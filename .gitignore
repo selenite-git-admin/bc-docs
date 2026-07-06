@@ -1,0 +1,7 @@
+docs-control/docs-control.db
+docs-control/*.db
+docs-control/*.db-shm
+docs-control/*.db-wal
+__pycache__/
+*.pyc
+.DS_Store

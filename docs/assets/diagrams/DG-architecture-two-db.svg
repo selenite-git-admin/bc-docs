@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="780" viewBox="0 0 1200 780" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333333"/>
+    </marker>
+    <marker id="arrred" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#c43a4a"/>
+    </marker>
+    <linearGradient id="db-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f7f7f7"/>
+      <stop offset="100%" stop-color="#e0e0e0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="780" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="30" y="36" font-size="18" font-weight="bold" fill="#1a1a2e">Architecture: Two-Database Topology</text>
+  <text x="30" y="54" font-size="11" font-style="italic" fill="#999999">Platform DB and Tenant DB. Asymmetric ownership. One-directional authority.</text>
+  <text x="1170" y="36" font-size="9" fill="#666666" text-anchor="end">DG-architecture-two-db · v1</text>
+
+  <!-- Central principle banner -->
+  <rect x="30" y="80" width="1140" height="50" rx="6" fill="#dae8fc" fill-opacity="0.3" stroke="#6c8ebf" stroke-width="1"/>
+  <text x="600" y="103" font-size="13" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Contracts are platform. Data is tenant.</text>
+  <text x="600" y="121" font-size="10" font-style="italic" text-anchor="middle" fill="#666666">A contract is a definition. Data is an instance. Definitions belong to the platform regardless of how many tenants use them.</text>
+
+  <!-- ============== PLATFORM DB ============== -->
+  <rect x="40" y="160" width="380" height="500" rx="8" fill="url(#db-grad)" stroke="#666666" stroke-width="2"/>
+  <ellipse cx="230" cy="160" rx="190" ry="14" fill="#cccccc" stroke="#666666" stroke-width="2"/>
+  <ellipse cx="230" cy="660" rx="190" ry="14" fill="url(#db-grad)" stroke="#666666" stroke-width="2"/>
+
+  <text x="230" y="195" font-size="15" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Platform DB</text>
+  <text x="230" y="213" font-size="10" font-style="italic" text-anchor="middle" fill="#666666">bc_platform_dev</text>
+  <text x="230" y="229" font-size="9" font-style="italic" text-anchor="middle" fill="#999999">one per environment</text>
+
+  <text x="60" y="260" font-size="11" font-weight="bold" fill="#3a6a3e">Owns (design-time):</text>
+  <text x="70" y="280" font-size="10" fill="#444444">• Source Catalog hierarchy</text>
+  <text x="80" y="294" font-size="9" fill="#666666">Provider · System · Version · Module · Table · Field</text>
+  <text x="70" y="314" font-size="10" fill="#444444">• Contract registry (six families plus AI provisional)</text>
+  <text x="80" y="328" font-size="9" fill="#666666">Source · Admission · Observation · Canonical · Metric · Intervention</text>
+  <text x="70" y="348" font-size="10" fill="#444444">• Canonical Mapping (supporting schema)</text>
+  <text x="70" y="368" font-size="10" fill="#444444">• Master data</text>
+  <text x="80" y="382" font-size="9" fill="#666666">currencies · countries · industries · system types</text>
+  <text x="70" y="402" font-size="10" fill="#444444">• Tenant identity records</text>
+  <text x="70" y="422" font-size="10" fill="#444444">• Subscription records (per DEC-324d9e)</text>
+  <text x="70" y="442" font-size="10" fill="#444444">• Governance state</text>
+  <text x="80" y="456" font-size="9" fill="#666666">decisions · change records · activity log</text>
+  <text x="70" y="476" font-size="10" fill="#444444">• Chain status (L1-L7 readiness)</text>
+
+  <line x1="60" y1="495" x2="400" y2="495" stroke="#cccccc" stroke-width="1"/>
+  <text x="60" y="515" font-size="10" font-weight="bold" fill="#666666">Writes by:</text>
+  <text x="70" y="532" font-size="9" fill="#444444">platform governance acts</text>
+  <text x="70" y="548" font-size="9" fill="#444444">bc-core control-plane modules</text>
+
+  <text x="60" y="572" font-size="10" font-weight="bold" fill="#666666">Reads by:</text>
+  <text x="70" y="589" font-size="9" fill="#444444">bc-core (control + execution planes)</text>
+  <text x="70" y="605" font-size="9" fill="#444444">bc-portal · bc-admin (delivery, read-only)</text>
+  <text x="70" y="621" font-size="9" fill="#444444">bc-ai (read-only context)</text>
+
+  <text x="230" y="650" font-size="9" font-style="italic" text-anchor="middle" fill="#3a6a3e">Shared by every tenant</text>
+
+  <!-- ============== bc-core (middle) ============== -->
+  <rect x="450" y="200" width="300" height="380" rx="6" fill="#d5e8d4" fill-opacity="0.5" stroke="#82b366" stroke-width="2"/>
+  <text x="600" y="225" font-size="14" font-weight="bold" text-anchor="middle" fill="#3a6a3e">bc-core</text>
+  <text x="600" y="242" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">single execution authority</text>
+
+  <!-- control plane modules -->
+  <rect x="465" y="265" width="270" height="55" rx="4" fill="#e1d5e7" stroke="#9673a6" stroke-width="1"/>
+  <text x="600" y="285" font-size="11" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Control-plane modules</text>
+  <text x="600" y="300" font-size="9" fill="#666666" text-anchor="middle">@PlatformOnly() routes</text>
+  <text x="600" y="313" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">contract authoring · registry · catalog</text>
+
+  <!-- execution plane modules -->
+  <rect x="465" y="335" width="270" height="55" rx="4" fill="#fff2cc" stroke="#d6b656" stroke-width="1"/>
+  <text x="600" y="355" font-size="11" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Execution-plane modules</text>
+  <text x="600" y="370" font-size="9" fill="#666666" text-anchor="middle">@TenantScoped() routes</text>
+  <text x="600" y="383" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">four boundary acts</text>
+
+  <!-- discovery surface -->
+  <rect x="465" y="405" width="270" height="55" rx="4" fill="#ffffff" stroke="#9673a6" stroke-width="1"/>
+  <text x="600" y="425" font-size="11" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Discovery surface</text>
+  <text x="600" y="440" font-size="9" fill="#666666" text-anchor="middle">platform act</text>
+  <text x="600" y="453" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">reads tenant data structure read-only</text>
+
+  <!-- Auth boundary -->
+  <rect x="465" y="475" width="270" height="40" rx="4" fill="#ffffff" stroke="#666666" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="600" y="492" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Auth: Cognito JWT</text>
+  <text x="600" y="506" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">custom:tenant_id binds tenant scope</text>
+
+  <text x="600" y="540" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">One runtime hosts both planes.</text>
+  <text x="600" y="555" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">Future split is a deployment refactor, not architectural.</text>
+  <text x="600" y="570" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">DEC-9b23a7</text>
+
+  <!-- ============== TENANT DB ============== -->
+  <rect x="780" y="160" width="380" height="500" rx="8" fill="url(#db-grad)" stroke="#666666" stroke-width="2"/>
+  <ellipse cx="970" cy="160" rx="190" ry="14" fill="#cccccc" stroke="#666666" stroke-width="2"/>
+  <ellipse cx="970" cy="660" rx="190" ry="14" fill="url(#db-grad)" stroke="#666666" stroke-width="2"/>
+
+  <text x="970" y="195" font-size="15" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Tenant DB</text>
+  <text x="970" y="213" font-size="10" font-style="italic" text-anchor="middle" fill="#666666">tbc_{slug}_dev</text>
+  <text x="970" y="229" font-size="9" font-style="italic" text-anchor="middle" fill="#999999">one per tenant</text>
+
+  <text x="800" y="260" font-size="11" font-weight="bold" fill="#a08230">Owns (execution-time):</text>
+  <text x="810" y="280" font-size="10" fill="#444444">• Source Objects</text>
+  <text x="810" y="298" font-size="10" fill="#444444">• Canonical Objects</text>
+  <text x="810" y="316" font-size="10" fill="#444444">• Metric Snapshots</text>
+  <text x="810" y="334" font-size="10" fill="#444444">• Action Objects</text>
+  <text x="810" y="352" font-size="10" fill="#444444">• Evidence and Lineage (proof chain)</text>
+  <text x="810" y="370" font-size="10" fill="#444444">• Run records</text>
+  <text x="820" y="384" font-size="9" fill="#666666">admission · canonical · metric · action</text>
+  <text x="810" y="404" font-size="10" fill="#444444">• Connections</text>
+  <text x="820" y="418" font-size="9" fill="#666666">tenant credentials · Reader Flavor binding</text>
+  <text x="810" y="438" font-size="10" fill="#444444">• Contract Bindings</text>
+  <text x="820" y="452" font-size="9" fill="#666666">tenant-specific contract version locks</text>
+  <text x="810" y="472" font-size="10" fill="#444444">• Tenant-scoped extensions</text>
+  <text x="820" y="486" font-size="9" fill="#666666">Z-tables · Z-fields per per-family rules</text>
+
+  <line x1="800" y1="500" x2="1140" y2="500" stroke="#cccccc" stroke-width="1"/>
+  <text x="800" y="520" font-size="10" font-weight="bold" fill="#666666">Writes by:</text>
+  <text x="810" y="535" font-size="9" fill="#444444">bc-core under two governed categories,</text>
+  <text x="810" y="549" font-size="9" fill="#444444">both under a bound contract version:</text>
+  <text x="820" y="563" font-size="9" fill="#444444">• boundary acts (SO · CO · MS · AO + proof)</text>
+  <text x="820" y="577" font-size="9" fill="#444444">• tenant-scoped authoring</text>
+  <text x="830" y="591" font-size="9" fill="#666666">(Connections · Bindings · extensions)</text>
+
+  <text x="800" y="608" font-size="10" font-weight="bold" fill="#666666">Reads by:</text>
+  <text x="810" y="624" font-size="9" fill="#444444">bc-core (execution + delivery)</text>
+  <text x="810" y="638" font-size="9" fill="#444444">bc-portal (tenant UI, scoped)</text>
+  <text x="810" y="652" font-size="9" fill="#444444">bc-admin (platform UI, monitoring)</text>
+
+  <text x="970" y="650" font-size="9" font-style="italic" text-anchor="middle" fill="#a08230">Physically separate per tenant</text>
+
+  <!-- ============== ARROWS ============== -->
+  <!-- Platform DB → bc-core (read) -->
+  <line x1="420" y1="300" x2="450" y2="300" stroke="#333333" stroke-width="2" marker-end="url(#arr3)"/>
+  <text x="435" y="290" font-size="9" font-style="italic" fill="#444444" text-anchor="middle">read</text>
+
+  <!-- bc-core ↔ Tenant DB (governed read/write) -->
+  <line x1="750" y1="365" x2="780" y2="365" stroke="#333333" stroke-width="2" marker-end="url(#arr3)"/>
+  <text x="765" y="355" font-size="9" font-style="italic" fill="#444444" text-anchor="middle">read</text>
+  <text x="765" y="380" font-size="9" font-style="italic" fill="#444444" text-anchor="middle">+ write</text>
+  <text x="765" y="394" font-size="8" font-style="italic" fill="#666666" text-anchor="middle">(boundary acts + tenant-scoped authoring)</text>
+
+  <!-- bc-core → Tenant DB discovery (read only) -->
+  <line x1="750" y1="430" x2="780" y2="430" stroke="#999999" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arr3)"/>
+  <text x="765" y="420" font-size="9" font-style="italic" fill="#666666" text-anchor="middle">discovery (read-only)</text>
+
+  <!-- FORBIDDEN arrow: Platform DB → Tenant DB direct -->
+  <line x1="380" y1="450" x2="780" y2="450" stroke="#c43a4a" stroke-width="2" stroke-dasharray="4,3"/>
+  <line x1="540" y1="438" x2="600" y2="462" stroke="#c43a4a" stroke-width="3"/>
+  <line x1="600" y1="438" x2="540" y2="462" stroke="#c43a4a" stroke-width="3"/>
+  <text x="580" y="475" font-size="9" font-weight="bold" fill="#c43a4a" text-anchor="middle">No direct cross-DB write</text>
+
+  <!-- Bottom: governance summary -->
+  <rect x="30" y="690" width="1140" height="80" rx="4" fill="#fafafa" stroke="#cccccc" stroke-width="1"/>
+  <text x="40" y="710" font-size="11" font-weight="bold" fill="#666666">ONE-DIRECTIONAL AUTHORITY</text>
+  <text x="40" y="728" font-size="9" fill="#444444">• A backend service authoring platform-level state never reads a tenant database to do so.</text>
+  <text x="40" y="744" font-size="9" fill="#444444">• A backend service authoring tenant-level state writes through governed acts (boundary acts or tenant-scoped authoring) under a bound contract version.</text>
+  <text x="40" y="760" font-size="9" fill="#444444">• Discovery acts read tenant state read-only without writing. The platform never authors tenant state outside governed boundary acts and governed tenant-scoped authoring.</text>
+
+  <text x="600" y="780" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">Governing source: DEC-1918d0; DEC-771baf; The Object Model; The Contract Grammar.</text>
+</svg>

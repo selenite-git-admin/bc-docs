@@ -1,0 +1,33 @@
+{
+  "private": true,
+  "scripts": {
+    "docs:init": "python scripts/docs-control/init_db.py",
+    "docs:inventory:v3": "python scripts/docs-control/inventory_v3.py --source C:/MyProjects/bc-docs-v3",
+    "docs:classify": "python scripts/docs-control/classify_migration.py",
+    "docs:import:approved": "python scripts/docs-control/import_approved.py",
+    "docs:import:dry-run": "python scripts/docs-control/import_approved.py --dry-run",
+    "docs:nav": "python scripts/docs-control/seed_navigation.py",
+    "docs:audit": "python scripts/docs-control/audit_target_docs.py",
+    "docs:coverage:bc-core": "python scripts/docs-control/inventory_bc_core.py",
+    "docs:generate:source-refs": "python scripts/docs-control/generate_source_references.py",
+    "docs:generate:source-refs:apply": "python scripts/docs-control/generate_source_references.py --apply",
+    "docs:sanitize:source-system-volatility": "python scripts/docs-control/sanitize_source_system_volatility.py",
+    "docs:sanitize:source-system-volatility:apply": "python scripts/docs-control/sanitize_source_system_volatility.py --apply",
+    "docs:links:rewrite": "python scripts/docs-control/rewrite_migrated_links.py",
+    "docs:links:rewrite:apply": "python scripts/docs-control/rewrite_migrated_links.py --apply",
+    "docs:links:repair-missing": "python scripts/docs-control/repair_missing_links.py",
+    "docs:links:repair-missing:apply": "python scripts/docs-control/repair_missing_links.py --apply",
+    "docs:links:normalize-local": "python scripts/docs-control/normalize_local_links.py",
+    "docs:links:normalize-local:apply": "python scripts/docs-control/normalize_local_links.py --apply",
+    "docs:legacy-roots:normalize": "python scripts/docs-control/normalize_legacy_roots.py",
+    "docs:legacy-roots:normalize:apply": "python scripts/docs-control/normalize_legacy_roots.py --apply",
+    "docs:legacy-roots:normalize-all-stale": "python scripts/docs-control/normalize_legacy_roots.py --scope all-stale",
+    "docs:legacy-roots:normalize-all-stale:apply": "python scripts/docs-control/normalize_legacy_roots.py --scope all-stale --apply",
+    "docs:review:undecided": "python scripts/docs-control/review_undecided.py",
+    "docs:review:undecided:apply": "python scripts/docs-control/review_undecided.py --apply",
+    "docs:report:inventory": "python scripts/docs-control/report_inventory.py",
+    "docs:report:mutable-claims": "python scripts/docs-control/report_mutable_claims.py",
+    "docs:report:cleanup": "python scripts/docs-control/report_cleanup_queues.py",
+    "docs:report:migration": "python scripts/docs-control/report_migration_plan.py"
+  }
+}

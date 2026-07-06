@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="860" viewBox="0 0 1300 860" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333333"/>
+    </marker>
+    <marker id="arrlight2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#999999"/>
+    </marker>
+  </defs>
+  <rect width="1300" height="860" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="30" y="36" font-size="18" font-weight="bold" fill="#1a1a2e">Architecture: Layers and Surfaces</text>
+  <text x="30" y="54" font-size="11" font-style="italic" fill="#999999">The canonical map: two interaction surfaces, three planes within Trust, two ownership boundaries.</text>
+  <text x="1270" y="36" font-size="9" fill="#666666" text-anchor="end">DG-architecture-layers · v1</text>
+
+  <!-- ============== CONVERSATION SURFACE ============== -->
+  <rect x="30" y="80" width="1240" height="100" rx="6" fill="#fce4ec" fill-opacity="0.4" stroke="#e57373" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="50" y="105" font-size="13" font-weight="bold" fill="#c43a4a">CONVERSATION SURFACE</text>
+  <text x="50" y="120" font-size="10" fill="#666666">Advisory · ephemeral · agent outputs not yet promoted to governed state</text>
+
+  <rect x="50" y="130" width="240" height="40" rx="4" fill="#ffffff" stroke="#e57373" stroke-width="1"/>
+  <text x="170" y="148" font-size="11" font-weight="bold" text-anchor="middle" fill="#1a1a2e">AI Panel</text>
+  <text x="170" y="162" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">conversational suggestions</text>
+
+  <rect x="310" y="130" width="240" height="40" rx="4" fill="#ffffff" stroke="#e57373" stroke-width="1"/>
+  <text x="430" y="148" font-size="11" font-weight="bold" text-anchor="middle" fill="#1a1a2e">AI Agents (advisory output)</text>
+  <text x="430" y="162" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">recommendations · drafts</text>
+
+  <rect x="570" y="130" width="240" height="40" rx="4" fill="#ffffff" stroke="#e57373" stroke-width="1"/>
+  <text x="690" y="148" font-size="11" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Conversational queries</text>
+  <text x="690" y="162" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">read Trust freely</text>
+
+  <text x="900" y="148" font-size="10" fill="#444444">Reads Trust:</text>
+  <text x="900" y="163" font-size="10" font-weight="bold" fill="#1a1a2e">Yes</text>
+  <text x="1020" y="148" font-size="10" fill="#444444">Writes Trust:</text>
+  <text x="1020" y="163" font-size="10" font-weight="bold" fill="#c43a4a">Never directly</text>
+
+  <!-- Boundary line: read freely / never write -->
+  <line x1="50" y1="200" x2="1250" y2="200" stroke="#666666" stroke-width="1.5"/>
+  <text x="650" y="195" font-size="10" font-style="italic" fill="#666666" text-anchor="middle">↑ AI may read · AI may NOT write authoritative state without a governed authoring act ↓</text>
+
+  <!-- ============== TRUST SURFACE ============== -->
+  <rect x="30" y="220" width="1240" height="540" rx="6" fill="#dae8fc" fill-opacity="0.15" stroke="#6c8ebf" stroke-width="2"/>
+  <text x="50" y="248" font-size="14" font-weight="bold" fill="#1a3a6c">TRUST SURFACE</text>
+  <text x="50" y="265" font-size="10" fill="#666666">Authoritative · immutable · the only surface that records governed and authoritative state</text>
+
+  <!-- ===== Three planes within Trust ===== -->
+
+  <!-- CONTROL PLANE -->
+  <rect x="50" y="285" width="380" height="220" rx="6" fill="#e1d5e7" fill-opacity="0.4" stroke="#9673a6" stroke-width="1.5"/>
+  <text x="65" y="308" font-size="12" font-weight="bold" fill="#6f4a8c">CONTROL PLANE</text>
+  <text x="65" y="324" font-size="9" fill="#666666">Authors and governs. Platform DB.</text>
+
+  <rect x="65" y="338" width="170" height="40" rx="3" fill="#e1d5e7" stroke="#9673a6" stroke-width="1"/>
+  <text x="150" y="356" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Source Catalog</text>
+  <text x="150" y="370" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">Provider · System · ...</text>
+
+  <rect x="245" y="338" width="170" height="40" rx="3" fill="#e1d5e7" stroke="#9673a6" stroke-width="1"/>
+  <text x="330" y="356" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Contract Registry</text>
+  <text x="330" y="370" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">SC · AC · OC · CC · MC · IC</text>
+
+  <rect x="65" y="388" width="170" height="40" rx="3" fill="#e1d5e7" stroke="#9673a6" stroke-width="1"/>
+  <text x="150" y="406" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Master Data</text>
+  <text x="150" y="420" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">currencies · countries</text>
+
+  <rect x="245" y="388" width="170" height="40" rx="3" fill="#e1d5e7" stroke="#9673a6" stroke-width="1"/>
+  <text x="330" y="406" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Subscriptions</text>
+  <text x="330" y="420" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">tenant entitlement</text>
+
+  <rect x="65" y="438" width="170" height="40" rx="3" fill="#e1d5e7" stroke="#9673a6" stroke-width="1"/>
+  <text x="150" y="456" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Governance State</text>
+  <text x="150" y="470" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">decisions · change records</text>
+
+  <rect x="245" y="438" width="170" height="40" rx="3" fill="#e1d5e7" stroke="#9673a6" stroke-width="1"/>
+  <text x="330" y="456" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Chain Status</text>
+  <text x="330" y="470" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">L1-L7 readiness</text>
+
+  <text x="65" y="495" font-size="9" font-style="italic" fill="#666666">Hosted by: bc-core control-plane modules + DevHub</text>
+
+  <!-- EXECUTION PLANE -->
+  <rect x="450" y="285" width="380" height="220" rx="6" fill="#fff2cc" fill-opacity="0.4" stroke="#d6b656" stroke-width="1.5"/>
+  <text x="465" y="308" font-size="12" font-weight="bold" fill="#a08230">EXECUTION PLANE</text>
+  <text x="465" y="324" font-size="9" fill="#666666">Runs the four boundary acts. Tenant DB.</text>
+
+  <rect x="465" y="338" width="350" height="35" rx="3" fill="#fff2cc" stroke="#d6b656" stroke-width="1"/>
+  <text x="640" y="360" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Admission boundary → Source Object</text>
+
+  <rect x="465" y="378" width="350" height="35" rx="3" fill="#fff2cc" stroke="#d6b656" stroke-width="1"/>
+  <text x="640" y="400" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Canonical Evaluation → Canonical Object</text>
+
+  <rect x="465" y="418" width="350" height="35" rx="3" fill="#fff2cc" stroke="#d6b656" stroke-width="1"/>
+  <text x="640" y="440" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Metric Evaluation → Metric Snapshot</text>
+
+  <rect x="465" y="458" width="350" height="35" rx="3" fill="#fff2cc" stroke="#d6b656" stroke-width="1"/>
+  <text x="640" y="480" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Action Evaluation → Action Object</text>
+
+  <text x="465" y="498" font-size="9" font-style="italic" fill="#666666">Hosted by: bc-core boundary modules · single execution authority</text>
+
+  <!-- DELIVERY PLANE -->
+  <rect x="850" y="285" width="400" height="220" rx="6" fill="#d5e8d4" fill-opacity="0.4" stroke="#82b366" stroke-width="1.5"/>
+  <text x="865" y="308" font-size="12" font-weight="bold" fill="#3a6a3e">DELIVERY PLANE</text>
+  <text x="865" y="324" font-size="9" fill="#666666">Surfaces results. Read-only.</text>
+
+  <rect x="865" y="338" width="180" height="40" rx="3" fill="#d5e8d4" stroke="#82b366" stroke-width="1"/>
+  <text x="955" y="356" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">bc-portal</text>
+  <text x="955" y="370" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">tenant UI</text>
+
+  <rect x="1055" y="338" width="180" height="40" rx="3" fill="#d5e8d4" stroke="#82b366" stroke-width="1"/>
+  <text x="1145" y="356" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">bc-admin</text>
+  <text x="1145" y="370" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">platform UI · docs reader</text>
+
+  <rect x="865" y="388" width="180" height="40" rx="3" fill="#d5e8d4" stroke="#82b366" stroke-width="1"/>
+  <text x="955" y="406" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Read APIs</text>
+  <text x="955" y="420" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">analytics integration</text>
+
+  <rect x="1055" y="388" width="180" height="40" rx="3" fill="#d5e8d4" stroke="#82b366" stroke-width="1"/>
+  <text x="1145" y="406" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">AI visibility</text>
+  <text x="1145" y="420" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">read-only over Trust</text>
+
+  <text x="865" y="455" font-size="9" font-style="italic" fill="#666666">Hosted by: bc-portal · bc-admin · bc-core delivery routes · bc-ai visibility routes</text>
+  <text x="865" y="470" font-size="9" font-style="italic" fill="#a08230">External write-back and AI-triggered authoring are adjacent</text>
+  <text x="865" y="484" font-size="9" font-style="italic" fill="#a08230">integration paths, not delivery-plane writes.</text>
+
+  <!-- Plane order: Control → Execution → Delivery -->
+  <line x1="430" y1="395" x2="450" y2="395" stroke="#333333" stroke-width="2" marker-end="url(#arr2)"/>
+  <line x1="830" y1="395" x2="850" y2="395" stroke="#333333" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- ===== Two ownership boundaries (within Trust) ===== -->
+
+  <rect x="50" y="525" width="1200" height="220" rx="6" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+  <text x="65" y="548" font-size="12" font-weight="bold" fill="#1a1a2e">TWO OWNERSHIP BOUNDARIES</text>
+  <text x="65" y="564" font-size="9" fill="#666666">Asymmetric ownership of state. One-directional authority.</text>
+
+  <!-- Platform side -->
+  <rect x="65" y="580" width="555" height="150" rx="4" fill="#dae8fc" fill-opacity="0.4" stroke="#6c8ebf" stroke-width="1.5"/>
+  <text x="80" y="600" font-size="11" font-weight="bold" fill="#1a3a6c">PLATFORM SIDE (Platform DB)</text>
+  <text x="80" y="618" font-size="9" fill="#444444">Owns: contracts · catalog · master data · governance · Subscription · tenant identity</text>
+  <text x="80" y="635" font-size="9" fill="#444444">Stored in: bc_platform_dev (one per environment)</text>
+  <text x="80" y="652" font-size="9" fill="#444444">Writes by: platform governance acts; bc-core control-plane modules</text>
+  <text x="80" y="678" font-size="9" font-style="italic" fill="#666666">One per environment</text>
+  <text x="80" y="694" font-size="9" font-style="italic" fill="#666666">Shared by every tenant for definitions and master data</text>
+  <text x="80" y="720" font-size="9" font-weight="bold" fill="#3a6a3e">Contracts are platform.</text>
+
+  <!-- Authority arrow Platform → Tenant (one-way) -->
+  <line x1="625" y1="650" x2="675" y2="650" stroke="#333333" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="650" y="640" font-size="9" font-style="italic" fill="#666666" text-anchor="middle">authority</text>
+  <text x="650" y="668" font-size="9" font-style="italic" fill="#666666" text-anchor="middle">one-way</text>
+
+  <!-- Tenant side -->
+  <rect x="685" y="580" width="555" height="150" rx="4" fill="#fff2cc" fill-opacity="0.4" stroke="#d6b656" stroke-width="1.5"/>
+  <text x="700" y="600" font-size="11" font-weight="bold" fill="#a08230">TENANT SIDE (Tenant DB · one per tenant)</text>
+  <text x="700" y="618" font-size="9" fill="#444444">Owns: SO · CO · MS · AO · Evidence · Lineage · Run records · Connections · Bindings</text>
+  <text x="700" y="635" font-size="9" fill="#444444">Stored in: tbc_{slug}_dev (one per tenant)</text>
+  <text x="700" y="652" font-size="9" fill="#444444">Writes by: bc-core under two governed categories (boundary acts; tenant-scoped authoring)</text>
+  <text x="700" y="678" font-size="9" font-style="italic" fill="#666666">One per tenant; physically separate from Platform DB</text>
+  <text x="700" y="694" font-size="9" font-style="italic" fill="#666666">Platform never writes outside governed boundary acts</text>
+  <text x="700" y="720" font-size="9" font-weight="bold" fill="#3a6a3e">Data is tenant.</text>
+
+  <!-- ===== READ AND WRITE RULES box ===== -->
+  <rect x="30" y="775" width="1240" height="65" rx="4" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+  <text x="40" y="795" font-size="11" font-weight="bold" fill="#666666">READ AND WRITE RULES (load-bearing architectural commitments)</text>
+  <text x="40" y="811" font-size="9" fill="#444444">• Conversation surface reads Trust freely; never writes Trust without a governed authoring act.</text>
+  <text x="40" y="825" font-size="9" fill="#444444">• Trust surface writes only at governed evaluation acts (boundaries) and governed authoring acts (control plane and tenant-scoped registration).</text>
+  <text x="40" y="839" font-size="9" fill="#444444">• Platform side never writes Tenant DB outside governed boundary acts and governed tenant-scoped authoring. Tenant side never writes Platform DB.</text>
+
+  <!-- Footer -->
+  <text x="30" y="857" font-size="9" font-style="italic" fill="#999999">Governing source: The Dual-Layer Interaction Model; The Object Model; The Contract Grammar; DEC-1918d0; DEC-771baf.</text>
+</svg>

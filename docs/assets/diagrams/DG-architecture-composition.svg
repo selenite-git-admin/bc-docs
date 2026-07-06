@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="900" viewBox="0 0 1300 900" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333333"/>
+    </marker>
+    <marker id="arrCs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#999999"/>
+    </marker>
+  </defs>
+  <rect width="1300" height="900" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="30" y="36" font-size="18" font-weight="bold" fill="#1a1a2e">Architecture: Repository Composition</text>
+  <text x="30" y="54" font-size="11" font-style="italic" fill="#999999">Repositories that compose the platform; what each one owns; dependency direction.</text>
+  <text x="1270" y="36" font-size="9" fill="#666666" text-anchor="end">DG-architecture-composition · v1</text>
+
+  <!-- Tier labels -->
+  <text x="40" y="100" font-size="11" font-weight="bold" fill="#666666">FRONTENDS</text>
+  <line x1="40" y1="105" x2="160" y2="105" stroke="#cccccc" stroke-width="1"/>
+
+  <!-- bc-portal -->
+  <rect x="40" y="120" width="290" height="100" rx="6" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5"/>
+  <text x="185" y="142" font-size="13" font-weight="bold" text-anchor="middle" fill="#1a1a2e">bc-portal</text>
+  <text x="185" y="158" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">tenant-facing browser shell</text>
+  <text x="55" y="178" font-size="9" fill="#444444">• Vite + React</text>
+  <text x="55" y="192" font-size="9" fill="#444444">• KPI dashboards · action console</text>
+  <text x="55" y="206" font-size="9" fill="#444444">• Reads bc-core via tenant-scoped API</text>
+
+  <!-- bc-admin -->
+  <rect x="350" y="120" width="290" height="100" rx="6" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5"/>
+  <text x="495" y="142" font-size="13" font-weight="bold" text-anchor="middle" fill="#1a1a2e">bc-admin</text>
+  <text x="495" y="158" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">platform-facing browser shell</text>
+  <text x="365" y="178" font-size="9" fill="#444444">• Vite + React</text>
+  <text x="365" y="192" font-size="9" fill="#444444">• Contract registry UI · catalog · governance</text>
+  <text x="365" y="206" font-size="9" fill="#444444">• Embedded documentation reader (DEC-b97390)</text>
+
+  <!-- BACKEND SERVICES -->
+  <text x="40" y="270" font-size="11" font-weight="bold" fill="#666666">BACKEND SERVICES</text>
+  <line x1="40" y1="275" x2="200" y2="275" stroke="#cccccc" stroke-width="1"/>
+
+  <!-- bc-core (large, central) -->
+  <rect x="40" y="290" width="600" height="170" rx="6" fill="#d5e8d4" stroke="#82b366" stroke-width="2"/>
+  <text x="340" y="315" font-size="14" font-weight="bold" text-anchor="middle" fill="#1a1a2e">bc-core</text>
+  <text x="340" y="332" font-size="10" font-style="italic" text-anchor="middle" fill="#3a6a3e">single execution authority for the spine</text>
+
+  <!-- Internal modules inside bc-core -->
+  <rect x="60" y="345" width="180" height="32" rx="3" fill="#ffffff" stroke="#82b366" stroke-width="1"/>
+  <text x="150" y="365" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">registry/ modules</text>
+
+  <rect x="250" y="345" width="180" height="32" rx="3" fill="#ffffff" stroke="#82b366" stroke-width="1"/>
+  <text x="340" y="365" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">boundary/ modules</text>
+
+  <rect x="440" y="345" width="180" height="32" rx="3" fill="#ffffff" stroke="#82b366" stroke-width="1"/>
+  <text x="530" y="365" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">evidence/ modules</text>
+
+  <rect x="60" y="385" width="180" height="32" rx="3" fill="#ffffff" stroke="#82b366" stroke-width="1"/>
+  <text x="150" y="405" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">tenancy/ modules</text>
+
+  <rect x="250" y="385" width="180" height="32" rx="3" fill="#ffffff" stroke="#82b366" stroke-width="1"/>
+  <text x="340" y="405" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">auth/ + JWT</text>
+
+  <rect x="440" y="385" width="180" height="32" rx="3" fill="#ffffff" stroke="#82b366" stroke-width="1"/>
+  <text x="530" y="405" font-size="10" font-weight="bold" text-anchor="middle" fill="#1a1a2e">api/ delivery routes</text>
+
+  <text x="60" y="437" font-size="9" fill="#444444">• NestJS monorepo · TypeScript</text>
+  <text x="340" y="437" font-size="9" fill="#444444">• @PlatformOnly() and @TenantScoped()</text>
+  <text x="60" y="451" font-size="9" font-style="italic" fill="#666666">Hosts contract registry and the four boundary acts.</text>
+  <text x="340" y="451" font-size="9" font-style="italic" fill="#666666">Internal Modules chapter for per-module detail.</text>
+
+  <!-- bc-ai -->
+  <rect x="660" y="290" width="290" height="170" rx="6" fill="#fce4ec" stroke="#e57373" stroke-width="1.5"/>
+  <text x="805" y="315" font-size="13" font-weight="bold" text-anchor="middle" fill="#1a1a2e">bc-ai</text>
+  <text x="805" y="332" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">AI runtime</text>
+  <text x="675" y="355" font-size="9" fill="#444444">• Python + FastAPI</text>
+  <text x="675" y="371" font-size="9" fill="#444444">• AWS Bedrock integration</text>
+  <text x="675" y="387" font-size="9" fill="#444444">• Inference profiles · prompt patterns</text>
+  <text x="675" y="403" font-size="9" fill="#444444">• AI agents · cross-family verification</text>
+  <text x="675" y="419" font-size="9" fill="#444444">• Read-only over Trust surface</text>
+  <text x="675" y="435" font-size="9" font-style="italic" fill="#666666">AI Architecture chapter for depth.</text>
+  <text x="675" y="451" font-size="9" font-style="italic" fill="#666666">Detail in AI section.</text>
+
+  <!-- DevHub -->
+  <rect x="970" y="290" width="290" height="170" rx="6" fill="#e1d5e7" stroke="#9673a6" stroke-width="1.5"/>
+  <text x="1115" y="315" font-size="13" font-weight="bold" text-anchor="middle" fill="#1a1a2e">DevHub</text>
+  <text x="1115" y="332" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">governance backbone</text>
+  <text x="985" y="355" font-size="9" fill="#444444">• Node + better-sqlite3</text>
+  <text x="985" y="371" font-size="9" fill="#444444">• MCP-server interface</text>
+  <text x="985" y="387" font-size="9" fill="#444444">• Sessions · plans · tasks · decisions</text>
+  <text x="985" y="403" font-size="9" fill="#444444">• Change records · activity log</text>
+  <text x="985" y="419" font-size="9" fill="#444444">• Independent of bc-core</text>
+  <text x="985" y="435" font-size="9" font-style="italic" fill="#666666">Detail in Development section.</text>
+  <text x="985" y="451" font-size="9" font-style="italic" fill="#666666">DEC-9b23a7 · independent startup</text>
+
+  <!-- DATA STORES -->
+  <text x="40" y="510" font-size="11" font-weight="bold" fill="#666666">DATA STORES</text>
+  <line x1="40" y1="515" x2="160" y2="515" stroke="#cccccc" stroke-width="1"/>
+
+  <!-- Platform DB -->
+  <rect x="40" y="530" width="290" height="80" rx="6" fill="#f0f0f0" stroke="#999999" stroke-width="1.5"/>
+  <text x="185" y="552" font-size="12" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Platform DB</text>
+  <text x="185" y="568" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">bc_platform_dev · one per environment</text>
+  <text x="55" y="588" font-size="9" fill="#444444">contracts · catalog · governance · master data</text>
+  <text x="55" y="602" font-size="9" font-style="italic" fill="#999999">Schema inventory in Data Model and Schema</text>
+
+  <!-- Tenant DB -->
+  <rect x="350" y="530" width="290" height="80" rx="6" fill="#f0f0f0" stroke="#999999" stroke-width="1.5"/>
+  <text x="495" y="552" font-size="12" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Tenant DB</text>
+  <text x="495" y="568" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">tbc_{slug}_dev · one per tenant</text>
+  <text x="365" y="588" font-size="9" fill="#444444">SO · CO · MS · AO · Evidence · Lineage · Runs</text>
+  <text x="365" y="602" font-size="9" font-style="italic" fill="#999999">Bindings · Connections · tenant extensions</text>
+
+  <!-- Redis -->
+  <rect x="660" y="530" width="290" height="80" rx="6" fill="#f0f0f0" stroke="#999999" stroke-width="1.5"/>
+  <text x="805" y="552" font-size="12" font-weight="bold" text-anchor="middle" fill="#1a1a2e">Redis</text>
+  <text x="805" y="568" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">cache layer</text>
+  <text x="675" y="588" font-size="9" fill="#444444">contract reads · session caches</text>
+  <text x="675" y="602" font-size="9" font-style="italic" fill="#999999">Detail in Infrastructure</text>
+
+  <!-- bc-pg-mcp (positioned to the right of data stores; reads both DBs) -->
+  <rect x="970" y="530" width="290" height="80" rx="6" fill="#d5e8d4" stroke="#82b366" stroke-width="1.5"/>
+  <text x="1115" y="552" font-size="12" font-weight="bold" text-anchor="middle" fill="#1a1a2e">bc-pg-mcp</text>
+  <text x="1115" y="568" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">PostgreSQL MCP server (tooling)</text>
+  <text x="985" y="588" font-size="9" fill="#444444">read-only access surface for development</text>
+  <text x="985" y="602" font-size="9" font-style="italic" fill="#999999">writes governed by bc-core, not bc-pg-mcp</text>
+
+  <!-- AUXILIARY -->
+  <text x="40" y="660" font-size="11" font-weight="bold" fill="#666666">AUXILIARY</text>
+  <line x1="40" y1="665" x2="120" y2="665" stroke="#cccccc" stroke-width="1"/>
+
+  <rect x="40" y="680" width="290" height="70" rx="6" fill="#fafafa" stroke="#999999" stroke-width="1"/>
+  <text x="185" y="700" font-size="11" font-weight="bold" text-anchor="middle" fill="#1a1a2e">bc-core-dashboard</text>
+  <text x="185" y="716" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">operations dashboard</text>
+  <text x="55" y="734" font-size="9" fill="#444444">platform monitoring · health surfaces</text>
+
+  <rect x="350" y="680" width="290" height="70" rx="6" fill="#fafafa" stroke="#999999" stroke-width="1"/>
+  <text x="495" y="700" font-size="11" font-weight="bold" text-anchor="middle" fill="#1a1a2e">bc-sdg</text>
+  <text x="495" y="716" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">synthetic data generator</text>
+  <text x="365" y="734" font-size="9" fill="#444444">per-system-type simulators · qa-bench</text>
+
+  <rect x="660" y="680" width="290" height="70" rx="6" fill="#fafafa" stroke="#999999" stroke-width="1"/>
+  <text x="805" y="700" font-size="11" font-weight="bold" text-anchor="middle" fill="#1a1a2e">bc-website</text>
+  <text x="805" y="716" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">marketing site</text>
+  <text x="675" y="734" font-size="9" fill="#444444">static · not in the platform execution surface</text>
+
+  <rect x="970" y="680" width="290" height="70" rx="6" fill="#fafafa" stroke="#999999" stroke-width="1"/>
+  <text x="1115" y="700" font-size="11" font-weight="bold" text-anchor="middle" fill="#1a1a2e">bc-qa</text>
+  <text x="1115" y="716" font-size="9" font-style="italic" text-anchor="middle" fill="#666666">QA tooling repository</text>
+  <text x="985" y="734" font-size="9" fill="#444444">Power of Ten · audits · NC register</text>
+
+  <!-- DEPENDENCY ARROWS -->
+  <!-- Frontends -> bc-core -->
+  <line x1="185" y1="220" x2="185" y2="285" stroke="#333333" stroke-width="1.5" marker-end="url(#arrC)"/>
+  <line x1="495" y1="220" x2="450" y2="285" stroke="#333333" stroke-width="1.5" marker-end="url(#arrC)"/>
+
+  <!-- bc-core -> Platform DB (read) -->
+  <line x1="185" y1="465" x2="185" y2="525" stroke="#333333" stroke-width="1.5" marker-end="url(#arrC)"/>
+  <text x="195" y="495" font-size="9" font-style="italic" fill="#666666">read</text>
+
+  <!-- bc-core -> Tenant DB (read+write) -->
+  <line x1="495" y1="465" x2="495" y2="525" stroke="#333333" stroke-width="1.5" marker-end="url(#arrC)"/>
+  <text x="505" y="495" font-size="9" font-style="italic" fill="#666666">read · write</text>
+
+  <!-- bc-core -> Redis -->
+  <line x1="600" y1="465" x2="750" y2="525" stroke="#999999" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arrCs)"/>
+
+  <!-- bc-ai -> Platform DB (read context) -->
+  <path d="M 750 465 Q 700 500, 320 530" fill="none" stroke="#999999" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arrCs)"/>
+  <text x="660" y="490" font-size="9" font-style="italic" fill="#666666" transform="rotate(20 660 490)">read context</text>
+
+  <!-- bc-ai -> bc-core (governed authoring acts) -->
+  <line x1="745" y1="370" x2="640" y2="370" stroke="#999999" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arrCs)"/>
+  <text x="690" y="362" font-size="9" font-style="italic" fill="#666666" text-anchor="middle">governed authoring</text>
+
+  <!-- bc-pg-mcp -> Platform DB and Tenant DB (read-only) -->
+  <path d="M 1115 530 Q 1080 480, 600 580" fill="none" stroke="#999999" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="900" y="510" font-size="9" font-style="italic" fill="#666666">read-only (tooling)</text>
+
+  <!-- bc-core-dashboard -> bc-core -->
+  <path d="M 185 680 Q 185 620, 240 460" fill="none" stroke="#999999" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arrCs)"/>
+
+  <!-- LEGEND -->
+  <rect x="40" y="780" width="1220" height="100" rx="4" fill="#fafafa" stroke="#cccccc" stroke-width="1"/>
+  <text x="55" y="800" font-size="11" font-weight="bold" fill="#666666">LEGEND</text>
+
+  <rect x="55" y="810" width="14" height="10" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1"/>
+  <text x="75" y="820" font-size="9" fill="#444444">Browser shell (frontend)</text>
+
+  <rect x="200" y="810" width="14" height="10" fill="#d5e8d4" stroke="#82b366" stroke-width="1"/>
+  <text x="220" y="820" font-size="9" fill="#444444">Backend service / runtime</text>
+
+  <rect x="370" y="810" width="14" height="10" fill="#fce4ec" stroke="#e57373" stroke-width="1"/>
+  <text x="390" y="820" font-size="9" fill="#444444">AI service</text>
+
+  <rect x="475" y="810" width="14" height="10" fill="#e1d5e7" stroke="#9673a6" stroke-width="1"/>
+  <text x="495" y="820" font-size="9" fill="#444444">Governance backbone</text>
+
+  <rect x="615" y="810" width="14" height="10" fill="#f0f0f0" stroke="#999999" stroke-width="1"/>
+  <text x="635" y="820" font-size="9" fill="#444444">Database / cache</text>
+
+  <rect x="745" y="810" width="14" height="10" fill="#fafafa" stroke="#999999" stroke-width="1"/>
+  <text x="765" y="820" font-size="9" fill="#444444">Auxiliary repository</text>
+
+  <line x1="55" y1="845" x2="69" y2="845" stroke="#333333" stroke-width="1.5"/>
+  <text x="75" y="848" font-size="9" fill="#444444">Direct dependency at the act</text>
+
+  <line x1="220" y1="845" x2="234" y2="845" stroke="#999999" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="240" y="848" font-size="9" fill="#444444">Mediated · governed reference · read-only</text>
+
+  <text x="55" y="868" font-size="9" font-style="italic" fill="#666666">bc-core is the single execution authority for the spine; bc-ai writes platform state only through governed authoring acts that route through bc-core.</text>
+
+  <text x="650" y="893" font-size="9" font-style="italic" fill="#999999" text-anchor="middle">Governing source: DEC-1918d0; DEC-771baf; DEC-9b23a7; DEC-b97390; DEC-441665.</text>
+</svg>
