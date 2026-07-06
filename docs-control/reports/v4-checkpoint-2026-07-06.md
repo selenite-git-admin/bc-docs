@@ -1,6 +1,6 @@
 # v4 Checkpoint - 2026-07-06
 
-This checkpoint records the isolated `bc-docs-v4` state after the first control-plane, coverage, navigation, source-reference, and mutable-claim cleanup pass.
+This checkpoint records the isolated `bc-docs-v4` state after the first control-plane, coverage, navigation, source-reference, mutable-claim cleanup, and second-layer bc-core relevance audit pass.
 
 ## Safety Boundary
 
@@ -20,7 +20,10 @@ This checkpoint records the isolated `bc-docs-v4` state after the first control-
 | Generated references pending regeneration | 0 |
 | Mutable-claim review lines | 0 |
 | Latest target-audit run | 75 |
+| Latest bidirectional bc-core audit run | 80 |
 | bc-core coverage | 1107/1107 linked targets |
+| bc-core code facts extracted | 2947 |
+| bc-core doc claims extracted | 2094 |
 | Reader navigation | 210 visible, 760 hidden |
 
 ## Coverage Snapshot
@@ -41,6 +44,18 @@ This checkpoint records the isolated `bc-docs-v4` state after the first control-
 | warning | stale-doc-root-reference | 33 |
 | info | stale-doc-root-reference | 228 |
 
+## Relevance Snapshot
+
+| Signal | Count |
+|---|---:|
+| High-priority uncovered bc-core facts | 7 |
+| Generated-only controllers | 96 |
+| Generated-only endpoints | 449 |
+| Generated-only schema tables | 393 |
+| Out-of-scope cross-repo/vendor claims separated | 141 |
+
+The second-layer audit separates generated inventory coverage from human explanatory coverage. It also normalizes public `/api` routes, path parameters, and schema-table leaf names so the queue focuses on likely stale or missing bc-core documentation rather than obvious extractor noise.
+
 ## Remaining Queues
 
 1. Defer v3 cutover references: 261 remaining legacy-root mentions are intentionally left until active Claude sessions are stopped and cutover is explicitly approved. The generated cutover-reference plan separates 33 warning/current-visible references from 228 informational provenance references.
@@ -49,6 +64,7 @@ This checkpoint records the isolated `bc-docs-v4` state after the first control-
 4. Run the later external reference scan before physical deletion of `bc-docs-safe-delete` contents.
 5. Use the external legacy-reference scan as the repoint input for other repos: 4,470 project-repo matches, including 1,222 code/config references, 2,157 served-doc-copy references, and 354 Claude handoff/memory references.
 6. Build the later cutover report before any rename from `bc-docs-v4` to `bc-docs`.
+7. Review the second-layer bc-core relevance queue, starting with uncovered guards/interceptor/env vars and high-count ungrounded documents such as `docs/implementation/internal-modules.md`, `docs/implementation/audit-and-activity-logging.md`, and `docs/implementation/api-surface.md`.
 
 ## Reports
 
@@ -60,7 +76,9 @@ This checkpoint records the isolated `bc-docs-v4` state after the first control-
 - `docs-control/reports/cutover-reference-plan.md`
 - `docs-control/reports/legacy-documentation-retirement-inventory.md`
 - `docs-control/reports/external-legacy-reference-scan.md`
+- `docs-control/reports/bidirectional-bc-core-audit.md`
+- `docs-control/reports/bc-core-relevance-coverage-queue.md`
 
 ## Worktree State
 
-The v4 tree is still uncommitted and untracked as an isolated build product. This is intentional until the structure stabilizes and the user approves a repository checkpoint or commit.
+The v4 tree is tracked in the isolated `bc-docs-v4` repository. This checkpoint remains pre-cutover: no v3 path rename, no Claude/MCP repointing, and no physical legacy deletion have been performed.

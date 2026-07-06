@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS schema_meta (
 
 INSERT OR REPLACE INTO schema_meta(key, value) VALUES
   ('schema_name', 'bc-docs-v4-control'),
-  ('schema_version', '0.1.0'),
+  ('schema_version', '0.2.0'),
   ('created_for', 'clean-room v4 documentation migration');
 
 CREATE TABLE IF NOT EXISTS repositories (
@@ -186,6 +186,98 @@ CREATE TABLE IF NOT EXISTS coverage_links (
   confidence TEXT NOT NULL DEFAULT 'medium' CHECK(confidence IN ('high', 'medium', 'low')),
   notes TEXT
 );
+
+CREATE TABLE IF NOT EXISTS code_facts (
+  code_fact_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  run_id INTEGER NOT NULL REFERENCES inventory_runs(run_id) ON DELETE CASCADE,
+  repo_key TEXT NOT NULL,
+  fact_type TEXT NOT NULL CHECK(fact_type IN (
+    'code_path',
+    'controller',
+    'endpoint',
+    'service',
+    'module',
+    'guard',
+    'interceptor',
+    'middleware',
+    'schema_table',
+    'script_command',
+    'env_var'
+  )),
+  source_path TEXT NOT NULL,
+  line_number INTEGER,
+  symbol TEXT,
+  normalized_key TEXT NOT NULL,
+  fact_value TEXT,
+  evidence TEXT,
+  fingerprint TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_code_facts_run_type ON code_facts(run_id, fact_type);
+CREATE INDEX IF NOT EXISTS idx_code_facts_repo_key ON code_facts(repo_key, normalized_key);
+CREATE INDEX IF NOT EXISTS idx_code_facts_source ON code_facts(source_path);
+
+CREATE TABLE IF NOT EXISTS doc_claims (
+  doc_claim_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  run_id INTEGER NOT NULL REFERENCES inventory_runs(run_id) ON DELETE CASCADE,
+  target_doc_id INTEGER REFERENCES target_documents(target_doc_id),
+  canonical_path TEXT NOT NULL,
+  line_number INTEGER NOT NULL,
+  claim_type TEXT NOT NULL CHECK(claim_type IN (
+    'code_path',
+    'class_symbol',
+    'endpoint',
+    'endpoint_path',
+    'schema_table',
+    'env_var'
+  )),
+  claim_text TEXT NOT NULL,
+  normalized_key TEXT NOT NULL,
+  context TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_doc_claims_run_type ON doc_claims(run_id, claim_type);
+CREATE INDEX IF NOT EXISTS idx_doc_claims_path ON doc_claims(canonical_path);
+CREATE INDEX IF NOT EXISTS idx_doc_claims_key ON doc_claims(normalized_key);
+
+CREATE TABLE IF NOT EXISTS doc_code_assessments (
+  assessment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  run_id INTEGER NOT NULL REFERENCES inventory_runs(run_id) ON DELETE CASCADE,
+  doc_claim_id INTEGER NOT NULL REFERENCES doc_claims(doc_claim_id) ON DELETE CASCADE,
+  status TEXT NOT NULL CHECK(status IN ('grounded', 'ungrounded', 'ambiguous', 'out_of_scope')),
+  matched_code_fact_id INTEGER REFERENCES code_facts(code_fact_id),
+  confidence TEXT NOT NULL CHECK(confidence IN ('high', 'medium', 'low')),
+  rationale TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_doc_code_assessments_run_status ON doc_code_assessments(run_id, status);
+CREATE INDEX IF NOT EXISTS idx_doc_code_assessments_claim ON doc_code_assessments(doc_claim_id);
+
+CREATE TABLE IF NOT EXISTS code_doc_assessments (
+  code_doc_assessment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  run_id INTEGER NOT NULL REFERENCES inventory_runs(run_id) ON DELETE CASCADE,
+  code_fact_id INTEGER NOT NULL REFERENCES code_facts(code_fact_id) ON DELETE CASCADE,
+  generated_claims INTEGER NOT NULL DEFAULT 0,
+  current_claims INTEGER NOT NULL DEFAULT 0,
+  current_grounded_claims INTEGER NOT NULL DEFAULT 0,
+  coverage_depth TEXT NOT NULL CHECK(coverage_depth IN (
+    'current_grounded',
+    'current_claim_unverified',
+    'generated_only',
+    'uncovered',
+    'not_required'
+  )),
+  relevance_priority TEXT NOT NULL CHECK(relevance_priority IN ('critical', 'high', 'medium', 'low', 'none')),
+  best_doc_path TEXT,
+  rationale TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_code_doc_assessments_run_depth ON code_doc_assessments(run_id, coverage_depth);
+CREATE INDEX IF NOT EXISTS idx_code_doc_assessments_fact ON code_doc_assessments(code_fact_id);
 
 CREATE TABLE IF NOT EXISTS reader_collections (
   collection_id INTEGER PRIMARY KEY AUTOINCREMENT,
