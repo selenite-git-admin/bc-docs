@@ -36,10 +36,10 @@ related_sessions:
 | v2 confirm phase | 2026-06-24T06:53Z → 2026-06-24T06:57Z (~4 min, 3 confirms, writer concurrency = 1) |
 | Substrate snapshot at start of v2 | 26 / 62 / 194 active |
 | Substrate snapshot at v2 complete | 26 / 62 / 194 active (66 total characteristic rows including 3 new draft + 1 pre-existing draft) |
-| v2 panel-builder design | [bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md](../../work-records/implementation/bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md) |
-| v2 packets used | `.claude/pass1-c1-packet-builder-v2-2026-06-24.json` (3 panel_ready_retry packets) |
-| v2 outcomes JSONL (panel) | `.claude/pass1-c1-v2-panel-outcomes-2026-06-24.jsonl` |
-| v2 outcomes JSONL (confirm) | `.claude/pass1-c1-v2-confirm-outcomes-2026-06-24.jsonl` |
+| v2 panel-builder design | [bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md](bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md) |
+| v2 packets used | [`.claude/pass1-c1-packet-builder-v2-2026-06-24.json`](../../../barecount-devhub/.claude/pass1-c1-packet-builder-v2-2026-06-24.json) (3 panel_ready_retry packets) |
+| v2 outcomes JSONL (panel) | [`.claude/pass1-c1-v2-panel-outcomes-2026-06-24.jsonl`](../../../barecount-devhub/.claude/pass1-c1-v2-panel-outcomes-2026-06-24.jsonl) |
+| v2 outcomes JSONL (confirm) | [`.claude/pass1-c1-v2-confirm-outcomes-2026-06-24.jsonl`](../../../barecount-devhub/.claude/pass1-c1-v2-confirm-outcomes-2026-06-24.jsonl) |
 
 ## 2. v2 panel outcomes (3 rows)
 

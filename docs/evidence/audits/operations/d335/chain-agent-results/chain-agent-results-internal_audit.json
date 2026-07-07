@@ -1,0 +1,512 @@
+{
+  "subfunction": "internal_audit",
+  "boMappings": {
+    "bc_internal_audit_operations": {
+      "number_of_comprehensible_reports": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_reports": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "audit_report_issuance_date": {
+        "bfName": "bc_internal_audit_ops_analysis_assessment_inputs",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "audit_planning_start_date": {
+        "bfName": "bc_internal_audit_ops_analysis_assessment_inputs",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_data_issues_identified": {
+        "bfName": "bc_internal_audit_ops_identified_risks_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_data_points_reviewed": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_conclusions_with_sufficient_evidence": {
+        "bfName": "bc_internal_audit_ops_number_of_conclusions_with_sufficient_evidence",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_conclusions": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_recurring_audit_findings": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_prior_audit_findings_reviewed": {
+        "bfName": "bc_internal_audit_ops_total_number_of_prior_audit_findings_reviewed",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "sum_of_weighted_finding_severity": {
+        "bfName": "bc_internal_audit_ops_sum_of_weighted_finding_severity",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_number_of_findings": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "qualitative_assessment_score": {
+        "bfName": "bc_internal_audit_ops_qualitative_assessment_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_audit_issues_closed": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_audit_issues_due_for_closure": {
+        "bfName": "bc_internal_audit_ops_total_number_of_audit_issues_due_for_closure",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "number_of_audits_completed_as_per_plan": {
+        "bfName": "bc_internal_audit_ops_number_of_audits_completed_as_per_plan",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_audits_in_plan": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "automated_audit_processes": {
+        "bfName": "bc_internal_audit_ops_automated_audit_processes",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_audit_processes": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_implemented_recommendations": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_audit_recommendations_issued": {
+        "bfName": "bc_internal_audit_ops_total_cost_after_recommendations",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "productive_audit_hours": {
+        "bfName": "bc_internal_audit_ops_productive_audit_hours",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_available_audit_hours": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "scoped_areas_audited": {
+        "bfName": "bc_internal_audit_ops_scoped_areas_audited",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_scoped_areas": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_certified_audit_staff": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_internal_audit_staff": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_staff_rotated": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_audits_using_technology": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_audit_engagements": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_audit_days_across_all_audits": {
+        "bfName": "bc_internal_audit_ops_total_audit_days_across_all_audits",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "number_of_completed_audits": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "compliance_obligations_met": {
+        "bfName": "bc_internal_audit_ops_compliance_obligations_met",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_compliance_obligations": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_processes_under_continuous_monitoring": {
+        "bfName": "bc_internal_audit_ops_number_of_processes_under_continuous_monitoring",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_critical_processes_or_risk_areas": {
+        "bfName": "bc_internal_audit_ops_total_critical_processes_or_risk_areas",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "internal_audit_assessment_score": {
+        "bfName": "bc_internal_audit_ops_internal_audit_assessment_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cost_before_recommendations": {
+        "bfName": "bc_internal_audit_ops_total_cost_before_recommendations",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_cost_after_recommendations": {
+        "bfName": "bc_internal_audit_ops_total_cost_after_recommendations",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_exception_items": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_items_audited": {
+        "bfName": "bc_internal_audit_ops_strategic_risks_audited_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_integrated_audits": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "number_of_digitized_audit_processes": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_internal_audit_processes": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "sum_of_auditor_training_hours": {
+        "bfName": "bc_internal_audit_ops_sum_of_auditor_training_hours",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "sum_of_identified_material_issues": {
+        "bfName": "bc_internal_audit_ops_sum_of_identified_material_issues",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "risks_mitigated_count": {
+        "bfName": "bc_internal_audit_ops_risks_mitigated_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "identified_risks_count": {
+        "bfName": "bc_internal_audit_ops_identified_risks_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "analysis_assessment_inputs": {
+        "bfName": "bc_internal_audit_ops_analysis_assessment_inputs",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "satisfaction_feedback_inputs": {
+        "bfName": "bc_internal_audit_ops_satisfaction_feedback_inputs",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "strategic_risks_audited_count": {
+        "bfName": "bc_internal_audit_ops_strategic_risks_audited_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_strategic_risks_count": {
+        "bfName": "bc_internal_audit_ops_total_strategic_risks_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "effective_controls_count": {
+        "bfName": "bc_internal_audit_ops_effective_controls_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_controls_tested_count": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_whistleblower_reports_received": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "bc_internal_audit_operations": {
+      "exists": true,
+      "contractId": "019d774b-2487-7cec-93c3-3ff6e0fefdce",
+      "name": "cc__bc_internal_audit_operations",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "audit_communication_effectiveness",
+      "status": "exists",
+      "name": "mc__audit_communication_effectiveness"
+    },
+    {
+      "metric": "audit_cycle_time",
+      "status": "exists",
+      "name": "mc__audit_cycle_time"
+    },
+    {
+      "metric": "audit_data_quality",
+      "status": "exists",
+      "name": "mc__audit_data_quality"
+    },
+    {
+      "metric": "audit_evidence_sufficiency",
+      "status": "exists",
+      "name": "mc__audit_evidence_sufficiency"
+    },
+    {
+      "metric": "audit_finding_recurrence_rate",
+      "status": "exists",
+      "name": "mc__audit_finding_recurrence_rate"
+    },
+    {
+      "metric": "audit_finding_severity_level",
+      "status": "exists",
+      "name": "mc__audit_finding_severity_level"
+    },
+    {
+      "metric": "audit_impact",
+      "status": "exists",
+      "name": "mc__audit_impact"
+    },
+    {
+      "metric": "audit_issue_closure_rate",
+      "status": "exists",
+      "name": "mc__audit_issue_closure_rate"
+    },
+    {
+      "metric": "audit_methodology_adequacy",
+      "status": "exists",
+      "name": "mc__audit_methodology_adequacy"
+    },
+    {
+      "metric": "audit_plan_achievement_ratio",
+      "status": "exists",
+      "name": "mc__audit_plan_achievement_ratio"
+    },
+    {
+      "metric": "audit_process_automation_level",
+      "status": "exists",
+      "name": "mc__audit_process_automation_level"
+    },
+    {
+      "metric": "audit_quality",
+      "status": "exists",
+      "name": "mc__audit_quality"
+    },
+    {
+      "metric": "audit_recommendation_implementation_rate",
+      "status": "exists",
+      "name": "mc__audit_recommendation_implementation_rate"
+    },
+    {
+      "metric": "audit_report_clarity",
+      "status": "exists",
+      "name": "mc__audit_report_clarity"
+    },
+    {
+      "metric": "audit_resource_utilization",
+      "status": "exists",
+      "name": "mc__audit_resource_utilization"
+    },
+    {
+      "metric": "audit_scope_adherence",
+      "status": "exists",
+      "name": "mc__audit_scope_adherence"
+    },
+    {
+      "metric": "audit_staff_certification_rate",
+      "status": "exists",
+      "name": "mc__audit_staff_certification_rate"
+    },
+    {
+      "metric": "audit_staff_rotation_rate",
+      "status": "exists",
+      "name": "mc__audit_staff_rotation_rate"
+    },
+    {
+      "metric": "audit_team_competency",
+      "status": "exists",
+      "name": "mc__audit_team_competency"
+    },
+    {
+      "metric": "audit_technology_utilization",
+      "status": "exists",
+      "name": "mc__audit_technology_utilization"
+    },
+    {
+      "metric": "audit_timeliness",
+      "status": "exists",
+      "name": "mc__audit_timeliness"
+    },
+    {
+      "metric": "benchmarking_effectiveness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "compliance_effectiveness",
+      "status": "exists",
+      "name": "mc__compliance_effectiveness"
+    },
+    {
+      "metric": "continuous_monitoring_adoption",
+      "status": "exists",
+      "name": "mc__continuous_monitoring_adoption"
+    },
+    {
+      "metric": "control_environment_strength",
+      "status": "exists",
+      "name": "mc__control_environment_strength"
+    },
+    {
+      "metric": "cost_savings_from_audit_recommendations",
+      "status": "exists",
+      "name": "mc__cost_savings_from_audit_recommendations"
+    },
+    {
+      "metric": "exception_items_rate",
+      "status": "exists",
+      "name": "mc__exception_items_rate"
+    },
+    {
+      "metric": "integrated_audit_approach_utilization",
+      "status": "exists",
+      "name": "mc__integrated_audit_approach_utilization"
+    },
+    {
+      "metric": "internal_audit_independence",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "internal_audit_process_digitization_rate",
+      "status": "exists",
+      "name": "mc__internal_audit_process_digitization_rate"
+    },
+    {
+      "metric": "internal_audit_training_hours",
+      "status": "exists",
+      "name": "mc__internal_audit_training_hours"
+    },
+    {
+      "metric": "internal_control_training_effectiveness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "material_misstatement_identification",
+      "status": "exists",
+      "name": "mc__material_misstatement_identification"
+    },
+    {
+      "metric": "pre_audit_preparation_adequacy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "recommendations_implemented_rate",
+      "status": "exists",
+      "name": "mc__recommendations_implemented_rate"
+    },
+    {
+      "metric": "regulatory_change_adaptability",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "risk_appetite_alignment",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "risk_assessment_effectiveness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "risk_mitigation_rate",
+      "status": "exists",
+      "name": "mc__risk_mitigation_rate"
+    },
+    {
+      "metric": "root_cause_analysis_thoroughness",
+      "status": "exists",
+      "name": "mc__root_cause_analysis_thoroughness"
+    },
+    {
+      "metric": "stakeholder_satisfaction",
+      "status": "exists",
+      "name": "mc__stakeholder_satisfaction"
+    },
+    {
+      "metric": "strategic_risk_coverage",
+      "status": "exists",
+      "name": "mc__strategic_risk_coverage"
+    },
+    {
+      "metric": "test_of_controls_effectiveness",
+      "status": "exists",
+      "name": "mc__test_of_controls_effectiveness"
+    },
+    {
+      "metric": "whistleblower_reports_handled",
+      "status": "exists",
+      "name": "mc__whistleblower_reports_handled"
+    }
+  ]
+}

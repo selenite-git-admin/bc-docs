@@ -1,0 +1,1043 @@
+{
+  "subfunction": "fpa",
+  "boMappings": {
+    "actual_ledger": {
+      "total_annual_in_store_sales": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_annual_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_ad_spend": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_gross_profit_from_retail_stores": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_revenue_from_retail_stores": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_bank_fees": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_financial_result": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_expenditure": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_financial_figure": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "current_period_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "prior_period_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "annual_sales_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "average_stockholders_equity": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "total_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cost_of_goods_sold": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "operating_expenses": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "net_income": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "interest_expense": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "tax_expense": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "depreciation_and_amortization": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_financial_outcomes": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "net_sales": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "actual_value": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "current_period_lfl_sales": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "prior_period_lfl_sales": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "liquid_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_or_projected_sales": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "break_even_sales": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "actual_total_financial_performance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "annual_revenue_loss_without_ai": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "annual_revenue_loss_with_ai": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "inventory_carrying_cost_without_gen_ai": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "inventory_carrying_cost_with_gen_ai": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "warehousing_cost_without_gen_ai": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "warehousing_cost_with_gen_ai": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_inventory_cost": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_personnel_cost": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_total_sales": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "revenue_per_employee_after_automation": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "revenue_per_employee_before_automation": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "money_lost_from_mistakes_after_automation": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_finance_cost_after_automation": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_finance_cost_before_automation": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "ytd_run_rate": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "one_time_items": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "ytd_actuals": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "book_value_of_equity": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "research_development_expenses": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_cost_of_automation_implementation": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_cost_of_rpa_implementation": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_results": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "selling_general_administrative_expenses": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "interest_expenses": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_operating_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "location_area": {
+      "total_retail_selling_square_footage": {
+        "bfName": "location_area_physical_area_measure",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "gaap_income_statement": {
+      "total_annual_operating_income": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "current_period_gross_profit": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "prior_period_gross_profit": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "budget_ledger_hdr": {
+      "approved_budget_amount": {
+        "bfName": "budget_ledger_hdr_status_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "number_of_budget_reforecasts": {
+        "bfName": "budget_ledger_hdr_status_code",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "low"
+      },
+      "allocated_budget_amount": {
+        "bfName": "budget_ledger_hdr_status_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "number_of_budget_versions": {
+        "bfName": "budget_ledger_hdr_status_code",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "low"
+      },
+      "approved_capital_budget": {
+        "bfName": "budget_ledger_hdr_status_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "budget_final_approval_date": {
+        "bfName": "budget_ledger_hdr_effective_end_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "budget_initiation_date": {
+        "bfName": "budget_ledger_hdr_effective_end_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "variance_percentage": {
+        "bfName": "budget_ledger_hdr_effective_end_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_on_time_forecast_submissions": {
+        "bfName": "budget_ledger_hdr_last_modification_date_time",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_finance_learning_budget": {
+        "bfName": "budget_ledger_hdr_status_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "annual_budget_cycle_time_with_ai": {
+        "bfName": "budget_ledger_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "annual_budget_cycle_time_without_ai": {
+        "bfName": "budget_ledger_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_planning_days": {
+        "bfName": "budget_ledger_hdr_effective_end_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "quarter_end_variance": {
+        "bfName": "budget_ledger_hdr_effective_end_date",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "year_end_variance": {
+        "bfName": "budget_ledger_hdr_effective_end_date",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "total_dwes_in_planning_management_accounting": {
+        "bfName": "budget_ledger_hdr_effective_end_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "asset": {
+      "capitalized_improvements_to_assets": {
+        "bfName": "asset_effective_to",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "initial_investment": {
+        "bfName": "asset_initial_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "gaap_cash_flow": {
+      "proceeds_from_asset_sales": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "operating_cash_flow": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      }
+    },
+    "invoice_hdr": {
+      "total_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "ap_cost_per_invoice_with_ai": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "ap_cost_per_invoice_without_ai": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "item_master": {
+      "lead_time": {
+        "bfName": "item_master_lead_time_duration",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      }
+    },
+    "receivable_hdr": {
+      "estimated_uncollected_balances_with_ai": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "estimated_uncollected_balances_without_ai": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "employee_work_schedule": {
+      "total_operating_hours": {
+        "bfName": "employee_work_schedule_scheduled_hours_quantity",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "customer_party_master": {
+      "number_of_active_customers": {
+        "bfName": "customer_party_master_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "high"
+      }
+    }
+  },
+  "ccResults": {
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 48
+    },
+    "location_area": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-0233-7abd-b608-83dd1c68a001",
+      "name": "cc__location_area"
+    },
+    "gaap_income_statement": {
+      "exists": true,
+      "contractId": "019d762a-1944-7468-ba8b-f605ef2f8067",
+      "name": "cc__gaap_income_statement",
+      "mappingsAdded": 3
+    },
+    "budget_ledger_hdr": {
+      "exists": true,
+      "contractId": "019d7663-f27e-7c14-bd51-aa05ea8d4038",
+      "name": "cc__budget_ledger_hdr",
+      "mappingsAdded": 16
+    },
+    "asset": {
+      "exists": true,
+      "contractId": "019d7701-d9db-728f-89ad-60f06fdf4f42",
+      "name": "cc__asset",
+      "mappingsAdded": 2
+    },
+    "gaap_cash_flow": {
+      "exists": true,
+      "contractId": "019d762a-1884-7cd0-8aca-30f6eb805929",
+      "name": "cc__gaap_cash_flow",
+      "mappingsAdded": 1
+    },
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr",
+      "mappingsAdded": 2
+    },
+    "item_master": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-02e8-769e-bbdc-8f7898a88c07",
+      "name": "cc__item_master"
+    },
+    "receivable_hdr": {
+      "exists": true,
+      "contractId": "019d762a-13e9-789e-86ad-02afdad6eb24",
+      "name": "cc__receivable_hdr",
+      "mappingsAdded": 2
+    },
+    "employee_work_schedule": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-0330-7e46-8140-590b1b08fe34",
+      "name": "cc__employee_work_schedule"
+    },
+    "customer_party_master": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-036d-7f08-8d3b-dc8382c6acb7",
+      "name": "cc__customer_party_master"
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "average_annual_in_store_sales_per_square_foot_of_brick_and_mortar_retail",
+      "status": "created",
+      "name": "mc__average_annual_in_store_sales_per_square_foot_of_brick_and_mortar_retail",
+      "coBindings": 2
+    },
+    {
+      "metric": "average_annual_operating_margin",
+      "status": "created",
+      "name": "mc__average_annual_operating_margin",
+      "coBindings": 2
+    },
+    {
+      "metric": "average_cost_per_click_for_an_online_retail_ad",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "average_gross_profitability_for_brick_and_mortar_retail_stores",
+      "status": "created",
+      "name": "mc__average_gross_profitability_for_brick_and_mortar_retail_stores",
+      "coBindings": 1
+    },
+    {
+      "metric": "bank_fee_variance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "budget_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "budget_execution_rate",
+      "status": "created",
+      "name": "mc__budget_execution_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "budget_reforecast_frequency",
+      "status": "created",
+      "name": "mc__budget_reforecast_frequency",
+      "coBindings": 1
+    },
+    {
+      "metric": "budget_utilization_rate",
+      "status": "created",
+      "name": "mc__budget_utilization_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "budget_variance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "budget_versions_produced_before_final_approval",
+      "status": "created",
+      "name": "mc__budget_versions_produced_before_final_approval",
+      "coBindings": 1
+    },
+    {
+      "metric": "business_entity_annual_revenue_growth",
+      "status": "created",
+      "name": "mc__business_entity_annual_revenue_growth",
+      "coBindings": 1
+    },
+    {
+      "metric": "business_entity_revenue_per_business_entity_fte",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "capital_budget_adherence",
+      "status": "created",
+      "name": "mc__capital_budget_adherence",
+      "coBindings": 2
+    },
+    {
+      "metric": "capital_expenditure_capex",
+      "status": "created",
+      "name": "mc__capital_expenditure_capex",
+      "coBindings": 3
+    },
+    {
+      "metric": "capital_turnover_ratio",
+      "status": "created",
+      "name": "mc__capital_turnover_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "cash_flow",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "complete_the_annual_budget",
+      "status": "created",
+      "name": "mc__complete_the_annual_budget",
+      "coBindings": 1
+    },
+    {
+      "metric": "cost_center_variance_distribution",
+      "status": "created",
+      "name": "mc__cost_center_variance_distribution",
+      "coBindings": 1
+    },
+    {
+      "metric": "cost_variance",
+      "status": "exists",
+      "name": "mc__cost_variance"
+    },
+    {
+      "metric": "credit_rating",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "debt_ratio",
+      "status": "exists",
+      "name": "mc__debt_ratio"
+    },
+    {
+      "metric": "earnings_before_interest_and_taxes_ebit",
+      "status": "exists",
+      "name": "mc__earnings_before_interest_and_taxes_ebit"
+    },
+    {
+      "metric": "earnings_before_interest_taxes_depreciation_and_amortization_ebitda",
+      "status": "created",
+      "name": "mc__earnings_before_interest_taxes_depreciation_and_amortization_ebitda",
+      "coBindings": 1
+    },
+    {
+      "metric": "employees_with_compensations_affected_by_budget_versus_actual_variances",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "employees_with_compensations_affected_by_profit",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "estimate_if_not_using_process_automation_business_entity_revenue_per_business",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "etr_vs_statutory_rate_variance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "financial_forecast_created_through_touchless_processing",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "financial_scenario_planning_effectiveness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "fixed_asset_turnover",
+      "status": "exists",
+      "name": "mc__fixed_asset_turnover"
+    },
+    {
+      "metric": "forecast_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "forecast_bias",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "forecast_submission_timeliness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "forecasted_stockout_risk",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "gross_profit_growth_year_over_year_yoy",
+      "status": "created",
+      "name": "mc__gross_profit_growth_year_over_year_yoy",
+      "coBindings": 1
+    },
+    {
+      "metric": "headcount_variance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "learning_budget_per_finance_function_employee",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "like_for_like_lfl_brick_and_mortar_retail_sales_growth",
+      "status": "created",
+      "name": "mc__like_for_like_lfl_brick_and_mortar_retail_sales_growth",
+      "coBindings": 1
+    },
+    {
+      "metric": "liquidity",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "margin_of_safety",
+      "status": "created",
+      "name": "mc__margin_of_safety",
+      "coBindings": 1
+    },
+    {
+      "metric": "ml_forecast_confidence_score",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "net_present_value_npv",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "optimal_scenario_recommendation_score",
+      "status": "exists",
+      "name": "mc__optimal_scenario_recommendation_score"
+    },
+    {
+      "metric": "overall_financial_forecast_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percent_reduction_in_annual_revenue_loss_leakage_achieved_through_ai",
+      "status": "created",
+      "name": "mc__percent_reduction_in_annual_revenue_loss_leakage_achieved_through_ai",
+      "coBindings": 1
+    },
+    {
+      "metric": "percentage_achieved_from_supply_chain_generative_ai_use_for_reduced_inventory",
+      "status": "created",
+      "name": "mc__percentage_achieved_from_supply_chain_generative_ai_use_for_reduced_inventory",
+      "coBindings": 1
+    },
+    {
+      "metric": "percentage_achieved_from_supply_chain_generative_ai_use_for_reduced_warehousing",
+      "status": "created",
+      "name": "mc__percentage_achieved_from_supply_chain_generative_ai_use_for_reduced_warehousing",
+      "coBindings": 1
+    },
+    {
+      "metric": "percentage_error_for_the_inventory_cost_forecast",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_error_for_the_personnel_cost_forecast",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_error_for_the_total_sales_forecast",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_improvement_achieved_in_external_customer_satisfaction_from_finance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_improvement_achieved_in_finance_function_employee_engagement_scores",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_improvement_achieved_in_profit_per_employee_from_finance_function",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_improvement_achieved_in_quality_accuracy_for_financial_planning_and",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_improvement_achieved_in_quality_accuracy_for_order_to_cash_from",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_improvement_achieved_in_quality_accuracy_for_procure_to_pay_from",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_improvement_achieved_in_quality_accuracy_for_record_to_report_from",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_improvement_achieved_in_revenue_per_employee_from_finance_function",
+      "status": "created",
+      "name": "mc__percentage_improvement_achieved_in_revenue_per_employee_from_finance_function",
+      "coBindings": 1
+    },
+    {
+      "metric": "percentage_reduction_achieved_in_cycle_time_for_financial_planning_and_analysis",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_reduction_achieved_in_cycle_time_for_procure_to_pay_from_finance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_reduction_achieved_in_cycle_times_for_order_to_cash_from_finance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_reduction_achieved_in_cycle_times_for_record_to_report_from_finance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_reduction_achieved_in_finance_function_headcount_from_finance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_reduction_achieved_in_finance_function_personnel_time_spent_doing",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_reduction_achieved_in_finance_function_personnel_voluntary_turnover",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_reduction_achieved_in_money_lost_from_mistakes_balancing_out_prior",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "percentage_reduction_achieved_in_overall_finance_function_cost_from_finance",
+      "status": "created",
+      "name": "mc__percentage_reduction_achieved_in_overall_finance_function_cost_from_finance",
+      "coBindings": 1
+    },
+    {
+      "metric": "percentage_that_ai_in_financial_planning_and_analysis_has_reduced_the_average",
+      "status": "created",
+      "name": "mc__percentage_that_ai_in_financial_planning_and_analysis_has_reduced_the_average",
+      "coBindings": 1
+    },
+    {
+      "metric": "percentage_that_ai_in_order_to_cash_is_estimated_to_reduce_the_total_annual",
+      "status": "created",
+      "name": "mc__percentage_that_ai_in_order_to_cash_is_estimated_to_reduce_the_total_annual",
+      "coBindings": 1
+    },
+    {
+      "metric": "percentage_that_ai_in_procure_to_pay_has_reduced_the_total_annual_cost_for",
+      "status": "created",
+      "name": "mc__percentage_that_ai_in_procure_to_pay_has_reduced_the_total_annual_cost_for",
+      "coBindings": 1
+    },
+    {
+      "metric": "percentage_that_ai_in_record_to_report_has_reduced_the_average_cycle_time_for",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "plan_vs_actual_variance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "planning_cycle_time",
+      "status": "created",
+      "name": "mc__planning_cycle_time",
+      "coBindings": 1
+    },
+    {
+      "metric": "predicted_variance_quarter_end",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "predicted_year_end_budget_variance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "price_to_book_ratio_p_b",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "price_to_sales_ratio_p_s",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "profitability_forecast",
+      "status": "exists",
+      "name": "mc__profitability_forecast"
+    },
+    {
+      "metric": "research_development_to_revenue_ratio",
+      "status": "created",
+      "name": "mc__research_development_to_revenue_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "revenue_forecast_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "revenue_variance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "roi_achieved_with_finance_process_automation_all_types_of_automation",
+      "status": "created",
+      "name": "mc__roi_achieved_with_finance_process_automation_all_types_of_automation",
+      "coBindings": 2
+    },
+    {
+      "metric": "roi_achieved_with_rpa_in_finance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "rolling_forecast_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "scenario_coverage",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "sg_a_to_revenue_ratio",
+      "status": "created",
+      "name": "mc__sg_a_to_revenue_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "strategic_investment_decision_success_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "time_finance_related_chatbots_bots_and_dwes_not_available_for_use",
+      "status": "created",
+      "name": "mc__time_finance_related_chatbots_bots_and_dwes_not_available_for_use",
+      "coBindings": 2
+    },
+    {
+      "metric": "times_interest_earned_tie",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "total_dwes_in_process_group_perform_planning_and_management_accounting_per",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "total_dwes_in_process_group_perform_planning_and_management_accounting_per_1",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "total_revenue_per_active_customer",
+      "status": "created",
+      "name": "mc__total_revenue_per_active_customer",
+      "coBindings": 2
+    },
+    {
+      "metric": "typical_operating_cost_forecast_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "variance_analysis",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "variance_explanation_coverage",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    }
+  ]
+}

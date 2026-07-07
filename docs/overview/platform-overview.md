@@ -19,7 +19,7 @@ governing_adrs:
   - DEC-c06f41 (Spine expansion to eight sections plus a home; the documentation's structural authority)
   - DEC-376587 (Section renames; the canonical section names)
   - DEC-9c58c6 (Operating Model section name; the no-article register that the home overview honors when naming the section)
-  - DEC-3395bc (bc-docs-v3 SSOT cutover; the documentation home that the bc-admin reader fetches against)
+  - DEC-3395bc (bc-docs SSOT cutover; the documentation home that the bc-admin reader fetches against)
   - DEC-b97390 (bc-admin embedded reader is canonical; the home of the reader sidebar)
   - DEC-a4e550 (ADR-First Decision Workflow; the registry the documentation's Decisions peer holds)
   - DEC-ebf0b4 (Session Discipline and Data Integrity Rules; the engineering-session discipline the documentation's drafting workflow honors)
@@ -149,7 +149,7 @@ The chapter is the authority for the rationale and the design intent; the refere
 
 ## Repository and Reader
 
-The documentation lives at the bc-docs-v3 repository per `DEC-3395bc`. The bc-admin embedded reader is the canonical reader per `DEC-b97390`. The reader fetches manifest, Markdown, and assets from bc-core's JWT-guarded `/api/docs/*` endpoints; the bc-admin sync-docs script bridges bc-docs-v3 to bc-core's `private-docs/` directory; the bc-core docs controller serves the content with rate limiting, audit logging, and the anti-scraping discipline. Documentation System (within Development) records the substrate; this overview locates it.
+The documentation lives at the bc-docs repository per `DEC-3395bc`. The bc-admin embedded reader is the canonical reader per `DEC-b97390`. The reader fetches manifest, Markdown, and assets from bc-core's JWT-guarded `/api/docs/*` endpoints; the bc-admin sync-docs script bridges bc-docs to bc-core's `private-docs/` directory; the bc-core docs controller serves the content with rate limiting, audit logging, and the anti-scraping discipline. Documentation System (within Development) records the substrate; this overview locates it.
 
 The legacy `legacy v2 archive` repository is read-only archive. New chapters land in v3; the v2 SOPs migration is queued.
 
@@ -179,7 +179,7 @@ The documentation rests on a small set of structural decisions. Each row carries
 | DEC-c06f41 | Spine expansion to eight sections plus a home | Governs documentation structure: the eight sections plus this home is the canonical spine |
 | DEC-376587 | Section renames | Governs documentation structure: the section names are the canonical labels |
 | DEC-9c58c6 | Operating Model section name | Governs documentation structure: the no-article register for sections; section-internal mid-sentence usage admits the lowercase article |
-| DEC-3395bc | bc-docs-v3 SSOT cutover | Governs the documentation's home repository, the v3 layout, and the bc-core docs endpoints |
+| DEC-3395bc | bc-docs SSOT cutover | Governs the documentation's home repository, the v3 layout, and the bc-core docs endpoints |
 | DEC-b97390 | bc-admin embedded reader | Governs the canonical reader; the bc-admin reader is the reference rendering |
 | DEC-a4e550 | ADR-First Decision Workflow | Governs the Decisions peer; ADR file is SSOT, DevHub holds metadata |
 | DEC-ebf0b4 | Session Discipline and Data Integrity Rules | Governs the engineering session discipline that drafts and revises the chapters |
@@ -208,10 +208,10 @@ This overview routes governance to the owning chapter or owning section. The bou
 - DEC-c06f41 (Spine expansion to eight sections plus a home)
 - DEC-376587 (Section renames)
 - DEC-9c58c6 (Operating Model section name)
-- DEC-3395bc (bc-docs-v3 SSOT cutover)
+- DEC-3395bc (bc-docs SSOT cutover)
 - DEC-b97390 (bc-admin embedded reader)
 - DEC-a4e550 (ADR-First Decision Workflow)
 - DEC-ebf0b4 (Session Discipline and Data Integrity Rules)
-- bc-docs-v3 outline.md (the framework)
-- bc-docs-v3 HANDOFF.md (the per-session entry point)
+- bc-docs outline.md (the framework)
+- bc-docs HANDOFF.md (the per-session entry point)
 - `scripts/reference/aws-rewrite-checklist.md` (the eighty-eight earned voice patterns)

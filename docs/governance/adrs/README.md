@@ -44,49 +44,49 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-246a24` | [Stack naming: bc-{stage}-{series}-{domain}](ADR-246a24.md) | implemented |  |
+| `DEC-246a24` | [Stack naming: bc-{stage}-{series}-{domain}](./ADR-246a24.md) | implemented |  |
 
 #### frontend-sdk
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-13a260` | [Frontend SDK: amazon-cognito-identity-js (not Amplify)](ADR-13a260.md) | implemented |  |
+| `DEC-13a260` | [Frontend SDK: amazon-cognito-identity-js (not Amplify)](./ADR-13a260.md) | implemented |  |
 
 #### mfa
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-912f4f` | [Cognito-managed TOTP MFA (optional, admin-enforceable)](ADR-912f4f.md) | implemented |  |
+| `DEC-912f4f` | [Cognito-managed TOTP MFA (optional, admin-enforceable)](./ADR-912f4f.md) | implemented |  |
 
 #### nestjs-guards
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-f6c2e5` | [Global auth guard on bc-core with @Public() exceptions](ADR-f6c2e5.md) | implemented |  |
+| `DEC-f6c2e5` | [Global auth guard on bc-core with @Public() exceptions](./ADR-f6c2e5.md) | implemented |  |
 
 #### npm-supply-chain
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-441665` | [NPM supply chain mitigation via AWS CodeArtifact](ADR-441665.md) | implemented |  |
+| `DEC-441665` | [NPM supply chain mitigation via AWS CodeArtifact](./ADR-441665.md) | implemented |  |
 
 #### tech-stack
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-5d4b1b` | [bc-website v2 tech stack — Astro + React islands + Tailwind](ADR-5d4b1b.md) | implemented |  |
+| `DEC-5d4b1b` | [bc-website v2 tech stack — Astro + React islands + Tailwind](./ADR-5d4b1b.md) | implemented |  |
 
 #### tenancy
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-8dc51d` | [bc-portal: resolve x-tenant-id from JWT claim at runtime, not from build-time env](ADR-8dc51d.md) | decided |  |
+| `DEC-8dc51d` | [bc-portal: resolve x-tenant-id from JWT claim at runtime, not from build-time env](./ADR-8dc51d.md) | decided |  |
 
 #### token-strategy
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-a537bf` | [Cognito JWT end-to-end token strategy](ADR-a537bf.md) | implemented |  |
+| `DEC-a537bf` | [Cognito JWT end-to-end token strategy](./ADR-a537bf.md) | implemented |  |
 
 ### bc-portal
 
@@ -94,8 +94,8 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-6cdceb` | [bc-portal surface split — Beyond (viewing) + Settings/Workspace + Settings/Data Infra (plumbing)](ADR-6cdceb.md) | implemented | supersedes [DEC-04dade](ADR-04dade.md) |
-| `DEC-7e76b9` | [Retire v2 dashboards entirely — single Beyond surface, no toggle](ADR-7e76b9.md) | implemented | supersedes [DEC-2e801a](ADR-2e801a.md) |
+| `DEC-6cdceb` | [bc-portal surface split — Beyond (viewing) + Settings/Workspace + Settings/Data Infra (plumbing)](./ADR-6cdceb.md) | implemented | supersedes [DEC-04dade](./ADR-04dade.md) |
+| `DEC-7e76b9` | [Retire v2 dashboards entirely — single Beyond surface, no toggle](./ADR-7e76b9.md) | implemented | supersedes [DEC-2e801a](./ADR-2e801a.md) |
 
 ### canonical
 
@@ -103,7 +103,7 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-6d8be5` | [D225: Bottom-Up Canonical Chain Generation from Metric Formula Variables](ADR-6d8be5.md) | superseded | superseded by [DEC-f1dae0](ADR-f1dae0.md) |
+| `DEC-6d8be5` | [D225: Bottom-Up Canonical Chain Generation from Metric Formula Variables](./ADR-6d8be5.md) | superseded | superseded by [DEC-f1dae0](./ADR-f1dae0.md) |
 
 ### connectors
 
@@ -111,38 +111,38 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ecd55c` | [Connection authority reconciled — config in platform runtime.connection (D168), credentials in AWS Secrets Manager](ADR-ecd55c.md) | decided |  |
+| `DEC-ecd55c` | [Connection authority reconciled — config in platform runtime.connection (D168), credentials in AWS Secrets Manager](./ADR-ecd55c.md) | decided |  |
 
 #### connectors
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-9f801c` | [Connector tenant usage: read-only visibility in platform admin](ADR-9f801c.md) | implemented |  |
-| `DEC-adeba8` | [Connector category: external_source for non-operational reference data sources](ADR-adeba8.md) | implemented |  |
+| `DEC-9f801c` | [Connector tenant usage: read-only visibility in platform admin](./ADR-9f801c.md) | implemented |  |
+| `DEC-adeba8` | [Connector category: external_source for non-operational reference data sources](./ADR-adeba8.md) | implemented |  |
 
 #### dev-service-orchestration
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-890417` | [pm2 for multi-project dev service management](ADR-890417.md) | superseded | superseded by [DEC-9b23a7](ADR-9b23a7.md) |
+| `DEC-890417` | [pm2 for multi-project dev service management](./ADR-890417.md) | superseded | superseded by [DEC-9b23a7](./ADR-9b23a7.md) |
 
 #### mcp-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-d6f6e1` | [DevHub as MCP server](ADR-d6f6e1.md) | implemented |  |
+| `DEC-d6f6e1` | [DevHub as MCP server](./ADR-d6f6e1.md) | implemented |  |
 
 #### port-allocation
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-2589d0` | [Port 4200 for bc-sdg OData server (D014 dev tools range)](ADR-2589d0.md) | implemented |  |
+| `DEC-2589d0` | [Port 4200 for bc-sdg OData server (D014 dev tools range)](./ADR-2589d0.md) | implemented |  |
 
 #### sfdc-catalog
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-103528` | [SFDC Source Catalog — Salesforce native cloud grouping, CPQ deferred](ADR-103528.md) | implemented |  |
+| `DEC-103528` | [SFDC Source Catalog — Salesforce native cloud grouping, CPQ deferred](./ADR-103528.md) | implemented |  |
 
 ### contract
 
@@ -150,876 +150,876 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1ce490` | [contract.business_field is the certified BF-BO catalog](ADR-1ce490.md) | decided |  |
+| `DEC-1ce490` | [contract.business_field is the certified BF-BO catalog](./ADR-1ce490.md) | decided |  |
 
 ### contracts
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-000002` | [Contract lifecycle in Admin app, enforcement in Platform Host](ADR-0002.md) | superseded |  |
-| `DEC-000003` | [Three-contract model — Raw, GDP, KPI](ADR-0003.md) | superseded |  |
-| `DEC-2e4cb3` | [BO/BF is organizational grouping, not computational node in contract chain](ADR-2e4cb3.md) | implemented |  |
-| `DEC-381254` | [Source Catalog: Admissions → Source Contracts (extraction + source + admission)](ADR-381254.md) | superseded |  |
-| `DEC-4282d7` | [Admin Portal IA v3 — Catalog/Chain/AI-ML separation](ADR-4282d7.md) | superseded |  |
-| `DEC-58bf7f` | [Platform vs Tenant API Scope — Role-Based Middleware Bypass](ADR-58bf7f.md) | superseded |  |
-| `DEC-637072` | [Derived Canonical Fields — Compute Rules in CC Field Mapping](ADR-637072.md) | implemented |  |
-| `DEC-739207` | [Information Architecture v3 — Contracts group, Scoping removed, nav reorder](ADR-739207.md) | superseded |  |
-| `DEC-9361cd` | [CC Field Mapping: 1-BF-to-Many-CFs + Filter + Canonical Uniqueness](ADR-9361cd.md) | implemented |  |
-| `DEC-9a5dc0` | [CF Boundary — Reporting Standards Promote to Canonical Fields](ADR-9a5dc0.md) | decided |  |
-| `DEC-9d1f4b` | [Shared Dimension Normalization in CC Field Selection](ADR-9d1f4b.md) | decided |  |
-| `DEC-ae0d33` | [Source contracts pivot on SO Detail page, not standalone nav](ADR-ae0d33.md) | superseded |  |
-| `DEC-be4ff9` | [Serverless deployment: Lambda + Fargate split](ADR-be4ff9.md) | superseded |  |
-| `DEC-bebaec` | [Chain Completeness SSOT — Definition of Complete + Persisted Chain Status](ADR-bebaec.md) | implemented |  |
-| `DEC-c6180d` | [Business Chain — nav group + onboarding workbench + bulk monitor](ADR-c6180d.md) | implemented |  |
-| `DEC-cbc07b` | [Type Conformance Enforcement — Source Object through Metric Snapshot](ADR-cbc07b.md) | proposed |  |
-| `DEC-f66378` | [BO-Scoped BF Composition — No Shared Observation Fields Across BOs](ADR-f66378.md) | implemented |  |
-| `DEC-pending` | [Contract Chain Invariants — Machine-Checkable Integrity Rules](ADR-chain-invariants.md) | proposed |  |
+| `DEC-000002` | [Contract lifecycle in Admin app, enforcement in Platform Host](./ADR-0002.md) | superseded |  |
+| `DEC-000003` | [Three-contract model — Raw, GDP, KPI](./ADR-0003.md) | superseded |  |
+| `DEC-2e4cb3` | [BO/BF is organizational grouping, not computational node in contract chain](./ADR-2e4cb3.md) | implemented |  |
+| `DEC-381254` | [Source Catalog: Admissions → Source Contracts (extraction + source + admission)](./ADR-381254.md) | superseded |  |
+| `DEC-4282d7` | [Admin Portal IA v3 — Catalog/Chain/AI-ML separation](./ADR-4282d7.md) | superseded |  |
+| `DEC-58bf7f` | [Platform vs Tenant API Scope — Role-Based Middleware Bypass](./ADR-58bf7f.md) | superseded |  |
+| `DEC-637072` | [Derived Canonical Fields — Compute Rules in CC Field Mapping](./ADR-637072.md) | implemented |  |
+| `DEC-739207` | [Information Architecture v3 — Contracts group, Scoping removed, nav reorder](./ADR-739207.md) | superseded |  |
+| `DEC-9361cd` | [CC Field Mapping: 1-BF-to-Many-CFs + Filter + Canonical Uniqueness](./ADR-9361cd.md) | implemented |  |
+| `DEC-9a5dc0` | [CF Boundary — Reporting Standards Promote to Canonical Fields](./ADR-9a5dc0.md) | decided |  |
+| `DEC-9d1f4b` | [Shared Dimension Normalization in CC Field Selection](./ADR-9d1f4b.md) | decided |  |
+| `DEC-ae0d33` | [Source contracts pivot on SO Detail page, not standalone nav](./ADR-ae0d33.md) | superseded |  |
+| `DEC-be4ff9` | [Serverless deployment: Lambda + Fargate split](./ADR-be4ff9.md) | superseded |  |
+| `DEC-bebaec` | [Chain Completeness SSOT — Definition of Complete + Persisted Chain Status](./ADR-bebaec.md) | implemented |  |
+| `DEC-c6180d` | [Business Chain — nav group + onboarding workbench + bulk monitor](./ADR-c6180d.md) | implemented |  |
+| `DEC-cbc07b` | [Type Conformance Enforcement — Source Object through Metric Snapshot](./ADR-cbc07b.md) | proposed |  |
+| `DEC-f66378` | [BO-Scoped BF Composition — No Shared Observation Fields Across BOs](./ADR-f66378.md) | implemented |  |
+| `DEC-pending` | [Contract Chain Invariants — Machine-Checkable Integrity Rules](./ADR-chain-invariants.md) | proposed |  |
 
 #### aggregation
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-35b34b` | [Aggregation Authority — Metric Formulas Own Aggregation; cc_field_mapping.resolution_rule_code Becomes Documentary](ADR-35b34b.md) | decided |  |
+| `DEC-35b34b` | [Aggregation Authority — Metric Formulas Own Aggregation; cc_field_mapping.resolution_rule_code Becomes Documentary](./ADR-35b34b.md) | decided |  |
 
 #### architecture-docs
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-afdb59` | [BareCount Component Architecture Diagram — canonical reference](ADR-afdb59.md) | implemented |  |
+| `DEC-afdb59` | [BareCount Component Architecture Diagram — canonical reference](./ADR-afdb59.md) | implemented |  |
 
 #### as-of-balance
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-83fda0` | [Route B — As-of/Stock/Balance metrics via open-item canonical (postings−clearings netting) + unified temporal-gate grammar](ADR-83fda0.md) | decided | supersedes [DEC-c012c0](ADR-c012c0.md), [DEC-1db1c7](ADR-1db1c7.md) |
+| `DEC-83fda0` | [Route B — As-of/Stock/Balance metrics via open-item canonical (postings−clearings netting) + unified temporal-gate grammar](./ADR-83fda0.md) | decided | supersedes [DEC-c012c0](./ADR-c012c0.md), [DEC-1db1c7](./ADR-1db1c7.md) |
 
 #### bc-admin-cleanup
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-bd5fed` | [Orphaned routes — remove from router](ADR-bd5fed.md) | implemented |  |
+| `DEC-bd5fed` | [Orphaned routes — remove from router](./ADR-bd5fed.md) | implemented |  |
 
 #### bc-admin-ia
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-824ae2` | [Data Sources UI — redesign from execution model, not pipeline thinking](ADR-824ae2.md) | implemented |  |
+| `DEC-824ae2` | [Data Sources UI — redesign from execution model, not pipeline thinking](./ADR-824ae2.md) | implemented |  |
 
 #### bc-core-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-affb24` | [17 shared services as NestJS modules in bc-core](ADR-affb24.md) | implemented |  |
+| `DEC-affb24` | [17 shared services as NestJS modules in bc-core](./ADR-affb24.md) | implemented |  |
 
 #### bc-portal-ia
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-06cb2c` | [Two sectors in bc-portal: CXO Portal + Control Plane (gated)](ADR-06cb2c.md) | decided |  |
+| `DEC-06cb2c` | [Two sectors in bc-portal: CXO Portal + Control Plane (gated)](./ADR-06cb2c.md) | decided |  |
 
 #### bcf-admission-policy
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ec341c` | [Admission scope as primary policy axis (cross_function / function_scoped / industry_scoped)](ADR-ec341c.md) | decided |  |
+| `DEC-ec341c` | [Admission scope as primary policy axis (cross_function / function_scoped / industry_scoped)](./ADR-ec341c.md) | decided |  |
 
 #### bcf/supersession
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-9d27a9` | [BCF supersession-cascade: fail-closed guard on supersede + systematic consumer remediation](ADR-9d27a9.md) | decided |  |
+| `DEC-9d27a9` | [BCF supersession-cascade: fail-closed guard on supersede + systematic consumer remediation](./ADR-9d27a9.md) | decided |  |
 
 #### business-object-model
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-683cf3` | [Business Object tiers — basic (business events) vs derived (accounting artifacts)](ADR-683cf3.md) | implemented |  |
-| `DEC-f1dae0` | [Standards-First BF/BO Creation — OAGIS Primary, Metrics Validate](ADR-f1dae0.md) | implemented | supersedes [DEC-6d8be5](ADR-6d8be5.md) |
+| `DEC-683cf3` | [Business Object tiers — basic (business events) vs derived (accounting artifacts)](./ADR-683cf3.md) | implemented |  |
+| `DEC-f1dae0` | [Standards-First BF/BO Creation — OAGIS Primary, Metrics Validate](./ADR-f1dae0.md) | implemented | supersedes [DEC-6d8be5](./ADR-6d8be5.md) |
 
 #### business-vocabulary
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-68f2c7` | [company_code is a shared dimension BF (5th D292 exception)](ADR-68f2c7.md) | implemented |  |
+| `DEC-68f2c7` | [company_code is a shared dimension BF (5th D292 exception)](./ADR-68f2c7.md) | implemented |  |
 
 #### canonical-field
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-d72560` | [Canonical Field as 3rd Contract Primitive — Two-Vocabulary Model with CC as Translator](ADR-d72560.md) | superseded | superseded by [DEC-a17d0f](ADR-a17d0f.md) |
+| `DEC-d72560` | [Canonical Field as 3rd Contract Primitive — Two-Vocabulary Model with CC as Translator](./ADR-d72560.md) | superseded | superseded by [DEC-a17d0f](./ADR-a17d0f.md) |
 
 #### canonical-field-governance
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-a49413` | [SDA Phase 1 implementation profile: CF semantic_family classification with multi-vendor advisory panel](ADR-a49413.md) | proposed |  |
+| `DEC-a49413` | [SDA Phase 1 implementation profile: CF semantic_family classification with multi-vendor advisory panel](./ADR-a49413.md) | proposed |  |
 
 #### catalog
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-149ab2` | [BCF Authority Delegation — Framework Approval for the Business Context Framework](ADR-149ab2.md) | decided |  |
-| `DEC-54f221` | [Controlled Semantic Refactor — three-layer model (Interpretation Surfaces / Implementation Names / Compatibility Names) — supersedes DEC-7a1c98](ADR-54f221.md) | decided | supersedes [DEC-7a1c98](ADR-7a1c98.md) |
-| `DEC-65dc86` | [BCF is the forward governance model for business meaning; BF/BO is legacy compatibility](ADR-65dc86.md) | decided |  |
-| `DEC-6c57e2` | [Legacy Vocabulary Stack Quarantine — BF/BO/CF/CM physically retained, semantically non-authoritative](ADR-6c57e2.md) | decided |  |
-| `DEC-7a1c98` | [Vocabulary Lock for the Opaque Workflow-Code Family — MMS / MCF doctrinal renaming policy](ADR-7a1c98.md) | superseded | superseded by [DEC-54f221](ADR-54f221.md) |
-| `DEC-a19428` | [Pre-production Legacy Active-Runtime Retirement — authorize archival ahead of MCF re-authoring; preserve carve-outs](ADR-a19428.md) | decided |  |
-| `DEC-b8ec00` | [BF-BO Catalog Expansion Factory](ADR-b8ec00.md) | decided |  |
-| `DEC-c3e57f` | [Foundational Metric Context Framework (MCF) — sibling of BCF for metric meaning and metric-context packages](ADR-c3e57f.md) | decided |  |
-| `DEC-f8f925` | [Foundational Metric Context Framework (MCF) — sibling of BCF for metric meaning and metric-context packages](ADR-f8f925.md) | reversed | superseded by [DEC-c3e57f](ADR-c3e57f.md) |
-| `DEC-f94895` | [A1–A5 Program Authorization — BCF × OAGIS Broad Foundation Buildout](ADR-f94895.md) | decided |  |
+| `DEC-149ab2` | [BCF Authority Delegation — Framework Approval for the Business Context Framework](./ADR-149ab2.md) | decided |  |
+| `DEC-54f221` | [Controlled Semantic Refactor — three-layer model (Interpretation Surfaces / Implementation Names / Compatibility Names) — supersedes DEC-7a1c98](./ADR-54f221.md) | decided | supersedes [DEC-7a1c98](./ADR-7a1c98.md) |
+| `DEC-65dc86` | [BCF is the forward governance model for business meaning; BF/BO is legacy compatibility](./ADR-65dc86.md) | decided |  |
+| `DEC-6c57e2` | [Legacy Vocabulary Stack Quarantine — BF/BO/CF/CM physically retained, semantically non-authoritative](./ADR-6c57e2.md) | decided |  |
+| `DEC-7a1c98` | [Vocabulary Lock for the Opaque Workflow-Code Family — MMS / MCF doctrinal renaming policy](./ADR-7a1c98.md) | superseded | superseded by [DEC-54f221](./ADR-54f221.md) |
+| `DEC-a19428` | [Pre-production Legacy Active-Runtime Retirement — authorize archival ahead of MCF re-authoring; preserve carve-outs](./ADR-a19428.md) | decided |  |
+| `DEC-b8ec00` | [BF-BO Catalog Expansion Factory](./ADR-b8ec00.md) | decided |  |
+| `DEC-c3e57f` | [Foundational Metric Context Framework (MCF) — sibling of BCF for metric meaning and metric-context packages](./ADR-c3e57f.md) | decided |  |
+| `DEC-f8f925` | [Foundational Metric Context Framework (MCF) — sibling of BCF for metric meaning and metric-context packages](./ADR-f8f925.md) | reversed | superseded by [DEC-c3e57f](./ADR-c3e57f.md) |
+| `DEC-f94895` | [A1–A5 Program Authorization — BCF × OAGIS Broad Foundation Buildout](./ADR-f94895.md) | decided |  |
 
 #### concept-registry/identity
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-f4e9a0` | [Customer Invoice identity = composite {Legal Entity (ref), document number, document fiscal year}; introduce Legal Entity entity](ADR-f4e9a0.md) | proposed |  |
+| `DEC-f4e9a0` | [Customer Invoice identity = composite {Legal Entity (ref), document number, document fiscal year}; introduce Legal Entity entity](./ADR-f4e9a0.md) | proposed |  |
 
 #### connectors
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-5dfee7` | [Public data sources auto-connect without credentials; per-connector legal file](ADR-5dfee7.md) | implemented |  |
+| `DEC-5dfee7` | [Public data sources auto-connect without credentials; per-connector legal file](./ADR-5dfee7.md) | implemented |  |
 
 #### contract-authoring
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-426b24` | [Contract Creation Framework — SC + AC Entry Boundary Pattern](ADR-426b24.md) | implemented |  |
-| `DEC-5fd322` | [Observation Contract is the central design-time artifact, readers are runtime executors](ADR-5fd322.md) | implemented |  |
+| `DEC-426b24` | [Contract Creation Framework — SC + AC Entry Boundary Pattern](./ADR-426b24.md) | implemented |  |
+| `DEC-5fd322` | [Observation Contract is the central design-time artifact, readers are runtime executors](./ADR-5fd322.md) | implemented |  |
 
 #### contract-generation
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-d6a1d4` | [Contract Generation Service — programmatic, not hand-built JSON](ADR-d6a1d4.md) | implemented |  |
+| `DEC-d6a1d4` | [Contract Generation Service — programmatic, not hand-built JSON](./ADR-d6a1d4.md) | implemented |  |
 
 #### contract-governance
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-804874` | [Persisted L-node verification with semantic-family classification](ADR-804874.md) | implemented |  |
+| `DEC-804874` | [Persisted L-node verification with semantic-family classification](./ADR-804874.md) | implemented |  |
 
 #### contract-primitive
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-aa6251` | [Contract Primitives — BO and BF as First-Class Governed Artifacts](ADR-aa6251.md) | implemented |  |
-| `DEC-baaa09` | [Source contracts are business-function-agnostic — function_code belongs on canonical/metric layer only](ADR-baaa09.md) | decided |  |
+| `DEC-aa6251` | [Contract Primitives — BO and BF as First-Class Governed Artifacts](./ADR-aa6251.md) | implemented |  |
+| `DEC-baaa09` | [Source contracts are business-function-agnostic — function_code belongs on canonical/metric layer only](./ADR-baaa09.md) | decided |  |
 
 #### contracts/activation
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-29b518` | [Fix fail-open activation/publication gates X5/X4 (D429 Step 4)](ADR-29b518.md) | decided |  |
+| `DEC-29b518` | [Fix fail-open activation/publication gates X5/X4 (D429 Step 4)](./ADR-29b518.md) | decided |  |
 
 #### contracts/business-field
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-6edbe3` | [D409 catalog factory — four-stage division of labor (Rules shortlist → AI panel → Endpoint gates → Operator approval)](ADR-6edbe3.md) | decided |  |
+| `DEC-6edbe3` | [D409 catalog factory — four-stage division of labor (Rules shortlist → AI panel → Endpoint gates → Operator approval)](./ADR-6edbe3.md) | decided |  |
 
 #### contracts/canonical
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-0f15a7` | [date_add — additive D330 compute function for net-due-date derivation](ADR-0f15a7.md) | decided |  |
-| `DEC-7d2f8c` | [D461 derivation home — canonical-boundary 1-hop derived fields; cross-concept comparison at the metric boundary (corrects DEC-bc6be2 observation-boundary mechanism + design-doc L2/L3)](ADR-7d2f8c.md) | decided |  |
-| `DEC-7f2e73` | [MCF Reference-Stamping — edge-resolved reference attributes on the Canonical Object (customer-axis Component A)](ADR-7f2e73.md) | decided |  |
-| `DEC-a6258b` | [Canonical Contract field-level semantic identity (implements DEC-02f5a9 schema-key)](ADR-a6258b.md) | decided |  |
-| `DEC-acce2b` | [CC-v2 canonical resolution engine — runtime SO→CO for field_selection contracts (replaces canonical_mapping resolver)](ADR-acce2b.md) | proposed |  |
+| `DEC-0f15a7` | [date_add — additive D330 compute function for net-due-date derivation](./ADR-0f15a7.md) | decided |  |
+| `DEC-7d2f8c` | [D461 derivation home — canonical-boundary 1-hop derived fields; cross-concept comparison at the metric boundary (corrects DEC-bc6be2 observation-boundary mechanism + design-doc L2/L3)](./ADR-7d2f8c.md) | decided |  |
+| `DEC-7f2e73` | [MCF Reference-Stamping — edge-resolved reference attributes on the Canonical Object (customer-axis Component A)](./ADR-7f2e73.md) | decided |  |
+| `DEC-a6258b` | [Canonical Contract field-level semantic identity (implements DEC-02f5a9 schema-key)](./ADR-a6258b.md) | decided |  |
+| `DEC-acce2b` | [CC-v2 canonical resolution engine — runtime SO→CO for field_selection contracts (replaces canonical_mapping resolver)](./ADR-acce2b.md) | proposed |  |
 
 #### contracts/core-chain-consolidation
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-b54a43` | [Core chain consolidation: canonical context/onboarding/execution/store path, mark-don't-delete cleanup, core-then-tenant sequencing](ADR-b54a43.md) | decided |  |
+| `DEC-b54a43` | [Core chain consolidation: canonical context/onboarding/execution/store path, mark-don't-delete cleanup, core-then-tenant sequencing](./ADR-b54a43.md) | decided |  |
 
 #### contracts/metric
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-7bdd03` | [Guard the legacy Metric Contract authoring door (D429 Step 3)](ADR-7bdd03.md) | decided |  |
+| `DEC-7bdd03` | [Guard the legacy Metric Contract authoring door (D429 Step 3)](./ADR-7bdd03.md) | decided |  |
 
 #### contracts/observation
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-4a17e0` | [Observation Contract field-level semantic identity (sibling to DEC-a6258b; old Business Field role)](ADR-4a17e0.md) | decided |  |
+| `DEC-4a17e0` | [Observation Contract field-level semantic identity (sibling to DEC-a6258b; old Business Field role)](./ADR-4a17e0.md) | decided |  |
 
 #### dimensional-modeling
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-8672d0` | [Conformed dimension tables (dim_*) as platform SSOT for grain](ADR-8672d0.md) | implemented |  |
+| `DEC-8672d0` | [Conformed dimension tables (dim_*) as platform SSOT for grain](./ADR-8672d0.md) | implemented |  |
 
 #### evaluation-engine
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1efa47` | [Grain key-source mismatch: fiscal_period vs evaluation_period must be disambiguated](ADR-1efa47.md) | proposed |  |
+| `DEC-1efa47` | [Grain key-source mismatch: fiscal_period vs evaluation_period must be disambiguated](./ADR-1efa47.md) | proposed |  |
 
 #### execution-model
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-2342bf` | [Backfill and batch execution model — distinct from live observation](ADR-2342bf.md) | decided |  |
+| `DEC-2342bf` | [Backfill and batch execution model — distinct from live observation](./ADR-2342bf.md) | decided |  |
 
 #### fiscal-calendar
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-a8e8fc` | [CC declares posting_date_field; canonical resolution enriches payload with fiscal_period + fiscal_year](ADR-a8e8fc.md) | proposed |  |
+| `DEC-a8e8fc` | [CC declares posting_date_field; canonical resolution enriches payload with fiscal_period + fiscal_year](./ADR-a8e8fc.md) | proposed |  |
 
 #### framework-approval
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-47a4e7` | [C5 operator-driven transition expansion (operatorAdvance)](ADR-47a4e7.md) | decided |  |
-| `DEC-c338b3` | [BF/BO versioning model for supersede-active (Model E)](ADR-c338b3.md) | decided |  |
+| `DEC-47a4e7` | [C5 operator-driven transition expansion (operatorAdvance)](./ADR-47a4e7.md) | decided |  |
+| `DEC-c338b3` | [BF/BO versioning model for supersede-active (Model E)](./ADR-c338b3.md) | decided |  |
 
 #### go-to-market
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-77f4b5` | [Demo-to-Contract Strategy — Synthetic Data Hook + SAP Licensing Gate](ADR-77f4b5.md) | implemented |  |
+| `DEC-77f4b5` | [Demo-to-Contract Strategy — Synthetic Data Hook + SAP Licensing Gate](./ADR-77f4b5.md) | implemented |  |
 
 #### governance
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-7b15c7` | [Pause MCF materialization until contract governance hardening completes](ADR-7b15c7.md) | decided |  |
-| `DEC-d5fb43` | [Contract Version Format — Semver, Release Notes, Tenant Notifications](ADR-d5fb43.md) | implemented |  |
+| `DEC-7b15c7` | [Pause MCF materialization until contract governance hardening completes](./ADR-7b15c7.md) | decided |  |
+| `DEC-d5fb43` | [Contract Version Format — Semver, Release Notes, Tenant Notifications](./ADR-d5fb43.md) | implemented |  |
 
 #### governance-lifecycle
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-f26528` | [Governance lifecycle uses 'in_review' not 'submitted'](ADR-f26528.md) | implemented |  |
+| `DEC-f26528` | [Governance lifecycle uses 'in_review' not 'submitted'](./ADR-f26528.md) | implemented |  |
 
 #### marketing-content
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-38c8bb` | [bc-website v2 Direction — Marketing-First, Separate Voice Register](ADR-38c8bb.md) | decided |  |
+| `DEC-38c8bb` | [bc-website v2 Direction — Marketing-First, Separate Voice Register](./ADR-38c8bb.md) | decided |  |
 
 #### mc-envelope
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-889238` | [MC Envelope Governance — deduplication policy](ADR-889238.md) | decided |  |
-| `DEC-af8247` | [Cross-domain metric scope and tenant applicability policy](ADR-af8247.md) | decided |  |
+| `DEC-889238` | [MC Envelope Governance — deduplication policy](./ADR-889238.md) | decided |  |
+| `DEC-af8247` | [Cross-domain metric scope and tenant applicability policy](./ADR-af8247.md) | decided |  |
 
 #### metric-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-29c324` | [Metric contracts reference N canonical objects, not one](ADR-29c324.md) | implemented |  |
-| `DEC-8f09d9` | [Restore Computation Grain to Metric Contract Body](ADR-8f09d9.md) | implemented |  |
+| `DEC-29c324` | [Metric contracts reference N canonical objects, not one](./ADR-29c324.md) | implemented |  |
+| `DEC-8f09d9` | [Restore Computation Grain to Metric Contract Body](./ADR-8f09d9.md) | implemented |  |
 
 #### metric-store
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-61f7c8` | [MCF Clean Single Published Metric-Contract Store (amends D426)](ADR-61f7c8.md) | decided |  |
+| `DEC-61f7c8` | [MCF Clean Single Published Metric-Contract Store (amends D426)](./ADR-61f7c8.md) | decided |  |
 
 #### naming-convention
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ea5074` | [SC/AC Naming Convention — sc__{system}__{table}](ADR-ea5074.md) | implemented |  |
+| `DEC-ea5074` | [SC/AC Naming Convention — sc__{system}__{table}](./ADR-ea5074.md) | implemented |  |
 
 #### navigation-ia
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-8c232d` | [Metric Catalog: 2-page flat navigation, drop domain/module drill-down](ADR-8c232d.md) | implemented |  |
+| `DEC-8c232d` | [Metric Catalog: 2-page flat navigation, drop domain/module drill-down](./ADR-8c232d.md) | implemented |  |
 
 #### payload-storage
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-9bffcd` | [BF-SF aliases as relational table, not JSONB](ADR-9bffcd.md) | implemented |  |
+| `DEC-9bffcd` | [BF-SF aliases as relational table, not JSONB](./ADR-9bffcd.md) | implemented |  |
 
 #### project-organization
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-29e378` | [BareCount project taxonomy — 7 projects](ADR-29e378.md) | implemented |  |
-| `DEC-3d4949` | [Backend lives in separate bc-core repo](ADR-3d4949.md) | implemented |  |
-| `DEC-d4a383` | [Infrastructure lives in dedicated infra repo](ADR-d4a383.md) | implemented |  |
+| `DEC-29e378` | [BareCount project taxonomy — 7 projects](./ADR-29e378.md) | implemented |  |
+| `DEC-3d4949` | [Backend lives in separate bc-core repo](./ADR-3d4949.md) | implemented |  |
+| `DEC-d4a383` | [Infrastructure lives in dedicated infra repo](./ADR-d4a383.md) | implemented |  |
 
 #### quarantine-and-retirement
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-f48f99` | [D418 Historical FK Sink Classification](ADR-f48f99.md) | decided |  |
+| `DEC-f48f99` | [D418 Historical FK Sink Classification](./ADR-f48f99.md) | decided |  |
 
 #### reader-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-136a23` | [Observation Contract stays reader-scoped, field_affinity is the sharing layer](ADR-136a23.md) | decided |  |
-| `DEC-bf5e61` | [Reader Configuration Presets — fixed option lists, foundation-aligned](ADR-bf5e61.md) | implemented |  |
+| `DEC-136a23` | [Observation Contract stays reader-scoped, field_affinity is the sharing layer](./ADR-136a23.md) | decided |  |
+| `DEC-bf5e61` | [Reader Configuration Presets — fixed option lists, foundation-aligned](./ADR-bf5e61.md) | implemented |  |
 
 #### readers
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-22ed4b` | [Material Master vs Product Master — distinct readers](ADR-22ed4b.md) | implemented |  |
-| `DEC-625d0b` | [Reader contract readiness: bound flavors / total flavors](ADR-625d0b.md) | implemented |  |
-| `DEC-6fc629` | [Build All Custom UinBAT Readers — No Airbyte Runtime Dependency](ADR-6fc629.md) | implemented |  |
-| `DEC-b10dad` | [Exchange Rate Reader: One reader, flavor-detected, source-specific contracts](ADR-b10dad.md) | implemented |  |
-| `DEC-b36558` | [Operational config and connections are tenant-scoped, not on reader definition](ADR-b36558.md) | implemented |  |
+| `DEC-22ed4b` | [Material Master vs Product Master — distinct readers](./ADR-22ed4b.md) | implemented |  |
+| `DEC-625d0b` | [Reader contract readiness: bound flavors / total flavors](./ADR-625d0b.md) | implemented |  |
+| `DEC-6fc629` | [Build All Custom UinBAT Readers — No Airbyte Runtime Dependency](./ADR-6fc629.md) | implemented |  |
+| `DEC-b10dad` | [Exchange Rate Reader: One reader, flavor-detected, source-specific contracts](./ADR-b10dad.md) | implemented |  |
+| `DEC-b36558` | [Operational config and connections are tenant-scoped, not on reader definition](./ADR-b36558.md) | implemented |  |
 
 #### semantic-vocabulary
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-02f5a9` | [Business Concept Registry: vocabulary identity model and greenfield rebuild](ADR-02f5a9.md) | decided | supersedes [DEC-a17d0f](ADR-a17d0f.md) |
-| `DEC-26b6e2` | [Immutable Characteristic Atoms](ADR-26b6e2.md) | decided |  |
-| `DEC-a17d0f` | [Semantic Definitions Authority for governed vocabulary primitives](ADR-a17d0f.md) | superseded | supersedes [DEC-5017fe](ADR-5017fe.md), [DEC-d72560](ADR-d72560.md) |
-| `DEC-b7affa` | [Amendment to DEC-a17d0f: BF-CF semantic-family compatibility gate (G11)](ADR-b7affa.md) | decided |  |
-| `DEC-fb0b12` | [Editorial Amendment of Active Characteristic Definitions — Refinement of DEC-26b6e2](ADR-fb0b12.md) | decided |  |
+| `DEC-02f5a9` | [Business Concept Registry: vocabulary identity model and greenfield rebuild](./ADR-02f5a9.md) | decided | supersedes [DEC-a17d0f](./ADR-a17d0f.md) |
+| `DEC-26b6e2` | [Immutable Characteristic Atoms](./ADR-26b6e2.md) | decided |  |
+| `DEC-a17d0f` | [Semantic Definitions Authority for governed vocabulary primitives](./ADR-a17d0f.md) | superseded | supersedes [DEC-5017fe](./ADR-5017fe.md), [DEC-d72560](./ADR-d72560.md) |
+| `DEC-b7affa` | [Amendment to DEC-a17d0f: BF-CF semantic-family compatibility gate (G11)](./ADR-b7affa.md) | decided |  |
+| `DEC-fb0b12` | [Editorial Amendment of Active Characteristic Definitions — Refinement of DEC-26b6e2](./ADR-fb0b12.md) | decided |  |
 
 #### source-catalog
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-192116` | [Source system tabs by business category, not transport mechanism](ADR-192116.md) | implemented |  |
-| `DEC-c8dd31` | [Reference-to-Source Catalog promotion — governed copy with draft status](ADR-c8dd31.md) | implemented |  |
+| `DEC-192116` | [Source system tabs by business category, not transport mechanism](./ADR-192116.md) | implemented |  |
+| `DEC-c8dd31` | [Reference-to-Source Catalog promotion — governed copy with draft status](./ADR-c8dd31.md) | implemented |  |
 
 #### source-onboarding
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-fc41a3` | [Source Chain Contract Generation — SAP ECC Finance](ADR-fc41a3.md) | implemented |  |
+| `DEC-fc41a3` | [Source Chain Contract Generation — SAP ECC Finance](./ADR-fc41a3.md) | implemented |  |
 
 #### tenant-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-176a8e` | [Contracts are platform-only — tenant customization via contract_binding](ADR-176a8e.md) | implemented |  |
+| `DEC-176a8e` | [Contracts are platform-only — tenant customization via contract_binding](./ADR-176a8e.md) | implemented |  |
 
 #### tenant-onboarding
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ad76e9` | [Three-Phase Tenant Onboarding — instant value, gap closure, consulting](ADR-ad76e9.md) | implemented |  |
+| `DEC-ad76e9` | [Three-Phase Tenant Onboarding — instant value, gap closure, consulting](./ADR-ad76e9.md) | implemented |  |
 
 #### tenant-topology
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-f02230` | [Tenant DB schema organization — 6 schemas with data/identity/admin separation](ADR-f02230.md) | implemented |  |
+| `DEC-f02230` | [Tenant DB schema organization — 6 schemas with data/identity/admin separation](./ADR-f02230.md) | implemented |  |
 
 #### ui-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-7eec2e` | [Chain-based navigation for bc-admin v1.0.0](ADR-7eec2e.md) | implemented |  |
+| `DEC-7eec2e` | [Chain-based navigation for bc-admin v1.0.0](./ADR-7eec2e.md) | implemented |  |
 
 ### database
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-0a5947` | [bc-admin Information Architecture — 5 navigation groups](ADR-0a5947.md) | superseded |  |
-| `DEC-177c52` | [Operational tables moved from Platform DB to Tenant DB](ADR-177c52.md) | superseded |  |
-| `DEC-24b4ec` | [Contract Registry — 7 Contract Types](ADR-24b4ec.md) | superseded |  |
-| `DEC-2bd5d6` | [Monorepo with npm workspaces](ADR-2bd5d6.md) | superseded |  |
-| `DEC-3196eb` | [Drop operational schema — discovery to operations, connections tenant-only](ADR-3196eb.md) | superseded |  |
-| `DEC-351108` | [Contract-Typed Payload Tables + Reader Batch Write Model](ADR-351108.md) | superseded |  |
-| `DEC-42421d` | [Contract-Typed Payload Tables — known schema gets real columns, JSONB payload columns dropped](ADR-42421d.md) | superseded |  |
-| `DEC-43e93f` | [5 schema categories: extractor, source, gdp, kpi, ai](ADR-43e93f.md) | superseded |  |
-| `DEC-5fa096` | [Landscape vs Catalog: superset/subset with promotion-approval workflow](ADR-5fa096.md) | superseded |  |
-| `DEC-70573b` | [Navigation IA v4 — Source Catalog, Source Chain, Canonical Map, Metric Chain](ADR-70573b.md) | superseded |  |
-| `DEC-71c50d` | [Universal Protocol Readers — Connector Reclassification & Onboarding-Embedded Provisioning](ADR-71c50d.md) | superseded |  |
-| `DEC-8c489b` | [Evidence as Structural Lineage — FK chain IS the evidence, no separate evidence table](ADR-8c489b.md) | superseded |  |
-| `DEC-974ff3` | [Source-Chain Contract Binding Model & Meta-Schema Correction](ADR-974ff3.md) | superseded |  |
-| `DEC-9e0cd0` | [Contract-Typed Payload Tables — known schema gets real columns, not JSONB](ADR-9e0cd0.md) | superseded |  |
-| `DEC-a25931` | [JSONB-first for boundary payloads, typed tables immediately after via D210](ADR-a25931.md) | superseded | superseded by [DEC-95687d](ADR-95687d.md) |
-| `DEC-a5df75` | [Contract Registry — separate service vs API monolith](ADR-a5df75.md) | superseded | superseded by [DEC-856d61](ADR-856d61.md) |
-| `DEC-ac05fc` | [Three contract chains: Source → Metric → AI (layered, feed-forward)](ADR-ac05fc.md) | superseded |  |
-| `DEC-c2f499` | [Control Plane / Data Plane Architecture Split](ADR-c2f499.md) | superseded |  |
-| `DEC-c318b2` | [Tenant Database Segregation — separate DB per tenant](ADR-c318b2.md) | superseded |  |
-| `DEC-c3fef3` | [Runner dual-write — operational logs to platform, business data to tenant](ADR-c3fef3.md) | superseded |  |
-| `DEC-d2eeb8` | [Schema namespace reorganization + table pluralization — sequence with tenant isolation](ADR-d2eeb8.md) | superseded |  |
+| `DEC-0a5947` | [bc-admin Information Architecture — 5 navigation groups](./ADR-0a5947.md) | superseded |  |
+| `DEC-177c52` | [Operational tables moved from Platform DB to Tenant DB](./ADR-177c52.md) | superseded |  |
+| `DEC-24b4ec` | [Contract Registry — 7 Contract Types](./ADR-24b4ec.md) | superseded |  |
+| `DEC-2bd5d6` | [Monorepo with npm workspaces](./ADR-2bd5d6.md) | superseded |  |
+| `DEC-3196eb` | [Drop operational schema — discovery to operations, connections tenant-only](./ADR-3196eb.md) | superseded |  |
+| `DEC-351108` | [Contract-Typed Payload Tables + Reader Batch Write Model](./ADR-351108.md) | superseded |  |
+| `DEC-42421d` | [Contract-Typed Payload Tables — known schema gets real columns, JSONB payload columns dropped](./ADR-42421d.md) | superseded |  |
+| `DEC-43e93f` | [5 schema categories: extractor, source, gdp, kpi, ai](./ADR-43e93f.md) | superseded |  |
+| `DEC-5fa096` | [Landscape vs Catalog: superset/subset with promotion-approval workflow](./ADR-5fa096.md) | superseded |  |
+| `DEC-70573b` | [Navigation IA v4 — Source Catalog, Source Chain, Canonical Map, Metric Chain](./ADR-70573b.md) | superseded |  |
+| `DEC-71c50d` | [Universal Protocol Readers — Connector Reclassification & Onboarding-Embedded Provisioning](./ADR-71c50d.md) | superseded |  |
+| `DEC-8c489b` | [Evidence as Structural Lineage — FK chain IS the evidence, no separate evidence table](./ADR-8c489b.md) | superseded |  |
+| `DEC-974ff3` | [Source-Chain Contract Binding Model & Meta-Schema Correction](./ADR-974ff3.md) | superseded |  |
+| `DEC-9e0cd0` | [Contract-Typed Payload Tables — known schema gets real columns, not JSONB](./ADR-9e0cd0.md) | superseded |  |
+| `DEC-a25931` | [JSONB-first for boundary payloads, typed tables immediately after via D210](./ADR-a25931.md) | superseded | superseded by [DEC-95687d](./ADR-95687d.md) |
+| `DEC-a5df75` | [Contract Registry — separate service vs API monolith](./ADR-a5df75.md) | superseded | superseded by [DEC-856d61](./ADR-856d61.md) |
+| `DEC-ac05fc` | [Three contract chains: Source → Metric → AI (layered, feed-forward)](./ADR-ac05fc.md) | superseded |  |
+| `DEC-c2f499` | [Control Plane / Data Plane Architecture Split](./ADR-c2f499.md) | superseded |  |
+| `DEC-c318b2` | [Tenant Database Segregation — separate DB per tenant](./ADR-c318b2.md) | superseded |  |
+| `DEC-c3fef3` | [Runner dual-write — operational logs to platform, business data to tenant](./ADR-c3fef3.md) | superseded |  |
+| `DEC-d2eeb8` | [Schema namespace reorganization + table pluralization — sequence with tenant isolation](./ADR-d2eeb8.md) | superseded |  |
 
 #### ai-verification
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-40b650` | [AI-assisted catalog verification — hybrid model with gated enterprise controls](ADR-40b650.md) | implemented |  |
+| `DEC-40b650` | [AI-assisted catalog verification — hybrid model with gated enterprise controls](./ADR-40b650.md) | implemented |  |
 
 #### aws-deployment
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-495eaf` | [AWS Target Deployment Topology — Design Now, Deploy After E2E](ADR-495eaf.md) | implemented |  |
+| `DEC-495eaf` | [AWS Target Deployment Topology — Design Now, Deploy After E2E](./ADR-495eaf.md) | implemented |  |
 
 #### bc-admin
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-011c93` | [Schema contracts managed via DB + Admin UI, not repo seed files](ADR-011c93.md) | implemented |  |
-| `DEC-520b33` | [bc-admin port: 3010 (reassigned from Datajettyadminportal)](ADR-520b33.md) | implemented |  |
-| `DEC-9c5dbe` | [Operations group removed — ops monitoring lives on Dashboard + object detail pages](ADR-9c5dbe.md) | implemented |  |
-| `DEC-c19242` | [bc-admin UI Development Freeze — Runtime Over Registry](ADR-c19242.md) | superseded | superseded by [DEC-b39a00](ADR-b39a00.md) |
+| `DEC-011c93` | [Schema contracts managed via DB + Admin UI, not repo seed files](./ADR-011c93.md) | implemented |  |
+| `DEC-520b33` | [bc-admin port: 3010 (reassigned from Datajettyadminportal)](./ADR-520b33.md) | implemented |  |
+| `DEC-9c5dbe` | [Operations group removed — ops monitoring lives on Dashboard + object detail pages](./ADR-9c5dbe.md) | implemented |  |
+| `DEC-c19242` | [bc-admin UI Development Freeze — Runtime Over Registry](./ADR-c19242.md) | superseded | superseded by [DEC-b39a00](./ADR-b39a00.md) |
 
 #### bc-core-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-81cd26` | [Connections are platform-scoped — reverse D163 for connection tables](ADR-81cd26.md) | implemented |  |
+| `DEC-81cd26` | [Connections are platform-scoped — reverse D163 for connection tables](./ADR-81cd26.md) | implemented |  |
 
 #### business-object-model
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-616e02` | [Business Object Model — independent canonical entity definitions as contract infrastructure](ADR-616e02.md) | implemented |  |
+| `DEC-616e02` | [Business Object Model — independent canonical entity definitions as contract infrastructure](./ADR-616e02.md) | implemented |  |
 
 #### canonical-evaluation
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-5f11f8` | [Canonical evaluation has internal layering — primary COs (from SOs) and derived COs (from other COs)](ADR-5f11f8.md) | implemented |  |
-| `DEC-97bb94` | [Canonical Object resolves N Source Objects — multi-source canonical evaluation](ADR-97bb94.md) | implemented |  |
-| `DEC-e9a1a7` | [join_context Scope — same-source-system only, no cross-system joins](ADR-e9a1a7.md) | implemented |  |
+| `DEC-5f11f8` | [Canonical evaluation has internal layering — primary COs (from SOs) and derived COs (from other COs)](./ADR-5f11f8.md) | implemented |  |
+| `DEC-97bb94` | [Canonical Object resolves N Source Objects — multi-source canonical evaluation](./ADR-97bb94.md) | implemented |  |
+| `DEC-e9a1a7` | [join_context Scope — same-source-system only, no cross-system joins](./ADR-e9a1a7.md) | implemented |  |
 
 #### canonical-meta-schema
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-efb5bf` | [Canonical-v1 meta-schema body structure finalized](ADR-efb5bf.md) | implemented |  |
+| `DEC-efb5bf` | [Canonical-v1 meta-schema body structure finalized](./ADR-efb5bf.md) | implemented |  |
 
 #### change-governance
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-164830` | [DB Change Protocol — mandatory user approval for all schema changes, overrides Bypass permissions](ADR-164830.md) | implemented |  |
+| `DEC-164830` | [DB Change Protocol — mandatory user approval for all schema changes, overrides Bypass permissions](./ADR-164830.md) | implemented |  |
 
 #### connectors
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-422db8` | [Multi-source connector generation — not Airbyte-only, intermediate spec, risk mitigations](ADR-422db8.md) | implemented |  |
-| `DEC-5213e3` | [Open-source connector strategy — npm libs as transport, ReaderExecutor as containment boundary](ADR-5213e3.md) | implemented |  |
-| `DEC-8d180b` | [Three-Level Source Model — Source System / Connector Type / Connection](ADR-8d180b.md) | implemented |  |
-| `DEC-b228ec` | [Two independent trees: Source Catalog and Integration — contracts reference provider](ADR-b228ec.md) | implemented |  |
-| `DEC-b28b13` | [Connector lifecycle: status enum replaces available boolean](ADR-b28b13.md) | implemented |  |
-| `DEC-f0866a` | [Connector Ecosystem — transport abstraction, dynamic registry, test harness, scaffold CLI](ADR-f0866a.md) | implemented |  |
+| `DEC-422db8` | [Multi-source connector generation — not Airbyte-only, intermediate spec, risk mitigations](./ADR-422db8.md) | implemented |  |
+| `DEC-5213e3` | [Open-source connector strategy — npm libs as transport, ReaderExecutor as containment boundary](./ADR-5213e3.md) | implemented |  |
+| `DEC-8d180b` | [Three-Level Source Model — Source System / Connector Type / Connection](./ADR-8d180b.md) | implemented |  |
+| `DEC-b228ec` | [Two independent trees: Source Catalog and Integration — contracts reference provider](./ADR-b228ec.md) | implemented |  |
+| `DEC-b28b13` | [Connector lifecycle: status enum replaces available boolean](./ADR-b28b13.md) | implemented |  |
+| `DEC-f0866a` | [Connector Ecosystem — transport abstraction, dynamic registry, test harness, scaffold CLI](./ADR-f0866a.md) | implemented |  |
 
 #### contract-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ecec75` | [Metric contract architecture — one contract per KPI, not per module](ADR-ecec75.md) | implemented |  |
+| `DEC-ecec75` | [Metric contract architecture — one contract per KPI, not per module](./ADR-ecec75.md) | implemented |  |
 
 #### contract-authoring
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-057c1f` | [Mapping is embedded in contract constructors — no standalone mapping entity](ADR-057c1f.md) | implemented |  |
+| `DEC-057c1f` | [Mapping is embedded in contract constructors — no standalone mapping entity](./ADR-057c1f.md) | implemented |  |
 
 #### contract-chain
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-0e3c64` | [Contract Chain Clarification — Observation Contract is Canonical-Chain (Mapping Binding), not Source-Chain](ADR-0e3c64.md) | implemented |  |
-| `DEC-1edaaa` | [One Observation Contract Per System Per Reader + Source Entity Provenance on Field Map](ADR-1edaaa.md) | implemented |  |
-| `DEC-3c2917` | [Connection belongs on reader_flavor, not observation_contract](ADR-3c2917.md) | implemented |  |
-| `DEC-9f8c13` | [Contract Registry — dedicated menu group with per-type surfaces](ADR-9f8c13.md) | implemented |  |
-| `DEC-a7c0f9` | [Canonical Resolution — Run-scoped, multi-SO, CO DAG support](ADR-a7c0f9.md) | implemented |  |
-| `DEC-d785d4` | [Reader → Business Object FK — SO Shape Enforcement via BO Constraint](ADR-d785d4.md) | implemented |  |
+| `DEC-0e3c64` | [Contract Chain Clarification — Observation Contract is Canonical-Chain (Mapping Binding), not Source-Chain](./ADR-0e3c64.md) | implemented |  |
+| `DEC-1edaaa` | [One Observation Contract Per System Per Reader + Source Entity Provenance on Field Map](./ADR-1edaaa.md) | implemented |  |
+| `DEC-3c2917` | [Connection belongs on reader_flavor, not observation_contract](./ADR-3c2917.md) | implemented |  |
+| `DEC-9f8c13` | [Contract Registry — dedicated menu group with per-type surfaces](./ADR-9f8c13.md) | implemented |  |
+| `DEC-a7c0f9` | [Canonical Resolution — Run-scoped, multi-SO, CO DAG support](./ADR-a7c0f9.md) | implemented |  |
+| `DEC-d785d4` | [Reader → Business Object FK — SO Shape Enforcement via BO Constraint](./ADR-d785d4.md) | implemented |  |
 
 #### contract-families
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-615b87` | [Intervention contract — 6th contract family in platform contract schema](ADR-615b87.md) | implemented |  |
+| `DEC-615b87` | [Intervention contract — 6th contract family in platform contract schema](./ADR-615b87.md) | implemented |  |
 
 #### contract-primitive
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1b32a9` | [Canonical contracts are source-agnostic — not part of Source Chain](ADR-1b32a9.md) | implemented |  |
+| `DEC-1b32a9` | [Canonical contracts are source-agnostic — not part of Source Chain](./ADR-1b32a9.md) | implemented |  |
 
 #### contract-scoping
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-0b3c08` | [D053: Master/Tenant-Override contract pattern — platform defines, tenant tunes](ADR-0b3c08.md) | implemented |  |
-| `DEC-938450` | [Universal Two-Layer Contract Scoping — Platform Master + Tenant Instance](ADR-938450.md) | superseded | superseded by [DEC-176a8e](ADR-176a8e.md) |
+| `DEC-0b3c08` | [D053: Master/Tenant-Override contract pattern — platform defines, tenant tunes](./ADR-0b3c08.md) | implemented |  |
+| `DEC-938450` | [Universal Two-Layer Contract Scoping — Platform Master + Tenant Instance](./ADR-938450.md) | superseded | superseded by [DEC-176a8e](./ADR-176a8e.md) |
 
 #### contracts-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-24f6da` | [Temporal values are absolute — cron + timezone + ISO 8601 durations](ADR-24f6da.md) | implemented |  |
-| `DEC-e27625` | [Tenant-Scoped Admission Contracts — no shared production contracts](ADR-e27625.md) | implemented |  |
-| `DEC-f5018a` | [Canonical Contract Split — universal form vs tenant-scoped mapping binding](ADR-f5018a.md) | implemented |  |
+| `DEC-24f6da` | [Temporal values are absolute — cron + timezone + ISO 8601 durations](./ADR-24f6da.md) | implemented |  |
+| `DEC-e27625` | [Tenant-Scoped Admission Contracts — no shared production contracts](./ADR-e27625.md) | implemented |  |
+| `DEC-f5018a` | [Canonical Contract Split — universal form vs tenant-scoped mapping binding](./ADR-f5018a.md) | implemented |  |
 
 #### cross-frontend
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-43fd36` | [bc-admin = Contracts view, bc-portal = Catalog view — audience-based rendering](ADR-43fd36.md) | implemented |  |
+| `DEC-43fd36` | [bc-admin = Contracts view, bc-portal = Catalog view — audience-based rendering](./ADR-43fd36.md) | implemented |  |
 
 #### dag-support
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-3d6e11` | [DAG Support in Contract JSON Shapes — Derived CO Evaluation + Secondary Metric Evaluation](ADR-3d6e11.md) | implemented |  |
+| `DEC-3d6e11` | [DAG Support in Contract JSON Shapes — Derived CO Evaluation + Secondary Metric Evaluation](./ADR-3d6e11.md) | implemented |  |
 
 #### data-acquisition
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-d5c352` | [SAP Data Acquisition Strategy — Phase 1: sapdatasheet.org](ADR-d5c352.md) | implemented |  |
+| `DEC-d5c352` | [SAP Data Acquisition Strategy — Phase 1: sapdatasheet.org](./ADR-d5c352.md) | implemented |  |
 
 #### data-product
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-db1c63` | [Metric as Data Product — KPI Output tab with consumable endpoints and AI activation metadata](ADR-db1c63.md) | decided |  |
+| `DEC-db1c63` | [Metric as Data Product — KPI Output tab with consumable endpoints and AI activation metadata](./ADR-db1c63.md) | decided |  |
 
 #### data-store-strategy
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-6bc7ef` | [Graph DB for lineage, bindings, and contract relationships](ADR-6bc7ef.md) | implemented |  |
+| `DEC-6bc7ef` | [Graph DB for lineage, bindings, and contract relationships](./ADR-6bc7ef.md) | implemented |  |
 
 #### deferred-normalization
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-00bba0` | [Discovery scan counts are frozen snapshots, not denormalized counters](ADR-00bba0.md) | implemented |  |
-| `DEC-0659d9` | [Screen Registry: design_rationale captures scope — no separate scope columns](ADR-0659d9.md) | implemented |  |
-| `DEC-6a9777` | [Inline ownerJson retained — owner_assignment table deferred until RBAC owner queries needed](ADR-6a9777.md) | decided |  |
+| `DEC-00bba0` | [Discovery scan counts are frozen snapshots, not denormalized counters](./ADR-00bba0.md) | implemented |  |
+| `DEC-0659d9` | [Screen Registry: design_rationale captures scope — no separate scope columns](./ADR-0659d9.md) | implemented |  |
+| `DEC-6a9777` | [Inline ownerJson retained — owner_assignment table deferred until RBAC owner queries needed](./ADR-6a9777.md) | decided |  |
 | `DEC-efe97f` | [Inline text[] tags retained — junction tables deferred until cross-entity tag querying needed](./ADR-efe97f.md) | decided |  |
 
 #### dev-tooling
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-5c39ea` | [Golden DB snapshot replaces seed scripts as primary dev setup method](ADR-5c39ea.md) | implemented |  |
+| `DEC-5c39ea` | [Golden DB snapshot replaces seed scripts as primary dev setup method](./ADR-5c39ea.md) | implemented |  |
 
 #### driver-stack
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-2dab98` | [Use postgres.js (not pg/node-postgres) as PostgreSQL driver](ADR-2dab98.md) | implemented |  |
+| `DEC-2dab98` | [Use postgres.js (not pg/node-postgres) as PostgreSQL driver](./ADR-2dab98.md) | implemented |  |
 
 #### e2e-runbook
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-973363` | [E2E Execution Flow — Step-by-Step Runbook](ADR-973363.md) | superseded | superseded by [DEC-1edaaa](ADR-1edaaa.md) |
-| `DEC-e7b1c9` | [E2E Execution Chain — Issues Found and Permanent Fixes](ADR-e7b1c9.md) | implemented |  |
+| `DEC-973363` | [E2E Execution Flow — Step-by-Step Runbook](./ADR-973363.md) | superseded | superseded by [DEC-1edaaa](./ADR-1edaaa.md) |
+| `DEC-e7b1c9` | [E2E Execution Chain — Issues Found and Permanent Fixes](./ADR-e7b1c9.md) | implemented |  |
 
 #### enrichment-engine
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-d214ed` | [BO-CO Enrichment Engine — Claude Code Generation + Gemini Verification + Audit Trail](ADR-d214ed.md) | superseded | superseded by [DEC-e9294b](ADR-e9294b.md) |
+| `DEC-d214ed` | [BO-CO Enrichment Engine — Claude Code Generation + Gemini Verification + Audit Trail](./ADR-d214ed.md) | superseded | superseded by [DEC-e9294b](./ADR-e9294b.md) |
 
 #### evidence-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-20eefe` | [Evidence as Structural Lineage — per-run summaries in RDS, detailed archive on S3](ADR-20eefe.md) | proposed |  |
+| `DEC-20eefe` | [Evidence as Structural Lineage — per-run summaries in RDS, detailed archive on S3](./ADR-20eefe.md) | proposed |  |
 
 #### evidence-model
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-4472ca` | [Reader Batch Write Model — per-run operations, not per-row](ADR-4472ca.md) | proposed |  |
-| `DEC-b5bedb` | [Execution run tables for all 4 evaluation boundaries](ADR-b5bedb.md) | implemented |  |
+| `DEC-4472ca` | [Reader Batch Write Model — per-run operations, not per-row](./ADR-4472ca.md) | proposed |  |
+| `DEC-b5bedb` | [Execution run tables for all 4 evaluation boundaries](./ADR-b5bedb.md) | implemented |  |
 
 #### foundational-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-0a0843` | [Open-Standard Publication Protocol Architecture](ADR-0a0843.md) | decided |  |
-| `DEC-69a24a` | [Foundation Boundary Precision — tighten conceptual model to match implementation reality](ADR-69a24a.md) | proposed |  |
-| `DEC-ccb7f7` | [Source Discovery Model — reconnaissance, not extraction](ADR-ccb7f7.md) | implemented |  |
+| `DEC-0a0843` | [Open-Standard Publication Protocol Architecture](./ADR-0a0843.md) | decided |  |
+| `DEC-69a24a` | [Foundation Boundary Precision — tighten conceptual model to match implementation reality](./ADR-69a24a.md) | proposed |  |
+| `DEC-ccb7f7` | [Source Discovery Model — reconnaissance, not extraction](./ADR-ccb7f7.md) | implemented |  |
 
 #### integrity-guards
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1f6659` | [Safe Delete Guard — Referential Integrity Check Before Any Hard Delete](ADR-1f6659.md) | implemented |  |
+| `DEC-1f6659` | [Safe Delete Guard — Referential Integrity Check Before Any Hard Delete](./ADR-1f6659.md) | implemented |  |
 
 #### master-data
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-cb906b` | [master_system_type reference table for software system categories](ADR-cb906b.md) | implemented |  |
+| `DEC-cb906b` | [master_system_type reference table for software system categories](./ADR-cb906b.md) | implemented |  |
 
 #### metric-catalog
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-9ab097` | [Metric Catalog: flat table, not card catalog](ADR-9ab097.md) | implemented |  |
+| `DEC-9ab097` | [Metric Catalog: flat table, not card catalog](./ADR-9ab097.md) | implemented |  |
 
 #### naming
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-0f61dd` | [Source system catalog uses business function names, not tech abbreviations](ADR-0f61dd.md) | implemented |  |
+| `DEC-0f61dd` | [Source system catalog uses business function names, not tech abbreviations](./ADR-0f61dd.md) | implemented |  |
 
 #### naming-convention
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-cf2cbc` | [Foundation naming compliance + schema integrity for boundary tables](ADR-cf2cbc.md) | superseded | superseded by [DEC-f02230](ADR-f02230.md) |
-| `DEC-deac26` | [Canonical mapping — rename mapping_binding, move from master to contract schema](ADR-deac26.md) | implemented |  |
+| `DEC-cf2cbc` | [Foundation naming compliance + schema integrity for boundary tables](./ADR-cf2cbc.md) | superseded | superseded by [DEC-f02230](./ADR-f02230.md) |
+| `DEC-deac26` | [Canonical mapping — rename mapping_binding, move from master to contract schema](./ADR-deac26.md) | implemented |  |
 
 #### naming-standards
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-3f4105` | [Database naming convention — _dev/_prod suffix for environment safety](ADR-3f4105.md) | implemented |  |
+| `DEC-3f4105` | [Database naming convention — _dev/_prod suffix for environment safety](./ADR-3f4105.md) | implemented |  |
 
 #### navigation-ia
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-5cef91` | [Navigation IA v5 — Final locked structure (AUTHORITATIVE)](ADR-5cef91.md) | implemented |  |
+| `DEC-5cef91` | [Navigation IA v5 — Final locked structure (AUTHORITATIVE)](./ADR-5cef91.md) | implemented |  |
 
 #### payload-storage
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-2658ff` | [Contract-Typed Payload Tables — real columns in RDS, raw payloads archived to S3](ADR-2658ff.md) | implemented |  |
+| `DEC-2658ff` | [Contract-Typed Payload Tables — real columns in RDS, raw payloads archived to S3](./ADR-2658ff.md) | implemented |  |
 
 #### platform-ops
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1ab381` | [Platform ticket system — failed runs auto-create incidents](ADR-1ab381.md) | decided |  |
+| `DEC-1ab381` | [Platform ticket system — failed runs auto-create incidents](./ADR-1ab381.md) | decided |  |
 
 #### platform-philosophy
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-e29de9` | [BareCount is anti-pipeline: contract-first lifecycle system](ADR-e29de9.md) | implemented |  |
+| `DEC-e29de9` | [BareCount is anti-pipeline: contract-first lifecycle system](./ADR-e29de9.md) | implemented |  |
 
 #### platform-schema-organization
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1bad13` | [Execution schema — carve out from operations](ADR-1bad13.md) | implemented |  |
+| `DEC-1bad13` | [Execution schema — carve out from operations](./ADR-1bad13.md) | implemented |  |
 
 #### platform-tenant-split
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-08dc92` | [Platform/Tenant Route Isolation — /api/* vs /api/t/* with schema-per-tenant DB fence](ADR-08dc92.md) | implemented |  |
-| `DEC-3a6f74` | [Platform/Tenant: Keep single service, formalize with guard decorators](ADR-3a6f74.md) | implemented |  |
+| `DEC-08dc92` | [Platform/Tenant Route Isolation — /api/* vs /api/t/* with schema-per-tenant DB fence](./ADR-08dc92.md) | implemented |  |
+| `DEC-3a6f74` | [Platform/Tenant: Keep single service, formalize with guard decorators](./ADR-3a6f74.md) | implemented |  |
 
 #### platform-tooling
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-a1110e` | [Support schema — internal ticketing for platform & tenant issues](ADR-a1110e.md) | implemented |  |
+| `DEC-a1110e` | [Support schema — internal ticketing for platform & tenant issues](./ADR-a1110e.md) | implemented |  |
 
 #### port-allocation
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-e50b83` | [Master port reservation — all local dev services](ADR-e50b83.md) | implemented |  |
+| `DEC-e50b83` | [Master port reservation — all local dev services](./ADR-e50b83.md) | implemented |  |
 
 #### portability
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-76a91b` | [Cloud-agnostic architecture — no cloud vendor lock-in](ADR-76a91b.md) | decided |  |
+| `DEC-76a91b` | [Cloud-agnostic architecture — no cloud vendor lock-in](./ADR-76a91b.md) | decided |  |
 
 #### reader-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-90faff` | [Canonical-Driven Reader Creation Flow — Top-Down Assembly of the BareCount Machine](ADR-90faff.md) | implemented |  |
-| `DEC-f656a6` | [Universal Protocol Readers — Connector Reclassification & Onboarding-Embedded Provisioning](ADR-f656a6.md) | implemented |  |
+| `DEC-90faff` | [Canonical-Driven Reader Creation Flow — Top-Down Assembly of the BareCount Machine](./ADR-90faff.md) | implemented |  |
+| `DEC-f656a6` | [Universal Protocol Readers — Connector Reclassification & Onboarding-Embedded Provisioning](./ADR-f656a6.md) | implemented |  |
 
 #### reader-flavors
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-6a1b47` | [Add OER flavor as second exchange rate source to prove CO convergence](ADR-6a1b47.md) | decided |  |
+| `DEC-6a1b47` | [Add OER flavor as second exchange rate source to prove CO convergence](./ADR-6a1b47.md) | decided |  |
 
 #### readers
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-36d78f` | [Reader Observation Schema — selective observation with standard field naming](ADR-36d78f.md) | implemented |  |
-| `DEC-cafc1b` | [UinBAT Reader operational shape — schedule, retries, backfill, failure policy](ADR-cafc1b.md) | implemented |  |
-| `DEC-f1565d` | [Multi-Table Executor — Backward-Compatible Interface Extension](ADR-f1565d.md) | implemented |  |
+| `DEC-36d78f` | [Reader Observation Schema — selective observation with standard field naming](./ADR-36d78f.md) | implemented |  |
+| `DEC-cafc1b` | [UinBAT Reader operational shape — schedule, retries, backfill, failure policy](./ADR-cafc1b.md) | implemented |  |
+| `DEC-f1565d` | [Multi-Table Executor — Backward-Compatible Interface Extension](./ADR-f1565d.md) | implemented |  |
 
 #### readers-and-flavors
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-075dd3` | [Old readers/flavors retired — fresh assets with SDG executor configs](ADR-075dd3.md) | implemented |  |
+| `DEC-075dd3` | [Old readers/flavors retired — fresh assets with SDG executor configs](./ADR-075dd3.md) | implemented |  |
 
 #### registry
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-57d540` | [Registry tables aligned with UinBAT Reader terminology](ADR-57d540.md) | implemented |  |
+| `DEC-57d540` | [Registry tables aligned with UinBAT Reader terminology](./ADR-57d540.md) | implemented |  |
 
 #### s3-archive
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-14592e` | [S3 Boundary Archive — WORM storage for raw payloads and detailed evidence](ADR-14592e.md) | implemented |  |
-| `DEC-3ee0f6` | [Per-tenant S3 archive bucket — provisioned at tenant onboarding](ADR-3ee0f6.md) | decided | supersedes [DEC-14592e](ADR-14592e.md) |
+| `DEC-14592e` | [S3 Boundary Archive — WORM storage for raw payloads and detailed evidence](./ADR-14592e.md) | implemented |  |
+| `DEC-3ee0f6` | [Per-tenant S3 archive bucket — provisioned at tenant onboarding](./ADR-3ee0f6.md) | decided | supersedes [DEC-14592e](./ADR-14592e.md) |
 
 #### sap-catalog
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-523a5d` | [S/4HANA CDS View Catalog — Three Public Sources + Two Customer Access Models](ADR-523a5d.md) | implemented |  |
-| `DEC-b51b48` | [SAP Landscape Scanner — connector-level discovery + compatibility report](ADR-b51b48.md) | implemented |  |
-| `DEC-d53320` | [Three SAP landscapes: S/4HANA Public Cloud, S/4HANA On-Premise, ECC EHP8](ADR-d53320.md) | implemented |  |
-| `DEC-e93a19` | [SAP Table Reference — separate catalog table](ADR-e93a19.md) | implemented |  |
+| `DEC-523a5d` | [S/4HANA CDS View Catalog — Three Public Sources + Two Customer Access Models](./ADR-523a5d.md) | implemented |  |
+| `DEC-b51b48` | [SAP Landscape Scanner — connector-level discovery + compatibility report](./ADR-b51b48.md) | implemented |  |
+| `DEC-d53320` | [Three SAP landscapes: S/4HANA Public Cloud, S/4HANA On-Premise, ECC EHP8](./ADR-d53320.md) | implemented |  |
+| `DEC-e93a19` | [SAP Table Reference — separate catalog table](./ADR-e93a19.md) | implemented |  |
 
 #### schema-organization
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-0a75b5` | [Registry schema circular import fix — pg-schema.ts extraction](ADR-0a75b5.md) | implemented |  |
-| `DEC-8eb2b4` | [Execution schema carved from operations for boundary aggregation](ADR-8eb2b4.md) | implemented |  |
+| `DEC-0a75b5` | [Registry schema circular import fix — pg-schema.ts extraction](./ADR-0a75b5.md) | implemented |  |
+| `DEC-8eb2b4` | [Execution schema carved from operations for boundary aggregation](./ADR-8eb2b4.md) | implemented |  |
 
 #### screen-registry
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-3805f6` | [Screen Registry workflow taxonomy: split dataspace into canonical-data, evidence, data-infra](ADR-3805f6.md) | implemented |  |
+| `DEC-3805f6` | [Screen Registry workflow taxonomy: split dataspace into canonical-data, evidence, data-infra](./ADR-3805f6.md) | implemented |  |
 
 #### seed-engine
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-3c1084` | [V2 Seed Engine — dedicated, complete, AWS-ready](ADR-3c1084.md) | superseded |  |
+| `DEC-3c1084` | [V2 Seed Engine — dedicated, complete, AWS-ready](./ADR-3c1084.md) | superseded |  |
 
 #### seed-format
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-cd3046` | [V2 seed data format — CSV, not JSON](ADR-cd3046.md) | implemented |  |
+| `DEC-cd3046` | [V2 seed data format — CSV, not JSON](./ADR-cd3046.md) | implemented |  |
 
 #### source-catalog
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-05140c` | [Unified Source Catalog — drop Landscape, status-driven approval, scope attribute](ADR-05140c.md) | implemented |  |
-| `DEC-09b8e6` | [Unified Source Catalog — status-driven 6-tier hierarchy with object/view support](ADR-09b8e6.md) | implemented |  |
-| `DEC-ada431` | [Source Category — Reader/Provider trust-tier classification](ADR-ada431.md) | implemented |  |
+| `DEC-05140c` | [Unified Source Catalog — drop Landscape, status-driven approval, scope attribute](./ADR-05140c.md) | implemented |  |
+| `DEC-09b8e6` | [Unified Source Catalog — status-driven 6-tier hierarchy with object/view support](./ADR-09b8e6.md) | implemented |  |
+| `DEC-ada431` | [Source Category — Reader/Provider trust-tier classification](./ADR-ada431.md) | implemented |  |
 
 #### source-landscape
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-3fc279` | [Source Landscape — per-source reference indexes, separate from Source Catalog](ADR-3fc279.md) | superseded | superseded by [DEC-05140c](ADR-05140c.md) |
-| `DEC-f28021` | [Reference Landscape vs Source Catalog — separation of concerns](ADR-f28021.md) | superseded | superseded by [DEC-05140c](ADR-05140c.md) |
+| `DEC-3fc279` | [Source Landscape — per-source reference indexes, separate from Source Catalog](./ADR-3fc279.md) | superseded | superseded by [DEC-05140c](./ADR-05140c.md) |
+| `DEC-f28021` | [Reference Landscape vs Source Catalog — separation of concerns](./ADR-f28021.md) | superseded | superseded by [DEC-05140c](./ADR-05140c.md) |
 
 #### source-onboarding
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-28741f` | [Source Contract Correction — Platform Template (Full Schema) + Observation Contract Per Flavor (Field Selection)](ADR-28741f.md) | implemented |  |
+| `DEC-28741f` | [Source Contract Correction — Platform Template (Full Schema) + Observation Contract Per Flavor (Field Selection)](./ADR-28741f.md) | implemented |  |
 
 #### source-systems
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-6c1bd2` | [system_type_code on source_system, not source_provider](ADR-6c1bd2.md) | implemented |  |
+| `DEC-6c1bd2` | [system_type_code on source_system, not source_provider](./ADR-6c1bd2.md) | implemented |  |
 
 #### taxonomy
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-339c97` | [External standards provenance on Business Objects and Business Fields](ADR-339c97.md) | implemented |  |
-| `DEC-388129` | [Domain Taxonomy as Platform Master](ADR-388129.md) | superseded | superseded by [DEC-7bbdba](ADR-7bbdba.md) |
-| `DEC-4bff1c` | [Reader \"flavors\" are \"Target Sources\"](ADR-4bff1c.md) | decided |  |
-| `DEC-7bbdba` | [4-Level KPI Taxonomy: Industry Category → Industry → Business Function → Business Sub-function](ADR-7bbdba.md) | implemented |  |
+| `DEC-339c97` | [External standards provenance on Business Objects and Business Fields](./ADR-339c97.md) | implemented |  |
+| `DEC-388129` | [Domain Taxonomy as Platform Master](./ADR-388129.md) | superseded | superseded by [DEC-7bbdba](./ADR-7bbdba.md) |
+| `DEC-4bff1c` | [Reader \"flavors\" are \"Target Sources\"](./ADR-4bff1c.md) | decided |  |
+| `DEC-7bbdba` | [4-Level KPI Taxonomy: Industry Category → Industry → Business Function → Business Sub-function](./ADR-7bbdba.md) | implemented |  |
 
 #### tech-stack
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ace519` | [Tech stack: Node.js + TypeScript + PostgreSQL + Fastify + Drizzle](ADR-ace519.md) | implemented |  |
+| `DEC-ace519` | [Tech stack: Node.js + TypeScript + PostgreSQL + Fastify + Drizzle](./ADR-ace519.md) | implemented |  |
 
 #### tenant-binding
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-a2af9e` | [Single Cognito User Pool with custom:tenant_id](ADR-a2af9e.md) | implemented |  |
+| `DEC-a2af9e` | [Single Cognito User Pool with custom:tenant_id](./ADR-a2af9e.md) | implemented |  |
 
 #### tenant-deployment
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-e9bba0` | [Tenant infrastructure table — per-tenant deployment configuration on platform DB](ADR-e9bba0.md) | implemented |  |
+| `DEC-e9bba0` | [Tenant infrastructure table — per-tenant deployment configuration on platform DB](./ADR-e9bba0.md) | implemented |  |
 
 #### tenant-isolation
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-d7c1dd` | [Hybrid tenant isolation — schema-per-tenant standard, database-per-tenant premium](ADR-d7c1dd.md) | superseded | superseded by [DEC-1cdc5e](ADR-1cdc5e.md) |
-| `DEC-faef79` | [Customer data isolation — data plane architecture](ADR-faef79.md) | implemented |  |
+| `DEC-d7c1dd` | [Hybrid tenant isolation — schema-per-tenant standard, database-per-tenant premium](./ADR-d7c1dd.md) | superseded | superseded by [DEC-1cdc5e](./ADR-1cdc5e.md) |
+| `DEC-faef79` | [Customer data isolation — data plane architecture](./ADR-faef79.md) | implemented |  |
 
 #### tenant-provisioning
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-f82a8a` | [Dynamic schema-per-tenant provisioning on tenant creation](ADR-f82a8a.md) | superseded | superseded by [DEC-1cdc5e](ADR-1cdc5e.md) |
+| `DEC-f82a8a` | [Dynamic schema-per-tenant provisioning on tenant creation](./ADR-f82a8a.md) | superseded | superseded by [DEC-1cdc5e](./ADR-1cdc5e.md) |
 
 #### tenant-runtime
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-95687d` | [Typed-First Tenant Runtime — Schema Provisioner as declarative reconciler, connector onboarding as primary trigger, S3 WORM as the only opaque-payload store](ADR-95687d.md) | proposed | supersedes [DEC-a25931](ADR-a25931.md) |
+| `DEC-95687d` | [Typed-First Tenant Runtime — Schema Provisioner as declarative reconciler, connector onboarding as primary trigger, S3 WORM as the only opaque-payload store](./ADR-95687d.md) | proposed | supersedes [DEC-a25931](./ADR-a25931.md) |
 
 #### tenant-topology
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1cdc5e` | [Drop bc_tenant database — orphan with t_xxx schemas replaced by tbc_xxx](ADR-1cdc5e.md) | implemented |  |
-| `DEC-29477a` | [PostgreSQL schema-per-tenant](ADR-29477a.md) | superseded | superseded by [DEC-40c29f](ADR-40c29f.md) |
-| `DEC-2c79c8` | [Full per-tenant SQL isolation — all boundary + evidence tables move to tenant schemas](ADR-2c79c8.md) | implemented |  |
-| `DEC-40c29f` | [Control Plane / Data Plane DB Split — Registry to Platform, Boundary+Evidence to Tenant](ADR-40c29f.md) | implemented |  |
-| `DEC-909e64` | [Tenant DB: single schema per tenant, no sub-schemas](ADR-909e64.md) | superseded | superseded by [DEC-771baf](ADR-771baf.md) |
-| `DEC-a560bf` | [Platform DB never queries tenant DB — orchestrator pushes summaries](ADR-a560bf.md) | implemented |  |
-| `DEC-bc7281` | [Connections reversed from tenant DB to platform runtime schema](ADR-bc7281.md) | reversed |  |
+| `DEC-1cdc5e` | [Drop bc_tenant database — orphan with t_xxx schemas replaced by tbc_xxx](./ADR-1cdc5e.md) | implemented |  |
+| `DEC-29477a` | [PostgreSQL schema-per-tenant](./ADR-29477a.md) | superseded | superseded by [DEC-40c29f](./ADR-40c29f.md) |
+| `DEC-2c79c8` | [Full per-tenant SQL isolation — all boundary + evidence tables move to tenant schemas](./ADR-2c79c8.md) | implemented |  |
+| `DEC-40c29f` | [Control Plane / Data Plane DB Split — Registry to Platform, Boundary+Evidence to Tenant](./ADR-40c29f.md) | implemented |  |
+| `DEC-909e64` | [Tenant DB: single schema per tenant, no sub-schemas](./ADR-909e64.md) | superseded | superseded by [DEC-771baf](./ADR-771baf.md) |
+| `DEC-a560bf` | [Platform DB never queries tenant DB — orchestrator pushes summaries](./ADR-a560bf.md) | implemented |  |
+| `DEC-bc7281` | [Connections reversed from tenant DB to platform runtime schema](./ADR-bc7281.md) | reversed |  |
 
 #### ui-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-c800d2` | [bc-admin v1.0.0 Lock — Scope & Architecture](ADR-c800d2.md) | implemented |  |
+| `DEC-c800d2` | [bc-admin v1.0.0 Lock — Scope & Architecture](./ADR-c800d2.md) | implemented |  |
 
 #### validation-lifecycle
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-552ddd` | [Separate catalog_status and verification_status on source entities](ADR-552ddd.md) | implemented |  |
-| `DEC-7c4c39` | [Source Catalog Status Lifecycle — 4-state catalog_status](ADR-7c4c39.md) | implemented |  |
-| `DEC-eaba02` | [Validation Status — Tenant-Scoped Execution Proof for Catalog Objects](ADR-eaba02.md) | implemented |  |
+| `DEC-552ddd` | [Separate catalog_status and verification_status on source entities](./ADR-552ddd.md) | implemented |  |
+| `DEC-7c4c39` | [Source Catalog Status Lifecycle — 4-state catalog_status](./ADR-7c4c39.md) | implemented |  |
+| `DEC-eaba02` | [Validation Status — Tenant-Scoped Execution Proof for Catalog Objects](./ADR-eaba02.md) | implemented |  |
 
 ### deployment
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-f275d7` | [Ghost Data Infra routes — add placeholder pages](ADR-f275d7.md) | superseded |  |
+| `DEC-f275d7` | [Ghost Data Infra routes — add placeholder pages](./ADR-f275d7.md) | superseded |  |
 
 #### deployment-topology
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1918d0` | [Deployment & Database Architecture — staging topology, DB separation, naming standard, normalization rulebook](ADR-1918d0.md) | implemented |  |
+| `DEC-1918d0` | [Deployment & Database Architecture — staging topology, DB separation, naming standard, normalization rulebook](./ADR-1918d0.md) | implemented |  |
 
 ### design-system
 
@@ -1027,13 +1027,13 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-2cf250` | [BareCount visual language — bare/confident/light; color as information, not decoration](ADR-2cf250.md) | decided |  |
+| `DEC-2cf250` | [BareCount visual language — bare/confident/light; color as information, not decoration](./ADR-2cf250.md) | decided |  |
 
 ### devops
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-9b23a7` | [Remove pm2 — independent service startup](ADR-9b23a7.md) | implemented | supersedes [DEC-890417](ADR-890417.md) |
+| `DEC-9b23a7` | [Remove pm2 — independent service startup](./ADR-9b23a7.md) | implemented | supersedes [DEC-890417](./ADR-890417.md) |
 
 ### docs
 
@@ -1041,17 +1041,17 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-3395bc` | [v3 docs reader: drop book wrapper, drop mkdocs, flat sections under docs/](ADR-3395bc.md) | decided |  |
+| `DEC-3395bc` | [v3 docs reader: drop book wrapper, drop mkdocs, flat sections under docs/](./ADR-3395bc.md) | decided |  |
 
 #### structure
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-376587` | [Section rename: The Platform → Implementation](ADR-376587.md) | decided |  |
-| `DEC-3b86ea` | [Section renames + scope cleanup: Onboarding, Operations; drop Demo Execution; move Clean Slate Migration to Upgrade and Migration](ADR-3b86ea.md) | decided |  |
-| `DEC-9c58c6` | [Article-drop refinement: 'The Operating Model' → 'Operating Model' in label positions](ADR-9c58c6.md) | decided |  |
-| `DEC-c06f41` | [Spine expansion: add AI and Development sections; split Services into three chapters; add Notifications and Webhooks and Audit Logging chapters](ADR-c06f41.md) | decided |  |
-| `DEC-ce6e2b` | [Section rename: The Runtime → The Operating Model](ADR-ce6e2b.md) | decided |  |
+| `DEC-376587` | [Section rename: The Platform → Implementation](./ADR-376587.md) | decided |  |
+| `DEC-3b86ea` | [Section renames + scope cleanup: Onboarding, Operations; drop Demo Execution; move Clean Slate Migration to Upgrade and Migration](./ADR-3b86ea.md) | decided |  |
+| `DEC-9c58c6` | [Article-drop refinement: 'The Operating Model' → 'Operating Model' in label positions](./ADR-9c58c6.md) | decided |  |
+| `DEC-c06f41` | [Spine expansion: add AI and Development sections; split Services into three chapters; add Notifications and Webhooks and Audit Logging chapters](./ADR-c06f41.md) | decided |  |
+| `DEC-ce6e2b` | [Section rename: The Runtime → The Operating Model](./ADR-ce6e2b.md) | decided |  |
 
 ### documentation
 
@@ -1059,7 +1059,7 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-6cb4f3` | [Source Systems documentation framework (bc-docs-v3)](ADR-6cb4f3.md) | implemented |  |
+| `DEC-6cb4f3` | [Source Systems documentation framework (bc-docs-v3)](./ADR-6cb4f3.md) | implemented |  |
 
 ### evidence-lineage
 
@@ -1067,90 +1067,90 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ebb3cd` | [Evidence and Lineage Write Semantics — Best-Effort + Degraded Marker, Per-Evaluation Lineage with Snapshot Fan-Out](ADR-ebb3cd.md) | proposed |  |
+| `DEC-ebb3cd` | [Evidence and Lineage Write Semantics — Best-Effort + Degraded Marker, Per-Evaluation Lineage with Snapshot Fan-Out](./ADR-ebb3cd.md) | proposed |  |
 
 ### execution
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-000004` | [Worker pool architecture for contract execution](ADR-0004.md) | superseded |  |
+| `DEC-000004` | [Worker pool architecture for contract execution](./ADR-0004.md) | superseded |  |
 
 #### ai-storage
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-14fb98` | [bc-ai uses own SQLite database, not shared with DevHub](ADR-14fb98.md) | implemented |  |
+| `DEC-14fb98` | [bc-ai uses own SQLite database, not shared with DevHub](./ADR-14fb98.md) | implemented |  |
 
 #### intervention-ai
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-3cc8a1` | [Metis — AI-Driven Function CounterParts at the Intervention Boundary](ADR-3cc8a1.md) | proposed |  |
+| `DEC-3cc8a1` | [Metis — AI-Driven Function CounterParts at the Intervention Boundary](./ADR-3cc8a1.md) | proposed |  |
 
 #### rag
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-37ee92` | [D235: Documentation RAG Layer — Vector Retrieval from legacy v2 archive for AI Grounding and Help Assistant](ADR-37ee92.md) | proposed |  |
+| `DEC-37ee92` | [D235: Documentation RAG Layer — Vector Retrieval from legacy-v2-archive for AI Grounding and Help Assistant](./ADR-37ee92.md) | proposed |  |
 
 ### foundation
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-03db11` | [Contract Body Principle — JSON-First, Catalog-Separate](ADR-03db11.md) | superseded | superseded by [DEC-ec9e89](ADR-ec9e89.md) |
+| `DEC-03db11` | [Contract Body Principle — JSON-First, Catalog-Separate](./ADR-03db11.md) | superseded | superseded by [DEC-ec9e89](./ADR-ec9e89.md) |
 
 #### body-purity
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-01419c` | [MC Body Purity — Catalog Fields Out, Formula as Object, sql_logic Parked](ADR-01419c.md) | implemented |  |
-| `DEC-242d60` | [AC Body Purity — Remove readiness_predicate](ADR-242d60.md) | implemented |  |
-| `DEC-8a6acb` | [SC Body Purity — Remove extraction_rules and effective_period](ADR-8a6acb.md) | implemented |  |
-| `DEC-bae0ef` | [IC Simplification — Remove action_templates, Single Intervention with Numeric Target](ADR-bae0ef.md) | implemented |  |
+| `DEC-01419c` | [MC Body Purity — Catalog Fields Out, Formula as Object, sql_logic Parked](./ADR-01419c.md) | implemented |  |
+| `DEC-242d60` | [AC Body Purity — Remove readiness_predicate](./ADR-242d60.md) | implemented |  |
+| `DEC-8a6acb` | [SC Body Purity — Remove extraction_rules and effective_period](./ADR-8a6acb.md) | implemented |  |
+| `DEC-bae0ef` | [IC Simplification — Remove action_templates, Single Intervention with Numeric Target](./ADR-bae0ef.md) | implemented |  |
 
 #### contract-chain
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-762336` | [Contract Chain Reconciliation — 3 active chains + AI provisional, 4 execution boundaries](ADR-762336.md) | implemented | supersedes [DEC-ac05fc](ADR-ac05fc.md) |
+| `DEC-762336` | [Contract Chain Reconciliation — 3 active chains + AI provisional, 4 execution boundaries](./ADR-762336.md) | implemented | supersedes [DEC-ac05fc](./ADR-ac05fc.md) |
 
 #### contract-spec
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-a0e92e` | [Contract Requirements Correction + Master Shape as Unified Artifact](ADR-a0e92e.md) | implemented |  |
+| `DEC-a0e92e` | [Contract Requirements Correction + Master Shape as Unified Artifact](./ADR-a0e92e.md) | implemented |  |
 
 #### data-quality
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-7896b2` | [DQC Integration — Global QC Rulebook as Foundation F04, Three-Tier Rule Model for AC](ADR-7896b2.md) | implemented |  |
+| `DEC-7896b2` | [DQC Integration — Global QC Rulebook as Foundation F04, Three-Tier Rule Model for AC](./ADR-7896b2.md) | implemented |  |
 
 #### foundation-spec
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-586ccb` | [F06 Service Catalog — Catalog SVS as First Service](ADR-586ccb.md) | implemented |  |
-| `DEC-f5111d` | [Retire Accountability Boundary, Responsibility object, and Accountable state from Foundation Specification](ADR-f5111d.md) | implemented |  |
+| `DEC-586ccb` | [F06 Service Catalog — Catalog SVS as First Service](./ADR-586ccb.md) | implemented |  |
+| `DEC-f5111d` | [Retire Accountability Boundary, Responsibility object, and Accountable state from Foundation Specification](./ADR-f5111d.md) | implemented |  |
 
 #### governance
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ec9e89` | [Contract Governance Model — Master Shape, Platform Instance, Tenant Override](ADR-ec9e89.md) | implemented | supersedes [DEC-03db11](ADR-03db11.md) |
+| `DEC-ec9e89` | [Contract Governance Model — Master Shape, Platform Instance, Tenant Override](./ADR-ec9e89.md) | implemented | supersedes [DEC-03db11](./ADR-03db11.md) |
 
 #### master-shape
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-bef347` | [Structural Completeness — All Contract Instance Keys Required, No Structural Optionality](ADR-bef347.md) | implemented |  |
-| `DEC-ca4c1e` | [AC Master Shape Locked — DQC-Integrated Admission Contract Body v1](ADR-ca4c1e.md) | implemented |  |
+| `DEC-bef347` | [Structural Completeness — All Contract Instance Keys Required, No Structural Optionality](./ADR-bef347.md) | implemented |  |
+| `DEC-ca4c1e` | [AC Master Shape Locked — DQC-Integrated Admission Contract Body v1](./ADR-ca4c1e.md) | implemented |  |
 
 #### metric-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-01df6b` | [Metric Catalog Tables are Derived from contract_json — JSON Authored, Catalog Decomposed](ADR-01df6b.md) | implemented |  |
+| `DEC-01df6b` | [Metric Catalog Tables are Derived from contract_json — JSON Authored, Catalog Decomposed](./ADR-01df6b.md) | implemented |  |
 
 ### frontend
 
@@ -1158,108 +1158,108 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ab0b7c` | [bc-admin stack: React 18 + Vite + Radix UI + TailwindCSS v4 (same as bc-portal)](ADR-ab0b7c.md) | implemented |  |
+| `DEC-ab0b7c` | [bc-admin stack: React 18 + Vite + Radix UI + TailwindCSS v4 (same as bc-portal)](./ADR-ab0b7c.md) | implemented |  |
 
 #### bc-portal
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-026fae` | [bc-portal Naming Convention — route equals component equals nav label, no legacy suffixes](ADR-026fae.md) | superseded | superseded by [DEC-162de5](ADR-162de5.md) |
-| `DEC-142237` | [bc-portal Design System Governance](ADR-142237.md) | superseded | superseded by [DEC-9a3c6a](ADR-9a3c6a.md) |
-| `DEC-2d5df2` | [Drop dark mode from bc-portal](ADR-2d5df2.md) | implemented |  |
-| `DEC-2e801a` | [Lock Beyond canvas as the post-dashboard interface for bc-portal](ADR-2e801a.md) | superseded | superseded by [DEC-7e76b9](ADR-7e76b9.md) |
-| `DEC-705f76` | [bc-portal Naming Convention](ADR-705f76.md) | superseded | superseded by [DEC-162de5](ADR-162de5.md) |
-| `DEC-8cbae7` | [bc-portal Design System Governance — canonical source, token rule, component registry](ADR-8cbae7.md) | superseded | superseded by [DEC-9a3c6a](ADR-9a3c6a.md) |
-| `DEC-b2da18` | [bc-portal Architecture and Patterns](ADR-b2da18.md) | superseded | superseded by [DEC-04dade](ADR-04dade.md) |
+| `DEC-026fae` | [bc-portal Naming Convention — route equals component equals nav label, no legacy suffixes](./ADR-026fae.md) | superseded | superseded by [DEC-162de5](./ADR-162de5.md) |
+| `DEC-142237` | [bc-portal Design System Governance](./ADR-142237.md) | superseded | superseded by [DEC-9a3c6a](./ADR-9a3c6a.md) |
+| `DEC-2d5df2` | [Drop dark mode from bc-portal](./ADR-2d5df2.md) | implemented |  |
+| `DEC-2e801a` | [Lock Beyond canvas as the post-dashboard interface for bc-portal](./ADR-2e801a.md) | superseded | superseded by [DEC-7e76b9](./ADR-7e76b9.md) |
+| `DEC-705f76` | [bc-portal Naming Convention](./ADR-705f76.md) | superseded | superseded by [DEC-162de5](./ADR-162de5.md) |
+| `DEC-8cbae7` | [bc-portal Design System Governance — canonical source, token rule, component registry](./ADR-8cbae7.md) | superseded | superseded by [DEC-9a3c6a](./ADR-9a3c6a.md) |
+| `DEC-b2da18` | [bc-portal Architecture and Patterns](./ADR-b2da18.md) | superseded | superseded by [DEC-04dade](./ADR-04dade.md) |
 
 #### frontend-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-cce1d3` | [bc-portal Architecture and Patterns — routing, state, data-fetching, auth, error handling](ADR-cce1d3.md) | superseded | superseded by [DEC-04dade](ADR-04dade.md) |
+| `DEC-cce1d3` | [bc-portal Architecture and Patterns — routing, state, data-fetching, auth, error handling](./ADR-cce1d3.md) | superseded | superseded by [DEC-04dade](./ADR-04dade.md) |
 
 ### governance
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-42ca56` | [MCP Tool Registry — scanner-derived catalog of DevHub MCP tools with side-effect metadata](ADR-42ca56.md) | implemented |  |
-| `DEC-633b2a` | [D-code monotonic allocator - prevent concurrent-session drift](ADR-633b2a.md) | implemented |  |
-| `DEC-98871b` | [D268 Structured Self-Audit — session close enforces structured discipline report + backend stats](ADR-98871b.md) | implemented |  |
-| `DEC-a280da` | [Process Auditor Agent — Gemini-Powered Independent Session Governance](ADR-a280da.md) | implemented |  |
+| `DEC-42ca56` | [MCP Tool Registry — scanner-derived catalog of DevHub MCP tools with side-effect metadata](./ADR-42ca56.md) | implemented |  |
+| `DEC-633b2a` | [D-code monotonic allocator - prevent concurrent-session drift](./ADR-633b2a.md) | implemented |  |
+| `DEC-98871b` | [D268 Structured Self-Audit — session close enforces structured discipline report + backend stats](./ADR-98871b.md) | implemented |  |
+| `DEC-a280da` | [Process Auditor Agent — Gemini-Powered Independent Session Governance](./ADR-a280da.md) | implemented |  |
 
 #### ai-agents
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-365f51` | [DevHub Housekeeping Agents — Intelligent Autonomous Platform Maintenance](ADR-365f51.md) | superseded | superseded by [DEC-38b354](ADR-38b354.md) |
-| `DEC-38b354` | [Housekeeping Agents Migration — bc-ai APScheduler → Claude Code Scheduled Tasks](ADR-38b354.md) | implemented | supersedes [DEC-365f51](ADR-365f51.md) |
+| `DEC-365f51` | [DevHub Housekeeping Agents — Intelligent Autonomous Platform Maintenance](./ADR-365f51.md) | superseded | superseded by [DEC-38b354](./ADR-38b354.md) |
+| `DEC-38b354` | [Housekeeping Agents Migration — bc-ai APScheduler → Claude Code Scheduled Tasks](./ADR-38b354.md) | implemented | supersedes [DEC-365f51](./ADR-365f51.md) |
 
 #### compliance
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ae331f` | [Staged pursuit of ISO 27001 readiness and SOC 2 Type I on reduced criteria](ADR-ae331f.md) | decided |  |
+| `DEC-ae331f` | [Staged pursuit of ISO 27001 readiness and SOC 2 Type I on reduced criteria](./ADR-ae331f.md) | decided |  |
 
 #### devhub-governance
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ebf0b4` | [Session Discipline & Data Integrity Rules (NOT-TO-DO)](ADR-ebf0b4.md) | implemented |  |
+| `DEC-ebf0b4` | [Session Discipline & Data Integrity Rules (NOT-TO-DO)](./ADR-ebf0b4.md) | implemented |  |
 
 #### documentation-delivery
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-b97390` | [Embedded documentation reader in bc-admin with native React implementation](ADR-b97390.md) | decided |  |
+| `DEC-b97390` | [Embedded documentation reader in bc-admin with native React implementation](./ADR-b97390.md) | decided |  |
 
 #### documentation-discipline
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-0cdfed` | [Drift Visibility & Chapter Conformance — citation lint, loud-warn, structured drift inventory, anti-revisionism gate](ADR-0cdfed.md) | proposed |  |
+| `DEC-0cdfed` | [Drift Visibility & Chapter Conformance — citation lint, loud-warn, structured drift inventory, anti-revisionism gate](./ADR-0cdfed.md) | proposed |  |
 
 #### execution-discipline
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-7f9597` | [Rulebook-first execution stance — reduce ceremony, not standards](ADR-7f9597.md) | decided |  |
+| `DEC-7f9597` | [Rulebook-first execution stance — reduce ceremony, not standards](./ADR-7f9597.md) | decided |  |
 
 #### failure-vocabulary
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-9d7a5c` | [OLS Failure Vocabulary — registry shape, namespace discipline, definitions-vs-occurrences split, seeded codes](ADR-9d7a5c.md) | decided |  |
+| `DEC-9d7a5c` | [OLS Failure Vocabulary — registry shape, namespace discipline, definitions-vs-occurrences split, seeded codes](./ADR-9d7a5c.md) | decided |  |
 
 #### governance
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-d894de` | [Workflow Governance: SOP + Programmatic Flow + UI Control Plane](ADR-d894de.md) | implemented |  |
+| `DEC-d894de` | [Workflow Governance: SOP + Programmatic Flow + UI Control Plane](./ADR-d894de.md) | implemented |  |
 
 #### metric-lifecycle-states
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-c9e623` | [BareCount Object Life States — framework, state ledger schema, probe-vs-gate separation, cross-boundary code rule](ADR-c9e623.md) | decided |  |
-| `DEC-e7b7b3` | [MLS State Substrate — current ledger, append-only event log, declarative trigger binding, queue-based recorder](ADR-e7b7b3.md) | decided |  |
+| `DEC-c9e623` | [BareCount Object Life States — framework, state ledger schema, probe-vs-gate separation, cross-boundary code rule](./ADR-c9e623.md) | decided |  |
+| `DEC-e7b7b3` | [MLS State Substrate — current ledger, append-only event log, declarative trigger binding, queue-based recorder](./ADR-e7b7b3.md) | decided |  |
 
 #### naming-standards
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-69f09e` | [ISO 11179 Technical Naming Standard — all internal technical names](ADR-69f09e.md) | implemented |  |
+| `DEC-69f09e` | [ISO 11179 Technical Naming Standard — all internal technical names](./ADR-69f09e.md) | implemented |  |
 
 #### qa-standards
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ee6018` | [Power of Ten — Adapted Coding Rules for BareCount](ADR-ee6018.md) | implemented |  |
+| `DEC-ee6018` | [Power of Ten — Adapted Coding Rules for BareCount](./ADR-ee6018.md) | implemented |  |
 
 ### infrastructure
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ade703` | [Drop monorepo — single-project NestJS for bc-core](ADR-ade703.md) | implemented |  |
+| `DEC-ade703` | [Drop monorepo — single-project NestJS for bc-core](./ADR-ade703.md) | implemented |  |
 
 ### mcf
 
@@ -1267,22 +1267,22 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-3f093f` | [MCF Canonicality and Legacy Runtime Boundary](ADR-3f093f.md) | decided |  |
+| `DEC-3f093f` | [MCF Canonicality and Legacy Runtime Boundary](./ADR-3f093f.md) | decided |  |
 
 #### metric-authoring-panel
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-09f86b` | [M12 Metric Authoring Panel — Judge role + Exhibit-ID abstraction + admissibility-scoped retrieval (replaces Moderator-as-witness shape)](ADR-09f86b.md) | proposed |  |
-| `DEC-5cb154` | [M12 Panel Composition v3 + Transport-Agnostic Envelope Harvest + Pre-Adoption Canary Policy](ADR-5cb154.md) | decided |  |
+| `DEC-09f86b` | [M12 Metric Authoring Panel — Judge role + Exhibit-ID abstraction + admissibility-scoped retrieval (replaces Moderator-as-witness shape)](./ADR-09f86b.md) | proposed |  |
+| `DEC-5cb154` | [M12 Panel Composition v3 + Transport-Agnostic Envelope Harvest + Pre-Adoption Canary Policy](./ADR-5cb154.md) | decided |  |
 
 #### metric-contract-semantics
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-46ff0a` | [D442 Amendment 1 — resolve lineage-vs-version semantic_role collision discovered at Packet 1+2 entry](ADR-46ff0a.md) | decided |  |
-| `DEC-61850f` | [D441 Foundation-shape lock — BC semantic_role + canonical_value_set storage](ADR-61850f.md) | proposed |  |
-| `DEC-6b35e0` | [Source vocabulary discipline at the Metric Contract boundary](ADR-6b35e0.md) | decided |  |
+| `DEC-46ff0a` | [D442 Amendment 1 — resolve lineage-vs-version semantic_role collision discovered at Packet 1+2 entry](./ADR-46ff0a.md) | decided |  |
+| `DEC-61850f` | [D441 Foundation-shape lock — BC semantic_role + canonical_value_set storage](./ADR-61850f.md) | proposed |  |
+| `DEC-6b35e0` | [Source vocabulary discipline at the Metric Contract boundary](./ADR-6b35e0.md) | decided |  |
 
 ### metric
 
@@ -1290,188 +1290,188 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1db1c7` | [Open-item / as-of canonical semantics — temporal projection for balance metrics](ADR-1db1c7.md) | superseded | superseded by [DEC-83fda0](ADR-83fda0.md) |
+| `DEC-1db1c7` | [Open-item / as-of canonical semantics — temporal projection for balance metrics](./ADR-1db1c7.md) | superseded | superseded by [DEC-83fda0](./ADR-83fda0.md) |
 
 #### metric-grammar
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-c012c0` | [Metric Contract grammar v1.1 — per-variable temporal input selection](ADR-c012c0.md) | superseded | superseded by [DEC-83fda0](ADR-83fda0.md) |
+| `DEC-c012c0` | [Metric Contract grammar v1.1 — per-variable temporal input selection](./ADR-c012c0.md) | superseded | superseded by [DEC-83fda0](./ADR-83fda0.md) |
 
 ### metrics
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1e9fd1` | [Observed Indicators — compositionCode 'observed' for External Reference Metrics](ADR-1e9fd1.md) | superseded | superseded by [DEC-9dce29](ADR-9dce29.md) |
-| `DEC-4a8abb` | [MC Constant Value Propagation — End-to-End](ADR-4a8abb.md) | decided |  |
-| `DEC-c0290f` | [Metric Evaluation Engine — Universal Formula Engine with Schedule-Driven Orchestration](ADR-c0290f.md) | implemented |  |
-| `DEC-d315ve` | [D315 — Metric Evaluation Verification Framework](ADR-d315ve.md) | decided |  |
-| `DEC-d316mr` | [D316 — Metric Readiness Scheduler](ADR-d316mr.md) | decided |  |
-| `DEC-e8a4d2` | [Definition is the canonical parent — fold contract page into definition page, drop reverse FK](ADR-e8a4d2.md) | implemented |  |
+| `DEC-1e9fd1` | [Observed Indicators — compositionCode 'observed' for External Reference Metrics](./ADR-1e9fd1.md) | superseded | superseded by [DEC-9dce29](./ADR-9dce29.md) |
+| `DEC-4a8abb` | [MC Constant Value Propagation — End-to-End](./ADR-4a8abb.md) | decided |  |
+| `DEC-c0290f` | [Metric Evaluation Engine — Universal Formula Engine with Schedule-Driven Orchestration](./ADR-c0290f.md) | implemented |  |
+| `DEC-d315ve` | [D315 — Metric Evaluation Verification Framework](./ADR-d315ve.md) | decided |  |
+| `DEC-d316mr` | [D316 — Metric Readiness Scheduler](./ADR-d316mr.md) | decided |  |
+| `DEC-e8a4d2` | [Definition is the canonical parent — fold contract page into definition page, drop reverse FK](./ADR-e8a4d2.md) | implemented |  |
 
 #### as-of-selection
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-c4c742` | [The Governed Selection — defining the Invariant-IV reserved selection artifact (as-of/state selection)](ADR-c4c742.md) | decided |  |
+| `DEC-c4c742` | [The Governed Selection — defining the Invariant-IV reserved selection artifact (as-of/state selection)](./ADR-c4c742.md) | decided |  |
 
 #### bcf-reference-concepts
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-d468e2` | [Reference BCs deferred until Reference BC End-to-End DBCP](ADR-d468e2.md) | decided |  |
+| `DEC-d468e2` | [Reference BCs deferred until Reference BC End-to-End DBCP](./ADR-d468e2.md) | decided |  |
 
 #### contracts/metric
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-0f3e57` | [MCF Secondary Metrics — metric-over-metric-snapshot DAG (Component D)](ADR-0f3e57.md) | decided |  |
-| `DEC-2c2849` | [MCF Reference-Dimension Grouping — group-by / top-N over a stamped reference dimension (CB-008 Component B)](ADR-2c2849.md) | decided |  |
-| `DEC-327d4e` | [MCF identity_tuple_hash v2 — include the computed-dimension kernel (amends hash-authority D-M7-8)](ADR-327d4e.md) | decided |  |
+| `DEC-0f3e57` | [MCF Secondary Metrics — metric-over-metric-snapshot DAG (Component D)](./ADR-0f3e57.md) | decided |  |
+| `DEC-2c2849` | [MCF Reference-Dimension Grouping — group-by / top-N over a stamped reference dimension (CB-008 Component B)](./ADR-2c2849.md) | decided |  |
+| `DEC-327d4e` | [MCF identity_tuple_hash v2 — include the computed-dimension kernel (amends hash-authority D-M7-8)](./ADR-327d4e.md) | decided |  |
 
 #### lifecycle
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-da4c51` | [Contract Trust Chain — Lifecycle Stages with Upward Trust Propagation](ADR-da4c51.md) | decided |  |
+| `DEC-da4c51` | [Contract Trust Chain — Lifecycle Stages with Upward Trust Propagation](./ADR-da4c51.md) | decided |  |
 
 #### lifecycle-funnel
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-4ca5a5` | [Metric Landscape — single-page UI consolidation of three overlapping metric-lifecycle surfaces](ADR-4ca5a5.md) | decided |  |
-| `DEC-a8b33e` | [Metric Lifecycle Funnel — canonical 7-stage ladder + single-service ownership](ADR-a8b33e.md) | decided |  |
+| `DEC-4ca5a5` | [Metric Landscape — single-page UI consolidation of three overlapping metric-lifecycle surfaces](./ADR-4ca5a5.md) | decided |  |
+| `DEC-a8b33e` | [Metric Lifecycle Funnel — canonical 7-stage ladder + single-service ownership](./ADR-a8b33e.md) | decided |  |
 
 #### m10-self-verification
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-2411e4` | [Bump self-verifier algorithm to mcf-verifier-v2: apply declared metric filter clauses during fixture playback](ADR-2411e4.md) | decided |  |
+| `DEC-2411e4` | [Bump self-verifier algorithm to mcf-verifier-v2: apply declared metric filter clauses during fixture playback](./ADR-2411e4.md) | decided |  |
 
 #### mcf-m12-grounding
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-32a56e` | [MCF M12 Context Judge — semantic grounding via LLM, not regex](ADR-32a56e.md) | proposed |  |
+| `DEC-32a56e` | [MCF M12 Context Judge — semantic grounding via LLM, not regex](./ADR-32a56e.md) | proposed |  |
 
 #### mcf-publication-eligibility
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-bd6ceb` | [Platform M14 activation does not gate on PE-MC-8 default-mode (Model A)](ADR-bd6ceb.md) | decided |  |
+| `DEC-bd6ceb` | [Platform M14 activation does not gate on PE-MC-8 default-mode (Model A)](./ADR-bd6ceb.md) | decided |  |
 
 #### mcf-trust-chain
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1002c9` | [MCF trust-chain resolution — concept-mediated MC→CC derivation, PE-MC-11 resolvability evidence, honest chain-green semantics](ADR-1002c9.md) | decided |  |
+| `DEC-1002c9` | [MCF trust-chain resolution — concept-mediated MC→CC derivation, PE-MC-11 resolvability evidence, honest chain-green semantics](./ADR-1002c9.md) | decided |  |
 
 #### mcf/trust-view
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-57c6d9` | [Platform metric trust strip ends at Activated; tenant-runtime stages move to bc-portal](ADR-57c6d9.md) | decided |  |
+| `DEC-57c6d9` | [Platform metric trust strip ends at Activated; tenant-runtime stages move to bc-portal](./ADR-57c6d9.md) | decided |  |
 
 #### metric-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-375e6b` | [KPIDepot Enrichment — Classification & Formula Decomposition Rules](ADR-375e6b.md) | implemented |  |
-| `DEC-6ee36c` | [Metric discipline taxonomy — function sub-grouping on metric_definition](ADR-6ee36c.md) | implemented |  |
-| `DEC-7696ea` | [D315 — Metric Evaluation Verification Framework](ADR-7696ea.md) | implemented |  |
-| `DEC-85565c` | [D316 — Metric Readiness Scheduler](ADR-85565c.md) | implemented |  |
-| `DEC-9dce29` | [Metric Specification Framework — 5-Dimensional Classification](ADR-9dce29.md) | implemented | supersedes [DEC-1e9fd1](ADR-1e9fd1.md) |
+| `DEC-375e6b` | [KPIDepot Enrichment — Classification & Formula Decomposition Rules](./ADR-375e6b.md) | implemented |  |
+| `DEC-6ee36c` | [Metric discipline taxonomy — function sub-grouping on metric_definition](./ADR-6ee36c.md) | implemented |  |
+| `DEC-7696ea` | [D315 — Metric Evaluation Verification Framework](./ADR-7696ea.md) | implemented |  |
+| `DEC-85565c` | [D316 — Metric Readiness Scheduler](./ADR-85565c.md) | implemented |  |
+| `DEC-9dce29` | [Metric Specification Framework — 5-Dimensional Classification](./ADR-9dce29.md) | implemented | supersedes [DEC-1e9fd1](./ADR-1e9fd1.md) |
 
 #### metric-catalog
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1ac398` | [Metric Catalog rebuild — governed attributes, panel-time enrichment, knowledge import, and the two-strip trust view](ADR-1ac398.md) | decided |  |
-| `DEC-c566f3` | [D223: KPI Catalog AI Assistant — Structured Retrieval + Grounded LLM](ADR-c566f3.md) | decided |  |
+| `DEC-1ac398` | [Metric Catalog rebuild — governed attributes, panel-time enrichment, knowledge import, and the two-strip trust view](./ADR-1ac398.md) | decided |  |
+| `DEC-c566f3` | [D223: KPI Catalog AI Assistant — Structured Retrieval + Grounded LLM](./ADR-c566f3.md) | decided |  |
 
 #### metric-portfolio
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-a7fe72` | [Finance Package v0 — scope lock, gold-universe planning SSOT, and execution sequence](ADR-a7fe72.md) | decided |  |
-| `DEC-bc6be2` | [Finance Package v0 — advance the date-derivation unlock; sanction date_offset OC transform for the date-diff family](ADR-bc6be2.md) | decided |  |
+| `DEC-a7fe72` | [Finance Package v0 — scope lock, gold-universe planning SSOT, and execution sequence](./ADR-a7fe72.md) | decided |  |
+| `DEC-bc6be2` | [Finance Package v0 — advance the date-derivation unlock; sanction date_offset OC transform for the date-diff family](./ADR-bc6be2.md) | decided |  |
 
 #### metric-rendering
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-063b5e` | [Formula Rendering — AST Parser Replaces Regex for LaTeX Generation](ADR-063b5e.md) | decided |  |
+| `DEC-063b5e` | [Formula Rendering — AST Parser Replaces Regex for LaTeX Generation](./ADR-063b5e.md) | decided |  |
 
 #### metric-runtime
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-2f0967` | [CB-008 Component C — cross-entity governed selection (credit-limit utilization)](ADR-2f0967.md) | decided |  |
-| `DEC-483f1e` | [The General Metric Runtime — substrate-driven, shape-dispatched governed-selection → aggregation](ADR-483f1e.md) | decided |  |
-| `DEC-5ea578` | [Metric Evaluation Boundary — Unification & Wiring (governed runtime promotion, run object, transactional idempotent act)](ADR-5ea578.md) | proposed |  |
-| `DEC-b8b825` | [OLS-14 Semantic Activation Gate — refusal rules, signature-hash comparison, intentional reuse pattern, MT-04971 specimen](ADR-b8b825.md) | decided |  |
+| `DEC-2f0967` | [CB-008 Component C — cross-entity governed selection (credit-limit utilization)](./ADR-2f0967.md) | decided |  |
+| `DEC-483f1e` | [The General Metric Runtime — substrate-driven, shape-dispatched governed-selection → aggregation](./ADR-483f1e.md) | decided |  |
+| `DEC-5ea578` | [Metric Evaluation Boundary — Unification & Wiring (governed runtime promotion, run object, transactional idempotent act)](./ADR-5ea578.md) | proposed |  |
+| `DEC-b8b825` | [OLS-14 Semantic Activation Gate — refusal rules, signature-hash comparison, intentional reuse pattern, MT-04971 specimen](./ADR-b8b825.md) | decided |  |
 
 #### metric-runtime/temporal-grammar
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-26f75a` | [period_aggregate anchor_field — event-date period membership for flow metrics (temporal grammar ADR](ADR-26f75a.md) | decided |  |
+| `DEC-26f75a` | [period_aggregate anchor_field — event-date period membership for flow metrics (temporal grammar ADR](./ADR-26f75a.md) | decided |  |
 
 #### metric-semantics
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-952faa` | [Metric Temporality Class & Inspector — close the semantic gap and lock a first-class trust surface](ADR-952faa.md) | decided |  |
+| `DEC-952faa` | [Metric Temporality Class & Inspector — close the semantic gap and lock a first-class trust surface](./ADR-952faa.md) | decided |  |
 
 #### metric/mcf-classification
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-31c212` | [MCF metric function/subfunction classification: master-authoritative, not_defined sentinel, DB-enforced](ADR-31c212.md) | decided |  |
+| `DEC-31c212` | [MCF metric function/subfunction classification: master-authoritative, not_defined sentinel, DB-enforced](./ADR-31c212.md) | decided |  |
 
 #### metrics/mcf-m13
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-957fb0` | [Editorial rebind evidence handling — PE-MC carry-forward](ADR-957fb0.md) | decided |  |
+| `DEC-957fb0` | [Editorial rebind evidence handling — PE-MC carry-forward](./ADR-957fb0.md) | decided |  |
 
 #### metrics/mcf-materialization
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-7ab22b` | [MCF-materialized metrics governed by MCF M13/M14, not legacy D305 chain_status](ADR-7ab22b.md) | implemented |  |
+| `DEC-7ab22b` | [MCF-materialized metrics governed by MCF M13/M14, not legacy D305 chain_status](./ADR-7ab22b.md) | implemented |  |
 
 #### metrics/runtime
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ada203` | [Composite (metric-of-metrics) evaluation — resolve upstream snapshots + reuse the formula engine](ADR-ada203.md) | decided |  |
+| `DEC-ada203` | [Composite (metric-of-metrics) evaluation — resolve upstream snapshots + reuse the formula engine](./ADR-ada203.md) | decided |  |
 
 #### metrics/tenant-read
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-a1290e` | [v3 tenant metric read surface (/beyond) is MCF-native, not a legacy bridge](ADR-a1290e.md) | decided |  |
+| `DEC-a1290e` | [v3 tenant metric read surface (/beyond) is MCF-native, not a legacy bridge](./ADR-a1290e.md) | decided |  |
 
 #### naming-standards
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-37967b` | [Function/Subfunction Taxonomy — APQC PCF Alignment Adjustments](ADR-37967b.md) | implemented |  |
+| `DEC-37967b` | [Function/Subfunction Taxonomy — APQC PCF Alignment Adjustments](./ADR-37967b.md) | implemented |  |
 
 #### readiness
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-28b176` | [Metric Readiness Model — three independent dials + per-formula-token audit](ADR-28b176.md) | decided |  |
+| `DEC-28b176` | [Metric Readiness Model — three independent dials + per-formula-token audit](./ADR-28b176.md) | decided |  |
 
 #### synthetic-data
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-049cb1` | [Apex Generator Architecture for Permanent CFO Pack Demo](ADR-049cb1.md) | superseded | superseded by [DEC-076521](ADR-076521.md) |
-| `DEC-076521` | [Apex Tenant Binds to SAP S/4HANA Reader Chain; bc-sdg as Profile-Parameterised SDG-SAP Service](ADR-076521.md) | decided | supersedes [DEC-049cb1](ADR-049cb1.md) |
-| `DEC-b0839a` | [SDG Coherent Snapshots and Multi-Projection Architecture](ADR-b0839a.md) | decided |  |
+| `DEC-049cb1` | [Apex Generator Architecture for Permanent CFO Pack Demo](./ADR-049cb1.md) | superseded | superseded by [DEC-076521](./ADR-076521.md) |
+| `DEC-076521` | [Apex Tenant Binds to SAP S/4HANA Reader Chain; bc-sdg as Profile-Parameterised SDG-SAP Service](./ADR-076521.md) | decided | supersedes [DEC-049cb1](./ADR-049cb1.md) |
+| `DEC-b0839a` | [SDG Coherent Snapshots and Multi-Projection Architecture](./ADR-b0839a.md) | decided |  |
 
 ### operations
 
@@ -1479,168 +1479,168 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-743186` | [Tenant Business Data PII Detection — Source Catalog Field-Level Marking](ADR-743186.md) | implemented |  |
+| `DEC-743186` | [Tenant Business Data PII Detection — Source Catalog Field-Level Marking](./ADR-743186.md) | implemented |  |
 
 ### platform
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-000001` | [Platform Host Services — control plane and shared services foundation](ADR-0001.md) | superseded |  |
-| `DEC-1fbaf1` | [BCF admission-error withdrawal — archival of vocabulary admitted in error, distinct from supersession](ADR-1fbaf1.md) | decided |  |
-| `DEC-594211` | [Source System Simulators — Per-System-Type Synthetic Data Architecture](ADR-594211.md) | implemented |  |
-| `DEC-6f5199` | [D226: bc-docs Restructuring — Essentials/Domains/Tier Documentation Model](ADR-6f5199.md) | superseded | superseded by [DEC-b80330](ADR-b80330.md) |
-| `DEC-72d723` | [Editorial Amendment of Active Characteristic Definitions — Refinement of DEC-26b6e2](ADR-72d723.md) | decided |  |
-| `DEC-c10d05` | [bc-core Base Refactoring — Build, Type Safety, Error Handling, Module Structure](ADR-c10d05.md) | decided |  |
-| `DEC-c193a1` | [Server-Side Onboarding Orchestrator — SSE streaming for all onboarding workflows](ADR-c193a1.md) | implemented |  |
-| `DEC-cc8fd9` | [E2E Chain Test Bench — Tenant-Publishes-to-Platform QA Architecture](ADR-cc8fd9.md) | implemented |  |
-| `DEC-e82f0a` | [bc-portal AI Assistant — unified drawer replacing help, dual retrieval (catalog + articles) [QUARANTINED DUPLICATE FILE]](./ADR-DEC-e82f0a.md) | superseded | superseded by [DEC-e82f0a](ADR-e82f0a.md) |
+| `DEC-000001` | [Platform Host Services — control plane and shared services foundation](./ADR-0001.md) | superseded |  |
+| `DEC-1fbaf1` | [BCF admission-error withdrawal — archival of vocabulary admitted in error, distinct from supersession](./ADR-1fbaf1.md) | decided |  |
+| `DEC-594211` | [Source System Simulators — Per-System-Type Synthetic Data Architecture](./ADR-594211.md) | implemented |  |
+| `DEC-6f5199` | [D226: bc-docs Restructuring — Essentials/Domains/Tier Documentation Model](./ADR-6f5199.md) | superseded | superseded by [DEC-b80330](./ADR-b80330.md) |
+| `DEC-72d723` | [Editorial Amendment of Active Characteristic Definitions — Refinement of DEC-26b6e2](./ADR-72d723.md) | decided |  |
+| `DEC-c10d05` | [bc-core Base Refactoring — Build, Type Safety, Error Handling, Module Structure](./ADR-c10d05.md) | decided |  |
+| `DEC-c193a1` | [Server-Side Onboarding Orchestrator — SSE streaming for all onboarding workflows](./ADR-c193a1.md) | implemented |  |
+| `DEC-cc8fd9` | [E2E Chain Test Bench — Tenant-Publishes-to-Platform QA Architecture](./ADR-cc8fd9.md) | implemented |  |
+| `DEC-e82f0a` | [bc-portal AI Assistant — unified drawer replacing help, dual retrieval (catalog + articles) [QUARANTINED DUPLICATE FILE]](./ADR-DEC-e82f0a.md) | superseded | superseded by [DEC-e82f0a](./ADR-e82f0a.md) |
 
 #### adr-governance
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-623f8f` | [ADR Hygiene Policy — closure process for the 351-ADR registry](ADR-623f8f.md) | decided |  |
+| `DEC-623f8f` | [ADR Hygiene Policy — closure process for the 351-ADR registry](./ADR-623f8f.md) | decided |  |
 
 #### backend-framework
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-a466c5` | [NestJS for backend API](ADR-a466c5.md) | implemented |  |
+| `DEC-a466c5` | [NestJS for backend API](./ADR-a466c5.md) | implemented |  |
 
 #### bc-admin
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-6f7d38` | [Fresh bc-admin repo — Datajettyadminportal stays as Figma reference](ADR-6f7d38.md) | implemented |  |
-| `DEC-b39a00` | [bc-admin Platform Audit — Menu Restructure, Tenant Group, TopBar+LeftBar Layout](ADR-b39a00.md) | decided |  |
+| `DEC-6f7d38` | [Fresh bc-admin repo — Datajettyadminportal stays as Figma reference](./ADR-6f7d38.md) | implemented |  |
+| `DEC-b39a00` | [bc-admin Platform Audit — Menu Restructure, Tenant Group, TopBar+LeftBar Layout](./ADR-b39a00.md) | decided |  |
 
 #### bc-core-architecture
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-856d61` | [Split RegistryModule into 6 domain modules](ADR-856d61.md) | decided | supersedes [DEC-a5df75](ADR-a5df75.md) |
+| `DEC-856d61` | [Split RegistryModule into 6 domain modules](./ADR-856d61.md) | decided | supersedes [DEC-a5df75](./ADR-a5df75.md) |
 
 #### bc-portal
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-04dade` | [bc-portal architecture & patterns](ADR-04dade.md) | superseded | superseded by [DEC-6cdceb](ADR-6cdceb.md) |
-| `DEC-162de5` | [bc-portal naming convention — one name, three places](ADR-162de5.md) | implemented |  |
-| `DEC-7d0116` | [Frontend is React 18 + Vite, not Angular](ADR-7d0116.md) | implemented |  |
-| `DEC-8e857a` | [Design-system screen consolidation: 42 individual demos → 13 section pages](ADR-8e857a.md) | implemented |  |
-| `DEC-9a3c6a` | [bc-portal Design System governance](ADR-9a3c6a.md) | implemented |  |
-| `DEC-d9578e` | [Dashboard route slugs — keep short](ADR-d9578e.md) | superseded | superseded by [DEC-7e76b9](ADR-7e76b9.md) |
-| `DEC-e82f0a` | [bc-portal AI Assistant — unified drawer replacing help, dual retrieval (catalog + articles)](ADR-e82f0a.md) | implemented |  |
-| `DEC-eba2aa` | [Register all 66 auto-generated dashboard routes in Screen Registry](ADR-eba2aa.md) | implemented |  |
+| `DEC-04dade` | [bc-portal architecture & patterns](./ADR-04dade.md) | superseded | superseded by [DEC-6cdceb](./ADR-6cdceb.md) |
+| `DEC-162de5` | [bc-portal naming convention — one name, three places](./ADR-162de5.md) | implemented |  |
+| `DEC-7d0116` | [Frontend is React 18 + Vite, not Angular](./ADR-7d0116.md) | implemented |  |
+| `DEC-8e857a` | [Design-system screen consolidation: 42 individual demos → 13 section pages](./ADR-8e857a.md) | implemented |  |
+| `DEC-9a3c6a` | [bc-portal Design System governance](./ADR-9a3c6a.md) | implemented |  |
+| `DEC-d9578e` | [Dashboard route slugs — keep short](./ADR-d9578e.md) | superseded | superseded by [DEC-7e76b9](./ADR-7e76b9.md) |
+| `DEC-e82f0a` | [bc-portal AI Assistant — unified drawer replacing help, dual retrieval (catalog + articles)](./ADR-e82f0a.md) | implemented |  |
+| `DEC-eba2aa` | [Register all 66 auto-generated dashboard routes in Screen Registry](./ADR-eba2aa.md) | implemented |  |
 
 #### chain-engines
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1fa08f` | [Chain Audit Service (CAS) — read-only verifier with 5-mode lifecycle gating](ADR-1fa08f.md) | decided |  |
-| `DEC-739e23` | [Chain Enrichment Engine (CEE) v0 — planner-only over harness v1.1 governed-apply](ADR-739e23.md) | decided |  |
-| `DEC-cff0cf` | [ABC = Autonomous Business Chain — deterministic orchestrator over governed factories + bounded retrieval-first reasoning panel](ADR-cff0cf.md) | decided |  |
-| `DEC-e01fcf` | [Chain enrichment doctrine — autonomous sequencing across BCF / SC / AC / OC / CC / MC / CAS / PE-MC](ADR-e01fcf.md) | decided |  |
+| `DEC-1fa08f` | [Chain Audit Service (CAS) — read-only verifier with 5-mode lifecycle gating](./ADR-1fa08f.md) | decided |  |
+| `DEC-739e23` | [Chain Enrichment Engine (CEE) v0 — planner-only over harness v1.1 governed-apply](./ADR-739e23.md) | decided |  |
+| `DEC-cff0cf` | [ABC = Autonomous Business Chain — deterministic orchestrator over governed factories + bounded retrieval-first reasoning panel](./ADR-cff0cf.md) | decided |  |
+| `DEC-e01fcf` | [Chain enrichment doctrine — autonomous sequencing across BCF / SC / AC / OC / CC / MC / CAS / PE-MC](./ADR-e01fcf.md) | decided |  |
 
 #### cross-frontend
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-03cf97` | [Radix UI + Tailwind v4](ADR-03cf97.md) | implemented |  |
+| `DEC-03cf97` | [Radix UI + Tailwind v4](./ADR-03cf97.md) | implemented |  |
 
 #### devhub-deployment
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-376c9c` | [DevHub as separate repo + EC2](ADR-376c9c.md) | implemented |  |
+| `DEC-376c9c` | [DevHub as separate repo + EC2](./ADR-376c9c.md) | implemented |  |
 
 #### doc-framework
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-2347a3` | [Filesystem-Derived Doc Registry — Single Root from mkdocs.yml + Frontmatter](ADR-2347a3.md) | implemented |  |
-| `DEC-a4e550` | [Documentation Registry in DevHub + Standard ADR File Format](ADR-a4e550.md) | implemented |  |
-| `DEC-b80330` | [Documentation Implementation — Greenfield with Split Dossiers, Diagram Layer, Foundation Stream](ADR-b80330.md) | implemented | supersedes [DEC-6f5199](ADR-6f5199.md) |
+| `DEC-2347a3` | [Filesystem-Derived Doc Registry — Single Root from mkdocs.yml + Frontmatter](./ADR-2347a3.md) | implemented |  |
+| `DEC-a4e550` | [Documentation Registry in DevHub + Standard ADR File Format](./ADR-a4e550.md) | implemented |  |
+| `DEC-b80330` | [Documentation Implementation — Greenfield with Split Dossiers, Diagram Layer, Foundation Stream](./ADR-b80330.md) | implemented | supersedes [DEC-6f5199](./ADR-6f5199.md) |
 
 #### documentation
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-2f406b` | [D230 Addendum — Dossier ID scheme, frontmatter, diagrams, awesome-pages](ADR-2f406b.md) | implemented |  |
-| `DEC-737b58` | [Developer Guides — per-repo codebase guides and code reviews in dev-guides/](ADR-737b58.md) | implemented |  |
-| `DEC-f0eb14` | [System Documentation Framework — 4-Stream, Module-Component Architecture](ADR-f0eb14.md) | implemented |  |
+| `DEC-2f406b` | [D230 Addendum — Dossier ID scheme, frontmatter, diagrams, awesome-pages](./ADR-2f406b.md) | implemented |  |
+| `DEC-737b58` | [Developer Guides — per-repo codebase guides and code reviews in dev-guides/](./ADR-737b58.md) | implemented |  |
+| `DEC-f0eb14` | [System Documentation Framework — 4-Stream, Module-Component Architecture](./ADR-f0eb14.md) | implemented |  |
 
 #### documentation-structure
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-b79d16` | [Source docs at bc-docs/sources/ (root level, not architecture/)](ADR-b79d16.md) | implemented |  |
+| `DEC-b79d16` | [Source docs at bc-docs/sources/ (root level, not architecture/)](./ADR-b79d16.md) | implemented |  |
 
 #### frontend-routing
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-5d3f0f` | [Phase 5 route architecture refactor — do now](ADR-5d3f0f.md) | implemented |  |
+| `DEC-5d3f0f` | [Phase 5 route architecture refactor — do now](./ADR-5d3f0f.md) | implemented |  |
 
 #### frontend-state
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-855b77` | [TanStack Query for server state](ADR-855b77.md) | implemented |  |
+| `DEC-855b77` | [TanStack Query for server state](./ADR-855b77.md) | implemented |  |
 
 #### governance-agent
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-8391fd` | [Cross-Model Architecture Audit — Gemini Deep Research (4-Pass)](ADR-8391fd.md) | implemented |  |
+| `DEC-8391fd` | [Cross-Model Architecture Audit — Gemini Deep Research (4-Pass)](./ADR-8391fd.md) | implemented |  |
 
 #### mcp-platform
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-459a9e` | [Zod v4 syntax rule for MCP tool schemas + tools/list regression guard](ADR-459a9e.md) | implemented |  |
+| `DEC-459a9e` | [Zod v4 syntax rule for MCP tool schemas + tools/list regression guard](./ADR-459a9e.md) | implemented |  |
 
 #### metric-evaluation
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-aa286c` | [Multi-binding MC evaluation end-to-end](ADR-aa286c.md) | implemented |  |
+| `DEC-aa286c` | [Multi-binding MC evaluation end-to-end](./ADR-aa286c.md) | implemented |  |
 
 #### model-orchestration
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-e9294b` | [bc-ai — Platform AI Orchestration Service (MCP + REST)](ADR-e9294b.md) | implemented | supersedes [DEC-d214ed](ADR-d214ed.md) |
+| `DEC-e9294b` | [bc-ai — Platform AI Orchestration Service (MCP + REST)](./ADR-e9294b.md) | implemented | supersedes [DEC-d214ed](./ADR-d214ed.md) |
 
 #### privacy
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-bd5492` | [GDPR/DPDP/CCPA Nullification Object — Privacy Erasure for Immutable-Fact Architecture](ADR-bd5492.md) | decided |  |
+| `DEC-bd5492` | [GDPR/DPDP/CCPA Nullification Object — Privacy Erasure for Immutable-Fact Architecture](./ADR-bd5492.md) | decided |  |
 
 #### qa-standards
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-f0c0f7` | [No Hardcoded Enums — All Dropdowns Must Be API-Driven](ADR-f0c0f7.md) | implemented |  |
+| `DEC-f0c0f7` | [No Hardcoded Enums — All Dropdowns Must Be API-Driven](./ADR-f0c0f7.md) | implemented |  |
 
 #### readiness-model
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-2b5a82` | [Readiness assessment rules for master_data and integration](ADR-2b5a82.md) | decided |  |
+| `DEC-2b5a82` | [Readiness assessment rules for master_data and integration](./ADR-2b5a82.md) | decided |  |
 
 #### synthetic-data-profiles
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-9ec48f` | [Six customer profiles across industries — configurable company simulation](ADR-9ec48f.md) | implemented |  |
+| `DEC-9ec48f` | [Six customer profiles across industries — configurable company simulation](./ADR-9ec48f.md) | implemented |  |
 
 #### taxonomy
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ddbce8` | [Unified Business Domain Taxonomy](ADR-ddbce8.md) | superseded | superseded by [DEC-7bbdba](ADR-7bbdba.md) |
+| `DEC-ddbce8` | [Unified Business Domain Taxonomy](./ADR-ddbce8.md) | superseded | superseded by [DEC-7bbdba](./ADR-7bbdba.md) |
 
 ### qa
 
@@ -1648,7 +1648,7 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-3e9829` | [QA Shift-Left — Coding Standards in CLAUDE.md](ADR-3e9829.md) | implemented |  |
+| `DEC-3e9829` | [QA Shift-Left — Coding Standards in CLAUDE.md](./ADR-3e9829.md) | implemented |  |
 
 ### rbac
 
@@ -1656,7 +1656,7 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-e44afd` | [Function Admin Console — decentralized RBAC and tabbed envelope for function-scoped governance](ADR-e44afd.md) | decided |  |
+| `DEC-e44afd` | [Function Admin Console — decentralized RBAC and tabbed envelope for function-scoped governance](./ADR-e44afd.md) | decided |  |
 
 ### readers
 
@@ -1664,68 +1664,68 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-edd9bb` | [BC-Agent On-Premises Appliance — premium tier with branded hardware](ADR-edd9bb.md) | decided |  |
+| `DEC-edd9bb` | [BC-Agent On-Premises Appliance — premium tier with branded hardware](./ADR-edd9bb.md) | decided |  |
 
 #### e2e-demo
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-010bf9` | [Connection simulation — bc-sdg serves as mock SAP system for end-to-end demo](ADR-010bf9.md) | implemented |  |
+| `DEC-010bf9` | [Connection simulation — bc-sdg serves as mock SAP system for end-to-end demo](./ADR-010bf9.md) | implemented |  |
 
 #### naming-standards
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-5017fe` | [Standard Field Registry — ISO 11179 MDR for observation vocabulary](ADR-5017fe.md) | superseded | superseded by [DEC-a17d0f](ADR-a17d0f.md) |
+| `DEC-5017fe` | [Standard Field Registry — ISO 11179 MDR for observation vocabulary](./ADR-5017fe.md) | superseded | superseded by [DEC-a17d0f](./ADR-a17d0f.md) |
 
 #### odata-protocol
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-40a68b` | [Full OData V4/V2 protocol fidelity — $metadata, $filter, $expand, $top/$skip, delta](ADR-40a68b.md) | implemented |  |
+| `DEC-40a68b` | [Full OData V4/V2 protocol fidelity — $metadata, $filter, $expand, $top/$skip, delta](./ADR-40a68b.md) | implemented |  |
 
 #### reader-authoring
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-17112b` | [UniBAT Reader Authoring Surface — Four-Layer Model, Per-Entity Observation Contract Binding & Chain-Resolvability Activation Gate](ADR-17112b.md) | decided |  |
+| `DEC-17112b` | [UniBAT Reader Authoring Surface — Four-Layer Model, Per-Entity Observation Contract Binding & Chain-Resolvability Activation Gate](./ADR-17112b.md) | decided |  |
 
 #### reader-config
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-3ac7d6` | [Reader backfill configuration at flavor level](ADR-3ac7d6.md) | decided |  |
+| `DEC-3ac7d6` | [Reader backfill configuration at flavor level](./ADR-3ac7d6.md) | decided |  |
 
 #### reader-execution
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-b7349d` | [Reader execution: dev in-process, prod Fargate — no infra planning needed now](ADR-b7349d.md) | decided |  |
+| `DEC-b7349d` | [Reader execution: dev in-process, prod Fargate — no infra planning needed now](./ADR-b7349d.md) | decided |  |
 
 #### readers-and-flavors
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ccfa3f` | [SFDC flavor fixes — drop ar-invoice-item→OpportunityLineItem, flag material-master rename](ADR-ccfa3f.md) | implemented |  |
-| `DEC-e7a4f5` | [Readers are domain-bound, not source-bound](ADR-e7a4f5.md) | implemented |  |
+| `DEC-ccfa3f` | [SFDC flavor fixes — drop ar-invoice-item→OpportunityLineItem, flag material-master rename](./ADR-ccfa3f.md) | implemented |  |
+| `DEC-e7a4f5` | [Readers are domain-bound, not source-bound](./ADR-e7a4f5.md) | implemented |  |
 
 #### runtime-contracts
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-354552` | [Reader Path Robustness + Chain Integrity Gates — fail-fast contracts, locked SOPs, end-to-end smoke gate](ADR-354552.md) | proposed |  |
+| `DEC-354552` | [Reader Path Robustness + Chain Integrity Gates — fail-fast contracts, locked SOPs, end-to-end smoke gate](./ADR-354552.md) | proposed |  |
 
 ### runtime
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-129417` | [Reader consolidation — per-subfunction with system flavors](ADR-129417.md) | implemented |  |
+| `DEC-129417` | [Reader consolidation — per-subfunction with system flavors](./ADR-129417.md) | implemented |  |
 
 #### drift-detection
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-29f134` | [Runtime Drift Detection — payload vs catalog probe, classification dispatch, S3 quarantine route, ticket lodging](ADR-29f134.md) | decided |  |
+| `DEC-29f134` | [Runtime Drift Detection — payload vs catalog probe, classification dispatch, S3 quarantine route, ticket lodging](./ADR-29f134.md) | decided |  |
 
 ### sdg
 
@@ -1733,13 +1733,13 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-068fe7` | [Mock/Real dual-path via env.useMock](ADR-068fe7.md) | implemented |  |
+| `DEC-068fe7` | [Mock/Real dual-path via env.useMock](./ADR-068fe7.md) | implemented |  |
 
 #### synthetic-data-window
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-87ab35` | [18-month backfill covering 2 full fiscal years (April 2024 — September 2025)](ADR-87ab35.md) | decided |  |
+| `DEC-87ab35` | [18-month backfill covering 2 full fiscal years (April 2024 — September 2025)](./ADR-87ab35.md) | decided |  |
 
 ### security
 
@@ -1747,7 +1747,7 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-f0e78e` | [Platform/tenant authority boundary — distinct classes; narrow platform-inspection carve-out](ADR-f0e78e.md) | decided |  |
+| `DEC-f0e78e` | [Platform/tenant authority boundary — distinct classes; narrow platform-inspection carve-out](./ADR-f0e78e.md) | decided |  |
 
 ### source-catalog
 
@@ -1755,7 +1755,7 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-490520` | [PII Classification at Source Field Level — Observe at Source, Propagate Through Chain](ADR-490520.md) | decided |  |
+| `DEC-490520` | [PII Classification at Source Field Level — Observe at Source, Propagate Through Chain](./ADR-490520.md) | decided |  |
 
 ### sources
 
@@ -1763,49 +1763,49 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-b5631b` | [Field Data Type Quality Gate — Mandatory Validation at AI Verify and Registration](ADR-b5631b.md) | implemented |  |
+| `DEC-b5631b` | [Field Data Type Quality Gate — Mandatory Validation at AI Verify and Registration](./ADR-b5631b.md) | implemented |  |
 
 #### catalog-sourcing
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-316f3c` | [bc-seed — Standalone Catalog Sourcing Service (MongoDB, Port 4200)](ADR-316f3c.md) | implemented |  |
+| `DEC-316f3c` | [bc-seed — Standalone Catalog Sourcing Service (MongoDB, Port 4200)](./ADR-316f3c.md) | implemented |  |
 
 #### mfa
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-78b437` | [Email OTP MFA deferred — TOTP retained with UX improvements](ADR-78b437.md) | implemented |  |
+| `DEC-78b437` | [Email OTP MFA deferred — TOTP retained with UX improvements](./ADR-78b437.md) | implemented |  |
 
 #### providers
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-861a88` | [Providers are status-free containers — lifecycle lives on systems](ADR-861a88.md) | reversed |  |
+| `DEC-861a88` | [Providers are status-free containers — lifecycle lives on systems](./ADR-861a88.md) | reversed |  |
 
 #### sap
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-d2cdb9` | [SAP data admission stance under SAP API Policy v.4/2026](ADR-d2cdb9.md) | decided |  |
+| `DEC-d2cdb9` | [SAP data admission stance under SAP API Policy v.4/2026](./ADR-d2cdb9.md) | decided |  |
 
 #### sap-catalog
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-7e3779` | [Source Catalog Dual-System Strategy — ECC Primary, S/4HANA Overlay](ADR-7e3779.md) | implemented |  |
+| `DEC-7e3779` | [Source Catalog Dual-System Strategy — ECC Primary, S/4HANA Overlay](./ADR-7e3779.md) | implemented |  |
 
 #### source-classification
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-f83b8a` | [Source Specification Framework — 5-Dimensional Classification for Source Tables](ADR-f83b8a.md) | implemented |  |
+| `DEC-f83b8a` | [Source Specification Framework — 5-Dimensional Classification for Source Tables](./ADR-f83b8a.md) | implemented |  |
 
 #### source-systems
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-50995f` | [Source Catalog shows system cards, not provider cards](ADR-50995f.md) | implemented |  |
+| `DEC-50995f` | [Source Catalog shows system cards, not provider cards](./ADR-50995f.md) | implemented |  |
 
 ### subscription
 
@@ -1813,19 +1813,19 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-9eb783` | [Pin all dependency versions exactly — no caret/tilde ranges](ADR-9eb783.md) | decided |  |
+| `DEC-9eb783` | [Pin all dependency versions exactly — no caret/tilde ranges](./ADR-9eb783.md) | decided |  |
 
 #### synthetic-data-coverage
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-4a515b` | [All 4 process chains from day one — P2P, O2C, R2R, Plan-to-Produce](ADR-4a515b.md) | implemented |  |
+| `DEC-4a515b` | [All 4 process chains from day one — P2P, O2C, R2R, Plan-to-Produce](./ADR-4a515b.md) | implemented |  |
 
 #### type-sharing-strategy
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-ab1546` | [Shared types via @barecount/types npm package](ADR-ab1546.md) | reversed |  |
+| `DEC-ab1546` | [Shared types via @barecount/types npm package](./ADR-ab1546.md) | reversed |  |
 
 ### tenants
 
@@ -1833,67 +1833,67 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-324d9e` | [Stripe Billing integration — subscription and payment management from day 1](ADR-324d9e.md) | decided |  |
+| `DEC-324d9e` | [Stripe Billing integration — subscription and payment management from day 1](./ADR-324d9e.md) | decided |  |
 
 #### cognito-pool
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1fcbc0` | [AWS Cognito for authentication](ADR-1fcbc0.md) | implemented |  |
+| `DEC-1fcbc0` | [AWS Cognito for authentication](./ADR-1fcbc0.md) | implemented |  |
 
 #### cross-frontend
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-22eaaf` | [bc-core serves both bc-admin and bc-portal frontends](ADR-22eaaf.md) | implemented |  |
+| `DEC-22eaaf` | [bc-core serves both bc-admin and bc-portal frontends](./ADR-22eaaf.md) | implemented |  |
 
 #### demo-scenario
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-3b23de` | [sandbox1 demo scenario — 3 fiscal years of real-estate AR data via bc-sdg + canonical AR slice](ADR-3b23de.md) | decided |  |
+| `DEC-3b23de` | [sandbox1 demo scenario — 3 fiscal years of real-estate AR data via bc-sdg + canonical AR slice](./ADR-3b23de.md) | decided |  |
 
 #### demo-tier
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-1392ee` | [Demo tier — 2 weeks free on AWS Shared only](ADR-1392ee.md) | decided |  |
+| `DEC-1392ee` | [Demo tier — 2 weeks free on AWS Shared only](./ADR-1392ee.md) | decided |  |
 
 #### fiscal-calendar
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-d7e7a0` | [Platform date_dim + per-entity tenant fiscal calendar + FiscalCalendarService](ADR-d7e7a0.md) | implemented |  |
+| `DEC-d7e7a0` | [Platform date_dim + per-entity tenant fiscal calendar + FiscalCalendarService](./ADR-d7e7a0.md) | implemented |  |
 
 #### provisioning
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-42b9c0` | [Admin-provisioned users only (no self-signup)](ADR-42b9c0.md) | implemented |  |
+| `DEC-42b9c0` | [Admin-provisioned users only (no self-signup)](./ADR-42b9c0.md) | implemented |  |
 
 #### tenant-lifecycle
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-005ea7` | [Single production environment — no dev/staging/prod per tenant](ADR-005ea7.md) | implemented |  |
+| `DEC-005ea7` | [Single production environment — no dev/staging/prod per tenant](./ADR-005ea7.md) | implemented |  |
 
 #### tenant-onboarding
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-a67518` | [Tenant Onboarding Gate — checklist-based readiness for BYO-DB and BC-Agent tiers](ADR-a67518.md) | decided |  |
+| `DEC-a67518` | [Tenant Onboarding Gate — checklist-based readiness for BYO-DB and BC-Agent tiers](./ADR-a67518.md) | decided |  |
 
 #### tenant-topology
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-771baf` | [Tenant Database Architecture — 4 schemas, platform→tenant one-way dependency, all contracts platform-owned](ADR-771baf.md) | implemented |  |
+| `DEC-771baf` | [Tenant Database Architecture — 4 schemas, platform→tenant one-way dependency, all contracts platform-owned](./ADR-771baf.md) | implemented |  |
 
 #### tenants/subscription-binding
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-4aa2fd` | [Subscription-plan-driven contract binding automation (metric entitlement is the control surface)](ADR-4aa2fd.md) | proposed |  |
+| `DEC-4aa2fd` | [Subscription-plan-driven contract binding automation (metric entitlement is the control surface)](./ADR-4aa2fd.md) | proposed |  |
 
 ### website
 
@@ -1901,6 +1901,6 @@ These ADRs predate the D334 UID discipline. Content is preserved; the filenames 
 
 | UID | Title | Status | Supersession |
 |---|---|---|---|
-| `DEC-5bfa81` | [bc-website Versioning — Branch Model in Single Repo](ADR-5bfa81.md) | implemented |  |
+| `DEC-5bfa81` | [bc-website Versioning — Branch Model in Single Repo](./ADR-5bfa81.md) | implemented |  |
 
 *Generated by `scripts/adr-audit.js` at 2026-07-03T03:02:15.756Z.*

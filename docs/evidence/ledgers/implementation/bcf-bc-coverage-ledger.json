@@ -1,0 +1,3181 @@
+{
+  "schema_version": "bcf-bc-coverage-ledger.v0.1",
+  "generated_at": "2026-06-25T03:54:36.452Z",
+  "authority": "bc-docs-v3 SSOT synthesis from A0.5 matrix + C1/C2 closure artifacts",
+  "scope": {
+    "pass": 1,
+    "clusters": [
+      "C1",
+      "C2"
+    ],
+    "rows": 86
+  },
+  "objective": "Track platform coverage as future BC target routing, not only substrate draft creation.",
+  "route_type_definitions": {
+    "new_substrate_characteristic": "BC targets route to a newly authored draft characteristic.",
+    "new_substrate_or_parent_enabled": "BC targets are covered by a C1 draft or by a C1 parent characteristic confirmed to draft.",
+    "map_to_existing_characteristic": "BC targets route to an existing substrate characteristic, usually with role qualifier and/or BC-level representation precision.",
+    "operator_semantic_decision_slice_blocked": "Valid-looking value-property is premature because target entity slice is missing.",
+    "operator_semantic_decision_type_root": "High-impact generic/root decision requiring operator framing under BC coverage lens.",
+    "held_residual_panel_or_reprep": "Panel/packet residual held for future scoped remediation.",
+    "operator_semantic_decision_held": "Semantic ambiguity held for operator decision.",
+    "defer_insufficient_evidence": "Held due to insufficient evidence for admission or routing.",
+    "reject_circular_or_generic": "Rejected as representation-term/source-shape/generic leakage.",
+    "service_error_held": "Transport failed without governed verdict; held for runtime investigation.",
+    "defer_or_reject": "Current closure lens treats row as not productively routed."
+  },
+  "summaries": {
+    "C1": {
+      "rows": 40,
+      "bc_targets": 147,
+      "byRoute": {
+        "operator_semantic_decision_type_root": {
+          "rows": 1,
+          "bc_targets": 61
+        },
+        "new_substrate_or_parent_enabled": {
+          "rows": 23,
+          "bc_targets": 56
+        },
+        "held_residual_panel_or_reprep": {
+          "rows": 9,
+          "bc_targets": 20
+        },
+        "map_to_existing_characteristic": {
+          "rows": 3,
+          "bc_targets": 5
+        },
+        "operator_semantic_decision_held": {
+          "rows": 2,
+          "bc_targets": 3
+        },
+        "defer_or_reject": {
+          "rows": 2,
+          "bc_targets": 2
+        }
+      },
+      "byStatus": {
+        "operator_decision": {
+          "rows": 1,
+          "bc_targets": 61
+        },
+        "addressed": {
+          "rows": 26,
+          "bc_targets": 61
+        },
+        "held_residual": {
+          "rows": 11,
+          "bc_targets": 23
+        },
+        "not_addressed": {
+          "rows": 2,
+          "bc_targets": 2
+        }
+      }
+    },
+    "C2": {
+      "rows": 46,
+      "bc_targets": 109,
+      "byRoute": {
+        "map_to_existing_characteristic": {
+          "rows": 15,
+          "bc_targets": 56
+        },
+        "service_error_held": {
+          "rows": 1,
+          "bc_targets": 6
+        },
+        "operator_semantic_decision_scope": {
+          "rows": 1,
+          "bc_targets": 5
+        },
+        "operator_semantic_decision_slice_blocked": {
+          "rows": 21,
+          "bc_targets": 29
+        },
+        "defer_insufficient_evidence": {
+          "rows": 6,
+          "bc_targets": 9
+        },
+        "reject_circular_or_generic": {
+          "rows": 1,
+          "bc_targets": 2
+        },
+        "new_substrate_characteristic": {
+          "rows": 1,
+          "bc_targets": 2
+        }
+      },
+      "byStatus": {
+        "addressed": {
+          "rows": 16,
+          "bc_targets": 58
+        },
+        "held_residual": {
+          "rows": 1,
+          "bc_targets": 6
+        },
+        "operator_decision": {
+          "rows": 1,
+          "bc_targets": 5
+        },
+        "blocked_until_entity_slice": {
+          "rows": 21,
+          "bc_targets": 29
+        },
+        "not_addressed": {
+          "rows": 7,
+          "bc_targets": 11
+        }
+      }
+    },
+    "combined": {
+      "rows": 86,
+      "bc_targets": 256,
+      "byRoute": {
+        "operator_semantic_decision_type_root": {
+          "rows": 1,
+          "bc_targets": 61
+        },
+        "new_substrate_or_parent_enabled": {
+          "rows": 23,
+          "bc_targets": 56
+        },
+        "held_residual_panel_or_reprep": {
+          "rows": 9,
+          "bc_targets": 20
+        },
+        "map_to_existing_characteristic": {
+          "rows": 18,
+          "bc_targets": 61
+        },
+        "operator_semantic_decision_held": {
+          "rows": 2,
+          "bc_targets": 3
+        },
+        "defer_or_reject": {
+          "rows": 2,
+          "bc_targets": 2
+        },
+        "service_error_held": {
+          "rows": 1,
+          "bc_targets": 6
+        },
+        "operator_semantic_decision_scope": {
+          "rows": 1,
+          "bc_targets": 5
+        },
+        "operator_semantic_decision_slice_blocked": {
+          "rows": 21,
+          "bc_targets": 29
+        },
+        "defer_insufficient_evidence": {
+          "rows": 6,
+          "bc_targets": 9
+        },
+        "reject_circular_or_generic": {
+          "rows": 1,
+          "bc_targets": 2
+        },
+        "new_substrate_characteristic": {
+          "rows": 1,
+          "bc_targets": 2
+        }
+      },
+      "byStatus": {
+        "operator_decision": {
+          "rows": 2,
+          "bc_targets": 66
+        },
+        "addressed": {
+          "rows": 42,
+          "bc_targets": 119
+        },
+        "held_residual": {
+          "rows": 12,
+          "bc_targets": 29
+        },
+        "not_addressed": {
+          "rows": 9,
+          "bc_targets": 13
+        },
+        "blocked_until_entity_slice": {
+          "rows": 21,
+          "bc_targets": 29
+        }
+      }
+    }
+  },
+  "known_arithmetic_notes": [
+    "The live A0.5 C1 used_by_bc_target_count values sum to 147, not 145 as one retrospective note stated. This ledger uses live A0.5 values.",
+    "C1 source-row accounting and characteristic-term accounting are intentionally distinct per the C1 operator-decision packet; route_type keeps source-row coverage separate from substrate-row count.",
+    "C2 requested_execution_date_time is counted as map_to_existing under BC coverage because the post-panel defect is naming/precision-tail over-specification; operator naming remains before Pass-3 binding."
+  ],
+  "records": [
+    {
+      "cluster": "C1",
+      "seq": 1,
+      "bf_name": "type_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 61,
+      "target_slices": [
+        "asset-maintenance-simple",
+        "existing-finance",
+        "inventory-composite",
+        "logistics",
+        "maintenance-composite",
+        "master-data",
+        "master-data-root",
+        "procurement-transactional",
+        "production-composite",
+        "production-simple",
+        "quality-composite",
+        "quality-simple",
+        "reference-warranty-budget",
+        "workforce"
+      ],
+      "route_type": "operator_semantic_decision_type_root",
+      "coverage_status": "operator_decision",
+      "source_disposition": "reject_circular_or_generic",
+      "final_disposition": "prior_reject_reopened_as_coverage_lever",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "retrospective",
+      "note": "Operator-decision packet rejected generic type_code; BC coverage lens flags it as the largest unresolved root-vs-role decision."
+    },
+    {
+      "cluster": "C1",
+      "seq": 2,
+      "bf_name": "payment_method_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 8,
+      "target_slices": [
+        "existing-finance",
+        "logistics",
+        "master-data"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "authored_draft",
+      "final_disposition": "authored_draft",
+      "route_target_term": "payment method code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 3,
+      "bf_name": "transportation_method_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 5,
+      "target_slices": [
+        "existing-finance",
+        "logistics"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "authored_draft",
+      "final_disposition": "authored_draft",
+      "route_target_term": "transportation method code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 4,
+      "bf_name": "special_price_authorization_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 5,
+      "target_slices": [
+        "existing-finance",
+        "logistics"
+      ],
+      "route_type": "held_residual_panel_or_reprep",
+      "coverage_status": "held_residual",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "price authorization code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "Held by C1 closure checkpoint; future scoped remediation required."
+    },
+    {
+      "cluster": "C1",
+      "seq": 5,
+      "bf_name": "incoterms_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 5,
+      "target_slices": [
+        "existing-finance",
+        "logistics",
+        "master-data"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "authored_draft",
+      "final_disposition": "authored_draft",
+      "route_target_term": "incoterms code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 6,
+      "bf_name": "distribution_center_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 4,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "location code",
+      "role_qualifier": "distribution_center",
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 7,
+      "bf_name": "base_uom_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 4,
+      "target_slices": [
+        "asset-maintenance-simple",
+        "master-data-root",
+        "production-simple"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "unit of measure code",
+      "role_qualifier": "base",
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 8,
+      "bf_name": "storage_uom_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 3,
+      "target_slices": [
+        "asset-maintenance-simple",
+        "inventory-composite",
+        "master-data-root"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "unit of measure code",
+      "role_qualifier": "storage",
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 9,
+      "bf_name": "freight_term_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 3,
+      "target_slices": [
+        "existing-finance",
+        "logistics"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "freight terms code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 10,
+      "bf_name": "ownership_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 3,
+      "target_slices": [
+        "existing-finance",
+        "logistics"
+      ],
+      "route_type": "held_residual_panel_or_reprep",
+      "coverage_status": "held_residual",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "ownership type code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "Held by C1 closure checkpoint; future scoped remediation required."
+    },
+    {
+      "cluster": "C1",
+      "seq": 11,
+      "bf_name": "harmonized_tariff_schedule_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "tariff classification code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 12,
+      "bf_name": "transaction_analysis_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "existing-finance",
+        "reference-warranty-budget"
+      ],
+      "route_type": "held_residual_panel_or_reprep",
+      "coverage_status": "held_residual",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "transaction analysis code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "Held by C1 closure checkpoint; future scoped remediation required."
+    },
+    {
+      "cluster": "C1",
+      "seq": 13,
+      "bf_name": "first_agent_payment_method_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "payment method code",
+      "role_qualifier": "first_agent",
+      "triage": {
+        "substrate_sibling_search": "matched_parent",
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets route to an already-existing substrate characteristic."
+    },
+    {
+      "cluster": "C1",
+      "seq": 14,
+      "bf_name": "job_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "master-data"
+      ],
+      "route_type": "operator_semantic_decision_held",
+      "coverage_status": "held_residual",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "job code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "Held for operator semantic decision."
+    },
+    {
+      "cluster": "C1",
+      "seq": 15,
+      "bf_name": "shipment_service_level_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "existing-finance",
+        "logistics"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "transport service level code",
+      "role_qualifier": "shipment",
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 16,
+      "bf_name": "destination_country_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "existing-finance",
+        "production-simple"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "country code",
+      "role_qualifier": "destination",
+      "triage": {
+        "substrate_sibling_search": "matched_parent",
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets route to an already-existing substrate characteristic."
+    },
+    {
+      "cluster": "C1",
+      "seq": 17,
+      "bf_name": "freight_classification_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "existing-finance",
+        "logistics"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "freight classification code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 18,
+      "bf_name": "date_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "logistics",
+        "production-simple"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "schedule date basis code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 19,
+      "bf_name": "schedule_type_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "logistics",
+        "production-simple"
+      ],
+      "route_type": "held_residual_panel_or_reprep",
+      "coverage_status": "held_residual",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "schedule type code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "Held by C1 closure checkpoint; future scoped remediation required."
+    },
+    {
+      "cluster": "C1",
+      "seq": 20,
+      "bf_name": "usage_restriction_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "asset-maintenance-simple",
+        "master-data-root"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "usage restriction code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 21,
+      "bf_name": "formulation_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "asset-maintenance-simple",
+        "master-data-root"
+      ],
+      "route_type": "held_residual_panel_or_reprep",
+      "coverage_status": "held_residual",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "formulation code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "Held by C1 closure checkpoint; future scoped remediation required."
+    },
+    {
+      "cluster": "C1",
+      "seq": 22,
+      "bf_name": "tracking_method_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "asset-maintenance-simple",
+        "master-data-root"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "tracking method code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 23,
+      "bf_name": "shipping_uom_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "asset-maintenance-simple",
+        "master-data-root"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "unit of measure code",
+      "role_qualifier": "shipping",
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 24,
+      "bf_name": "alternate_uom_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "asset-maintenance-simple",
+        "master-data-root"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "unit of measure code",
+      "role_qualifier": "alternate",
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 25,
+      "bf_name": "expiration_control_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "asset-maintenance-simple",
+        "master-data-root"
+      ],
+      "route_type": "held_residual_panel_or_reprep",
+      "coverage_status": "held_residual",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "expiration control code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "Held by C1 closure checkpoint; future scoped remediation required."
+    },
+    {
+      "cluster": "C1",
+      "seq": 26,
+      "bf_name": "source_type_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "asset-maintenance-simple",
+        "master-data-root"
+      ],
+      "route_type": "held_residual_panel_or_reprep",
+      "coverage_status": "held_residual",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "sourcing method code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "Held by C1 closure checkpoint; future scoped remediation required."
+    },
+    {
+      "cluster": "C1",
+      "seq": 27,
+      "bf_name": "financial_match_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "logistics"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "invoice match type code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 28,
+      "bf_name": "carrier_service_level_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "transport service level code",
+      "role_qualifier": "carrier",
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 29,
+      "bf_name": "point_of_loading_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "location code",
+      "role_qualifier": "loading",
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 30,
+      "bf_name": "point_of_shipment_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "location code",
+      "role_qualifier": "shipment",
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 31,
+      "bf_name": "point_of_staging_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "location code",
+      "role_qualifier": "staging",
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 32,
+      "bf_name": "receipt_routing_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "operator_semantic_decision_held",
+      "coverage_status": "held_residual",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "receipt routing code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "Held for operator semantic decision."
+    },
+    {
+      "cluster": "C1",
+      "seq": 33,
+      "bf_name": "sequence_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "production-simple"
+      ],
+      "route_type": "held_residual_panel_or_reprep",
+      "coverage_status": "held_residual",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "sequence number",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "Held by C1 closure checkpoint; future scoped remediation required."
+    },
+    {
+      "cluster": "C1",
+      "seq": 34,
+      "bf_name": "origination_country_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "production-simple"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "country code",
+      "role_qualifier": "origin",
+      "triage": {
+        "substrate_sibling_search": "matched_parent",
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets route to an already-existing substrate characteristic."
+    },
+    {
+      "cluster": "C1",
+      "seq": 35,
+      "bf_name": "wage_type_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "production-simple"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "wage type code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 36,
+      "bf_name": "end_sequence_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "production-simple"
+      ],
+      "route_type": "defer_or_reject",
+      "coverage_status": "not_addressed",
+      "source_disposition": "map_to_existing",
+      "final_disposition": "map_to_existing",
+      "route_target_term": "sequence number",
+      "role_qualifier": "end",
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "End sequence code depends on unresolved sequence/process-step parent; held as defer under closure lens."
+    },
+    {
+      "cluster": "C1",
+      "seq": 37,
+      "bf_name": "code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "quality-simple"
+      ],
+      "route_type": "defer_or_reject",
+      "coverage_status": "not_addressed",
+      "source_disposition": "reject_circular_or_generic",
+      "final_disposition": "reject_circular_or_generic",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": null,
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "Bare code representation-term leakage."
+    },
+    {
+      "cluster": "C1",
+      "seq": 38,
+      "bf_name": "gender_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "quality-simple"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "authored_draft",
+      "final_disposition": "authored_draft",
+      "route_target_term": "sex code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 39,
+      "bf_name": "marital_status_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "quality-simple"
+      ],
+      "route_type": "new_substrate_or_parent_enabled",
+      "coverage_status": "addressed",
+      "source_disposition": "authored_draft",
+      "final_disposition": "authored_draft",
+      "route_target_term": "marital status code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "C1 governance produced or enabled a draft characteristic for these BC targets"
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "BC targets are covered by a C1 draft characteristic or by a C1 parent characteristic confirmed to draft."
+    },
+    {
+      "cluster": "C1",
+      "seq": 40,
+      "bf_name": "capa_resource_type_code",
+      "shape_tuple": "code|code|dimension",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "quality-simple"
+      ],
+      "route_type": "held_residual_panel_or_reprep",
+      "coverage_status": "held_residual",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "panel_ready_retry",
+      "route_target_term": "corrective action resource type code",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "code_dimension_cluster",
+        "entity_slice_availability": "mixed_or_future_slice",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C1",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md"
+      ],
+      "confidence": "documented",
+      "note": "Held by C1 closure checkpoint; future scoped remediation required."
+    },
+    {
+      "cluster": "C2",
+      "seq": 1,
+      "bf_name": "required_delivery_date_time",
+      "candidateRef": "pass1-c2-clean-01-required_delivery_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 9,
+      "target_slices": [
+        "existing-finance",
+        "procurement-transactional",
+        "production-composite",
+        "production-simple"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing_characteristic",
+      "final_disposition": "map_to_existing_preclassified",
+      "route_target_term": "delivery date",
+      "role_qualifier": "required",
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 2,
+      "bf_name": "promised_ship_date_time",
+      "candidateRef": "pass1-c2-clean-02-promised_ship_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 6,
+      "target_slices": [
+        "existing-finance",
+        "procurement-transactional"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing_characteristic",
+      "final_disposition": "map_to_existing_preclassified",
+      "route_target_term": "ship date",
+      "role_qualifier": "promised",
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 3,
+      "bf_name": "promised_delivery_date_time",
+      "candidateRef": "pass1-c2-clean-03-promised_delivery_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 6,
+      "target_slices": [
+        "existing-finance",
+        "procurement-transactional"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing_characteristic",
+      "final_disposition": "map_to_existing_preclassified",
+      "route_target_term": "delivery date",
+      "role_qualifier": "promised",
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 4,
+      "bf_name": "transaction_date_time",
+      "candidateRef": "pass1-c2-clean-04-transaction_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 6,
+      "target_slices": [
+        "existing-finance",
+        "inventory-composite",
+        "logistics"
+      ],
+      "route_type": "service_error_held",
+      "coverage_status": "held_residual",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "service_error_timeout",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": {
+        "panel_run_uid": null,
+        "outcome_class": "service_error",
+        "verdict_code": null,
+        "http_status": 0,
+        "latency_ms": 180137
+      },
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 5,
+      "bf_name": "requested_delivery_date",
+      "candidateRef": "pass1-c2-clean-05-requested_delivery_date",
+      "shape_tuple": "date|date|temporal",
+      "used_by_bc_target_count": 5,
+      "target_slices": [
+        "existing-finance",
+        "logistics"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing_characteristic",
+      "final_disposition": "map_to_existing_preclassified",
+      "route_target_term": "delivery date",
+      "role_qualifier": "requested",
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": null,
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 6,
+      "bf_name": "expiration_date",
+      "candidateRef": "pass1-c2-clean-06-expiration_date",
+      "shape_tuple": "date|date|temporal",
+      "used_by_bc_target_count": 5,
+      "target_slices": [
+        "existing-finance",
+        "inventory-composite",
+        "logistics",
+        "production-composite"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing_characteristic",
+      "final_disposition": "map_to_existing_preclassified",
+      "route_target_term": "expiry date",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": null,
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 7,
+      "bf_name": "best_used_by_date",
+      "candidateRef": "pass1-c2-clean-07-best_used_by_date",
+      "shape_tuple": "date|date|temporal",
+      "used_by_bc_target_count": 5,
+      "target_slices": [
+        "existing-finance",
+        "inventory-composite",
+        "logistics",
+        "production-composite"
+      ],
+      "route_type": "operator_semantic_decision_scope",
+      "coverage_status": "operator_decision",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "operator_semantic_decision_post_panel",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": null,
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": {
+        "panel_run_uid": "a4dc27f4-ea70-4619-a729-ecf91c5725d5",
+        "outcome_class": "parked",
+        "verdict_code": "OPERATOR_REVIEW",
+        "http_status": 200,
+        "latency_ms": 111198
+      },
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "panel_feedback_retrofit",
+      "note": "Scope-inflation park; operator framing required."
+    },
+    {
+      "cluster": "C2",
+      "seq": 8,
+      "bf_name": "scheduled_delivery_date_time",
+      "candidateRef": "pass1-c2-clean-08-scheduled_delivery_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 4,
+      "target_slices": [
+        "existing-finance",
+        "quality-composite"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing_characteristic",
+      "final_disposition": "map_to_existing_preclassified",
+      "route_target_term": "delivery date",
+      "role_qualifier": "scheduled",
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 9,
+      "bf_name": "received_date_time",
+      "candidateRef": "pass1-c2-clean-09-received_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 4,
+      "target_slices": [
+        "existing-finance",
+        "logistics",
+        "quality-composite"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 10,
+      "bf_name": "required_date_time",
+      "candidateRef": "pass1-c2-clean-10-required_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 4,
+      "target_slices": [
+        "logistics",
+        "production-composite",
+        "production-simple"
+      ],
+      "route_type": "defer_insufficient_evidence",
+      "coverage_status": "not_addressed",
+      "source_disposition": "defer_insufficient_evidence",
+      "final_disposition": "defer_insufficient_evidence",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 11,
+      "bf_name": "creation_date_time",
+      "candidateRef": "pass1-c2-clean-11-creation_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 4,
+      "target_slices": [
+        "existing-finance",
+        "master-data"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "map_to_existing_post_panel_reclassification",
+      "route_target_term": "system entry date",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": {
+        "panel_run_uid": "3644392d-7b8e-4d38-8dfe-679597adc3bb",
+        "outcome_class": "parked",
+        "verdict_code": "OPERATOR_REVIEW",
+        "http_status": 200,
+        "latency_ms": 135649
+      },
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "panel_feedback_retrofit",
+      "note": "Precision-tail park reclassified to existing substrate sibling."
+    },
+    {
+      "cluster": "C2",
+      "seq": 12,
+      "bf_name": "earliest_ship_date_time",
+      "candidateRef": "pass1-c2-clean-12-earliest_ship_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 3,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing_characteristic",
+      "final_disposition": "map_to_existing_preclassified",
+      "route_target_term": "ship date",
+      "role_qualifier": "earliest",
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 13,
+      "bf_name": "actual_ship_date_time",
+      "candidateRef": "pass1-c2-clean-13-actual_ship_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 3,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing_characteristic",
+      "final_disposition": "map_to_existing_preclassified",
+      "route_target_term": "ship date",
+      "role_qualifier": "actual",
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 14,
+      "bf_name": "goods_receipt_date_time",
+      "candidateRef": "pass1-c2-clean-14-goods_receipt_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "map_to_existing_post_panel_reclassification",
+      "route_target_term": "delivery date",
+      "role_qualifier": "goods-receipt",
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": {
+        "panel_run_uid": "97d2677f-f909-443e-95b6-ad2a8303aa16",
+        "outcome_class": "parked",
+        "verdict_code": "OPERATOR_REVIEW",
+        "http_status": 200,
+        "latency_ms": 149816
+      },
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "panel_feedback_retrofit",
+      "note": "Precision-tail park reclassified to existing substrate sibling."
+    },
+    {
+      "cluster": "C2",
+      "seq": 15,
+      "bf_name": "services_receipt_date_time",
+      "candidateRef": "pass1-c2-clean-15-services_receipt_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "map_to_existing_post_panel_reclassification",
+      "route_target_term": "delivery date",
+      "role_qualifier": "services-receipt",
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": {
+        "panel_run_uid": "a0210dbd-be68-431d-bbfe-a6645129733f",
+        "outcome_class": "parked",
+        "verdict_code": "OPERATOR_REVIEW",
+        "http_status": 200,
+        "latency_ms": 128843
+      },
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "panel_feedback_retrofit",
+      "note": "Precision-tail park reclassified to existing substrate sibling."
+    },
+    {
+      "cluster": "C2",
+      "seq": 16,
+      "bf_name": "date_time",
+      "candidateRef": "pass1-c2-clean-16-date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "asset-maintenance-simple",
+        "existing-finance"
+      ],
+      "route_type": "reject_circular_or_generic",
+      "coverage_status": "not_addressed",
+      "source_disposition": "reject_circular_or_generic",
+      "final_disposition": "reject_circular_or_generic",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": null,
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 17,
+      "bf_name": "requested_execution_date_time",
+      "candidateRef": "pass1-c2-clean-17-requested_execution_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "map_to_existing_post_panel_reclassification",
+      "route_target_term": "requested execution date",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": {
+        "panel_run_uid": "feba2c0c-9f85-49cf-883e-010cf5aac707",
+        "outcome_class": "parked",
+        "verdict_code": "OPERATOR_REVIEW",
+        "http_status": 200,
+        "latency_ms": 127830
+      },
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "panel_feedback_retrofit",
+      "note": "needs naming/operator framing before Pass-3 binding"
+    },
+    {
+      "cluster": "C2",
+      "seq": 18,
+      "bf_name": "payment_date_time",
+      "candidateRef": "pass1-c2-clean-18-payment_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "master-data"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 19,
+      "bf_name": "shipment_release_date_time",
+      "candidateRef": "pass1-c2-clean-19-shipment_release_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing_characteristic",
+      "final_disposition": "map_to_existing_preclassified",
+      "route_target_term": "ship date",
+      "role_qualifier": "released",
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 20,
+      "bf_name": "estimated_departure_date_time",
+      "candidateRef": "pass1-c2-clean-20-estimated_departure_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "map_to_existing_post_panel_reclassification",
+      "route_target_term": "ship date",
+      "role_qualifier": "estimated-departure",
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": {
+        "panel_run_uid": "92c1fb76-e9ae-4621-8c41-9461f8e99179",
+        "outcome_class": "parked",
+        "verdict_code": "OPERATOR_REVIEW",
+        "http_status": 200,
+        "latency_ms": 152594
+      },
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "panel_feedback_retrofit",
+      "note": "Precision-tail park reclassified to existing substrate sibling."
+    },
+    {
+      "cluster": "C2",
+      "seq": 21,
+      "bf_name": "estimated_arrival_date_time",
+      "candidateRef": "pass1-c2-clean-21-estimated_arrival_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "new_substrate_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "authored_draft",
+      "route_target_term": "estimated arrival date time",
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": "ETA survived panel as distinct logistics forecast event, not merely delivery-date precision"
+      },
+      "panel": {
+        "panel_run_uid": "ca88b689-aad5-497b-8f21-80fceea63a7a",
+        "outcome_class": "approve_for_draft",
+        "verdict_code": null,
+        "http_status": 200,
+        "latency_ms": 146494
+      },
+      "characteristic": {
+        "characteristic_id": "2f90d4d3-68f6-43c5-9c8a-56a5b160511b",
+        "certification_record_id": "2d1069ff-62fe-4e30-99bb-2d8e8f2415b9",
+        "lifecycle_state": "draft"
+      },
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": "C2 approve-for-draft confirmed through C5."
+    },
+    {
+      "cluster": "C2",
+      "seq": 22,
+      "bf_name": "need_delivery_date",
+      "candidateRef": "pass1-c2-clean-22-need_delivery_date",
+      "shape_tuple": "date|date|temporal",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "production-composite",
+        "production-simple"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": null,
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 23,
+      "bf_name": "available_date_time",
+      "candidateRef": "pass1-c2-clean-23-available_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "production-composite",
+        "production-simple"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 24,
+      "bf_name": "manufacture_date_time",
+      "candidateRef": "pass1-c2-clean-24-manufacture_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "quality-composite",
+        "quality-simple"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 25,
+      "bf_name": "sampled_date_time",
+      "candidateRef": "pass1-c2-clean-25-sampled_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 2,
+      "target_slices": [
+        "quality-composite",
+        "quality-simple"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 26,
+      "bf_name": "set_date_time",
+      "candidateRef": "pass1-c2-clean-26-set_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "defer_insufficient_evidence",
+      "coverage_status": "not_addressed",
+      "source_disposition": "defer_insufficient_evidence",
+      "final_disposition": "defer_insufficient_evidence",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 27,
+      "bf_name": "activity_date_time",
+      "candidateRef": "pass1-c2-clean-27-activity_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "master-data"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 28,
+      "bf_name": "accept_by_date_time",
+      "candidateRef": "pass1-c2-clean-28-accept_by_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "defer_insufficient_evidence",
+      "coverage_status": "not_addressed",
+      "source_disposition": "defer_insufficient_evidence",
+      "final_disposition": "defer_insufficient_evidence",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 29,
+      "bf_name": "loading_date_time",
+      "candidateRef": "pass1-c2-clean-29-loading_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "defer_insufficient_evidence",
+      "coverage_status": "not_addressed",
+      "source_disposition": "panel_ready_retry",
+      "final_disposition": "defer_post_panel_single_source",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": "failed_two_source_scoped_evidence",
+        "why_not_bc_binding": null
+      },
+      "panel": {
+        "panel_run_uid": "5838b063-ad89-44d8-bc37-426c3dbf0e0d",
+        "outcome_class": "parked",
+        "verdict_code": "OPERATOR_REVIEW",
+        "http_status": 200,
+        "latency_ms": 136228
+      },
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "panel_feedback_retrofit",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 30,
+      "bf_name": "scheduled_ship_date_time",
+      "candidateRef": "pass1-c2-clean-30-scheduled_ship_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "existing-finance"
+      ],
+      "route_type": "map_to_existing_characteristic",
+      "coverage_status": "addressed",
+      "source_disposition": "map_to_existing_characteristic",
+      "final_disposition": "map_to_existing_preclassified",
+      "route_target_term": "ship date",
+      "role_qualifier": "scheduled",
+      "triage": {
+        "substrate_sibling_search": "matched_existing_or_post_panel_sibling",
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "has_existing_finance_target",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 31,
+      "bf_name": "engineering_change_date_time",
+      "candidateRef": "pass1-c2-clean-31-engineering_change_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "logistics"
+      ],
+      "route_type": "defer_insufficient_evidence",
+      "coverage_status": "not_addressed",
+      "source_disposition": "defer_insufficient_evidence",
+      "final_disposition": "defer_insufficient_evidence",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 32,
+      "bf_name": "last_shipment_date_time",
+      "candidateRef": "pass1-c2-clean-32-last_shipment_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "logistics"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 33,
+      "bf_name": "last_receiving_date_time",
+      "candidateRef": "pass1-c2-clean-33-last_receiving_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "logistics"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 34,
+      "bf_name": "start_date_time",
+      "candidateRef": "pass1-c2-clean-34-start_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "production-composite"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 35,
+      "bf_name": "end_date_time",
+      "candidateRef": "pass1-c2-clean-35-end_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "production-composite"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 36,
+      "bf_name": "desired_completion_date_time",
+      "candidateRef": "pass1-c2-clean-36-desired_completion_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "quality-composite"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 37,
+      "bf_name": "planned_completion_date_time",
+      "candidateRef": "pass1-c2-clean-37-planned_completion_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "quality-composite"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 38,
+      "bf_name": "birth_date_time",
+      "candidateRef": "pass1-c2-clean-38-birth_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "quality-simple"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 39,
+      "bf_name": "death_date_time",
+      "candidateRef": "pass1-c2-clean-39-death_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "quality-simple"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 40,
+      "bf_name": "estimated_completion_date_time",
+      "candidateRef": "pass1-c2-clean-40-estimated_completion_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "quality-composite"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 41,
+      "bf_name": "certification_date",
+      "candidateRef": "pass1-c2-clean-41-certification_date",
+      "shape_tuple": "date|date|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "quality-simple"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": null,
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 42,
+      "bf_name": "reported_date_time",
+      "candidateRef": "pass1-c2-clean-42-reported_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "asset-maintenance-simple"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 43,
+      "bf_name": "respond_by_date_time",
+      "candidateRef": "pass1-c2-clean-43-respond_by_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "asset-maintenance-simple"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 44,
+      "bf_name": "change_date_time",
+      "candidateRef": "pass1-c2-clean-44-change_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "asset-maintenance-simple"
+      ],
+      "route_type": "defer_insufficient_evidence",
+      "coverage_status": "not_addressed",
+      "source_disposition": "defer_insufficient_evidence",
+      "final_disposition": "defer_insufficient_evidence",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 45,
+      "bf_name": "failure_date_time",
+      "candidateRef": "pass1-c2-clean-45-failure_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "asset-maintenance-simple"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    },
+    {
+      "cluster": "C2",
+      "seq": 46,
+      "bf_name": "completion_date_time",
+      "candidateRef": "pass1-c2-clean-46-completion_date_time",
+      "shape_tuple": "date|timestamp|temporal",
+      "used_by_bc_target_count": 1,
+      "target_slices": [
+        "maintenance-composite"
+      ],
+      "route_type": "operator_semantic_decision_slice_blocked",
+      "coverage_status": "blocked_until_entity_slice",
+      "source_disposition": "operator_semantic_decision_slice_blocked",
+      "final_disposition": "operator_semantic_decision_slice_blocked",
+      "route_target_term": null,
+      "role_qualifier": null,
+      "triage": {
+        "substrate_sibling_search": null,
+        "role_precision_representation_check": "date_time_precision_tail_checked",
+        "entity_slice_availability": "future_slice_only_or_mixed",
+        "evidence_scope_check": null,
+        "why_not_bc_binding": null
+      },
+      "panel": null,
+      "characteristic": null,
+      "evidence_refs": [
+        "bc-docs-v3/docs/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md#1.C2",
+        "bc-docs-v3/docs/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md",
+        "barecount-devhub/.claude/desktop-prep-output-c2-2026-06-25/prep-summary.json",
+        "barecount-devhub/.claude/pass1-c2-transport-outcomes-2026-06-25.jsonl"
+      ],
+      "confidence": "documented",
+      "note": ""
+    }
+  ]
+}

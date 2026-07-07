@@ -1,0 +1,143 @@
+{
+  "subfunction": "billing",
+  "boMappings": {
+    "invoice_hdr": {
+      "total_billed_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoices_issued": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "automated_billing_system_adoption_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "automated_invoices",
+      "status": "created",
+      "name": "mc__automated_invoices",
+      "coBindings": 1
+    },
+    {
+      "metric": "average_revenue_per_invoice",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "billing_error_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "billing_staff_productivity",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cash_collection_efficiency_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cost_of_billing_errors",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cost_per_invoice",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "credit_note_volume",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "customer_satisfaction_with_billing",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "electronic_invoice_penetration",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "first_pass_yield",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "invoices_sent_on_time",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "past_due_invoices",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "payment_terms_adherence_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "revenue_leakage",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "revenue_per_billing_employee",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "self_service_invoices",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "time_to_bill",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "time_to_issue_corrected_invoice",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "time_to_resolve_disputes",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "total_revenue_collected",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "write_off_amount",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    }
+  ]
+}

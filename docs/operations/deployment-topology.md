@@ -64,7 +64,7 @@ A precondition that fails is not bypassed. The OIDC role and the GitHub Environm
 
 ## The GitHub Actions Surface
 
-> **Residual risk (audit GAP-009).** The deployment-surface, AuthStack-deployed-footprint, and PlatformInfraStack-dormancy claims in this chapter (and in "Readiness-Baseline Deployment: AuthStack Only" and "Defined But Not Deployed: PlatformInfraStack" below) depend on `platform-infra-stack/` files that were not readable in the platform code/docs gap audit. They rest on prior grounding, not on this-pass verification. Treat as unverified until a dedicated readable infra-stack audit confirms the workflow shapes, the deployed stack list, and the README-vs-entry-point drift. Source: `bc-docs-v3/reports/platform-code-doc-gap-report.md` GAP-009.
+> **Residual risk (audit GAP-009).** The deployment-surface, AuthStack-deployed-footprint, and PlatformInfraStack-dormancy claims in this chapter (and in "Readiness-Baseline Deployment: AuthStack Only" and "Defined But Not Deployed: PlatformInfraStack" below) depend on `platform-infra-stack/` files that were not readable in the platform code/docs gap audit. They rest on prior grounding, not on this-pass verification. Treat as unverified until a dedicated readable infra-stack audit confirms the workflow shapes, the deployed stack list, and the README-vs-entry-point drift. Source: `bc-docs/reports/platform-code-doc-gap-report.md` GAP-009.
 
 The platform deployment surface is described by prior grounding as two GitHub Actions files under `platform-infra-stack/.github/workflows/`; that repository was not readable in this review.
 

@@ -1,0 +1,534 @@
+{
+  "subfunction": "capital_structure_optimization",
+  "boMappings": {
+    "actual_ledger": {
+      "total_shareholders_equity": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_outstanding_shares": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "long_term_debt_due_in_more_than_one_year": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "new_debt_issued": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "debt_repaid": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "existing_debt_before_refinancing": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_shareholder_equity_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "average_shareholder_equity": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "fixed_interest_rate_debt_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "variable_interest_rate_debt_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "net_income": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "net_debt_issued": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "debt_repayments": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_hybrid_instruments_value": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_capital_structure_value": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "average_rate_of_return_on_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "average_interest_rate_on_liabilities": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "book_value_of_equity": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_preferred_equity_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_common_equity_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "average_total_assets": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "corporate_tax_rate": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "ifrs_balance_sheet": {
+      "capital_expenditure": {
+        "bfName": "ifrs_issued_capital",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "capital_expenditures": {
+        "bfName": "ifrs_issued_capital",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "change_in_non_cash_working_capital": {
+        "bfName": "ifrs_issued_capital",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "bc_financial_risk_management_operations": {
+      "long_term_debt_balance": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "shareholder_equity_balance": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_debt_balance": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_long_term_debt": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_interest_expense": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_assets_balance": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_sales_revenue": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "financial_ratios": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "average_total_debt": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_long_term_financial_goals": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_current_assets": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_inventories": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_current_liabilities": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_senior_debt_balance": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_subordinated_debt_balance": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_short_term_debt": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "gaap_cash_flow": {
+      "operating_cash_flow": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      }
+    },
+    "xbrl_gaap_equity": {
+      "risk_free_rate": {
+        "bfName": "xbrl_share_based_compensation_arrangement_by_share_based_payment_award_fair_value_assumptions_risk_free_interest_rate",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "earnings_before_interest_tax_depreciation_and_amortization_ebitda": {
+        "bfName": "xbrl_share_based_goods_and_nonemployee_services_transaction_tax_benefit",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "earnings_before_interest_and_taxes_ebit": {
+        "bfName": "xbrl_share_based_goods_and_nonemployee_services_transaction_valuation_method_risk_free_interest_rate",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "market_value_of_equity": {
+        "bfName": "xbrl_share_based_compensation_arrangement_by_share_based_payment_award_equity_instruments_other_than_options_forfeitures_intrinsic_value",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      }
+    },
+    "bc_internal_audit_operations": {
+      "total_fixed_charges_before_taxes": {
+        "bfName": "bc_internal_audit_ops_total_cost_before_recommendations",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "asset": {
+      "net_debt_balance": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cost_of_equity": {
+        "bfName": "asset_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cost_of_debt": {
+        "bfName": "asset_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "bc_ar_operations": {
+      "total_retained_earnings": {
+        "bfName": "bc_ar_ops_customers_retained_post_collection",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "bc_gl_operations": {
+      "proportion_of_equity_in_capital_structure": {
+        "bfName": "bc_gl_ops_actual_capital_expenditure",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "proportion_of_debt_in_capital_structure": {
+        "bfName": "bc_gl_ops_actual_capital_expenditure",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 18
+    },
+    "ifrs_balance_sheet": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7837-b4c5-7358-b33c-cc1950f87cdb",
+      "name": "cc__ifrs_balance_sheet"
+    },
+    "bc_financial_risk_management_operations": {
+      "exists": true,
+      "contractId": "019d774b-22e9-7264-adc7-4a6c75446651",
+      "name": "cc__bc_financial_risk_management_operations",
+      "mappingsAdded": 0
+    },
+    "gaap_cash_flow": {
+      "exists": true,
+      "contractId": "019d762a-1884-7cd0-8aca-30f6eb805929",
+      "name": "cc__gaap_cash_flow",
+      "mappingsAdded": 0
+    },
+    "xbrl_gaap_equity": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7837-b5c0-7ec4-9f2d-a517dce5474c",
+      "name": "cc__xbrl_gaap_equity"
+    },
+    "bc_internal_audit_operations": {
+      "exists": true,
+      "contractId": "019d774b-2487-7cec-93c3-3ff6e0fefdce",
+      "name": "cc__bc_internal_audit_operations",
+      "mappingsAdded": 0
+    },
+    "asset": {
+      "exists": true,
+      "contractId": "019d7701-d9db-728f-89ad-60f06fdf4f42",
+      "name": "cc__asset",
+      "mappingsAdded": 0
+    },
+    "bc_ar_operations": {
+      "exists": true,
+      "contractId": "019d762a-1662-7980-9b8b-3e8431f8c91c",
+      "name": "cc__bc_ar_operations",
+      "mappingsAdded": 0
+    },
+    "bc_gl_operations": {
+      "exists": true,
+      "contractId": "019d7664-5001-76df-92ce-388cb8a39f0e",
+      "name": "cc__bc_gl_operations",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "book_value_of_equity_per_share_bvps",
+      "status": "created",
+      "name": "mc__book_value_of_equity_per_share_bvps",
+      "coBindings": 1
+    },
+    {
+      "metric": "capital_expenditure_to_total_assets_ratio",
+      "status": "created",
+      "name": "mc__capital_expenditure_to_total_assets_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "capitalization_ratio",
+      "status": "exists",
+      "name": "mc__capitalization_ratio"
+    },
+    {
+      "metric": "cash_flow_to_debt_ratio",
+      "status": "exists",
+      "name": "mc__cash_flow_to_debt_ratio"
+    },
+    {
+      "metric": "cost_of_equity",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "current_portion_of_long_term_debt",
+      "status": "created",
+      "name": "mc__current_portion_of_long_term_debt",
+      "coBindings": 2
+    },
+    {
+      "metric": "debt_refinancing_rate",
+      "status": "created",
+      "name": "mc__debt_refinancing_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "debt_to_capital_ratio",
+      "status": "created",
+      "name": "mc__debt_to_capital_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "earnings_before_interest_tax_depreciation_and_amortization_ebitda_to_interest",
+      "status": "created",
+      "name": "mc__earnings_before_interest_tax_depreciation_and_amortization_ebitda_to_interest",
+      "coBindings": 2
+    },
+    {
+      "metric": "equity_to_assets_ratio",
+      "status": "created",
+      "name": "mc__equity_to_assets_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "equity_turnover_ratio",
+      "status": "created",
+      "name": "mc__equity_turnover_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "financial_distress_probability",
+      "status": "exists",
+      "name": "mc__financial_distress_probability"
+    },
+    {
+      "metric": "financial_leverage_ratio",
+      "status": "created",
+      "name": "mc__financial_leverage_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "fixed_charge_coverage_ratio",
+      "status": "exists",
+      "name": "mc__fixed_charge_coverage_ratio"
+    },
+    {
+      "metric": "fixed_to_variable_interest_rate_debt_ratio",
+      "status": "created",
+      "name": "mc__fixed_to_variable_interest_rate_debt_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "free_cash_flow_to_equity_fcfe",
+      "status": "created",
+      "name": "mc__free_cash_flow_to_equity_fcfe",
+      "coBindings": 2
+    },
+    {
+      "metric": "hybrid_instruments_proportion",
+      "status": "created",
+      "name": "mc__hybrid_instruments_proportion",
+      "coBindings": 1
+    },
+    {
+      "metric": "interest_expense_to_debt_ratio",
+      "status": "exists",
+      "name": "mc__interest_expense_to_debt_ratio"
+    },
+    {
+      "metric": "interest_rate_spread",
+      "status": "created",
+      "name": "mc__interest_rate_spread",
+      "coBindings": 1
+    },
+    {
+      "metric": "long_term_debt_to_total_debt_ratio",
+      "status": "exists",
+      "name": "mc__long_term_debt_to_total_debt_ratio"
+    },
+    {
+      "metric": "long_term_financial_strategy_success_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "market_value_of_equity_to_book_value_of_equity_ratio",
+      "status": "created",
+      "name": "mc__market_value_of_equity_to_book_value_of_equity_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "net_debt_to_ebitda_ratio",
+      "status": "created",
+      "name": "mc__net_debt_to_ebitda_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "preferred_to_common_equity_ratio",
+      "status": "created",
+      "name": "mc__preferred_to_common_equity_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "quick_ratio",
+      "status": "exists",
+      "name": "mc__quick_ratio"
+    },
+    {
+      "metric": "retained_earnings_to_equity_ratio",
+      "status": "created",
+      "name": "mc__retained_earnings_to_equity_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "roa_return_on_assets",
+      "status": "exists",
+      "name": "mc__roa_return_on_assets"
+    },
+    {
+      "metric": "roe_return_on_equity",
+      "status": "created",
+      "name": "mc__roe_return_on_equity",
+      "coBindings": 1
+    },
+    {
+      "metric": "senior_debt_to_subordinated_debt_ratio",
+      "status": "exists",
+      "name": "mc__senior_debt_to_subordinated_debt_ratio"
+    },
+    {
+      "metric": "short_term_debt_to_total_debt_ratio",
+      "status": "exists",
+      "name": "mc__short_term_debt_to_total_debt_ratio"
+    },
+    {
+      "metric": "total_asset_turnover_ratio",
+      "status": "exists",
+      "name": "mc__total_asset_turnover_ratio"
+    },
+    {
+      "metric": "total_debt_to_total_assets_ratio",
+      "status": "exists",
+      "name": "mc__total_debt_to_total_assets_ratio"
+    },
+    {
+      "metric": "wacc_weighted_average_cost_of_capital",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    }
+  ]
+}

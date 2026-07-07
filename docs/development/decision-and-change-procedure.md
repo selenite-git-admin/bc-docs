@@ -16,7 +16,7 @@ governing_adrs:
   - DEC-623f8f (ADR Hygiene Policy; eight rules for supersession pairs, stuck-proposed audit, implementation verification, monthly audit, D-code guidance, orphan tolerance, authoring gates, quarterly sweep)
   - DEC-ebf0b4 (Session Discipline and Data Integrity Rules; the ten D268 rules)
   - DEC-804874 (L-Node Verification with Semantic Family Classification; the session-close gate per D366)
-  - DEC-3395bc (bc-docs-v3 SSOT cutover; the v3 layout under docs/; ADR files written into docs/adrs/)
+  - DEC-3395bc (bc-docs SSOT cutover; the v3 layout under docs/; ADR files written into docs/adrs/)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -26,7 +26,7 @@ diagrams: []
 
 ## Scope
 
-This chapter records the procedure for recording architectural decisions and governing change in the BareCount platform. It states the ADR-first discipline (the ADR file in `bc-docs-v3/docs/adrs/` is the source of truth; DevHub holds metadata pointing at it), the canonical UID and the nickname D-code distinction (per `DEC-633b2a`), the eight ADR hygiene rules (per `DEC-623f8f`), the change-record plan-and-report pair that ISO 27001 conformance reads against, the session-discipline rules that govern engineering session behavior (per `DEC-ebf0b4` rules one through ten), and the L-node semantic gate that runs at session close (per `DEC-804874`).
+This chapter records the procedure for recording architectural decisions and governing change in the BareCount platform. It states the ADR-first discipline (the ADR file in `bc-docs/docs/adrs/` is the source of truth; DevHub holds metadata pointing at it), the canonical UID and the nickname D-code distinction (per `DEC-633b2a`), the eight ADR hygiene rules (per `DEC-623f8f`), the change-record plan-and-report pair that ISO 27001 conformance reads against, the session-discipline rules that govern engineering session behavior (per `DEC-ebf0b4` rules one through ten), and the L-node semantic gate that runs at session close (per `DEC-804874`).
 
 This chapter does not redefine the DevHub registry tables (DevHub), the audit substrate that holds the records (Audit and Activity Logging), or the operational triage path for incidents (Incident and Change Management).
 
@@ -34,7 +34,7 @@ This chapter does not redefine the DevHub registry tables (DevHub), the audit su
 
 ## Architectural Decisions Are ADR Files
 
-The platform records every architectural decision as an ADR file under `bc-docs-v3/docs/adrs/`. Per `DEC-a4e550`, the ADR file is the source of truth; the DevHub `decisions` table row is metadata that points at the file.
+The platform records every architectural decision as an ADR file under `bc-docs/docs/adrs/`. Per `DEC-a4e550`, the ADR file is the source of truth; the DevHub `decisions` table row is metadata that points at the file.
 
 | Property | Form |
 |---|---|
@@ -43,7 +43,7 @@ The platform records every architectural decision as an ADR file under `bc-docs-
 | Frontmatter | `uid`, `title`, `description`, `status`, `date`, `project`, `domain`, optional `subdomain`, optional `focus`, optional `supersedes`, optional `superseded_by` |
 | Body | Free-form Markdown; conventional sections are Context, Decision, and Consequences |
 | Canonical reference | Body prose and code cite `DEC-xxxxxx` (the canonical UID); D-code nicknames are not used as the load-bearing identifier in a published chapter |
-| File write path | The `devhub_decision_record` MCP tool both inserts the registry row and writes the ADR file at the bc-docs-v3 path; the file write is non-fatal for the registry insert |
+| File write path | The `devhub_decision_record` MCP tool both inserts the registry row and writes the ADR file at the bc-docs path; the file write is non-fatal for the registry insert |
 
 The ADR file is the authoritative record. DevHub's `decision_text` column is deprecated content from the pre-D221 era and is not consulted. To read a decision's full context, the reader opens the ADR file.
 
@@ -85,15 +85,15 @@ The historical registry contains twenty-four D-code duplicates from before the a
 | Supersession pair | When a new ADR has `supersedes: DEC-xxx` in frontmatter, the target ADR's status flips to `superseded` in the same commit; `superseded_by: DEC-yyy` is added to the target. The audit script flags any unflipped pair as a `supersessionIssues` row |
 | Stuck-proposed | An ADR in `proposed` status for more than thirty days auto-spawns a DevHub task tagged `adr-stuck-proposed`; informational, not merge-blocking |
 | Implementation verification | Status transitions follow draft → proposed → decided → implemented; the `closes: DEC-xxxxxx` commit token signals implementation completion; a future post-merge hook will auto-flip the status |
-| Monthly audit | `bc-docs-v3/scripts/adr-audit.js` runs monthly; output is compared to the prior month; regressions open a governance task |
+| Monthly audit | `bc-docs/scripts/adr-audit.js` runs monthly; output is compared to the prior month; regressions open a governance task |
 | D-code guidance | UIDs are canonical; D-codes are nicknames. New content uses UIDs; D-codes remain readable in conversation |
 | Orphan tolerance | Zero incoming references does not auto-mark stale; the orphan count is informational; no closure pressure |
 | Authoring gates | Existing gates are kept; the supersession pair check is added as a new gate; if `supersedes:` is present in frontmatter, the target ADR must exist and the status flip must be staged in the same commit |
 | Quarterly sweep | A quarterly review reruns the audit, reads the top twenty orphan ADRs, and reviews retired SOPs for ADR coverage |
 
-The audit script is `bc-docs-v3/scripts/adr-audit.js`. It is a pure diagnostic; it writes nothing. The operator runs it ad hoc; the monthly cron is a future surface owned by Operations.
+The audit script is `bc-docs/scripts/adr-audit.js`. It is a pure diagnostic; it writes nothing. The operator runs it ad hoc; the monthly cron is a future surface owned by Operations.
 
-**Governing source.** DEC-623f8f (ADR Hygiene Policy); `bc-docs-v3/scripts/adr-audit.js`.
+**Governing source.** DEC-623f8f (ADR Hygiene Policy); `bc-docs/scripts/adr-audit.js`.
 
 ## ADR Authoring with Subdomain and Focus
 
@@ -168,7 +168,7 @@ The gate consumes the L-node verdict; it does not author the verdict. The verdic
 
 | Constraint | Form |
 |---|---|
-| ADR file is canonical | The DevHub `decisions.decision_text` column is deprecated; the ADR file under `bc-docs-v3/docs/adrs/` is the authority |
+| ADR file is canonical | The DevHub `decisions.decision_text` column is deprecated; the ADR file under `bc-docs/docs/adrs/` is the authority |
 | UID canonical, D-code nickname | Body prose, code, schema comments cite the UID; D-codes appear in conversation and in optional frontmatter parentheticals only |
 | Caller-supplied D-code rejected | `devhub_decision_record` ignores any caller-supplied `decision_code`; the allocator runs unconditionally |
 | Supersession pair commit | A new ADR with `supersedes: DEC-xxx` and the target's status flip to `superseded` land in the same commit |
@@ -200,7 +200,7 @@ The gate consumes the L-node verdict; it does not author the verdict. The verdic
 | Drift item | Status |
 |---|---|
 | Twenty-four historical D-code duplicates | Recorded; not retroactively renumbered per `DEC-623f8f` rule five |
-| Implementation-verification commit token (`closes: DEC-xxxxxx`) lacks an auto-flip post-merge hook | Recorded; the historical backfill script `bc-docs-v3/scripts/adr-backfill-implemented.js` reads commit messages to propose flips; the post-merge hook is queued |
+| Implementation-verification commit token (`closes: DEC-xxxxxx`) lacks an auto-flip post-merge hook | Recorded; the historical backfill script `bc-docs/scripts/adr-backfill-implemented.js` reads commit messages to propose flips; the post-merge hook is queued |
 | Subdomain and focus axes are free-form | Recorded; cluster-and-normalize after a corpus accumulates |
 | Existing ADRs are being backfilled with subdomain and focus | Recorded; the deep-triage sweep is a long-running governance task |
 | `change_records.report_json` upsert is not transaction-wrapped | Independent statements; the operator reruns the close to resolve a partial-write window |
@@ -234,5 +234,5 @@ The gate consumes the L-node verdict; it does not author the verdict. The verdic
 - DEC-623f8f (ADR Hygiene Policy)
 - DEC-ebf0b4 (Session Discipline and Data Integrity Rules)
 - DEC-804874 (L-Node Verification with Semantic Family Classification)
-- DEC-3395bc (bc-docs-v3 SSOT cutover)
+- DEC-3395bc (bc-docs SSOT cutover)
 - CLAUDE.md (Session Protocol section, Architecture Decision Records section, Session Discipline section)

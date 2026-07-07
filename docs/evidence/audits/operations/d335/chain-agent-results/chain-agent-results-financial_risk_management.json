@@ -1,0 +1,762 @@
+{
+  "subfunction": "financial_risk_management",
+  "boMappings": {
+    "bc_financial_risk_management_operations": {
+      "number_of_audit_findings_closed": {
+        "bfName": "bc_financial_risk_management_ops_number_of_audit_findings_closed",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_audit_findings_identified": {
+        "bfName": "bc_financial_risk_management_ops_total_audit_findings_identified",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_claims_filed": {
+        "bfName": "bc_financial_risk_management_ops_total_cost_of_claims",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_exposure_units": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "normalization_factor": {
+        "bfName": "bc_financial_risk_management_ops_normalization_factor",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "total_cost_of_claims": {
+        "bfName": "bc_financial_risk_management_ops_total_cost_of_claims",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "value_of_collateral_managed": {
+        "bfName": "bc_financial_risk_management_ops_value_of_collateral_managed",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "costs_of_collateral_management": {
+        "bfName": "bc_financial_risk_management_ops_costs_of_collateral_management",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_compliance_violations": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_compliance_checks_or_audits": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "potential_financial_impact_of_contract": {
+        "bfName": "bc_financial_risk_management_ops_potential_financial_impact_of_contract",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "retained_losses": {
+        "bfName": "bc_financial_risk_management_ops_retained_losses",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "insurance_premiums": {
+        "bfName": "bc_financial_risk_management_ops_insurance_premiums",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "risk_management_expenses": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "risk_mitigation_investments": {
+        "bfName": "bc_financial_risk_management_ops_risk_mitigation_investments",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "potential_future_value_at_risk": {
+        "bfName": "bc_financial_risk_management_ops_potential_future_value_at_risk",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "probability_of_default": {
+        "bfName": "bc_financial_risk_management_ops_probability_of_default",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "number_of_covenants_met": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_financial_covenants": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "accounts_receivable_balance": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "outstanding_loans_granted": {
+        "bfName": "bc_financial_risk_management_ops_outstanding_loans_granted",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "unfunded_commitments": {
+        "bfName": "bc_financial_risk_management_ops_unfunded_commitments",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "number_of_critical_issues_identified_internally": {
+        "bfName": "bc_financial_risk_management_ops_number_of_critical_issues_identified_internally",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_critical_quality_issues": {
+        "bfName": "bc_financial_risk_management_ops_individual_quality_risk_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "returns_from_cybersecurity_measures": {
+        "bfName": "bc_financial_risk_management_ops_returns_from_cybersecurity_measures",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "investment_in_cybersecurity": {
+        "bfName": "bc_financial_risk_management_ops_investment_in_cybersecurity",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "number_of_fraud_incidents_identified": {
+        "bfName": "bc_financial_risk_management_ops_number_of_fraud_incidents_identified",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "undiversified_portfolio_risk": {
+        "bfName": "bc_financial_risk_management_ops_undiversified_portfolio_risk",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "diversified_portfolio_risk": {
+        "bfName": "bc_financial_risk_management_ops_diversified_portfolio_risk",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "potential_environmental_risks": {
+        "bfName": "bc_financial_risk_management_ops_potential_environmental_risks",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "estimated_financial_impacts": {
+        "bfName": "bc_financial_risk_management_ops_estimated_financial_impacts",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "probability_of_default_pd": {
+        "bfName": "bc_financial_risk_management_ops_probability_of_default",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "exposure_at_default_ead": {
+        "bfName": "bc_financial_risk_management_ops_exposure_at_default_ead",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "loss_given_default_lgd": {
+        "bfName": "bc_financial_risk_management_ops_loss_given_default_lgd",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "current_outstanding_balance": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "unused_committed_credit_line": {
+        "bfName": "bc_financial_risk_management_ops_unused_committed_credit_line",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "currency_rate_changes": {
+        "bfName": "bc_financial_risk_management_ops_currency_rate_changes",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_fraud_investigations_initiated": {
+        "bfName": "bc_financial_risk_management_ops_number_of_fraud_investigations_initiated",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_potential_fraud_alerts_or_reports": {
+        "bfName": "bc_financial_risk_management_ops_number_of_potential_fraud_alerts_or_reports",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "sum_of_historical_losses": {
+        "bfName": "bc_financial_risk_management_ops_sum_of_historical_losses",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_years_in_period": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_risks_mitigated": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_identified_risks": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "security_breach_incidents_count": {
+        "bfName": "bc_financial_risk_management_ops_security_breach_incidents_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "observation_period_months": {
+        "bfName": "bc_financial_risk_management_ops_actual_credit_losses",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "audited_operations_scope": {
+        "bfName": "bc_financial_risk_management_ops_audited_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_auditable_operations_scope": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_new_legal_risks_identified": {
+        "bfName": "bc_financial_risk_management_ops_number_of_new_legal_risks_identified",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "estimated_litigation_loss": {
+        "bfName": "bc_financial_risk_management_ops_estimated_litigation_loss",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "exposure_at_default": {
+        "bfName": "bc_financial_risk_management_ops_exposure_at_default",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "recoveries_after_default": {
+        "bfName": "bc_financial_risk_management_ops_recoveries_after_default",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "interest_sensitive_assets_maturing": {
+        "bfName": "bc_financial_risk_management_ops_interest_sensitive_assets_maturing",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "interest_sensitive_liabilities_maturing": {
+        "bfName": "bc_financial_risk_management_ops_interest_sensitive_liabilities_maturing",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "prevented_incidents": {
+        "bfName": "bc_financial_risk_management_ops_prevented_incidents",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "preventive_actions_taken": {
+        "bfName": "bc_financial_risk_management_ops_preventive_actions_taken",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "individual_quality_risk_score": {
+        "bfName": "bc_financial_risk_management_ops_individual_quality_risk_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "risk_weight": {
+        "bfName": "bc_financial_risk_management_ops_risk_weight",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "incident_response_start_timestamp": {
+        "bfName": "bc_financial_risk_management_ops_incident_response_start_timestamp",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "incident_detection_timestamp": {
+        "bfName": "bc_financial_risk_management_ops_actual_credit_losses",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_quality_risk_assessments": {
+        "bfName": "bc_financial_risk_management_ops_individual_quality_risk_score",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_successfully_mitigated_quality_risks": {
+        "bfName": "bc_financial_risk_management_ops_number_of_successfully_mitigated_quality_risks",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_quality_risks_with_mitigation_actions": {
+        "bfName": "bc_financial_risk_management_ops_total_quality_risks_with_mitigation_actions",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "inherent_risk_score": {
+        "bfName": "bc_financial_risk_management_ops_inherent_risk_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "risk_reduction_from_controls": {
+        "bfName": "bc_financial_risk_management_ops_risk_reduction_from_controls",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "risk_adjusted_return": {
+        "bfName": "bc_financial_risk_management_ops_risk_adjusted_return",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "economic_capital": {
+        "bfName": "bc_financial_risk_management_ops_economic_capital",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "number_of_legal_risk_assessments": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_risk_based_inspections": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_inspections_conducted": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_risk_committee_meetings": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "sum_of_risk_exposures_in_specific_area": {
+        "bfName": "bc_financial_risk_management_ops_sum_of_risk_exposures_in_specific_area",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_risk_exposure": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "disclosure_assessment_inputs": {
+        "bfName": "bc_financial_risk_management_ops_disclosure_assessment_inputs",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "staff_completed_training": {
+        "bfName": "bc_financial_risk_management_ops_staff_completed_training",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_relevant_staff": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_mitigation_plans_implemented": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_breaches": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "social_risk_indicators": {
+        "bfName": "bc_financial_risk_management_ops_social_risk_indicators",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "strategic_risk_indicators": {
+        "bfName": "bc_financial_risk_management_ops_strategic_risk_indicators",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_supplier_audits": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "reporting_period_in_months": {
+        "bfName": "bc_financial_risk_management_ops_actual_credit_losses",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_vendor_risk_assessments": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "actual_credit_losses": {
+        "bfName": "bc_financial_risk_management_ops_actual_credit_losses",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "expected_credit_losses": {
+        "bfName": "bc_financial_risk_management_ops_expected_credit_losses",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "standard_deviation_asset_portfolio_returns": {
+        "bfName": "bc_financial_risk_management_ops_standard_deviation_asset_portfolio_returns",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "bc_financial_risk_management_operations": {
+      "exists": true,
+      "contractId": "019d774b-22e9-7264-adc7-4a6c75446651",
+      "name": "cc__bc_financial_risk_management_operations",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "audit_findings_closure_rate",
+      "status": "exists",
+      "name": "mc__audit_findings_closure_rate"
+    },
+    {
+      "metric": "basel_iii_compliance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "business_continuity_plan_effectiveness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "claims_frequency_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "claims_severity_rate",
+      "status": "exists",
+      "name": "mc__claims_severity_rate"
+    },
+    {
+      "metric": "collateral_management_efficiency",
+      "status": "exists",
+      "name": "mc__collateral_management_efficiency"
+    },
+    {
+      "metric": "compliance_violation_rate",
+      "status": "exists",
+      "name": "mc__compliance_violation_rate"
+    },
+    {
+      "metric": "contractual_risk_exposure",
+      "status": "exists",
+      "name": "mc__contractual_risk_exposure"
+    },
+    {
+      "metric": "cost_of_risk",
+      "status": "exists",
+      "name": "mc__cost_of_risk"
+    },
+    {
+      "metric": "counterparty_credit_risk",
+      "status": "exists",
+      "name": "mc__counterparty_credit_risk"
+    },
+    {
+      "metric": "covenant_compliance_rate",
+      "status": "exists",
+      "name": "mc__covenant_compliance_rate"
+    },
+    {
+      "metric": "credit_exposure",
+      "status": "exists",
+      "name": "mc__credit_exposure"
+    },
+    {
+      "metric": "credit_risk",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "critical_quality_issue_identification_rate",
+      "status": "exists",
+      "name": "mc__critical_quality_issue_identification_rate"
+    },
+    {
+      "metric": "cybersecurity_investment_return",
+      "status": "exists",
+      "name": "mc__cybersecurity_investment_return"
+    },
+    {
+      "metric": "detected_fraud_cases",
+      "status": "exists",
+      "name": "mc__detected_fraud_cases"
+    },
+    {
+      "metric": "diversification_benefit",
+      "status": "exists",
+      "name": "mc__diversification_benefit"
+    },
+    {
+      "metric": "effectiveness_of_risk_communication",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "environmental_risk_exposure",
+      "status": "exists",
+      "name": "mc__environmental_risk_exposure"
+    },
+    {
+      "metric": "expected_loss",
+      "status": "exists",
+      "name": "mc__expected_loss"
+    },
+    {
+      "metric": "exposure_at_default_ead",
+      "status": "exists",
+      "name": "mc__exposure_at_default_ead"
+    },
+    {
+      "metric": "foreign_exchange_risk",
+      "status": "exists",
+      "name": "mc__foreign_exchange_risk"
+    },
+    {
+      "metric": "fraud_investigation_rate",
+      "status": "exists",
+      "name": "mc__fraud_investigation_rate"
+    },
+    {
+      "metric": "governance_risk",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "historical_loss_experience",
+      "status": "exists",
+      "name": "mc__historical_loss_experience"
+    },
+    {
+      "metric": "identified_risks_mitigated",
+      "status": "exists",
+      "name": "mc__identified_risks_mitigated"
+    },
+    {
+      "metric": "incident_response_team_effectiveness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "information_security_breach_frequency",
+      "status": "exists",
+      "name": "mc__information_security_breach_frequency"
+    },
+    {
+      "metric": "interest_rate_risk_exposure",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "internal_audit_risk_assessment_coverage",
+      "status": "exists",
+      "name": "mc__internal_audit_risk_assessment_coverage"
+    },
+    {
+      "metric": "key_risk_indicator_kri_effectiveness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "legal_risk_identification_frequency",
+      "status": "exists",
+      "name": "mc__legal_risk_identification_frequency"
+    },
+    {
+      "metric": "liquidity_risk",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "litigation_risk_exposure",
+      "status": "exists",
+      "name": "mc__litigation_risk_exposure"
+    },
+    {
+      "metric": "loss_given_default_lgd",
+      "status": "exists",
+      "name": "mc__loss_given_default_lgd"
+    },
+    {
+      "metric": "market_risk",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "maturity_gap_analysis",
+      "status": "exists",
+      "name": "mc__maturity_gap_analysis"
+    },
+    {
+      "metric": "model_risk",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "operational_risk",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "preventive_action_effectiveness",
+      "status": "exists",
+      "name": "mc__preventive_action_effectiveness"
+    },
+    {
+      "metric": "probability_of_default_pd",
+      "status": "exists",
+      "name": "mc__probability_of_default_pd"
+    },
+    {
+      "metric": "product_quality_risk_score",
+      "status": "exists",
+      "name": "mc__product_quality_risk_score"
+    },
+    {
+      "metric": "quality_incident_response_time",
+      "status": "exists",
+      "name": "mc__quality_incident_response_time"
+    },
+    {
+      "metric": "quality_risk_assessment_frequency",
+      "status": "exists",
+      "name": "mc__quality_risk_assessment_frequency"
+    },
+    {
+      "metric": "quality_risk_exposure",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "quality_risk_mitigation_success_rate",
+      "status": "exists",
+      "name": "mc__quality_risk_mitigation_success_rate"
+    },
+    {
+      "metric": "recovery_time_objective_rto",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "reputational_risk_impact",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "residual_risk",
+      "status": "exists",
+      "name": "mc__residual_risk"
+    },
+    {
+      "metric": "risk_adjusted_return_on_capital_raroc",
+      "status": "exists",
+      "name": "mc__risk_adjusted_return_on_capital_raroc"
+    },
+    {
+      "metric": "risk_assessments_completed",
+      "status": "exists",
+      "name": "mc__risk_assessments_completed"
+    },
+    {
+      "metric": "risk_based_inspection_rate",
+      "status": "exists",
+      "name": "mc__risk_based_inspection_rate"
+    },
+    {
+      "metric": "risk_committee_meeting_frequency",
+      "status": "exists",
+      "name": "mc__risk_committee_meeting_frequency"
+    },
+    {
+      "metric": "risk_concentration",
+      "status": "exists",
+      "name": "mc__risk_concentration"
+    },
+    {
+      "metric": "risk_disclosure_quality",
+      "status": "exists",
+      "name": "mc__risk_disclosure_quality"
+    },
+    {
+      "metric": "risk_management_training_completion_rate",
+      "status": "exists",
+      "name": "mc__risk_management_training_completion_rate"
+    },
+    {
+      "metric": "risk_mitigation_plans_implemented",
+      "status": "exists",
+      "name": "mc__risk_mitigation_plans_implemented"
+    },
+    {
+      "metric": "risk_tolerance_threshold_breaches",
+      "status": "exists",
+      "name": "mc__risk_tolerance_threshold_breaches"
+    },
+    {
+      "metric": "social_risk_exposure",
+      "status": "exists",
+      "name": "mc__social_risk_exposure"
+    },
+    {
+      "metric": "strategic_risk",
+      "status": "exists",
+      "name": "mc__strategic_risk"
+    },
+    {
+      "metric": "supplier_risk_audit_frequency",
+      "status": "exists",
+      "name": "mc__supplier_risk_audit_frequency"
+    },
+    {
+      "metric": "third_party_vendor_risk_assessment_frequency",
+      "status": "exists",
+      "name": "mc__third_party_vendor_risk_assessment_frequency"
+    },
+    {
+      "metric": "unexpected_loss",
+      "status": "exists",
+      "name": "mc__unexpected_loss"
+    },
+    {
+      "metric": "volatility_risk",
+      "status": "exists",
+      "name": "mc__volatility_risk"
+    }
+  ]
+}

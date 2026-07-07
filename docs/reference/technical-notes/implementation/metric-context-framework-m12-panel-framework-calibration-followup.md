@@ -14,7 +14,7 @@ superseded_by:
 
 # MCF M12 — Panel-Framework Calibration Follow-Up
 
-> **Tag**: `mcf-framework-calibration`. Filed as bc-docs-v3 follow-up arising from `metric-context-framework-m12-first-real-run-disposition.md`. This is investigation scope, not a fix. The fix shape will be authored as one or more separately operator-authorized DBCPs / PRs once the investigation closes.
+> **Tag**: `mcf-framework-calibration`. Filed as bc-docs follow-up arising from `metric-context-framework-m12-first-real-run-disposition.md`. This is investigation scope, not a fix. The fix shape will be authored as one or more separately operator-authorized DBCPs / PRs once the investigation closes.
 
 ## 1. Scope
 
@@ -160,10 +160,10 @@ per_role_summary:          all three roles report verdict OPERATOR_REVIEW with c
 
 | Step | Owner | Output |
 |---|---|---|
-| **5.1** Read `bc-core/src/registry/mcf/panel-agents/{anthropic,openai,google}-agent.adapter.ts` to inventory the actual role prompts, structured-output schemas, and model defaults at PR #166 `a48d429a`. | Investigator | A bc-docs-v3 read-only findings note documenting the prompt contents and structured-output schema, anchored to a SHA. |
+| **5.1** Read `bc-core/src/registry/mcf/panel-agents/{anthropic,openai,google}-agent.adapter.ts` to inventory the actual role prompts, structured-output schemas, and model defaults at PR #166 `a48d429a`. | Investigator | A bc-docs read-only findings note documenting the prompt contents and structured-output schema, anchored to a SHA. |
 | **5.2** Read `bc-core/src/registry/mcf/metric-authoring-panel.service.ts` Step 6 (consensus algorithm) and `panel-consensus.ts` to inventory the exact `operator_review_reason` routing logic. | Investigator | Same findings note as 5.1; consensus-logic section. |
 | **5.3** Inventory whether a production `PanelToolSurface` exists in bc-core today (search for implementations other than the empty stub). | Investigator | Same findings note; tool-surface section. |
-| **5.4** Synthesize the seven Q1-Q7 threads against the inventory in 5.1-5.3 and propose a calibration DBCP (or a small ADR proposing the calibration scope). | Investigator | A new bc-docs-v3 PR proposing the calibration DBCP / ADR. |
+| **5.4** Synthesize the seven Q1-Q7 threads against the inventory in 5.1-5.3 and propose a calibration DBCP (or a small ADR proposing the calibration scope). | Investigator | A new bc-docs PR proposing the calibration DBCP / ADR. |
 | **5.5** Operator decides the calibration scope and authorizes any subordinate bc-core code-change PRs. | Operator | Operator-authorized DBCP per the BareCount DBCP pattern. |
 | **5.6** Subordinate bc-core PRs implement the calibration. | Implementer | Merged bc-core PRs with the framework changes. |
 | **5.7** Evidence-capture rerun (same candidate, calibrated framework) — isolates framework effects from candidate effects. | Implementer | bc-core PR documenting the evidence-capture rerun outcome. |
@@ -178,7 +178,7 @@ per_role_summary:          all three roles report verdict OPERATOR_REVIEW with c
 
 This follow-up closes when:
 
-1. The findings note (Step 5.1-5.3) is authored and merged to bc-docs-v3 main
+1. The findings note (Step 5.1-5.3) is authored and merged to bc-docs main
 2. The calibration DBCP or ADR (Step 5.4) is authored, operator-approved, and merged
 3. The subordinate bc-core code-change PRs (Step 5.6) are merged
 4. The evidence-capture rerun (Step 5.7) is authored and merged with documented results

@@ -1,12 +1,12 @@
-# bc-docs-v4
+# bc-docs
 
-Clean-room documentation rebuild for BareCount.
+Canonical documentation spine for BareCount.
 
-This repository is isolated from the live Claude-facing `bc-docs-v3` tree. During the v4 build, `bc-docs-v3` is treated as read-only source material. No Claude, DevHub, MCP, bc-core, or bc-admin defaults should be repointed to this repository until the cutover window is explicitly approved.
+This repository is the governed documentation source of truth after the 2026-07-07 v3 to canonical cutover. The former `bc-docs-v3` tree is retired source material; new documentation work should land here through the control-plane and governance rules below.
 
 ## Purpose
 
-v4 is the controlled documentation spine:
+`bc-docs` is the controlled documentation spine:
 
 - Markdown remains the human-readable artifact.
 - SQLite is the control plane for inventory, migration decisions, provenance, navigation, freshness, coverage, and audit findings.
@@ -15,13 +15,13 @@ v4 is the controlled documentation spine:
 
 ## First Rule
 
-Do not bulk-copy v3 into v4. Every source document must pass through the migration ledger with a classification and a decision.
+Do not bulk-copy legacy documentation into the canonical tree. Every source document must pass through the migration ledger with a classification and a decision.
 
 ## Local Commands
 
 ```powershell
 python scripts/docs-control/init_db.py
-python scripts/docs-control/inventory_v3.py --source C:\MyProjects\bc-docs-v3
+python scripts/docs-control/inventory_v3.py --source C:\MyProjects\bc-docs-v3-retired-2026-07-07
 python scripts/docs-control/classify_migration.py
 python scripts/docs-control/report_inventory.py
 python scripts/docs-control/report_migration_plan.py
@@ -32,12 +32,12 @@ python scripts/docs-control/audit_target_docs.py
 python scripts/docs-control/inventory_bc_core.py
 ```
 
-Generated SQLite state lives at `docs-control/docs-control.db` and is intentionally ignored by Git until a later decision says otherwise.
+Generated SQLite state lives at `docs-control/docs-control.db` and is intentionally ignored by Git until a later decision says otherwise. Replayable exports for operator-approved delta syncs live under `docs-control/exports/`.
 
-## Current Build State
+## Current State
 
-- v3 inventory, migration decisions, undecided review, import report, navigation report, target audit, and `bc-core` coverage report are under `docs-control/reports/`.
-- Approved v3 documents have been imported only after classification and second-pass review.
-- API, schema, and data-dictionary references are not copied as truth; they are marked for regeneration from source.
-- The formerly undecided v3 documents have been reviewed; one template is rejected and the rest are current, reference, evidence, or archive-only.
-- v4 is not the live docs root and must not be renamed or repointed until the explicit cutover window.
+- The v3-to-canonical migration is ledgered under `docs-control/reports/` and `docs-control/exports/`.
+- Approved v3 documents were imported only after classification and review.
+- API, schema, and data-dictionary references are regenerated from source rather than copied as truth.
+- Raw evidence that is not reader navigation is preserved under `docs/evidence/`.
+- Diagrams and supporting assets are mirrored under `docs/assets/` and remain byte-for-byte covered by the migration checks.

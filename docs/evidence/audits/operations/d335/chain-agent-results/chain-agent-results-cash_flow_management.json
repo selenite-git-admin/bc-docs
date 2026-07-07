@@ -1,0 +1,458 @@
+{
+  "subfunction": "cash_flow_management",
+  "boMappings": {
+    "gaap_cash_flow": {
+      "operating_cash_flow": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "operating_cash_flow_after_capex": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "payments_for_share_repurchases": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "total_sales_revenue": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "average_number_of_employees": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_shareholder_equity": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_current_liabilities": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cash_flow_from_operating_activities": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "nopat_net_operating_profit_after_tax": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "depreciation_and_amortization_expense": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "net_change_in_non_cash_working_capital": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "weighted_average_shares_outstanding": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      }
+    },
+    "ifrs_balance_sheet": {
+      "capital_expenditures": {
+        "bfName": "ifrs_issued_capital",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "current_liabilities": {
+        "bfName": "ifrs_current_liabilities",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "bc_ap_operations": {
+      "current_period_capital_expenditures": {
+        "bfName": "bc_ap_ops_current_dpo",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "actual_ledger": {
+      "prior_period_capital_expenditures": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "proceeds_from_debt_issuance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "repayment_of_debt": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "proceeds_from_equity_issuance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "dividend_payments": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "net_sales_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_actual_cash_flow": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "period_length": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "net_income": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cash_and_cash_equivalents": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "gross_margin": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "average_inventory_investment": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "current_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "ifrs_cash_flow": {
+      "total_dividends_paid": {
+        "bfName": "ifrs_dividends_paid",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "other_financing_cash_flows": {
+        "bfName": "ifrs_cash_flows_from_used_in_financing_activities",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "purchases_of_property_plant_equipment": {
+        "bfName": "ifrs_purchase_of_property_plant_and_equipment",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "other_investing_cash_flows": {
+        "bfName": "ifrs_cash_flows_from_used_in_investing_activities",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "cash_flow_from_investing_activities": {
+        "bfName": "ifrs_cash_flows_from_used_in_investing_activities",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "cash_flow_from_financing_activities": {
+        "bfName": "ifrs_cash_flows_from_used_in_financing_activities",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "xbrl_gaap_cash_flow": {
+      "projected_cash_inflows": {
+        "bfName": "xbrl_dividends_cash",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "projected_cash_outflows": {
+        "bfName": "xbrl_dividends_cash",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "proceeds_from_sale_of_property_plant_equipment": {
+        "bfName": "xbrl_proceeds_from_sale_of_other_property_plant_and_equipment",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "proceeds_from_sale_of_investments": {
+        "bfName": "xbrl_proceeds_from_sale_and_maturity_of_other_investments",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "gross_cash_flow": {
+        "bfName": "xbrl_dividends_cash",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "cash_flow_from_operations_series": {
+        "bfName": "xbrl_dividends_cash",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "free_cash_flow": {
+        "bfName": "xbrl_dividends_cash",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "xbrl_gaap_income_statement": {
+      "purchases_of_investments": {
+        "bfName": "xbrl_impairment_of_investments",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "xbrl_gaap_balance_sheet": {
+      "gross_investment": {
+        "bfName": "xbrl_inventory_gross",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "invoice_hdr": {
+      "total_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "bc_gl_operations": {
+      "ebitda_earnings_before_interest_taxes_depreciation_amortization": {
+        "bfName": "bc_gl_ops_earnings_before_interest_taxes_depreciation_amortization",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      }
+    }
+  },
+  "ccResults": {
+    "gaap_cash_flow": {
+      "exists": true,
+      "contractId": "019d762a-1884-7cd0-8aca-30f6eb805929",
+      "name": "cc__gaap_cash_flow",
+      "mappingsAdded": 3
+    },
+    "ifrs_balance_sheet": {
+      "exists": true,
+      "contractId": "019d7837-b4c5-7358-b33c-cc1950f87cdb",
+      "name": "cc__ifrs_balance_sheet",
+      "mappingsAdded": 1
+    },
+    "bc_ap_operations": {
+      "exists": true,
+      "contractId": "019d7661-63a3-7a61-9792-c9c6deb988f6",
+      "name": "cc__bc_ap_operations",
+      "mappingsAdded": 0
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 6
+    },
+    "ifrs_cash_flow": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7837-c8ff-7768-9e17-776d6695615f",
+      "name": "cc__ifrs_cash_flow"
+    },
+    "xbrl_gaap_cash_flow": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7837-c96e-7705-b86b-a1c6e24f7565",
+      "name": "cc__xbrl_gaap_cash_flow"
+    },
+    "xbrl_gaap_income_statement": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7837-c9e0-7c3c-9f6e-4fb0fc1d0eb3",
+      "name": "cc__xbrl_gaap_income_statement"
+    },
+    "xbrl_gaap_balance_sheet": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7837-ca43-7929-acf4-c20413d5f3c7",
+      "name": "cc__xbrl_gaap_balance_sheet"
+    },
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr",
+      "mappingsAdded": 0
+    },
+    "bc_gl_operations": {
+      "exists": true,
+      "contractId": "019d7664-5001-76df-92ce-388cb8a39f0e",
+      "name": "cc__bc_gl_operations",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "capital_expenditure_capex_coverage_ratio",
+      "status": "created",
+      "name": "mc__capital_expenditure_capex_coverage_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "capital_expenditure_growth_rate",
+      "status": "exists",
+      "name": "mc__capital_expenditure_growth_rate"
+    },
+    {
+      "metric": "cash_flow_coverage_of_dividends",
+      "status": "created",
+      "name": "mc__cash_flow_coverage_of_dividends",
+      "coBindings": 1
+    },
+    {
+      "metric": "cash_flow_forecast",
+      "status": "created",
+      "name": "mc__cash_flow_forecast",
+      "coBindings": 1
+    },
+    {
+      "metric": "cash_flow_from_financing_activities",
+      "status": "created",
+      "name": "mc__cash_flow_from_financing_activities",
+      "coBindings": 3
+    },
+    {
+      "metric": "cash_flow_from_investing_activities",
+      "status": "created",
+      "name": "mc__cash_flow_from_investing_activities",
+      "coBindings": 3
+    },
+    {
+      "metric": "cash_flow_from_operations_to_sales_ratio",
+      "status": "exists",
+      "name": "mc__cash_flow_from_operations_to_sales_ratio"
+    },
+    {
+      "metric": "cash_flow_margin_ratio",
+      "status": "exists",
+      "name": "mc__cash_flow_margin_ratio"
+    },
+    {
+      "metric": "cash_flow_per_employee",
+      "status": "exists",
+      "name": "mc__cash_flow_per_employee"
+    },
+    {
+      "metric": "cash_flow_predictive_analytics_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cash_flow_return_on_investment_cfroi",
+      "status": "created",
+      "name": "mc__cash_flow_return_on_investment_cfroi",
+      "coBindings": 2
+    },
+    {
+      "metric": "cash_flow_stability",
+      "status": "exists",
+      "name": "mc__cash_flow_stability"
+    },
+    {
+      "metric": "cash_flow_to_capital_expenditures_ratio",
+      "status": "created",
+      "name": "mc__cash_flow_to_capital_expenditures_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "cash_flow_to_revenue_ratio",
+      "status": "exists",
+      "name": "mc__cash_flow_to_revenue_ratio"
+    },
+    {
+      "metric": "cash_flow_to_shareholder_equity_ratio",
+      "status": "exists",
+      "name": "mc__cash_flow_to_shareholder_equity_ratio"
+    },
+    {
+      "metric": "cash_reinvestment_ratio",
+      "status": "exists",
+      "name": "mc__cash_reinvestment_ratio"
+    },
+    {
+      "metric": "cash_to_current_liabilities_ratio",
+      "status": "created",
+      "name": "mc__cash_to_current_liabilities_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "ebitda_to_free_cash_flow_conversion_ratio",
+      "status": "created",
+      "name": "mc__ebitda_to_free_cash_flow_conversion_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "gross_margin_return_on_investment_gmroi",
+      "status": "exists",
+      "name": "mc__gross_margin_return_on_investment_gmroi"
+    },
+    {
+      "metric": "liquidity_ratio",
+      "status": "created",
+      "name": "mc__liquidity_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "net_cash_flow",
+      "status": "created",
+      "name": "mc__net_cash_flow",
+      "coBindings": 2
+    },
+    {
+      "metric": "net_income_to_operating_cash_flow_ratio",
+      "status": "exists",
+      "name": "mc__net_income_to_operating_cash_flow_ratio"
+    },
+    {
+      "metric": "net_operating_profit_after_tax_nopat_to_free_cash_flow_ratio",
+      "status": "created",
+      "name": "mc__net_operating_profit_after_tax_nopat_to_free_cash_flow_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "operating_cash_flow_ocf",
+      "status": "created",
+      "name": "mc__operating_cash_flow_ocf",
+      "coBindings": 2
+    },
+    {
+      "metric": "operating_cash_flow_per_share",
+      "status": "exists",
+      "name": "mc__operating_cash_flow_per_share"
+    },
+    {
+      "metric": "operational_cash_to_capital_expenditure_ratio",
+      "status": "created",
+      "name": "mc__operational_cash_to_capital_expenditure_ratio",
+      "coBindings": 2
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "subfunction": "financial_reporting",
+  "boMappings": {
+    "gaap_income_statement": {
+      "number_of_users_adopting_automated_tools": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_eligible_users_or_processes": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "gross_profit": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "depreciation_expense": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "amortization_expense": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "effective_tax_rate": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "one_hundred_percent": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "number_of_compliant_reports": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_financial_reports_submitted": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "actual_ledger": {
+      "operating_expenses": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "invoice_hdr": {
+      "total_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "gaap_income_statement": {
+      "exists": true,
+      "contractId": "019d762a-1944-7468-ba8b-f605ef2f8067",
+      "name": "cc__gaap_income_statement",
+      "mappingsAdded": 8
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 0
+    },
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "automated_financial_reporting_adoption_rate",
+      "status": "created",
+      "name": "mc__automated_financial_reporting_adoption_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "ebit_earnings_before_interest_and_taxes",
+      "status": "created",
+      "name": "mc__ebit_earnings_before_interest_and_taxes",
+      "coBindings": 2
+    },
+    {
+      "metric": "ebitda_earnings_before_interest_taxes_depreciation_and_amortization",
+      "status": "failed",
+      "error": "One or more fields failed validation."
+    },
+    {
+      "metric": "net_operating_profit_after_tax_nopat",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "operating_profit_margin",
+      "status": "failed",
+      "error": "One or more fields failed validation."
+    },
+    {
+      "metric": "regulatory_compliance_reporting_rate",
+      "status": "created",
+      "name": "mc__regulatory_compliance_reporting_rate",
+      "coBindings": 1
+    }
+  ]
+}

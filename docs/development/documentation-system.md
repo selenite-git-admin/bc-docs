@@ -11,7 +11,7 @@ governing_sources:
   - Decision and Change Procedure
   - Audit and Activity Logging
 governing_adrs:
-  - DEC-3395bc (bc-docs-v3 SSOT cutover; flat layout under docs/; ADR files written into docs/adrs/; bc-core JWT-served document endpoints)
+  - DEC-3395bc (bc-docs SSOT cutover; flat layout under docs/; ADR files written into docs/adrs/; bc-core JWT-served document endpoints)
   - DEC-b97390 (bc-admin embedded reader is canonical; reader fetches manifest, markdown, and assets from bc-core; URL uglification rejected)
   - DEC-c06f41 (Spine expansion to eight sections plus a home; Implementation reshape; section-overview discipline)
   - DEC-a4e550 (ADR-First Decision Workflow; the ADR file is SSOT)
@@ -25,19 +25,19 @@ diagrams: []
 
 ## Scope
 
-This chapter records the platform's documentation system: the bc-docs-v3 SSOT repository as the single source of truth, the bc-admin embedded reader as the canonical reader surface, the bc-core JWT-served document endpoints that the reader fetches against, the bc-admin sync-docs script as the manifest builder that bridges the SSOT to the reader, the data-dictionary generator that introspects the live PostgreSQL state, the DevHub document scanner as the derived registry index, the diagram-rewrite script and the section-numbering migration script as authoring aids, and the as-built drift in section coverage and reference-material generation.
+This chapter records the platform's documentation system: the bc-docs SSOT repository as the single source of truth, the bc-admin embedded reader as the canonical reader surface, the bc-core JWT-served document endpoints that the reader fetches against, the bc-admin sync-docs script as the manifest builder that bridges the SSOT to the reader, the data-dictionary generator that introspects the live PostgreSQL state, the DevHub document scanner as the derived registry index, the diagram-rewrite script and the section-numbering migration script as authoring aids, and the as-built drift in section coverage and reference-material generation.
 
 This chapter does not redefine the ADR-first procedure (Decision and Change Procedure), the reader-side audit trail (Audit and Activity Logging records the docs JSONL trail and AuditService caller wiring), or the bc-core API surface that hosts the document endpoints (API Surface).
 
 **Governing source.** outline.md §4.5; DEC-3395bc; DEC-b97390.
 
-## bc-docs-v3 as the SSOT
+## bc-docs as the SSOT
 
-Per `DEC-3395bc`, bc-docs-v3 is the documentation source of truth. Filesystem layout plus YAML frontmatter authority is the discipline; nothing else is consulted as the authoritative content.
+Per `DEC-3395bc`, bc-docs is the documentation source of truth. Filesystem layout plus YAML frontmatter authority is the discipline; nothing else is consulted as the authoritative content.
 
 | Property | Form |
 |---|---|
-| Repository path | `C:\MyProjects\bc-docs-v3` (the platform's developer-machine path; the deployed path is owned by Infrastructure) |
+| Repository path | `C:\MyProjects\bc-docs` (the platform's developer-machine path; the deployed path is owned by Infrastructure) |
 | Layout | Flat under `docs/`: section folders (`foundation`, `operating-model`, `implementation`, `ai`, `development`, `onboarding`, `operations`, `compliance`), top-level governance peers (`adrs`, `errata`), and assets (`data-dictionary`, plus future generated reference materials) |
 | Authority axis | Each chapter's frontmatter `authority` field declares whether the chapter is `authoritative`, `reference`, or `evidentiary` |
 | Status axis | Each chapter's frontmatter `status` field declares `drafting`, `reviewing`, `locked`, `superseded`, or `retired`; binding force requires `authority: authoritative` plus `status: locked` |
@@ -47,7 +47,7 @@ The legacy `legacy v2 archive` archive at `legacy-v2-docs-root` is read-only ref
 
 The repository carries an `outline.md` that records the section structure, the chapter list, the voice discipline, and the editorial gates. The outline is authoritative for the framework; the chapter is authoritative for its content.
 
-**Governing source.** DEC-3395bc; bc-docs-v3 `outline.md`; bc-docs-v3 `HANDOFF.md`.
+**Governing source.** DEC-3395bc; bc-docs `outline.md`; bc-docs `HANDOFF.md`.
 
 ## The bc-admin Embedded Reader
 
@@ -96,24 +96,24 @@ The DB-backed access log and the `@nestjs/throttler` package are queued; the cur
 
 ## The sync-docs Manifest Builder
 
-`bc-admin/scripts/sync-docs.js` is the build-time bridge between bc-docs-v3 and bc-core. The script reads the SSOT, walks every chapter and asset, generates a manifest, and writes the manifest plus the source files into bc-core's `private-docs/` directory.
+`bc-admin/scripts/sync-docs.js` is the build-time bridge between bc-docs and bc-core. The script reads the SSOT, walks every chapter and asset, generates a manifest, and writes the manifest plus the source files into bc-core's `private-docs/` directory.
 
 | Step | Form |
 |---|---|
-| Source root | Read from environment `V3_DOCS_ROOT` or default to the local bc-docs-v3 repo path |
+| Source root | Read from environment `BC_DOCS_ROOT` or default to the local bc-docs repo path |
 | Sync target | Read from environment `BC_CORE_PRIVATE_DOCS` or default to the bc-core sibling path's `private-docs/` directory |
 | Section labels | The script's `SECTION_LABELS` table records the section slug to title mapping; the table enumerates the eight top-level sections and the home overview |
-| Collection labels | The `COLLECTION_LABELS` table records the top-level governance peers (adrs, errata, data-dictionary, plus queued schemas, glossary, sops) |
+| Collection labels | The `COLLECTION_LABELS` table records the top-level governance and reference collections (ADRs, errata, data-dictionary, glossary, API, schemas, and source systems) |
 | Manifest shape | The output manifest carries section list, per-section chapter list, per-chapter frontmatter excerpt, and the asset inventory |
 | Output | The manifest writes alongside the copied chapters and assets in `private-docs/` |
 
-The script must be re-run after a chapter is added, removed, or renamed. The bc-admin Vite HMR detects the resulting file change and the reader updates without a full reload. Per pattern 81: the `SECTION_LABELS` table is the source-of-truth for which sections the reader knows about; a section folder created in bc-docs-v3 without a corresponding `SECTION_LABELS` entry does not surface in the reader.
+The script must be re-run after a chapter is added, removed, or renamed. The bc-admin Vite HMR detects the resulting file change and the reader updates without a full reload. Per pattern 81: the `SECTION_LABELS` table is the source-of-truth for which sections the reader knows about; a section folder created in bc-docs without a corresponding `SECTION_LABELS` entry does not surface in the reader.
 
 **Governing source.** `bc-admin/scripts/sync-docs.js`; DEC-b97390.
 
 ## The Data-Dictionary Generator
 
-`bc-docs-v3/scripts/generate-data-dictionary.mjs` produces the data-dictionary reference under `docs/data-dictionary/` by introspecting the live PostgreSQL state. The generator is the authoritative inventory of every table, every column, every index, and every foreign-key constraint as the database actually carries them.
+`bc-docs/scripts/generate-data-dictionary.mjs` produces the data-dictionary reference under `docs/data-dictionary/` by introspecting the live PostgreSQL state. The generator is the authoritative inventory of every table, every column, every index, and every foreign-key constraint as the database actually carries them.
 
 | Property | Form |
 |---|---|
@@ -125,15 +125,15 @@ The script must be re-run after a chapter is added, removed, or renamed. The bc-
 
 The generator is the reference inventory; the chapter (Data Model and Schema) is the authority for the rationale and the design intent. Per pattern 67: chapters describe; references enumerate.
 
-**Governing source.** `bc-docs-v3/scripts/generate-data-dictionary.mjs`; Data Model and Schema.
+**Governing source.** `bc-docs/scripts/generate-data-dictionary.mjs`; Data Model and Schema.
 
 ## DevHub Document Scanner
 
-DevHub maintains a derived `documents` registry by walking bc-docs-v3 and reading frontmatter. The scanner is on-demand: `devhub_doc_scan` rebuilds the registry; `devhub_doc_list`, `devhub_doc_get`, `devhub_doc_update`, `devhub_doc_link_ref`, and `devhub_doc_validate` are the subsequent read and mutate tools.
+DevHub maintains a derived `documents` registry by walking bc-docs and reading frontmatter. The scanner is on-demand: `devhub_doc_scan` rebuilds the registry; `devhub_doc_list`, `devhub_doc_get`, `devhub_doc_update`, `devhub_doc_link_ref`, and `devhub_doc_validate` are the subsequent read and mutate tools.
 
 | Aspect | Form |
 |---|---|
-| Source path | Environment `BC_DOCS_PATH` if set; otherwise the configured bc-docs-v3 path |
+| Source path | Environment `BC_DOCS_PATH` if set; otherwise the configured bc-docs path |
 | Walk | Filesystem recursive walk of `docs/`; every Markdown file is considered |
 | Metadata extracted | `id` and `title` from frontmatter; `type` and `domain` derived from the file path; `authority`, `status`, `governing_adrs`, `errata_referenced` from frontmatter |
 | Cadence | Operator-run; the boot output's "AUTO-SCAN" line is informational, not a re-scan trigger |
@@ -144,7 +144,7 @@ Per pattern 81: the DevHub document registry is a derived index, not the authori
 
 ## ADR Authoring through DevHub
 
-Per `DEC-a4e550` and as recorded in Decision and Change Procedure, the `devhub_decision_record` MCP tool both inserts the registry row and writes the ADR file to `bc-docs-v3/docs/adrs/`. The Documentation System chapter records the file-write side: the ADR file is canonical content, the registry row is metadata, and the ADR audit script `bc-docs-v3/scripts/adr-audit.js` is a pure-diagnostic over the file content.
+Per `DEC-a4e550` and as recorded in Decision and Change Procedure, the `devhub_decision_record` MCP tool both inserts the registry row and writes the ADR file to `bc-docs/docs/adrs/`. The Documentation System chapter records the file-write side: the ADR file is canonical content, the registry row is metadata, and the ADR audit script `bc-docs/scripts/adr-audit.js` is a pure-diagnostic over the file content.
 
 The ADR file's frontmatter carries `uid`, `title`, `description`, `status`, `date`, `project`, `domain`, plus optional `subdomain`, `focus`, `supersedes`, and `superseded_by`. The body's conventional sections are Context, Decision, and Consequences. Per `DEC-623f8f`, the eight ADR hygiene rules govern the file-content lifecycle (Decision and Change Procedure records the rules; Documentation System records the file shape).
 
@@ -156,25 +156,25 @@ Errata are first-class governance peers under `docs/errata/`. Each erratum has a
 
 The errata registry is a small, slow-growing surface. Per `DEC-3395bc`, the errata sit as peers to the section directories; they are not nested under a `reference/` wrapper.
 
-**Governing source.** DEC-3395bc; `bc-docs-v3/docs/errata/`.
+**Governing source.** DEC-3395bc; `bc-docs/docs/errata/`.
 
 ## Diagram Substrate
 
-Diagrams live at `bc-docs-v3/docs/assets/diagrams/`. Source format is SVG; filenames follow the `DG-{slug}.svg` convention; chapter body references use absolute paths (`/docs/assets/diagrams/DG-{slug}.svg`).
+Diagrams live at `bc-docs/docs/assets/diagrams/`. Source format is SVG; filenames follow the `DG-{slug}.svg` convention; chapter body references use absolute paths (`/docs/assets/diagrams/DG-{slug}.svg`).
 
 | Property | Form |
 |---|---|
 | Active diagrams | The four architectural diagrams (`DG-architecture-conceptual`, `DG-architecture-layers`, `DG-architecture-two-db`, `DG-architecture-composition`) plus four Foundation-and-Operating-Model diagrams (`DG-binding-chain`, `DG-catalog-hierarchy`, `DG-evaluation-boundaries`, `DG-object-model`) |
 | Deferred diagrams | A `_deferred/` subdirectory holds diagrams that need a structural redraw before they reach the active set |
-| Label rewriting | `bc-docs-v3/scripts/diagram-rewrite.mjs` carries per-diagram label substitution rules; the script is idempotent |
+| Label rewriting | `bc-docs/scripts/diagram-rewrite.mjs` carries per-diagram label substitution rules; the script is idempotent |
 | Bidirectional declaration | Per outline §2.13: every chapter that body-references a diagram declares it in frontmatter `diagrams:`, and every frontmatter-declared diagram is referenced in body |
 | Authoring aid | Prose is the spec; the diagram is the navigation aid; when prose and diagram disagree, prose wins and the diagram is redrawn |
 
-**Governing source.** outline.md §2.13; `bc-docs-v3/scripts/diagram-rewrite.mjs`.
+**Governing source.** outline.md §2.13; `bc-docs/scripts/diagram-rewrite.mjs`.
 
 ## Voice and Editorial Discipline
 
-The documentation's voice is governed by `bc-docs-v3/scripts/reference/aws-rewrite-checklist.md`. The checklist records the AWS-style register, the forbidden vocabulary, the section pattern (six elements for behavior, seven for components), the bidirectional frontmatter discipline, and the per-chapter pattern set that has accumulated through founder cold-reads.
+The documentation's voice is governed by `bc-docs/scripts/reference/aws-rewrite-checklist.md`. The checklist records the AWS-style register, the forbidden vocabulary, the section pattern (six elements for behavior, seven for components), the bidirectional frontmatter discipline, and the per-chapter pattern set that has accumulated through founder cold-reads.
 
 | Discipline | Form |
 |---|---|
@@ -187,16 +187,16 @@ The documentation's voice is governed by `bc-docs-v3/scripts/reference/aws-rewri
 
 The pattern set evolves with each founder cold-read. New patterns are extracted into the checklist; the running count is the live count. The discipline is "patterns are earned, not invented"; a pattern is added when a real cold-read surfaces a real drift that the checklist does not yet catch.
 
-**Governing source.** `bc-docs-v3/scripts/reference/aws-rewrite-checklist.md`; outline.md §2.
+**Governing source.** `bc-docs/scripts/reference/aws-rewrite-checklist.md`; outline.md §2.
 
 ## Constraints
 
 | Constraint | Form |
 |---|---|
-| Single SSOT | bc-docs-v3 is the only authoritative content store; legacy v2 archive is read-only archive |
+| Single SSOT | bc-docs is the only authoritative content store; legacy v2 archive is read-only archive |
 | Canonical reader is bc-admin | The bc-admin embedded reader is the reference rendering; ad-hoc Markdown viewers are not |
-| Reader fetches through bc-core | The reader does not read bc-docs-v3 directly; it fetches through the JWT-guarded bc-core endpoints |
-| sync-docs is the bridge | bc-core does not read bc-docs-v3 directly; the sync-docs script populates bc-core's `private-docs/` directory |
+| Reader fetches through bc-core | The reader does not read bc-docs directly; it fetches through the JWT-guarded bc-core endpoints |
+| sync-docs is the bridge | bc-core does not read bc-docs directly; the sync-docs script populates bc-core's `private-docs/` directory |
 | Frontmatter is bidirectional | The bidirectional discipline binds every chapter |
 | Voice is grep-checked | The forbidden-roots regex passes before commit |
 | Per-section ordering is frontmatter-driven | Section folders carry chapters whose `order` field provides sort stability |
@@ -231,9 +231,9 @@ The pattern set evolves with each founder cold-read. New patterns are extracted 
 | API Reference generator is queued | Recorded; the DevHub API scanner will produce the inventory; the chapter (API Surface) is the rationale authority |
 | Glossary, Diagram Index, Contract Schemas references are queued | Recorded as future top-level peers under `docs/` |
 | sync-docs `SECTION_LABELS` table requires manual amendment when a new section folder is added | Recorded; the amendment lands in the same change as the section's first chapter |
-| ADR audit script `bc-docs-v3/scripts/adr-audit.js` is operator-run | Recorded; the monthly cron is queued per `DEC-623f8f` rule four |
+| ADR audit script `bc-docs/scripts/adr-audit.js` is operator-run | Recorded; the monthly cron is queued per `DEC-623f8f` rule four |
 
-**Governing source.** outline.md §4.9; bc-docs-v3 `HANDOFF.md`.
+**Governing source.** outline.md §4.9; bc-docs `HANDOFF.md`.
 
 ## Boundaries with Other Chapters
 
@@ -257,10 +257,11 @@ The pattern set evolves with each founder cold-read. New patterns are extracted 
 - API Surface
 - Data Model and Schema
 - Frontend Experience
-- DEC-3395bc (bc-docs-v3 SSOT cutover)
+- DEC-3395bc (bc-docs SSOT cutover)
 - DEC-b97390 (bc-admin embedded reader)
 - DEC-c06f41 (Spine expansion to eight sections plus a home)
 - DEC-a4e550 (ADR-First Decision Workflow)
-- bc-docs-v3 outline.md (section structure, voice discipline, editorial gates)
-- bc-docs-v3 HANDOFF.md (current drafting state and per-chapter workflow)
-- `bc-docs-v3/scripts/reference/aws-rewrite-checklist.md` (the voice patterns)
+- bc-docs outline.md (section structure, voice discipline, editorial gates)
+- bc-docs HANDOFF.md (current drafting state and per-chapter workflow)
+- `bc-docs/scripts/reference/aws-rewrite-checklist.md` (the voice patterns)
+

@@ -1,0 +1,471 @@
+{
+  "subfunction": "iso_55001",
+  "boMappings": {
+    "inspection_order": {
+      "Inspection Score": {
+        "bfName": "inspection_order_status_code",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "Current Asset Condition Index": {
+        "bfName": "inspection_order_status_code",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "Previous Period Asset Condition Index": {
+        "bfName": "inspection_order_status_code",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      }
+    },
+    "maintenance_order_hdr": {
+      "Maintenance Cost Ratio": {
+        "bfName": "maintenance_order_hdr_actual_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "Total Downtime": {
+        "bfName": "maintenance_order_hdr_actual_duration",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "asset": {
+      "Asset Age": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "total_number_of_assets": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_asset_data_records_reviewed": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_disposed_assets": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "accurate_asset_records_count": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_asset_records_audited": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_asset_replacement_value": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_asset_activities": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "actual_asset_performance": {
+        "bfName": "asset_category_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "total_estimated_asset_retirement_obligations": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "fair_market_value_of_assets": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "book_value_of_assets": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "actual_value_generated_from_capex": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "value_generated_from_capex_projects": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_number_of_financial_asset_activities": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "asset_acquisition_cost": {
+        "bfName": "asset_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "estimated_salvage_value_at_end_of_life": {
+        "bfName": "asset_salvage_value_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      }
+    },
+    "actual_ledger": {
+      "total_revenue_from_asset_disposal": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_cost_of_asset_disposal": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "value_gained_from_asset_investments": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_investment_in_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_asset_management_benefits": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_asset_management_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_training_expenditure_on_asset_management": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "funds_set_aside_for_aro": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_capital_expenditure_incurred": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_identified_and_avoided_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_energy_cost_for_asset": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "asset_operation_cost": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "asset_maintenance_cost": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "asset_disposal_cost": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_liabilities": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "asset_operating_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "asset_maintenance_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "asset_disposal_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "average_working_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      }
+    },
+    "training_analysis": {
+      "Employee Training in New Tech": {
+        "bfName": "training_analysis_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "budget_ledger_hdr": {
+      "total_capital_expenditure_budget": {
+        "bfName": "budget_ledger_hdr_status_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      }
+    },
+    "invoice_hdr": {
+      "total_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "inspection_order": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-75af-762b-9134-ec662d0c1a3a",
+      "name": "cc__inspection_order"
+    },
+    "maintenance_order_hdr": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-75f3-76df-bfba-81c1405d94e7",
+      "name": "cc__maintenance_order_hdr"
+    },
+    "asset": {
+      "exists": true,
+      "contractId": "019d7701-d9db-728f-89ad-60f06fdf4f42",
+      "name": "cc__asset",
+      "mappingsAdded": 17
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 18
+    },
+    "training_analysis": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-76b1-77a3-88d3-2a7fdebdc228",
+      "name": "cc__training_analysis"
+    },
+    "budget_ledger_hdr": {
+      "exists": true,
+      "contractId": "019d7663-f27e-7c14-bd51-aa05ea8d4038",
+      "name": "cc__budget_ledger_hdr",
+      "mappingsAdded": 1
+    },
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "asset_condition_index",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_criticality_ranking",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_data_governance_quality",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_disposal_efficiency",
+      "status": "created",
+      "name": "mc__asset_disposal_efficiency",
+      "coBindings": 2
+    },
+    {
+      "metric": "asset_health_and_safety_incident_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_information_accuracy_rate",
+      "status": "created",
+      "name": "mc__asset_information_accuracy_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "asset_investment_strategy_effectiveness",
+      "status": "created",
+      "name": "mc__asset_investment_strategy_effectiveness",
+      "coBindings": 1
+    },
+    {
+      "metric": "asset_maintenance_cost_ratio",
+      "status": "created",
+      "name": "mc__asset_maintenance_cost_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "asset_management_cost_benefit_ratio",
+      "status": "created",
+      "name": "mc__asset_management_cost_benefit_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "asset_management_governance_effectiveness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_management_innovation_index",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_management_policy_adherence",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_management_process_maturity",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_management_strategic_review_frequency",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_management_strategy_alignment",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_management_training_investment",
+      "status": "created",
+      "name": "mc__asset_management_training_investment",
+      "coBindings": 1
+    },
+    {
+      "metric": "asset_performance_to_plan_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_reliability_index",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_retirement_obligation_coverage",
+      "status": "created",
+      "name": "mc__asset_retirement_obligation_coverage",
+      "coBindings": 2
+    },
+    {
+      "metric": "asset_valuation_variance",
+      "status": "created",
+      "name": "mc__asset_valuation_variance",
+      "coBindings": 1
+    },
+    {
+      "metric": "capital_asset_condition_trend",
+      "status": "created",
+      "name": "mc__capital_asset_condition_trend",
+      "coBindings": 1
+    },
+    {
+      "metric": "capital_budgeting_efficiency",
+      "status": "created",
+      "name": "mc__capital_budgeting_efficiency",
+      "coBindings": 2
+    },
+    {
+      "metric": "capital_expenditure_capex_efficiency",
+      "status": "created",
+      "name": "mc__capital_expenditure_capex_efficiency",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_avoidance_from_asset_management",
+      "status": "created",
+      "name": "mc__cost_avoidance_from_asset_management",
+      "coBindings": 1
+    },
+    {
+      "metric": "energy_cost_per_asset_unit",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "financial_compliance_rate_for_asset_management",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "financial_leverage_from_assets",
+      "status": "exists",
+      "name": "mc__financial_leverage_from_assets"
+    },
+    {
+      "metric": "life_cycle_costing_total",
+      "status": "created",
+      "name": "mc__life_cycle_costing_total",
+      "coBindings": 2
+    },
+    {
+      "metric": "net_asset_value_nav",
+      "status": "exists",
+      "name": "mc__net_asset_value_nav"
+    },
+    {
+      "metric": "residual_value_of_assets",
+      "status": "created",
+      "name": "mc__residual_value_of_assets",
+      "coBindings": 1
+    },
+    {
+      "metric": "strategic_asset_management_plan_samp_compliance_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "total_cost_of_ownership_tco_for_assets",
+      "status": "created",
+      "name": "mc__total_cost_of_ownership_tco_for_assets",
+      "coBindings": 2
+    },
+    {
+      "metric": "working_asset_turnover_ratio",
+      "status": "created",
+      "name": "mc__working_asset_turnover_ratio",
+      "coBindings": 2
+    }
+  ]
+}

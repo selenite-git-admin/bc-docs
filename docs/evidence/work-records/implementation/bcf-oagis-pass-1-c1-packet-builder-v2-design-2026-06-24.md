@@ -28,11 +28,11 @@ related_sessions:
 
 | Construct | v1 source line | Construction | M-checklist failure observed in panel feedback |
 |---|---|---|---|
-| `proposedName` | `_pass1-c1-execute.mjs:121` → calls `'toSpacedLowercase()' at :85` | `bfName.replace(/_/g, ' ').toLowerCase()` — mechanical lift of OAGIS field-path slug | **M9 source-field-copy** ("term appears copied from the OAGIS source field name", "near-verbatim from source element name") — observed ~18 of 26 non-APPROVE rows |
-| `definition` | `_pass1-c1-execute.mjs:122` → `'buildProposedDefinition()' at :88-92` | Template `"A coded value identifying the ${term} of the associated entity. Code-typed dimension sourced from the OAGIS 10.12 vocabulary."` — restates the term ("circular by construction") and embeds source attribution as part of meaning | **M8 circular definition** ("definition restates the term", "definition is circular/tautological") — observed ~20 of 26 non-APPROVE rows |
-| `citedText` | `_pass1-c1-execute.mjs:124` | `oagis.description.slice(0, 200)` — uses whatever the enrichment pass landed; for 2 of 28 rows (`type_code`, `harmonized_tariff_schedule_code`) this is OAGIS standalone-page XSD primitive-lineage boilerplate ("Data Type Description … data type primitives …") rather than business meaning; for many others it is a thin field gloss | **M2 thin / boilerplate citation** ("candidateEvidence describes only technical XSD primitive lineage, not a substantive business meaning", "thin field gloss") — observed in 5+ rows explicitly + drives most "not evidence-backed Global" parks |
+| `proposedName` | [`_pass1-c1-execute.mjs:121`](../../../barecount-devhub/scripts/_pass1-c1-execute.mjs:121) → calls [`toSpacedLowercase()` at :85](../../../barecount-devhub/scripts/_pass1-c1-execute.mjs:85) | `bfName.replace(/_/g, ' ').toLowerCase()` — mechanical lift of OAGIS field-path slug | **M9 source-field-copy** ("term appears copied from the OAGIS source field name", "near-verbatim from source element name") — observed ~18 of 26 non-APPROVE rows |
+| `definition` | [`_pass1-c1-execute.mjs:122`](../../../barecount-devhub/scripts/_pass1-c1-execute.mjs:122) → [`buildProposedDefinition()` at :88-92](../../../barecount-devhub/scripts/_pass1-c1-execute.mjs:88) | Template `"A coded value identifying the ${term} of the associated entity. Code-typed dimension sourced from the OAGIS 10.12 vocabulary."` — restates the term ("circular by construction") and embeds source attribution as part of meaning | **M8 circular definition** ("definition restates the term", "definition is circular/tautological") — observed ~20 of 26 non-APPROVE rows |
+| `citedText` | [`_pass1-c1-execute.mjs:124`](../../../barecount-devhub/scripts/_pass1-c1-execute.mjs:124) | `oagis.description.slice(0, 200)` — uses whatever the enrichment pass landed; for 2 of 28 rows (`type_code`, `harmonized_tariff_schedule_code`) this is OAGIS standalone-page XSD primitive-lineage boilerplate ("Data Type Description … data type primitives …") rather than business meaning; for many others it is a thin field gloss | **M2 thin / boilerplate citation** ("candidateEvidence describes only technical XSD primitive lineage, not a substantive business meaning", "thin field gloss") — observed in 5+ rows explicitly + drives most "not evidence-backed Global" parks |
 | `classification` (Global rationale) | (absent) — DTO has no `classification` field and v1 supplies no Global rationale | The F4-v2 panel must infer Global from the single OAGIS citation alone; with single-field citations from role-specific OAGIS leaves, the panel correctly refuses to certify Global | **Non-Global classification** ("classification is not explicit and evidence-backed Global", "single OAGIS leaf-citation does not establish cross-system or cross-industry governed characteristic status") — observed ~24 of 26 non-APPROVE rows |
-| `evidenceHash` | `_pass1-c1-execute.mjs:126` | `sha256(citedText + '|AR-3+AR-4')` — fingerprint over a single field | Causes one false collision (`type_code` ↔ `harmonized_tariff_schedule_code` both XSD-boilerplate citedText) and does not protect retry from re-issuing the same panel input; the hash is not a panel-input fingerprint, just a citedText fingerprint |
+| `evidenceHash` | [`_pass1-c1-execute.mjs:126`](../../../barecount-devhub/scripts/_pass1-c1-execute.mjs:126) | `sha256(citedText + '|AR-3+AR-4')` — fingerprint over a single field | Causes one false collision (`type_code` ↔ `harmonized_tariff_schedule_code` both XSD-boilerplate citedText) and does not protect retry from re-issuing the same panel input; the hash is not a panel-input fingerprint, just a citedText fingerprint |
 
 ### Why these defects produced 89% non-APPROVE
 
@@ -133,7 +133,7 @@ else:
         disposition = panel_ready_retry
 ```
 
-Implementation: `barecount-devhub/scripts/_pass1-c1-packet-builder-v2.mjs` — deterministic, no LLM, no panel calls, no writes. Outputs `barecount-devhub/.claude/pass1-c1-packet-builder-v2-2026-06-24.json`.
+Implementation: [`barecount-devhub/scripts/_pass1-c1-packet-builder-v2.mjs`](../../../barecount-devhub/scripts/_pass1-c1-packet-builder-v2.mjs) — deterministic, no LLM, no panel calls, no writes. Outputs `barecount-devhub/.claude/pass1-c1-packet-builder-v2-2026-06-24.json`.
 
 ### 3.6 Retry handling and packet-hash
 
@@ -250,7 +250,7 @@ Both can be confirmed via C5 immediately when the operator authorizes — no re-
 
 ## 7. Implementation pointer
 
-`barecount-devhub/scripts/_pass1-c1-packet-builder-v2.mjs` — deterministic builder, encodes per-row disposition and v2 packet content; runs read-only; produces `barecount-devhub/.claude/pass1-c1-packet-builder-v2-2026-06-24.json`.
+[`barecount-devhub/scripts/_pass1-c1-packet-builder-v2.mjs`](../../../barecount-devhub/scripts/_pass1-c1-packet-builder-v2.mjs) — deterministic builder, encodes per-row disposition and v2 packet content; runs read-only; produces [`barecount-devhub/.claude/pass1-c1-packet-builder-v2-2026-06-24.json`](../../../barecount-devhub/.claude/pass1-c1-packet-builder-v2-2026-06-24.json).
 
 Output verified: 3 distinct packetHashes for the 3 panel_ready_retry rows (no collisions); v2 hashes differ from v1 hashes by construction (different inputs).
 

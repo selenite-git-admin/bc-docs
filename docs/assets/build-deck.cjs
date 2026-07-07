@@ -1,4 +1,4 @@
-// BareCount conceptual deck — generated from bc-docs-v3 source material.
+// BareCount conceptual deck — generated from bc-docs source material.
 // Visual: Midnight Executive (deep navy + brass accent). Dark title/closing, light content.
 // Tone: declarative, third-person, no contractions, no em dashes in titles.
 
@@ -51,7 +51,7 @@ function pageTitle(slide, text, opts = {}) {
 }
 
 function pageFooter(slide, citation, pageNum) {
-  slide.addText("BareCount  ·  conceptual reference  ·  bc-docs-v3", {
+  slide.addText("BareCount  ·  conceptual reference  ·  bc-docs", {
     x: 0.7, y: H - 0.42, w: 8, h: 0.3,
     fontFace: F.body, fontSize: 9, color: C.muted, align: "left", margin: 0,
   });
@@ -90,7 +90,7 @@ function darkSlide() {
   s.addShape(pres.shapes.RECTANGLE, {
     x: 0.7, y: 0.7, w: 0.32, h: 0.32, fill: { color: C.brass }, line: { type: "none" },
   });
-  s.addText("bc-docs-v3", {
+  s.addText("bc-docs", {
     x: 1.15, y: 0.7, w: 4, h: 0.32,
     fontFace: F.body, fontSize: 11, color: C.off, valign: "middle", margin: 0,
     charSpacing: 4,
@@ -867,7 +867,7 @@ function darkSlide() {
   s.addShape(pres.shapes.RECTANGLE, {
     x: 1.7, y: 5.2, w: 0.5, h: 0.03, fill: { color: C.brass }, line: { type: "none" },
   });
-  s.addText("Platform Overview. bc-docs-v3.", {
+  s.addText("Platform Overview. bc-docs.", {
     x: 1.7, y: 5.28, w: W - 2.4, h: 0.4,
     fontFace: F.body, fontSize: 13, color: C.brass, charSpacing: 2, margin: 0,
   });
@@ -881,5 +881,6 @@ function darkSlide() {
 
 // ---- Write file ----
 pres
-  .writeFile({ fileName: "C:/MyProjects/bc-docs-v3/docs/assets/barecount-conceptual-deck.pptx" })
+  .writeFile({ fileName: "C:/MyProjects/bc-docs/docs/assets/barecount-conceptual-deck.pptx" })
   .then((f) => console.log("Wrote:", f));
+

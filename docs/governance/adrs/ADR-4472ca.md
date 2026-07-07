@@ -12,7 +12,7 @@ refs:
   - type: decision
     label: "D210"
 authority: evolving
-migrated_from: legacy v2 archive
+migrated_from: legacy-v2-archive
 ---
 
 

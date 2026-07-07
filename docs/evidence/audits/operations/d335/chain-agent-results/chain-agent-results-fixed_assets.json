@@ -1,0 +1,395 @@
+{
+  "subfunction": "fixed_assets",
+  "boMappings": {
+    "asset": {
+      "total_accumulated_depreciation": {
+        "bfName": "asset_accumulated_depreciation_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_downtime_hours": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_scheduled_operational_hours": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "expected_future_cost": {
+        "bfName": "asset_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "discount_rate": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_periods": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "annual_depreciation_expense": {
+        "bfName": "asset_accumulated_depreciation_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_fixed_assets": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "depreciation_expense": {
+        "bfName": "asset_accumulated_depreciation_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "amortization_expense": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_depreciation_expense_for_period": {
+        "bfName": "asset_accumulated_depreciation_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "gross_value_of_disposed_assets": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "gross_fixed_assets_at_period_start": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_accurate_asset_records": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_fixed_asset_records_audited": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_capital_investment": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_assets_in_register": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_physical_assets_identified": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "desired_reserve_ratio": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "revalued_amount": {
+        "bfName": "asset_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "carrying_value_before_revaluation": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_value_of_fixed_assets_written_off": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "initial_asset_cost": {
+        "bfName": "asset_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "asset_carrying_amount": {
+        "bfName": "asset_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "asset_recoverable_amount": {
+        "bfName": "asset_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_maintenance_cost": {
+        "bfName": "asset_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_asset_value": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "accumulated_depreciation": {
+        "bfName": "asset_accumulated_depreciation_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "avoided_repair_costs_and_downtime_savings": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "current_period_ppe": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "prior_period_ppe": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "invoice_hdr": {
+      "total_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "actual_ledger": {
+      "total_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_shareholders_equity": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "net_income": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "average_total_assets": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "asset": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7701-d9db-728f-89ad-60f06fdf4f42",
+      "name": "cc__asset"
+    },
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr",
+      "mappingsAdded": 0
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "accumulated_depreciation_to_fixed_assets_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_downtime_ratio",
+      "status": "created",
+      "name": "mc__asset_downtime_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "asset_performance_improvement_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_retirement_obligations_aro",
+      "status": "created",
+      "name": "mc__asset_retirement_obligations_aro",
+      "coBindings": 1
+    },
+    {
+      "metric": "asset_turnover_efficiency_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "asset_utilization_ratio",
+      "status": "created",
+      "name": "mc__asset_utilization_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "average_useful_life_of_assets",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "book_value_per_fixed_asset",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "capex_as_of_revenue",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "capex_to_revenue_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "capex_vs_budget",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "capital_intensity_ratio",
+      "status": "created",
+      "name": "mc__capital_intensity_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "capital_maintenance_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "depreciation_amortization_as_of_revenue",
+      "status": "created",
+      "name": "mc__depreciation_amortization_as_of_revenue",
+      "coBindings": 2
+    },
+    {
+      "metric": "depreciation_expense",
+      "status": "created",
+      "name": "mc__depreciation_expense",
+      "coBindings": 1
+    },
+    {
+      "metric": "disposal_of_fixed_assets_ratio",
+      "status": "created",
+      "name": "mc__disposal_of_fixed_assets_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "energy_efficiency_ratio_for_fixed_assets",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "fixed_asset_age_ratio",
+      "status": "created",
+      "name": "mc__fixed_asset_age_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "fixed_asset_cost_accuracy",
+      "status": "created",
+      "name": "mc__fixed_asset_cost_accuracy",
+      "coBindings": 1
+    },
+    {
+      "metric": "fixed_asset_investment_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "fixed_asset_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "fixed_asset_register_completeness",
+      "status": "created",
+      "name": "mc__fixed_asset_register_completeness",
+      "coBindings": 1
+    },
+    {
+      "metric": "fixed_asset_renewal_and_replacement_reserve",
+      "status": "created",
+      "name": "mc__fixed_asset_renewal_and_replacement_reserve",
+      "coBindings": 1
+    },
+    {
+      "metric": "fixed_asset_revaluation_surplus",
+      "status": "created",
+      "name": "mc__fixed_asset_revaluation_surplus",
+      "coBindings": 1
+    },
+    {
+      "metric": "fixed_asset_to_equity_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "fixed_asset_write_offs",
+      "status": "created",
+      "name": "mc__fixed_asset_write_offs",
+      "coBindings": 1
+    },
+    {
+      "metric": "gross_fixed_assets",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "impairment_charge",
+      "status": "created",
+      "name": "mc__impairment_charge",
+      "coBindings": 1
+    },
+    {
+      "metric": "maintenance_cost_pct_of_asset_value",
+      "status": "created",
+      "name": "mc__maintenance_cost_pct_of_asset_value",
+      "coBindings": 2
+    },
+    {
+      "metric": "net_fixed_assets",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "preventive_maintenance_roi",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "property_plant_and_equipment_growth_rate",
+      "status": "created",
+      "name": "mc__property_plant_and_equipment_growth_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "return_on_assets_roa",
+      "status": "created",
+      "name": "mc__return_on_assets_roa",
+      "coBindings": 1
+    }
+  ]
+}

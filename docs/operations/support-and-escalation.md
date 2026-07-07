@@ -196,6 +196,6 @@ The chapter records the absence honestly. A mature support function will need au
 - CLAUDE.md (Session Protocol section)
 - outline.md §4.7: Operations
 
-[^residual-bc-portal]: **Residual risk (audit GAP-010).** bc-portal and BareCount-Customer-Portal repos were not readable in the referenced platform code/docs gap audit. Claims about bc-portal frontend behavior, design system, tenant override, embedded widgets, and information architecture rest on prior grounding, not on this-pass verification. Treat as unverified until a dedicated readable bc-portal pass confirms the frontend state. Source: `bc-docs-v3/reports/platform-code-doc-gap-report.md` GAP-010.
+[^residual-bc-portal]: **Residual risk (audit GAP-010).** bc-portal and BareCount-Customer-Portal repos were not readable in the referenced platform code/docs gap audit. Claims about bc-portal frontend behavior, design system, tenant override, embedded widgets, and information architecture rest on prior grounding, not on this-pass verification. Treat as unverified until a dedicated readable bc-portal pass confirms the frontend state. Source: `bc-docs/reports/platform-code-doc-gap-report.md` GAP-010.
 
 

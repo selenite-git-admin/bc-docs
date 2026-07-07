@@ -11,6 +11,8 @@ focus: mcf-re-entry
 
 # MCF Re-Entry Index
 
+> **Correction (2026-07-07).** Sections 3 and 5 below are stale. The MCF enrichment program (PLN-457cd0) ran successfully: **85 active MCF metric contracts** (corpus grew from 5 exploratory to 85 governed), pipeline proven at scale, BCF substrate fully classified (D496 measure_class + context_concept_id on all amount-role BCs). The FREEZE is lifted. `contract.chain_status` and `contract.l_node_semantic_verdict` have been **DROPPED** (Runtime Spine R3/R6, DEC-9c0da7); live chain status lives in `mcf.mcv_chain_status`. The next governed gate is **M15 supersession** (M14 publication has been exercised on the full corpus). Section 1 (authority stack) and section 2 (M-numbering) remain correct. For current MCF state, consult the session change records for SES-b54f06 (finance metric audit) and the metric-onboarding case-book (`docs/operations/metric-onboarding-case-book.md`).
+
 > **What this is.** A navigation index for any session resuming the MCF M-track. It exists because re-entry repeatedly drifted into the legacy metric world (D386 / `contract.metric_contract`) and into divergent M-numbering. **It is NOT an authority document** — authority is DEC-c3e57f + DEC-3f093f/D426 (the store/runtime boundary) + the build plan. Read this first, then the canonical stack.
 
 ## 1. Canonical MCF authority stack (precedence order)

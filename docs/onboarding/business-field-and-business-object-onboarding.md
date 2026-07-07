@@ -12,8 +12,8 @@ governing_sources:
 governing_adrs:
   - DEC-f66378 (D292 BO-scoped BF naming; D290 standards-sourced BFs; D294 five shared dimensions are absorbed into this ADR's body)
 governing_sops:
-  - legacy-v2/docs/sops/bf-bo-onboarding-sop.md
-  - legacy-v2/docs/sops/bf-sf-alias-sop.md
+  - legacy-v2-archive/docs/sops/bf-bo-onboarding-sop.md
+  - legacy-v2-archive/docs/sops/bf-sf-alias-sop.md
 errata_referenced: []
 v2_sources:
   - sops/bf-bo-onboarding-sop.md
@@ -22,6 +22,8 @@ diagrams: []
 ---
 
 # Business Field and Business Object Onboarding
+
+> **Bridging note (2026-07-07).** The semantic identity role that Business Fields and Business Objects served has been superseded by the **Business Concept Framework (BCF)** — the `concept_registry` schema (DEC-02f5a9 greenfield, DEC-61850f adoption). BCF uses an Entity / Characteristic / Business Concept model with governed authoring ceremonies (AI panel + C5 operator-confirm + F3 write). The legacy `contract.business_field` and `contract.business_object` tables remain in use for OC/CC `field_selection` binding, so this procedure is still valid for that purpose. For semantic identity — "what does this field mean?" — consult the BCF registry (136 active entities, ~630 active BCs, 173 active characteristics as of the BCF audit remediation closeout). Governing ADRs: DEC-02f5a9, DEC-61850f, DEC-14f5b6 (D496 measurement semantics), DEC-1fbaf1 (withdrawal). Program closeout: `docs/implementation/bcf-audit-remediation-closeout-2026-07-07.md`.
 
 ## Scope
 
@@ -243,7 +245,7 @@ A row that lands in any of the three tables (`business_field`, `business_object`
 | `inferBF` heuristics deprecated | Earlier versions of the service used `inferBF()` to synthesize BF names from field descriptions when the OAGIS metadata was sparse. The heuristic produced circular definitions and wrong amount-field assignments in historical data. The procedure forbids it; cleanup of historical rows is queued |
 | `business_field.source_aliases` JSONB column dropped | The platform moved aliases from a JSONB column on `business_field` to the dedicated `contract.business_field_alias` table (D299 in the v2 SOP shorthand). The drop is complete in the schema; any code or query that still references the JSONB column is failing closed |
 | Auto-certification spot-check is asynchronous | The AI spot-check fires after the bulk-certify call returns. A spot-check that flags a previously auto-certified BF results in a follow-up review row, not an automatic decertification |
-| Tier-2 standards loading is partial | OAGIS is loaded; ISO 20022 is partially loaded (the readiness-baseline ISO 20022 subset); XBRL US GAAP is loaded as reference for metric naming validation but no BFs are derived from it; IFRS and UN/CEFACT have not been onboarded as BF-and-BO sources. The procedure supports them; the data has not been loaded |
+| Tier-2 standards loading is partial | OAGIS is loaded; ISO 20022 is partially loaded (the currently loaded ISO 20022 subset); XBRL US GAAP is loaded as reference for metric naming validation but no BFs are derived from it; IFRS and UN/CEFACT have not been onboarded as BF-and-BO sources. The procedure supports them; the data has not been loaded |
 | Domain coverage is incomplete | Domain completion varies by function; the audit substrate reports per-domain BO and BF counts on demand |
 
 **Governing source.** Business Vocabulary; Audit and Activity Logging.
@@ -273,9 +275,10 @@ The `business_field_alias` table (D299) and the standards-sourced provenance dis
 - Multi-Standard Onboarding
 - Data Model and Schema
 - DEC-f66378: BO-scoped BF naming and shared dimension list
-- legacy-v2/docs/sops/bf-bo-onboarding-sop.md (predecessor SOP)
-- legacy-v2/docs/sops/bf-sf-alias-sop.md (predecessor SOP)
+- legacy-v2-archive/docs/sops/bf-bo-onboarding-sop.md (predecessor SOP)
+- legacy-v2-archive/docs/sops/bf-sf-alias-sop.md (predecessor SOP)
 - outline.md §4.6: Onboarding
+
 
 
 

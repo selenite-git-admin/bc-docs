@@ -1,0 +1,405 @@
+{
+  "subfunction": "cost_accounting",
+  "boMappings": {
+    "project_accounting": {
+      "applied_overhead_costs": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "actual_overhead_costs": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cost_of_activity_pool": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_activity_driver_volume": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_fixed_costs": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "per_unit_selling_price": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "per_unit_variable_costs": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_sales_revenue": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_variable_costs": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "beginning_inventory_value": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_purchases_or_production_costs": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "ending_inventory_value": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_production_costs": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "budgeted_cost": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "actual_cost": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "standard_labor_rate": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "standard_quantity_of_materials_allowed": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "actual_quantity_of_materials_used": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "standard_material_price": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cost_of_beginning_finished_goods_inventory": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cost_of_goods_manufactured": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_indirect_costs_allocated": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_actual_indirect_costs_incurred": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "actual_labor_rate": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_estimated_manufacturing_overhead": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_estimated_allocation_base": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cost_at_previous_quantity": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cost_at_current_quantity": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "actual_material_price": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "actual_quantity_of_materials_purchased": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_budgeted_overhead_costs": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_budgeted_activity_level": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cost_of_investment": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "standard_cost": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "acquisition_cost": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "operating_costs_over_useful_life": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "maintenance_costs_over_useful_life": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "disposal_or_end_of_life_costs": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "materials_costs_incomplete_products": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "labor_costs_incomplete_products": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "overhead_costs_incomplete_products": {
+        "bfName": "project_accounting_project_actual_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "actual_ledger": {
+      "cost_of_goods_sold": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "invoice_hdr": {
+      "total_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "costing_activity": {
+      "average_inventory_value": {
+        "bfName": "costing_activity_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "project_accounting": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7702-3b56-78d5-8aff-94bd3610065e",
+      "name": "cc__project_accounting"
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 0
+    },
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr",
+      "mappingsAdded": 0
+    },
+    "costing_activity": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7702-3c2a-7c6c-a167-901fe677762d",
+      "name": "cc__costing_activity"
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "absorption_costing_ratio",
+      "status": "created",
+      "name": "mc__absorption_costing_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "activity_based_costing_abc_overhead_rate",
+      "status": "created",
+      "name": "mc__activity_based_costing_abc_overhead_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "break_even_analysis",
+      "status": "created",
+      "name": "mc__break_even_analysis",
+      "coBindings": 1
+    },
+    {
+      "metric": "contribution_margin_ratio",
+      "status": "created",
+      "name": "mc__contribution_margin_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_of_goods_sold_cogs",
+      "status": "created",
+      "name": "mc__cost_of_goods_sold_cogs",
+      "coBindings": 1
+    },
+    {
+      "metric": "cost_per_equivalent_unit",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cost_variance_cv",
+      "status": "created",
+      "name": "mc__cost_variance_cv",
+      "coBindings": 1
+    },
+    {
+      "metric": "direct_labor_efficiency_variance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "direct_material_usage_variance",
+      "status": "created",
+      "name": "mc__direct_material_usage_variance",
+      "coBindings": 1
+    },
+    {
+      "metric": "finished_goods_inventory",
+      "status": "created",
+      "name": "mc__finished_goods_inventory",
+      "coBindings": 2
+    },
+    {
+      "metric": "fixed_cost_coverage_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "fixed_cost_leverage",
+      "status": "created",
+      "name": "mc__fixed_cost_leverage",
+      "coBindings": 2
+    },
+    {
+      "metric": "gross_profit_margin",
+      "status": "created",
+      "name": "mc__gross_profit_margin",
+      "coBindings": 2
+    },
+    {
+      "metric": "indirect_cost_allocation_effectiveness",
+      "status": "created",
+      "name": "mc__indirect_cost_allocation_effectiveness",
+      "coBindings": 1
+    },
+    {
+      "metric": "inventory_turnover_ratio",
+      "status": "created",
+      "name": "mc__inventory_turnover_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "labor_rate_variance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "manufacturing_overhead_rate",
+      "status": "created",
+      "name": "mc__manufacturing_overhead_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "marginal_cost",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "material_price_variance",
+      "status": "created",
+      "name": "mc__material_price_variance",
+      "coBindings": 1
+    },
+    {
+      "metric": "overhead_absorption_rate",
+      "status": "created",
+      "name": "mc__overhead_absorption_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "return_on_investment_roi",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "standard_costing_variances",
+      "status": "created",
+      "name": "mc__standard_costing_variances",
+      "coBindings": 1
+    },
+    {
+      "metric": "total_cost_of_ownership_tco",
+      "status": "created",
+      "name": "mc__total_cost_of_ownership_tco",
+      "coBindings": 1
+    },
+    {
+      "metric": "variable_cost_percentage",
+      "status": "created",
+      "name": "mc__variable_cost_percentage",
+      "coBindings": 2
+    },
+    {
+      "metric": "work_in_progress_wip",
+      "status": "created",
+      "name": "mc__work_in_progress_wip",
+      "coBindings": 1
+    }
+  ]
+}

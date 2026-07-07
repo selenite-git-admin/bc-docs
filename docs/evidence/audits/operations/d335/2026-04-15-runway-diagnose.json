@@ -1,0 +1,60 @@
+{
+  "generatedAt": "2026-04-15T13:54:52.195Z",
+  "sessionUid": "",
+  "tenant": "demo-selenite",
+  "totalMcs": 1,
+  "elapsedSec": 0,
+  "distribution": {
+    "walkable": 0,
+    "untestable": 0,
+    "human-required": 1,
+    "blocked": 0,
+    "ready": 0,
+    "error": 0,
+    "other": 0
+  },
+  "bySubfunction": {
+    "capital_structure_optimization": {
+      "walkable": 0,
+      "untestable": 0,
+      "human-required": 1,
+      "blocked": 0,
+      "ready": 0,
+      "error": 0,
+      "other": 0
+    }
+  },
+  "failClassCounts": {
+    "D335_SUM_ON_LATEST": 1
+  },
+  "results": [
+    {
+      "mcUid": "019d7837-b8f7-7911-8123-2324626234c5",
+      "mcName": "mc__equity_turnover_ratio",
+      "subfunction": "capital_structure_optimization",
+      "versionCode": "1.0.0",
+      "verdict": "human-required",
+      "bucket": "human-required",
+      "testable": true,
+      "coCount": 1368,
+      "ccCount": 2,
+      "findingCount": 5,
+      "failCount": 1,
+      "warnCount": 4,
+      "failCodes": [
+        "D335_SUM_ON_LATEST"
+      ],
+      "warnCodes": [
+        "CF_BF_AI_AMBIGUOUS",
+        "MAPPING_COVERAGE_GAP"
+      ],
+      "aiReviewCount": 2,
+      "aiSummary": {
+        "mismatch": 0,
+        "ambiguous": 2,
+        "aligned": 0
+      },
+      "formula": "O1 = SUM(I1) / SUM(I2)"
+    }
+  ]
+}

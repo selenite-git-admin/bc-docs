@@ -152,7 +152,7 @@ This chapter does not describe the iterations individually. The full design trea
 
 ## Embedded Documentation Reader (bc-admin)
 
-The bc-admin browser shell hosts the platform's canonical documentation reader per DEC-b97390 (D372). The reader fetches manifest and content from bc-core's `/api/docs/*` routes per DEC-3395bc; the content originates in this `bc-docs-v3` repository and is mirrored into bc-core's `private-docs/` directory by `bc-admin/scripts/sync-docs.js`.
+The bc-admin browser shell hosts the platform's canonical documentation reader per DEC-b97390 (D372). The reader fetches manifest and content from bc-core's `/api/docs/*` routes per DEC-3395bc; the content originates in this `bc-docs` repository and is mirrored into bc-core's `private-docs/` directory by `bc-admin/scripts/sync-docs.js`.
 
 The reader's readiness-baseline UI conventions distinguish chapter sections (expand-collapse navigation in the sidebar) from reference collections (single sidebar entry that opens a list view in the main pane with search and filters). Reference collections in the readiness baseline: Decisions, Errata, Data Dictionary; future reference collections (Contract Schemas, API Reference, SOP Index, Glossary, Diagram Index, Screen Registry) follow the same pattern.
 

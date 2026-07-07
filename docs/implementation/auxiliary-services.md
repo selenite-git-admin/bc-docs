@@ -86,7 +86,7 @@ The dashboard fetches data from bc-core on each page load (no caching beyond per
 
 ## bc-sdg
 
-> **Residual risk (audit GAP-011).** The `bc-sdg` repository was not readable in the platform code/docs gap audit. All claims in this section about bc-sdg's runtime, port, database, OData shape, simulator coverage, and CLI behavior rest on prior grounding, not on this-pass verification. Treat as unverified until a dedicated readable bc-sdg pass confirms the synthetic-data methodology and per-simulator interfaces. Source: `bc-docs-v3/reports/platform-code-doc-gap-report.md` GAP-011.
+> **Residual risk (audit GAP-011).** The `bc-sdg` repository was not readable in the platform code/docs gap audit. All claims in this section about bc-sdg's runtime, port, database, OData shape, simulator coverage, and CLI behavior rest on prior grounding, not on this-pass verification. Treat as unverified until a dedicated readable bc-sdg pass confirms the synthetic-data methodology and per-simulator interfaces. Source: `bc-docs/reports/platform-code-doc-gap-report.md` GAP-011.
 
 ### Purpose
 

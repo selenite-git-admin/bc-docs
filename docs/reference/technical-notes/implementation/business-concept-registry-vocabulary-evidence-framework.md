@@ -419,7 +419,7 @@ governs the worked example: **canonical reporting period** (resolver-stamped) is
 never BCF; **source-attested posting period code** is BCF-admissible only with
 strict naming and definition discipline (see *Substrate Boundary — Canonical
 Reporting Period vs Source-Attested Posting Period Code* in
-`bc-docs-v3/docs/operating-model/fiscal-time-and-temporal-gates.md`). The bare
+`bc-docs/docs/operating-model/fiscal-time-and-temporal-gates.md`). The bare
 label `fiscal period` is forbidden as a BCF characteristic name because it
 collides with the resolver-derived authority and invites cross-layer drift; the
 reserved Layer-B name is `posting period code`.

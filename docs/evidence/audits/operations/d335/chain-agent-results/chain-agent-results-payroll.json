@@ -1,0 +1,277 @@
+{
+  "subfunction": "payroll",
+  "boMappings": {
+    "asset": {
+      "payroll_transmit_date": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "employee_time_period_cut_off_date": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "payroll_system_cut_off_date": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "hr_benefits_system_cut_off_date": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "time_record_entry_date": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "time_record_receipt_date": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "payroll_system_inclusion_date": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "employee_effective_hire_date": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "payroll_system_removal_date": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "employee_effective_termination_date": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "payroll_error_resolution_date": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "payroll_error_identification_date": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "number_of_manual_time_record_entries": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_time_records_processed": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "error_free_time_records_processed_first_time": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      }
+    },
+    "bc_financial_risk_management_operations": {
+      "total_employees_paid": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_payroll_inquiries": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "ifrs_cash_flow": {
+      "employees_paid_weekly": {
+        "bfName": "ifrs_dividends_paid",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "bc_ap_operations": {
+      "total_payroll_disbursements": {
+        "bfName": "bc_ap_ops_electronic_disbursements_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_manual_payroll_payments": {
+        "bfName": "bc_ap_ops_manual_payments_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_voided_payroll_payments": {
+        "bfName": "bc_ap_ops_duplicate_payments_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "actual_ledger": {
+      "retroactive_adjustment_disbursement_count": {
+        "bfName": "actual_ledger_document_number",
+        "resolutionRule": "count_distinct",
+        "confidence": "medium"
+      }
+    },
+    "bc_internal_audit_operations": {
+      "total_payroll_disbursement_count": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "bc_gl_operations": {
+      "number_of_payroll_inquiries": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "asset": {
+      "exists": true,
+      "contractId": "019d7701-d9db-728f-89ad-60f06fdf4f42",
+      "name": "cc__asset",
+      "mappingsAdded": 0
+    },
+    "bc_financial_risk_management_operations": {
+      "exists": true,
+      "contractId": "019d774b-22e9-7264-adc7-4a6c75446651",
+      "name": "cc__bc_financial_risk_management_operations",
+      "mappingsAdded": 0
+    },
+    "ifrs_cash_flow": {
+      "exists": true,
+      "contractId": "019d7837-c8ff-7768-9e17-776d6695615f",
+      "name": "cc__ifrs_cash_flow",
+      "mappingsAdded": 1
+    },
+    "bc_ap_operations": {
+      "exists": true,
+      "contractId": "019d7661-63a3-7a61-9792-c9c6deb988f6",
+      "name": "cc__bc_ap_operations",
+      "mappingsAdded": 0
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 1
+    },
+    "bc_internal_audit_operations": {
+      "exists": true,
+      "contractId": "019d774b-2487-7cec-93c3-3ff6e0fefdce",
+      "name": "cc__bc_internal_audit_operations",
+      "mappingsAdded": 0
+    },
+    "bc_gl_operations": {
+      "exists": true,
+      "contractId": "019d7664-5001-76df-92ce-388cb8a39f0e",
+      "name": "cc__bc_gl_operations",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "cycle_time_in_business_days_between_the_time_period_cut_off_for_employees_and",
+      "status": "exists",
+      "name": "mc__cycle_time_in_business_days_between_the_time_period_cut_off_for_employees_and"
+    },
+    {
+      "metric": "cycle_time_in_business_days_from_hr_benefits_system_cut_off_until_payroll",
+      "status": "exists",
+      "name": "mc__cycle_time_in_business_days_from_hr_benefits_system_cut_off_until_payroll"
+    },
+    {
+      "metric": "cycle_time_in_business_days_from_the_payroll_system_cut_off_date_until_payroll",
+      "status": "exists",
+      "name": "mc__cycle_time_in_business_days_from_the_payroll_system_cut_off_date_until_payroll"
+    },
+    {
+      "metric": "cycle_time_in_business_days_to_process_the_payroll",
+      "status": "exists",
+      "name": "mc__cycle_time_in_business_days_to_process_the_payroll"
+    },
+    {
+      "metric": "cycle_time_in_business_days_to_process_time_record_data_and_enter_into_payroll",
+      "status": "exists",
+      "name": "mc__cycle_time_in_business_days_to_process_time_record_data_and_enter_into_payroll"
+    },
+    {
+      "metric": "cycle_time_in_business_days_to_reflect_a_new_employee_in_the_payroll_system",
+      "status": "exists",
+      "name": "mc__cycle_time_in_business_days_to_reflect_a_new_employee_in_the_payroll_system"
+    },
+    {
+      "metric": "cycle_time_in_business_days_to_remove_a_terminated_employee_from_the_payroll",
+      "status": "exists",
+      "name": "mc__cycle_time_in_business_days_to_remove_a_terminated_employee_from_the_payroll"
+    },
+    {
+      "metric": "cycle_time_in_business_days_to_resolve_a_payroll_error",
+      "status": "exists",
+      "name": "mc__cycle_time_in_business_days_to_resolve_a_payroll_error"
+    },
+    {
+      "metric": "employees_receiving_payroll_disbursements_via_direct_deposit",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "first_contact_resolution_rate_for_payroll_inquiries",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "paid_employees_paid_weekly",
+      "status": "created",
+      "name": "mc__paid_employees_paid_weekly",
+      "coBindings": 2
+    },
+    {
+      "metric": "payment_errors_pct_of_total_payroll_disbursements",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "payroll_disbursements_manual_checks_payments",
+      "status": "exists",
+      "name": "mc__payroll_disbursements_manual_checks_payments"
+    },
+    {
+      "metric": "payroll_disbursements_that_include_retroactive_pay_adjustments",
+      "status": "created",
+      "name": "mc__payroll_disbursements_that_include_retroactive_pay_adjustments",
+      "coBindings": 2
+    },
+    {
+      "metric": "payroll_related_inquiries_pct_of_payroll_disbursements",
+      "status": "exists",
+      "name": "mc__payroll_related_inquiries_pct_of_payroll_disbursements"
+    },
+    {
+      "metric": "time_records_entered_manually_into_the_payroll_system",
+      "status": "exists",
+      "name": "mc__time_records_entered_manually_into_the_payroll_system"
+    },
+    {
+      "metric": "time_records_processed_first_time_error_free",
+      "status": "exists",
+      "name": "mc__time_records_processed_first_time_error_free"
+    },
+    {
+      "metric": "voided_checks_payments_pct_of_payroll_disbursements",
+      "status": "exists",
+      "name": "mc__voided_checks_payments_pct_of_payroll_disbursements"
+    }
+  ]
+}

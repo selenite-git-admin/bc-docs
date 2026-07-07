@@ -36,7 +36,7 @@ This addendum records the discipline, the evidence behind it, and the guardrails
 
 ### 1.3 Method
 
-- Read-only inspection across bc-docs-v3, bc-core (gap survey already covered), `bc_platform_dev` (bc-postgres MCP), `bc_seed` Mongo (Node.js read-only via bc-seed's `mongodb` dependency).
+- Read-only inspection across bc-docs, bc-core (gap survey already covered), `bc_platform_dev` (bc-postgres MCP), `bc_seed` Mongo (Node.js read-only via bc-seed's `mongodb` dependency).
 - Five operator-approved evidence checks (E1-E5) executed in this session — log in §8.
 - Recommendations cite evidence inline.
 - Operator-owned decision items flagged explicitly.

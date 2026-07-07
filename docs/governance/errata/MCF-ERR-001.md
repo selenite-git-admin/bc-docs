@@ -3,7 +3,7 @@ id: MCF-ERR-001
 title: "First-real-M12 authorization DBCP: verdict-to-intake-status mapping is incorrect"
 status: adopted
 authority: authoritative
-affected: docs/implementation/metric-context-framework-m12-first-real-run-authorization-dbcp.md (bc-docs-v3 main `a18d6e3c`) — §4 expected-intake-row-status row, §4 Run Uniqueness Contract paragraph, §8 outcome table (3 verdict rows), §8.3 Re-attempt Path paragraph, §10 R3 + R5 risk-register rows
+affected: docs/implementation/metric-context-framework-m12-first-real-run-authorization-dbcp.md (bc-docs main `a18d6e3c`) — §4 expected-intake-row-status row, §4 Run Uniqueness Contract paragraph, §8 outcome table (3 verdict rows), §8.3 Re-attempt Path paragraph, §10 R3 + R5 risk-register rows
 temporary_governance:
   - docs/implementation/metric-context-framework-m12-authoring-panel-dbcp.md (M12 design-blueprint; Step 8 + outcome table)
   - docs/implementation/metric-context-framework-m12-5-materialization-legacy-bridge-dbcp.md (M12.5 design; markConsumedByPanel ownership)
@@ -17,7 +17,7 @@ opened: 2026-05-30
 
 ## Contradiction summary
 
-The first-real-M12 authorization DBCP (`metric-context-framework-m12-first-real-run-authorization-dbcp.md`, bc-docs-v3 main `a18d6e3c`, PR #29) documents that **every terminal M12 verdict** transitions the intake row from `pending` to `consumed_by_panel`. That mapping appears in five places in the DBCP:
+The first-real-M12 authorization DBCP (`metric-context-framework-m12-first-real-run-authorization-dbcp.md`, bc-docs main `a18d6e3c`, PR #29) documents that **every terminal M12 verdict** transitions the intake row from `pending` to `consumed_by_panel`. That mapping appears in five places in the DBCP:
 
 | DBCP location | Wording |
 |---|---|
@@ -137,7 +137,7 @@ M12.5 is therefore the first gate that may create `mcf.metric_contract` / `mcf.m
 
 ## Temporary governance
 
-Until the PR #29 DBCP is amended in a follow-up bc-docs-v3 PR, the governing reading is:
+Until the PR #29 DBCP is amended in a follow-up bc-docs PR, the governing reading is:
 
 1. The verdict-aware mapping table in §Implementation behavior of this erratum.
 2. The M12 authoring panel DBCP (`metric-context-framework-m12-authoring-panel-dbcp.md`) Step 8 + outcome table + D-M12-8.
@@ -148,7 +148,7 @@ PR #29 governs as authorization for the single first-real-M12 run that produced 
 
 ## Resolution state
 
-**Adopted.** The M12 DBCP + M12.5 DBCP + bc-core code reading is the correct behavior. PR #29's documentation was the deviation. The PR #29 DBCP itself will be amended in a follow-up bc-docs-v3 PR that:
+**Adopted.** The M12 DBCP + M12.5 DBCP + bc-core code reading is the correct behavior. PR #29's documentation was the deviation. The PR #29 DBCP itself will be amended in a follow-up bc-docs PR that:
 
 - Rewrites §4 `expected_intake_row_status_at_run_end` as the three-row verdict-aware table.
 - Rewrites §4 Run Uniqueness Contract paragraph to attribute uniqueness to the in-flight guard (M12 DBCP §5.4) rather than to a `pending → consumed_by_panel` flip.
@@ -160,7 +160,7 @@ This erratum closes when that follow-up amendment lands.
 
 ## References
 
-- `docs/implementation/metric-context-framework-m12-first-real-run-authorization-dbcp.md` (PR #29; bc-docs-v3 main `a18d6e3c`) — §4, §6, §8, §8.3, §10 R3 + R5
+- `docs/implementation/metric-context-framework-m12-first-real-run-authorization-dbcp.md` (PR #29; bc-docs main `a18d6e3c`) — §4, §6, §8, §8.3, §10 R3 + R5
 - `docs/implementation/metric-context-framework-m12-authoring-panel-dbcp.md` — Step 8, outcome table, D-M12-8, §5.4 in-flight guard
 - `docs/implementation/metric-context-framework-m12-5-materialization-legacy-bridge-dbcp.md` — APPROVE_FOR_DRAFT precondition, TX C `markConsumedByPanel` ownership
 - `docs/operating-model/mcf-legacy-bridge.md` — M11 intake → M12 panel → M12.5 materialization lifecycle

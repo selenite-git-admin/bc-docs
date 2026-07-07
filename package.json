@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "docs:init": "python scripts/docs-control/init_db.py",
-    "docs:inventory:v3": "python scripts/docs-control/inventory_v3.py --source C:/MyProjects/bc-docs-v3",
+    "docs:inventory:legacy-v3": "python scripts/docs-control/inventory_v3.py --source C:/MyProjects/bc-docs-v3-retired-2026-07-07",
     "docs:classify": "python scripts/docs-control/classify_migration.py",
     "docs:import:approved": "python scripts/docs-control/import_approved.py",
     "docs:import:dry-run": "python scripts/docs-control/import_approved.py --dry-run",
@@ -31,3 +31,4 @@
     "docs:report:migration": "python scripts/docs-control/report_migration_plan.py"
   }
 }
+

@@ -195,5 +195,5 @@ This overview routes governance to the owning chapter. The bounded scope languag
 - DEC-bebaec (Chain Completeness SSOT)
 - DEC-804874 (L-Node Verification with Semantic Family Classification)
 - DEC-ebf0b4 (Session Discipline and Data Integrity Rules)
-- bc-docs-v3 outline.md (section structure)
-- bc-docs-v3 HANDOFF.md (current drafting state)
+- bc-docs outline.md (section structure)
+- bc-docs HANDOFF.md (current drafting state)

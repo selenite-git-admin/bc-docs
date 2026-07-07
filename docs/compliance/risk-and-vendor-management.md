@@ -14,7 +14,7 @@ governing_adrs:
   - DEC-324d9e (Stripe billing integration; subscription and payment management as a vendor surface)
   - DEC-1918d0 (Two-database split; the database substrate that the AWS PostgreSQL vendor relationship hosts)
   - DEC-771baf (Tenant database topology; the per-tenant database the AWS PostgreSQL vendor relationship hosts)
-  - DEC-3395bc (bc-docs-v3 SSOT cutover; the documentation surface that the bc-core docs endpoints host)
+  - DEC-3395bc (bc-docs SSOT cutover; the documentation surface that the bc-core docs endpoints host)
   - DEC-623f8f (ADR Hygiene Policy; the audit cadence policy that this chapter cites for risk-review scheduling)
 errata_referenced: []
 v2_sources: []
@@ -180,5 +180,5 @@ Each vendor surface produces a risk profile that the DevHub registry should reco
 - DEC-441665 (NPM supply chain mitigation via AWS CodeArtifact)
 - DEC-324d9e (Stripe billing)
 - DEC-1918d0 (Two-database split)
-- DEC-3395bc (bc-docs-v3 SSOT cutover)
+- DEC-3395bc (bc-docs SSOT cutover)
 - CLAUDE.md (NPM Registry section, AWS section)

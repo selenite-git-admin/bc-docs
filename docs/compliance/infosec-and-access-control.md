@@ -15,7 +15,7 @@ governing_sources:
 governing_adrs:
   - DEC-1918d0 (Two-database split; platform DB plus per-tenant DB; access-control isolation at the database layer)
   - DEC-771baf (Tenant database topology; one database per tenant; one-way dependency platform reads contracts only, tenant owns its data)
-  - DEC-3395bc (bc-docs-v3 SSOT cutover; the docs anti-scraping mechanism with JWT-guarded endpoints, rate limiting, audit log)
+  - DEC-3395bc (bc-docs SSOT cutover; the docs anti-scraping mechanism with JWT-guarded endpoints, rate limiting, audit log)
   - DEC-441665 (NPM supply chain mitigation via AWS CodeArtifact; mitigates RSK-cb8929)
   - DEC-ee6018 (bc-qa standalone repo; the preventive control surface)
 errata_referenced: []
@@ -123,7 +123,7 @@ Per `DEC-441665`, every npm install in every BareCount repository routes through
 |---|---|
 | Domain | `barecount` (CodeArtifact domain identifier owned by Infrastructure) |
 | Repository | `npm-mirror` plus a delegate chain to `npm-public` then npmjs.org |
-| `.npmrc` distribution | Five repos carry committed `.npmrc` (barecount-devhub, bc-core, bc-portal, bc-admin, bc-qa); two repos do not consume npm (bc-ai is Python, bc-docs-v3 is markdown-only) |
+| `.npmrc` distribution | Five repos carry committed `.npmrc` (barecount-devhub, bc-core, bc-portal, bc-admin, bc-qa); two repos do not consume npm (bc-ai is Python, bc-docs is markdown-only) |
 | Token TTL | Twelve hours; renewal via `npm run codeartifact:refresh` per Build and Release |
 | Mitigated risk | `RSK-cb8929`: npm registry outage, package yanking incidents, dependency compromise events |
 
@@ -235,7 +235,7 @@ Every BareCount service that consumes AWS APIs runs under a single named AWS pro
 - SOC 2 Conformance
 - DEC-1918d0 (Two-database split)
 - DEC-771baf (Tenant database topology)
-- DEC-3395bc (bc-docs-v3 SSOT cutover and anti-scraping mechanism)
+- DEC-3395bc (bc-docs SSOT cutover and anti-scraping mechanism)
 - DEC-441665 (NPM supply chain mitigation via AWS CodeArtifact)
 - DEC-ee6018 (bc-qa standalone repo)
 - CLAUDE.md (AWS section, NPM Registry section, Don't section)

@@ -1,58 +1,56 @@
 # Target Documentation Audit
 
-Generated: `2026-07-06T11:49:38.848878+00:00`
-Audit run: `75`
+Generated: `2026-07-07T03:03:36.457074+00:00`
+Audit run: `86`
 
 ## Finding Categories
 
 | Category | Findings |
 |---|---|
-| stale-doc-root-reference | 261 |
+| iso-date-claim | 3 |
+| large-number-stat | 1 |
+| missing-internal-link | 14 |
+| percentage-stat | 1 |
+| stale-doc-root-reference | 229 |
+| temporal-claim | 4 |
+| unit-stat | 2 |
 
 ## Severity
 
 | Severity | Findings |
 |---|---|
-| warning | 33 |
-| info | 228 |
+| warning | 25 |
+| info | 229 |
 
 ## Top Open Findings
 
 | Severity | Category | Path | Message |
 |---|---|---|---|
-| warning | stale-doc-root-reference | docs/compliance/compliance-overview.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/compliance/infosec-and-access-control.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/compliance/iso-27001-conformance.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/compliance/risk-and-vendor-management.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/compliance/soc-2-conformance.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/development/build-and-release.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/development/decision-and-change-procedure.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/development/developer-experience.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/development/development-overview.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/development/devhub.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/development/documentation-system.md | Found legacy/staging path reference `C:\MyProjects\bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/development/documentation-system.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/development/quality-assurance.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/governance/errata/MCF-ERR-001.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/implementation/auxiliary-services.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/implementation/backend-services.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/implementation/frontend-experience.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/onboarding/metric-workstream.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/operating-model/fiscal-time-and-temporal-gates.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/operating-model/mcf-legacy-bridge.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/operating-model/metric-management-system.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/operating-model/operating-model-overview.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/operations/deployment-topology.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/operations/security-operations.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/operations/support-and-escalation.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/overview/platform-overview.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/reference/technical-notes/implementation/bcf-mcf-evidence-boundary-operator-decisions-d1-d11.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/reference/technical-notes/implementation/bcf-mcf-panel-workbench-alignment-note.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/reference/technical-notes/implementation/business-concept-registry-vocabulary-evidence-framework.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/reference/technical-notes/implementation/business-context-framework-helper-script-trust-catalog.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/reference/technical-notes/implementation/metric-context-framework-candidate-reservoir-and-authority-classification.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/reference/technical-notes/implementation/metric-context-framework-m12-first-real-run-disposition.md | Found legacy/staging path reference `bc-docs-v3`. |
-| warning | stale-doc-root-reference | docs/reference/technical-notes/implementation/metric-context-framework-m12-panel-framework-calibration-followup.md | Found legacy/staging path reference `bc-docs-v3`. |
+| warning | iso-date-claim | docs/implementation/data-model-and-schema.md | Found 2 possible mutable claim(s) in a current/reference document. |
+| warning | iso-date-claim | docs/onboarding/business-field-and-business-object-onboarding.md | Found 1 possible mutable claim(s) in a current/reference document. |
+| warning | iso-date-claim | docs/reference/source-systems/sap-ecc.md | Found 4 possible mutable claim(s) in a current/reference document. |
+| warning | large-number-stat | docs/reference/source-systems/sap-ecc.md | Found 2 possible mutable claim(s) in a current/reference document. |
+| warning | missing-internal-link | docs/evidence/closeouts/implementation/bcf-oagis-pass-1-c1-v2-closeout-2026-06-24.md | Internal link `bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/closeouts/implementation/bcf-oagis-pass-1-c1-v2-closeout-2026-06-24.md | Internal link `../../../barecount-devhub/.claude/pass1-c1-packet-builder-v2-2026-06-24.json` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/closeouts/implementation/bcf-oagis-pass-1-c1-v2-closeout-2026-06-24.md | Internal link `../../../barecount-devhub/.claude/pass1-c1-v2-panel-outcomes-2026-06-24.jsonl` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/closeouts/implementation/bcf-oagis-pass-1-c1-v2-closeout-2026-06-24.md | Internal link `../../../barecount-devhub/.claude/pass1-c1-v2-confirm-outcomes-2026-06-24.jsonl` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/work-records/implementation/bcf-oagis-compile-report-2026-06-24.md | Internal link `../adrs/ADR-f94895.md` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/work-records/implementation/bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md | Internal link `../../../barecount-devhub/scripts/_pass1-c1-execute.mjs:121` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/work-records/implementation/bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md | Internal link `../../../barecount-devhub/scripts/_pass1-c1-execute.mjs:85` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/work-records/implementation/bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md | Internal link `../../../barecount-devhub/scripts/_pass1-c1-execute.mjs:122` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/work-records/implementation/bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md | Internal link `../../../barecount-devhub/scripts/_pass1-c1-execute.mjs:88` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/work-records/implementation/bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md | Internal link `../../../barecount-devhub/scripts/_pass1-c1-execute.mjs:124` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/work-records/implementation/bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md | Internal link `../../../barecount-devhub/scripts/_pass1-c1-execute.mjs:126` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/work-records/implementation/bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md | Internal link `../../../barecount-devhub/scripts/_pass1-c1-packet-builder-v2.mjs` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/work-records/implementation/bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md | Internal link `../../../barecount-devhub/scripts/_pass1-c1-packet-builder-v2.mjs` does not resolve from this document. |
+| warning | missing-internal-link | docs/evidence/work-records/implementation/bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md | Internal link `../../../barecount-devhub/.claude/pass1-c1-packet-builder-v2-2026-06-24.json` does not resolve from this document. |
+| warning | percentage-stat | docs/implementation/synthetic-data-and-testing.md | Found 3 possible mutable claim(s) in a current/reference document. |
+| warning | temporal-claim | docs/implementation/data-model-and-schema.md | Found 5 possible mutable claim(s) in a current/reference document. |
+| warning | temporal-claim | docs/implementation/synthetic-data-and-testing.md | Found 4 possible mutable claim(s) in a current/reference document. |
+| warning | temporal-claim | docs/onboarding/business-field-and-business-object-onboarding.md | Found 2 possible mutable claim(s) in a current/reference document. |
+| warning | temporal-claim | docs/reference/source-systems/sap-ecc.md | Found 4 possible mutable claim(s) in a current/reference document. |
+| warning | unit-stat | docs/implementation/data-model-and-schema.md | Found 3 possible mutable claim(s) in a current/reference document. |
+| warning | unit-stat | docs/implementation/synthetic-data-and-testing.md | Found 4 possible mutable claim(s) in a current/reference document. |
 | info | stale-doc-root-reference | docs/evidence/audits/implementation/bcf-characteristic-scope-audit-2026-06-23.md | Found legacy/staging path reference `bc-docs-v3`. |
 | info | stale-doc-root-reference | docs/evidence/audits/implementation/devhub-decision-registration-integrity-audit-2026-06-22.md | Found legacy/staging path reference `bc-docs-v3`. |
 | info | stale-doc-root-reference | docs/evidence/audits/implementation/mcf-framework-audit-2026-06-22.md | Found legacy/staging path reference `bc-docs-v3`. |
@@ -100,3 +98,11 @@ Audit run: `75`
 | info | stale-doc-root-reference | docs/evidence/dbcp/implementation/bcf-evidence-schema-phase-a2-migration-dbcp.md | Found legacy/staging path reference `bc-docs-v3`. |
 | info | stale-doc-root-reference | docs/evidence/dbcp/implementation/bcf-evidence-schema-phase-a3-step-20-dbcp.md | Found legacy/staging path reference `bc-docs-v3`. |
 | info | stale-doc-root-reference | docs/evidence/dbcp/implementation/bcf-evidence-schema-phase-a3-writer-reader-cutover-dbcp.md | Found legacy/staging path reference `bc-docs-v3`. |
+| info | stale-doc-root-reference | docs/evidence/dbcp/implementation/bcf-evidence-schema-phase-a4-dbcp.md | Found legacy/staging path reference `bc-docs-v3`. |
+| info | stale-doc-root-reference | docs/evidence/dbcp/implementation/bcf-evidence-schema-phase-a5-dbcp.md | Found legacy/staging path reference `bc-docs-v3`. |
+| info | stale-doc-root-reference | docs/evidence/dbcp/implementation/bcf-mcf-evidence-boundary-and-contract-schema-retirement-dbcp.md | Found legacy/staging path reference `bc-docs-v3`. |
+| info | stale-doc-root-reference | docs/evidence/dbcp/implementation/d418-gate-5-physical-disposition-dbcp-design.md | Found legacy/staging path reference `bc-docs-v3`. |
+| info | stale-doc-root-reference | docs/evidence/dbcp/implementation/d445-cas-v0-evidence-substrate-dbcp.md | Found legacy/staging path reference `bc-docs-v3`. |
+| info | stale-doc-root-reference | docs/evidence/dbcp/implementation/d461-canonical-reduction-derived-field-dbcp-2026-06-27.md | Found legacy/staging path reference `bc-docs-v3`. |
+| info | stale-doc-root-reference | docs/evidence/dbcp/implementation/local-only-operating-model-dbcp.md | Found legacy/staging path reference `bc-docs-v3`. |
+| info | stale-doc-root-reference | docs/evidence/dbcp/implementation/mcf-role-grant-service-dbcp.md | Found legacy/staging path reference `bc-docs-v3`. |

@@ -29,7 +29,7 @@ Inventory §2.9 verdict shifts from coarse `default-untrusted` to **per-script-b
 - **Hardcoding grep:** tenant patterns (`tbc_\w+_dev`, `demo[-_]\w+`, `selenite`, `\bapex\b`), schema patterns (`\bboundary\.`, `\bcanonical_object\b` — pre-DEC-f02230), env patterns (`localhost`, `127.0.0.1`, `version 1.0`, hardcoded ports `:3100`, `:5432`, `:5435`, `:27017`).
 - **Side-effect classification (static):** writes:sql (INSERT/UPDATE/DELETE/DROP/TRUNCATE/ALTER/CREATE), writes:mongo (insertOne/updateOne/deleteOne/replaceOne/bulkWrite/etc.), spawns (execSync/spawn/fork/child_process), external_api (fetch/axios/http.request/etc.). Default: read-only.
 - **Git log:** `git log -1 --pretty=format:"%ad|%an" --date=short` per file for last-modified date + author.
-- **Call-site grep:** in-memory scan across the 5 surveyed repos (bc-core, bc-admin, bc-ai, bc-portal, bc-docs-v3) — package.json scripts, bc-docs-v3 markdown runbooks (665 files), sibling scripts in bc-core/scripts/.
+- **Call-site grep:** in-memory scan across the 5 surveyed repos (bc-core, bc-admin, bc-ai, bc-portal, bc-docs) — package.json scripts, bc-docs markdown runbooks (665 files), sibling scripts in bc-core/scripts/.
 - **Banding rules** (deterministic):
   - **trusted** — no hardcoding; read-only
   - **diagnostic** — hardcoded; read-only
@@ -81,7 +81,7 @@ The false-positive side-effect classification is sub-finding S3 below. The scrip
 |---|---:|---|
 | `invoked-by-ci` | **0** | **No CI workflows exist in any surveyed repo.** Sub-finding S1. |
 | `invoked-by-package-json` | 5 | `golden-snapshot.mjs`, `lint-column-names.mjs`, `smoke-e2e-pipeline.mjs`, `validate-build-config.mjs`, `validate-build-output.mjs` |
-| `invoked-by-runbook` | 30 | Referenced from bc-docs-v3 markdown |
+| `invoked-by-runbook` | 30 | Referenced from bc-docs markdown |
 | `invoked-by-other-script` | 8 | Referenced from another script in bc-core/scripts/ |
 | `not-invoked` | 117 | No invocation surface found |
 | **Total** | **160** | |
@@ -182,7 +182,7 @@ Common hardcoding pattern: `localhost` + a port (`:3100`, `:5435`, `:27017`).
 | # | Finding | Severity | Action |
 |---|---|---|---|
 | **S0** | File-count drift: 156 baseline (Codex §8.1) → 160 (this audit). 4 new scripts added between 2026-05-18 and 2026-05-19. Not a defect — just baseline drift to record. Future audits should re-derive the count rather than carrying it forward. | low | Document |
-| **S1** | **Zero CI workflow files in any surveyed repo.** No `.github/workflows/` exists in bc-core, bc-admin, bc-ai, bc-portal, or bc-docs-v3. The §13 trailer enforcement gate cannot be wired into CI today because **CI does not exist as a substrate yet**. The CI harness session (next in the queue) is therefore the work that creates the CI substrate, not just configures it. | **high** | CI harness session scope clarified: it builds CI from scratch, not adds checks to existing CI |
+| **S1** | **Zero CI workflow files in any surveyed repo.** No `.github/workflows/` exists in bc-core, bc-admin, bc-ai, bc-portal, or bc-docs. The §13 trailer enforcement gate cannot be wired into CI today because **CI does not exist as a substrate yet**. The CI harness session (next in the queue) is therefore the work that creates the CI substrate, not just configures it. | **high** | CI harness session scope clarified: it builds CI from scratch, not adds checks to existing CI |
 | **S2** | Banding rule "deprecated" never fires today. Rule requires >6 months old AND not-invoked. Oldest file in tree is `test-canonical-evaluation.js` from 2026-02-28 (~2.7 months at 2026-05-19). Rule will start producing `deprecated` band hits around Sept 2026 against the current cohort. Catalog reports 0 deprecated correctly — that's the rule firing as designed, not a missing classification. | low | Document; re-run audit periodically |
 | **S3** | Side-effect false-positive risk: any script whose source contains literal SQL/Mongo keywords (e.g. an audit script defining `PATTERNS = { writes_sql: /\b(INSERT|...)/i }`) gets flagged as having those side effects. Limited blast radius — only audit/lint/grep helper scripts hit this. Mitigation: manual triage when band doesn't match expected behavior. Observed self-classification of the audit script itself; defect-surface verdict was still `no` because call-site count was 0. | medium | Document; per-script manual triage when ambiguous |
 | **S4** | `\bapex\b` regex correctly identifies the apex tenant in this audit but would catch false positives like the word "apex" in a comment in future. Severity low because no false positives observed in this run. | low | Document |

@@ -1,0 +1,745 @@
+{
+  "subfunction": "financial_systems",
+  "boMappings": {
+    "bc_financial_risk_management_operations": {
+      "total_financial_transactions": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_financial_processes": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_days_to_close_books_over_period": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_days_to_generate_statements_over_period": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_number_of_assessable_areas": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_costs_of_financial_systems": {
+        "bfName": "bc_financial_risk_management_ops_costs_of_collateral_management",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_quantifiable_benefits": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_compliance_costs": {
+        "bfName": "bc_financial_risk_management_ops_costs_of_collateral_management",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_maintenance_expenses": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "baseline_financial_system_costs": {
+        "bfName": "bc_financial_risk_management_ops_costs_of_collateral_management",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "post_optimization_financial_system_costs": {
+        "bfName": "bc_financial_risk_management_ops_costs_of_collateral_management",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_customer_bills_issued": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_data_records_audited": {
+        "bfName": "bc_financial_risk_management_ops_audited_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_output_from_financial_systems": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_employee_hours_using_systems": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_data_points_reviewed": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_financial_data_volume": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_extraction_duration": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_historical_data_records": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_data_sources_requiring_integration": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_reconciliation_duration": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_financial_data_storage_capacity": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_reports_due": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_eligible_financial_system_users": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_system_modules": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_training_sessions_conducted": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_financial_transactions": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_critical_data_sources": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_benefits_from_financial_systems": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cost_of_financial_systems_investment": {
+        "bfName": "bc_financial_risk_management_ops_total_cost_of_claims",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_number_of_integration_attempts": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_response_duration": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_security_incidents": {
+        "bfName": "bc_financial_risk_management_ops_security_breach_incidents_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_security_events_monitored": {
+        "bfName": "bc_financial_risk_management_ops_security_breach_incidents_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_training_hours_provided": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_trained_users": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_users_surveyed": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_workflows_completed": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "bc_gl_operations": {
+      "number_of_automated_processes": {
+        "bfName": "bc_gl_ops_automated_primary_controls_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_months_in_period": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_reporting_periods": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_extractions": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_reconciliation_cycles": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_customized_system_modules": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_system_upgrades": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_resolved_tickets": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_successful_integrations": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "number_of_user_requests": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "asset": {
+      "total_scheduled_uptime": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_downtime": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_downtime_cost": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_downtime_hours": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_processing_time_for_transactions": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "number_of_reports_delivered_on_time": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "number_of_real_time_data_sources": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_number_of_downtime_incidents": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "maximum_transactions_per_timeframe": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "workflows_completed_on_time": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      }
+    },
+    "bc_ap_operations": {
+      "number_of_compliant_areas": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_erroneous_bills": {
+        "bfName": "bc_ap_ops_erroneous_payments_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_erroneous_records": {
+        "bfName": "bc_ap_ops_erroneous_payments_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_transactions_processed": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_monetary_impact_of_errors": {
+        "bfName": "bc_ap_ops_invoices_with_errors_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_errors_found": {
+        "bfName": "bc_ap_ops_invoices_with_errors_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "current_financial_data_storage_used": {
+        "bfName": "bc_ap_ops_current_dpo",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_errors_detected_by_system": {
+        "bfName": "bc_ap_ops_fraudulent_invoices_detected_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_verified_transactions": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_transactions": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_resolution_duration_for_tickets": {
+        "bfName": "bc_ap_ops_invoices_selected_for_audit_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_error_free_invoices": {
+        "bfName": "bc_ap_ops_error_free_disbursements_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_invoices_processed": {
+        "bfName": "bc_ap_ops_sum_of_all_processed_invoices_and_payments",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_electronic_transactions": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_lost_revenue_due_to_system_errors": {
+        "bfName": "bc_ap_ops_invoices_with_errors_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_user_errors": {
+        "bfName": "bc_ap_ops_invoices_with_errors_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_transactions_or_actions": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "log_book": {
+      "accessible_historical_data_records": {
+        "bfName": "log_book_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "active_financial_system_users": {
+        "bfName": "log_book_created_by_user_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "medium"
+      }
+    },
+    "bc_internal_audit_operations": {
+      "successfully_integrated_data_sources": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_audit_duration": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "actual_ledger": {
+      "actual_financial_outcome": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_number_of_actual_errors": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "measurement_period_in_years": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "Average User Satisfaction Score": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "freight_invoice_hdr": {
+      "volume_of_duplicated_data": {
+        "bfName": "freight_invoice_hdr_net_volume_measure",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "bc_financial_risk_management_operations": {
+      "exists": true,
+      "contractId": "019d774b-22e9-7264-adc7-4a6c75446651",
+      "name": "cc__bc_financial_risk_management_operations",
+      "mappingsAdded": 0
+    },
+    "bc_gl_operations": {
+      "exists": true,
+      "contractId": "019d7664-5001-76df-92ce-388cb8a39f0e",
+      "name": "cc__bc_gl_operations",
+      "mappingsAdded": 0
+    },
+    "asset": {
+      "exists": true,
+      "contractId": "019d7701-d9db-728f-89ad-60f06fdf4f42",
+      "name": "cc__asset",
+      "mappingsAdded": 0
+    },
+    "bc_ap_operations": {
+      "exists": true,
+      "contractId": "019d7661-63a3-7a61-9792-c9c6deb988f6",
+      "name": "cc__bc_ap_operations",
+      "mappingsAdded": 0
+    },
+    "log_book": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7837-eedc-7573-a2c9-c96d11fb326f",
+      "name": "cc__log_book"
+    },
+    "bc_internal_audit_operations": {
+      "exists": true,
+      "contractId": "019d774b-2487-7cec-93c3-3ff6e0fefdce",
+      "name": "cc__bc_internal_audit_operations",
+      "mappingsAdded": 0
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 1
+    },
+    "freight_invoice_hdr": {
+      "exists": true,
+      "contractId": "019d774b-24e5-7f75-857b-bf40fbc247eb",
+      "name": "cc__freight_invoice_hdr",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "audit_trail_completeness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "automated_financial_processes",
+      "status": "exists",
+      "name": "mc__automated_financial_processes"
+    },
+    {
+      "metric": "availability_of_financial_systems",
+      "status": "exists",
+      "name": "mc__availability_of_financial_systems"
+    },
+    {
+      "metric": "average_time_to_close_monthly_books",
+      "status": "exists",
+      "name": "mc__average_time_to_close_monthly_books"
+    },
+    {
+      "metric": "average_time_to_generate_financial_statements",
+      "status": "exists",
+      "name": "mc__average_time_to_generate_financial_statements"
+    },
+    {
+      "metric": "compliance_rate_with_financial_regulations",
+      "status": "exists",
+      "name": "mc__compliance_rate_with_financial_regulations"
+    },
+    {
+      "metric": "cost_benefit_ratio_of_financial_systems",
+      "status": "exists",
+      "name": "mc__cost_benefit_ratio_of_financial_systems"
+    },
+    {
+      "metric": "cost_of_compliance_per_financial_transaction",
+      "status": "exists",
+      "name": "mc__cost_of_compliance_per_financial_transaction"
+    },
+    {
+      "metric": "cost_of_financial_system_downtime_per_hour",
+      "status": "exists",
+      "name": "mc__cost_of_financial_system_downtime_per_hour"
+    },
+    {
+      "metric": "cost_of_financial_system_maintenance",
+      "status": "exists",
+      "name": "mc__cost_of_financial_system_maintenance"
+    },
+    {
+      "metric": "cost_saving_from_financial_system_optimization",
+      "status": "exists",
+      "name": "mc__cost_saving_from_financial_system_optimization"
+    },
+    {
+      "metric": "customer_billing_accuracy_rate",
+      "status": "exists",
+      "name": "mc__customer_billing_accuracy_rate"
+    },
+    {
+      "metric": "data_accuracy",
+      "status": "exists",
+      "name": "mc__data_accuracy"
+    },
+    {
+      "metric": "data_processing_time",
+      "status": "exists",
+      "name": "mc__data_processing_time"
+    },
+    {
+      "metric": "dollar_impact_of_financial_system_errors",
+      "status": "exists",
+      "name": "mc__dollar_impact_of_financial_system_errors"
+    },
+    {
+      "metric": "employee_productivity_rate_with_financial_systems",
+      "status": "exists",
+      "name": "mc__employee_productivity_rate_with_financial_systems"
+    },
+    {
+      "metric": "error_rate_in_financial_reports",
+      "status": "exists",
+      "name": "mc__error_rate_in_financial_reports"
+    },
+    {
+      "metric": "financial_data_covered_by_backups",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "financial_data_extraction_time",
+      "status": "exists",
+      "name": "mc__financial_data_extraction_time"
+    },
+    {
+      "metric": "financial_data_historical_availability",
+      "status": "created",
+      "name": "mc__financial_data_historical_availability",
+      "coBindings": 2
+    },
+    {
+      "metric": "financial_data_integration_efficiency",
+      "status": "exists",
+      "name": "mc__financial_data_integration_efficiency"
+    },
+    {
+      "metric": "financial_data_reconciliation_time",
+      "status": "exists",
+      "name": "mc__financial_data_reconciliation_time"
+    },
+    {
+      "metric": "financial_data_storage_utilization",
+      "status": "exists",
+      "name": "mc__financial_data_storage_utilization"
+    },
+    {
+      "metric": "financial_forecast_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "financial_reports_generated_on_time",
+      "status": "exists",
+      "name": "mc__financial_reports_generated_on_time"
+    },
+    {
+      "metric": "financial_system_adoption",
+      "status": "created",
+      "name": "mc__financial_system_adoption",
+      "coBindings": 2
+    },
+    {
+      "metric": "financial_system_customization_level",
+      "status": "exists",
+      "name": "mc__financial_system_customization_level"
+    },
+    {
+      "metric": "financial_system_scalability_index",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "financial_system_training_sessions_offered",
+      "status": "exists",
+      "name": "mc__financial_system_training_sessions_offered"
+    },
+    {
+      "metric": "financial_transaction_error_detection_rate",
+      "status": "exists",
+      "name": "mc__financial_transaction_error_detection_rate"
+    },
+    {
+      "metric": "financial_transactions_verified",
+      "status": "exists",
+      "name": "mc__financial_transactions_verified"
+    },
+    {
+      "metric": "frequency_of_financial_system_upgrades",
+      "status": "exists",
+      "name": "mc__frequency_of_financial_system_upgrades"
+    },
+    {
+      "metric": "help_desk_resolution_time",
+      "status": "exists",
+      "name": "mc__help_desk_resolution_time"
+    },
+    {
+      "metric": "internal_audit_cycle_time",
+      "status": "exists",
+      "name": "mc__internal_audit_cycle_time"
+    },
+    {
+      "metric": "invoice_processing_accuracy",
+      "status": "exists",
+      "name": "mc__invoice_processing_accuracy"
+    },
+    {
+      "metric": "paperless_financial_transactions",
+      "status": "exists",
+      "name": "mc__paperless_financial_transactions"
+    },
+    {
+      "metric": "real_time_financial_data",
+      "status": "exists",
+      "name": "mc__real_time_financial_data"
+    },
+    {
+      "metric": "redundant_financial_data",
+      "status": "exists",
+      "name": "mc__redundant_financial_data"
+    },
+    {
+      "metric": "return_on_investment_roi_for_financial_systems",
+      "status": "exists",
+      "name": "mc__return_on_investment_roi_for_financial_systems"
+    },
+    {
+      "metric": "revenue_leakage_attributed_to_financial_system_inefficiencies",
+      "status": "exists",
+      "name": "mc__revenue_leakage_attributed_to_financial_system_inefficiencies"
+    },
+    {
+      "metric": "system_downtimes",
+      "status": "exists",
+      "name": "mc__system_downtimes"
+    },
+    {
+      "metric": "system_integration_success_rate",
+      "status": "exists",
+      "name": "mc__system_integration_success_rate"
+    },
+    {
+      "metric": "system_response_time",
+      "status": "exists",
+      "name": "mc__system_response_time"
+    },
+    {
+      "metric": "system_security",
+      "status": "exists",
+      "name": "mc__system_security"
+    },
+    {
+      "metric": "training_hours_per_user_for_financial_systems",
+      "status": "exists",
+      "name": "mc__training_hours_per_user_for_financial_systems"
+    },
+    {
+      "metric": "transaction_volume_capacity",
+      "status": "exists",
+      "name": "mc__transaction_volume_capacity"
+    },
+    {
+      "metric": "user_error_rate_in_financial_systems",
+      "status": "exists",
+      "name": "mc__user_error_rate_in_financial_systems"
+    },
+    {
+      "metric": "user_friendly_financial_system_index",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "user_satisfaction",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "workflow_efficiency",
+      "status": "exists",
+      "name": "mc__workflow_efficiency"
+    }
+  ]
+}

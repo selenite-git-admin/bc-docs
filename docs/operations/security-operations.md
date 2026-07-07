@@ -99,7 +99,7 @@ The Bedrock access key is NOT a separate secret. bc-ai's `boto3.Session(profile_
 
 ## Supply-Chain Governance: AWS CodeArtifact
 
-Every npm install in the five npm-consuming repositories (barecount-devhub, bc-core, bc-portal, bc-admin, bc-qa) routes through AWS CodeArtifact's `npm-mirror` repository per `DEC-441665`. The mirror delegates to `npm-public`, which delegates to npmjs.org. A package not yet seen by the platform is fetched on first install and cached for subsequent installs. bc-ai (Python) and bc-docs-v3 (markdown) do not consume the npm registry.
+Every npm install in the five npm-consuming repositories (barecount-devhub, bc-core, bc-portal, bc-admin, bc-qa) routes through AWS CodeArtifact's `npm-mirror` repository per `DEC-441665`. The mirror delegates to `npm-public`, which delegates to npmjs.org. A package not yet seen by the platform is fetched on first install and cached for subsequent installs. bc-ai (Python) and bc-docs (markdown) do not consume the npm registry.
 
 | Property | Value |
 |---|---|

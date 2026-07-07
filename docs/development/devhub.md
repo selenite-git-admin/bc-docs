@@ -15,7 +15,7 @@ governing_adrs:
   - DEC-623f8f (ADR Hygiene Policy; supersession pair rule, stuck-proposed audit, eight rules)
   - DEC-ebf0b4 (Session Discipline and Data Integrity Rules; D268 self-audit at session close)
   - DEC-804874 (L-Node Verification with Semantic Family Classification; session-close gate per D366)
-  - DEC-3395bc (bc-docs-v3 SSOT cutover; ADR files written into bc-docs-v3 by devhub_decision_record)
+  - DEC-3395bc (bc-docs SSOT cutover; ADR files written into bc-docs by devhub_decision_record)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -33,7 +33,7 @@ This chapter does not redefine the decision and change procedure (Decision and C
 
 ## What DevHub Is
 
-DevHub is a single Node service plus a single SQLite database plus a stdio MCP server. The combination is the platform's coordination registry for engineering work: the substrate where sessions are opened and closed, where tasks are recorded and tracked, where decisions are recorded as ADR registry rows that point at ADR files in bc-docs-v3, where change records pair plan with report per session, and where cross-domain registries (documents, screens, API endpoints, MCP tools, risks, QA non-conformities, L-node verdicts) hold metadata that other surfaces scan into.
+DevHub is a single Node service plus a single SQLite database plus a stdio MCP server. The combination is the platform's coordination registry for engineering work: the substrate where sessions are opened and closed, where tasks are recorded and tracked, where decisions are recorded as ADR registry rows that point at ADR files in bc-docs, where change records pair plan with report per session, and where cross-domain registries (documents, screens, API endpoints, MCP tools, risks, QA non-conformities, L-node verdicts) hold metadata that other surfaces scan into.
 
 | Property | Form |
 |---|---|
@@ -130,12 +130,12 @@ DevHub holds derived registries scanned from external repositories. Each scanner
 
 | Registry | Scanner tool | Source | Written rows |
 |---|---|---|---|
-| Document | `devhub_doc_scan` | `bc-docs-v3` walked by frontmatter (env override `BC_DOCS_PATH`) | `documents` rows with `id`, `type`, `domain`, `authority`, `status`, `governing_adrs` derived from path and frontmatter |
+| Document | `devhub_doc_scan` | `bc-docs` walked by frontmatter (env override `BC_DOCS_PATH`) | `documents` rows with `id`, `type`, `domain`, `authority`, `status`, `governing_adrs` derived from path and frontmatter |
 | Screen | `devhub_screen_stats` (and adjacent tools) | bc-portal and bc-admin source for screen metadata | `screen_registry`, `screen_children`, `screen_api_map`, `screen_data_needs`, `screen_dependencies`, `screen_tests` |
 | API | `devhub_api_scan` | bc-core, bc-admin, bc-portal, bc-ai source for endpoint declarations | `api_registry`, `api_consumer`, `api_cross_cutting` |
 | MCP tool | `devhub_mcp_scan` | DevHub itself plus other MCP server source | `mcp_tool_registry` |
 
-Per pattern 81: the registries are derived. They are an index for navigation, not the authority for the artifacts they index. Authority is the file (the chapter under `bc-docs-v3/docs/`, the route handler under `bc-core/src/`, the screen component under `bc-admin/src/`, the MCP tool registration under `barecount-devhub/src/mcp-server.js`). When a registry row contradicts the file, the file wins and the registry is rescanned.
+Per pattern 81: the registries are derived. They are an index for navigation, not the authority for the artifacts they index. Authority is the file (the chapter under `bc-docs/docs/`, the route handler under `bc-core/src/`, the screen component under `bc-admin/src/`, the MCP tool registration under `barecount-devhub/src/mcp-server.js`). When a registry row contradicts the file, the file wins and the registry is rescanned.
 
 **Governing source.** `barecount-devhub/src/lib/doc-scanner.js`, `barecount-devhub/src/lib/api-scanner.js`, `barecount-devhub/src/lib/mcp-tool-scanner.js`; CLAUDE.md (Documentation section, MCP Server section).
 
@@ -208,7 +208,7 @@ These are the gaps between the substrate as documented and the substrate as impl
 | Decision and Change Procedure | The ADR-first procedure (D221), the eight ADR hygiene rules (D370), the supersession-pair discipline, the change-record plan-and-report pair semantics | The DevHub registry tables and tools that the procedure writes through |
 | Audit and Activity Logging | The DevHub activity log as the cross-domain governance trail; the JSONL docs trail; the bc-core operational logging | The activity-log write semantics and the per-domain event-type enumeration as DevHub-side facts |
 | Quality Assurance | The bc-qa repository, the audit script, the gate-config, the eslint-config package, the pre-commit hooks | The DevHub QA NC tables and `devhub_qa_audit` MCP tool that auto-raises NCs from audit findings |
-| Documentation System | bc-docs-v3 as the documentation SSOT; the bc-admin reader; bc-core JWT-served document endpoints | The DevHub document registry as a derived index; `devhub_decision_record` writing into `bc-docs-v3/docs/adrs/` |
+| Documentation System | bc-docs as the documentation SSOT; the bc-admin reader; bc-core JWT-served document endpoints | The DevHub document registry as a derived index; `devhub_decision_record` writing into `bc-docs/docs/adrs/` |
 | Operating Model: Chain Completeness and Verdict | The chain-status SSOT and the L-node semantic verdict table in bc-core | The DevHub `devhub_chain_status` and L-node MCP tools that proxy to bc-core; the session-close gate that reads them |
 | Backend Services | bc-core, DevHub, bc-pg-mcp as deployable services | DevHub specifically as the engineering-coordination service |
 
@@ -226,5 +226,5 @@ These are the gaps between the substrate as documented and the substrate as impl
 - DEC-623f8f (ADR Hygiene Policy)
 - DEC-ebf0b4 (Session Discipline and Data Integrity Rules)
 - DEC-804874 (L-Node Verification with Semantic Family Classification)
-- DEC-3395bc (bc-docs-v3 SSOT cutover)
+- DEC-3395bc (bc-docs SSOT cutover)
 - CLAUDE.md (Session Protocol section, Dev Service Management section, Don't section)

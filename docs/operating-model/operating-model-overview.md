@@ -152,9 +152,9 @@ A chapter that violates any of the seven constraints is incorrect against this s
 
 ## Diagram Convention
 
-Operating Model chapters may embed diagrams **inline** as Mermaid code blocks within the chapter body. The `diagrams:` frontmatter field lists the diagram IDs (e.g. `DG-mms-track-architecture`) regardless of whether the diagram is inline or rendered as a standalone asset file under `bc-docs-v3/docs/assets/diagrams/`. Inline Mermaid is the accepted default for Operating Model chapters; standalone asset files are a future option if rendering, export, or cross-section reuse needs require it, and are not a precondition for chapter authoring.
+Operating Model chapters may embed diagrams **inline** as Mermaid code blocks within the chapter body. The `diagrams:` frontmatter field lists the diagram IDs (e.g. `DG-mms-track-architecture`) regardless of whether the diagram is inline or rendered as a standalone asset file under `bc-docs/docs/assets/diagrams/`. Inline Mermaid is the accepted default for Operating Model chapters; standalone asset files are a future option if rendering, export, or cross-section reuse needs require it, and are not a precondition for chapter authoring.
 
-A chapter that uses inline Mermaid registers each diagram with a `DG-{kebab-name}` identifier in the frontmatter `diagrams` array. The identifier is the stable handle other chapters or ADRs cite when referencing the diagram, even if its rendering form (inline vs. asset file) changes later. Migration to standalone assets, when undertaken, preserves the identifier — the asset file at `bc-docs-v3/docs/assets/diagrams/{DG-id}.{ext}` becomes authoritative and the inline block is removed from the chapter body.
+A chapter that uses inline Mermaid registers each diagram with a `DG-{kebab-name}` identifier in the frontmatter `diagrams` array. The identifier is the stable handle other chapters or ADRs cite when referencing the diagram, even if its rendering form (inline vs. asset file) changes later. Migration to standalone assets, when undertaken, preserves the identifier — the asset file at `bc-docs/docs/assets/diagrams/{DG-id}.{ext}` becomes authoritative and the inline block is removed from the chapter body.
 
 Operating Model chapters that carry diagrams in this snapshot:
 

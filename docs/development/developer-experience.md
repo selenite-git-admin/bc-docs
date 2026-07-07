@@ -15,7 +15,7 @@ governing_sources:
 governing_adrs:
   - DEC-e50b83 (Port reservation; per-service reserved port ranges; the table is reproduced in CLAUDE.md and the deploy-coordinate detail is owned by Infrastructure)
   - DEC-1918d0 (Two-database split; the canonical DDL and the database change protocol)
-  - DEC-3395bc (bc-docs-v3 SSOT cutover; the agent reads bc-docs-v3, not legacy v2 archive)
+  - DEC-3395bc (bc-docs SSOT cutover; the agent reads bc-docs, not legacy v2 archive)
   - DEC-ebf0b4 (Session Discipline and Data Integrity Rules; the ten rules govern engineering session behavior)
 errata_referenced: []
 v2_sources: []
@@ -67,7 +67,7 @@ The Standard Operating Procedures live under `legacy-v2/docs/sops/` (twenty SOP 
 
 Per CLAUDE.md, every Claude session that performs a recurring procedure first checks whether an SOP exists, then follows it step by step. SOP deviation is recorded explicitly (which step was skipped, why, what was done instead) via `devhub_session_checkpoint`. SOPs that are missing are flagged via `devhub_task_add` with tag `sop-gap`.
 
-The SOPs have not yet been migrated from legacy v2 archive to bc-docs-v3. Per Documentation System the migration is queued; until then the v2 archive is the canonical SOP surface and the agent reads against the v2 path.
+The SOPs have not yet been migrated from legacy v2 archive to bc-docs. Per Documentation System the migration is queued; until then the v2 archive is the canonical SOP surface and the agent reads against the v2 path.
 
 **Governing source.** CLAUDE.md (SOP Compliance section); `legacy-v2/docs/sops/`.
 
@@ -207,7 +207,7 @@ The agent drafts; the founder cold-reads. The cold-read produces `_opt2.md` file
 
 The cold-read is the gate that flips a chapter from `drafting` to `reviewing`; locking requires founder approval. The pattern is established and is recorded in the AWS rewrite checklist under multiple patterns (the most relevant: pattern 87 for section-overview locating discipline, pattern 88 for universal-claim per-instance enumeration).
 
-**Governing source.** bc-docs-v3 `HANDOFF.md` (drafting workflow section); aws-rewrite-checklist.md.
+**Governing source.** bc-docs `HANDOFF.md` (drafting workflow section); aws-rewrite-checklist.md.
 
 ## Constraints
 
@@ -245,13 +245,13 @@ The cold-read is the gate that flips a chapter from `drafting` to `reviewing`; l
 | Drift item | Status |
 |---|---|
 | CLAUDE.md `preview_*` instruction is stale | Recorded; auto-memory operational checklist supersedes; CLAUDE.md amendment is queued |
-| SOPs have not been migrated from legacy v2 archive to bc-docs-v3 | Recorded; queued per Documentation System |
+| SOPs have not been migrated from legacy v2 archive to bc-docs | Recorded; queued per Documentation System |
 | `bc-core-dashboard` and `bc-core` launch.json entries are stubs | Recorded; pending full pm2 removal completion |
 | Per-repo CLAUDE.md files have not been audited for consistency with the master harness | Recorded; periodic audit is queued |
 | Worktree cleanup on abrupt session termination relies on the next session's sweep | Recorded; the harness cleanup is best-effort |
 | Auto-memory file lives outside the committed repo (in the operator's user profile) | Recorded; the auto-memory is local to the developer machine and does not propagate across operators |
 
-**Governing source.** CLAUDE.md (Verification section); bc-docs-v3 `HANDOFF.md` (drift inventory section).
+**Governing source.** CLAUDE.md (Verification section); bc-docs `HANDOFF.md` (drift inventory section).
 
 ## Boundaries with Other Chapters
 
@@ -261,7 +261,7 @@ The cold-read is the gate that flips a chapter from `drafting` to `reviewing`; l
 | Decision and Change Procedure | The session protocol details, the change-record substrate, the D268 discipline rules | The developer-experience surface that follows the protocol |
 | Build and Release | The per-repo dev commands and the CodeArtifact registry | The launch.json entries that invoke the per-repo dev commands |
 | Quality Assurance | The pre-commit hook, the audit harness, the eslint-config | The developer-machine pre-commit installation procedure |
-| Documentation System | bc-docs-v3 SSOT, the bc-admin reader, the sync-docs script | The agent reading documentation as part of session research |
+| Documentation System | bc-docs SSOT, the bc-admin reader, the sync-docs script | The agent reading documentation as part of session research |
 | Infrastructure | Reserved port assignments; AWS account, region, profile, IAM | The discipline of consuming reserved ports and named profiles without naming the values |
 
 **Governing source.** outline.md §4.5; The Authority Model.
@@ -277,7 +277,7 @@ The cold-read is the gate that flips a chapter from `drafting` to `reviewing`; l
 - Infrastructure
 - DEC-e50b83 (Port reservation)
 - DEC-1918d0 (Two-database split; Database Change Protocol authority)
-- DEC-3395bc (bc-docs-v3 SSOT cutover)
+- DEC-3395bc (bc-docs SSOT cutover)
 - DEC-ebf0b4 (Session Discipline and Data Integrity Rules)
 - CLAUDE.md (Session Protocol section, Don't section, AWS section, Database Change Protocol section, Verification section)
-- bc-docs-v3 `HANDOFF.md` (current drafting state, drafting workflow)
+- bc-docs `HANDOFF.md` (current drafting state, drafting workflow)

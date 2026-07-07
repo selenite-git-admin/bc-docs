@@ -42,7 +42,7 @@ Every BareCount repo that consumes npm dependencies routes installs through AWS 
 | `bc-admin` | Yes | Routes installs through CodeArtifact |
 | `bc-qa` | Yes | Routes installs through CodeArtifact (publishes the `@barecount/eslint-config` package back to CodeArtifact) |
 | `bc-ai` | Not applicable | Python service; pip-based dependency resolution; not part of npm registry routing |
-| `bc-docs-v3` | Not applicable | Markdown-only; no runtime dependencies |
+| `bc-docs` | Not applicable | Markdown-only; no runtime dependencies |
 
 The `.npmrc` files are committed; the registry URL embeds an AWS account identifier and a region code that are deploy coordinates owned by Infrastructure. The per-repo file points at the same domain and repository so that every repo resolves against the same cached package set.
 
@@ -62,7 +62,7 @@ Per `DEC-890417` superseded, the platform does not orchestrate services through 
 | `bc-admin` | `npm run dev` (`vite`) | Vite HMR |
 | `bc-ai` | `python -m uvicorn main:app` (the Python service has no npm dev script) | Uvicorn auto-reload |
 | `bc-qa` | None (no runtime; tooling-only repo) | Not applicable |
-| `bc-docs-v3` | None (markdown-only); the bc-admin reader renders chapters via Vite HMR after `bc-admin/scripts/sync-docs.js` runs | Indirect (through bc-admin's HMR) |
+| `bc-docs` | None (markdown-only); the bc-admin reader renders chapters via Vite HMR after `bc-admin/scripts/sync-docs.js` runs | Indirect (through bc-admin's HMR) |
 
 The deprecated `ecosystem.config.cjs` files for pm2 are still committed in `barecount-devhub` and `bc-ai` as historical reference per pattern 71. They are marked deprecated in their own headers and are not consumed by the as-built path.
 
@@ -77,7 +77,7 @@ Three repos build runtime artifacts. The remaining repos either ship source (mar
 | `bc-core` | `npm run build` (`nest build`) | `dist/` (NestJS standard) |
 | `bc-portal` | `npm run build` (delegates to the workspace web app's `vite build`) | `apps/web/dist/` (Vite standard) |
 | `bc-admin` | `npm run build` (`vite build`) | `dist/` (Vite standard) |
-| `barecount-devhub`, `bc-qa`, `bc-docs-v3` | Not defined | Source-shipped repos |
+| `barecount-devhub`, `bc-qa`, `bc-docs` | Not defined | Source-shipped repos |
 
 Type-check and lint commands are repo-local. `bc-core` exposes both `npm run typecheck` (`tsc --noEmit`) and `npm run lint` (`eslint .` plus a column-name lint). `bc-admin` exposes `npm run typecheck`. `bc-portal` and `barecount-devhub` rely on the pre-commit hook for lint enforcement; per-repo CLI lint commands are not standardized.
 
@@ -141,7 +141,7 @@ The platform does not run continuous-integration automation in the readiness bas
 | `bc-admin` | Not present | No CI |
 | `bc-ai` | Not present | No CI |
 | `bc-qa` | Not present | No CI; the audit harness is intended for CI integration but is not yet wired |
-| `bc-docs-v3` | Not present | No CI; the ADR audit script is operator-run |
+| `bc-docs` | Not present | No CI; the ADR audit script is operator-run |
 
 The QA hooks (Quality Assurance) run pre-commit at the developer machine; the bc-qa audit harness runs on demand via the `devhub_qa_audit` MCP tool or the `bash bc-qa/audits/audit-repo.sh` CLI. The transition from local-only enforcement to CI-integrated enforcement is queued as drift; the gate-bash wrapper `bc-qa/gates/compliance-gate.sh` exists as the integration point but is not invoked from a CI workflow in the readiness baseline.
 
@@ -200,7 +200,7 @@ The platform also does not use a formal release tool in the readiness baseline. 
 | Infrastructure | The as-deployed AWS substrate, including CodeArtifact deploy coordinates (account, region, profile, domain, repository), reserved ports, and IAM | The build-side procedure that consumes those coordinates |
 | Operations: Deployment Topology | The operational topology of the deployed platform; the per-environment substrate; the deploy procedure as run by Operations | The build-side artifact that Operations deploys |
 | Quality Assurance | The bc-qa repository, the audit harness, the gate-config, and the eslint-config package | The build-side commands that consume the QA tooling |
-| Documentation System | The bc-docs-v3 SSOT and the bc-admin reader build path through `bc-admin/scripts/sync-docs.js` | The sync-docs script as a build-time procedure that produces the manifest the bc-core docs endpoints serve |
+| Documentation System | The bc-docs SSOT and the bc-admin reader build path through `bc-admin/scripts/sync-docs.js` | The sync-docs script as a build-time procedure that produces the manifest the bc-core docs endpoints serve |
 | Decision and Change Procedure | The session protocol and the change-record substrate that govern release-bearing changes | The build-side commands that release-bearing changes invoke |
 
 **Governing source.** outline.md §4.5; The Authority Model.

@@ -525,7 +525,7 @@ The mapping is a default — the operator may always override with rationale.
 The per-route operational policy — including how an operator selects between R6 and R8 when both apply, what evidence the operator records, how the routing decision affects downstream operator-console visibility — is the scope of the **Recovery Track doctrine**:
 
 ```
-bc-docs-v3/docs/operating-model/metric-management-system-recovery-track.md (pending)
+bc-docs/docs/operating-model/metric-management-system-recovery-track.md (pending)
 ```
 
 The Recovery Track doctrine is **not part of this Creation Track chapter**. This chapter names the eight routes and their default mappings; the Recovery Track doctrine fills in the operational rules. It is the next artifact to draft after this chapter ships.
@@ -723,7 +723,7 @@ See §3.2 for the stage definition and §7.1 for the substrate listing. The colu
 
 This chapter is the steady-state Creation Track target, operator-ratified as draft-authoritative at the time of writing. It does not authorize any code, substrate, or runtime change. The operator-ratified next-step sequence is:
 
-1. **Recovery Track doctrine** (artifact 1; the next artifact to draft) — child chapter at `bc-docs-v3/docs/operating-model/metric-management-system-recovery-track.md`. Operating doctrine for the Recovery Track of MMS. Fills in the per-route operational policy for Stage 7's eight recovery routes — how an operator selects between R6 and R8 when both apply, what evidence the operator records, how the routing decision affects downstream operator-console visibility, the per-defect-code routing inside R2 vs. R3 for Self-Verification structural rejects. Inherits the MMS hierarchy framing from §1A.
+1. **Recovery Track doctrine** (artifact 1; the next artifact to draft) — child chapter at `bc-docs/docs/operating-model/metric-management-system-recovery-track.md`. Operating doctrine for the Recovery Track of MMS. Fills in the per-route operational policy for Stage 7's eight recovery routes — how an operator selects between R6 and R8 when both apply, what evidence the operator records, how the routing decision affects downstream operator-console visibility, the per-defect-code routing inside R2 vs. R3 for Self-Verification structural rejects. Inherits the MMS hierarchy framing from §1A.
 2. **Vocabulary-Lock ADR filing** — operationalises the naming rules in §6; sequenced per [Audit §7A.3 step 1](../evidence/audits/implementation/mcf-framework-audit-2026-06-22.md). Follows the Recovery Track doctrine because the ADR's migration appendix benefits from a complete naming surface across both documents. The ADR's migration appendix also carries the MMS / MCF / Metric Engine / Track hierarchy from §1A so the rename / refactor work in `bc-core/src/registry/mcf/` is sequenced against a complete naming surface.
 3. **Repair / refactor sequence** — driven by the [Audit §7A.3](../evidence/audits/implementation/mcf-framework-audit-2026-06-22.md) staged plan, drawing from this Creation Track chapter for stage names, gate enumeration, surface names, and new-substrate definitions. Begins only after artifacts 1 and 2 are filed.
 

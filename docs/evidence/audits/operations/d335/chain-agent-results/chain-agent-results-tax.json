@@ -1,0 +1,850 @@
+{
+  "subfunction": "tax",
+  "boMappings": {
+    "bc_internal_audit_operations": {
+      "number_of_successful_audit_defenses": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_tax_audit_adjustments": {
+        "bfName": "bc_internal_audit_ops_total_controls_tested_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_tax_audits_received": {
+        "bfName": "bc_internal_audit_ops_number_of_integrated_audits",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "commercial_invoice_hdr": {
+      "total_tax_audits_concluded": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_income_tax_expense": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_excise_tax_paid": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_sales_subject_to_excise_tax": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_indirect_tax_filings": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_international_tax_expense": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_payroll_tax_filings": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_property_tax_assessments": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_tax_liability": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_tax_benefits_from_planning": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_tax_filings": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_tax_credits_and_deductions_claimed": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_eligible_tax_credits_and_deductions": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_tax_department_costs": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_tax_savings_generated": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_number_of_tax_disputes_resolved": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_required_tax_documentation_packages": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_tax_filings_required": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_tax_processes": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_eligible_tax_incentives": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_benefits_from_tax_technology": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_tax_expense": {
+        "bfName": "commercial_invoice_hdr_total_tax_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_value_of_transfer_pricing_adjustments": {
+        "bfName": "commercial_invoice_hdr_total_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_value_of_intercompany_transactions": {
+        "bfName": "commercial_invoice_hdr_total_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "xbrl_gaap_income_statement": {
+      "cash_taxes_paid": {
+        "bfName": "xbrl_income_taxes_paid",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "actual_ledger": {
+      "pre_tax_income": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "deferred_tax_expense_benefit": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "green_tax_credits_claimed": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "number_of_accurate_and_timely_indirect_tax_filings": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "net_international_tax_savings": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "number_of_accurate_and_timely_payroll_tax_filings": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "number_of_accurate_property_tax_assessments": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "r_d_tax_credits_claimed": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "number_of_tax_strategy_staff": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "number_of_tax_filing_staff": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "applicable_tax_rate": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "tax_personnel_costs": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "tax_software_and_technology_costs": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "external_tax_advisory_fees": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "number_of_accurate_and_timely_tax_filings": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "number_of_tax_controversies_resolved": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "investment_tax_credits_claimed": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "other_tax_credits_claimed": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "number_of_tax_department_exits": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "average_number_of_tax_department_staff": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_complete_tax_documentation_packages": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "actual_tax_outcome": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "number_of_automated_tax_processes": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "Sum of Employee Engagement Survey Scores": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "Alignment with Risk Management Objectives": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "Weight for Risk Management Alignment": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "actual_tax_incentives_claimed": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "number_of_tax_notices": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "Strategy Effectiveness Score": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "Sustainability of Strategy Score": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "Weight for Strategy Effectiveness": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "Weight for Sustainability of Strategy": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "actual_tax_liability_with_planning": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "number_of_digitalized_tax_processes": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "actual_tax_expense": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "Effectiveness of Strategy Adjustments Score": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "Proactive Strategy Review Score": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "Weight for Effectiveness of Strategy Adjustments": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "Weight for Proactive Strategy Review": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "days_to_complete_tax_provision": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "withholding_tax_savings_achieved": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "bc_ap_operations": {
+      "number_of_compliant_country_reports": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_compliant_jurisdictions": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_eligible_vat_gst_for_recovery": {
+        "bfName": "bc_ap_ops_invoices_selected_for_audit_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_compliant_intercompany_transactions": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_intercompany_transactions": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_compliant_salt_filings": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_days_to_resolve_all_controversies": {
+        "bfName": "bc_ap_ops_sum_of_all_outstanding_invoices",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_transfer_pricing_transactions": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "bc_financial_risk_management_operations": {
+      "total_country_reports_required": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_jurisdictions_operated_in": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_vat_gst_recovered": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_salt_filings": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_tax_department_operational_cost": {
+        "bfName": "bc_financial_risk_management_ops_total_cost_of_claims",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_potential_litigations_avoided": {
+        "bfName": "bc_financial_risk_management_ops_potential_future_value_at_risk",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_days_to_respond_to_notices": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cost_of_tax_technology": {
+        "bfName": "bc_financial_risk_management_ops_total_cost_of_claims",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_vat_recovered": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_eligible_vat_paid": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_withholding_obligations": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "asset": {
+      "untaxed_transaction_value": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_tax_filings_submitted_on_time": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "tax_liability_reduction_from_shelters": {
+        "bfName": "asset_effective_from",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "bc_gl_operations": {
+      "number_of_reporting_periods": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "earnings_before_interest_taxes_depreciation_amortization": {
+        "bfName": "bc_gl_ops_earnings_before_interest_taxes_depreciation_amortization",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "number_of_disputes_resolved_favorably": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_litigations_proceeded_to_court": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_correctly_applied_withholding_obligations": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "bc_internal_audit_operations": {
+      "exists": true,
+      "contractId": "019d774b-2487-7cec-93c3-3ff6e0fefdce",
+      "name": "cc__bc_internal_audit_operations",
+      "mappingsAdded": 0
+    },
+    "commercial_invoice_hdr": {
+      "exists": true,
+      "contractId": "019d7746-5ae5-7715-b6b2-24de1325d994",
+      "name": "cc__commercial_invoice_hdr",
+      "mappingsAdded": 0
+    },
+    "xbrl_gaap_income_statement": {
+      "error": "CC validation failed (CR-QG-CC-001)"
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 11
+    },
+    "bc_ap_operations": {
+      "exists": true,
+      "contractId": "019d7661-63a3-7a61-9792-c9c6deb988f6",
+      "name": "cc__bc_ap_operations",
+      "mappingsAdded": 0
+    },
+    "bc_financial_risk_management_operations": {
+      "exists": true,
+      "contractId": "019d774b-22e9-7264-adc7-4a6c75446651",
+      "name": "cc__bc_financial_risk_management_operations",
+      "mappingsAdded": 0
+    },
+    "asset": {
+      "exists": true,
+      "contractId": "019d7701-d9db-728f-89ad-60f06fdf4f42",
+      "name": "cc__asset",
+      "mappingsAdded": 0
+    },
+    "bc_gl_operations": {
+      "exists": true,
+      "contractId": "019d7664-5001-76df-92ce-388cb8a39f0e",
+      "name": "cc__bc_gl_operations",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "audit_defense_success_rate",
+      "status": "exists",
+      "name": "mc__audit_defense_success_rate"
+    },
+    {
+      "metric": "cash_tax_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "country_by_country_reporting_compliance",
+      "status": "exists",
+      "name": "mc__country_by_country_reporting_compliance"
+    },
+    {
+      "metric": "deferred_tax_rate",
+      "status": "created",
+      "name": "mc__deferred_tax_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "effective_tax_rate_etr",
+      "status": "exists",
+      "name": "mc__effective_tax_rate_etr"
+    },
+    {
+      "metric": "excise_tax_management_efficiency",
+      "status": "exists",
+      "name": "mc__excise_tax_management_efficiency"
+    },
+    {
+      "metric": "global_tax_policy_adherence",
+      "status": "exists",
+      "name": "mc__global_tax_policy_adherence"
+    },
+    {
+      "metric": "green_tax_credits_utilization",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "indirect_tax_compliance_rate",
+      "status": "exists",
+      "name": "mc__indirect_tax_compliance_rate"
+    },
+    {
+      "metric": "indirect_tax_vat_gst_recovery_rate",
+      "status": "exists",
+      "name": "mc__indirect_tax_vat_gst_recovery_rate"
+    },
+    {
+      "metric": "intercompany_transactions_compliance",
+      "status": "exists",
+      "name": "mc__intercompany_transactions_compliance"
+    },
+    {
+      "metric": "international_tax_strategy_effectiveness",
+      "status": "created",
+      "name": "mc__international_tax_strategy_effectiveness",
+      "coBindings": 2
+    },
+    {
+      "metric": "payroll_tax_compliance_rate",
+      "status": "exists",
+      "name": "mc__payroll_tax_compliance_rate"
+    },
+    {
+      "metric": "property_tax_assessment_accuracy",
+      "status": "exists",
+      "name": "mc__property_tax_assessment_accuracy"
+    },
+    {
+      "metric": "r_d_tax_credit_utilization",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "ratio_of_tax_strategy_to_tax_filing_staff_at_the_finance_shared_services_center",
+      "status": "exists",
+      "name": "mc__ratio_of_tax_strategy_to_tax_filing_staff_at_the_finance_shared_services_center"
+    },
+    {
+      "metric": "sales_use_tax_audit_exposure",
+      "status": "exists",
+      "name": "mc__sales_use_tax_audit_exposure"
+    },
+    {
+      "metric": "state_and_local_tax_salt_compliance",
+      "status": "exists",
+      "name": "mc__state_and_local_tax_salt_compliance"
+    },
+    {
+      "metric": "tax_audit_adjustment_rate",
+      "status": "exists",
+      "name": "mc__tax_audit_adjustment_rate"
+    },
+    {
+      "metric": "tax_audit_frequency",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_authority_audit_frequency",
+      "status": "exists",
+      "name": "mc__tax_authority_audit_frequency"
+    },
+    {
+      "metric": "tax_benefit_to_ebitda_ratio",
+      "status": "exists",
+      "name": "mc__tax_benefit_to_ebitda_ratio"
+    },
+    {
+      "metric": "tax_code_change_adaptability",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_communication_effectiveness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_compliance_overhead_cost",
+      "status": "created",
+      "name": "mc__tax_compliance_overhead_cost",
+      "coBindings": 1
+    },
+    {
+      "metric": "tax_compliance_rate",
+      "status": "exists",
+      "name": "mc__tax_compliance_rate"
+    },
+    {
+      "metric": "tax_controversy_resolution_time",
+      "status": "exists",
+      "name": "mc__tax_controversy_resolution_time"
+    },
+    {
+      "metric": "tax_credits_and_deductions_capture_rate",
+      "status": "exists",
+      "name": "mc__tax_credits_and_deductions_capture_rate"
+    },
+    {
+      "metric": "tax_credits_utilized",
+      "status": "created",
+      "name": "mc__tax_credits_utilized",
+      "coBindings": 1
+    },
+    {
+      "metric": "tax_data_analytics_utilization",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_department_efficiency",
+      "status": "exists",
+      "name": "mc__tax_department_efficiency"
+    },
+    {
+      "metric": "tax_department_staff_turnover_rate",
+      "status": "exists",
+      "name": "mc__tax_department_staff_turnover_rate"
+    },
+    {
+      "metric": "tax_dispute_resolution_rate",
+      "status": "exists",
+      "name": "mc__tax_dispute_resolution_rate"
+    },
+    {
+      "metric": "tax_documentation_completeness",
+      "status": "exists",
+      "name": "mc__tax_documentation_completeness"
+    },
+    {
+      "metric": "tax_filing_timeliness",
+      "status": "exists",
+      "name": "mc__tax_filing_timeliness"
+    },
+    {
+      "metric": "tax_forecasting_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_function_automation",
+      "status": "exists",
+      "name": "mc__tax_function_automation"
+    },
+    {
+      "metric": "tax_function_cost_to_savings_ratio",
+      "status": "exists",
+      "name": "mc__tax_function_cost_to_savings_ratio"
+    },
+    {
+      "metric": "tax_function_employee_engagement",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_function_strategic_alignment",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_function_training_and_development",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_incentives_realization",
+      "status": "created",
+      "name": "mc__tax_incentives_realization",
+      "coBindings": 2
+    },
+    {
+      "metric": "tax_litigation_avoidance_ratio",
+      "status": "exists",
+      "name": "mc__tax_litigation_avoidance_ratio"
+    },
+    {
+      "metric": "tax_notice_response_time",
+      "status": "exists",
+      "name": "mc__tax_notice_response_time"
+    },
+    {
+      "metric": "tax_optimization_strategy_score",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_planning_savings",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_process_digitalization_level",
+      "status": "exists",
+      "name": "mc__tax_process_digitalization_level"
+    },
+    {
+      "metric": "tax_provision_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_sheltering_effectiveness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_strategy_adaptation_flexibility",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_technology_roi",
+      "status": "exists",
+      "name": "mc__tax_technology_roi"
+    },
+    {
+      "metric": "time_to_close_tax_provision",
+      "status": "exists",
+      "name": "mc__time_to_close_tax_provision"
+    },
+    {
+      "metric": "total_tax_rate",
+      "status": "exists",
+      "name": "mc__total_tax_rate"
+    },
+    {
+      "metric": "transfer_pricing_adjustment_rate",
+      "status": "exists",
+      "name": "mc__transfer_pricing_adjustment_rate"
+    },
+    {
+      "metric": "transfer_pricing_compliance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "transfer_pricing_documentation_compliance",
+      "status": "exists",
+      "name": "mc__transfer_pricing_documentation_compliance"
+    },
+    {
+      "metric": "vat_recovery_rate",
+      "status": "exists",
+      "name": "mc__vat_recovery_rate"
+    },
+    {
+      "metric": "withholding_tax_compliance_rate",
+      "status": "exists",
+      "name": "mc__withholding_tax_compliance_rate"
+    },
+    {
+      "metric": "withholding_tax_optimization",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    }
+  ]
+}

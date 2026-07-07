@@ -14,7 +14,7 @@ refs:
   - type: decision
     label: "D213"
 authority: evolving
-migrated_from: legacy v2 archive
+migrated_from: legacy-v2-archive
 ---
 
 

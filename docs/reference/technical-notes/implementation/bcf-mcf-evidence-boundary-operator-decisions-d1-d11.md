@@ -1,7 +1,7 @@
 ---
 uid: bcf-mcf-evidence-boundary-operator-decisions-d1-d11
 title: BCF/MCF Evidence Boundary — Operator Decisions D1..D11 (record of authorization for PR #11)
-description: Operator decision record for the BCF/MCF Evidence Boundary + contract.* Schema Retirement DBCP (`bcf-mcf-evidence-boundary-and-contract-schema-retirement-dbcp.md`, merged at bc-docs-v3 main 6f8cc159f6f21b6170c3d3195df616a1aa567348). Records the operator's verdicts on the 11 decisions D1..D11 enumerated in §11 of the parent DBCP. Option A (full BCF isolation via new `bcf.*` schema; framework_code patch rejected) is now the chosen architectural direction. D3 and D5 are obsolete under Option A. D7 (contract.framework_policy placement) is deferred to a separate policy/governance placement DBCP. D8 authorizes PR #133 to merge only as inventory/snapshot tooling. D9 keeps the PR #133 apply gate paused until Phase A1+A2 designs are accepted. D10 confirms tenant DBs out of scope. D11 confirms legacy metric.* retirement out of scope. **NOT EXECUTED.** This decision record authorizes the next planning gate (Phase A1 DBCP) — it does NOT authorize any DDL apply, data migration, FK redirect, writer flip, or M11/M12/M12.5/M13/M14 invocation. M14 remains CLOSED. Tenant `tbc_{slug}_dev` databases remain untouched and out of scope. Legacy `metric.*` schema (16,820 rows including 2 active AR pilot KPIs) remains preserved and out of scope.
+description: Operator decision record for the BCF/MCF Evidence Boundary + contract.* Schema Retirement DBCP (`bcf-mcf-evidence-boundary-and-contract-schema-retirement-dbcp.md`, merged at bc-docs main 6f8cc159f6f21b6170c3d3195df616a1aa567348). Records the operator's verdicts on the 11 decisions D1..D11 enumerated in §11 of the parent DBCP. Option A (full BCF isolation via new `bcf.*` schema; framework_code patch rejected) is now the chosen architectural direction. D3 and D5 are obsolete under Option A. D7 (contract.framework_policy placement) is deferred to a separate policy/governance placement DBCP. D8 authorizes PR #133 to merge only as inventory/snapshot tooling. D9 keeps the PR #133 apply gate paused until Phase A1+A2 designs are accepted. D10 confirms tenant DBs out of scope. D11 confirms legacy metric.* retirement out of scope. **NOT EXECUTED.** This decision record authorizes the next planning gate (Phase A1 DBCP) — it does NOT authorize any DDL apply, data migration, FK redirect, writer flip, or M11/M12/M12.5/M13/M14 invocation. M14 remains CLOSED. Tenant `tbc_{slug}_dev` databases remain untouched and out of scope. Legacy `metric.*` schema (16,820 rows including 2 active AR pilot KPIs) remains preserved and out of scope.
 status: decided
 date: 2026-05-28
 project: bc-docs
@@ -22,7 +22,7 @@ This record is **not** the architectural decision — the architectural decision
 
 | Artifact | Location | State |
 |---|---|---|
-| Parent DBCP | `docs/implementation/bcf-mcf-evidence-boundary-and-contract-schema-retirement-dbcp.md` | merged at bc-docs-v3 main `6f8cc159f6f21b6170c3d3195df616a1aa567348` (PR #11 squashed 2026-05-28T16:06:05Z) |
+| Parent DBCP | `docs/implementation/bcf-mcf-evidence-boundary-and-contract-schema-retirement-dbcp.md` | merged at bc-docs main `6f8cc159f6f21b6170c3d3195df616a1aa567348` (PR #11 squashed 2026-05-28T16:06:05Z) |
 | Operator hard rules HR1..HR5 | parent DBCP §5 | restated below for reading convenience; not re-litigated here |
 | Decision source | parent DBCP §11 (D1..D11) | this record fills in the operator-must-confirm column |
 
@@ -78,7 +78,7 @@ These remain in force across all gates spawned from this decision record:
 
 | Assertion | Status |
 |---|---|
-| No bc-core source edits | ✓ — this record is bc-docs-v3 only |
+| No bc-core source edits | ✓ — this record is bc-docs only |
 | No DDL applied | ✓ |
 | No DML applied | ✓ |
 | No M11 / M12 / M12.5 / M13 / M14 invocation | ✓ |
@@ -92,9 +92,9 @@ These remain in force across all gates spawned from this decision record:
 
 ## 8. Cross-references
 
-- Parent DBCP: `docs/implementation/bcf-mcf-evidence-boundary-and-contract-schema-retirement-dbcp.md` (bc-docs-v3 main `6f8cc15`)
+- Parent DBCP: `docs/implementation/bcf-mcf-evidence-boundary-and-contract-schema-retirement-dbcp.md` (bc-docs main `6f8cc15`)
 - Next planning gate: `docs/implementation/bcf-evidence-schema-phase-a1-dbcp.md` (authored alongside this record; same PR)
-- Predecessor cleanup DBCP (smoke debt): `docs/implementation/bcf-authoring-test-row-cleanup-dbcp.md` (bc-docs-v3 main `0f42662`)
+- Predecessor cleanup DBCP (smoke debt): `docs/implementation/bcf-authoring-test-row-cleanup-dbcp.md` (bc-docs main `0f42662`)
 - Implementing PR (paused apply gate): bc-core PR #133 (`bcf-authoring-test-row-cleanup-pr1-dry-run`, HEAD `d00a34b7`)
 - M5 substrate DBCP: `docs/implementation/metric-context-framework-m5-panel-substrate-dbcp.md` (D-M5-B hybrid composition decision; Phase A5 will revisit)
 - M12 panel DBCP: `docs/implementation/metric-context-framework-m12-authoring-panel-dbcp.md` (B1 review patch; Phase A5 will revisit)

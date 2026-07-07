@@ -177,4 +177,4 @@ The three-position coherence holds as long as:
 - **References MCF M0 correction commit `6ce9451`** (§1, §5.1, §5.2, §6).
 - **References BCF doctrine commit `1d7d209`** (§1, §6).
 - **References MCF build plan commit `40a9adc`** (§6 historical-docs preservation note).
-- **No code/DB/schema files changed.** Single new doc commit to bc-docs-v3 main.
+- **No code/DB/schema files changed.** Single new doc commit to bc-docs main.

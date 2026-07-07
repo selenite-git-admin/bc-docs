@@ -41,7 +41,7 @@ superseded_by:
 - ❌ No tenant DB touch
 - ❌ No DDL, no DML, no substrate mutation
 - ❌ No bc-core code change
-- ❌ No amendment to PR #29 DBCP (the PR #29 DBCP correction is the responsibility of a separate follow-up bc-docs-v3 PR per MCF-ERR-001 `target_resolution`)
+- ❌ No amendment to PR #29 DBCP (the PR #29 DBCP correction is the responsibility of a separate follow-up bc-docs PR per MCF-ERR-001 `target_resolution`)
 - ❌ No new authorization DBCP for any future M12 attempt
 - ❌ No commitment to a refined-candidate retry — refined-candidate retry is explicitly deferred behind the panel-framework calibration investigation
 - ❌ No commitment to a panel-framework code change in bc-core — the calibration follow-up is investigation scope only
@@ -50,9 +50,9 @@ superseded_by:
 
 | Anchor | Reference |
 |---|---|
-| PR #29 first-real-M12 authorization DBCP | bc-docs-v3 main `a18d6e3c` (`docs/implementation/metric-context-framework-m12-first-real-run-authorization-dbcp.md`) |
-| PR #30 errata MCF-ERR-001 | bc-docs-v3 main `3926d021` (`docs/errata/MCF-ERR-001.md`) |
-| PR #28 deferred prerequisites DBCP | bc-docs-v3 main `55bc4759` |
+| PR #29 first-real-M12 authorization DBCP | bc-docs main `a18d6e3c` (`docs/implementation/metric-context-framework-m12-first-real-run-authorization-dbcp.md`) |
+| PR #30 errata MCF-ERR-001 | bc-docs main `3926d021` (`docs/errata/MCF-ERR-001.md`) |
+| PR #28 deferred prerequisites DBCP | bc-docs main `55bc4759` |
 | PR #167 first real M11 intake row evidence | bc-core main `0e5e501d`; intake uid `4d849778-3989-4caf-8a71-7d44b782d98e` |
 | PR #168 first real M12 execution evidence (amended per MCF-ERR-001) | bc-core main `16cf3781` |
 | Stance ADR | `docs/adrs/ADR-7f9597.md` (DEC-7f9597 / D423) |
@@ -124,7 +124,7 @@ Per PR #29 §8.3 + A5 (preserved by MCF-ERR-001):
 
 - Any future M12 attempt MUST use a **new `reservoir_entry_id`** (the M11 substrate uniqueness constraint is `(reservoir_name, reservoir_entry_id)`).
 - The attempt MUST be evidenced by a **new bc-core M11 intake row PR** mirroring the PR #167 pattern.
-- The attempt MUST be authorized by a **fresh bc-docs-v3 authorization DBCP** mirroring the PR #29 pattern. PR #29 is single-use; it does not authorize subsequent runs.
+- The attempt MUST be authorized by a **fresh bc-docs authorization DBCP** mirroring the PR #29 pattern. PR #29 is single-use; it does not authorize subsequent runs.
 - Additionally, per this disposition's deferment clause (§3 reason 4), **no refined-candidate retry will be initiated until the panel-framework calibration investigation (`metric-context-framework-m12-panel-framework-calibration-followup.md`) reaches a closeout state with bc-core code-change recommendations applied**, or until the operator separately and explicitly waives that deferment.
 
 ## 5. Standing gate state summary (after this disposition)
@@ -141,9 +141,9 @@ Per PR #29 §8.3 + A5 (preserved by MCF-ERR-001):
 | M13 / M14 | BLOCKED (downstream of M12.5) |
 | `mcf.metric_contract` | 0 rows |
 | `mcf.metric_contract_version` | 0 rows |
-| PR #29 DBCP amendment (per MCF-ERR-001 `target_resolution`) | NOT AUTHORED (separate follow-up bc-docs-v3 PR; out of scope for this disposition) |
+| PR #29 DBCP amendment (per MCF-ERR-001 `target_resolution`) | NOT AUTHORED (separate follow-up bc-docs PR; out of scope for this disposition) |
 | Panel-framework calibration follow-up | OPEN per `metric-context-framework-m12-panel-framework-calibration-followup.md` |
-| bc-docs-v3 main | `3926d021` (after PR #30) |
+| bc-docs main | `3926d021` (after PR #30) |
 | bc-core main | `16cf3781` (after PR #168) |
 
 ## 6. Hard rule compliance

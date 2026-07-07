@@ -25,7 +25,7 @@ governing_adrs:
   - DEC-ee6018 (bc-qa standalone repo; the technical-vulnerability and code-quality control)
   - DEC-bebaec (Chain Completeness SSOT; the platform's processing-integrity authority)
   - DEC-804874 (L-Node Verification with Semantic Family Classification; the session-close gate that consumes the chain-status verdict)
-  - DEC-3395bc (bc-docs-v3 SSOT cutover; the data-leakage-prevention surface for documentation)
+  - DEC-3395bc (bc-docs SSOT cutover; the data-leakage-prevention surface for documentation)
   - DEC-8391fd (Process audit harness driven by Gemini; the internal-audit substrate beyond ADR hygiene and code quality)
 errata_referenced: []
 v2_sources: []
@@ -66,12 +66,12 @@ The platform's information-security policy surface is operational rather than fo
 | Substrate | Form |
 |---|---|
 | `CLAUDE.md` (at the barecount-devhub repo root) | The agent-instruction policy surface; records the session protocol, the SOP compliance discipline, the dev-service management model, the AWS profile discipline, the database change protocol, the QA coding standards, and the don't-list |
-| `bc-docs-v3/outline.md` and the chapter authority axis | The documentation-authority policy: every chapter declares `authority` (`authoritative`, `reference`, `evidentiary`) and `status` (`drafting`, `reviewing`, `locked`, `superseded`, `retired`); binding force requires `authority: authoritative` plus `status: locked` |
+| `bc-docs/outline.md` and the chapter authority axis | The documentation-authority policy: every chapter declares `authority` (`authoritative`, `reference`, `evidentiary`) and `status` (`drafting`, `reviewing`, `locked`, `superseded`, `retired`); binding force requires `authority: authoritative` plus `status: locked` |
 | `DEC-ebf0b4` (the D268 Session Discipline rules) | The ten-rule policy that governs engineering session behavior; rules cover bulk-generation prohibition, cosmetic status restraint, one-then-many, checkpoint discipline, self-audit at session close, independent verification |
 
 The platform's stance: these substrates are the as-built information-security policy. Formal board-approved policy documents are queued; the operational policy substrate carries the discipline in the readiness baseline.
 
-**Governing source.** CLAUDE.md; `bc-docs-v3/outline.md`; DEC-ebf0b4.
+**Governing source.** CLAUDE.md; `bc-docs/outline.md`; DEC-ebf0b4.
 
 ## A.5.36 Compliance with Policies: The Change-Record Plan-and-Report Pair
 
@@ -167,7 +167,7 @@ ISO 27001 expects scheduled internal audits. The platform operates three interna
 
 | Surface | Form |
 |---|---|
-| `bc-docs-v3/scripts/adr-audit.js` | ADR hygiene audit per `DEC-623f8f`; checks supersession pairs, stuck-proposed status, orphan ADRs; operator-run |
+| `bc-docs/scripts/adr-audit.js` | ADR hygiene audit per `DEC-623f8f`; checks supersession pairs, stuck-proposed status, orphan ADRs; operator-run |
 | bc-qa audit harness | Code-quality audit per `DEC-ee6018`; runs the thirteen modular checks; operator-run via `devhub_qa_audit` or the CLI |
 | Audit harness per `DEC-8391fd` | Gemini-driven audit of governed sequences; persists to the `process_audit` table; operator-run via `devhub_process_audit_run` |
 
@@ -179,7 +179,7 @@ The audits are operator-run in the readiness baseline, not scheduled. ISO 27001 
 
 ISO 27001 expects a documented management-review cadence. The platform's readiness-baseline substrate is the founder cold-read on every chapter, the session-close discipline that records D268 self-audit and L-node gate verdicts, and the change-record plan-and-report pair that surfaces session-by-session learnings. A formal management-review meeting cadence is queued.
 
-**Governing source.** DEC-ebf0b4; bc-docs-v3 founder cold-read discipline.
+**Governing source.** DEC-ebf0b4; bc-docs founder cold-read discipline.
 
 ## Constraints
 
@@ -200,7 +200,7 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 | Failure | Behavior |
 |---|---|
 | Audit finds an unrecorded risk | Operator runs `devhub_risk_add` to create the row; the session change record records the discovery |
-| Audit finds an unflipped supersession pair | The ADR audit script `bc-docs-v3/scripts/adr-audit.js` flags the gap; operator amends the target ADR's frontmatter and recommits |
+| Audit finds an unflipped supersession pair | The ADR audit script `bc-docs/scripts/adr-audit.js` flags the gap; operator amends the target ADR's frontmatter and recommits |
 | Audit finds a non-conforming code path | The bc-qa audit raises the NC; the NC register tracks the lifecycle |
 | Audit finds an unaudited governed sequence | Operator runs `devhub_process_audit_run` against the session's UID |
 | Audit finds a missing change record | Operator writes the missing change record retroactively or accepts the discipline gap in the audit trail |

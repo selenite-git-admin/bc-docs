@@ -20,7 +20,7 @@ governing_adrs:
   - DEC-ebf0b4 (Session Discipline and Data Integrity Rules; threads through DevHub, Decision and Change Procedure, and Developer Experience)
   - DEC-804874 (L-Node Verification with Semantic Family Classification; the DevHub session-close gate)
   - DEC-ee6018 (bc-qa standalone repo; the Quality Assurance chapter records it)
-  - DEC-3395bc (bc-docs-v3 SSOT cutover; the Documentation System chapter records it)
+  - DEC-3395bc (bc-docs SSOT cutover; the Documentation System chapter records it)
   - DEC-b97390 (bc-admin embedded reader; the Documentation System chapter records it)
   - DEC-890417 (pm2 service supervisor; superseded; the Build and Release chapter records the as-built model)
   - DEC-1918d0 (Two-database split; the Build and Release chapter records the canonical DDL location)
@@ -68,7 +68,7 @@ Development has seven chapters: this overview plus the six chapters that follow.
 | Governance procedure | Decision and Change Procedure | Navigation entry for the ADR-first procedure, the canonical UID and D-code allocator, the ADR hygiene rules, the change-record plan-and-report pair, the D268 session-discipline rules |
 | Build cycle | Build and Release | Navigation entry for the CodeArtifact registry routing, the per-repo dev commands, the build outputs, the docker compose substrate, the canonical DDL location, the seed scripts, the as-built CI gap |
 | Quality enforcement | Quality Assurance | Navigation entry for the bc-qa repository, the audit harness, the gate-config severity matrix, the eslint-config package, the pre-commit hook, the QA NC register |
-| Documentation tooling | Documentation System | Navigation entry for the bc-docs-v3 SSOT, the bc-admin embedded reader, the bc-core JWT-served document endpoints, the sync-docs manifest builder, the data-dictionary generator, the DevHub document scanner |
+| Documentation tooling | Documentation System | Navigation entry for the bc-docs SSOT, the bc-admin embedded reader, the bc-core JWT-served document endpoints, the sync-docs manifest builder, the data-dictionary generator, the DevHub document scanner |
 | Developer-machine substrate | Developer Experience | Navigation entry for the per-repo CLAUDE.md instruction surface, the SOP catalog, the .claude harness, the worktree harness, the verification surface, the port reservation discipline, the AWS profile discipline, the database change protocol |
 
 The six groups cover the six chapters that follow without overlap. A chapter that does not fit a group is a chapter that does not belong in Development.
@@ -131,7 +131,7 @@ The matrix is navigation. Following the cell to the owning chapter produces the 
 
 | Constraint | Form |
 |---|---|
-| Single SSOT for documentation | bc-docs-v3 per `DEC-3395bc`; legacy v2 archive is read-only archive |
+| Single SSOT for documentation | bc-docs per `DEC-3395bc`; legacy v2 archive is read-only archive |
 | ADR-first | Every architectural decision lands as an ADR file before code changes per `DEC-a4e550` |
 | Single QA authority | bc-qa per `DEC-ee6018`; no platform repo defines its own rule set |
 | Single MCP harness | `barecount-devhub/.claude/settings.json` is the master MCP registration |
@@ -157,7 +157,7 @@ The Development section rests on the ADRs below. Each row carries the bounded sc
 | DEC-ebf0b4 | Session Discipline and Data Integrity Rules | Governs the Decision and Change Procedure chapter and threads through DevHub and Developer Experience |
 | DEC-804874 | L-Node Verification with Semantic Family Classification | Governs the DevHub session-close gate and the Decision and Change Procedure override discipline |
 | DEC-ee6018 | bc-qa standalone repo | Governs the Quality Assurance chapter; bc-qa is the platform's QA authority |
-| DEC-3395bc | bc-docs-v3 SSOT cutover | Governs the Documentation System chapter; bc-docs-v3 is the documentation source of truth |
+| DEC-3395bc | bc-docs SSOT cutover | Governs the Documentation System chapter; bc-docs is the documentation source of truth |
 | DEC-b97390 | bc-admin embedded reader | Governs the Documentation System chapter; the bc-admin reader is canonical |
 | DEC-890417 | pm2 service supervisor (superseded) | Governs the Build and Release chapter; the as-built model starts each service independently |
 | DEC-1918d0 | Two-database split | Governs the Build and Release chapter (canonical DDL location); threads through Developer Experience (database change protocol) |
@@ -188,10 +188,10 @@ This overview routes governance to the owning chapter. The bounded scope languag
 - DEC-ebf0b4 (Session Discipline and Data Integrity Rules)
 - DEC-804874 (L-Node Verification with Semantic Family Classification)
 - DEC-ee6018 (bc-qa standalone repo)
-- DEC-3395bc (bc-docs-v3 SSOT cutover)
+- DEC-3395bc (bc-docs SSOT cutover)
 - DEC-b97390 (bc-admin embedded reader)
 - DEC-890417 (pm2 service supervisor; superseded)
 - DEC-1918d0 (Two-database split)
 - DEC-e50b83 (Port reservation)
-- bc-docs-v3 outline.md (section structure)
-- bc-docs-v3 HANDOFF.md (current drafting state)
+- bc-docs outline.md (section structure)
+- bc-docs HANDOFF.md (current drafting state)

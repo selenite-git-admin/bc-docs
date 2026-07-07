@@ -795,7 +795,7 @@ A0 + A0.5 are complete. Both arithmetic blockers are resolved. **A1–A5 program
 
 ## 21. A1–A5 program authorization recorded (2026-06-24)
 
-> **Status update.** Operator authorized recording of A1–A5 on 2026-06-24 with the instruction "Proceed to record A1–A5 program approval for the BCF × OAGIS broad foundation buildout." The recording is captured below; the canonical governance record is **[DEC-f94895 / D452](../../../governance/adrs/ADR-f94895.md)**; the substrate-of-record is the retry ledger header at `bcf-oagis-retry-ledger-2026-06-24.md` with `program_authorization: active`.
+> **Status update.** Operator authorized recording of A1–A5 on 2026-06-24 with the instruction "Proceed to record A1–A5 program approval for the BCF × OAGIS broad foundation buildout." The recording is captured below; the canonical governance record is **[DEC-f94895 / D452](../adrs/ADR-f94895.md)**; the substrate-of-record is the retry ledger header at `bcf-oagis-retry-ledger-2026-06-24.md` with `program_authorization: active`.
 
 ### 21.1 What was recorded
 

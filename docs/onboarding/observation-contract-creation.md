@@ -14,7 +14,7 @@ governing_adrs:
   - DEC-d72560 (D301 Two-vocabulary model; OC operates in source-side BF vocabulary)
   - DEC-9d1f4b (D327 Shared dimension normalization across the chain)
 governing_sops:
-  - legacy-v2/docs/sops/oc-creation-sop.md
+  - legacy-v2-archive/docs/sops/oc-creation-sop.md
 errata_referenced: []
 v2_sources:
   - sops/oc-creation-sop.md
@@ -258,10 +258,32 @@ The triage uses signals: multi-tenant demand, frequency of appearance in Source 
 
 **Governing source.** Source and Admission Contract Creation; Business Field and Business Object Onboarding; Canonical Contract Creation; Reader Creation.
 
+## Sign Indicator Pattern (Unsigned Source Tables)
+
+Some source tables store amounts unsigned, with a separate indicator field carrying the debit/credit direction (e.g. SAP ECC sub-ledger tables BSID/BSAD/BSIK/BSAK use `SHKZG` where `S` = debit, `H` = credit). When the OC maps such a table, the indicator field is declared with a special role so the CCv2 resolver can apply sign correction at the canonical boundary.
+
+The OC field_mapping entry for the indicator field uses:
+
+| Property | Value |
+|---|---|
+| `role` | `sign_indicator` |
+| `transform` | `direct` |
+| `transform_params` | `{ "credit_value": "H" }` |
+| `business_concept_id` | The `debit_credit_code` concept on the grain entity |
+| `representation_term` | `code` |
+| `data_type` | `string` |
+
+The sign indicator field is **not projected** to the Canonical Object. It is resolver metadata: the CCv2 resolver reads it, and when the indicator value equals `credit_value`, negates all `representation_term: "amount"` value fields in the CO payload. This satisfies Invariant I (meaning evaluated once at the canonical boundary) — the metric layer receives correctly-signed amounts and does not need to know about source-system sign conventions.
+
+Source tables that store signed amounts (e.g. SAP ACDOCA Universal Journal with `HSL`/`TSL`) do not declare a sign_indicator mapping. The resolver passes amounts through as-is.
+
+**Governing source.** [SAP ECC — §10 Sign Handling](../reference/source-systems/sap-ecc.md); The Contract Grammar; Canonical Contract Creation.
+
 ## Drift Inventory
 
 | Drift item | Form |
 |---|---|
+| OC v1 to v2 schema migration | The chapter describes `barecount/observation/v1` with `business_field_code`. The platform has migrated to `barecount/observation/v2` which uses `business_concept_id` (BCF concept identity), `representation_term`, `role`, `transform`, and `transform_params`. A full chapter rewrite for v2 is pending |
 | AI-assisted mapping confidence calibration drifts over time | Source-system field metadata changes; the AI's suggestion confidence reflects the metadata at suggestion time. A re-suggestion after a Seed Catalog enrichment may produce different scores |
 | Backflow into the alias table is one-directional | Alias rows tagged `confirmed` are the OC's confirmation trail. Aliases tagged `dictionary` (from prior bulk migrations) are not upgraded to `confirmed` until an OC explicitly confirms them |
 | Z-field discovery is reactive | The Reader reports Z-fields when it sees them at runtime. A tenant whose Reader never executes against a particular table never reports Z-fields for that table; the discovery surface is event-driven, not exhaustive |
@@ -277,7 +299,7 @@ The triage uses signals: multi-tenant demand, frequency of appearance in Source 
 | DEC-d72560 | Establishes the two-vocabulary model; the OC operates in source-side BF vocabulary only |
 | DEC-9d1f4b | Establishes shared dimension normalization; this chapter records the OC's freedom to use either the shared name or a BO-scoped variant for shared dimensions, with the CC normalizing on the CC side |
 
-The OC family-level governance (CR-OC-001 through CR-OC-011, twelve quality checks at CR-QG-OC-001, AI confidence routing at CR-QG-OC-002) is recorded in `legacy-v2/docs/sops/oc-creation-sop.md` and in `legacy-v2/docs/system/foundation/contract-requirements-v1.md`. New ADR files for the family-level rules may be filed if the policies are restated outside the v2 location.
+The OC family-level governance (CR-OC-001 through CR-OC-011, twelve quality checks at CR-QG-OC-001, AI confidence routing at CR-QG-OC-002) is recorded in `legacy-v2-archive/docs/sops/oc-creation-sop.md` and in `legacy-v2-archive/docs/system/foundation/contract-requirements-v1.md`. New ADR files for the family-level rules may be filed if the policies are restated outside the v2 location.
 
 **Governing source.** Decisions: ADR Registry.
 
@@ -303,7 +325,7 @@ The OC family-level governance (CR-OC-001 through CR-OC-011, twelve quality chec
 - API Surface
 - DEC-d72560: Canonical Field as 3rd contract primitive (two-vocabulary model)
 - DEC-9d1f4b: Shared dimension normalization
-- legacy-v2/docs/sops/oc-creation-sop.md (predecessor SOP)
+- legacy-v2-archive/docs/sops/oc-creation-sop.md (predecessor SOP)
 - outline.md §4.6: Onboarding
 
 

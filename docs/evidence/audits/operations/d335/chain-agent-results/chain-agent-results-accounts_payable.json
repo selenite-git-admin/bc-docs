@@ -1,0 +1,1679 @@
+{
+  "subfunction": "accounts_payable",
+  "boMappings": {
+    "invoice_hdr": {
+      "total_benefits_from_automation": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "ap_automation_technology_cost": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_ap_department_cost": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_company_spend": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_documents_required": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "baseline_ap_operating_cost": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "post_improvement_ap_operating_cost": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "full_time_equivalent_ap_staff": {
+        "bfName": "invoice_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_purchases": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "On-time Payment Rate": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "Weight for On-time Payment Rate": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_cost_of_invoice_disputes": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoice_disputes_count": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoice_line_items_approved_by_blanket_code_count": {
+        "bfName": "invoice_hdr_payment_status_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "medium"
+      },
+      "extended_payment_terms_benefit": {
+        "bfName": "invoice_hdr_payment_terms_code",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "total_ap_operating_cost": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_credit_notes_processed": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "error_resolution_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "error_identification_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "discrepancy_identification_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "invoice_receipt_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_expense_reports_processed_count": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_company_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "million_revenue_divisor": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "first_time_matched_invoice_line_items_count": {
+        "bfName": "invoice_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "upcoming_due_dates": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "total_time_to_process_intercompany_transactions": {
+        "bfName": "invoice_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_internal_ap_query_resolution_duration_days": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_internal_ap_queries_resolved_count": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoice_approval_duration_days": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_invoice_data_entry_duration_hours": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "hours_to_days_conversion_factor": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_invoice_disputes_resolved_count": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoice_error_resolution_duration_days": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_invoice_errors_resolved_count": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoice_exception_resolution_duration_working_days": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_invoice_exceptions_resolved_count": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_purchases_value": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoice_processing_duration_days": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "invoices_without_purchase_order": {
+        "bfName": "invoice_hdr_purchase_order_reference",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "total_overdue_accounts_payable_balance": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_accounts_payable_balance": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "open_payables_item_value": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "days_1_30_bucket_threshold": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "days_31_60_bucket_threshold": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "days_61_90_bucket_threshold": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "days_90_plus_bucket_threshold": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_payment_value": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoices_paid_on_time": {
+        "bfName": "invoice_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_invoices_due": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_payment_proposals_due": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "payments_made_on_time_no_late_fees": {
+        "bfName": "invoice_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_payments_due": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "purchase_orders_error_free_first_time": {
+        "bfName": "invoice_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_purchase_orders_processed": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoice_processing_volume": {
+        "bfName": "invoice_hdr_net_volume_measure",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "invoice_exception_rate": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "vendor_payment_terms": {
+        "bfName": "invoice_hdr_payment_terms_code",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "invoice_pipeline_value": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "payment_transmission_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "payment_due_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "actual_payment_date": {
+        "bfName": "invoice_hdr_actual_delivery_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_supplier_risk_assessments": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "reporting_period_in_months": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_cash_advances_for_te": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_te_expenditures": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_te_disbursements": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "reimbursement_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "expense_report_submission_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_invoices_requiring_3_way_match": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_trade_payables": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_non_trade_payables": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_spend_with_top_n_vendors": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_ap_spend": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_available_vendor_credit_limit": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_vendor_inquiries": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_survey_responses": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "bc_ap_operations": {
+      "software_license_fees": {
+        "bfName": "bc_ap_ops_software_license_fees",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "implementation_and_integration_costs": {
+        "bfName": "bc_ap_ops_sum_of_all_processed_invoices_and_payments",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "training_and_support_costs": {
+        "bfName": "bc_ap_ops_sum_of_all_processed_invoices_and_payments",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "hardware_and_infrastructure_costs": {
+        "bfName": "bc_ap_ops_sum_of_all_processed_invoices_and_payments",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "reconciled_ap_accounts_count": {
+        "bfName": "bc_ap_ops_reconciled_ap_accounts_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_ap_accounts_count": {
+        "bfName": "bc_ap_ops_reconciled_ap_accounts_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_compliant_documents": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "blocked_invoices": {
+        "bfName": "bc_ap_ops_blocked_invoices",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "original_payment_terms_cost": {
+        "bfName": "bc_ap_ops_discount_terms",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "negotiated_payment_terms_cost": {
+        "bfName": "bc_ap_ops_discount_terms",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoices_processed": {
+        "bfName": "bc_ap_ops_sum_of_all_processed_invoices_and_payments",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "compliant_tax_transactions_count": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_tax_transactions_audited_count": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "invoices_selected_for_audit_count": {
+        "bfName": "bc_ap_ops_invoices_selected_for_audit_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoices_processed_count": {
+        "bfName": "bc_ap_ops_electronic_approved_invoices_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoices_auto_matched_count": {
+        "bfName": "bc_ap_ops_invoices_auto_matched_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoice_line_items_auto_settled_count": {
+        "bfName": "bc_ap_ops_invoice_line_items_auto_settled_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_invoice_line_items_eligible_count": {
+        "bfName": "bc_ap_ops_edi_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_invoice_line_items_eligible_for_blanket_code_count": {
+        "bfName": "bc_ap_ops_edi_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "sum_of_all_blocked_invoices_value": {
+        "bfName": "bc_ap_ops_sum_of_all_outstanding_invoices",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "early_payment_discount_captured_value": {
+        "bfName": "bc_ap_ops_early_payment_discounts_missed",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "late_payment_penalties_incurred": {
+        "bfName": "bc_ap_ops_late_payment_penalties_incurred",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoice_line_items_with_discount_count": {
+        "bfName": "bc_ap_ops_edi_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoice_line_items_received_count": {
+        "bfName": "bc_ap_ops_electronic_received_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "duplicate_payments_count": {
+        "bfName": "bc_ap_ops_duplicate_payments_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "erroneous_payments_count": {
+        "bfName": "bc_ap_ops_erroneous_payments_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_payments_count": {
+        "bfName": "bc_ap_ops_duplicate_payments_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_potential_duplicate_invoices_detected": {
+        "bfName": "bc_ap_ops_fraudulent_invoices_detected_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoices_received_via_e_network_count": {
+        "bfName": "bc_ap_ops_invoices_received_via_e_network_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoices_received_count": {
+        "bfName": "bc_ap_ops_invoices_received_via_e_network_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "early_payment_discounts_taken_value": {
+        "bfName": "bc_ap_ops_early_payment_discounts_missed",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_available_early_payment_discounts_value": {
+        "bfName": "bc_ap_ops_early_payment_discounts_missed",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "edi_invoice_line_items_count": {
+        "bfName": "bc_ap_ops_edi_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoice_line_items_count": {
+        "bfName": "bc_ap_ops_edi_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "electronic_disbursements_count": {
+        "bfName": "bc_ap_ops_electronic_disbursements_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_disbursements_count": {
+        "bfName": "bc_ap_ops_electronic_disbursements_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "electronic_approved_invoices_count": {
+        "bfName": "bc_ap_ops_electronic_approved_invoices_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoices_approved_count": {
+        "bfName": "bc_ap_ops_electronic_approved_invoices_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "electronic_received_invoice_line_items_count": {
+        "bfName": "bc_ap_ops_electronic_received_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "electronic_submitted_invoices_count": {
+        "bfName": "bc_ap_ops_electronic_submitted_invoices_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "electronic_payments_count": {
+        "bfName": "bc_ap_ops_electronic_payments_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "error_free_disbursements_count": {
+        "bfName": "bc_ap_ops_error_free_disbursements_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoices_with_errors_count": {
+        "bfName": "bc_ap_ops_invoices_with_errors_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "error_free_expense_reports_count": {
+        "bfName": "bc_ap_ops_error_free_disbursements_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "exception_expense_report_line_items_count": {
+        "bfName": "bc_ap_ops_edi_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_expense_report_line_items_count": {
+        "bfName": "bc_ap_ops_edi_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_invoice_line_items_requiring_match_count": {
+        "bfName": "bc_ap_ops_edi_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "discount_terms": {
+        "bfName": "bc_ap_ops_discount_terms",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "cash_availability": {
+        "bfName": "bc_ap_ops_cash_availability",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "fraudulent_transactions_detected_count": {
+        "bfName": "bc_ap_ops_fraudulent_transactions_detected_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_fraudulent_transactions_attempted_count": {
+        "bfName": "bc_ap_ops_fraudulent_transactions_detected_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "goods_received_value": {
+        "bfName": "bc_ap_ops_electronic_received_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoices_received_value": {
+        "bfName": "bc_ap_ops_invoices_received_via_e_network_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_intercompany_transactions": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_invoices_data_entered_count": {
+        "bfName": "bc_ap_ops_electronic_approved_invoices_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "fraudulent_invoices_detected_count": {
+        "bfName": "bc_ap_ops_fraudulent_invoices_detected_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoice_line_items_processed_count": {
+        "bfName": "bc_ap_ops_edi_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "thousand_purchases_divisor": {
+        "bfName": "bc_ap_ops_thousand_purchases_divisor",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_payables_invoices_processed_count": {
+        "bfName": "bc_ap_ops_electronic_approved_invoices_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoices_processed_in_month_count": {
+        "bfName": "bc_ap_ops_electronic_approved_invoices_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoices_with_early_payment_incentive": {
+        "bfName": "bc_ap_ops_invoices_with_early_payment_incentive",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "manual_keyed_invoice_line_items": {
+        "bfName": "bc_ap_ops_manual_keyed_invoice_line_items",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "manual_payments_count": {
+        "bfName": "bc_ap_ops_manual_payments_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "urgent_payments_outside_run": {
+        "bfName": "bc_ap_ops_urgent_payments_outside_run",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "early_payment_discounts_missed": {
+        "bfName": "bc_ap_ops_early_payment_discounts_missed",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_available_early_payment_discounts": {
+        "bfName": "bc_ap_ops_early_payment_discounts_missed",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_vendor_invoices_received": {
+        "bfName": "bc_ap_ops_invoices_received_via_e_network_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoices_captured_by_ocr": {
+        "bfName": "bc_ap_ops_invoices_captured_by_ocr",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_supplier_invoices_processed": {
+        "bfName": "bc_ap_ops_sum_of_all_processed_invoices_and_payments",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoice_line_items_approved_non_standard": {
+        "bfName": "bc_ap_ops_invoice_line_items_approved_non_standard",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "electronic_invoices_processed": {
+        "bfName": "bc_ap_ops_electronic_invoices_processed",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "current_bucket_threshold": {
+        "bfName": "bc_ap_ops_current_bucket_threshold",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "error_free_payments_count": {
+        "bfName": "bc_ap_ops_error_free_payments_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "ach_payment_value": {
+        "bfName": "bc_ap_ops_early_payment_discounts_missed",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "checks_payment_value": {
+        "bfName": "bc_ap_ops_early_payment_discounts_missed",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "wire_payment_value": {
+        "bfName": "bc_ap_ops_early_payment_discounts_missed",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "card_payment_value": {
+        "bfName": "bc_ap_ops_early_payment_discounts_missed",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "payment_proposals_generated_on_schedule": {
+        "bfName": "bc_ap_ops_early_payment_discounts_missed",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "invoice_line_items_approved_via_pcard": {
+        "bfName": "bc_ap_ops_invoice_line_items_approved_via_pcard",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "po_invoices_reconciled_without_discrepancies": {
+        "bfName": "bc_ap_ops_po_invoices_reconciled_without_discrepancies",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_po_invoices_processed": {
+        "bfName": "bc_ap_ops_sum_of_all_processed_invoices_and_payments",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoice_line_items_matched_to_po": {
+        "bfName": "bc_ap_ops_invoice_line_items_matched_to_po",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "invoices_received_via_portal_or_upload": {
+        "bfName": "bc_ap_ops_invoices_received_via_portal_or_upload",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_invoices_received": {
+        "bfName": "bc_ap_ops_invoices_received_via_e_network_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "ap_staffing_level": {
+        "bfName": "bc_ap_ops_ap_staffing_level",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "ap_aging_schedule": {
+        "bfName": "bc_ap_ops_ap_aging_schedule",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "historical_payment_history": {
+        "bfName": "bc_ap_ops_historical_payment_history",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "current_dpo": {
+        "bfName": "bc_ap_ops_current_dpo",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "recurring_payments_count": {
+        "bfName": "bc_ap_ops_recurring_payments_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoices_correct_on_first_submission": {
+        "bfName": "bc_ap_ops_invoices_correct_on_first_submission",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_supplier_invoices_received": {
+        "bfName": "bc_ap_ops_invoices_received_via_e_network_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoice_line_items_entered_by_scanning": {
+        "bfName": "bc_ap_ops_invoice_line_items_entered_by_scanning",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "supplier_invoices_requiring_physical_scanning": {
+        "bfName": "bc_ap_ops_supplier_invoices_requiring_physical_scanning",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "self_billing_invoices_count": {
+        "bfName": "bc_ap_ops_self_billing_invoices_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cash_flow_optimization_targets": {
+        "bfName": "bc_ap_ops_cash_flow_optimization_targets",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "expense_reimbursement_fte_count": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "sum_weighted_performance_metrics": {
+        "bfName": "bc_ap_ops_sum_weighted_performance_metrics",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_performance_metrics": {
+        "bfName": "bc_ap_ops_sum_weighted_performance_metrics",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "invoice_line_items_approved_by_3_way_match": {
+        "bfName": "bc_ap_ops_invoice_line_items_approved_by_2_way_match",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "invoices_failing_3_way_match": {
+        "bfName": "bc_ap_ops_invoices_failing_3_way_match",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "sum_of_all_outstanding_invoices": {
+        "bfName": "bc_ap_ops_sum_of_all_outstanding_invoices",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "sum_of_all_processed_invoices_and_payments": {
+        "bfName": "bc_ap_ops_sum_of_all_processed_invoices_and_payments",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "invoice_line_items_approved_by_2_way_match": {
+        "bfName": "bc_ap_ops_invoice_line_items_approved_by_2_way_match",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "sum_weighted_dependability_metric_scores": {
+        "bfName": "bc_ap_ops_sum_weighted_dependability_metric_scores",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "sum_of_weights": {
+        "bfName": "bc_ap_ops_sum_of_weights",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "self_service_resolved_inquiries": {
+        "bfName": "bc_ap_ops_self_service_resolved_inquiries",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "completeness_score": {
+        "bfName": "bc_ap_ops_completeness_score",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "accuracy_score": {
+        "bfName": "bc_ap_ops_accuracy_score",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "currency_score": {
+        "bfName": "bc_ap_ops_currency_score",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "weight_completeness": {
+        "bfName": "bc_ap_ops_weight_completeness",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "weight_accuracy": {
+        "bfName": "bc_ap_ops_weight_accuracy",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "weight_currency": {
+        "bfName": "bc_ap_ops_weight_currency",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "payment_concentration": {
+        "bfName": "bc_ap_ops_early_payment_discounts_missed",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "delivery_history_score": {
+        "bfName": "bc_ap_ops_delivery_history_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "external_signals_score": {
+        "bfName": "bc_ap_ops_external_signals_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "sum_vendor_satisfaction_survey_scores": {
+        "bfName": "bc_ap_ops_sum_vendor_satisfaction_survey_scores",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "vmi_approved_invoice_line_items": {
+        "bfName": "bc_ap_ops_vmi_approved_invoice_line_items",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_vmi_invoice_line_items": {
+        "bfName": "bc_ap_ops_edi_invoice_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "payable_hdr": {
+      "average_accounts_payable_balance": {
+        "bfName": "payable_hdr_net_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "transaction_amount": {
+        "bfName": "payable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "current_accounts_payable_balance": {
+        "bfName": "payable_hdr_net_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "actual_ledger": {
+      "accounts_payable_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cost_of_goods_sold": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "invoice_line": {
+      "total_invoice_line_items": {
+        "bfName": "invoice_line_sub_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_invoice_line_items_approved": {
+        "bfName": "invoice_line_sub_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_invoice_line_items_requiring_3_way_match": {
+        "bfName": "invoice_line_sub_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_invoice_line_items_requiring_2_way_match": {
+        "bfName": "invoice_line_sub_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    }
+  },
+  "ccResults": {
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr",
+      "mappingsAdded": 0
+    },
+    "bc_ap_operations": {
+      "exists": true,
+      "contractId": "019d7661-63a3-7a61-9792-c9c6deb988f6",
+      "name": "cc__bc_ap_operations",
+      "mappingsAdded": 111
+    },
+    "payable_hdr": {
+      "exists": true,
+      "contractId": "019d765f-10c7-730c-91bd-251a9e4741a4",
+      "name": "cc__payable_hdr",
+      "mappingsAdded": 0
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 0
+    },
+    "invoice_line": {
+      "exists": true,
+      "contractId": "019d7650-e4f6-7dcf-9e3d-51bd9e9edf32",
+      "name": "cc__invoice_line",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "ap_automation_roi",
+      "status": "exists",
+      "name": "mc__ap_automation_roi"
+    },
+    {
+      "metric": "ap_automation_technology_cost",
+      "status": "created",
+      "name": "mc__ap_automation_technology_cost",
+      "coBindings": 2
+    },
+    {
+      "metric": "ap_balance_sheet_reconciliation_completeness",
+      "status": "created",
+      "name": "mc__ap_balance_sheet_reconciliation_completeness",
+      "coBindings": 2
+    },
+    {
+      "metric": "ap_cost_as_pct_of_spend",
+      "status": "exists",
+      "name": "mc__ap_cost_as_pct_of_spend"
+    },
+    {
+      "metric": "ap_document_retention_compliance",
+      "status": "exists",
+      "name": "mc__ap_document_retention_compliance"
+    },
+    {
+      "metric": "ap_hold_reasons_distribution",
+      "status": "created",
+      "name": "mc__ap_hold_reasons_distribution",
+      "coBindings": 1
+    },
+    {
+      "metric": "ap_negotiation_cost_savings",
+      "status": "exists",
+      "name": "mc__ap_negotiation_cost_savings"
+    },
+    {
+      "metric": "ap_process_improvement_savings",
+      "status": "exists",
+      "name": "mc__ap_process_improvement_savings"
+    },
+    {
+      "metric": "ap_staff_productivity",
+      "status": "exists",
+      "name": "mc__ap_staff_productivity"
+    },
+    {
+      "metric": "ap_tax_compliance_rate",
+      "status": "created",
+      "name": "mc__ap_tax_compliance_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "ap_turnover_ratio",
+      "status": "exists",
+      "name": "mc__ap_turnover_ratio"
+    },
+    {
+      "metric": "ap_working_capital_optimization_index",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "audited_invoice_pct",
+      "status": "created",
+      "name": "mc__audited_invoice_pct",
+      "coBindings": 2
+    },
+    {
+      "metric": "auto_matched_invoice_pct",
+      "status": "created",
+      "name": "mc__auto_matched_invoice_pct",
+      "coBindings": 2
+    },
+    {
+      "metric": "auto_receipt_settlement_rate",
+      "status": "created",
+      "name": "mc__auto_receipt_settlement_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "average_invoice_dispute_cost",
+      "status": "exists",
+      "name": "mc__average_invoice_dispute_cost"
+    },
+    {
+      "metric": "blanket_code_approval_rate",
+      "status": "exists",
+      "name": "mc__blanket_code_approval_rate"
+    },
+    {
+      "metric": "blocked_invoices_value",
+      "status": "exists",
+      "name": "mc__blocked_invoices_value"
+    },
+    {
+      "metric": "cash_flow_impact_from_ap",
+      "status": "created",
+      "name": "mc__cash_flow_impact_from_ap",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_per_invoice_processed",
+      "status": "exists",
+      "name": "mc__cost_per_invoice_processed"
+    },
+    {
+      "metric": "credit_notes_processed_count",
+      "status": "exists",
+      "name": "mc__credit_notes_processed_count"
+    },
+    {
+      "metric": "cross_functional_ap_integration_score",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "disbursement_error_resolution_time",
+      "status": "exists",
+      "name": "mc__disbursement_error_resolution_time"
+    },
+    {
+      "metric": "discount_offering_invoice_rate",
+      "status": "exists",
+      "name": "mc__discount_offering_invoice_rate"
+    },
+    {
+      "metric": "discrepancy_identification_time",
+      "status": "exists",
+      "name": "mc__discrepancy_identification_time"
+    },
+    {
+      "metric": "dpo",
+      "status": "exists",
+      "name": "mc__dpo"
+    },
+    {
+      "metric": "duplicate_erroneous_payment_rate",
+      "status": "created",
+      "name": "mc__duplicate_erroneous_payment_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "duplicate_invoice_detection_count",
+      "status": "exists",
+      "name": "mc__duplicate_invoice_detection_count"
+    },
+    {
+      "metric": "duplicate_payment_rate",
+      "status": "created",
+      "name": "mc__duplicate_payment_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "e_invoicing_network_receipt_rate",
+      "status": "created",
+      "name": "mc__e_invoicing_network_receipt_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "early_payment_discount_capture_rate",
+      "status": "exists",
+      "name": "mc__early_payment_discount_capture_rate"
+    },
+    {
+      "metric": "edi_invoice_rate",
+      "status": "created",
+      "name": "mc__edi_invoice_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "electronic_disbursement_rate",
+      "status": "created",
+      "name": "mc__electronic_disbursement_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "electronic_invoice_approval_rate",
+      "status": "created",
+      "name": "mc__electronic_invoice_approval_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "electronic_invoice_receipt_rate",
+      "status": "created",
+      "name": "mc__electronic_invoice_receipt_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "electronic_invoice_submission_rate",
+      "status": "created",
+      "name": "mc__electronic_invoice_submission_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "electronic_payment_rate",
+      "status": "created",
+      "name": "mc__electronic_payment_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "error_free_disbursement_rate",
+      "status": "created",
+      "name": "mc__error_free_disbursement_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "error_rate_in_invoicing",
+      "status": "created",
+      "name": "mc__error_rate_in_invoicing",
+      "coBindings": 2
+    },
+    {
+      "metric": "expense_report_error_free_rate",
+      "status": "exists",
+      "name": "mc__expense_report_error_free_rate"
+    },
+    {
+      "metric": "expense_report_exception_line_item_pct",
+      "status": "exists",
+      "name": "mc__expense_report_exception_line_item_pct"
+    },
+    {
+      "metric": "expense_reports_per_million_revenue",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "first_time_match_rate",
+      "status": "exists",
+      "name": "mc__first_time_match_rate"
+    },
+    {
+      "metric": "forecasted_discount_opportunity",
+      "status": "created",
+      "name": "mc__forecasted_discount_opportunity",
+      "coBindings": 2
+    },
+    {
+      "metric": "fraud_detection_rate",
+      "status": "created",
+      "name": "mc__fraud_detection_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "gr_ir_imbalance",
+      "status": "exists",
+      "name": "mc__gr_ir_imbalance"
+    },
+    {
+      "metric": "intercompany_billing_efficiency",
+      "status": "exists",
+      "name": "mc__intercompany_billing_efficiency"
+    },
+    {
+      "metric": "internal_ap_query_resolution_time",
+      "status": "exists",
+      "name": "mc__internal_ap_query_resolution_time"
+    },
+    {
+      "metric": "invoice_approval_cycle_time",
+      "status": "exists",
+      "name": "mc__invoice_approval_cycle_time"
+    },
+    {
+      "metric": "invoice_data_entry_cycle_time",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "invoice_dispute_resolution_count",
+      "status": "exists",
+      "name": "mc__invoice_dispute_resolution_count"
+    },
+    {
+      "metric": "invoice_error_resolution_time",
+      "status": "exists",
+      "name": "mc__invoice_error_resolution_time"
+    },
+    {
+      "metric": "invoice_exception_resolution_time",
+      "status": "exists",
+      "name": "mc__invoice_exception_resolution_time"
+    },
+    {
+      "metric": "invoice_fraud_detection_rate",
+      "status": "created",
+      "name": "mc__invoice_fraud_detection_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "invoice_line_items_per_invoice",
+      "status": "exists",
+      "name": "mc__invoice_line_items_per_invoice"
+    },
+    {
+      "metric": "invoice_line_items_per_million_revenue",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "invoice_line_items_per_thousand_purchases",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "invoice_processing_cycle_time",
+      "status": "exists",
+      "name": "mc__invoice_processing_cycle_time"
+    },
+    {
+      "metric": "invoices_per_million_revenue",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "invoices_processed_per_month",
+      "status": "exists",
+      "name": "mc__invoices_processed_per_month"
+    },
+    {
+      "metric": "invoices_with_early_payment_incentive_pct",
+      "status": "created",
+      "name": "mc__invoices_with_early_payment_incentive_pct",
+      "coBindings": 2
+    },
+    {
+      "metric": "manual_keyed_invoice_rate",
+      "status": "created",
+      "name": "mc__manual_keyed_invoice_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "manual_payment_rate",
+      "status": "created",
+      "name": "mc__manual_payment_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "manual_urgent_payment_share",
+      "status": "created",
+      "name": "mc__manual_urgent_payment_share",
+      "coBindings": 2
+    },
+    {
+      "metric": "missed_discount_pct",
+      "status": "created",
+      "name": "mc__missed_discount_pct",
+      "coBindings": 2
+    },
+    {
+      "metric": "no_po_invoice_rate",
+      "status": "exists",
+      "name": "mc__no_po_invoice_rate"
+    },
+    {
+      "metric": "ocr_invoice_capture_rate",
+      "status": "created",
+      "name": "mc__ocr_invoice_capture_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "other_approval_method_rate",
+      "status": "created",
+      "name": "mc__other_approval_method_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "overdue_payables_pct",
+      "status": "exists",
+      "name": "mc__overdue_payables_pct"
+    },
+    {
+      "metric": "paperless_invoice_pct",
+      "status": "created",
+      "name": "mc__paperless_invoice_pct",
+      "coBindings": 2
+    },
+    {
+      "metric": "payables_aging_distribution",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "payment_accuracy_rate",
+      "status": "created",
+      "name": "mc__payment_accuracy_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "payment_method_distribution",
+      "status": "exists",
+      "name": "mc__payment_method_distribution"
+    },
+    {
+      "metric": "payment_on_time_rate",
+      "status": "exists",
+      "name": "mc__payment_on_time_rate"
+    },
+    {
+      "metric": "payment_proposal_timeliness_pct",
+      "status": "exists",
+      "name": "mc__payment_proposal_timeliness_pct"
+    },
+    {
+      "metric": "payment_timeliness_pct",
+      "status": "exists",
+      "name": "mc__payment_timeliness_pct"
+    },
+    {
+      "metric": "pcard_approval_rate",
+      "status": "created",
+      "name": "mc__pcard_approval_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "po_first_time_error_free_rate",
+      "status": "exists",
+      "name": "mc__po_first_time_error_free_rate"
+    },
+    {
+      "metric": "po_invoice_reconciliation_rate",
+      "status": "created",
+      "name": "mc__po_invoice_reconciliation_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "po_match_rate",
+      "status": "created",
+      "name": "mc__po_match_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "portal_upload_invoice_rate",
+      "status": "created",
+      "name": "mc__portal_upload_invoice_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "predicted_ap_cycle_time",
+      "status": "created",
+      "name": "mc__predicted_ap_cycle_time",
+      "coBindings": 2
+    },
+    {
+      "metric": "predicted_cash_outflow",
+      "status": "created",
+      "name": "mc__predicted_cash_outflow",
+      "coBindings": 2
+    },
+    {
+      "metric": "projected_dpo_month_end",
+      "status": "created",
+      "name": "mc__projected_dpo_month_end",
+      "coBindings": 2
+    },
+    {
+      "metric": "receipt_to_payment_cycle_time",
+      "status": "exists",
+      "name": "mc__receipt_to_payment_cycle_time"
+    },
+    {
+      "metric": "recurring_payment_pct",
+      "status": "created",
+      "name": "mc__recurring_payment_pct",
+      "coBindings": 2
+    },
+    {
+      "metric": "right_first_time_invoice_rate",
+      "status": "created",
+      "name": "mc__right_first_time_invoice_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "scanned_invoice_rate",
+      "status": "created",
+      "name": "mc__scanned_invoice_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "scanning_required_invoice_rate",
+      "status": "created",
+      "name": "mc__scanning_required_invoice_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "self_billing_invoice_rate",
+      "status": "created",
+      "name": "mc__self_billing_invoice_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "spend_by_vendor_category",
+      "status": "exists",
+      "name": "mc__spend_by_vendor_category"
+    },
+    {
+      "metric": "strategic_payment_timing_score",
+      "status": "created",
+      "name": "mc__strategic_payment_timing_score",
+      "coBindings": 2
+    },
+    {
+      "metric": "supplier_risk_assessment_frequency",
+      "status": "exists",
+      "name": "mc__supplier_risk_assessment_frequency"
+    },
+    {
+      "metric": "te_cash_advance_pct",
+      "status": "exists",
+      "name": "mc__te_cash_advance_pct"
+    },
+    {
+      "metric": "te_disbursements_per_fte",
+      "status": "exists",
+      "name": "mc__te_disbursements_per_fte"
+    },
+    {
+      "metric": "te_reimbursement_cycle_time",
+      "status": "exists",
+      "name": "mc__te_reimbursement_cycle_time"
+    },
+    {
+      "metric": "third_party_ap_provider_performance",
+      "status": "created",
+      "name": "mc__third_party_ap_provider_performance",
+      "coBindings": 2
+    },
+    {
+      "metric": "three_way_match_approval_rate",
+      "status": "created",
+      "name": "mc__three_way_match_approval_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "three_way_match_exception_rate",
+      "status": "created",
+      "name": "mc__three_way_match_exception_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "total_ap_balance",
+      "status": "created",
+      "name": "mc__total_ap_balance",
+      "coBindings": 1
+    },
+    {
+      "metric": "total_ap_transactions",
+      "status": "created",
+      "name": "mc__total_ap_transactions",
+      "coBindings": 1
+    },
+    {
+      "metric": "trade_vs_non_trade_payables_ratio",
+      "status": "exists",
+      "name": "mc__trade_vs_non_trade_payables_ratio"
+    },
+    {
+      "metric": "two_way_match_approval_rate",
+      "status": "created",
+      "name": "mc__two_way_match_approval_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "vendor_concentration_risk",
+      "status": "exists",
+      "name": "mc__vendor_concentration_risk"
+    },
+    {
+      "metric": "vendor_credit_utilization",
+      "status": "exists",
+      "name": "mc__vendor_credit_utilization"
+    },
+    {
+      "metric": "vendor_dependability_score",
+      "status": "created",
+      "name": "mc__vendor_dependability_score",
+      "coBindings": 1
+    },
+    {
+      "metric": "vendor_inquiry_self_service_rate",
+      "status": "created",
+      "name": "mc__vendor_inquiry_self_service_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "vendor_master_data_quality_score",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "vendor_risk_score",
+      "status": "created",
+      "name": "mc__vendor_risk_score",
+      "coBindings": 2
+    },
+    {
+      "metric": "vendor_satisfaction_score",
+      "status": "created",
+      "name": "mc__vendor_satisfaction_score",
+      "coBindings": 2
+    },
+    {
+      "metric": "vmi_approval_rate",
+      "status": "created",
+      "name": "mc__vmi_approval_rate",
+      "coBindings": 2
+    }
+  ]
+}

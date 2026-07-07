@@ -1,0 +1,1431 @@
+{
+  "subfunction": "general_ledger",
+  "boMappings": {
+    "bc_gl_operations": {
+      "number_of_accounts_reconciled": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_standard_accounts": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "number_of_automated_accruals": {
+        "bfName": "bc_gl_ops_automated_primary_controls_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_manual_accruals": {
+        "bfName": "bc_gl_ops_manual_journal_entries_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_hybrid_accruals": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_on_budget_projects": {
+        "bfName": "bc_gl_ops_approved_capital_expenditure_budget",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_approved_capital_projects": {
+        "bfName": "bc_gl_ops_approved_capital_expenditure_budget",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_hours_spent_on_journal_entries": {
+        "bfName": "bc_gl_ops_error_free_journal_entries_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_journal_entries_processed": {
+        "bfName": "bc_gl_ops_error_free_journal_entries_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_gl_reconciliations_completed": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_capital_projects_completed": {
+        "bfName": "bc_gl_ops_actual_capital_expenditure",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_fixed_assets_capitalized": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_days_to_close_projects": {
+        "bfName": "bc_gl_ops_adjusting_entries_after_close",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_capital_projects_closed": {
+        "bfName": "bc_gl_ops_actual_capital_expenditure",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "days_to_financial_close": {
+        "bfName": "bc_gl_ops_adjusting_entries_after_close",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "task_delays_score": {
+        "bfName": "bc_gl_ops_task_delays_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "unreconciled_accounts_score": {
+        "bfName": "bc_gl_ops_unreconciled_accounts_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "pending_approvals_score": {
+        "bfName": "bc_gl_ops_pending_approvals_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "intercompany_open_items_score": {
+        "bfName": "bc_gl_ops_intercompany_open_items_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "actual_capital_expenditure": {
+        "bfName": "bc_gl_ops_actual_capital_expenditure",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "approved_capital_expenditure_budget": {
+        "bfName": "bc_gl_ops_approved_capital_expenditure_budget",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_new_control_violations_last_12_months": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_business_entity_employees": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "employee_grouping_factor": {
+        "bfName": "bc_gl_ops_employee_grouping_factor",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_previously_identified_control_violations_last_12_months": {
+        "bfName": "bc_gl_ops_identified_primary_controls_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "earnings_before_interest_taxes_depreciation_amortization": {
+        "bfName": "bc_gl_ops_earnings_before_interest_taxes_depreciation_amortization",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "accrual_accuracy": {
+        "bfName": "bc_gl_ops_accrual_accuracy",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "open_items": {
+        "bfName": "bc_gl_ops_intercompany_open_items_score",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "historical_adjustments": {
+        "bfName": "bc_gl_ops_historical_adjustments",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "it_costs_allocated_to_controls_and_risk_management": {
+        "bfName": "bc_gl_ops_automated_primary_controls_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_automated_fixed_asset_transactions": {
+        "bfName": "bc_gl_ops_automated_primary_controls_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_ftes_performing_esg_reporting_outside_esg_function": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "rent_and_utilities_administrative": {
+        "bfName": "bc_gl_ops_rent_and_utilities_administrative",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "office_supplies_and_expenses": {
+        "bfName": "bc_gl_ops_legal_and_professional_fees",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "legal_and_professional_fees": {
+        "bfName": "bc_gl_ops_legal_and_professional_fees",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_automated_gl_reconciliations": {
+        "bfName": "bc_gl_ops_automated_primary_controls_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_gl_reconciliations": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_hectares": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_units_sold": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_automatically_reconciled_intercompany_balances": {
+        "bfName": "bc_gl_ops_intercompany_open_items_score",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_intercompany_balances": {
+        "bfName": "bc_gl_ops_intercompany_open_items_score",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_fully_automated_intercompany_transactions": {
+        "bfName": "bc_gl_ops_automated_primary_controls_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_intercompany_transactions": {
+        "bfName": "bc_gl_ops_intercompany_open_items_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_fully_manual_intercompany_transactions": {
+        "bfName": "bc_gl_ops_intercompany_open_items_score",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_hybrid_intercompany_transactions": {
+        "bfName": "bc_gl_ops_intercompany_open_items_score",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_accurate_interdepartmental_chargebacks": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_number_of_interdepartmental_chargebacks": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_internal_controls_staff_in_fssc": {
+        "bfName": "bc_gl_ops_automated_primary_controls_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_internal_controls_staff": {
+        "bfName": "bc_gl_ops_automated_primary_controls_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "intercompany_journal_entries": {
+        "bfName": "bc_gl_ops_intercompany_journal_entries",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "automated_journal_entries": {
+        "bfName": "bc_gl_ops_automated_journal_entries",
+        "resolutionRule": "assert_equal",
+        "confidence": "medium"
+      },
+      "partially_automated_journal_entries": {
+        "bfName": "bc_gl_ops_partially_automated_journal_entries",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "error_free_journal_entries_count": {
+        "bfName": "bc_gl_ops_error_free_journal_entries_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "manual_journal_entries": {
+        "bfName": "bc_gl_ops_manual_journal_entries",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "journal_entries_requiring_correction": {
+        "bfName": "bc_gl_ops_journal_entries_requiring_correction",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_journal_entries_posted": {
+        "bfName": "bc_gl_ops_error_free_journal_entries_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "automated_recurring_line_items_count": {
+        "bfName": "bc_gl_ops_automated_recurring_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "corrective_adjusting_line_items": {
+        "bfName": "bc_gl_ops_corrective_adjusting_line_items",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "directly_linked_line_items": {
+        "bfName": "bc_gl_ops_directly_linked_line_items",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "intercompany_line_items": {
+        "bfName": "bc_gl_ops_intercompany_line_items",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "error_free_line_items_count": {
+        "bfName": "bc_gl_ops_error_free_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "other_sourced_line_items_count": {
+        "bfName": "bc_gl_ops_other_sourced_line_items_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "manual_journal_entries_count": {
+        "bfName": "bc_gl_ops_manual_journal_entries_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "other_non_independent_members_count": {
+        "bfName": "bc_gl_ops_other_non_independent_members_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "officer_employee_audit_committee_count": {
+        "bfName": "bc_gl_ops_officer_employee_audit_committee_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "independent_audit_committee_count": {
+        "bfName": "bc_gl_ops_independent_audit_committee_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "officer_employee_compensation_committee_count": {
+        "bfName": "bc_gl_ops_officer_employee_compensation_committee_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "independent_compensation_committee_count": {
+        "bfName": "bc_gl_ops_independent_compensation_committee_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "adjusting_entries_after_close": {
+        "bfName": "bc_gl_ops_adjusting_entries_after_close",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "automated_primary_controls_count": {
+        "bfName": "bc_gl_ops_automated_primary_controls_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "identified_primary_controls_count": {
+        "bfName": "bc_gl_ops_identified_primary_controls_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_detective_primary_controls": {
+        "bfName": "bc_gl_ops_automated_primary_controls_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_identified_primary_controls": {
+        "bfName": "bc_gl_ops_identified_primary_controls_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "number_of_preventative_primary_controls": {
+        "bfName": "bc_gl_ops_automated_primary_controls_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_intercompany_transactions_processed_successfully": {
+        "bfName": "bc_gl_ops_intercompany_open_items_score",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_automated_accounting_tasks": {
+        "bfName": "bc_gl_ops_automated_primary_controls_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_accounting_tasks": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "earnings_before_interest_and_taxes_ebit": {
+        "bfName": "bc_gl_ops_earnings_before_interest_and_taxes_ebit",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "capital_employed": {
+        "bfName": "bc_gl_ops_capital_employed",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "net_operating_profit_after_tax_nopat": {
+        "bfName": "bc_gl_ops_net_operating_profit_after_tax_nopat",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "invested_capital": {
+        "bfName": "bc_gl_ops_invested_capital",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "selling_general_and_administrative_expenses": {
+        "bfName": "bc_gl_ops_legal_and_professional_fees",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_close_tasks": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "cost_to_repair_and_maintain_fixed_assets": {
+        "bfName": "bc_gl_ops_legal_and_professional_fees",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "general_ledger_account": {
+      "total_balance_sheet_accounts": {
+        "bfName": "general_ledger_account_balance_sheet_income_statement_indicator",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      }
+    },
+    "actual_ledger": {
+      "cost_of_goods_sold": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "average_accounts_payable": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_accruals_generated": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_hours_spent_on_gl_reconciliation": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "earnings_release_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "financial_statement_completion_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "quarterly_earnings_release_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "quarterly_financial_statement_completion_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "monthly_close_completion_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "net_sales_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "net_income": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "interest_expense": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "operating_expenses": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "net_book_value_of_fixed_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "gross_value_of_fixed_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "operating_income": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "consolidated_financial_statements_completion_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "trial_balance_run_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "initial_trial_balance_run_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "consolidated_annual_financial_statements_completion_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "annual_flash_reports_production_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "monthly_flash_reports_production_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "shareholders_equity": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "general_ledger_reconciliation_completion_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "subledger_close_date": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_close_tasks_completed_on_time": {
+        "bfName": "actual_ledger_document_date_time",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "average_total_assets": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "depreciation_expense_for_fixed_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "chart_of_accounts": {
+      "total_accounts_in_chart_of_accounts": {
+        "bfName": "chart_of_accounts_name",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      }
+    },
+    "journal_entry_hdr": {
+      "total_asset_maintenance_cost": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_asset_value": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_projects_completed_on_time": {
+        "bfName": "journal_entry_hdr_last_modification_date_time",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_days_to_capitalize_assets": {
+        "bfName": "journal_entry_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "days_to_consolidated_statements": {
+        "bfName": "journal_entry_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_control_violations_last_12_months": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "net_income_less_preferred_dividends": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "weighted_average_common_shares_outstanding": {
+        "bfName": "journal_entry_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_finance_function_it_costs": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_fixed_asset_transactions": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "average_net_fixed_assets": {
+        "bfName": "journal_entry_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_business_entity_ftes": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "salaries_and_wages_administrative": {
+        "bfName": "journal_entry_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "gross_margin_dollars": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "average_inventory_investment": {
+        "bfName": "journal_entry_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "category_revenue": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "category_cost_of_goods_sold": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_revenue_from_hectare": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_variable_costs_for_hectare": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_revenue_from_units_sold": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cost_of_goods_sold_for_units": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "risk_policy_deployment_date": {
+        "bfName": "journal_entry_hdr_reversal_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "risk_change_identification_date": {
+        "bfName": "journal_entry_hdr_reversal_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_internal_funding_provided": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_funding_needs": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "first_time_originating_line_items": {
+        "bfName": "journal_entry_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "gross_operating_income": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_indirect_costs": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "allocation_base_value": {
+        "bfName": "journal_entry_hdr_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "Historical Average Close Duration": {
+        "bfName": "journal_entry_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "monthly_consolidated_financial_statements_completion_date": {
+        "bfName": "journal_entry_hdr_reversal_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "remediation_steps_developed_date": {
+        "bfName": "journal_entry_hdr_reversal_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "control_violation_reported_date": {
+        "bfName": "journal_entry_hdr_reversal_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_benefits_from_ai_initiatives": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cost_of_ai_initiatives": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "control_violation_identification_date": {
+        "bfName": "journal_entry_hdr_reversal_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_business_entity_revenue": {
+        "bfName": "journal_entry_hdr_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "journal_entry_line": {
+      "total_journal_entry_line_items": {
+        "bfName": "journal_entry_line_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_automated_journal_entry_line_items": {
+        "bfName": "journal_entry_line_exchange_rate",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "other_line_item_types_count": {
+        "bfName": "journal_entry_line_account_identifier",
+        "resolutionRule": "assert_equal",
+        "confidence": "medium"
+      },
+      "total_journal_entry_line_items_processed": {
+        "bfName": "journal_entry_line_exchange_rate",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "manual_recurring_line_item_percentage": {
+        "bfName": "journal_entry_line_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "manual_non_recurring_line_item_percentage": {
+        "bfName": "journal_entry_line_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "invoice_hdr": {
+      "total_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "budget_ledger_hdr": {
+      "monthly_close_start_date": {
+        "bfName": "budget_ledger_hdr_effective_start_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "period_end_management_report_completion_date": {
+        "bfName": "budget_ledger_hdr_effective_end_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "bc_gl_operations": {
+      "exists": true,
+      "contractId": "019d7664-5001-76df-92ce-388cb8a39f0e",
+      "name": "cc__bc_gl_operations",
+      "mappingsAdded": 82
+    },
+    "general_ledger_account": {
+      "exists": true,
+      "contractId": "019d7663-ef6f-7845-9607-f6d8bb34e5d5",
+      "name": "cc__general_ledger_account",
+      "mappingsAdded": 0
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 0
+    },
+    "chart_of_accounts": {
+      "exists": true,
+      "contractId": "019d7663-f067-7881-bcf8-323a99bd7439",
+      "name": "cc__chart_of_accounts",
+      "mappingsAdded": 0
+    },
+    "journal_entry_hdr": {
+      "exists": true,
+      "contractId": "019d7663-f10b-7c5b-9ff9-b00e701a2452",
+      "name": "cc__journal_entry_hdr",
+      "mappingsAdded": 0
+    },
+    "journal_entry_line": {
+      "exists": true,
+      "contractId": "019d7663-f1f7-7fc8-807c-46ab7f2d9a68",
+      "name": "cc__journal_entry_line",
+      "mappingsAdded": 0
+    },
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr",
+      "mappingsAdded": 0
+    },
+    "budget_ledger_hdr": {
+      "exists": true,
+      "contractId": "019d7663-f27e-7c14-bd51-aa05ea8d4038",
+      "name": "cc__budget_ledger_hdr",
+      "mappingsAdded": 0
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "account_reconciliation_completion",
+      "status": "created",
+      "name": "mc__account_reconciliation_completion",
+      "coBindings": 2
+    },
+    {
+      "metric": "accounts_payable_turnover_ratio",
+      "status": "exists",
+      "name": "mc__accounts_payable_turnover_ratio"
+    },
+    {
+      "metric": "accounts_standard_with_the_business_units_reporting_to_your_site",
+      "status": "created",
+      "name": "mc__accounts_standard_with_the_business_units_reporting_to_your_site",
+      "coBindings": 2
+    },
+    {
+      "metric": "accruals_generated_using_a_fully_automated_method",
+      "status": "created",
+      "name": "mc__accruals_generated_using_a_fully_automated_method",
+      "coBindings": 2
+    },
+    {
+      "metric": "accruals_generated_using_a_fully_manual_method",
+      "status": "created",
+      "name": "mc__accruals_generated_using_a_fully_manual_method",
+      "coBindings": 2
+    },
+    {
+      "metric": "accruals_generated_using_both_automation_and_manual_methods",
+      "status": "created",
+      "name": "mc__accruals_generated_using_both_automation_and_manual_methods",
+      "coBindings": 2
+    },
+    {
+      "metric": "approved_capital_projects_considered_within_or_on_budget_for_spending",
+      "status": "created",
+      "name": "mc__approved_capital_projects_considered_within_or_on_budget_for_spending",
+      "coBindings": 1
+    },
+    {
+      "metric": "asset_maintenance_cost_pct_of_asset_value",
+      "status": "exists",
+      "name": "mc__asset_maintenance_cost_pct_of_asset_value"
+    },
+    {
+      "metric": "average_cycle_time_in_hours_to_process_a_journal_entry",
+      "status": "created",
+      "name": "mc__average_cycle_time_in_hours_to_process_a_journal_entry",
+      "coBindings": 1
+    },
+    {
+      "metric": "average_cycle_time_in_hours_to_reconcile_the_general_ledger",
+      "status": "created",
+      "name": "mc__average_cycle_time_in_hours_to_reconcile_the_general_ledger",
+      "coBindings": 2
+    },
+    {
+      "metric": "average_number_of_journal_entry_line_items_per_journal_entry",
+      "status": "created",
+      "name": "mc__average_number_of_journal_entry_line_items_per_journal_entry",
+      "coBindings": 2
+    },
+    {
+      "metric": "capital_projects_completed_on_time",
+      "status": "created",
+      "name": "mc__capital_projects_completed_on_time",
+      "coBindings": 2
+    },
+    {
+      "metric": "capitalize_a_fixed_asset_purchase",
+      "status": "created",
+      "name": "mc__capitalize_a_fixed_asset_purchase",
+      "coBindings": 2
+    },
+    {
+      "metric": "close_a_capital_project",
+      "status": "created",
+      "name": "mc__close_a_capital_project",
+      "coBindings": 1
+    },
+    {
+      "metric": "close_cycle_time",
+      "status": "created",
+      "name": "mc__close_cycle_time",
+      "coBindings": 1
+    },
+    {
+      "metric": "close_risk_score",
+      "status": "created",
+      "name": "mc__close_risk_score",
+      "coBindings": 1
+    },
+    {
+      "metric": "complete_an_approved_capital_expenditure_plan",
+      "status": "created",
+      "name": "mc__complete_an_approved_capital_expenditure_plan",
+      "coBindings": 1
+    },
+    {
+      "metric": "complete_the_monthly_consolidated_financial_statements",
+      "status": "exists",
+      "name": "mc__complete_the_monthly_consolidated_financial_statements"
+    },
+    {
+      "metric": "completion_of_annual_consolidated_financial_statements_and_the_release_of",
+      "status": "exists",
+      "name": "mc__completion_of_annual_consolidated_financial_statements_and_the_release_of"
+    },
+    {
+      "metric": "completion_of_quarterly_consolidated_financial_statements_and_the_release_of",
+      "status": "exists",
+      "name": "mc__completion_of_quarterly_consolidated_financial_statements_and_the_release_of"
+    },
+    {
+      "metric": "control_violations_new",
+      "status": "created",
+      "name": "mc__control_violations_new",
+      "coBindings": 2
+    },
+    {
+      "metric": "control_violations_per_k_business_entity_employees",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "control_violations_previously_identified",
+      "status": "created",
+      "name": "mc__control_violations_previously_identified",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_of_revenue_cogs_ratio",
+      "status": "exists",
+      "name": "mc__cost_of_revenue_cogs_ratio"
+    },
+    {
+      "metric": "earnings_per_share_eps",
+      "status": "exists",
+      "name": "mc__earnings_per_share_eps"
+    },
+    {
+      "metric": "ebitda_margin",
+      "status": "created",
+      "name": "mc__ebitda_margin",
+      "coBindings": 2
+    },
+    {
+      "metric": "expected_adjustment_impact",
+      "status": "created",
+      "name": "mc__expected_adjustment_impact",
+      "coBindings": 1
+    },
+    {
+      "metric": "finance_function_it_costs_allocated_to_controls_and_risk_management",
+      "status": "created",
+      "name": "mc__finance_function_it_costs_allocated_to_controls_and_risk_management",
+      "coBindings": 2
+    },
+    {
+      "metric": "finance_shared_services_center_to_complete_the_monthly_financial_close",
+      "status": "exists",
+      "name": "mc__finance_shared_services_center_to_complete_the_monthly_financial_close"
+    },
+    {
+      "metric": "fixed_asset_transactions_handled_automatically_without_human_intervention",
+      "status": "created",
+      "name": "mc__fixed_asset_transactions_handled_automatically_without_human_intervention",
+      "coBindings": 2
+    },
+    {
+      "metric": "fixed_asset_turnover_ratio",
+      "status": "exists",
+      "name": "mc__fixed_asset_turnover_ratio"
+    },
+    {
+      "metric": "ftes_performing_esg_reporting_outside_the_esg_function_as_percentage_of_total",
+      "status": "created",
+      "name": "mc__ftes_performing_esg_reporting_outside_the_esg_function_as_percentage_of_total",
+      "coBindings": 2
+    },
+    {
+      "metric": "general_and_administrative_expense_g_a",
+      "status": "created",
+      "name": "mc__general_and_administrative_expense_g_a",
+      "coBindings": 2
+    },
+    {
+      "metric": "general_ledger_reconciliation_automation_rate",
+      "status": "created",
+      "name": "mc__general_ledger_reconciliation_automation_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "gmroi_gross_margin_return_on_investment",
+      "status": "exists",
+      "name": "mc__gmroi_gross_margin_return_on_investment"
+    },
+    {
+      "metric": "gross_margin",
+      "status": "exists",
+      "name": "mc__gross_margin"
+    },
+    {
+      "metric": "gross_margin_by_category",
+      "status": "exists",
+      "name": "mc__gross_margin_by_category"
+    },
+    {
+      "metric": "gross_margin_per_hectare",
+      "status": "created",
+      "name": "mc__gross_margin_per_hectare",
+      "coBindings": 2
+    },
+    {
+      "metric": "gross_profit_per_unit_gpu",
+      "status": "created",
+      "name": "mc__gross_profit_per_unit_gpu",
+      "coBindings": 2
+    },
+    {
+      "metric": "identification_of_change_in_risk_until_changes_to_risk_management_policies_and",
+      "status": "exists",
+      "name": "mc__identification_of_change_in_risk_until_changes_to_risk_management_policies_and"
+    },
+    {
+      "metric": "intercompany_funding_efficiency",
+      "status": "exists",
+      "name": "mc__intercompany_funding_efficiency"
+    },
+    {
+      "metric": "intercompany_reconciliation_rate",
+      "status": "created",
+      "name": "mc__intercompany_reconciliation_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "intercompany_transactions_processed_using_a_fully_automated_method",
+      "status": "created",
+      "name": "mc__intercompany_transactions_processed_using_a_fully_automated_method",
+      "coBindings": 1
+    },
+    {
+      "metric": "intercompany_transactions_processed_using_a_fully_manual_method",
+      "status": "created",
+      "name": "mc__intercompany_transactions_processed_using_a_fully_manual_method",
+      "coBindings": 1
+    },
+    {
+      "metric": "intercompany_transactions_processed_using_both_automation_and_manual_methods",
+      "status": "created",
+      "name": "mc__intercompany_transactions_processed_using_both_automation_and_manual_methods",
+      "coBindings": 1
+    },
+    {
+      "metric": "interdepartmental_chargeback_accuracy",
+      "status": "created",
+      "name": "mc__interdepartmental_chargeback_accuracy",
+      "coBindings": 1
+    },
+    {
+      "metric": "internal_controls_staff_centralized_at_the_finance_shared_services_center",
+      "status": "created",
+      "name": "mc__internal_controls_staff_centralized_at_the_finance_shared_services_center",
+      "coBindings": 1
+    },
+    {
+      "metric": "journal_entries_automated_or_system_generated_at_the_finance_shared_services",
+      "status": "exists",
+      "name": "mc__journal_entries_automated_or_system_generated_at_the_finance_shared_services"
+    },
+    {
+      "metric": "journal_entries_intercompany",
+      "status": "created",
+      "name": "mc__journal_entries_intercompany",
+      "coBindings": 1
+    },
+    {
+      "metric": "journal_entries_processed_automatically",
+      "status": "created",
+      "name": "mc__journal_entries_processed_automatically",
+      "coBindings": 1
+    },
+    {
+      "metric": "journal_entries_processed_by_partially_system_generated_partially_manual_methods",
+      "status": "created",
+      "name": "mc__journal_entries_processed_by_partially_system_generated_partially_manual_methods",
+      "coBindings": 1
+    },
+    {
+      "metric": "journal_entries_processed_error_free",
+      "status": "created",
+      "name": "mc__journal_entries_processed_error_free",
+      "coBindings": 1
+    },
+    {
+      "metric": "journal_entries_processed_manually",
+      "status": "created",
+      "name": "mc__journal_entries_processed_manually",
+      "coBindings": 1
+    },
+    {
+      "metric": "journal_entry_error_rate",
+      "status": "created",
+      "name": "mc__journal_entry_error_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "journal_entry_line_items_automated_and_recurring",
+      "status": "created",
+      "name": "mc__journal_entry_line_items_automated_and_recurring",
+      "coBindings": 2
+    },
+    {
+      "metric": "journal_entry_line_items_corrective_adjusting",
+      "status": "created",
+      "name": "mc__journal_entry_line_items_corrective_adjusting",
+      "coBindings": 1
+    },
+    {
+      "metric": "journal_entry_line_items_directly_linked_from_an_internal_external_system",
+      "status": "created",
+      "name": "mc__journal_entry_line_items_directly_linked_from_an_internal_external_system",
+      "coBindings": 1
+    },
+    {
+      "metric": "journal_entry_line_items_first_time_originating",
+      "status": "exists",
+      "name": "mc__journal_entry_line_items_first_time_originating"
+    },
+    {
+      "metric": "journal_entry_line_items_intercompany",
+      "status": "created",
+      "name": "mc__journal_entry_line_items_intercompany",
+      "coBindings": 1
+    },
+    {
+      "metric": "journal_entry_line_items_of_types_other_than_intercompany_corrective_adjusting",
+      "status": "exists",
+      "name": "mc__journal_entry_line_items_of_types_other_than_intercompany_corrective_adjusting"
+    },
+    {
+      "metric": "journal_entry_line_items_processed_error_free",
+      "status": "created",
+      "name": "mc__journal_entry_line_items_processed_error_free",
+      "coBindings": 2
+    },
+    {
+      "metric": "journal_entry_line_items_processed_per_journal_entry",
+      "status": "created",
+      "name": "mc__journal_entry_line_items_processed_per_journal_entry",
+      "coBindings": 2
+    },
+    {
+      "metric": "journal_entry_line_items_sourced_through_methods_other_than_manual_direct_link",
+      "status": "created",
+      "name": "mc__journal_entry_line_items_sourced_through_methods_other_than_manual_direct_link",
+      "coBindings": 2
+    },
+    {
+      "metric": "manual_journal_entry",
+      "status": "created",
+      "name": "mc__manual_journal_entry",
+      "coBindings": 1
+    },
+    {
+      "metric": "manual_journal_entry_line_item_percentage",
+      "status": "exists",
+      "name": "mc__manual_journal_entry_line_item_percentage"
+    },
+    {
+      "metric": "net_income_plus_interest_pct_of_total_assets",
+      "status": "exists",
+      "name": "mc__net_income_plus_interest_pct_of_total_assets"
+    },
+    {
+      "metric": "net_operating_income_noi",
+      "status": "exists",
+      "name": "mc__net_operating_income_noi"
+    },
+    {
+      "metric": "net_profit_margin",
+      "status": "exists",
+      "name": "mc__net_profit_margin"
+    },
+    {
+      "metric": "net_value_of_fixed_assets_pct_of_gross_value_of_fixed_assets",
+      "status": "exists",
+      "name": "mc__net_value_of_fixed_assets_pct_of_gross_value_of_fixed_assets"
+    },
+    {
+      "metric": "operating_expense_ratio_oer",
+      "status": "exists",
+      "name": "mc__operating_expense_ratio_oer"
+    },
+    {
+      "metric": "operating_margin",
+      "status": "exists",
+      "name": "mc__operating_margin"
+    },
+    {
+      "metric": "other_non_independent_members_on_the_audit_committee",
+      "status": "created",
+      "name": "mc__other_non_independent_members_on_the_audit_committee",
+      "coBindings": 1
+    },
+    {
+      "metric": "other_non_independent_members_on_the_compensation_committee",
+      "status": "created",
+      "name": "mc__other_non_independent_members_on_the_compensation_committee",
+      "coBindings": 1
+    },
+    {
+      "metric": "overhead_rate",
+      "status": "exists",
+      "name": "mc__overhead_rate"
+    },
+    {
+      "metric": "perform_annual_close_at_the_site_level",
+      "status": "exists",
+      "name": "mc__perform_annual_close_at_the_site_level"
+    },
+    {
+      "metric": "post_close_adjustment_count",
+      "status": "created",
+      "name": "mc__post_close_adjustment_count",
+      "coBindings": 1
+    },
+    {
+      "metric": "predicted_close_completion_date",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "primary_controls_automated",
+      "status": "created",
+      "name": "mc__primary_controls_automated",
+      "coBindings": 1
+    },
+    {
+      "metric": "primary_controls_detective_in_nature",
+      "status": "created",
+      "name": "mc__primary_controls_detective_in_nature",
+      "coBindings": 1
+    },
+    {
+      "metric": "primary_controls_per_k_employees",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "primary_controls_preventive_in_nature",
+      "status": "created",
+      "name": "mc__primary_controls_preventive_in_nature",
+      "coBindings": 1
+    },
+    {
+      "metric": "process_an_intercompany_transaction",
+      "status": "created",
+      "name": "mc__process_an_intercompany_transaction",
+      "coBindings": 1
+    },
+    {
+      "metric": "process_group_perform_general_accounting_and_reporting_handled_automatically",
+      "status": "created",
+      "name": "mc__process_group_perform_general_accounting_and_reporting_handled_automatically",
+      "coBindings": 1
+    },
+    {
+      "metric": "produce_period_end_management_reports",
+      "status": "exists",
+      "name": "mc__produce_period_end_management_reports"
+    },
+    {
+      "metric": "producing_annual_flash_reports_to_completing_consolidated_annual_financial",
+      "status": "exists",
+      "name": "mc__producing_annual_flash_reports_to_completing_consolidated_annual_financial"
+    },
+    {
+      "metric": "producing_monthly_flash_reports_to_completing_the_monthly_consolidated",
+      "status": "exists",
+      "name": "mc__producing_monthly_flash_reports_to_completing_the_monthly_consolidated"
+    },
+    {
+      "metric": "reporting_of_a_control_violation_until_investigation_is_completed_and",
+      "status": "exists",
+      "name": "mc__reporting_of_a_control_violation_until_investigation_is_completed_and"
+    },
+    {
+      "metric": "return_on_capital_employed_roce",
+      "status": "created",
+      "name": "mc__return_on_capital_employed_roce",
+      "coBindings": 1
+    },
+    {
+      "metric": "return_on_equity_roe",
+      "status": "exists",
+      "name": "mc__return_on_equity_roe"
+    },
+    {
+      "metric": "return_on_invested_capital_roic",
+      "status": "created",
+      "name": "mc__return_on_invested_capital_roic",
+      "coBindings": 1
+    },
+    {
+      "metric": "return_on_investment_roi_due_to_ai_initiatives_in_finance",
+      "status": "exists",
+      "name": "mc__return_on_investment_roi_due_to_ai_initiatives_in_finance"
+    },
+    {
+      "metric": "sg_a_as_of_revenue",
+      "status": "created",
+      "name": "mc__sg_a_as_of_revenue",
+      "coBindings": 2
+    },
+    {
+      "metric": "subledger_to_gl_reconciliation_delay",
+      "status": "exists",
+      "name": "mc__subledger_to_gl_reconciliation_delay"
+    },
+    {
+      "metric": "task_completion_by_deadline",
+      "status": "created",
+      "name": "mc__task_completion_by_deadline",
+      "coBindings": 2
+    },
+    {
+      "metric": "the_identification_of_a_control_violation_until_the_violation_is_reported",
+      "status": "exists",
+      "name": "mc__the_identification_of_a_control_violation_until_the_violation_is_reported"
+    },
+    {
+      "metric": "total_asset_turnover",
+      "status": "exists",
+      "name": "mc__total_asset_turnover"
+    },
+    {
+      "metric": "total_cost_of_repair_and_maintenance_per_k_gross_value_of_fixed_assets",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "total_cost_of_the_depreciation_expense_per_k_revenue",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    }
+  ]
+}

@@ -1,0 +1,1182 @@
+{
+  "subfunction": "treasury",
+  "boMappings": {
+    "gaap_cash_flow": {
+      "operating_cash_flow": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "actual_net_cash_flow": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "net_operating_income": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "ifrs_balance_sheet": {
+      "capital_expenditures": {
+        "bfName": "ifrs_issued_capital",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "current_year_cash_conversion_cycle": {
+        "bfName": "ifrs_borrowings_current",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "current_liabilities": {
+        "bfName": "ifrs_current_liabilities",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "actual_ledger": {
+      "debt_service_requirements": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "amount_drawn_on_facilities": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "billion_revenue_divisor": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_equity": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "days_inventory_outstanding_dio": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "cash_flow_from_operations": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "actual_end_of_day_cash_position": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "reported_or_forecasted_cash_position": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "actual_daily_cash_position": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "prior_year_cash_conversion_cycle": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "corporate_tax_rate": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "one_minus_tax_rate_base": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "available_funds": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "foreign_currency_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "foreign_currency_liabilities": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "realized_fx_gain_loss": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "unrealized_fx_gain_loss": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "mark_to_market_gain_loss_on_hedges": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "mark_to_market_gain_loss_on_underlying_exposure": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "high_quality_liquid_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "net_cash_outflows_30_days": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "net_debt": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "current_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "net_working_capital": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "annual_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "net_income": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "depreciation_and_amortization": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "change_in_working_capital": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_liabilities": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "forecast_horizon_days": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "Cash Balance vs. Short-Term Obligations": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "bank_fees_and_charges": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "other_treasury_financial_charges": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "average_working_capital": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "bc_financial_risk_management_operations": {
+      "total_hours_to_pool_cash": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_hours_to_develop_forecasts": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cash_balance_over_period": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_business_entity_revenue": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_debt": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "beginning_cash_balance": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cash_inflows": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cash_outflows": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cash_in_transit": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cash_balance": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_current_assets": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_current_liabilities": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "beginning_of_day_cash_balance": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_daily_cash_inflows": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_daily_cash_outflows": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_debt_service": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_different_funding_sources": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_funding": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_hedged_positions": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_fx_exposure": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cash_balance": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cost_treasury_operations_management": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "treasury_transactional_costs": {
+        "bfName": "bc_financial_risk_management_ops_costs_of_collateral_management",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_treasury_costs": {
+        "bfName": "bc_financial_risk_management_ops_costs_of_collateral_management",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_automated_risk_management_processes": {
+        "bfName": "bc_financial_risk_management_ops_accounts_receivable_balance",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_risk_management_processes": {
+        "bfName": "bc_financial_risk_management_ops_total_auditable_operations_scope",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      }
+    },
+    "bc_gl_operations": {
+      "number_of_cash_pooling_events": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_forecasts_developed": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_days_in_period": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "optimal_number_of_bank_accounts": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "actual_number_of_bank_accounts": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_reconciliations_completed": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "proportion_of_equity_in_capital_structure": {
+        "bfName": "bc_gl_ops_actual_capital_expenditure",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_foreign_currencies_hedged": {
+        "bfName": "bc_gl_ops_number_of_standard_accounts",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_global_legal_entities": {
+        "bfName": "bc_gl_ops_legal_and_professional_fees",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_global_legal_entities_supported": {
+        "bfName": "bc_gl_ops_legal_and_professional_fees",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "asset": {
+      "average_cycle_time_to_pool_cash_hours": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "cost_of_debt": {
+        "bfName": "asset_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cost_of_equity": {
+        "bfName": "asset_cost_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "initiation_time_in_hours": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "approval_time_in_hours": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "dispatch_time_in_hours": {
+        "bfName": "asset_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "change_in_value_of_hedge": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "change_in_value_of_underlying_asset": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "net_interest_expense_sensitivity_per_bp": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "present_value_fixed_leg": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "present_value_variable_leg": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "inventory_value": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "forecast_completion_date": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "forecast_start_date": {
+        "bfName": "asset_acquisition_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      }
+    },
+    "credit_status": {
+      "total_available_credit_facilities": {
+        "bfName": "credit_status_available_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "Available Credit Line Utilization": {
+        "bfName": "credit_status_available_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      }
+    },
+    "bc_ap_operations": {
+      "total_days_delayed_for_reconciliations": {
+        "bfName": "bc_ap_ops_invoices_selected_for_audit_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_banks_in_collection_network": {
+        "bfName": "bc_ap_ops_invoices_received_via_e_network_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_banks_in_disbursement_network": {
+        "bfName": "bc_ap_ops_invoices_received_via_e_network_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "days_sales_outstanding_dso": {
+        "bfName": "bc_ap_ops_sum_of_all_outstanding_invoices",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "days_payables_outstanding_dpo": {
+        "bfName": "bc_ap_ops_current_dpo",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_hours_for_reconciliation": {
+        "bfName": "bc_ap_ops_invoices_selected_for_audit_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "shares_outstanding": {
+        "bfName": "bc_ap_ops_sum_of_all_outstanding_invoices",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_foreign_currency_exposure": {
+        "bfName": "bc_ap_ops_currency_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_monthly_debt_payments": {
+        "bfName": "bc_ap_ops_duplicate_payments_count",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_currency_exposure": {
+        "bfName": "bc_ap_ops_currency_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_banks_in_cash_collection_network": {
+        "bfName": "bc_ap_ops_invoices_received_via_e_network_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_straight_through_processed_transactions": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_treasury_transactions": {
+        "bfName": "bc_ap_ops_compliant_tax_transactions_count",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "gaap_income_statement": {
+      "operating_profit": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "gross_monthly_income": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "investment_income_earned": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "xbrl_gaap_cash_flow": {
+      "actual_cash_flow": {
+        "bfName": "xbrl_dividends_cash",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "forecasted_cash_flow": {
+        "bfName": "xbrl_dividends_cash",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "forecasted_daily_cash_position": {
+        "bfName": "xbrl_dividends_cash",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "free_cash_flow_fcf": {
+        "bfName": "xbrl_dividends_cash",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "cash_flow_forecast": {
+        "bfName": "xbrl_dividends_cash",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "cash_conversion_cycle": {
+        "bfName": "xbrl_dividends_cash",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "xbrl_gaap_income_statement": {
+      "forecasted_net_cash_flow": {
+        "bfName": "xbrl_gain_loss_on_discontinuation_of_cash_flow_hedge_due_to_forecasted_transaction_probable_of_not_occurring_net",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "short_term_borrowings": {
+        "bfName": "xbrl_interest_expense_other_short_term_borrowings",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "inventory_balance": {
+      "Current Days Inventory Outstanding (DIO)": {
+        "bfName": "inventory_balance_quantity_value",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "Previous Period Days Inventory Outstanding (DIO)": {
+        "bfName": "inventory_balance_quantity_value",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "credit": {
+      "revolving_credit_drawn": {
+        "bfName": "credit_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "revolving_credit_limit": {
+        "bfName": "credit_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "available_credit_lines": {
+        "bfName": "credit_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      }
+    },
+    "invoice_hdr": {
+      "total_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "currency_exchange_rate": {
+      "hedged_fx_exposure": {
+        "bfName": "currency_exchange_rate_value",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "actively_managed_currency_positions": {
+        "bfName": "currency_exchange_rate_set_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "commercial_invoice_hdr": {
+      "total_investment_portfolio_value": {
+        "bfName": "commercial_invoice_hdr_total_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "receivable_hdr": {
+      "ar_aging": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "payable_hdr": {
+      "ap_aging": {
+        "bfName": "payable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "payment_runs": {
+        "bfName": "payable_hdr_payment_method_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      }
+    }
+  },
+  "ccResults": {
+    "gaap_cash_flow": {
+      "exists": true,
+      "contractId": "019d762a-1884-7cd0-8aca-30f6eb805929",
+      "name": "cc__gaap_cash_flow",
+      "mappingsAdded": 1
+    },
+    "ifrs_balance_sheet": {
+      "exists": true,
+      "contractId": "019d7837-b4c5-7358-b33c-cc1950f87cdb",
+      "name": "cc__ifrs_balance_sheet",
+      "mappingsAdded": 1
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 19
+    },
+    "bc_financial_risk_management_operations": {
+      "exists": true,
+      "contractId": "019d774b-22e9-7264-adc7-4a6c75446651",
+      "name": "cc__bc_financial_risk_management_operations",
+      "mappingsAdded": 0
+    },
+    "bc_gl_operations": {
+      "exists": true,
+      "contractId": "019d7664-5001-76df-92ce-388cb8a39f0e",
+      "name": "cc__bc_gl_operations",
+      "mappingsAdded": 0
+    },
+    "asset": {
+      "exists": true,
+      "contractId": "019d7701-d9db-728f-89ad-60f06fdf4f42",
+      "name": "cc__asset",
+      "mappingsAdded": 0
+    },
+    "credit_status": {
+      "exists": true,
+      "contractId": "019d762a-18e0-7b27-9dc7-1450084044e3",
+      "name": "cc__credit_status",
+      "mappingsAdded": 1
+    },
+    "bc_ap_operations": {
+      "exists": true,
+      "contractId": "019d7661-63a3-7a61-9792-c9c6deb988f6",
+      "name": "cc__bc_ap_operations",
+      "mappingsAdded": 0
+    },
+    "gaap_income_statement": {
+      "exists": true,
+      "contractId": "019d762a-1944-7468-ba8b-f605ef2f8067",
+      "name": "cc__gaap_income_statement",
+      "mappingsAdded": 0
+    },
+    "xbrl_gaap_cash_flow": {
+      "error": "CC validation failed (CR-QG-CC-001)"
+    },
+    "xbrl_gaap_income_statement": {
+      "error": "CC validation failed (CR-QG-CC-001)"
+    },
+    "inventory_balance": {
+      "exists": true,
+      "contractId": "019d7838-2d4d-7420-9393-683f1ee6c332",
+      "name": "cc__inventory_balance",
+      "mappingsAdded": 2
+    },
+    "credit": {
+      "exists": true,
+      "contractId": "019d762a-1998-738d-9b42-f14e1e6ed892",
+      "name": "cc__credit",
+      "mappingsAdded": 3
+    },
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr",
+      "mappingsAdded": 0
+    },
+    "currency_exchange_rate": {
+      "exists": true,
+      "contractId": "019d7747-489c-71d1-a8b9-7bc257928b62",
+      "name": "cc__currency_exchange_rate",
+      "mappingsAdded": 1
+    },
+    "commercial_invoice_hdr": {
+      "exists": true,
+      "contractId": "019d7746-5ae5-7715-b6b2-24de1325d994",
+      "name": "cc__commercial_invoice_hdr",
+      "mappingsAdded": 0
+    },
+    "receivable_hdr": {
+      "exists": true,
+      "contractId": "019d762a-13e9-789e-86ad-02afdad6eb24",
+      "name": "cc__receivable_hdr",
+      "mappingsAdded": 1
+    },
+    "payable_hdr": {
+      "exists": true,
+      "contractId": "019d765f-10c7-730c-91bd-251a9e4741a4",
+      "name": "cc__payable_hdr",
+      "mappingsAdded": 2
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "available_cash_flow",
+      "status": "created",
+      "name": "mc__available_cash_flow",
+      "coBindings": 3
+    },
+    {
+      "metric": "average_cycle_time_in_hours_for_the_organization_to_concentrate_physically_pool",
+      "status": "exists",
+      "name": "mc__average_cycle_time_in_hours_for_the_organization_to_concentrate_physically_pool"
+    },
+    {
+      "metric": "average_cycle_time_in_hours_to_develop_a_short_term_cash_flow_forecast",
+      "status": "exists",
+      "name": "mc__average_cycle_time_in_hours_to_develop_a_short_term_cash_flow_forecast"
+    },
+    {
+      "metric": "average_cycle_time_in_minutes_for_the_organization_to_concentrate_physically",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "average_daily_cash_balance",
+      "status": "exists",
+      "name": "mc__average_daily_cash_balance"
+    },
+    {
+      "metric": "bank_account_rationalization",
+      "status": "exists",
+      "name": "mc__bank_account_rationalization"
+    },
+    {
+      "metric": "bank_facility_utilization_ratio",
+      "status": "exists",
+      "name": "mc__bank_facility_utilization_ratio"
+    },
+    {
+      "metric": "bank_reconciliation_delay",
+      "status": "exists",
+      "name": "mc__bank_reconciliation_delay"
+    },
+    {
+      "metric": "banks_used_in_cash_collection_network_per_1_billion_revenue",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "banks_used_in_cash_disbursement_network_per_1_billion_revenue",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "capital_structure",
+      "status": "exists",
+      "name": "mc__capital_structure"
+    },
+    {
+      "metric": "cash_balance",
+      "status": "exists",
+      "name": "mc__cash_balance"
+    },
+    {
+      "metric": "cash_conversion_cycle_ccc",
+      "status": "exists",
+      "name": "mc__cash_conversion_cycle_ccc"
+    },
+    {
+      "metric": "cash_conversion_ratio",
+      "status": "created",
+      "name": "mc__cash_conversion_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "cash_flow_coverage_ratio",
+      "status": "exists",
+      "name": "mc__cash_flow_coverage_ratio"
+    },
+    {
+      "metric": "cash_flow_forecast_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cash_flow_realization_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cash_in_transit",
+      "status": "exists",
+      "name": "mc__cash_in_transit"
+    },
+    {
+      "metric": "cash_position_accuracy",
+      "status": "created",
+      "name": "mc__cash_position_accuracy",
+      "coBindings": 1
+    },
+    {
+      "metric": "cash_position_variance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "ccc_component_trend_dio",
+      "status": "created",
+      "name": "mc__ccc_component_trend_dio",
+      "coBindings": 1
+    },
+    {
+      "metric": "ccc_year_over_year_change",
+      "status": "created",
+      "name": "mc__ccc_year_over_year_change",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_of_capital",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "counterparty_risk",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "credit_limit_utilization",
+      "status": "created",
+      "name": "mc__credit_limit_utilization",
+      "coBindings": 1
+    },
+    {
+      "metric": "current_ratio",
+      "status": "exists",
+      "name": "mc__current_ratio"
+    },
+    {
+      "metric": "cycle_time_in_hours_to_initiate_approve_and_dispatch_a_wire_transfer",
+      "status": "exists",
+      "name": "mc__cycle_time_in_hours_to_initiate_approve_and_dispatch_a_wire_transfer"
+    },
+    {
+      "metric": "cycle_time_in_hours_to_reconcile_a_single_bank_account",
+      "status": "exists",
+      "name": "mc__cycle_time_in_hours_to_reconcile_a_single_bank_account"
+    },
+    {
+      "metric": "daily_cash_position",
+      "status": "exists",
+      "name": "mc__daily_cash_position"
+    },
+    {
+      "metric": "debt_service_coverage_ratio_dscr",
+      "status": "exists",
+      "name": "mc__debt_service_coverage_ratio_dscr"
+    },
+    {
+      "metric": "foreign_currencies_involved_in_foreign_exchange_hedging_program_per_1_billion",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "free_cash_flow_fcf",
+      "status": "created",
+      "name": "mc__free_cash_flow_fcf",
+      "coBindings": 2
+    },
+    {
+      "metric": "free_cash_flow_margin",
+      "status": "failed",
+      "error": "One or more fields failed validation."
+    },
+    {
+      "metric": "free_cash_flow_per_share",
+      "status": "failed",
+      "error": "One or more fields failed validation."
+    },
+    {
+      "metric": "funding_diversification_index",
+      "status": "exists",
+      "name": "mc__funding_diversification_index"
+    },
+    {
+      "metric": "funding_gap",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "fx_exposure_by_currency",
+      "status": "created",
+      "name": "mc__fx_exposure_by_currency",
+      "coBindings": 1
+    },
+    {
+      "metric": "fx_exposure_net",
+      "status": "exists",
+      "name": "mc__fx_exposure_net"
+    },
+    {
+      "metric": "fx_gain_loss_impact_on_p_l",
+      "status": "created",
+      "name": "mc__fx_gain_loss_impact_on_p_l",
+      "coBindings": 1
+    },
+    {
+      "metric": "global_legal_entities_supported_by_the_treasury_management_operation_per_1",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "gross_debt_service_ratio",
+      "status": "exists",
+      "name": "mc__gross_debt_service_ratio"
+    },
+    {
+      "metric": "hedge_effectiveness",
+      "status": "created",
+      "name": "mc__hedge_effectiveness",
+      "coBindings": 1
+    },
+    {
+      "metric": "hedge_effectiveness_ratio",
+      "status": "exists",
+      "name": "mc__hedge_effectiveness_ratio"
+    },
+    {
+      "metric": "hedge_ratio",
+      "status": "created",
+      "name": "mc__hedge_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "interest_rate_sensitivity",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "interest_rate_swap_valuation",
+      "status": "exists",
+      "name": "mc__interest_rate_swap_valuation"
+    },
+    {
+      "metric": "investment_income_ratio",
+      "status": "exists",
+      "name": "mc__investment_income_ratio"
+    },
+    {
+      "metric": "liquidity_coverage_ratio",
+      "status": "created",
+      "name": "mc__liquidity_coverage_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "liquidity_risk_score",
+      "status": "failed",
+      "error": "One or more fields failed validation."
+    },
+    {
+      "metric": "net_debt_ebitda",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "net_debt_to_cash_flow_ratio",
+      "status": "created",
+      "name": "mc__net_debt_to_cash_flow_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "net_liquidity",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "net_working_capital",
+      "status": "created",
+      "name": "mc__net_working_capital",
+      "coBindings": 2
+    },
+    {
+      "metric": "net_working_capital_ratio",
+      "status": "created",
+      "name": "mc__net_working_capital_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "operating_cash_flow",
+      "status": "created",
+      "name": "mc__operating_cash_flow",
+      "coBindings": 1
+    },
+    {
+      "metric": "operating_cash_flow_ratio",
+      "status": "exists",
+      "name": "mc__operating_cash_flow_ratio"
+    },
+    {
+      "metric": "predicted_cash_inflow_7_days",
+      "status": "created",
+      "name": "mc__predicted_cash_inflow_7_days",
+      "coBindings": 1
+    },
+    {
+      "metric": "predicted_cash_outflow_30_days",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "predicted_ccc_90_days",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "quick_ratio_acid_test",
+      "status": "created",
+      "name": "mc__quick_ratio_acid_test",
+      "coBindings": 3
+    },
+    {
+      "metric": "ratio_of_active_currency_positions",
+      "status": "exists",
+      "name": "mc__ratio_of_active_currency_positions"
+    },
+    {
+      "metric": "refresh_the_cash_flow_forecast",
+      "status": "exists",
+      "name": "mc__refresh_the_cash_flow_forecast"
+    },
+    {
+      "metric": "short_term_borrowings_to_total_debt_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "short_term_liquidity_stress_index",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "total_cost_of_the_process_group_manage_treasury_operations_per_bank_used_in",
+      "status": "exists",
+      "name": "mc__total_cost_of_the_process_group_manage_treasury_operations_per_bank_used_in"
+    },
+    {
+      "metric": "total_cost_of_the_process_group_manage_treasury_operations_per_global_legal",
+      "status": "exists",
+      "name": "mc__total_cost_of_the_process_group_manage_treasury_operations_per_global_legal"
+    },
+    {
+      "metric": "total_treasury_costs",
+      "status": "created",
+      "name": "mc__total_treasury_costs",
+      "coBindings": 1
+    },
+    {
+      "metric": "treasury_management_efficiency",
+      "status": "exists",
+      "name": "mc__treasury_management_efficiency"
+    },
+    {
+      "metric": "treasury_risk_management_automation_degree",
+      "status": "exists",
+      "name": "mc__treasury_risk_management_automation_degree"
+    },
+    {
+      "metric": "treasury_system_straight_through_processing",
+      "status": "exists",
+      "name": "mc__treasury_system_straight_through_processing"
+    },
+    {
+      "metric": "working_capital",
+      "status": "exists",
+      "name": "mc__working_capital"
+    },
+    {
+      "metric": "working_capital_as_of_revenue",
+      "status": "created",
+      "name": "mc__working_capital_as_of_revenue",
+      "coBindings": 1
+    },
+    {
+      "metric": "working_capital_optimization_score",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "working_capital_ratio",
+      "status": "exists",
+      "name": "mc__working_capital_ratio"
+    },
+    {
+      "metric": "working_capital_turnover",
+      "status": "exists",
+      "name": "mc__working_capital_turnover"
+    }
+  ]
+}

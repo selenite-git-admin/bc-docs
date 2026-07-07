@@ -150,7 +150,7 @@ NCs are created by two paths. The manual path runs `bc-qa/audits/nc-manage.sh ra
 |---|---|
 | Shell out | `runAuditShell(repoPath)` invokes the bc-qa runner; stdout is captured even on non-zero exit |
 | Verdict parse | `parseAuditCounts(output)` extracts PASS, WARN, FAIL, BLOCK, SKIP counts and computes the verdict |
-| Report write | `writeAuditReport(repo, verdict, counts, output)` writes a markdown report to `bc-docs-v3/docs/qa-reports/AUDIT-{repo}-{date}.md` with frontmatter |
+| Report write | `writeAuditReport(repo, verdict, counts, output)` writes a markdown report to `bc-docs/docs/qa-reports/AUDIT-{repo}-{date}.md` with frontmatter |
 | ESLint parse | `parseEslintFindings(output)` reads structured `ESLINT_NC` lines (format `ESLINT_NC|file|line|col|ruleId|severity|message`) and returns finding rows |
 | NC creation | `createNcsFromFindings(...)` bulk-inserts NC records into the DevHub `qa_nc_records` table; `severity` maps `error` to `block` and `warning` to `warn`; `check_name` is `eslint:{ruleId}`; the audit UID provides linkage |
 

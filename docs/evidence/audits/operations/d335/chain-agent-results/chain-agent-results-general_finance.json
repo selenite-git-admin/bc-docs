@@ -1,0 +1,2416 @@
+{
+  "subfunction": "general_finance",
+  "boMappings": {
+    "actual_ledger": {
+      "total_administrative_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_operating_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "all_in_sustaining_cost": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "growth_expansion_capital": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "operating_cash_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "sustaining_capital_expenditure": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "general_administrative_expenses": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "exploration_expenses": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_adjustments_identified": {
+        "bfName": "actual_ledger_document_number",
+        "resolutionRule": "count_distinct",
+        "confidence": "high"
+      },
+      "total_bank_fees": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_transaction_volume": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_flight_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "cost_per_available_seat_kilometer_cask": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "unit_variable_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "current_account_deposits": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "savings_account_deposits": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_deposits": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "ending_cash_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "cash_in_primary_operating_accounts": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_direct_operating_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "cash_equivalents": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "current_cash_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "total_global_cash": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "fuel_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "loss_ratio": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "expense_ratio": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "loss_component": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "product_variable_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "interest_expense_on_deposits": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_inpatient_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_shipping_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_institutional_expenditure": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_transaction_processing_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_logistics_cost": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "allocated_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "segment_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_operating_costs_for_occupied_rooms": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_deposits_mobilized": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "csm_released_to_profit_in_period": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "average_contractual_service_margin": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "cost_of_goods_sold_per_day": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "total_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_liabilities": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_deferred_tax_assets": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_deferred_tax_liabilities": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_development_cost": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "net_income": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "weighted_average_cost_of_capital_wacc": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "total_concessions_and_free_rent": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_tenant_improvement_allowances": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "net_asset_value": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "present_value_of_future_profits": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_equity_invested": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_shareholders_equity": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_food_and_beverage_cost": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_food_and_beverage_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "it_costs_allocated_to_finance_decision_support": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "it_costs_allocated_to_finance_management_activities": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "it_costs_allocated_to_finance_transaction_processing": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "fixed_rate_debt_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "floating_rate_debt_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_fuel_cost": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_premiums_written": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "group_booking_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "transient_guest_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "uninvested_cash_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "ifrs_17_calculated_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "interest_expense": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "value_of_inventory_written_off": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "labor_cost_savings_from_ssc": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_savings_from_ssc": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "ultimate_loss_amount": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "initial_loss_estimate": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_manufacturing_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "cost_of_goods_sold_trend": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "value_of_markdown_sales": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_inventory_sales_value": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_farm_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_farm_operating_expenses": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_interest_earned": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_interest_paid": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "average_earning_assets": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "total_revenue_from_production": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_royalties": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_transportation_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "new_business_profit": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "new_business_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_non_interest_expense": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_savings_from_fssc": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "gross_farm_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "percentage_change_in_sales_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "total_outpatient_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_hospital_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "passenger_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_pharmaceutical_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "medicare_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "medicaid_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "commercial_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "self_pay_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_fraud_losses": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_payment_processing_expenses": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "gross_margin_percentage": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "actual_sales_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "potential_list_price_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "earnings_per_share_eps": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "current_revenue_run_rate": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "debt_maturing_within_12_months": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_outstanding_debt": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "investment_income_from_idle_cash": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "average_idle_cash_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "net_sales": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "lost_revenue_amount": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_shipping_expense": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "yield_on_advances": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "cost_of_deposits": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_reserve_for_tax_disputes": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_tax_function_cost": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_tax_jurisdictions_with_filing_obligations": {
+        "bfName": "company_code",
+        "resolutionRule": "count_distinct",
+        "confidence": "medium"
+      },
+      "sum_of_tax_penalties_and_interest_paid": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "quantified_tax_savings_from_strategies": {
+        "bfName": "actual_ledger_tax_base_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_government_tax_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cost_of_finance_shared_services_center": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "sales_revenue_item": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "tuition_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_operating_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_unrecognized_tax_benefits": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "present_value_expected_future_profits_new_policies": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "value_of_new_business_vnb": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_warehouse_operating_costs": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "percentage_equity_in_capital_structure": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "percentage_debt_in_capital_structure": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "debt_instrument_value": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "average_loan_book_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "production_order_hdr": {
+      "total_units_produced": {
+        "bfName": "production_order_hdr_quantity_value",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "units_produced": {
+        "bfName": "production_order_hdr_quantity_value",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_units_produced": {
+        "bfName": "production_order_hdr_quantity_value",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "maximum_possible_production_units": {
+        "bfName": "production_order_hdr_quantity_value",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "actual_production_units": {
+        "bfName": "production_order_hdr_quantity_value",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "contract_hdr": {
+      "total_annualized_contract_value": {
+        "bfName": "contract_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_customer_contracts": {
+        "bfName": "contract_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_contractual_rent": {
+        "bfName": "contract_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "invoice_hdr": {
+      "total_invoiced_amount": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_invoices": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_invoices_issued": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_electronic_invoices_sent": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_invoices_sent": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_electronic_invoices_received": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_payments_made": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_invoices_with_errors": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_invoices_with_exceptions": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoice_creation_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "personnel": {
+      "total_number_of_finance_managers": {
+        "bfName": "personnel_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "medium"
+      }
+    },
+    "asset": {
+      "total_book_value": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_endowment_value": {
+        "bfName": "asset_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "beginning_market_value_of_endowment": {
+        "bfName": "asset_amount",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "initial_investment": {
+        "bfName": "asset_initial_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "average_investment_portfolio_value": {
+        "bfName": "asset_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "asset_appraised_value": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_farm_asset_value": {
+        "bfName": "asset_net_book_value_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "sales_order_line": {
+      "unit_selling_price": {
+        "bfName": "sales_order_line_unit_price_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "percentage_change_in_quantity_demanded": {
+        "bfName": "sales_order_line_quantity_value",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "order_completion_or_service_delivery_date": {
+        "bfName": "sales_order_line_actual_delivery_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      }
+    },
+    "gaap_cash_flow": {
+      "total_cash_invested": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "monthly_cash_burn_rate": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_cash_distributions": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "ifrs_balance_sheet": {
+      "current_liabilities": {
+        "bfName": "ifrs_current_liabilities",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "warranty_claim_hdr": {
+      "total_claims_submitted": {
+        "bfName": "warranty_claim_hdr_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "high"
+      }
+    },
+    "inventory_balance": {
+      "unhedged_commodity_volume": {
+        "bfName": "inventory_balance_quantity_value",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "price_list_line": {
+      "product_selling_price": {
+        "bfName": "price_list_line_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "pricing_trend": {
+        "bfName": "price_list_line_line_number_identifier",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "percentage_change_in_price": {
+        "bfName": "price_list_line_line_number_identifier",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "credit_transfer_hdr": {
+      "average_total_deposits": {
+        "bfName": "credit_transfer_hdr_entry_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "shipment_hdr": {
+      "number_of_shipments": {
+        "bfName": "shipment_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      }
+    },
+    "journal_entry_hdr": {
+      "number_of_transactions": {
+        "bfName": "journal_entry_hdr_document_number",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "shipment_item": {
+      "total_units_shipped": {
+        "bfName": "shipment_item_quantity_value",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "budget_ledger_hdr": {
+      "prior_period_targeted_costs": {
+        "bfName": "budget_ledger_hdr_effective_end_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "current_period_targeted_costs": {
+        "bfName": "budget_ledger_hdr_effective_end_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "gaap_income_statement": {
+      "total_income": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "expected_stabilized_net_operating_income": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "annual_dividends_per_share": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "non_interest_fee_income": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_investment_income": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "net_interest_income": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "percentage_change_in_operating_income": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_net_profit": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "farm_net_income": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "operating_profit": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "total_costs_of_continuing_operations": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_interest_income_from_loans": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "credit": {
+      "total_credit_deployed": {
+        "bfName": "credit_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "total_credit_facility_limit": {
+        "bfName": "credit_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "drawn_credit_facility_amount": {
+        "bfName": "credit_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      }
+    },
+    "purchase_order_hdr": {
+      "average_purchase_value": {
+        "bfName": "purchase_order_hdr_total_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "purchase_frequency": {
+        "bfName": "purchase_order_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "inventory_count_hdr": {
+      "number_of_accurate_cycle_counts": {
+        "bfName": "inventory_count_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_cycle_counts_performed": {
+        "bfName": "inventory_count_hdr_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "high"
+      }
+    },
+    "sales_order_hdr": {
+      "number_of_deals_confirmed": {
+        "bfName": "sales_order_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_orders_fulfilled": {
+        "bfName": "sales_order_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      }
+    },
+    "receivable_hdr": {
+      "total_loan_amount": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "number_of_defaulted_loans": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_loans_in_portfolio": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_loans_outstanding": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "loan_amount": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "payable_hdr": {
+      "number_of_electronic_payments_made": {
+        "bfName": "payable_hdr_net_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_incorrect_payments": {
+        "bfName": "payable_hdr_net_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_number_of_payments": {
+        "bfName": "payable_hdr_net_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_payment_volume": {
+        "bfName": "payable_hdr_net_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_number_of_payments_processed": {
+        "bfName": "payable_hdr_net_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "time_to_maturity_debt_instrument": {
+        "bfName": "payable_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "organizational_structure": {
+      "number_of_legal_entities_supported_by_fssc": {
+        "bfName": "organizational_structure_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "high"
+      }
+    },
+    "bc_ap_operations": {
+      "total_invoices_processed": {
+        "bfName": "bc_ap_ops_sum_of_all_processed_invoices_and_payments",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "invoice_line": {
+      "average_revenue_per_unit": {
+        "bfName": "invoice_line_allowance_charge_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "Gross Margin for Product Line": {
+        "bfName": "invoice_line_extended_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "Revenue for Product Line": {
+        "bfName": "invoice_line_extended_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "customer_party_master": {
+      "total_subscribers": {
+        "bfName": "customer_party_master_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "high"
+      },
+      "total_active_customers": {
+        "bfName": "customer_party_master_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "high"
+      }
+    }
+  },
+  "ccResults": {
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 126
+    },
+    "production_order_hdr": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2b73-7b8c-ae81-18ad223774ec",
+      "name": "cc__production_order_hdr"
+    },
+    "contract_hdr": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2bc5-7f09-bc6e-a5aadcb3c20f",
+      "name": "cc__contract_hdr"
+    },
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr",
+      "mappingsAdded": 7
+    },
+    "personnel": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2c3c-76ff-ac84-1920e83e0e91",
+      "name": "cc__personnel"
+    },
+    "asset": {
+      "exists": true,
+      "contractId": "019d7701-d9db-728f-89ad-60f06fdf4f42",
+      "name": "cc__asset",
+      "mappingsAdded": 6
+    },
+    "sales_order_line": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2c98-7a07-8022-165840d4d6b8",
+      "name": "cc__sales_order_line"
+    },
+    "gaap_cash_flow": {
+      "exists": true,
+      "contractId": "019d762a-1884-7cd0-8aca-30f6eb805929",
+      "name": "cc__gaap_cash_flow",
+      "mappingsAdded": 3
+    },
+    "ifrs_balance_sheet": {
+      "exists": true,
+      "contractId": "019d7837-b4c5-7358-b33c-cc1950f87cdb",
+      "name": "cc__ifrs_balance_sheet",
+      "mappingsAdded": 0
+    },
+    "warranty_claim_hdr": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2d0a-7750-982b-545cbe1a2029",
+      "name": "cc__warranty_claim_hdr"
+    },
+    "inventory_balance": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2d4d-7420-9393-683f1ee6c332",
+      "name": "cc__inventory_balance"
+    },
+    "price_list_line": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2d8f-766a-97ae-ed88209329fe",
+      "name": "cc__price_list_line"
+    },
+    "credit_transfer_hdr": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2dd6-78e9-96ef-4ef1e44cf402",
+      "name": "cc__credit_transfer_hdr"
+    },
+    "shipment_hdr": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2e12-748c-9841-cd0a8e59a91e",
+      "name": "cc__shipment_hdr"
+    },
+    "journal_entry_hdr": {
+      "exists": true,
+      "contractId": "019d7663-f10b-7c5b-9ff9-b00e701a2452",
+      "name": "cc__journal_entry_hdr",
+      "mappingsAdded": 1
+    },
+    "shipment_item": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2e63-73e3-b70a-d21bfcc7abb0",
+      "name": "cc__shipment_item"
+    },
+    "budget_ledger_hdr": {
+      "exists": true,
+      "contractId": "019d7663-f27e-7c14-bd51-aa05ea8d4038",
+      "name": "cc__budget_ledger_hdr",
+      "mappingsAdded": 2
+    },
+    "gaap_income_statement": {
+      "exists": true,
+      "contractId": "019d762a-1944-7468-ba8b-f605ef2f8067",
+      "name": "cc__gaap_income_statement",
+      "mappingsAdded": 12
+    },
+    "credit": {
+      "exists": true,
+      "contractId": "019d762a-1998-738d-9b42-f14e1e6ed892",
+      "name": "cc__credit",
+      "mappingsAdded": 3
+    },
+    "purchase_order_hdr": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2ef2-71ef-b98d-5db341ab6b0e",
+      "name": "cc__purchase_order_hdr"
+    },
+    "inventory_count_hdr": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2f36-7510-8e52-416153a4ed27",
+      "name": "cc__inventory_count_hdr"
+    },
+    "sales_order_hdr": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2f76-7e84-bcdf-638a2ea6dd1b",
+      "name": "cc__sales_order_hdr"
+    },
+    "receivable_hdr": {
+      "exists": true,
+      "contractId": "019d762a-13e9-789e-86ad-02afdad6eb24",
+      "name": "cc__receivable_hdr",
+      "mappingsAdded": 5
+    },
+    "payable_hdr": {
+      "exists": true,
+      "contractId": "019d765f-10c7-730c-91bd-251a9e4741a4",
+      "name": "cc__payable_hdr",
+      "mappingsAdded": 6
+    },
+    "organizational_structure": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-2fec-70db-8ac8-54b4f8e23d4e",
+      "name": "cc__organizational_structure"
+    },
+    "bc_ap_operations": {
+      "exists": true,
+      "contractId": "019d7661-63a3-7a61-9792-c9c6deb988f6",
+      "name": "cc__bc_ap_operations",
+      "mappingsAdded": 0
+    },
+    "invoice_line": {
+      "exists": true,
+      "contractId": "019d7650-e4f6-7dcf-9e3d-51bd9e9edf32",
+      "name": "cc__invoice_line",
+      "mappingsAdded": 3
+    },
+    "customer_party_master": {
+      "exists": true,
+      "contractId": "019d7838-036d-7f08-8d3b-dc8382c6acb7",
+      "name": "cc__customer_party_master",
+      "mappingsAdded": 2
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "administrative_cost_ratio",
+      "status": "created",
+      "name": "mc__administrative_cost_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "adr_average_daily_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "all_in_cost_aic",
+      "status": "created",
+      "name": "mc__all_in_cost_aic",
+      "coBindings": 2
+    },
+    {
+      "metric": "all_in_sustaining_cost_aisc",
+      "status": "created",
+      "name": "mc__all_in_sustaining_cost_aisc",
+      "coBindings": 2
+    },
+    {
+      "metric": "amount_of_recurring_non_labor_savings_generated_from_the_implementation_of_a",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "audit_adjustments_count",
+      "status": "created",
+      "name": "mc__audit_adjustments_count",
+      "coBindings": 1
+    },
+    {
+      "metric": "average_contract_value_acv",
+      "status": "created",
+      "name": "mc__average_contract_value_acv",
+      "coBindings": 1
+    },
+    {
+      "metric": "average_invoice_value",
+      "status": "created",
+      "name": "mc__average_invoice_value",
+      "coBindings": 1
+    },
+    {
+      "metric": "average_number_of_learning_days_per_finance_function_employee",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "average_span_of_control_for_the_finance_function",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "bank_fee_analysis",
+      "status": "created",
+      "name": "mc__bank_fee_analysis",
+      "coBindings": 1
+    },
+    {
+      "metric": "block_hour_revenue",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "book_value_per_share",
+      "status": "created",
+      "name": "mc__book_value_per_share",
+      "coBindings": 2
+    },
+    {
+      "metric": "break_even_load_factor_belf",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "break_even_point",
+      "status": "created",
+      "name": "mc__break_even_point",
+      "coBindings": 3
+    },
+    {
+      "metric": "business_entity_employees_per_finance_function_fte",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "casa_ratio",
+      "status": "created",
+      "name": "mc__casa_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "cash_burn_rate",
+      "status": "created",
+      "name": "mc__cash_burn_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "cash_concentration_ratio",
+      "status": "created",
+      "name": "mc__cash_concentration_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "cash_cost_per_unit",
+      "status": "created",
+      "name": "mc__cash_cost_per_unit",
+      "coBindings": 2
+    },
+    {
+      "metric": "cash_on_cash_return",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cash_pooling_effectiveness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cash_ratio",
+      "status": "created",
+      "name": "mc__cash_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "cash_runway",
+      "status": "created",
+      "name": "mc__cash_runway",
+      "coBindings": 2
+    },
+    {
+      "metric": "cash_visibility",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cask_ex_fuel",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "clean_claim_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "combined_ratio",
+      "status": "created",
+      "name": "mc__combined_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "commodity_price_exposure",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "contractual_service_margin_csm",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "contribution_margin",
+      "status": "exists",
+      "name": "mc__contribution_margin"
+    },
+    {
+      "metric": "contribution_margin_per_product",
+      "status": "created",
+      "name": "mc__contribution_margin_per_product",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_of_debt",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cost_of_deposits",
+      "status": "created",
+      "name": "mc__cost_of_deposits",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_per_adjusted_admission",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cost_per_available_seat_kilometer_cask",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cost_per_bushel_cost_per_tonne",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cost_per_discharge",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cost_per_shipment",
+      "status": "created",
+      "name": "mc__cost_per_shipment",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_per_student",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cost_per_transaction",
+      "status": "created",
+      "name": "mc__cost_per_transaction",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_per_unit_produced",
+      "status": "created",
+      "name": "mc__cost_per_unit_produced",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_per_unit_shipped",
+      "status": "created",
+      "name": "mc__cost_per_unit_shipped",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_reduction_rate",
+      "status": "created",
+      "name": "mc__cost_reduction_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "cost_to_income_ratio",
+      "status": "created",
+      "name": "mc__cost_to_income_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_to_serve_by_segment",
+      "status": "created",
+      "name": "mc__cost_to_serve_by_segment",
+      "coBindings": 1
+    },
+    {
+      "metric": "counterparty_credit_exposure",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "covenant_compliance_status",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cpor_cost_per_occupied_room",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "credit_deposit_ratio",
+      "status": "created",
+      "name": "mc__credit_deposit_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "csm_release_rate",
+      "status": "created",
+      "name": "mc__csm_release_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "customer_lifetime_value_clv",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "customer_margin_distribution",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "cycle_count_accuracy",
+      "status": "created",
+      "name": "mc__cycle_count_accuracy",
+      "coBindings": 1
+    },
+    {
+      "metric": "days_inventory_outstanding_dio",
+      "status": "created",
+      "name": "mc__days_inventory_outstanding_dio",
+      "coBindings": 2
+    },
+    {
+      "metric": "days_to_close_monthly",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "deal_confirmation_time",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "debt_maturity_profile",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "debt_to_assets_ratio",
+      "status": "exists",
+      "name": "mc__debt_to_assets_ratio"
+    },
+    {
+      "metric": "debt_to_equity_ratio",
+      "status": "exists",
+      "name": "mc__debt_to_equity_ratio"
+    },
+    {
+      "metric": "debt_yield",
+      "status": "created",
+      "name": "mc__debt_yield",
+      "coBindings": 2
+    },
+    {
+      "metric": "deferred_tax_asset_liability_balance",
+      "status": "created",
+      "name": "mc__deferred_tax_asset_liability_balance",
+      "coBindings": 1
+    },
+    {
+      "metric": "denial_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "development_yield_on_cost_dyoc",
+      "status": "created",
+      "name": "mc__development_yield_on_cost_dyoc",
+      "coBindings": 2
+    },
+    {
+      "metric": "disputed_invoice_rate",
+      "status": "exists",
+      "name": "mc__disputed_invoice_rate"
+    },
+    {
+      "metric": "dividend_payout_ratio",
+      "status": "exists",
+      "name": "mc__dividend_payout_ratio"
+    },
+    {
+      "metric": "dividend_yield",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "e_invoice_adoption_rate",
+      "status": "created",
+      "name": "mc__e_invoice_adoption_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "economic_value_added_eva",
+      "status": "created",
+      "name": "mc__economic_value_added_eva",
+      "coBindings": 2
+    },
+    {
+      "metric": "effective_rent",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "electronic_invoice_adoption_rate",
+      "status": "created",
+      "name": "mc__electronic_invoice_adoption_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "electronic_payment_adoption",
+      "status": "created",
+      "name": "mc__electronic_payment_adoption",
+      "coBindings": 2
+    },
+    {
+      "metric": "embedded_value_ev",
+      "status": "created",
+      "name": "mc__embedded_value_ev",
+      "coBindings": 1
+    },
+    {
+      "metric": "employees_per_legal_entity_supported_by_the_finance_shared_services_center",
+      "status": "created",
+      "name": "mc__employees_per_legal_entity_supported_by_the_finance_shared_services_center",
+      "coBindings": 2
+    },
+    {
+      "metric": "endowment_per_student",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "endowment_return",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "equity_multiple",
+      "status": "created",
+      "name": "mc__equity_multiple",
+      "coBindings": 2
+    },
+    {
+      "metric": "equity_multiplier",
+      "status": "exists",
+      "name": "mc__equity_multiplier"
+    },
+    {
+      "metric": "excess_obsolete_stock",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "f_b_cost_percentage",
+      "status": "created",
+      "name": "mc__f_b_cost_percentage",
+      "coBindings": 1
+    },
+    {
+      "metric": "fee_income_ratio",
+      "status": "created",
+      "name": "mc__fee_income_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "finance_chatbots_and_automated_bots_automated_bots",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_chatbots_and_automated_bots_chatbots",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_coe_employees_working_virtually",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_ftes_having_had_skill_requirement_changes_in_the_past_12_months",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_ftes_not_directly_reporting_to_the_finance_and_accounting",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_ftes_per_100_business_entity_employees",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_ftes_per_1_billion_revenue",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_it_costs_allocated_to_decision_support",
+      "status": "created",
+      "name": "mc__finance_function_it_costs_allocated_to_decision_support",
+      "coBindings": 2
+    },
+    {
+      "metric": "finance_function_it_costs_allocated_to_management_activities",
+      "status": "created",
+      "name": "mc__finance_function_it_costs_allocated_to_management_activities",
+      "coBindings": 2
+    },
+    {
+      "metric": "finance_function_it_costs_allocated_to_transaction_processing",
+      "status": "created",
+      "name": "mc__finance_function_it_costs_allocated_to_transaction_processing",
+      "coBindings": 2
+    },
+    {
+      "metric": "finance_function_monitoring_and_reporting_alerts_tasks_performed_by_automation",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_monitoring_and_taking_action_tasks_performed_by_automation",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_recurring_tasks_performed_by_automation",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_tasks_that_act_on_scheduled_events_across_a_workflow_performed",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_tasks_that_perform_complex_analytics_and_making",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_time_allocated_to_control",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_time_allocated_to_decision_support",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_time_allocated_to_management_activities",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_function_time_allocated_to_transaction_processing",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "finance_shared_services_employees_working_virtually",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "financial_restatement_frequency",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "first_contact_resolution_rate_for_the_finance_shared_services_center",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "fixed_vs_floating_debt_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "fuel_cost_per_ask",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "gross_written_premium_gwp",
+      "status": "created",
+      "name": "mc__gross_written_premium_gwp",
+      "coBindings": 1
+    },
+    {
+      "metric": "group_vs_transient_revenue_mix",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "idle_cash_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "insurance_revenue_ifrs_17",
+      "status": "created",
+      "name": "mc__insurance_revenue_ifrs_17",
+      "coBindings": 1
+    },
+    {
+      "metric": "interest_coverage_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "internal_rate_of_return_irr",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "inventory_write_off_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "investment_income_yield",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "invoice_error_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "invoice_exception_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "labor_savings_out_of_total_savings_observed_through_implementation_of_a_finance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "loan_default_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "loan_to_deposit_ratio_ldr",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "loan_to_value_ratio_ltv",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "loss_development_factor",
+      "status": "created",
+      "name": "mc__loss_development_factor",
+      "coBindings": 1
+    },
+    {
+      "metric": "lost_production_value",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "management_ftes_involved_in_finance_function_operations_pct_of_total_finance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "manufacturing_cost_per_unit",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "margin_erosion_risk_score",
+      "status": "created",
+      "name": "mc__margin_erosion_risk_score",
+      "coBindings": 2
+    },
+    {
+      "metric": "markdown_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "months_of_runway",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "motor_claims_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "net_farm_income",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "net_interest_income_nii",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "net_interest_margin_nim",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "net_written_premium_nwp",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "netback_per_boe",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "new_business_margin",
+      "status": "created",
+      "name": "mc__new_business_margin",
+      "coBindings": 1
+    },
+    {
+      "metric": "non_interest_expense_pct_of_total_assets",
+      "status": "created",
+      "name": "mc__non_interest_expense_pct_of_total_assets",
+      "coBindings": 1
+    },
+    {
+      "metric": "non_labor_savings_out_of_total_savings_observed_through_implementation_of_a",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "non_moving_inventory_value",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "operating_cost_ratio",
+      "status": "created",
+      "name": "mc__operating_cost_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "operating_leverage",
+      "status": "created",
+      "name": "mc__operating_leverage",
+      "coBindings": 2
+    },
+    {
+      "metric": "other_savings_out_of_total_savings_observed_through_implementation_of_a_finance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "outpatient_revenue_as_of_total",
+      "status": "created",
+      "name": "mc__outpatient_revenue_as_of_total",
+      "coBindings": 1
+    },
+    {
+      "metric": "overall_finance_shared_services_employees_working_virtually",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "passenger_yield",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "patient_drug_cost_per_stay",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "payer_mix",
+      "status": "created",
+      "name": "mc__payer_mix",
+      "coBindings": 2
+    },
+    {
+      "metric": "payment_error_rate",
+      "status": "created",
+      "name": "mc__payment_error_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "payment_fraud_attempts",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "payment_fraud_loss_rate",
+      "status": "created",
+      "name": "mc__payment_fraud_loss_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "payment_processing_cost",
+      "status": "created",
+      "name": "mc__payment_processing_cost",
+      "coBindings": 2
+    },
+    {
+      "metric": "postpaid_mix",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "predicted_margin_quarter_end",
+      "status": "created",
+      "name": "mc__predicted_margin_quarter_end",
+      "coBindings": 1
+    },
+    {
+      "metric": "price_elasticity_index",
+      "status": "created",
+      "name": "mc__price_elasticity_index",
+      "coBindings": 2
+    },
+    {
+      "metric": "price_realization",
+      "status": "created",
+      "name": "mc__price_realization",
+      "coBindings": 1
+    },
+    {
+      "metric": "price_to_earnings_ratio_p_e",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "product_margin_distribution",
+      "status": "created",
+      "name": "mc__product_margin_distribution",
+      "coBindings": 1
+    },
+    {
+      "metric": "professional_ftes_involved_in_finance_function_operations_pct_of_total_finance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "profit_per_ask_pask",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "profit_per_customer",
+      "status": "created",
+      "name": "mc__profit_per_customer",
+      "coBindings": 2
+    },
+    {
+      "metric": "profit_per_employee",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "projected_revenue_quarter_end",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "public_debt_to_gdp_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "refinancing_risk",
+      "status": "created",
+      "name": "mc__refinancing_risk",
+      "coBindings": 1
+    },
+    {
+      "metric": "rent_growth_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "reserve_adequacy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "return_on_farm_assets",
+      "status": "created",
+      "name": "mc__return_on_farm_assets",
+      "coBindings": 2
+    },
+    {
+      "metric": "return_on_idle_cash",
+      "status": "created",
+      "name": "mc__return_on_idle_cash",
+      "coBindings": 1
+    },
+    {
+      "metric": "return_on_sales_ros",
+      "status": "created",
+      "name": "mc__return_on_sales_ros",
+      "coBindings": 2
+    },
+    {
+      "metric": "revenue_leakage_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "separate_finance_related_shared_services_centers_throughout_the_entire",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "shipping_cost_as_of_revenue",
+      "status": "created",
+      "name": "mc__shipping_cost_as_of_revenue",
+      "coBindings": 2
+    },
+    {
+      "metric": "short_term_debt_as_of_total_debt",
+      "status": "exists",
+      "name": "mc__short_term_debt_as_of_total_debt"
+    },
+    {
+      "metric": "slow_moving_inventory",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "spread_yield_on_advances_minus_cost_of_deposits",
+      "status": "created",
+      "name": "mc__spread_yield_on_advances_minus_cost_of_deposits",
+      "coBindings": 1
+    },
+    {
+      "metric": "stockout_incidents",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "straight_through_processing_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "student_debt_at_graduation_avg",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_automation_rate",
+      "status": "exists",
+      "name": "mc__tax_automation_rate"
+    },
+    {
+      "metric": "tax_controversy_reserve",
+      "status": "created",
+      "name": "mc__tax_controversy_reserve",
+      "coBindings": 1
+    },
+    {
+      "metric": "tax_data_quality_score",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_department_cost_as_of_revenue",
+      "status": "created",
+      "name": "mc__tax_department_cost_as_of_revenue",
+      "coBindings": 2
+    },
+    {
+      "metric": "tax_jurisdictions_managed",
+      "status": "created",
+      "name": "mc__tax_jurisdictions_managed",
+      "coBindings": 1
+    },
+    {
+      "metric": "tax_penalty_interest_incurred",
+      "status": "created",
+      "name": "mc__tax_penalty_interest_incurred",
+      "coBindings": 1
+    },
+    {
+      "metric": "tax_return_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_return_filing_timeliness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tax_savings_from_planning",
+      "status": "created",
+      "name": "mc__tax_savings_from_planning",
+      "coBindings": 1
+    },
+    {
+      "metric": "tax_to_gdp_ratio",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "time_to_invoice",
+      "status": "created",
+      "name": "mc__time_to_invoice",
+      "coBindings": 2
+    },
+    {
+      "metric": "total_cost_of_continuing_operations_as_percentage_of_revenue",
+      "status": "created",
+      "name": "mc__total_cost_of_continuing_operations_as_percentage_of_revenue",
+      "coBindings": 2
+    },
+    {
+      "metric": "total_cost_to_operate_the_finance_shared_services_centers_per_finance_shared",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "total_cost_to_operate_the_finance_shared_services_centers_per_k_revenue",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "total_inventory_value",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "total_number_of_finance_employees_dedicated_to_problem_desk_or_customer_care",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "total_revenue",
+      "status": "created",
+      "name": "mc__total_revenue",
+      "coBindings": 1
+    },
+    {
+      "metric": "total_shareholder_return_tsr",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "tuition_dependency_ratio",
+      "status": "created",
+      "name": "mc__tuition_dependency_ratio",
+      "coBindings": 1
+    },
+    {
+      "metric": "undrawn_credit_facility",
+      "status": "created",
+      "name": "mc__undrawn_credit_facility",
+      "coBindings": 1
+    },
+    {
+      "metric": "unrecognized_tax_benefits_utb",
+      "status": "created",
+      "name": "mc__unrecognized_tax_benefits_utb",
+      "coBindings": 1
+    },
+    {
+      "metric": "value_at_risk_var",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "value_of_new_business_vnb",
+      "status": "created",
+      "name": "mc__value_of_new_business_vnb",
+      "coBindings": 1
+    },
+    {
+      "metric": "vnb_margin",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "warehouse_cost_per_order",
+      "status": "created",
+      "name": "mc__warehouse_cost_per_order",
+      "coBindings": 2
+    },
+    {
+      "metric": "weighted_average_cost_of_capital_wacc",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "weighted_average_debt_maturity",
+      "status": "created",
+      "name": "mc__weighted_average_debt_maturity",
+      "coBindings": 2
+    },
+    {
+      "metric": "yield_on_advances",
+      "status": "created",
+      "name": "mc__yield_on_advances",
+      "coBindings": 2
+    }
+  ]
+}

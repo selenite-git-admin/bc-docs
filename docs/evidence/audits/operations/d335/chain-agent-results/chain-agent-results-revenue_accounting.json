@@ -1,0 +1,1324 @@
+{
+  "subfunction": "revenue_accounting",
+  "boMappings": {
+    "receivable_hdr": {
+      "number_of_active_customer_accounts": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_customer_accounts": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "cash_collection_date": {
+        "bfName": "receivable_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "count_of_delinquent_customers": {
+        "bfName": "receivable_hdr_customer_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "days_sales_outstanding": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "payment_receipt_date": {
+        "bfName": "receivable_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_active_subscribers_accounts": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "journal_entry_hdr": {
+      "adjustment_resolution_date": {
+        "bfName": "journal_entry_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "adjustment_identification_date": {
+        "bfName": "journal_entry_hdr_document_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "automated_gl_entries_count": {
+        "bfName": "journal_entry_hdr_document_number",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_gl_entries_count": {
+        "bfName": "journal_entry_hdr_document_number",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_revenue_transactions_audited": {
+        "bfName": "journal_entry_hdr_document_number",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "invoice_hdr": {
+      "total_inbound_invoices_processed_by_ai": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_outbound_invoices_processed_by_ai": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoice_creation_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_automatically_generated_invoices": {
+        "bfName": "invoice_hdr_extended_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_invoices_count": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoices_generated_count": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "invoice_delivery_date": {
+        "bfName": "invoice_hdr_requested_delivery_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "billing_data_completion_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_billing_transactions_count": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_billings_value": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoices_adjusted_by_customer_count": {
+        "bfName": "invoice_hdr_customer_party_identifier",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "total_invoices_issued_count": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoices_paid_in_full_first_time_count": {
+        "bfName": "invoice_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_invoices_due_count": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoice_value_due": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoice_completion_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "invoice_initiation_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "invoice_transmission_date": {
+        "bfName": "invoice_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "billing_volume": {
+        "bfName": "invoice_hdr_net_volume_measure",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      }
+    },
+    "actual_ledger": {
+      "total_ancillary_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_revenue_for_period": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_segment_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "monthly_recurring_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_revenue_from_closed_deals": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_ecommerce_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_retail_sales_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_banquet_event_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_revenue_from_all_services": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_direct_costs_of_goods_sold": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "cash_and_cash_equivalents_balance": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_operating_expenses_for_period": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_unearned_revenue_collected": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_unearned_revenue_outstanding": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "expansion_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "beginning_of_period_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "total_fb_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "average_revenue_per_user_account": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "gross_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "sales_returns": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "sales_allowances": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "current_period_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "prior_period_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "revenue_from_acquisitions_divestitures": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "foreign_exchange_impact_on_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "product_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "product_operating_expenses": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_passenger_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "revenue_from_goods_or_services": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_recurring_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "net_income": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "contracted_unrecognized_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "revenue_from_specific_channel": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "revenue_from_specific_product_line": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "revenue_from_specific_region": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "lost_recurring_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "beginning_of_period_recurring_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "revenue_from_top_customers": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "actual_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_patient_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_hospital_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_content_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_flight_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_agricultural_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_educational_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_revenue_from_calls": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_hotel_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "revenue_attributable_to_s_m": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_sales_and_marketing_spend": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "current_period_segment_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "prior_period_segment_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_spa_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_route_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "current_year_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "prior_year_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "customer_party_master": {
+      "total_subscribers_or_users": {
+        "bfName": "customer_party_master_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "high"
+      },
+      "total_segment_subscribers_or_users": {
+        "bfName": "customer_party_master_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "medium"
+      },
+      "total_subscribers_count": {
+        "bfName": "customer_party_master_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "high"
+      },
+      "count_of_active_customers": {
+        "bfName": "customer_party_master_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_active_customers_count": {
+        "bfName": "customer_party_master_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "high"
+      },
+      "number_of_active_customers": {
+        "bfName": "customer_party_master_identifier",
+        "resolutionRule": "count_distinct",
+        "confidence": "high"
+      }
+    },
+    "credit_transfer_hdr": {
+      "total_customer_receipts": {
+        "bfName": "credit_transfer_hdr_entry_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "credit": {
+      "automated_credit_decisions_count": {
+        "bfName": "credit_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "total_credit_decisions_count": {
+        "bfName": "credit_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "credit_approval_completion_date": {
+        "bfName": "credit_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      },
+      "credit_application_submission_date": {
+        "bfName": "credit_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      }
+    },
+    "sales_order_hdr": {
+      "number_of_closed_deals": {
+        "bfName": "sales_order_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_ecommerce_orders_count": {
+        "bfName": "sales_order_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_retail_orders_count": {
+        "bfName": "sales_order_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_bookings_value": {
+        "bfName": "sales_order_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "order_backlog": {
+        "bfName": "sales_order_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "gaap_receivables": {
+      "total_uncollectable_balances": {
+        "bfName": "gaap_receivables_allowance_for_doubtful",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "location_area": {
+      "total_function_space_square_meters": {
+        "bfName": "location_area_physical_area_measure",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_cultivated_hectares": {
+        "bfName": "location_area_physical_area_measure",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_available_square_meters": {
+        "bfName": "location_area_physical_area_measure",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      }
+    },
+    "sales_order_line": {
+      "product_service_delivery_date": {
+        "bfName": "sales_order_line_actual_delivery_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      }
+    },
+    "budget_ledger_hdr": {
+      "period_end_date": {
+        "bfName": "budget_ledger_hdr_effective_end_date",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      }
+    },
+    "invoice_line": {
+      "invoice_line_items_adjusted_by_customer_count": {
+        "bfName": "invoice_line_allowance_charge_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "billed_line_items_with_discount_taken_count": {
+        "bfName": "invoice_line_line_number_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "billed_line_items_offering_discount_count": {
+        "bfName": "invoice_line_line_number_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "billed_line_items_with_discount_offer_count": {
+        "bfName": "invoice_line_line_number_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "total_billed_line_items_count": {
+        "bfName": "invoice_line_line_number_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      },
+      "invoice_line_items_electronically_invoiced_count": {
+        "bfName": "invoice_line_allowance_charge_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "total_invoice_line_items_due_count": {
+        "bfName": "invoice_line_sub_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "sales_discounts": {
+        "bfName": "invoice_line_allowance_charge_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "payable_hdr": {
+      "average_payment_terms_in_days": {
+        "bfName": "payable_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "value_paid_in_full_first_time": {
+        "bfName": "payable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "receive_delivery_hdr": {
+      "total_receipts_count": {
+        "bfName": "receive_delivery_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_receipts_processed_count": {
+        "bfName": "receive_delivery_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "shipment_hdr": {
+      "goods_shipment_service_delivery_date": {
+        "bfName": "shipment_hdr_actual_delivery_date_time",
+        "resolutionRule": "latest",
+        "confidence": "high"
+      },
+      "number_of_departures": {
+        "bfName": "shipment_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "high"
+      }
+    },
+    "gaap_income_statement": {
+      "product_cost_of_goods_sold": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "receive_item_hdr": {
+      "error_free_receipts_count": {
+        "bfName": "receive_item_hdr_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "receivable_hdr": {
+      "exists": true,
+      "contractId": "019d762a-13e9-789e-86ad-02afdad6eb24",
+      "name": "cc__receivable_hdr",
+      "mappingsAdded": 7
+    },
+    "journal_entry_hdr": {
+      "exists": true,
+      "contractId": "019d7663-f10b-7c5b-9ff9-b00e701a2452",
+      "name": "cc__journal_entry_hdr",
+      "mappingsAdded": 5
+    },
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr",
+      "mappingsAdded": 18
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 49
+    },
+    "customer_party_master": {
+      "exists": true,
+      "contractId": "019d7838-036d-7f08-8d3b-dc8382c6acb7",
+      "name": "cc__customer_party_master",
+      "mappingsAdded": 5
+    },
+    "credit_transfer_hdr": {
+      "exists": true,
+      "contractId": "019d7838-2dd6-78e9-96ef-4ef1e44cf402",
+      "name": "cc__credit_transfer_hdr",
+      "mappingsAdded": 1
+    },
+    "credit": {
+      "exists": true,
+      "contractId": "019d762a-1998-738d-9b42-f14e1e6ed892",
+      "name": "cc__credit",
+      "mappingsAdded": 4
+    },
+    "sales_order_hdr": {
+      "exists": true,
+      "contractId": "019d7838-2f76-7e84-bcdf-638a2ea6dd1b",
+      "name": "cc__sales_order_hdr",
+      "mappingsAdded": 5
+    },
+    "gaap_receivables": {
+      "exists": true,
+      "contractId": "019d762a-1826-7d44-8c86-ec64e894c948",
+      "name": "cc__gaap_receivables",
+      "mappingsAdded": 1
+    },
+    "location_area": {
+      "exists": true,
+      "contractId": "019d7838-0233-7abd-b608-83dd1c68a001",
+      "name": "cc__location_area",
+      "mappingsAdded": 3
+    },
+    "sales_order_line": {
+      "exists": true,
+      "contractId": "019d7838-2c98-7a07-8022-165840d4d6b8",
+      "name": "cc__sales_order_line",
+      "mappingsAdded": 1
+    },
+    "budget_ledger_hdr": {
+      "exists": true,
+      "contractId": "019d7663-f27e-7c14-bd51-aa05ea8d4038",
+      "name": "cc__budget_ledger_hdr",
+      "mappingsAdded": 1
+    },
+    "invoice_line": {
+      "exists": true,
+      "contractId": "019d7650-e4f6-7dcf-9e3d-51bd9e9edf32",
+      "name": "cc__invoice_line",
+      "mappingsAdded": 8
+    },
+    "payable_hdr": {
+      "exists": true,
+      "contractId": "019d765f-10c7-730c-91bd-251a9e4741a4",
+      "name": "cc__payable_hdr",
+      "mappingsAdded": 2
+    },
+    "receive_delivery_hdr": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-9d28-7519-aab1-dcba784f6fa4",
+      "name": "cc__receive_delivery_hdr"
+    },
+    "shipment_hdr": {
+      "exists": true,
+      "contractId": "019d7838-2e12-748c-9841-cd0a8e59a91e",
+      "name": "cc__shipment_hdr",
+      "mappingsAdded": 2
+    },
+    "gaap_income_statement": {
+      "exists": true,
+      "contractId": "019d762a-1944-7468-ba8b-f605ef2f8067",
+      "name": "cc__gaap_income_statement",
+      "mappingsAdded": 1
+    },
+    "receive_item_hdr": {
+      "exists": true,
+      "created": true,
+      "contractId": "019d7838-9d81-72ce-9551-45ae841b31f0",
+      "name": "cc__receive_item_hdr"
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "active_customer_rate",
+      "status": "created",
+      "name": "mc__active_customer_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "adjustment_resolution_time",
+      "status": "created",
+      "name": "mc__adjustment_resolution_time",
+      "coBindings": 1
+    },
+    {
+      "metric": "ai_inbound_invoice_stp_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "ai_inbound_invoice_time_reduction",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "ai_outbound_invoice_stp_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "ai_outbound_invoice_time_reduction",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "ancillary_revenue_per_passenger",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "ar_and_collections_cycle_time",
+      "status": "created",
+      "name": "mc__ar_and_collections_cycle_time",
+      "coBindings": 2
+    },
+    {
+      "metric": "arpa",
+      "status": "created",
+      "name": "mc__arpa",
+      "coBindings": 2
+    },
+    {
+      "metric": "arpu",
+      "status": "created",
+      "name": "mc__arpu",
+      "coBindings": 2
+    },
+    {
+      "metric": "arpu_by_segment",
+      "status": "created",
+      "name": "mc__arpu_by_segment",
+      "coBindings": 2
+    },
+    {
+      "metric": "arr",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "auto_invoice_generation_rate",
+      "status": "created",
+      "name": "mc__auto_invoice_generation_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "auto_receipt_application_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "auto_receipt_matching_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "automated_credit_decision_rate",
+      "status": "created",
+      "name": "mc__automated_credit_decision_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "automated_gl_entry_rate",
+      "status": "created",
+      "name": "mc__automated_gl_entry_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "average_deal_size",
+      "status": "created",
+      "name": "mc__average_deal_size",
+      "coBindings": 2
+    },
+    {
+      "metric": "average_ecommerce_order_value",
+      "status": "created",
+      "name": "mc__average_ecommerce_order_value",
+      "coBindings": 2
+    },
+    {
+      "metric": "average_line_items_per_invoice",
+      "status": "created",
+      "name": "mc__average_line_items_per_invoice",
+      "coBindings": 2
+    },
+    {
+      "metric": "average_retail_order_value",
+      "status": "created",
+      "name": "mc__average_retail_order_value",
+      "coBindings": 2
+    },
+    {
+      "metric": "bad_debt_ratio",
+      "status": "created",
+      "name": "mc__bad_debt_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "banquet_revenue_per_sqm",
+      "status": "created",
+      "name": "mc__banquet_revenue_per_sqm",
+      "coBindings": 2
+    },
+    {
+      "metric": "billing_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "billing_bottleneck_score",
+      "status": "exists",
+      "name": "mc__billing_bottleneck_score"
+    },
+    {
+      "metric": "billing_cycle_time",
+      "status": "created",
+      "name": "mc__billing_cycle_time",
+      "coBindings": 2
+    },
+    {
+      "metric": "billing_data_generation_time",
+      "status": "created",
+      "name": "mc__billing_data_generation_time",
+      "coBindings": 2
+    },
+    {
+      "metric": "billing_exceptions_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "billing_volume",
+      "status": "created",
+      "name": "mc__billing_volume",
+      "coBindings": 1
+    },
+    {
+      "metric": "blended_arpu",
+      "status": "created",
+      "name": "mc__blended_arpu",
+      "coBindings": 2
+    },
+    {
+      "metric": "booking_to_billing_ratio",
+      "status": "created",
+      "name": "mc__booking_to_billing_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "cost_of_revenue",
+      "status": "created",
+      "name": "mc__cost_of_revenue",
+      "coBindings": 1
+    },
+    {
+      "metric": "credit_approval_cycle_time",
+      "status": "created",
+      "name": "mc__credit_approval_cycle_time",
+      "coBindings": 1
+    },
+    {
+      "metric": "customer_delinquency_rate",
+      "status": "created",
+      "name": "mc__customer_delinquency_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "customer_pre_payment_adjustment_invoice_rate",
+      "status": "created",
+      "name": "mc__customer_pre_payment_adjustment_invoice_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "customer_pre_payment_adjustment_line_item_rate",
+      "status": "created",
+      "name": "mc__customer_pre_payment_adjustment_line_item_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "customer_self_service_billing_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "days_cash_on_hand",
+      "status": "created",
+      "name": "mc__days_cash_on_hand",
+      "coBindings": 2
+    },
+    {
+      "metric": "deferred_revenue",
+      "status": "created",
+      "name": "mc__deferred_revenue",
+      "coBindings": 1
+    },
+    {
+      "metric": "deferred_revenue_balance",
+      "status": "created",
+      "name": "mc__deferred_revenue_balance",
+      "coBindings": 1
+    },
+    {
+      "metric": "discount_capture_rate_billed",
+      "status": "created",
+      "name": "mc__discount_capture_rate_billed",
+      "coBindings": 1
+    },
+    {
+      "metric": "discount_offering_billed_line_item_rate",
+      "status": "created",
+      "name": "mc__discount_offering_billed_line_item_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "dso_to_payment_terms_ratio",
+      "status": "created",
+      "name": "mc__dso_to_payment_terms_ratio",
+      "coBindings": 2
+    },
+    {
+      "metric": "electronic_invoicing_rate",
+      "status": "created",
+      "name": "mc__electronic_invoicing_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "electronic_receipt_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "event_triggered_invoice_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "expansion_revenue_rate",
+      "status": "created",
+      "name": "mc__expansion_revenue_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "fb_revenue_per_cover",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "first_time_full_payment_invoice_rate",
+      "status": "created",
+      "name": "mc__first_time_full_payment_invoice_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "first_time_full_payment_line_item_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "first_time_full_payment_value_rate",
+      "status": "created",
+      "name": "mc__first_time_full_payment_value_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "invoice_error_free_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "invoice_line_item_error_free_rate",
+      "status": "exists",
+      "name": "mc__invoice_line_item_error_free_rate"
+    },
+    {
+      "metric": "invoice_line_items_per_receipt",
+      "status": "created",
+      "name": "mc__invoice_line_items_per_receipt",
+      "coBindings": 2
+    },
+    {
+      "metric": "invoice_process_cycle_time",
+      "status": "created",
+      "name": "mc__invoice_process_cycle_time",
+      "coBindings": 1
+    },
+    {
+      "metric": "invoice_to_payment_cycle_time",
+      "status": "created",
+      "name": "mc__invoice_to_payment_cycle_time",
+      "coBindings": 2
+    },
+    {
+      "metric": "invoice_to_shipment_cycle_time",
+      "status": "created",
+      "name": "mc__invoice_to_shipment_cycle_time",
+      "coBindings": 2
+    },
+    {
+      "metric": "manual_receipt_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "mrr",
+      "status": "created",
+      "name": "mc__mrr",
+      "coBindings": 2
+    },
+    {
+      "metric": "net_revenue",
+      "status": "created",
+      "name": "mc__net_revenue",
+      "coBindings": 2
+    },
+    {
+      "metric": "on_time_payment_receipt_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "organic_revenue_growth",
+      "status": "created",
+      "name": "mc__organic_revenue_growth",
+      "coBindings": 1
+    },
+    {
+      "metric": "predicted_billing_volume",
+      "status": "created",
+      "name": "mc__predicted_billing_volume",
+      "coBindings": 3
+    },
+    {
+      "metric": "product_profitability",
+      "status": "created",
+      "name": "mc__product_profitability",
+      "coBindings": 2
+    },
+    {
+      "metric": "rask",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "receipt_error_free_rate",
+      "status": "created",
+      "name": "mc__receipt_error_free_rate",
+      "coBindings": 2
+    },
+    {
+      "metric": "receipts_per_thousand_revenue",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "recognized_revenue",
+      "status": "created",
+      "name": "mc__recognized_revenue",
+      "coBindings": 1
+    },
+    {
+      "metric": "recurring_revenue_pct",
+      "status": "created",
+      "name": "mc__recurring_revenue_pct",
+      "coBindings": 2
+    },
+    {
+      "metric": "return_on_revenue",
+      "status": "exists",
+      "name": "mc__return_on_revenue"
+    },
+    {
+      "metric": "revenue_backlog",
+      "status": "created",
+      "name": "mc__revenue_backlog",
+      "coBindings": 1
+    },
+    {
+      "metric": "revenue_by_channel",
+      "status": "created",
+      "name": "mc__revenue_by_channel",
+      "coBindings": 1
+    },
+    {
+      "metric": "revenue_by_product_line",
+      "status": "created",
+      "name": "mc__revenue_by_product_line",
+      "coBindings": 2
+    },
+    {
+      "metric": "revenue_by_region",
+      "status": "created",
+      "name": "mc__revenue_by_region",
+      "coBindings": 1
+    },
+    {
+      "metric": "revenue_churn",
+      "status": "created",
+      "name": "mc__revenue_churn",
+      "coBindings": 1
+    },
+    {
+      "metric": "revenue_concentration",
+      "status": "created",
+      "name": "mc__revenue_concentration",
+      "coBindings": 2
+    },
+    {
+      "metric": "revenue_forecasting_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "revenue_growth_rate",
+      "status": "created",
+      "name": "mc__revenue_growth_rate",
+      "coBindings": 1
+    },
+    {
+      "metric": "revenue_per_adjusted_patient_day",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "revenue_per_bed",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "revenue_per_content_hour",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "revenue_per_customer",
+      "status": "created",
+      "name": "mc__revenue_per_customer",
+      "coBindings": 2
+    },
+    {
+      "metric": "revenue_per_departure",
+      "status": "created",
+      "name": "mc__revenue_per_departure",
+      "coBindings": 2
+    },
+    {
+      "metric": "revenue_per_employee",
+      "status": "exists",
+      "name": "mc__revenue_per_employee"
+    },
+    {
+      "metric": "revenue_per_hectare",
+      "status": "created",
+      "name": "mc__revenue_per_hectare",
+      "coBindings": 2
+    },
+    {
+      "metric": "revenue_per_student",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "revenue_per_successful_call",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "revenue_recognition_compliance_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "revenue_run_rate",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "revpam",
+      "status": "created",
+      "name": "mc__revpam",
+      "coBindings": 2
+    },
+    {
+      "metric": "revpor",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "sales_and_marketing_roi",
+      "status": "created",
+      "name": "mc__sales_and_marketing_roi",
+      "coBindings": 1
+    },
+    {
+      "metric": "sales_growth_by_segment",
+      "status": "created",
+      "name": "mc__sales_growth_by_segment",
+      "coBindings": 1
+    },
+    {
+      "metric": "sla_performance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "spa_revenue_per_treatment_room",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "unit_revenue_by_route",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "yoy_revenue_growth",
+      "status": "created",
+      "name": "mc__yoy_revenue_growth",
+      "coBindings": 1
+    }
+  ]
+}

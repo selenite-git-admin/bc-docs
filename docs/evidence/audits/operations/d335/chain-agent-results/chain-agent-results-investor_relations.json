@@ -1,0 +1,189 @@
+{
+  "subfunction": "investor_relations",
+  "boMappings": {
+    "personnel": {
+      "active_analysts_count": {
+        "bfName": "personnel_identifier",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      }
+    },
+    "gaap_income_statement": {
+      "current_period_earnings_per_share": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "prior_period_earnings_per_share": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "current_period_net_income": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "prior_period_net_income": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "actual_ledger": {
+      "total_shares_outstanding": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "current_period_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "prior_period_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "cost_of_goods_sold": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "gaap_cash_flow": {
+      "current_period_operating_cash_flow": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "prior_period_operating_cash_flow": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      }
+    },
+    "asset": {
+      "Number of Years": {
+        "bfName": "asset_useful_life_years",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    }
+  },
+  "ccResults": {
+    "personnel": {
+      "exists": true,
+      "contractId": "019d7838-2c3c-76ff-ac84-1920e83e0e91",
+      "name": "cc__personnel",
+      "mappingsAdded": 1
+    },
+    "gaap_income_statement": {
+      "exists": true,
+      "contractId": "019d762a-1944-7468-ba8b-f605ef2f8067",
+      "name": "cc__gaap_income_statement",
+      "mappingsAdded": 4
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger",
+      "mappingsAdded": 1
+    },
+    "gaap_cash_flow": {
+      "exists": true,
+      "contractId": "019d762a-1884-7cd0-8aca-30f6eb805929",
+      "name": "cc__gaap_cash_flow",
+      "mappingsAdded": 2
+    },
+    "asset": {
+      "exists": true,
+      "contractId": "019d7701-d9db-728f-89ad-60f06fdf4f42",
+      "name": "cc__asset",
+      "mappingsAdded": 1
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "analyst_coverage",
+      "status": "created",
+      "name": "mc__analyst_coverage",
+      "coBindings": 1
+    },
+    {
+      "metric": "earnings_growth",
+      "status": "created",
+      "name": "mc__earnings_growth",
+      "coBindings": 1
+    },
+    {
+      "metric": "insider_trading_activity",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "institutional_ownership",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "investor_perception",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "investor_sentiment_analysis_accuracy",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "market_capitalization",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "net_income_growth",
+      "status": "created",
+      "name": "mc__net_income_growth",
+      "coBindings": 1
+    },
+    {
+      "metric": "operating_cash_flow_growth",
+      "status": "created",
+      "name": "mc__operating_cash_flow_growth",
+      "coBindings": 1
+    },
+    {
+      "metric": "payout_frequency",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "revenue_growth",
+      "status": "created",
+      "name": "mc__revenue_growth",
+      "coBindings": 1
+    },
+    {
+      "metric": "sell_inventory",
+      "status": "exists",
+      "name": "mc__sell_inventory"
+    },
+    {
+      "metric": "share_price_performance",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "shareholder_engagement_effectiveness",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "volume_of_shares_traded",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    }
+  ]
+}

@@ -6,16 +6,16 @@ status: drafting
 authority: reference
 depends_on: [the-invariants, the-evaluation-boundaries, the-contract-grammar, metric-contract-creation, metric-registration, mc-chain-integrity]
 governing_sources:
-  - bc-docs-v3/docs/foundation/the-invariants.md
-  - bc-docs-v3/docs/foundation/the-evaluation-boundaries.md
-  - bc-docs-v3/docs/foundation/the-contract-grammar.md
+  - bc-docs/docs/foundation/the-invariants.md
+  - bc-docs/docs/foundation/the-evaluation-boundaries.md
+  - bc-docs/docs/foundation/the-contract-grammar.md
 governing_adrs:
   - DEC-ebf0b4 (D268 — Session Discipline Rules)
   - DEC-804874 (D366 — L-Node Semantic Gate)
 governing_sops:
-  - bc-docs-v3/docs/onboarding/metric-contract-creation.md
-  - bc-docs-v3/docs/onboarding/metric-registration.md
-  - bc-docs-v3/docs/onboarding/mc-chain-integrity.md
+  - bc-docs/docs/onboarding/metric-contract-creation.md
+  - bc-docs/docs/onboarding/metric-registration.md
+  - bc-docs/docs/onboarding/mc-chain-integrity.md
 errata_referenced: []
 diagrams: []
 ---
@@ -30,8 +30,8 @@ This chapter is an **operational overlay**. It frames metric work as a disciplin
 
 **Where this chapter conflicts with another source, that source wins.** The conflict order is:
 
-1. `bc-docs-v3/docs/foundation/the-invariants.md` (and the rest of the Foundation chapters).
-2. ADRs in `bc-docs-v3/docs/adrs/`.
+1. `bc-docs/docs/foundation/the-invariants.md` (and the rest of the Foundation chapters).
+2. ADRs in `bc-docs/docs/adrs/`.
 3. The authoritative onboarding SOPs — primarily `metric-contract-creation.md`, `metric-registration.md`, `mc-chain-integrity.md`, plus their siblings.
 4. `barecount-devhub/CLAUDE.md` Foundation Invariant Check (operational reminder of Foundation).
 5. This chapter.
@@ -301,7 +301,7 @@ The lists below are *operational* — they don't replace the SOPs' procedural st
 ### 9.5 Grammar or evaluator extension checklist
 
 - [ ] Foundation Gate: layer B+D (contract grammar + engine implementation).
-- [ ] ADR drafted in `bc-docs-v3/docs/adrs/` — grammar extensions are always architecturally significant.
+- [ ] ADR drafted in `bc-docs/docs/adrs/` — grammar extensions are always architecturally significant.
 - [ ] New grammar fields are additive and version-gated (`$contract: barecount/metric/v<major>.<minor>`); existing MCs unaffected.
 - [ ] No `Date.now()`, no implicit head-of-stream reference; every reference is contract-declared.
 - [ ] Engine extension behind the same version gate; v1.0 evaluation path bit-identical to the readiness baseline.
@@ -348,12 +348,12 @@ A Metric Work Record is a short, structured orientation document that lets a fut
 | **Is** | A metric-indexed orientation summary. Links to canonical artifacts. Captures the Foundation Gate result, the findings, the decision, the non-decisions, and the follow-ups. |
 | **Is not** | An ADR. Does not override contracts or Foundation. Does not replace DevHub session change records or evidence objects. If a record contains a decision that changes architecture, an ADR is also required. |
 
-Canonical sources of truth remain: DevHub session change records (operational), ADRs in `bc-docs-v3/docs/adrs/` (architectural), commits (code state), `evidence.evidence_object` rows (evaluation outcomes), `contract.metric_contract_version` rows (contract state). A Metric Work Record is the metric-indexed *pointer view* into those.
+Canonical sources of truth remain: DevHub session change records (operational), ADRs in `bc-docs/docs/adrs/` (architectural), commits (code state), `evidence.evidence_object` rows (evaluation outcomes), `contract.metric_contract_version` rows (contract state). A Metric Work Record is the metric-indexed *pointer view* into those.
 
 ### Storage location
 
 ```
-bc-docs-v3/docs/onboarding/metric-work-records/<metric_slug>/YYYY-MM-DD-<work_type>-<session_uid>.md
+bc-docs/docs/onboarding/metric-work-records/<metric_slug>/YYYY-MM-DD-<work_type>-<session_uid>.md
 ```
 
 Where:
@@ -471,7 +471,7 @@ If a record and any of the above disagree, the canonical source wins. The record
 
 ### Template
 
-A reusable template lives at `bc-docs-v3/docs/onboarding/metric-work-records/_template.md`. Copy it for a new record. The companion README at `bc-docs-v3/docs/onboarding/metric-work-records/README.md` carries operating notes for the directory.
+A reusable template lives at `bc-docs/docs/onboarding/metric-work-records/_template.md`. Copy it for a new record. The companion README at `bc-docs/docs/onboarding/metric-work-records/README.md` carries operating notes for the directory.
 
 ---
 
@@ -487,13 +487,13 @@ A reusable template lives at `bc-docs-v3/docs/onboarding/metric-work-records/_te
 
 ## References
 
-- `bc-docs-v3/docs/foundation/the-invariants.md` — six invariants
-- `bc-docs-v3/docs/foundation/the-evaluation-boundaries.md` — four boundaries + boundary-independent rules
-- `bc-docs-v3/docs/foundation/the-contract-grammar.md` — twelve grammar artifacts
-- `bc-docs-v3/docs/adrs/ADR-ebf0b4.md` (D268) — Session Discipline Rules
-- `bc-docs-v3/docs/adrs/ADR-804874.md` (D366) — L-Node Semantic Gate; override mechanic
-- `bc-docs-v3/docs/adrs/ADR-chain-invariants.md` — machine-checkable chain invariants
-- `bc-docs-v3/docs/onboarding/metric-contract-creation.md`
-- `bc-docs-v3/docs/onboarding/metric-registration.md`
-- `bc-docs-v3/docs/onboarding/mc-chain-integrity.md`
+- `bc-docs/docs/foundation/the-invariants.md` — six invariants
+- `bc-docs/docs/foundation/the-evaluation-boundaries.md` — four boundaries + boundary-independent rules
+- `bc-docs/docs/foundation/the-contract-grammar.md` — twelve grammar artifacts
+- `bc-docs/docs/adrs/ADR-ebf0b4.md` (D268) — Session Discipline Rules
+- `bc-docs/docs/adrs/ADR-804874.md` (D366) — L-Node Semantic Gate; override mechanic
+- `bc-docs/docs/adrs/ADR-chain-invariants.md` — machine-checkable chain invariants
+- `bc-docs/docs/onboarding/metric-contract-creation.md`
+- `bc-docs/docs/onboarding/metric-registration.md`
+- `bc-docs/docs/onboarding/mc-chain-integrity.md`
 - `barecount-devhub/CLAUDE.md` §Foundation Invariant Check

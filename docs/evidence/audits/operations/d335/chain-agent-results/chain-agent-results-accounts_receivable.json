@@ -1,0 +1,1077 @@
+{
+  "subfunction": "accounts_receivable",
+  "boMappings": {
+    "receivable_hdr": {
+      "total_disputes_over_30_days": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "outstanding_receivables_amount": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "age_category_definition": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "average_accounts_receivable_balance": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "cost_of_capital_rate": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "administrative_collection_costs": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_ar_from_top_n_customers": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_accounts_receivable_balance": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "current_period_ar_balance": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "prior_period_ar_balance": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_open_receivables_requiring_pod": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_overdue_receivables": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "gross_profit_from_credit_sales": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_ar_costs": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_ar_volume_processed": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_ar_staff": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "accounts_receivable_balance": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "net_credit_sales": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_revenue_per_available_room": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "variable_costs_per_available_room": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_automated_invoices": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_invoices_generated": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "sum_of_days_past_due_for_overdue_invoices": {
+        "bfName": "receivable_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_overdue_invoices": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_processing_time_for_invoices": {
+        "bfName": "receivable_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_invoices_processed": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_accounts_receivable": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "sum_of_days_from_invoice_date_to_cash_receipt": {
+        "bfName": "receivable_hdr_due_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_invoices_paid": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_payments_correctly_applied_first_attempt": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_payments_received": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_successful_collection_calls": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_collection_calls_made": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "beginning_accounts_receivable": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "ending_accounts_receivable": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "beginning_current_accounts_receivable": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "low"
+      },
+      "total_cash_collected_from_receivables": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_accounts_receivable_outstanding": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "coverage_score": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "ageing_improvement_score": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "weight_coverage": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "weight_ageing_improvement": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_collection_costs": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_collection_attempts": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_time_for_credit_approvals": {
+        "bfName": "receivable_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_credit_applications_processed": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_time_to_resolve_credit_holds": {
+        "bfName": "receivable_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_credit_holds_resolved": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_credit_notes_issued": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_elapsed_time_for_credit_onboarding": {
+        "bfName": "receivable_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_credit_accounts_onboarded": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_credit_rating_upgrades": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_credit_rating_downgrades": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_sales_revenue": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "current_accounts_receivable_balance": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "customer_outstanding_ar_balance": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_time_to_resolve_ar_requests": {
+        "bfName": "receivable_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_ar_requests_resolved": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "recovered_bad_debt_amount": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_bad_debt_written_off": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_days_to_resolve_all_disputes": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_disputes_resolved": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "estimated_uncollectible_percentage": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_invoices_with_early_payment_discount_taken": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_eligible_invoices_for_early_payment_discount": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_electronic_invoices_issued": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_available_rooms": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_days_unreconciled_intercompany_balances": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_intercompany_transactions": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_invoices_with_adjustments": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_days_from_completion_to_delivery": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_invoices_delivered": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "number_of_disputed_invoices": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "fee_income_from_new_accounts": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_fee_income": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "order_to_invoice_time": {
+        "bfName": "receivable_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "invoice_to_payment_time": {
+        "bfName": "receivable_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "payment_to_cash_application_time": {
+        "bfName": "receivable_hdr_last_modification_date_time",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_past_due_accounts_receivable": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "number_of_delinquent_customer_accounts": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_active_customer_accounts": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "ach_payment_usage": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "wire_payment_usage": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "check_payment_usage": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "digital_wallet_payment_usage": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_honored_payment_promises": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_payment_promises_made": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "revpar_for_specific_room_type": {
+        "bfName": "receivable_hdr_document_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "medium"
+      },
+      "revpar_for_competitive_set_room_type": {
+        "bfName": "receivable_hdr_document_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "medium"
+      },
+      "total_cash_collected_from_revenue": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_days_between_invoice_and_recognition": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "number_of_revenue_transactions": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "count_where_not_null",
+        "confidence": "medium"
+      },
+      "total_value_of_credit_notes_and_reversals": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_room_revenue": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_ar_from_top_10_customers": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "open_item_amount": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "high"
+      },
+      "total_property_revenue": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "unbilled_revenue": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "period_remaining": {
+        "bfName": "receivable_hdr_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "total_ar_write_offs": {
+        "bfName": "receivable_hdr_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "bc_ar_operations": {
+      "open_receivables_missing_pod": {
+        "bfName": "bc_ar_ops_open_receivables_missing_pod",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "overdue_receivables_without_recent_follow_up": {
+        "bfName": "bc_ar_ops_open_receivables_missing_pod",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "discounts_per_available_room": {
+        "bfName": "bc_ar_ops_discounts_per_room",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "ml_model_output_score": {
+        "bfName": "bc_ar_ops_ml_model_score",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "collection_performance_score": {
+        "bfName": "bc_ar_ops_collection_performance_score",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "customers_retained_post_collection": {
+        "bfName": "bc_ar_ops_customers_retained_post_collection",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "customers_subject_to_collection": {
+        "bfName": "bc_ar_ops_customers_subject_to_collection",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "invoices_with_errors": {
+        "bfName": "bc_ar_ops_invoices_with_errors",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "monthly_cash_collection_target": {
+        "bfName": "bc_ar_ops_monthly_collection_target",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "billing_capacity": {
+        "bfName": "bc_ar_ops_billing_capacity",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      }
+    },
+    "invoice_hdr": {
+      "total_credit_sales": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_invoices_issued": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_billed_revenue": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "total_gross_sales": {
+        "bfName": "invoice_hdr_total_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "actual_ledger": {
+      "average_accounts_receivable": {
+        "bfName": "actual_ledger_fiscal_year",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "net_income": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "recognized_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "billed_revenue": {
+        "bfName": "actual_ledger_amount",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      }
+    },
+    "gaap_receivables": {
+      "allowance_for_doubtful_accounts": {
+        "bfName": "gaap_receivables_allowance_for_doubtful",
+        "resolutionRule": "sum",
+        "confidence": "medium"
+      },
+      "actual_bad_debt_write_offs": {
+        "bfName": "gaap_receivables_write_off_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "actual_cash_collections_for_month": {
+        "bfName": "gaap_receivables_allowance_for_doubtful",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      }
+    },
+    "gaap_cash_flow": {
+      "operating_cash_flow": {
+        "bfName": "gaap_cashflow_operating_net",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      }
+    },
+    "credit_status": {
+      "credit_sales_for_period": {
+        "bfName": "credit_status_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      },
+      "customer_approved_credit_limit": {
+        "bfName": "credit_status_approved_order_amount",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      },
+      "credit_card_payment_usage": {
+        "bfName": "credit_status_date",
+        "resolutionRule": "latest",
+        "confidence": "medium"
+      }
+    },
+    "gaap_income_statement": {
+      "gross_operating_profit": {
+        "bfName": "gaap_income_gross_profit",
+        "resolutionRule": "sum",
+        "confidence": "low"
+      }
+    },
+    "credit": {
+      "customer_credit_risk_rating": {
+        "bfName": "credit_type_code",
+        "resolutionRule": "assert_equal",
+        "confidence": "low"
+      }
+    }
+  },
+  "ccResults": {
+    "receivable_hdr": {
+      "exists": true,
+      "contractId": "019d762a-13e9-789e-86ad-02afdad6eb24",
+      "name": "cc__receivable_hdr"
+    },
+    "bc_ar_operations": {
+      "exists": true,
+      "contractId": "019d762a-1662-7980-9b8b-3e8431f8c91c",
+      "name": "cc__bc_ar_operations"
+    },
+    "invoice_hdr": {
+      "exists": true,
+      "contractId": "019d762a-172f-71a6-b3ca-dc1b020a3947",
+      "name": "cc__invoice_hdr"
+    },
+    "actual_ledger": {
+      "exists": true,
+      "contractId": "019d762a-17b6-71d1-8cdf-7b899eb28247",
+      "name": "cc__actual_ledger"
+    },
+    "gaap_receivables": {
+      "exists": true,
+      "contractId": "019d762a-1826-7d44-8c86-ec64e894c948",
+      "name": "cc__gaap_receivables"
+    },
+    "gaap_cash_flow": {
+      "exists": true,
+      "contractId": "019d762a-1884-7cd0-8aca-30f6eb805929",
+      "name": "cc__gaap_cash_flow"
+    },
+    "credit_status": {
+      "exists": true,
+      "contractId": "019d762a-18e0-7b27-9dc7-1450084044e3",
+      "name": "cc__credit_status"
+    },
+    "gaap_income_statement": {
+      "exists": true,
+      "contractId": "019d762a-1944-7468-ba8b-f605ef2f8067",
+      "name": "cc__gaap_income_statement"
+    },
+    "credit": {
+      "exists": true,
+      "contractId": "019d762a-1998-738d-9b42-f14e1e6ed892",
+      "name": "cc__credit"
+    }
+  },
+  "mcResults": [
+    {
+      "metric": "aged_dispute_count_30_plus_days",
+      "status": "exists",
+      "name": "mc__aged_dispute_count_30_plus_days"
+    },
+    {
+      "metric": "ar_aging_distribution",
+      "status": "exists",
+      "name": "mc__ar_aging_distribution"
+    },
+    {
+      "metric": "ar_carry_cost",
+      "status": "exists",
+      "name": "mc__ar_carry_cost"
+    },
+    {
+      "metric": "ar_concentration_risk",
+      "status": "exists",
+      "name": "mc__ar_concentration_risk"
+    },
+    {
+      "metric": "ar_cost_of_capital",
+      "status": "exists",
+      "name": "mc__ar_cost_of_capital"
+    },
+    {
+      "metric": "ar_growth_rate",
+      "status": "exists",
+      "name": "mc__ar_growth_rate"
+    },
+    {
+      "metric": "ar_missing_pod_rate",
+      "status": "exists",
+      "name": "mc__ar_missing_pod_rate"
+    },
+    {
+      "metric": "ar_no_follow_up_rate",
+      "status": "exists",
+      "name": "mc__ar_no_follow_up_rate"
+    },
+    {
+      "metric": "ar_roi",
+      "status": "exists",
+      "name": "mc__ar_roi"
+    },
+    {
+      "metric": "ar_staff_productivity",
+      "status": "exists",
+      "name": "mc__ar_staff_productivity"
+    },
+    {
+      "metric": "ar_to_sales_ratio",
+      "status": "exists",
+      "name": "mc__ar_to_sales_ratio"
+    },
+    {
+      "metric": "ar_turnover",
+      "status": "exists",
+      "name": "mc__ar_turnover"
+    },
+    {
+      "metric": "arpar",
+      "status": "exists",
+      "name": "mc__arpar"
+    },
+    {
+      "metric": "automated_invoicing_adoption_rate",
+      "status": "exists",
+      "name": "mc__automated_invoicing_adoption_rate"
+    },
+    {
+      "metric": "average_days_delinquent",
+      "status": "exists",
+      "name": "mc__average_days_delinquent"
+    },
+    {
+      "metric": "average_invoice_processing_time",
+      "status": "exists",
+      "name": "mc__average_invoice_processing_time"
+    },
+    {
+      "metric": "bad_debt_likelihood",
+      "status": "exists",
+      "name": "mc__bad_debt_likelihood"
+    },
+    {
+      "metric": "bad_debt_provision_rate",
+      "status": "exists",
+      "name": "mc__bad_debt_provision_rate"
+    },
+    {
+      "metric": "bad_debt_to_sales_ratio",
+      "status": "exists",
+      "name": "mc__bad_debt_to_sales_ratio"
+    },
+    {
+      "metric": "billing_csat",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "billing_to_cash_cycle_time",
+      "status": "exists",
+      "name": "mc__billing_to_cash_cycle_time"
+    },
+    {
+      "metric": "cash_application_accuracy",
+      "status": "exists",
+      "name": "mc__cash_application_accuracy"
+    },
+    {
+      "metric": "cash_conversion_efficiency",
+      "status": "exists",
+      "name": "mc__cash_conversion_efficiency"
+    },
+    {
+      "metric": "collection_call_effectiveness",
+      "status": "exists",
+      "name": "mc__collection_call_effectiveness"
+    },
+    {
+      "metric": "collection_effectiveness_index",
+      "status": "exists",
+      "name": "mc__collection_effectiveness_index"
+    },
+    {
+      "metric": "collection_efficiency",
+      "status": "exists",
+      "name": "mc__collection_efficiency"
+    },
+    {
+      "metric": "collector_efficiency_score",
+      "status": "exists",
+      "name": "mc__collector_efficiency_score"
+    },
+    {
+      "metric": "collector_performance_forecast",
+      "status": "exists",
+      "name": "mc__collector_performance_forecast"
+    },
+    {
+      "metric": "cost_per_collection_attempt",
+      "status": "exists",
+      "name": "mc__cost_per_collection_attempt"
+    },
+    {
+      "metric": "credit_approval_time",
+      "status": "exists",
+      "name": "mc__credit_approval_time"
+    },
+    {
+      "metric": "credit_hold_resolution_time",
+      "status": "exists",
+      "name": "mc__credit_hold_resolution_time"
+    },
+    {
+      "metric": "credit_note_issuance_rate",
+      "status": "exists",
+      "name": "mc__credit_note_issuance_rate"
+    },
+    {
+      "metric": "credit_onboarding_time",
+      "status": "exists",
+      "name": "mc__credit_onboarding_time"
+    },
+    {
+      "metric": "credit_risk_rating_changes",
+      "status": "exists",
+      "name": "mc__credit_risk_rating_changes"
+    },
+    {
+      "metric": "credit_sales_ratio",
+      "status": "exists",
+      "name": "mc__credit_sales_ratio"
+    },
+    {
+      "metric": "current_ar_rate",
+      "status": "exists",
+      "name": "mc__current_ar_rate"
+    },
+    {
+      "metric": "customer_credit_limit_utilization",
+      "status": "exists",
+      "name": "mc__customer_credit_limit_utilization"
+    },
+    {
+      "metric": "customer_payment_performance_score",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "customer_request_turnaround_time",
+      "status": "exists",
+      "name": "mc__customer_request_turnaround_time"
+    },
+    {
+      "metric": "customer_retention_rate_post_collection",
+      "status": "exists",
+      "name": "mc__customer_retention_rate_post_collection"
+    },
+    {
+      "metric": "days_sales_outstanding",
+      "status": "exists",
+      "name": "mc__days_sales_outstanding"
+    },
+    {
+      "metric": "debt_recovery_ratio",
+      "status": "exists",
+      "name": "mc__debt_recovery_ratio"
+    },
+    {
+      "metric": "dispute_resolution_time",
+      "status": "exists",
+      "name": "mc__dispute_resolution_time"
+    },
+    {
+      "metric": "doubtful_debt_provision",
+      "status": "exists",
+      "name": "mc__doubtful_debt_provision"
+    },
+    {
+      "metric": "early_payment_discount_utilization",
+      "status": "exists",
+      "name": "mc__early_payment_discount_utilization"
+    },
+    {
+      "metric": "electronic_invoice_rate",
+      "status": "exists",
+      "name": "mc__electronic_invoice_rate"
+    },
+    {
+      "metric": "goppar",
+      "status": "exists",
+      "name": "mc__goppar"
+    },
+    {
+      "metric": "high_risk_ar_exposure",
+      "status": "exists",
+      "name": "mc__high_risk_ar_exposure"
+    },
+    {
+      "metric": "intercompany_reconciliation_aging",
+      "status": "exists",
+      "name": "mc__intercompany_reconciliation_aging"
+    },
+    {
+      "metric": "invoice_accuracy_rate",
+      "status": "exists",
+      "name": "mc__invoice_accuracy_rate"
+    },
+    {
+      "metric": "invoice_adjustment_ratio",
+      "status": "exists",
+      "name": "mc__invoice_adjustment_ratio"
+    },
+    {
+      "metric": "invoice_default_risk_score",
+      "status": "exists",
+      "name": "mc__invoice_default_risk_score"
+    },
+    {
+      "metric": "invoice_delivery_time",
+      "status": "exists",
+      "name": "mc__invoice_delivery_time"
+    },
+    {
+      "metric": "invoice_dispute_rate",
+      "status": "exists",
+      "name": "mc__invoice_dispute_rate"
+    },
+    {
+      "metric": "monthly_collection_target_achievement",
+      "status": "exists",
+      "name": "mc__monthly_collection_target_achievement"
+    },
+    {
+      "metric": "new_account_fee_income_rate",
+      "status": "exists",
+      "name": "mc__new_account_fee_income_rate"
+    },
+    {
+      "metric": "o2c_cycle_time",
+      "status": "exists",
+      "name": "mc__o2c_cycle_time"
+    },
+    {
+      "metric": "past_due_ar_rate",
+      "status": "exists",
+      "name": "mc__past_due_ar_rate"
+    },
+    {
+      "metric": "payment_delinquency_rate",
+      "status": "exists",
+      "name": "mc__payment_delinquency_rate"
+    },
+    {
+      "metric": "payment_method_diversity",
+      "status": "exists",
+      "name": "mc__payment_method_diversity"
+    },
+    {
+      "metric": "predicted_ar_cash_inflow",
+      "status": "exists",
+      "name": "mc__predicted_ar_cash_inflow"
+    },
+    {
+      "metric": "predicted_dso_next_90_days",
+      "status": "failed",
+      "error": "MC validation failed (CR-QG-MC-001)"
+    },
+    {
+      "metric": "promise_to_pay_reliability_rate",
+      "status": "exists",
+      "name": "mc__promise_to_pay_reliability_rate"
+    },
+    {
+      "metric": "rerti",
+      "status": "exists",
+      "name": "mc__rerti"
+    },
+    {
+      "metric": "revenue_collection_rate",
+      "status": "exists",
+      "name": "mc__revenue_collection_rate"
+    },
+    {
+      "metric": "revenue_recognition_lag",
+      "status": "exists",
+      "name": "mc__revenue_recognition_lag"
+    },
+    {
+      "metric": "reversal_credit_note_ratio",
+      "status": "exists",
+      "name": "mc__reversal_credit_note_ratio"
+    },
+    {
+      "metric": "revpar",
+      "status": "exists",
+      "name": "mc__revpar"
+    },
+    {
+      "metric": "top_10_ar_concentration",
+      "status": "exists",
+      "name": "mc__top_10_ar_concentration"
+    },
+    {
+      "metric": "total_ar_balance",
+      "status": "exists",
+      "name": "mc__total_ar_balance"
+    },
+    {
+      "metric": "trevpar",
+      "status": "exists",
+      "name": "mc__trevpar"
+    },
+    {
+      "metric": "unbilled_revenue",
+      "status": "exists",
+      "name": "mc__unbilled_revenue"
+    },
+    {
+      "metric": "unbilled_revenue_at_risk",
+      "status": "exists",
+      "name": "mc__unbilled_revenue_at_risk"
+    },
+    {
+      "metric": "write_off_rate",
+      "status": "exists",
+      "name": "mc__write_off_rate"
+    }
+  ]
+}

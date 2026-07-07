@@ -198,7 +198,7 @@ The boundary that fiscal time exposes generalises: **BCF characteristics declare
 
 The general rule is the operational form of Invariant I at the BCF boundary: meaning is produced at the boundary that owns the concept, not at a peer surface that compensates.
 
-**Governing source.** This chapter; DEC-d7e7a0; DEC-a8e8fc; DEC-1efa47; BCF vocabulary evidence framework (`bc-docs-v3/docs/implementation/business-concept-registry-vocabulary-evidence-framework.md`); Foundation Invariants.
+**Governing source.** This chapter; DEC-d7e7a0; DEC-a8e8fc; DEC-1efa47; BCF vocabulary evidence framework (`bc-docs/docs/implementation/business-concept-registry-vocabulary-evidence-framework.md`); Foundation Invariants.
 
 ## References
 
@@ -213,6 +213,6 @@ The general rule is the operational form of Invariant I at the BCF boundary: mea
 - DEC-d7e7a0: Platform date dim plus per-entity tenant fiscal calendar plus FiscalCalendarService
 - DEC-a8e8fc: Canonical Contract declares posting-date field; canonical resolution enriches payload
 - DEC-1efa47: Grain key-source mismatch; fiscal period is a business field
-- Business Concept Registry — Vocabulary Evidence Framework: BCF admission discipline and substrate-boundary §11 amendment (`bc-docs-v3/docs/implementation/business-concept-registry-vocabulary-evidence-framework.md`)
+- Business Concept Registry — Vocabulary Evidence Framework: BCF admission discipline and substrate-boundary §11 amendment (`bc-docs/docs/implementation/business-concept-registry-vocabulary-evidence-framework.md`)
 - Foundation: The Invariants — Invariant I (meaning is evaluated once)
 - Decisions: ADR Registry
