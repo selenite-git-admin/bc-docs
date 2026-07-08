@@ -33,12 +33,15 @@ This is the directory's feasibility gate doing its job: the bottleneck has shift
 
 | # | Concept | Entity | Role · representation | Canonical values | Unblocks |
 |---|---|---|---|---|---|
-| 1 | **entry method** | Journal Entry | dimension · code | `manual`, `automated`, `system_generated`, `partially_system_generated` | % processed manually / automatically / partially |
-| 2 | **line type** | Journal Entry Line | dimension · code | `first_time_originating`, `corrective_adjusting`, `intercompany`, `recurring`, `other` | corrective/adjusting %, first-time %, intercompany-line %, line-type-other % |
-| 3 | **processing quality** | Journal Entry | status · code | `error_free_first_time`, `reworked`, `errored` | journal_entry_error_rate, error-free-first-time % |
-| 4 | **intercompany indicator** | Journal Entry | status · code | `intercompany`, `standalone` | header-level % intercompany JEs |
+| # | Concept | Entity | Role · representation | Canonical values | Status |
+| 1 | **entry method** | Journal Entry | dimension · code | `manual`, `automated`, `system_generated`, `partially_system_generated` | ✅ **AUTHORED + ACTIVE** (2026-07-08) — characteristic `9485cffa`, concept `eee06046`. Unblocks % processed manually / automatically / partially. |
+| 2 | **line type** | Journal Entry Line | dimension · code | `first_time_originating`, `corrective_adjusting`, `intercompany`, `recurring`, `other` | ✅ **AUTHORED + ACTIVE** (2026-07-08) — characteristic `0bc731b8`, concept `ffaaee59`. Unblocks corrective/adjusting %, first-time %, intercompany-line %, line-type-other %. |
+| 3 | ~~**processing quality**~~ | Journal Entry | ~~status · code~~ | ~~`error_free_first_time`, `reworked`, `errored`~~ | ❌ **REJECTED — DO NOT AUTHOR** (M5, 2026-07-08). |
+| 4 | ~~**intercompany indicator**~~ | Journal Entry | ~~status · code~~ | ~~`intercompany`, `standalone`~~ | ❌ **DROP** — redundant with #2's line-level `intercompany` (see below). |
 
-Note on #4: the `intercompany` value already appears in #2 (line-level). Keep #4 **only** if header-grain intercompany metrics are wanted; otherwise drop it to avoid a duplicate vocabulary path.
+**#3 processing quality — rejected by the M5 gate (2026-07-08).** An attempt to author this was withdrawn as an admission error. The BCF panel's M5 (synonym / near-duplicate) check correctly found: (a) it overlaps the governed **`status`** characteristic ("current lifecycle or processing state of a record"); (b) its `reworked` value **duplicates #2 `line type`'s `corrective_adjusting`** (both = "this posting is a correction of a prior entry"); (c) it is a **metric-driven convenience aggregation** (a first-time-right grouping) composed from existing governed facts, not a genuinely new value-property (Invariant I / no fact-shape-tied vocabulary). Therefore `journal_entry_error_rate` and error-free-first-time % **must be composed at the metric layer from `line type` (`corrective_adjusting`) + `status`** — not from a new BCF term.
+
+**#4 intercompany indicator — drop.** The `intercompany` value already exists at line grain in #2. A header-grain "any line is intercompany" metric composes from #2; a separate header characteristic is a duplicate vocabulary path.
 
 ### B. New ENTITIES (larger — an event/master + its concepts + reference roles)
 
@@ -51,7 +54,8 @@ Note on #4: the `intercompany` value already appears in #2 (line-level). Keep #4
 
 - **Canonical, not source literals.** These are governed dimensions with declared `canonical_value_set`s. The reader/canonical layer (repair-locations A/C) maps source-system codes (SAP `BLART`, entry-type fields, close-task-system statuses) onto these values. Metrics discriminate on the canonical value only (D441 source-agnosticism; Invariant I).
 - **A-layer feasibility for #5/#6.** New entities imply **source data** (reconciliation logs, close-task systems) a tenant may or may not emit. Their feasibility is admission-boundary (does the source provide it), not merely BCF — confirm source availability before authoring the entity.
-- **Sequencing.** #1–#4 are high-ROI, low-complexity (dimensions on existing entities) and unblock most journal-quality metrics — author first. #5–#6 are the heavy lift (new entities + source dependency) — later.
+- **Sequencing.** #1 (entry method) and #2 (line type) are AUTHORED + ACTIVE (2026-07-08). #3 and #4 are rejected/dropped (above) — the journal-quality metrics they were meant to unblock compose from #1/#2 + the existing `status` characteristic at the metric layer. #5–#6 are the heavy lift (new entities + source dependency) — later, gated on A-layer source availability.
+- **Retry discipline (lesson, 2026-07-08).** BCF panel parks are of two kinds. A **structural** park ("recommendation malformed: checklist_answers must carry {answer,basis} for M1–M10") is maker output-quality noise — a retry is legitimate. A **semantic** park (M5 synonym/near-duplicate collision, or insufficient evidence) is a real objection — **do not retry to get a different maker roll**; that is forcing past the gate. Read `bcf.panel_output_record.verdict_payload_json->>'review_reason'` before any retry, and only retry structural parks. Authoring #3 violated this and had to be withdrawn.
 
 ## Authoring path (governed)
 
