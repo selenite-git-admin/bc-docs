@@ -2,7 +2,8 @@
 uid: DEC-f90ba3
 title: "MCF Onboarding Orchestration Schema — DevHub-side queue for 12K metric reservoir"
 description: "Dedicated DevHub tables to track per-candidate onboarding pipeline state across sessions — replaces manual cookbook/memory state management at 12K scale"
-status: proposed
+status: superseded
+superseded_by: DEC-b5c7ff
 date: 2026-07-06T11:28:03.905Z
 project: barecount-devhub
 domain: metrics
