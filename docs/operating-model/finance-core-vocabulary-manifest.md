@@ -110,7 +110,7 @@ The manifest's initial "12 entity gaps" over-counted — the analysis agents lac
 
 ## Enrichment execution log — final state (2026-07-08)
 
-The directory was enriched from this manifest. **Final: 171→177 Metric Directory members, all `bcf_ready`, across all 7 finance-frontier subfunctions** (general_ledger, revenue_accounting, fixed_assets, cost_accounting, tax, treasury, cash_flow_management) plus the pre-existing AR/AP/billing/credit families. **Enrichment mode only — no metric contracts were authored** (declaring intended metrics, not evaluating them).
+The directory was enriched from this manifest. **Final: 198 Metric Directory members, all `bcf_ready`, across all 7 finance-frontier subfunctions** (general_ledger, revenue_accounting, fixed_assets, cost_accounting, tax, treasury, cash_flow_management) plus the pre-existing AR/AP/billing/credit families. Progression: initial enrichment 130 → +30 curated → 160; balance/current-ratio digs → 171; contract value + first-hand re-triage corrections → **198**. **Enrichment mode only — no metric contracts were authored** (declaring intended metrics, not evaluating them).
 
 ### Vocabulary authored / bound to enable members
 - **Track-1 dimensions:** entry method, line type (GL journal); revenue stream type (Contract); cost type (JE Line); cash flow category (GL Account); revenue recognition status (Customer Invoice Line Item).
@@ -127,6 +127,18 @@ The directory was enriched from this manifest. **Final: 171→177 Metric Directo
 
 **Scorecard: 2 of 4 "gaps" needed no new authoring** — the vocabulary already existed and just needed binding/applying. Dedup-first is the operating lesson: the agent-reported `NEEDS_VOCAB` backlog is inflated; verify against live vocabulary before authoring.
 
+### First-hand re-triage + correction (2026-07-08)
+The initial enrichment leaned on fan-out agents for the candidate lists. A first-hand re-triage of all 7 subfunctions' seeds against the **actual** business concepts found the agent output was **both inflated and shallow** — it over-marked READY (e.g. treasury claimed ~33 READY; reality ~3) *and* missed feasible flagship metrics. Three concrete mistakes:
+1. **cash_flow:** members `operating/investing/financing_gl_account_count` counted *accounts*; the flagship metric is the cash-flow **amount** per category. Added `operating/investing/financing_cash_flow` (the account-counts remain, pending archive).
+2. **fixed_assets:** `depreciation_expense` is a period *flow*, but Asset carries *accumulated* depreciation (a stock) — not directly READY (NEEDS_VOCAB / derived-Δ).
+3. **general_ledger:** reconciliation was over-classified AWAIT_ENTITY — `account_reconciliation_completion` needs only a **reconciliation-status dimension** on the existing GL Account (NEEDS_VOCAB), not a new entity.
+
+**Corrected additive pass (+21 READY-missed members):** cash-flow amounts; GL `journal_entry_processing_cycle_time` / `gl_account_count` / `total_credit_amount` + 6 derived %s; revenue growth-rate / YoY / run-rate / avg-line-items-per-invoice; fixed-assets NBV-per-asset / PP&E-growth; treasury avg-daily-cash-balance / bank cash inflows-outflows.
+
+**Operating lesson:** do NOT trust agent output for feasibility *or* completeness. First-hand triage against live BCs is the reliable method — agents both invent infeasible metrics and miss obvious ones. `cost` and `tax` were confirmed genuinely thin/entity-gated (agent was ~right there).
+
+**Genuine NEEDS_VOCAB identified (not yet authored):** `reconciliation status` (GL Account), `line source method` (JE Line — M5-care vs entry method).
+
 ### Layer discipline (source-agnosticism)
 The directory and metrics reference only **canonical** vocabulary (e.g. `tax type` values like `output_igst`) — never a source code. Mapping a source's raw codes onto canonical values (e.g. SAP `MWSKZ` → `tax type`) is a **reader/canonical (A/C), per-source-system** concern that belongs to tenant/source onboarding — **not** directory or metric work, and never a universal step. D503-T2 tracks that runtime mapping under TSK-c9c192.
 
@@ -135,5 +147,5 @@ The directory and metrics reference only **canonical** vocabulary (e.g. `tax typ
 - **AWAIT_ENTITY builds** — new entities, each **source-availability-gated** (A-layer check first): Financial Close, GL Account Reconciliation, Debt/Hedge Instrument, Performance Obligation, Capital Project, Tax Return, Cash Flow Forecast.
 
 ### Known bc-core defects surfaced during this arc (filed)
-- **TSK-386325** — `v_member_realized` counts archived/abandoned MCs as realizations (coverage inflation).
-- **TSK-658566** — materialization emits malformed SQL when a fixture omits `section_c_resolver_config_json` (500 + orphan draft).
+- **TSK-386325** — `v_member_realized` counted archived/abandoned MCs as realizations (coverage inflation). ✅ **FIXED** (bc-core `4c71eb4`, CI green): `mc.archived_at IS NULL` added to the derive-view join.
+- **TSK-658566** — materialization emits malformed SQL when a fixture omits `section_c_resolver_config_json` (500 + orphan draft). Deferred (off-arch — metric-contract path).
