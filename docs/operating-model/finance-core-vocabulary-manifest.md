@@ -107,3 +107,33 @@ The manifest's initial "12 entity gaps" over-counted — the analysis agents lac
 
 - The ~20 count is an **operator-adjudicated estimate, medium confidence.** The per-subfunction agent passes systematically **over-counted** (listed per-measure attributes separately, proposed dimensions belonging to already-authored subfunctions, and included industry noise); these were pruned/collapsed by hand. The **entity-vs-dimension split and the "gaps are bounded and source-gated" conclusion are robust**; exact primitive names/values are first-draft and get finalized at authoring time through the panel.
 - Subfunctions not analyzed (fpa, financial_risk_management, internal_audit, financial_systems, iso_55001, capital_structure, investor_relations, payroll) are largely derived/analytical or non-core; expected to compose from existing vocab or belong to other functions. Revisit only if a specific metric demands it.
+
+## Enrichment execution log — final state (2026-07-08)
+
+The directory was enriched from this manifest. **Final: 171→177 Metric Directory members, all `bcf_ready`, across all 7 finance-frontier subfunctions** (general_ledger, revenue_accounting, fixed_assets, cost_accounting, tax, treasury, cash_flow_management) plus the pre-existing AR/AP/billing/credit families. **Enrichment mode only — no metric contracts were authored** (declaring intended metrics, not evaluating them).
+
+### Vocabulary authored / bound to enable members
+- **Track-1 dimensions:** entry method, line type (GL journal); revenue stream type (Contract); cost type (JE Line); cash flow category (GL Account); revenue recognition status (Customer Invoice Line Item).
+- **Cost Center entity** (`0e1a0035`) + `cost center code` + JE-Line→Cost-Center reference.
+- **Fixed-asset financials** on the Asset entity: acquisition cost, accumulated depreciation, useful life, depreciation method; `allocation base` on Cost Center.
+
+### Backlog digs (post-enrichment) — dedup-FIRST discipline
+| Dig | Gap real? | Action | Result |
+|---|---|---|---|
+| GL/Bank balance measures | No — `closing`/`opening balance` chars existed | **bind** to GL Account + Bank Account | unlocked total assets/liabilities/equity, cash balance, net movement |
+| current/non-current | No — `account type code` already carries `current asset`/`current liability` | **enrich-only** (no authoring) | unlocked working capital + current/quick/cash ratios |
+| contract value | **Yes** | **author** (`c1c587e9`, finance-scoped) → bind to Contract | unlocked total/recurring/one-time contract value + ARR/MRR/ACV |
+| tax type | **Yes** — routed through **DEC-9c430b/D503** T2 | **author** (`e74f808d`, output/input × regime component, source-agnostic) → bind to invoice lines | enables canonical tax-by-type slicing |
+
+**Scorecard: 2 of 4 "gaps" needed no new authoring** — the vocabulary already existed and just needed binding/applying. Dedup-first is the operating lesson: the agent-reported `NEEDS_VOCAB` backlog is inflated; verify against live vocabulary before authoring.
+
+### Layer discipline (source-agnosticism)
+The directory and metrics reference only **canonical** vocabulary (e.g. `tax type` values like `output_igst`) — never a source code. Mapping a source's raw codes onto canonical values (e.g. SAP `MWSKZ` → `tax type`) is a **reader/canonical (A/C), per-source-system** concern that belongs to tenant/source onboarding — **not** directory or metric work, and never a universal step. D503-T2 tracks that runtime mapping under TSK-c9c192.
+
+### Remaining backlog (genuine)
+- **D503 continuation** (TSK-c9c192): tax jurisdiction / taxable base / recoverable flag; the source-code→canonical-tax-type mapping at the reader/canonical layer (A/C, per source); richer tax metrics (T3); tax-point selector (T4).
+- **AWAIT_ENTITY builds** — new entities, each **source-availability-gated** (A-layer check first): Financial Close, GL Account Reconciliation, Debt/Hedge Instrument, Performance Obligation, Capital Project, Tax Return, Cash Flow Forecast.
+
+### Known bc-core defects surfaced during this arc (filed)
+- **TSK-386325** — `v_member_realized` counts archived/abandoned MCs as realizations (coverage inflation).
+- **TSK-658566** — materialization emits malformed SQL when a fixture omits `section_c_resolver_config_json` (500 + orphan draft).
