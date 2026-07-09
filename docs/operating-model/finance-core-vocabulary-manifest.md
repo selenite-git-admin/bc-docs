@@ -233,3 +233,29 @@ Ran the 4 finance-scoped deferred dup-risk candidates through the **BCF panel** 
 **Still deferred (out of this pass, unchanged):** tax gaps → D503/TSK-c9c192; sales channel/region + contract expansion/churn → need customer-level reference context; standard-cost variance → no source grain; maintenance cost → needs a Maintenance Order entity.
 
 **Track A (full) + B combined: directory 198 → 301 members (+103), 25 → 36 families (+11).**
+
+## Genuinely-remaining — completed to logical end (2026-07-09, SES-7d7d6e)
+
+Closed every remaining NEEDS_VOCAB item to a definitive end (authored, or scoped-out with a documented reason) so it is not revisited. First-hand assessment corrected several earlier assumptions (grains that were thought missing already exist). **Result: directory 301 → 318 members (+17), 36 → 39 families (+3).**
+
+### AUTHORED (grain existed; operator-direct zero-Anthropic, or panel-approved)
+| Item | Grain (existing entity) | Vocab authored | Members |
+|---|---|---|---|
+| **maintenance cost** | **Maintenance Order** (existed — no new entity) | maintenance cost (measure) — at the per-order atomic grain the panel demanded | fixed_assets/**asset_maintenance**: order count, total maintenance cost, cost-per-order, cost-to-book-value (4) |
+| **standard cost** | **Product** (existed) | standard cost (measure) — ERP standard price IS source-observable, resolving the "no grain" deferral | cost_accounting/**product_costing**: total standard cost + standard-to-actual variance, variance %, purchase-price variance (4) |
+| **contract expansion/retention** | Contract (no new vocab) | — (derived intent from contract value) | revenue_accounting/contract_lifecycle: net & gross revenue retention, expansion revenue, contract-value growth (4) |
+| **tax recoverable indicator** | **Supplier Invoice Line** (existed) | tax recoverable indicator (dimension: recoverable/non_recoverable/partially_recoverable) — **BCF-panel-APPROVED** (`awaiting_operator_confirm`, run 8ef06cdc), completed | tax/**input_tax_recovery**: recoverable/non-recoverable line counts + amounts + recovery rate (5) |
+
+### SCOPED-OUT — documented logical end (NOT authored)
+| Item | Disposition |
+|---|---|
+| **region / geography** | **DEDUP — no new vocab.** Customer already carries `country code`, `territory code`, `industry code` (all active dimensions). Geographic/segment analysis is a high-cardinality *slicing dimension* over existing revenue members (via the CILI→Customer reference), not enumerable per-value directory members. Available now; nothing to author. |
+| **sales channel** | **CRM-domain gap.** No channel concept on any onboarded source; addable only when a channel-carrying source is registered. Not a core finance-substrate gap. |
+| **taxable base** | **RESPECTED panel park (probable synonym).** Panel (run d58a7814): probable M5 collision with active `line extension amount` — "both denote the amount a tax rate is applied to"; the distinct case (partial exemption / mixed rate → multiple taxable bases per commercial line) is plausible but unsubstantiated by generic evidence. Common case = `line extension amount` (use it). The genuinely-distinct case needs per-source tax-procedure record-structure evidence → **D503 T3**. |
+| **deferred tax** | **→ D503 T3.** Needs a deferred-tax GL-account sub-classification (account-type value), not a new measure — a tax-accounting balance-classification concern in the D503 workstream. |
+| **transfer-pricing classification** | **→ D503 T3.** Transfer-pricing *method* dimension (cost-plus / resale-minus / CUP / profit-split) on intercompany transactions — deeper tax modeling, D503. |
+| **standard-cost deep variance decomposition** | Standard cost + basic variance (above) covers the intent. Full price/usage/mix decomposition needs production volume + consumption data (Production Run / material movements) — a future manufacturing-costing extension, not a finance-substrate vocab gap. |
+
+**Discipline:** operator-direct only for clean non-dup measures; the two tax candidates went through the **panel** for M5 adjudication — `tax recoverable indicator` cleared (authored), `taxable base` flagged a probable synonym and was **respected (not authored)**. No park was forced.
+
+**Finance directory frontier — final: 198 → 318 members (+120), 25 → 39 families (+14).** All remaining items are either authored or closed with a documented reason (region=dedup; channel=CRM; taxable base/deferred tax/TP=D503 T3; deep variance=manufacturing-costing). No open finance-vocabulary backlog remains.
