@@ -188,3 +188,31 @@ Each is a real gap but held for one of: M5 near-dup risk (needs panel review, ne
 - **transfer-pricing classification**, **deferred tax**, **recoverable-tax flag / taxable base** — route through D503 (TSK-c9c192).
 - **sales channel / region** (revenue) — likely reference-role/CRM context; revisit if a metric demands it.
 - **contract expansion / churn markers** — needs customer-level tracking; revisit with revenue-retention work.
+
+## Track B — 6 new entities → directory members (2026-07-09, SES-be98c9)
+
+Operator directive: after Track A, create the 6 clean new entities and enrich each into the directory. Same steer — **entry into dictionary is the target; source availability is downstream/out of scope.**
+
+**Result: 244 → 295 members (+51), 30 → 36 families (+6). All `planned` (0 blocked). 6 new BCF entities created + enriched.**
+
+### Authoring pattern (per entity)
+1. **Create entity via the BCF panel** (`POST /api/bcf/registry-authoring-runs` `operation:createEntity`). New-entity creation has **no operator-direct surface** — the panel is required (Opus maker, locked roster). But `createEntity` **auto-authors on a clean APPROVE** (`operator_confirm_required=false` for entities; the high-risk operator-confirm parking is characteristic-only) — one panel run, no confirm dead-end. All 6 returned `kind:authored`, `lifecycleState:active` first try (grounding = evidence-cited + non-colliding name).
+2. **Author its measures/dimensions via the operator-direct zero-Anthropic path** (as Track A Part 2).
+3. **Enter directory members** via the gated `/api/metric-directory` API.
+
+### Entities + families
+| Entity (id) | Subfn / theme (new family) | Chars authored (operator-direct) | Members |
+|---|---|---|---|
+| Debt Instrument `bc3829f5` | treasury / debt_and_leverage | principal amount, debt type | 11 (count/by-type + total principal + D/E, net-debt/EBITDA, DSCR, avg) |
+| Financial Close `c262f1c3` | general_ledger / financial_close | close status, close type | 9 (by-cadence/status counts + cycle time, on-time/delayed rate) |
+| GL Account Reconciliation `a811010b` | general_ledger / reconciliation_events | reconciliation outcome | 7 (outcome-mix counts + cycle time, adjustment/overdue rate) — the EVENT grain, distinct from Track-A reconciliation-status % on GL Account |
+| Hedge Instrument `9e270a91` | treasury / hedging | notional amount, hedge type | 7 (by-type counts + total notional + effectiveness, avg notional) |
+| Performance Obligation `fc7f48ab` | revenue_accounting / performance_obligations | allocated transaction price, obligation satisfaction status | 8 (satisfaction-mix counts + allocated price + satisfaction rate, backlog, unbilled) |
+| Tax Return `0c2baf29` | tax / tax_filing_compliance | filing status, return type | 9 (by-status/regime counts + timeliness, compliance, rejection rate) |
+
+### Notes
+- **GL Account Reconciliation** dedup: kept distinct from Track A's `reconciliation status` (a current-state % on GL Account) — this is the per-record **event** grain (cycle time, outcome mix). Term uniqueness forced a distinct char name (`reconciliation outcome`).
+- Cross-entity derived members (D/E, net-debt/EBITDA, DSCR, revenue backlog, unbilled revenue) are **intent-only** (name+class) under their theme — the directory blueprints the intended metric; its realization composes inputs at authoring time.
+- All 6 entity families are directory intent — several members' realization is source-availability-gated downstream (out of scope for the blueprint per the operator steer).
+
+**Track A + B combined: directory 198 → 295 members (+97), 25 → 36 families (+11), 8 new BCF entities/characteristics + 2 Track-A characteristics, all via governed services (panel for entities, operator-direct zero-Anthropic for vocabulary, gated API for members).**
