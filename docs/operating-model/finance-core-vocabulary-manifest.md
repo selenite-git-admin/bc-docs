@@ -149,3 +149,42 @@ The directory and metrics reference only **canonical** vocabulary (e.g. `tax typ
 ### Known bc-core defects surfaced during this arc (filed)
 - **TSK-386325** — `v_member_realized` counted archived/abandoned MCs as realizations (coverage inflation). ✅ **FIXED** (bc-core `4c71eb4`, CI green): `mc.archived_at IS NULL` added to the derive-view join.
 - **TSK-658566** — materialization emits malformed SQL when a fixture omits `section_c_resolver_config_json` (500 + orphan draft). Deferred (off-arch — metric-contract path).
+
+## Track A — coverage addition via existing-entity characteristics (2026-07-09, SES-a366fb)
+
+Operator directive: enrich the directory via **characteristics on entities that already exist** (Track A) + 6 clean new entities (Track B, later). Steer: **entry into dictionary is the target — not data production / metric contracts.** Source availability is a downstream/runtime concern, explicitly out of scope for the blueprint.
+
+**Result: 198 → 244 members (+46), 25 → 30 families (+5). All `planned` (0 blocked — every referenced concept resolves).**
+
+### Part 1 — existing-vocab entries (36 members, ZERO authoring)
+First-hand census confirmed the dedup lesson again: **most Track-A characteristics already existed** — the win was entering members from **already-active but unused discriminators/measures**:
+| Theme (family) | Discriminator/measure (pre-existing) | Members |
+|---|---|---|
+| general_ledger / journal_and_close_quality | Journal Entry `status` [draft/posted/reversed/cancelled] | posted/reversed/draft/cancelled counts + **journal_reversal_rate** + draft/cancelled % (7) |
+| fixed_assets / **asset_lifecycle** (new) | Asset `status` [operational/in_maintenance/standby/decommissioned] | status counts + utilization/decommission/under-maintenance rates (7) |
+| fixed_assets / asset_value_and_depreciation | Asset `depreciation method` [straight_line/…] | method counts + straight-line % (5) |
+| revenue_accounting / **contract_lifecycle** (new) | Contract `status` [active/executed/renewed/terminated/expired] | lifecycle counts + renewal/termination/expiry rates (8) |
+| accounts_payable / **ap_invoice_workflow** (new) | Supplier Invoice `status` [received/approved/posted/cancelled] | funnel counts + approval/cancellation rates (6) — intent-valid; realization runtime-gated (TSK-999084), a downstream concern |
+| revenue_accounting / **order_fulfillment** (new) | CILI `delivered`/`ordered quantity` | total delivered/ordered qty + order fill rate (3) |
+
+### Part 2 — 2 genuine new characteristics authored, then entered (10 members)
+Authored via the **OPERATOR-DIRECT path (`POST /api/bcf/registry/characteristics/admission-recommendations` → confirm → publish → `/concepts/authoring-recommendations` → confirm) — NO LLM panel, zero-Anthropic (cost-lean compliant)**. Operator IS the maker; gated on written directive + named published-standard evidence + re-validation at confirm.
+- **`reconciliation status`** (dimension, GL Account; concept `3489e93c`; values reconciled/in_progress/unreconciled/discrepancy; IAS/SOX-404 grounding) → new family general_ledger/**account_reconciliation**: reconciled/unreconciled/in-progress/discrepancy account counts + **account_reconciliation_completion_rate** + unreconciled/discrepancy rates (7).
+- **`impairment amount`** (measure, Asset; concept `d58c5490`; IAS 36 grounding; distinct from accumulated depreciation + acquisition cost) → asset_value_and_depreciation: total impairment amount + impairment_rate + impairment_to_net_book_value (3).
+
+### Recipe additions learned (operator-direct authoring)
+1. **Two zero-LLM surfaces exist** — characteristic admission + business-concept authoring — the cost-lean way to admit vocabulary when the operator has authorized it and named evidence exists. Not a semantic bypass (confirm re-validates name-conflict, grammar floor, F4-v2 checklist).
+2. **`dataType` differs by surface:** characteristic-admission `dataType` is surface-only (F3 ignores; enum text/currency-amount/…); **BC-authoring `dataType` is `BCF_DATA_TYPES` = string|integer|decimal|boolean|date|timestamp|json** (use `string` for a code dimension, `decimal` for a monetary measure).
+3. **`registry-publications/confirm` requires `rationale` (≥40)** + `semanticFinalityAffirmed:true` for a characteristic.
+4. Confirm pairings: characteristic → `{characteristic, registry_author_vocabulary}`; BC create → `{business_concept, registry_create}` (auto-activates, no separate publish).
+5. Metric-directory API is snake_case + `{data}`-enveloped; BCF authoring API is camelCase.
+
+### Deferred NEEDS_VOCAB backlog (Track A remainder — NOT authored; recorded for a later governed pass)
+Each is a real gap but held for one of: M5 near-dup risk (needs panel review, never a blind operator-direct admission), murky grain, or lower value. Author only with dedup-first + read-the-review-reason discipline.
+- **`line source method`** (JE Line) — M5-care vs `entry method`/`line type`.
+- **`accrual flag`** (Journal Entry) — M5 risk vs `entry method`.
+- **`maintenance cost`**, **`revaluation surplus`** (Asset measures) — genuine but murkier grain (maintenance is event-based; revaluation is IFRS-model-specific).
+- **standard cost / actual-vs-standard variance** (cost accounting) — no clean source grain for *standard* cost (planning data); actual cost already covered via JE-Line cost-type amounts.
+- **transfer-pricing classification**, **deferred tax**, **recoverable-tax flag / taxable base** — route through D503 (TSK-c9c192).
+- **sales channel / region** (revenue) — likely reference-role/CRM context; revisit if a metric demands it.
+- **contract expansion / churn markers** — needs customer-level tracking; revisit with revenue-retention work.
