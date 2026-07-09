@@ -216,3 +216,20 @@ Operator directive: after Track A, create the 6 clean new entities and enrich ea
 - All 6 entity families are directory intent — several members' realization is source-availability-gated downstream (out of scope for the blueprint per the operator steer).
 
 **Track A + B combined: directory 198 → 295 members (+97), 25 → 36 families (+11), 8 new BCF entities/characteristics + 2 Track-A characteristics, all via governed services (panel for entities, operator-direct zero-Anthropic for vocabulary, gated API for members).**
+
+## Track A NEEDS_VOCAB — panel-reviewed pass (2026-07-09, SES-c57954)
+
+Ran the 4 finance-scoped deferred dup-risk candidates through the **BCF panel** (`createCharacteristic`) so the panel adjudicates M5 near-duplication — the arbiter these were held for. Read each `verdict_payload_json->>'review_reason'` (all parked `OPERATOR_REVIEW`, the panel's procedural default for new vocabulary; the *reason* is what discriminates). **Result: directory 295 → 301 members (+6).**
+
+| Candidate | Panel `review_reason` (verbatim gist) | Disposition |
+|---|---|---|
+| **line source method** (JE Line) | **M5 synonym collision** with active `entry method` — "same value-property… line-grain framing does not create a distinct substrate property; header-to-line inheritance is a BC binding concern" | **RESPECTED — rejected.** Not authored. Insight: line-grain origination = *bind* `entry method` to JE Line, not a new characteristic. |
+| **maintenance cost** (Asset) | Grain wrong — "asset-lifetime aggregation (derived), not a single-instance value-property; admissible base grain is per-maintenance-order cost"; evidence attests treatment not a carrier field | **RESPECTED — deferred.** Needs a Maintenance Order grain entity + named-system evidence. Validates the "murky grain" deferral. |
+| **revaluation surplus** (Asset) | "Maker and Checker agree the meaning is sound and the term is not a synonym"; only fails the function_scoped **2-source evidence precondition** (SCOPE_PRECONDITION_FAILED) | **AUTHORED** via operator-direct with the required 2nd source (IAS 16 + FRS 102 §17 + SAP FI-AA revaluation reserve). Members: `total_revaluation_surplus`, `revaluation_surplus_to_carrying_value`. |
+| **accrual indicator** (JE) | Semantic overlap flagged, but "**Operator must confirm whether this is a genuinely distinct value-property** (boolean accrual/deferral orthogonal to origination)" | **AUTHORED** via operator-direct — operator determination: accrual/deferral basis IS orthogonal to origination (a *manual* entry can be an accrual; an *automated* entry can be cash-basis). Members: accrual/deferral/cash-basis JE counts + `accrual_entry_percentage`. |
+
+**Discipline note:** the two authored candidates were panel-*cleared* (sound + not-a-dup, or explicitly deferred-to-operator), not forced past a semantic objection. The one hard **M5 dup (line source method) was respected and rejected** — the panel doing its job. Both authored via operator-direct (zero-Anthropic) with `priorPanelRunUidReference` audit linkage to their panel runs.
+
+**Still deferred (out of this pass, unchanged):** tax gaps → D503/TSK-c9c192; sales channel/region + contract expansion/churn → need customer-level reference context; standard-cost variance → no source grain; maintenance cost → needs a Maintenance Order entity.
+
+**Track A (full) + B combined: directory 198 → 301 members (+103), 25 → 36 families (+11).**
