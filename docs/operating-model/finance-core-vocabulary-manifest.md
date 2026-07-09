@@ -259,3 +259,32 @@ Closed every remaining NEEDS_VOCAB item to a definitive end (authored, or scoped
 **Discipline:** operator-direct only for clean non-dup measures; the two tax candidates went through the **panel** for M5 adjudication — `tax recoverable indicator` cleared (authored), `taxable base` flagged a probable synonym and was **respected (not authored)**. No park was forced.
 
 **Finance directory frontier — final: 198 → 318 members (+120), 25 → 39 families (+14).** All remaining items are either authored or closed with a documented reason (region=dedup; channel=CRM; taxable base/deferred tax/TP=D503 T3; deep variance=manufacturing-costing). No open finance-vocabulary backlog remains.
+
+## Domain-knowledge completeness pass — the reporting/derived layer the seeds missed (2026-07-09, SES-475b39)
+
+Operator prompt: review families/members for KPIs that domain knowledge says exist but the (transaction-grain) seeds never surfaced. First-hand audit of all 318 members found the directory deep on transaction metrics but **missing the entire reporting/derived layer** a finance professional lives by. **Result: directory 318 → 361 members (+43), 39 → 47 families (+8).** All additions are DERIVED intent (name+class) — zero new vocab except the Budget entity/measures — grain = Legal Entity (entity-level reporting), Asset (CapEx), Supplier Invoice (AP discount), Budget (FP&A).
+
+### AUTHORED — new reporting families (derived intent, no vocab)
+| Family | Members (flagship KPIs that were entirely absent) |
+|---|---|
+| financial_reporting/**profitability** | COGS, gross profit, operating income (EBIT), EBITDA, net income + gross/operating/EBITDA/net margins (9) |
+| financial_reporting/**returns_and_efficiency** | ROA, ROE, ROCE, ROIC, asset turnover (5) |
+| financial_reporting/**solvency** | debt-to-assets, equity ratio, financial leverage, net debt, net-debt-to-equity (5) |
+| cash_flow_management/**free_cash_flow** | free cash flow, FCF margin, operating-cash-flow ratio, cash-flow-to-debt, capex-to-OCF (5) |
+| fixed_assets/**capital_investment** | CapEx, capex-to-revenue, capex-to-depreciation, fixed-asset turnover (4) |
+| tax/**tax_rate_analysis** | effective tax rate, cash tax rate, book-tax difference (3) |
+| treasury/**working_capital** | cash conversion cycle, days working capital (2) |
+| accounts_payable/ap_payment_and_dpo (add) | early-payment discount capture rate, discount lost (2) |
+
+### AUTHORED — FP&A layer (was entirely empty): Budget entity built (panel) + variance
+`Budget` entity `63445ca2` (EPM planning grounding) + `budget amount` (measure) + `plan version` (dimension: budget/forecast/latest_estimate/actual), operator-direct → **fpa/budget_and_variance**: budget line count, total budgeted/forecast amount + budget variance, variance %, budget attainment rate, forecast accuracy, expense budget utilization (8).
+
+### DOCUMENTED out-of-scope (needs data the finance transaction substrate doesn't carry)
+- **Investor-market metrics** (EPS, P/E, market cap, book value per share) → need a market-data source (share price, shares outstanding). Dividend payout/retention are computable but low-priority; addable later.
+- **Inventory metrics** (DIO, inventory turnover, days inventory) → need an Inventory entity/balance; cash-conversion-cycle is declared but its DIO term composes from inventory once onboarded.
+- **Cost-of-capital** (WACC, cost of debt/equity) → need market rates.
+- **Financial-risk models** (VaR, stress exposure) → need risk-model inputs beyond the ledger.
+
+**Why this mattered (accuracy + coverage):** the seed catalog is transaction-grain, so the P&L subtotals, margins, return ratios, free cash flow, and effective tax rate — the metrics executives and investors actually watch — never appeared. These are not padding; they are the textbook core of financial analysis and were the single largest coverage gap. **Lesson: seed-driven enrichment must be paired with a domain-expert reporting-layer sweep — the most important metrics are often the derived ones no source row emits.**
+
+**Finance directory — final after domain pass: 198 → 361 members (+163), 25 → 47 families (+22).**
