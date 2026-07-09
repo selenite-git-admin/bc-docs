@@ -288,3 +288,23 @@ Operator prompt: review families/members for KPIs that domain knowledge says exi
 **Why this mattered (accuracy + coverage):** the seed catalog is transaction-grain, so the P&L subtotals, margins, return ratios, free cash flow, and effective tax rate — the metrics executives and investors actually watch — never appeared. These are not padding; they are the textbook core of financial analysis and were the single largest coverage gap. **Lesson: seed-driven enrichment must be paired with a domain-expert reporting-layer sweep — the most important metrics are often the derived ones no source row emits.**
 
 **Finance directory — final after domain pass: 198 → 361 members (+163), 25 → 47 families (+22).**
+
+## Realizability enablement — grounding the reporting layer for onboarding (2026-07-09, SES-70710d)
+
+Operator: the natural extension is filling the absent base members/BCs that gate onboarding of the declared (mostly derived) reporting metrics. Dependency audit ranked the enablers by unblock-count. **Result: directory 361 → 370 members (+9); the reporting layer's P&L inputs are now grounded to real classifiers.**
+
+### KEYSTONE — turned out NOT absent (panel dedup catch)
+Proposed a new `income statement classification` BC on GL Account (the hypothesized keystone). The **BCF panel parked it as an M5 synonym collision — not with `account class` (5 buckets) but with the existing `account type code`** (concept `a425b01a`): an intentionally-open, finer chart-of-accounts classification "explicitly citing operating revenue, cost of goods sold, operating expense, other income — the same semantic space." **RESPECTED the park — no duplicate classifier minted.** The P&L classifier already exists; the dedup discipline + panel prevented a redundant governed dimension.
+
+### GROUNDED base P&L members on the existing `account type code`
+New base group financial_reporting/profitability/**income_statement_line_amounts** (grain GL Account, measure = GL closing balance, discriminated by `account type code`): operating revenue, cost of sales, operating expense, D&A, interest expense, tax expense, other income, other expense amounts (8). These are the groundable inputs the existing derived subtotals (gross profit / EBIT / EBITDA / net income) + margins + returns compose from — the reporting layer's dependency graph is now closed to real concepts.
+
+### CapEx enabler — genuine absent BC, authored
+Asset had **no temporal concept**. Authored `acquisition date` (temporal, Asset; concept `16d72468`, operator-direct, IAS 16 / SAP FI-AA grounding) → new base group fixed_assets/capital_investment/**asset_additions** (grain Asset, temporal-anchored by acquisition date, measure = acquisition cost): `asset_additions_amount` — the groundable CapEx base that feeds capex ratios + free cash flow.
+
+### ⚠ One Layer-3 realizability caveat (recorded, resolved at onboarding)
+`account type code` is **diagnostic-role + open value set**. Per PE-MC-12 (filter vocabulary binds status/dimension/strategic_filter roles), the P&L metrics may not filter on it directly at metric-evaluation time. The correct fix is **NOT a new BC** (the panel proved that) but a **targeted concept-version amendment of `account type code`** (role → dimension/strategic_filter + a closed P&L value set) — to be done at actual onboarding (Layer 3 devhub_metric_drive), when the exact PE-MC-13 binding requirement is known. This is the single precise, minimal action that flips the whole grounded reporting cluster to runtime-filterable.
+
+**Realizability lesson:** "absent BC" hypotheses must go through the panel/dedup first — the highest-value classifier (`account type code`) already existed as an open diagnostic; the real enabler is a small role/value-set *amendment*, not a new dimension. Filling the dependency graph is mostly grounding members on what exists + a few surgical additions (acquisition date), not bulk authoring.
+
+**Finance directory — after realizability pass: 198 → 370 members (+172), 25 → 47 families (+22).** Reporting-layer inputs grounded; one documented Layer-3 amendment (account type code role/value-set) is the remaining onboarding prerequisite for the P&L cluster.
