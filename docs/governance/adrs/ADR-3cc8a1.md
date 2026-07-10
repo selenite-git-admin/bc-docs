@@ -2,7 +2,7 @@
 uid: DEC-3cc8a1
 title: "Metis — AI-Driven Function CounterParts at the Intervention Boundary"
 description: "Metis: autonomous AI CounterParts per business function. Hierarchy-aware, bidirectional communication, suo moto actions, cross-function intelligence. Owned by bc-ai."
-status: proposed
+status: reversed
 subdomain: intervention-ai
 focus: metis-counterpart-agents
 date: 2026-04-02
