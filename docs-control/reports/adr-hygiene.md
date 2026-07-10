@@ -1,0 +1,22 @@
+# ADR hygiene audit (D370 / DEC-623f8f)
+
+Generated: 2026-07-10T04:35:00.788703+00:00
+ADRs scanned: 489
+Status distribution: {'decided': 156, 'implemented': 248, 'proposed': 8, 'reversed': 5, 'superseded': 72}
+
+## supersessionIssues (2) — MUST be 0
+- DEC-3ee0f6 supersedes DEC-14592e — target status is 'implemented', expected 'superseded'
+- DEC-762336 supersedes DEC-ac05fc — target is superseded but MISSING superseded_by (SHOULD be set)
+- (none)
+
+## stuck 'proposed' (> 30d) (6)
+- DEC-32a56e — 39d old — MCF M12 Context Judge — semantic grounding via LLM, not regex
+- DEC-3cc8a1 — 99d old — Metis — AI-Driven Function CounterParts at the Intervention Boundary
+- DEC-69a24a — 107d old — Foundation Boundary Precision — tighten conceptual model to match impl
+- DEC-a49413 — 56d old — SDA Phase 1 implementation profile: CF semantic_family classification 
+- DEC-cbc07b — 86d old — Type Conformance Enforcement — Source Object through Metric Snapshot
+- DEC-pending — 90d old — Contract Chain Invariants — Machine-Checkable Integrity Rules
+- (none)
+
+## advisory — missing subdomain/focus (64)
+## WARNING — duplicate uids: ['DEC-e82f0a']

@@ -8,6 +8,7 @@
     "docs:import:dry-run": "python scripts/docs-control/import_approved.py --dry-run",
     "docs:nav": "python scripts/docs-control/seed_navigation.py",
     "docs:audit": "python scripts/docs-control/audit_target_docs.py",
+    "docs:audit:adrs": "python scripts/docs-control/audit_adrs.py",
     "docs:coverage:bc-core": "python scripts/docs-control/inventory_bc_core.py",
     "docs:generate:source-refs": "python scripts/docs-control/generate_source_references.py",
     "docs:generate:source-refs:apply": "python scripts/docs-control/generate_source_references.py --apply",
