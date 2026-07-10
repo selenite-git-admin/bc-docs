@@ -2,7 +2,7 @@
 uid: DEC-69a24a
 title: "Foundation Boundary Precision — tighten conceptual model to match implementation reality"
 description: "Clarify that boundaries are logical state transitions (not physical ops), batch writes are valid, and typed payload tables are allowed."
-status: proposed
+status: decided
 subdomain: foundational-architecture
 focus: evidence-scope-batch-validity
 date: 2026-03-25

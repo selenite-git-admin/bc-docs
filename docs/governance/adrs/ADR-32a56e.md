@@ -2,7 +2,7 @@
 uid: DEC-32a56e
 title: "MCF M12 Context Judge — semantic grounding via LLM, not regex"
 description: "Replace regex/substring semantic grounding in the M12 panel with a context-judge LLM call that evaluates Maker APPROVE claims per-claim against cited tool evidence. Rules at deterministic boundaries only. Vendor-pluggable; v1 uses an already-configured reliable vendor. Four-phase migration; no big-bang."
-status: proposed
+status: decided
 date: 2026-06-01T02:44:12.995Z
 project: platform
 domain: metrics

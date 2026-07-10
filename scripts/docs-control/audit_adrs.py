@@ -99,15 +99,25 @@ def main() -> int:
     by_uid: dict[str, dict] = {}
     dup_uids: list[str] = []
 
+    quarantined = 0
     for path in sorted(ADR_DIR.glob("ADR-*.md")):
         fm = parse_frontmatter(path.read_text(encoding="utf-8", errors="replace"))
         rec = {"file": path.name, **fm}
         adrs.append(rec)
         uid = fm.get("uid")
-        if uid:
-            if uid in by_uid:
-                dup_uids.append(uid)
-            by_uid[uid] = rec
+        if not uid:
+            continue
+        # A self-quarantined duplicate marks itself: superseded_by its OWN uid, or
+        # an explicit [QUARANTINED ...] title. It is a dispositioned artifact — not
+        # the canonical row and not a duplicate-uid violation.
+        title_up = str(fm.get("title", "")).upper()
+        if fm.get("superseded_by") == uid or "QUARANTINED" in title_up:
+            rec["_quarantine"] = True
+            quarantined += 1
+            continue
+        if uid in by_uid:
+            dup_uids.append(uid)
+        by_uid[uid] = rec
 
     supersession_issues: list[str] = []
     for rec in adrs:
@@ -163,6 +173,7 @@ def main() -> int:
     lines.extend(f"- {s}" for s in stuck_proposed) or lines.append("- (none)")
     lines.append("")
     lines.append(f"## advisory — missing subdomain/focus ({len(missing_classification)})")
+    lines.append(f"## quarantined duplicates skipped: {quarantined}")
     if dup_uids:
         lines.append(f"## WARNING — duplicate uids: {sorted(set(dup_uids))}")
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -178,6 +189,7 @@ def main() -> int:
     for s in stuck_proposed:
         print(f"    ! {s}")
     print(f"  advisory missing subdomain/focus: {len(missing_classification)}")
+    print(f"  quarantined duplicates skipped: {quarantined}")
     if dup_uids:
         print(f"  WARNING duplicate uids: {sorted(set(dup_uids))}")
     print(f"  report: {REPORT_PATH.relative_to(ROOT)}")

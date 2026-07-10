@@ -1,8 +1,8 @@
 ---
-uid: DEC-pending
+uid: DEC-a7f3d2
 title: "Contract Chain Invariants — Machine-Checkable Integrity Rules"
 description: "Defines 14 invariants across 5 contract chain layers (Source, BF/BO, OC, CC, MC) plus 1 cross-layer invariant. Each invariant is a SQL query that returns violating rows."
-status: proposed
+status: implemented
 date: 2026-04-11
 project: bc-core
 domain: contracts
