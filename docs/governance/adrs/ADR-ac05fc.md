@@ -3,6 +3,7 @@ uid: DEC-ac05fc
 title: "Three contract chains: Source → Metric → AI (layered, feed-forward)"
 description: "Superseded three-chain model (Source, Metric, AI). Replaced by six contract families with unified chain model."
 status: superseded
+superseded_by: DEC-762336
 date: 2026-03-01
 project: platform
 domain: database

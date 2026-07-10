@@ -1,12 +1,10 @@
 # ADR hygiene audit (D370 / DEC-623f8f)
 
-Generated: 2026-07-10T04:35:00.788703+00:00
+Generated: 2026-07-10T04:38:19.660822+00:00
 ADRs scanned: 489
-Status distribution: {'decided': 156, 'implemented': 248, 'proposed': 8, 'reversed': 5, 'superseded': 72}
+Status distribution: {'decided': 156, 'implemented': 247, 'proposed': 8, 'reversed': 5, 'superseded': 73}
 
-## supersessionIssues (2) — MUST be 0
-- DEC-3ee0f6 supersedes DEC-14592e — target status is 'implemented', expected 'superseded'
-- DEC-762336 supersedes DEC-ac05fc — target is superseded but MISSING superseded_by (SHOULD be set)
+## supersessionIssues (0) — MUST be 0
 - (none)
 
 ## stuck 'proposed' (> 30d) (6)
