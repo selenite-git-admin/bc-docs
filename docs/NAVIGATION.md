@@ -252,7 +252,7 @@ Generated from `docs-control/docs-control.db` by `scripts/docs-control/seed_navi
 - [ServiceNow](reference/source-systems/servicenow.md)
 - [Siemens Opcenter](reference/source-systems/siemens-opcenter.md)
 - [Stripe](reference/source-systems/stripe.md)
-- [Tally Prime](reference/source-systems/tally-prime.md)
+- [Tally Prime](reference/source-systems/tally-prime/index.md) 🗂
 - [Workday Financial Management](reference/source-systems/workday-financials.md)
 - [Workday HCM](reference/source-systems/workday-hcm.md)
 - [World Bank Open Data](reference/source-systems/world-bank.md)

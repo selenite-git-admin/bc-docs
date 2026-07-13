@@ -75,7 +75,7 @@ The category groupings below mirror the v2 index for reader continuity.
 | FreshBooks | [freshbooks.md](freshbooks.md) | superseded | `designed` |
 | Sage Intacct | [sage-intacct.md](sage-intacct.md) | superseded | `designed` |
 | Zoho Books | [zoho-books.md](zoho-books.md) | superseded | `designed` |
-| Tally Prime | [tally-prime.md](tally-prime.md) | superseded | `designed` |
+| Tally Prime | [tally-prime/](tally-prime/index.md) 🗂 | superseded | `designed` |
 | Busy Accounting | [busy-accounting.md](busy-accounting.md) | superseded | `designed` |
 | Odoo ERP | [odoo-erp/](odoo-erp/index.md) 🗂 | superseded | `designed` |
 
@@ -176,7 +176,7 @@ Source systems are **docket folders** (`<slug>/`) per **DEC-8570d4 (D526)**, not
 5. Register in the category table above with a link to `<slug>/` (folder), not `<slug>.md`.
 6. Run `devhub_doc_scan` then `devhub_doc_validate`.
 
-> **Migration status (D526):** converting the 61 flat pages to docket folders is staged (prove-on-one → rollout). Migrated: 🗂 **SAP ECC**, 🗂 **Microsoft D365 BC**, 🗂 **Odoo ERP**, 🗂 **Oracle Fusion Cloud ERP**. The rest remain flat `<slug>.md` until migrated; new systems are born as dockets.
+> **Migration status (D526):** converting the 61 flat pages to docket folders is staged (prove-on-one → rollout). Migrated: 🗂 **SAP ECC**, 🗂 **Microsoft D365 BC**, 🗂 **Odoo ERP**, 🗂 **Oracle Fusion Cloud ERP**, 🗂 **Tally Prime**. The rest remain flat `<slug>.md` until migrated; new systems are born as dockets.
 
 ## Changelog
 
