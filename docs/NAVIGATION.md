@@ -245,7 +245,7 @@ Generated from `docs-control/docs-control.db` by `scripts/docs-control/seed_navi
 - [Salesforce](reference/source-systems/salesforce.md)
 - [SAP BW/4HANA](reference/source-systems/sap-bw4hana.md)
 - [SAP Digital Manufacturing](reference/source-systems/sap-dm.md)
-- [SAP ECC](reference/source-systems/sap-ecc.md)
+- [SAP ECC](reference/source-systems/sap-ecc/index.md) 🗂
 - [SAP Licensing & Public Catalogue Reference](reference/source-systems/sap-licensing-reference.md)
 - [SAP S/4HANA](reference/source-systems/sap-s4hana.md)
 - [SAP SuccessFactors](reference/source-systems/sap-successfactors.md)

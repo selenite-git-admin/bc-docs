@@ -53,7 +53,7 @@ The category groupings below mirror the v2 index for reader continuity.
 | Source | v3 page | v2 reference | Proof |
 |--------|---------|---------------|-------|
 | SAP S/4HANA | [sap-s4hana.md](sap-s4hana.md) | superseded | `shape_tested` |
-| SAP ECC | [sap-ecc.md](sap-ecc.md) | superseded | `shape_tested` |
+| SAP ECC | [sap-ecc/](sap-ecc/index.md) 🗂 | superseded | `designed` |
 | SAP BW/4HANA | [sap-bw4hana.md](sap-bw4hana.md) | superseded | `designed` |
 | SAP SuccessFactors | [sap-successfactors.md](sap-successfactors.md) | superseded | `designed` |
 | SAP Digital Manufacturing | [sap-dm.md](sap-dm.md) | superseded | `designed` |
@@ -167,11 +167,16 @@ The category groupings below mirror the v2 index for reader continuity.
 
 ## Authoring a new source page
 
-1. Read **DEC-6cb4f3 (D385)** for the framework and required sections.
-2. Use the SAP S/4HANA page as the structural exemplar.
-3. Set `proof_status` honestly. If it is `first_hand_proven`, §9 must list verified entities with date and anonymised customer reference.
-4. Bind to a reader flavor that exists in DevHub — or set `reader_flavors: []` and explain in §10.
-5. Run `devhub_doc_validate` once validator support for Source Systems pages leaves the parked state.
+Source systems are **docket folders** (`<slug>/`) per **DEC-8570d4 (D526)**, not flat files. Full convention: [_template/README.md](_template/README.md).
+
+1. Read **DEC-6cb4f3 (D385)** (framework + required sections) and **DEC-8570d4 (D526)** (docket structure).
+2. Copy [_template/](_template/) to `source-systems/<slug>/`. Use the migrated [sap-ecc/](sap-ecc/index.md) 🗂 as the exemplar.
+3. Fill `index.md` (the docket cover/manifest): allocate a real `SRC-*` uid, set `proof_status` honestly (start `designed`), `system_type_code`, `reader_flavors[]`. If `first_hand_proven`, `evidence.md` must list verified entities with date + anonymised customer reference.
+4. As contracts/catalog/evidence accrue, fill the sibling files (`contracts.md`, `catalog.md`, `onboarding-log.md`, `evidence.md`) AND the `index.md` linking hooks (`admission_contract_versions[]`, `catalog_ref`, `evidence_records[]`).
+5. Register in the category table above with a link to `<slug>/` (folder), not `<slug>.md`.
+6. Run `devhub_doc_scan` then `devhub_doc_validate`.
+
+> **Migration status (D526):** converting the 61 flat pages to docket folders is staged (prove-on-one → rollout). Migrated: 🗂 **SAP ECC**. The rest remain flat `<slug>.md` until migrated; new systems are born as dockets.
 
 ## Changelog
 

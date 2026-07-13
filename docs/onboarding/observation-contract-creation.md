@@ -277,7 +277,7 @@ The sign indicator field is **not projected** to the Canonical Object. It is res
 
 Source tables that store signed amounts (e.g. SAP ACDOCA Universal Journal with `HSL`/`TSL`) do not declare a sign_indicator mapping. The resolver passes amounts through as-is.
 
-**Governing source.** [SAP ECC — §10 Sign Handling](../reference/source-systems/sap-ecc.md); The Contract Grammar; Canonical Contract Creation.
+**Governing source.** [SAP ECC — Sign Handling](../reference/source-systems/sap-ecc/contracts.md); The Contract Grammar; Canonical Contract Creation.
 
 ## Drift Inventory
 

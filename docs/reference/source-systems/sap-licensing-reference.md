@@ -23,7 +23,7 @@ supersedes: legacy-v2/reference/sources/sap/
 
 > Verification note: This appendix is retained for SAP vendor-context orientation. It is not current SAP licensing advice. Verify SAP policy, official catalogue status, and customer contract terms during source onboarding; DEC-d2cdb9 remains BareCount's admission authority.
 
-This page consolidates the SAP-side reference material that informs the SAP source pages — [sap-s4hana](sap-s4hana.md), [sap-ecc](sap-ecc.md), [sap-bw4hana](sap-bw4hana.md), [sap-successfactors](sap-successfactors.md), [sap-dm](sap-dm.md). It is **appendix material**: it explains what SAP's own rules say so BareCount's onboarding playbook can reference the correct framing without reproducing it on every source page.
+This page consolidates the SAP-side reference material that informs the SAP source pages — [sap-s4hana](sap-s4hana.md), [sap-ecc](sap-ecc/index.md), [sap-bw4hana](sap-bw4hana.md), [sap-successfactors](sap-successfactors.md), [sap-dm](sap-dm.md). It is **appendix material**: it explains what SAP's own rules say so BareCount's onboarding playbook can reference the correct framing without reproducing it on every source page.
 
 The authoritative position on BareCount's SAP admission stance is **DEC-d2cdb9 (D384)** — read that first if you want the actionable rule. This page provides the supporting context.
 
