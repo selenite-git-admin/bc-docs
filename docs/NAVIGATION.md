@@ -228,7 +228,7 @@ Generated from `docs-control/docs-control.db` by `scripts/docs-control/seed_navi
 - [LinkedIn Ads](reference/source-systems/linkedin-ads.md)
 - [ManageEngine ServiceDesk Plus](reference/source-systems/manageengine.md)
 - [Meta Ads](reference/source-systems/meta-ads.md)
-- [Microsoft Dynamics 365 Business Central](reference/source-systems/microsoft-d365-bc.md)
+- [Microsoft Dynamics 365 Business Central](reference/source-systems/microsoft-d365-bc/index.md) 🗂
 - [Microsoft Dynamics 365 Finance & Operations](reference/source-systems/microsoft-d365-fo.md)
 - [Monday.com](reference/source-systems/monday.md)
 - [Odoo CRM](reference/source-systems/odoo-crm.md)

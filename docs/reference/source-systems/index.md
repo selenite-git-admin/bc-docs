@@ -62,7 +62,7 @@ The category groupings below mirror the v2 index for reader continuity.
 | Oracle E-Business Suite | [oracle-ebs.md](oracle-ebs.md) | superseded | `designed` |
 | Oracle NetSuite | [oracle-netsuite.md](oracle-netsuite.md) | superseded | `designed` |
 | Microsoft D365 F&O | [microsoft-d365-fo.md](microsoft-d365-fo.md) | superseded | `designed` |
-| Microsoft D365 BC | [microsoft-d365-bc.md](microsoft-d365-bc.md) | superseded | `designed` |
+| Microsoft D365 BC | [microsoft-d365-bc/](microsoft-d365-bc/index.md) 🗂 | superseded | `designed` |
 | Epicor Kinetic | [epicor-kinetic.md](epicor-kinetic.md) | superseded | `designed` |
 | Infor CloudSuite | [infor-cloudsuite.md](infor-cloudsuite.md) | superseded | `designed` |
 
@@ -176,7 +176,7 @@ Source systems are **docket folders** (`<slug>/`) per **DEC-8570d4 (D526)**, not
 5. Register in the category table above with a link to `<slug>/` (folder), not `<slug>.md`.
 6. Run `devhub_doc_scan` then `devhub_doc_validate`.
 
-> **Migration status (D526):** converting the 61 flat pages to docket folders is staged (prove-on-one → rollout). Migrated: 🗂 **SAP ECC**. The rest remain flat `<slug>.md` until migrated; new systems are born as dockets.
+> **Migration status (D526):** converting the 61 flat pages to docket folders is staged (prove-on-one → rollout). Migrated: 🗂 **SAP ECC**, 🗂 **Microsoft D365 BC**. The rest remain flat `<slug>.md` until migrated; new systems are born as dockets.
 
 ## Changelog
 
