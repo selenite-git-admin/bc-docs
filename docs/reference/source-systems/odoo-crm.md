@@ -88,7 +88,7 @@ Capture customer-specific subscription, add-on, service-account, API, connector,
 
 ## 6. Technical
 
-The Odoo external API is database-aware and ORM-shaped — same protocol details as the Odoo ERP page (see [odoo-erp.md §6](odoo-erp.md)).
+The Odoo external API is database-aware and ORM-shaped — same protocol details as the Odoo ERP page (see [odoo-erp §6](odoo-erp/index.md)).
 
 For CRM specifically:
 - `crm.lead` is a single model; the `type` field distinguishes `lead` vs `opportunity`.
@@ -147,7 +147,7 @@ Same as Odoo ERP plus CRM-specific:
 | Resource | Link |
 |---|---|
 | ADR — Source Systems framework (D385) | [ADR-6cb4f3](../../governance/adrs/ADR-6cb4f3.md) |
-| Companion source page | [Odoo ERP](odoo-erp.md) |
+| Companion source page | [Odoo ERP](odoo-erp/index.md) |
 | Odoo External API (v18) | https://www.odoo.com/documentation/18.0/developer/reference/external_api.html |
 | Odoo CRM module docs | https://www.odoo.com/documentation/18.0/applications/sales/crm.html |
 | Predecessor — legacy v2 archive Odoo CRM reference | legacy-v2/reference/sources/odoo-crm.md |

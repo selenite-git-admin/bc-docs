@@ -232,7 +232,7 @@ Generated from `docs-control/docs-control.db` by `scripts/docs-control/seed_navi
 - [Microsoft Dynamics 365 Finance & Operations](reference/source-systems/microsoft-d365-fo.md)
 - [Monday.com](reference/source-systems/monday.md)
 - [Odoo CRM](reference/source-systems/odoo-crm.md)
-- [Odoo ERP](reference/source-systems/odoo-erp.md)
+- [Odoo ERP](reference/source-systems/odoo-erp/index.md) 🗂
 - [Oracle E-Business Suite](reference/source-systems/oracle-ebs.md)
 - [Oracle Fusion Cloud ERP](reference/source-systems/oracle-fusion.md)
 - [Oracle NetSuite](reference/source-systems/oracle-netsuite.md)
