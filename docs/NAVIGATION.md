@@ -257,7 +257,7 @@ Generated from `docs-control/docs-control.db` by `scripts/docs-control/seed_navi
 - [Workday HCM](reference/source-systems/workday-hcm.md)
 - [World Bank Open Data](reference/source-systems/world-bank.md)
 - [Xero](reference/source-systems/xero.md)
-- [Zoho Books](reference/source-systems/zoho-books.md)
+- [Zoho Books](reference/source-systems/zoho-books/index.md) 🗂
 - [Zoho CRM](reference/source-systems/zoho-crm.md)
 - [Zoho People](reference/source-systems/zoho-people.md)
 
