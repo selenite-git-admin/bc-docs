@@ -91,7 +91,7 @@ The category groupings below mirror the v2 index for reader continuity.
 
 | Source | v3 page | v2 reference | Proof |
 |--------|---------|---------------|-------|
-| Salesforce | [salesforce.md](salesforce.md) | superseded | `shape_tested` |
+| Salesforce | [salesforce/](salesforce/index.md) 🗂 | superseded | `designed` |
 | HubSpot | [hubspot.md](hubspot.md) | superseded | `designed` |
 | Zoho CRM | [zoho-crm.md](zoho-crm.md) | superseded | `designed` |
 | Pipedrive | [pipedrive.md](pipedrive.md) | superseded | `designed` |
@@ -176,7 +176,7 @@ Source systems are **docket folders** (`<slug>/`) per **DEC-8570d4 (D526)**, not
 5. Register in the category table above with a link to `<slug>/` (folder), not `<slug>.md`.
 6. Run `devhub_doc_scan` then `devhub_doc_validate`.
 
-> **Migration status (D526):** converting the 61 flat pages to docket folders is staged (prove-on-one → rollout). Migrated: 🗂 **SAP ECC**, 🗂 **Microsoft D365 BC**, 🗂 **Odoo ERP**, 🗂 **Oracle Fusion Cloud ERP**, 🗂 **Tally Prime**, 🗂 **Zoho Books**. The rest remain flat `<slug>.md` until migrated; new systems are born as dockets.
+> **Migration status (D526):** converting the 61 flat pages to docket folders is staged (prove-on-one → rollout). Migrated: 🗂 **SAP ECC**, 🗂 **Microsoft D365 BC**, 🗂 **Odoo ERP**, 🗂 **Oracle Fusion Cloud ERP**, 🗂 **Tally Prime**, 🗂 **Zoho Books**, 🗂 **Salesforce**. The rest remain flat `<slug>.md` until migrated; new systems are born as dockets.
 
 ## Changelog
 

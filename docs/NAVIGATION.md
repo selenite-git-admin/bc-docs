@@ -242,7 +242,7 @@ Generated from `docs-control/docs-control.db` by `scripts/docs-control/seed_navi
 - [Reserve Bank of India (RBI)](reference/source-systems/rbi.md)
 - [Rockwell Automation FactoryTalk](reference/source-systems/rockwell-factorytalk.md)
 - [Sage Intacct](reference/source-systems/sage-intacct.md)
-- [Salesforce](reference/source-systems/salesforce.md)
+- [Salesforce](reference/source-systems/salesforce/index.md) 🗂
 - [SAP BW/4HANA](reference/source-systems/sap-bw4hana.md)
 - [SAP Digital Manufacturing](reference/source-systems/sap-dm.md)
 - [SAP ECC](reference/source-systems/sap-ecc/index.md) 🗂
