@@ -234,7 +234,7 @@ Generated from `docs-control/docs-control.db` by `scripts/docs-control/seed_navi
 - [Odoo CRM](reference/source-systems/odoo-crm.md)
 - [Odoo ERP](reference/source-systems/odoo-erp/index.md) 🗂
 - [Oracle E-Business Suite](reference/source-systems/oracle-ebs.md)
-- [Oracle Fusion Cloud ERP](reference/source-systems/oracle-fusion.md)
+- [Oracle Fusion Cloud ERP](reference/source-systems/oracle-fusion/index.md) 🗂
 - [Oracle NetSuite](reference/source-systems/oracle-netsuite.md)
 - [Pipedrive](reference/source-systems/pipedrive.md)
 - [QuickBooks Online](reference/source-systems/quickbooks-online.md)

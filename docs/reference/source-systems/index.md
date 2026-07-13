@@ -58,7 +58,7 @@ The category groupings below mirror the v2 index for reader continuity.
 | SAP SuccessFactors | [sap-successfactors.md](sap-successfactors.md) | superseded | `designed` |
 | SAP Digital Manufacturing | [sap-dm.md](sap-dm.md) | superseded | `designed` |
 | _SAP Licensing Reference (appendix)_ | [sap-licensing-reference.md](sap-licensing-reference.md) | superseded (8 v2 guides consolidated) | _appendix_ |
-| Oracle Fusion Cloud | [oracle-fusion.md](oracle-fusion.md) | superseded | `designed` |
+| Oracle Fusion Cloud | [oracle-fusion/](oracle-fusion/index.md) 🗂 | superseded | `designed` |
 | Oracle E-Business Suite | [oracle-ebs.md](oracle-ebs.md) | superseded | `designed` |
 | Oracle NetSuite | [oracle-netsuite.md](oracle-netsuite.md) | superseded | `designed` |
 | Microsoft D365 F&O | [microsoft-d365-fo.md](microsoft-d365-fo.md) | superseded | `designed` |
@@ -176,7 +176,7 @@ Source systems are **docket folders** (`<slug>/`) per **DEC-8570d4 (D526)**, not
 5. Register in the category table above with a link to `<slug>/` (folder), not `<slug>.md`.
 6. Run `devhub_doc_scan` then `devhub_doc_validate`.
 
-> **Migration status (D526):** converting the 61 flat pages to docket folders is staged (prove-on-one → rollout). Migrated: 🗂 **SAP ECC**, 🗂 **Microsoft D365 BC**, 🗂 **Odoo ERP**. The rest remain flat `<slug>.md` until migrated; new systems are born as dockets.
+> **Migration status (D526):** converting the 61 flat pages to docket folders is staged (prove-on-one → rollout). Migrated: 🗂 **SAP ECC**, 🗂 **Microsoft D365 BC**, 🗂 **Odoo ERP**, 🗂 **Oracle Fusion Cloud ERP**. The rest remain flat `<slug>.md` until migrated; new systems are born as dockets.
 
 ## Changelog
 
