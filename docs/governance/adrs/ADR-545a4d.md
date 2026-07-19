@@ -2,7 +2,7 @@
 uid: DEC-545a4d
 title: "Numeric admission classes v2: scaled-decimal exactness + correctly-rounded reproducibility"
 description: "Unblocks 182 NOT_PROVEN members: scaled-decimal sums become provably EXACT (~96); division shapes admit under a bit-reproducible correctly-rounded class (~86); additive re-proof evidence, no snapshot mutation."
-status: proposed
+status: decided
 date: 2026-07-19T08:33:36.573Z
 project: bc-core
 domain: metrics
@@ -75,7 +75,21 @@ never re-computing at read time (reads do not trigger evaluation).
 3. Prong (b): gate extension behind its own review → re-prove the ~86.
 4. Eligibility manifest v4 re-derivation (same drift-refusing method) → pool restated.
 
-## Open questions for review
+## Review disposition (2026-07-19)
+
+**ACCEPTED WITH BOUNDARY** — auditor response
+`RESPONSE-Codex-DEC-545a4d-numeric-admission-classes-v2-review-2026-07-19.md`
+(sha256 `b526b10f51825a565c88d4196eefbe3e00cad005b18ffb37d4094c2fa199e631`), operator-ratified.
+Direction accepted; NO implementation, DDL, ledger write, manifest v4, or admission action
+authorized — each unit separately governed. Binding boundaries: (a) is an EXACT proof extension
+only, fail-closed to NOT_PROVEN on missing/stale/ambiguous/exceeded bounds; (b) is a distinct
+class, never conflated with EXACT (`binary64_activation_eligible` stays EXACT-only; explicit
+class field), surfaced in every decision/report/closure; re-proof ledger append-only + DBCP,
+consulted via a deterministic prover-policy-bound resolver (not timestamp-latest); bit-replay
+claims proven against pinned engine/rulebook; audit schemas must expose class + ledger row. The
+response also answers the three open questions below and prescribes the per-prong proof packages.
+
+## Open questions for review (answered by the disposition)
 
 1. Cardinality bound source for prong (a): declared per-gate `n` vs derived from window/grain —
    which is authoritative, and what happens when the live population exceeds the declared bound
