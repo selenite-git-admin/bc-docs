@@ -2,7 +2,7 @@
 uid: DEC-c4619b
 title: "Deterministic numeric execution profile: scaled-integer exact arithmetic for metric evaluation"
 description: "Amounts never touch binary64: BigInt scaled-integer execution between exact decimal stores; verifier v3 + production engine; binary64-v1 facts immutable+labeled; re-anchors DEC-545a4d prongs a+b."
-status: proposed
+status: decided
 date: 2026-07-19T09:12:34.043Z
 project: bc-core
 domain: metrics
@@ -132,5 +132,13 @@ numbering fixed (legacy engine renumbered 7→8).
 
 ## Review disposition
 
-v1: CHANGES REQUIRED (`e92ed2f2…`). v2: CHANGES REQUIRED, narrow (`3e723e97…`). v3 pending
-re-review; E1 blocked until accepted (operator ratifies).
+v1: CHANGES REQUIRED (`e92ed2f2…`). v2: CHANGES REQUIRED, narrow (`3e723e97…`).
+**v3: ACCEPTED WITH BOUNDARY (`09784ee8…`, 2026-07-19), operator-ratified — policy and
+sequencing decision only.** Binding boundaries: E1/E2/E3 each a separately reviewed governed
+package (E1 = shared arithmetic module + `mcf-verifier-v3` + exact-string entry + exact
+comparator + `legacy_json_quantized` refusal/labeling; E2 = production engine/persistence/
+reader/composite + evidence pins + scratch SQL-vs-engine agreement; E3 gates any DEC-545a4d
+evidence admission, prong (b) forbidden until the rational-to-binary64 primitive is implemented,
+vectored, and traced per member). Historical `binary64-v1` facts/evidence immutable and labeled —
+never rewritten or silently reclassified. No implementation, DDL, re-proof, manifest v4,
+signing, feed, or live admission authorized by the acceptance itself.
