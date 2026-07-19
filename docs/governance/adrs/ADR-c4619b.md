@@ -14,7 +14,7 @@ focus: numeric-execution
 
 ## Context
 
-The prong (a) preflight finding (d9fc0f3f) proved the scaled-decimal EXACT claim unsound for the pinned binary64-v1 engine: live production facts carry drift tails (fact.ms_gross_invoiced_amount 15478987.020000001) while both the canonical inputs (1716/1716 clean 2dp) and the storage columns (Postgres numeric) are exact — the error is manufactured entirely in the JS compute layer summing unit-value doubles. The v1 exactness gate's own text anticipated this fix ("before deterministic decimal execution lands"). Operator selected option 1 over an error-bound admission class (labels the error honestly but keeps producing it) and over holding the 182 blocked members (defeats the directory program). BigInt scaled-integer execution makes the arithmetic exact by construction, is native to the runtime (no dependency), removes overflow concerns at execution, and turns division into a genuine single-rounding over exact inputs — rescuing both DEC-545a4d prongs with one profile. Storage needs no change, so the unit is compute-layer-only with pinned-version coexistence.
+The prong (a) preflight finding (d9fc0f3f) proved the scaled-decimal EXACT claim unsound for the pinned binary64-v1 engine: live production facts carry drift tails (fact.ms_gross_invoiced_amount 15478987.020000001) while both the canonical inputs (1716/1716 clean 2dp) and the storage columns (Postgres numeric) are exact — the error is manufactured entirely in the JS compute layer summing unit-value doubles. The v1 exactness gate's own text anticipated this fix ("before deterministic decimal execution lands"). Operator selected option 1 over an error-bound admission class (labels the error honestly but keeps producing it) and over holding the 182 blocked members (defeats the directory program). BigInt scaled-integer execution makes the EXACT-class arithmetic exact by construction, is native to the runtime (no dependency), and removes overflow concerns at execution; it additionally makes a single-rounding division claim POSSIBLE — but only via the §7 rational-to-binary64 correctly-rounded primitive, never from BigInt inputs alone — giving both DEC-545a4d prongs a sound re-anchor path under one profile. Storage needs no change, so the unit is compute-layer-only with pinned-version coexistence.
 
 ## Decision
 
@@ -87,7 +87,7 @@ none is added: the profile uses native `BigInt`.
    trace showing every non-exact node is exactly one invocation of this primitive over
    exact/reproducible inputs. Prong (b) proceeds as its own reviewed unit only after this
    primitive is implemented and vectored.
-7. **Legacy envelope engine (Path B, deprecated):** out of profile scope; it never gains the new
+8. **Legacy envelope engine (Path B, deprecated):** out of profile scope; it never gains the new
    pin, and metrics evaluated through it remain non-admissible under the exactness gate exactly
    as today. The composite path adopts the profile with the governed engine.
 
@@ -123,7 +123,14 @@ The v1 body text of §1/§5/§6 was corrected in place (this ADR was `proposed`,
 no accepted text was rewritten). Also corrected the Decision paragraph's transport clause to
 match §5.
 
+## Revision v3 (2026-07-19)
+
+Per v2 review (`3e723e97…`, CHANGES REQUIRED, narrow): the Context paragraph still carried the
+rejected v1 claim ("turns division into a genuine single-rounding over exact inputs") — now
+aligned with §7 (single-rounding possible ONLY via the specified primitive); duplicate spec item
+numbering fixed (legacy engine renumbered 7→8).
+
 ## Review disposition
 
-v1: CHANGES REQUIRED (`e92ed2f2…`). v2 pending re-review; E1 blocked until v2 is accepted
-(operator ratifies).
+v1: CHANGES REQUIRED (`e92ed2f2…`). v2: CHANGES REQUIRED, narrow (`3e723e97…`). v3 pending
+re-review; E1 blocked until accepted (operator ratifies).
