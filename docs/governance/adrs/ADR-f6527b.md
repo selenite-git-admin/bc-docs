@@ -2,13 +2,28 @@
 uid: DEC-f6527b
 title: "Currency normalization for metrics — canonical FX rate store + normalize_currency policy"
 description: "Currency normalization for metrics — canonical FX rate store + normalize_currency policy"
-status: decided
+status: superseded
+superseded_by: DEC-7bccf6
 date: 2026-07-08T00:58:42.295Z
 project: bc-core
 domain: metrics
 subdomain: metric-contract/currency
 focus: architecture
 ---
+
+> **SUPERSEDED by DEC-7bccf6 (D539), 2026-07-30.** The platform-computed conversion mechanisms designed
+> below — the canonical FX rate store as a *conversion authority* and the `normalize_currency` aggregation
+> policy with its rate-date selector — are **retired as wrong in principle**, not deferred: re-deriving an
+> amount in a currency the source never booked contradicts the customer's audited books and violates
+> Invariant I (meaning produced once at its boundary) and Invariant VI (evidence emitted, not inferred).
+> The source's own booked local-currency amount (SAP `WRBTR`/`DMBTR`, Odoo `amount_currency`/`balance`) is
+> authoritative. Never load-bearing in practice: the rate store resolved to 0 mapping rows since inception
+> and `org_profile.reporting_currency_code` was never read.
+>
+> **Not superseded by implication** — D539 leaves explicitly open: (a) ECB/RBI as *non-authoritative*
+> reference data (deviation, diagnostic, disclosure); (b) cross-entity group-reporting consolidation, which
+> needs its own ADR naming authority and rate basis. **DEC-f4b2b0 (D495)** aggregation policies
+> (`document_currency` / `single_currency_required` / `local_currency`) are unaffected and remain in force.
 
 # Currency normalization for metrics — canonical FX rate store + normalize_currency policy
 
