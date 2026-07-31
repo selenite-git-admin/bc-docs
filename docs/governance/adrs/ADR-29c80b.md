@@ -2,7 +2,8 @@
 uid: DEC-29c80b
 title: "Single-plane audit lifecycle — audit_pending before active; active means externally audited + calculator-grade"
 description: "Insert audit_pending before active in the MCF lifecycle; active = externally audited + admitted + calculator-grade consumable. One-time governed back-entry of existing actives to audit_pending. No consumer repoint. Supersedes the two-plane release model (D522)."
-status: decided
+status: superseded
+superseded_by: DEC-793e13
 date: 2026-07-11T14:00:16.540Z
 project: bc-core
 domain: metrics
