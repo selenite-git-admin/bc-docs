@@ -13,7 +13,13 @@ governing_adrs:
   - DEC-a8b33e (D397 — Metric Lifecycle Funnel; canonical 7-stage ladder is the truth source every dial in this chapter projects from)
   - DEC-4ca5a5 (D398 — Metric Landscape; the bc-admin UI consolidation that retired the Lifecycle Funnel + Tenant Metrics pages)
   - DEC-28b176 (D394 — Metric Readiness Model — three independent dials + per-formula-token audit; AMENDED by DEC-a8b33e)
-  - DEC-bebaec (D305 — Chain Completeness SSOT; the readiness toolkit reads chain_status, never recomputes)
+  - DEC-bebaec (D305 — Chain Completeness SSOT) — **SUPERSEDED for this chapter (Runtime Spine R3, D481).**
+    `contract.chain_status` was never populated and has been DROPPED; the toolkit's lifecycle counts come
+    from the D397 ladder (`MetricFunnelService.getLadder()`), and MCF-governed metrics are evidenced by the
+    Metric Activation certificate (DEC-7ab22b), not by chain_status. Per-MCV chain diagnostics now live in
+    `mcf.mcv_chain_status` (see DEC-1e55d3 for the SSOT split, and DEC-a6cdae for the chain-readiness
+    vs data-readiness program boundary that this chapter's dials sit inside). The prior line — "the readiness toolkit reads chain_status, never recomputes" —
+    described a table that no longer exists.
   - DEC-ebf0b4 (D268 — Session Discipline; bind operations require explicit approval per DB Change Protocol)
 errata_referenced: []
 v2_sources: []
