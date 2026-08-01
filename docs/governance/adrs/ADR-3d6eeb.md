@@ -2,7 +2,8 @@
 uid: DEC-3d6eeb
 title: "External metric-correctness audit as a permanent pre-release gate — two engines, one store, signature-bound certification"
 description: "External metric-correctness audit as a permanent pre-release gate — two engines, one store, signature-bound certification"
-status: decided
+status: superseded
+superseded_by: DEC-c48b0f
 date: 2026-07-11T10:09:16.888Z
 project: bc-core
 domain: data-platform
