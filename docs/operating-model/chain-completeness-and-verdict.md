@@ -21,6 +21,8 @@ v2_sources: []
 
 # Chain Completeness and Verdict
 
+> **D481 R3 NOTE (2026-08-01).** This chapter describes the D305 `contract.chain_status` model. That table was never populated and was DROPPED; the live chain-status surface is **`mcf.mcv_chain_status`** (checks: bindings_resolve, grain_cc_active, currency_policy_supported, pe_current, self_verification). Retained for the E1–E3 conceptual model; all table/endpoint references below are historical.
+
 ## Scope
 
 This chapter defines chain completeness as the platform's locked answer to the question "can this metric compute against its sources." It defines the per-variable seven-link resolution chain that each Metric Contract input variable must traverse, the per-contract structural and governance checks that each contract on the chain must satisfy, the end-to-end checks that bind variable-level and contract-level results into a single chain verdict, the chain verdict set the platform recognizes, the persisted chain-status store that holds the verdict per Metric Contract version as a single source of truth, the separate tenant/source readiness record that answers whether a tenant Source System can feed that complete chain for a selected readiness read, the version model under which chain status is computed (single active per contract with a transition window), the read-only nature of the chain integrity check, and the boundary that separates chain integrity from runtime act outcomes.
@@ -91,7 +93,7 @@ Three end-to-end checks aggregate per-variable, per-contract, and tenant/source 
 | E2 | Every grain Canonical Field declared by the Metric Contract has a Canonical Field mapping in every Canonical Contract bound by the Metric Contract. The check is per (grain Canonical Field, bound Canonical Contract) pair, not per metric. | Metric Contract version |
 | E3 | At least one tenant Source System combination has the active set required for live evaluation: an active Source Contract, an active Admission Contract, an active Observation Contract, a bound Reader, and field-mapping records that resolve the chain's source-side claims. | Tenant, Source System, Metric Contract version |
 
-E1 binds variable-level results into a metric-level verdict. E2 verifies grain coverage independent of variable resolution because grain may be declared on Canonical Fields that the metric does not name as input variables. E3 verifies whether a tenant Source System combination can produce the Canonical Objects the metric requires for the selected readiness read. E3 is a tenant/source readiness result; it is not folded into the global `contract.chain_status` verdict.
+E1 binds variable-level results into a metric-level verdict. E2 verifies grain coverage independent of variable resolution because grain may be declared on Canonical Fields that the metric does not name as input variables. E3 verifies whether a tenant Source System combination can produce the Canonical Objects the metric requires for the selected readiness read. E3 is a tenant/source readiness result; it is not folded into the global `contract.chain_status` *(RETIRED — dropped D481 R3; live surface: `mcf.mcv_chain_status`)* verdict.
 
 **Governing source.** DEC-bebaec; The Contract Grammar; Connectors and Readers; Admission and Observation.
 

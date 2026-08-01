@@ -81,7 +81,7 @@ Generated from Drizzle schema files in `bc-core`.
 | contract | src/database/schema/contract/intake-queue.ts | intake_queue | intakeQueue |
 | contract | src/database/schema/contract/intervention-contract.ts | intervention_contract, intervention_contract_approval, intervention_contract_version | interventionContract, interventionContractApproval, interventionContractVersion |
 | contract | src/database/schema/contract/l-node-semantic-trace.ts | l_node_semantic_trace | lNodeSemanticTrace |
-| contract | src/database/schema/contract/l-node-semantic-verdict.ts | l_node_semantic_verdict | lNodeSemanticVerdict |
+| contract | src/database/schema/contract/l-node-semantic-verdict.ts | l_node_semantic_verdict (RETIRED, D481 R3) | lNodeSemanticVerdict |
 | contract | src/database/schema/contract/mc-envelope-audit-record.ts | mc_envelope_audit_record | mcEnvelopeAuditRecord |
 | contract | src/database/schema/contract/mc-integrity-state.ts | mc_integrity_state | mcIntegrityState |
 | contract | src/database/schema/contract/metric-contract.ts | metric_contract, metric_contract_approval, metric_contract_version | metricContract, metricContractApproval, metricContractVersion |

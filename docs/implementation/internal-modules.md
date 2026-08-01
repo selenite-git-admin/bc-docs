@@ -115,7 +115,7 @@ Seven modules compose the contract-registry surface inside bc-core. They host th
 
 ### ContractModule
 
-ContractModule lives at `src/registry/contract.module.ts`. It is the platform-side contract registry: the CRUD surface for the seven contract families, the platform-side authoring validator, the formula audit and metric readiness derivations, and the host for ChainStatusService (the SSOT reader and re-evaluation API for `contract.chain_status` per DEC-bebaec). The chain-readiness verdict semantics, the L1 to L7 layer definitions, and the per-variable funnel are owned by Operating Model Chain Completeness and Verdict; ContractModule hosts the API.
+ContractModule lives at `src/registry/contract.module.ts`. It is the platform-side contract registry: the CRUD surface for the seven contract families, the platform-side authoring validator, the formula audit and metric readiness derivations, and the host for ChainStatusService (the SSOT reader and re-evaluation API for `contract.chain_status` *(RETIRED — dropped D481 R3; live surface: `mcf.mcv_chain_status`)* per DEC-bebaec). The chain-readiness verdict semantics, the L1 to L7 layer definitions, and the per-variable funnel are owned by Operating Model Chain Completeness and Verdict; ContractModule hosts the API.
 
 **Governing source.** Architecture; DEC-bebaec.
 
@@ -311,7 +311,7 @@ The failure modes Backend Services records for bc-core (database connection fail
 | ExecutorRegistryService cannot find a registered executor for the requested Reader Flavor | BoundaryModule | Admission rejects the runtime invocation with a registry-miss error; the Source Object is not produced; the Run record records the miss |
 | EvidenceService or Lineage write fails after a boundary act produced an authoritative object | EvidenceModule | Current boundary services log the failure rather than consistently rolling back the authoritative write. This is an implementation gap against the proof-emitted-at-boundary commitment and remains visible until the boundary transaction path is tightened. |
 | Onboarding controller in ExecutionModule receives an authoring request that violates a chain-readiness gate | ExecutionModule | The request rejects with a gate-failure Problem Detail naming the failed gate; the gate semantics themselves are owned by the chapter that defines the gate |
-| ChainStatusService re-evaluation fails because `contract.chain_status` is unreadable | ContractModule | The re-evaluation call returns the prior persisted state with a stale-flag warning; the SSOT remains the persisted table per DEC-bebaec |
+| ChainStatusService re-evaluation fails because `contract.chain_status` *(RETIRED — dropped D481 R3; live surface: `mcf.mcv_chain_status`)* is unreadable | ContractModule | The re-evaluation call returns the prior persisted state with a stale-flag warning; the SSOT remains the persisted table per DEC-bebaec |
 | NullificationExecutorService cannot complete an erasure because the receiving external system rejects the tombstone | NullificationModule | The erasure act records partial completion; the protocol response is owned by Privacy and the Immutable Fact |
 
 Module-level failures all surface as Problem Detail responses through the global ProblemDetailFilter; they are recorded in the operational audit log through AuditService when AuditModule's interceptor is invoked on the failed request.
@@ -325,7 +325,7 @@ Module-level failures all surface as Problem Detail responses through the global
 | DEC-1918d0 | Deployment and database architecture; ten normalization rules | Two-database split realized in DatabaseModule's two connection paths and in the asymmetric write rule the contract-registry and evaluation-boundary modules honor |
 | DEC-771baf | Tenant database topology; platform-tenant one-way dependency | TenancyModule and DatabaseModule cooperate to keep the boundary one-directional: TenantMiddleware resolves the operational tenant identifier into CLS, DatabaseModule's TenantDataProvider consumes that identifier per request to select the addressed Tenant DB connection, and tenant-scoped repositories read and write through that connection. ScopeGuard enforces platform-vs-tenant route scope only |
 | DEC-c06f41 | Spine expansion to eight sections plus home | The Internal Modules chapter exists in the reshaped Implementation section per DEC-c06f41 |
-| DEC-bebaec | Chain completeness SSOT in `contract.chain_status` | ContractModule hosts ChainStatusService as the SSOT reader and refresher |
+| DEC-bebaec | Chain completeness SSOT in `contract.chain_status` *(RETIRED — dropped D481 R3; live surface: `mcf.mcv_chain_status`)* | ContractModule hosts ChainStatusService as the SSOT reader and refresher |
 | DEC-804874 | L-node semantic verification gate at session close | SemanticModule hosts LNodeSemanticService that DevHub's session-close gate calls |
 | DEC-3395bc | v3 documentation structure; bc-core JWT-guarded `/api/docs/*` | DocsModule hosts the documentation read-surface |
 

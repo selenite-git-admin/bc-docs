@@ -85,7 +85,7 @@ The evidence table is the operational telemetry substrate for AI verdicts, while
 **Governing source.** AI Evidence and Budgeting; `bc-ai/app/db/schema.sql`; `bc-ai/app/clients/bedrock.py`; `bc-ai/app/clients/anthropic_client.py`.
 ## Chain Status SSOT as Operational Read
 
-DEC-bebaec establishes `contract.chain_status` as the SSOT for chain completeness. The operational consequence: an operator answering "is metric X computable end-to-end?" reads from the chain status SSOT, not from ad-hoc queries against the chain artifacts.
+DEC-bebaec establishes `contract.chain_status` *(RETIRED — dropped D481 R3; live surface: `mcf.mcv_chain_status`)* as the SSOT for chain completeness. The operational consequence: an operator answering "is metric X computable end-to-end?" reads from the chain status SSOT, not from ad-hoc queries against the chain artifacts.
 
 The MCP tool `devhub_chain_status` exposes the SSOT to Claude sessions; the bc-admin Metric Readiness page (per CLAUDE.md) is the operator-facing surface; the underlying API is `GET /registry/chain-status/summary` and `GET /registry/chain-status/funnel`.
 

@@ -81,7 +81,7 @@ The self-audit *practice* is not optional — every session is expected to refle
 
 CLAUDE.md (Session Protocol step 6) records the L-Node semantic gate. The `devhub_session_close` tool runs a semantic-verdict check before accepting close:
 
-> Per D366: If any `contract.l_node_semantic_verdict` row reached `red` during this session's window, close is **blocked** unless `self_audit_json.l_node_override` is supplied with at least 40 characters of rationale.
+> Per D366: If any `contract.l_node_semantic_verdict` *(RETIRED — dropped D481 R3, never populated)* row reached `red` during this session's window, close is **blocked** unless `self_audit_json.l_node_override` is supplied with at least 40 characters of rationale.
 
 The gate is the platform's last-line check that a session did not regress the L-node semantic state. Legitimate override cases (recorded in CLAUDE.md): emergency fix; known-broken tenant (`demo-selenite`); migration in progress.
 

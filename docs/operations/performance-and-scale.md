@@ -38,7 +38,7 @@ The chapter records what is measurable in the readiness baseline and what is que
 |---|---|---|
 | Metric engine per-CC evaluation | Latency of one CC evaluation across its bound COs | bc-core engine logs; one per scheduled run |
 | Metric engine per-MC evaluation | Latency of one MC formula evaluation against its bound COs | bc-core engine logs |
-| Chain status snapshot | The per-MC L1-L7 state at a point in time | `contract.chain_status` SSOT; reconciled at operator request via the chain-status reconcile endpoint |
+| Chain status snapshot | The per-MC L1-L7 state at a point in time | `contract.chain_status` *(RETIRED — dropped D481 R3; live surface: `mcf.mcv_chain_status`)* SSOT; reconciled at operator request via the chain-status reconcile endpoint |
 | AI invocation latency | Per-call wall-clock from boto3 invoke to response | bc-ai evidence table |
 | AI invocation cost | Per-call cost estimate from token counts and per-model pricing | bc-ai evidence table |
 | HTTP request latency | Per-request handling time | bc-core stdout (no aggregation in the readiness baseline) |

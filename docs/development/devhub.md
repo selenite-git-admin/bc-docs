@@ -107,7 +107,7 @@ Session close runs a gate before accepting the close summary. The gate reads the
 
 Per `DEC-804874`: legitimate override cases are emergency fix, known-broken tenant, or migration in progress. The override surface is a discipline gate, not an authorization escape hatch; CLAUDE.md ("Don't" section) names casual override as a violation of session discipline.
 
-The L-node verdicts themselves are persisted in the bc-core `contract.l_node_semantic_verdict` table and read through the `devhub_l_node_verify`, `devhub_l_node_audit`, and `devhub_l_node_refresh` MCP tools, which proxy to the bc-core registry endpoint. DevHub does not author L-node verdicts; it consumes them at session close as a governance gate.
+The L-node verdicts themselves are persisted in the bc-core `contract.l_node_semantic_verdict` *(RETIRED — dropped D481 R3, never populated)* table and read through the `devhub_l_node_verify`, `devhub_l_node_audit`, and `devhub_l_node_refresh` MCP tools, which proxy to the bc-core registry endpoint. DevHub does not author L-node verdicts; it consumes them at session close as a governance gate.
 
 **Governing source.** `barecount-devhub/src/mcp-server.js` (session close gate at the close-handling block); DEC-804874 (the L-Node Verification ADR titled "L-Node Verification with Semantic Family Classification").
 

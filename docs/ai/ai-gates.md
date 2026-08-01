@@ -72,7 +72,7 @@ The gate is allowed to override the threshold-derived routing when its structure
 
 bc-core consumes AI verdicts through the `BcAiClient` service at `bc-core/src/registry/semantic/bc-ai-client.service.ts`. The client carries seven invocation methods: `invokeCcFieldAudit`, `invokeFieldMapper`, `invokeChainAuditor`, `invokeMetricTracer`, `invokeMetricVerifier`, `invokeSourceVerifier`, and `invokeTableVerifier`. Each method posts to the corresponding bc-ai endpoint and parses the response.
 
-Of the seven invocation methods, only `invokeCcFieldAudit` is wired into a governed bc-core gate at the time of writing. The wiring lives in `bc-core/src/registry/semantic/l-node-semantic.service.ts`: when the L-node semantic verifier processes a node check that the deterministic compatibility filter returned `inconclusive` for, the verifier calls `invokeCcFieldAudit`, persists the agent's verdict to `contract.l_node_semantic_trace`, and rolls the per-trace verdict up into the per-MC `contract.l_node_semantic_verdict` row.
+Of the seven invocation methods, only `invokeCcFieldAudit` is wired into a governed bc-core gate at the time of writing. The wiring lives in `bc-core/src/registry/semantic/l-node-semantic.service.ts`: when the L-node semantic verifier processes a node check that the deterministic compatibility filter returned `inconclusive` for, the verifier calls `invokeCcFieldAudit`, persists the agent's verdict to `contract.l_node_semantic_trace`, and rolls the per-trace verdict up into the per-MC `contract.l_node_semantic_verdict` *(RETIRED — dropped D481 R3, never populated)* row.
 
 The other six invocation methods are defined and tested but are not wired into a governed gate. Direct callers (operator-driven verification through bc-admin pages, ad-hoc bulk runs, the housekeeping `registry-refresh` agent's metadata sweep) invoke them and consume the verdicts inline; the verdicts do not feed a bc-core gate that runs at a boundary act. AI Agents records this as drift; the integration of the remaining triplets into governed gates is queued.
 
@@ -80,14 +80,14 @@ The other six invocation methods are defined and tested but are not wired into a
 
 ## The L-Node Semantic Gate
 
-The L-node semantic gate per DEC-804874 is the one hard close-blocker that depends on AI verdicts. The gate runs at session close: `devhub_session_close` consults `contract.l_node_semantic_verdict` rows on bc-core's platform database whose `computedAt` falls within the session's window; if any verdict reached `red` during the session, close is blocked unless `self_audit_json.l_node_override` is supplied with a rationale of at least 40 characters. The gate is enforced in DevHub's session-close handler; its detail is in Audit and Activity Logging.
+The L-node semantic gate per DEC-804874 is the one hard close-blocker that depends on AI verdicts. The gate runs at session close: `devhub_session_close` consults `contract.l_node_semantic_verdict` *(RETIRED — dropped D481 R3, never populated)* rows on bc-core's platform database whose `computedAt` falls within the session's window; if any verdict reached `red` during the session, close is blocked unless `self_audit_json.l_node_override` is supplied with a rationale of at least 40 characters. The gate is enforced in DevHub's session-close handler; its detail is in Audit and Activity Logging.
 
 The L-node semantic verdict the gate consults is rolled up from per-trace verdicts the L-node semantic verifier wrote during the session. Each trace row records which agent produced which verdict; the rollup is per metric contract and per metric version code, not per CC field. The rollup carries per-level verdicts for the seven L-node levels (L1 through L7 plus an L8 reserved for future use) plus an `overallSemanticVerdict` field. The trace and the rollup live in two tables in the `contract` schema:
 
 | Table | Primary key | What it stores |
 |---|---|---|
 | `contract.l_node_semantic_trace` | (mc_uid, mv_code, cf_code, variable_code, l_node_code, agent_flow_id) | Per-agent verdict per level per CC field per variable per metric contract; carries verdict, confidence, agent_flow_id, agent response payload as JSON |
-| `contract.l_node_semantic_verdict` | (mc_uid, mv_code) | Per-MC rollup with per-level verdicts and the overall verdict |
+| `contract.l_node_semantic_verdict` *(RETIRED — dropped D481 R3, never populated)* | (mc_uid, mv_code) | Per-MC rollup with per-level verdicts and the overall verdict |
 
 The gate's authority is structural: it depends on the per-MC rollup being present and not red. The gate does not consult bc-ai's evidence trail directly; bc-core has already pulled and persisted the per-trace and per-verdict rows by the time the gate runs.
 
@@ -113,7 +113,7 @@ AI verdicts persist in three places. The persistence boundary is asymmetric and 
 |---|---|---|
 | Triplet evidence (per-flow maker, checker, gate outputs plus combined confidence and routing) | bc-ai local SQLite (`evidence` and `draft_evidence` tables) | bc-ai produces; bc-core does not read |
 | Per-trace AI verdict (per agent invocation per level per CC field per variable per MC) | bc-core platform database (`contract.l_node_semantic_trace`) | bc-core's L-node semantic verifier writes; DevHub reads (via `devhub_l_node_audit`) |
-| Per-MC AI verdict rollup | bc-core platform database (`contract.l_node_semantic_verdict`) | bc-core's L-node semantic verifier writes; DevHub reads at session close per DEC-804874 |
+| Per-MC AI verdict rollup | bc-core platform database (`contract.l_node_semantic_verdict` *(RETIRED — dropped D481 R3, never populated)*) | bc-core's L-node semantic verifier writes; DevHub reads at session close per DEC-804874 |
 
 bc-ai's evidence trail is not pushed to bc-core's database. bc-core captures only the verdict per trace row, not the maker output, the checker output, or the gate output. A reader who wants the full verdict trail (the prompt, the maker's reasoning, the checker's signal, the gate's structured output) reads bc-ai's local SQLite. A reader who wants the per-MC verdict status reads bc-core's `l_node_semantic_verdict` table. A reader who wants the gate decision at session close reads DevHub's `change_records.report_json.discipline_audit` (when the operator supplied the audit) plus the `l_node_override` rationale (when an override was supplied per DEC-804874).
 

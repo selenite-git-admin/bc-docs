@@ -152,7 +152,7 @@ The self-audit at session close carries four fields: `rules_relevant` (the rules
 | Aspect | Form |
 |---|---|
 | Purpose | Detect regression in chain semantic state during a session window before accepting the close |
-| Substrate | The bc-core `contract.l_node_semantic_verdict` table holds per-MC L1 through L8 verdicts plus an `overall_verdict` and a `computed_at` timestamp |
+| Substrate | The bc-core `contract.l_node_semantic_verdict` *(RETIRED — dropped D481 R3, never populated)* table holds per-MC L1 through L8 verdicts plus an `overall_verdict` and a `computed_at` timestamp |
 | Regression definition | An overall verdict transition from `complete` or `partial` to `broken` or `unlinked` during the session window (`computed_at > session.started_ts`) |
 | Block behavior | If a regression is detected and no `self_audit_json.l_node_override` is supplied, close is blocked and the MCP tool returns an error naming the regressed MCs |
 | Override behavior | An override of at least forty characters of rationale is required; on override, close proceeds, a followup task tagged `l-node-regression` is auto-spawned with the regression list and break reasons, and the rationale is preserved in the change record |
