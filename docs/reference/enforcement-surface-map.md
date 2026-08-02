@@ -2,8 +2,8 @@
 
 **GENERATED — do not edit.** Regenerate: `node scripts/docs-control/generate_enforcement_surface_map.mjs`
 
-Generated: 2026-07-26T04:23:34.260Z
-Sources: bc_platform_dev + bc_audit_dev (live), bc-core@c923f2a, auditor@3230390
+Generated: 2026-08-02T05:30:49.645Z
+Sources: bc_platform_dev + bc_audit_dev (live), bc-core@c923f2a, auditor@05106574
 
 **Usage rule (operator, 2026-07-26):** no design, no ADR applied-instance, and no population count
 is claimed without citing this map. Counts are computed from the gate predicates below, never from
@@ -46,7 +46,10 @@ CREATE OR REPLACE FUNCTION metric_audit.fn_admission_evidence_guard()
  SECURITY DEFINER
  SET search_path TO 'pg_catalog'
 AS $function$
-DECLARE pred metric_audit.admission_recomputation_evidence%ROWTYPE;
+DECLARE
+  pred metric_audit.admission_recomputation_evidence%ROWTYPE;
+  v_decision_request uuid;
+  v_decision_found boolean;
 BEGIN
   NEW.recompute_txid := txid_current();  -- DB-owned
   NEW.recomputed_at  := now();           -- DB-owned
@@ -57,11 +60,22 @@ BEGIN
     RAISE EXCEPTION 'admission_recomputation_evidence evidence_digest != DB-recomputed semantic identity (forged/tampered column)'
       USING ERRCODE='check_violation'; END IF;
   -- the effective decision must target this MCV (relational closure)
-  IF NOT EXISTS (SELECT 1 FROM metric_audit.decision d
-                 WHERE d.decision_uid = NEW.effective_decision_uid
-                   AND d.metric_contract_version_uid = NEW.metric_contract_version_uid) THEN
+  SELECT d.request_uid, true INTO v_decision_request, v_decision_found
+  FROM metric_audit.decision d
+  WHERE d.decision_uid = NEW.effective_decision_uid
+    AND d.metric_contract_version_uid = NEW.metric_contract_version_uid;
+  IF NOT COALESCE(v_decision_found, false) THEN
     RAISE EXCEPTION 'admission evidence effective_decision % does not target mcv %',
       NEW.effective_decision_uid, NEW.metric_contract_version_uid; END IF;
+  -- TSK-4520b8: the evidence's request binding must EQUAL its decision's — both NULL (D542
+  -- run-origin, no request exists), or both present and equal (exchange origin). This is the
+  -- write-time counterpart of the readiness function's evidence_request_uid_mismatch clause: with a
+  -- nullable column, a head could otherwise be bound to a request its decision never signed, or a
+  -- run-origin head could invent one.
+  IF NEW.request_uid IS DISTINCT FROM v_decision_request THEN
+    RAISE EXCEPTION 'admission evidence request_uid % does not match effective decision %''s request_uid % (both must be NULL for run-origin, or equal)',
+      NEW.request_uid, NEW.effective_decision_uid, v_decision_request
+      USING ERRCODE='check_violation'; END IF;
   -- supersession stays within the SAME (mcv, effective_decision) stream (no cross-stream supersession)
   IF NEW.supersedes_evidence_uid IS NOT NULL THEN
     IF NEW.supersedes_evidence_uid = NEW.evidence_uid THEN
@@ -111,6 +125,20 @@ CREATE OR REPLACE FUNCTION metric_audit.fn_admission_evidence_immutability()
 AS $function$
 BEGIN
   RAISE EXCEPTION 'metric_audit.admission_recomputation_evidence is append-only (% refused, Invariant III)', TG_OP USING ERRCODE='check_violation';
+END $function$
+```
+
+### `metric_audit.fn_aihc_immutable`
+
+```sql
+CREATE OR REPLACE FUNCTION metric_audit.fn_aihc_immutable()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog'
+AS $function$
+BEGIN
+  RAISE EXCEPTION 'auditor_infrastructure_halt_cause rows are append-only (halt facts are evidence)';
 END $function$
 ```
 
@@ -228,6 +256,102 @@ BEGIN
     p_operator_authorization_ref, p_operator_authorization_sha256,
     p_accepted_review_response_ref, p_accepted_review_response_sha256, p_reason, p_created_by);
   -- 5. post-check: the resolver must now return exactly the successor
+  v_resolved := metric_audit.fn_intrinsic_authority_pin_current();
+  IF v_resolved IS DISTINCT FROM v_new THEN
+    RAISE EXCEPTION 'authority-pin supersede post-check failed: resolver=% != successor=%', v_resolved, v_new USING ERRCODE='check_violation'; END IF;
+  RETURN v_new;
+END $function$
+```
+
+### `metric_audit.fn_authority_pin_supersede_current`
+
+Reads/writes: `metric_audit.intrinsic_authority_pin`, `metric_audit.intrinsic_authority_pin_event`
+
+```sql
+CREATE OR REPLACE FUNCTION metric_audit.fn_authority_pin_supersede_current(p_coordinates jsonb, p_expected_successor_digest text, p_methodology_release_ratification_ref text, p_methodology_release_ratification_sha256 text, p_operator_authorization_ref text, p_operator_authorization_sha256 text, p_accepted_review_response_ref text, p_accepted_review_response_sha256 text, p_reason text, p_created_by text)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog'
+AS $function$
+DECLARE v_pred uuid; v_canonical text; v_computed text; v_new uuid; v_resolved uuid; v_same boolean;
+BEGIN
+  -- 1. singular current pin, locked. The predecessor is never caller-supplied.
+  v_pred := metric_audit.fn_intrinsic_authority_pin_current();
+  IF v_pred IS NULL THEN
+    RAISE EXCEPTION 'authority-pin supersede refused: no singular current pin' USING ERRCODE='check_violation'; END IF;
+  PERFORM 1 FROM metric_audit.intrinsic_authority_pin WHERE pin_uid = v_pred FOR UPDATE;
+  -- 2. attestations must be present and non-empty (the sha FORMAT is CHECKed at insert; this fails
+  --    early with a named cause instead of a constraint violation).
+  IF coalesce(btrim(p_methodology_release_ratification_ref), '') = ''
+     OR coalesce(btrim(p_operator_authorization_ref), '') = ''
+     OR coalesce(btrim(p_accepted_review_response_ref), '') = '' THEN
+    RAISE EXCEPTION 'authority-pin supersede refused: all three attestation refs are required (methodology release ratification, operator authorization, accepted review response)' USING ERRCODE='check_violation'; END IF;
+  IF coalesce(btrim(p_reason), '') = '' THEN
+    RAISE EXCEPTION 'authority-pin supersede refused: reason is required' USING ERRCODE='check_violation'; END IF;
+  -- 3. complete coordinates (no partial pin)
+  IF (SELECT bool_or(val IS NULL) FROM (VALUES
+        (p_coordinates->>'source_authority_revision'),(p_coordinates->>'authority_revision'),
+        (p_coordinates->>'source_authority_policy_digest'),(p_coordinates->>'package_hash_algorithm'),
+        (p_coordinates->>'methodology_version'),(p_coordinates->>'methodology_digest'),
+        (p_coordinates->>'engine'),(p_coordinates->>'engine_version'),
+        (p_coordinates->>'gate_policy_version')) AS c(val)) THEN
+    RAISE EXCEPTION 'authority-pin supersede refused: incomplete successor coordinates' USING ERRCODE='check_violation'; END IF;
+  -- 4. refuse a no-op: a supersede that changes nothing is an event with no act behind it.
+  SELECT p_coordinates->>'source_authority_revision'      IS NOT DISTINCT FROM source_authority_revision
+     AND p_coordinates->>'authority_revision'             IS NOT DISTINCT FROM authority_revision
+     AND p_coordinates->>'source_authority_policy_digest' IS NOT DISTINCT FROM source_authority_policy_digest
+     AND p_coordinates->>'package_hash_algorithm'         IS NOT DISTINCT FROM package_hash_algorithm
+     AND p_coordinates->>'methodology_version'            IS NOT DISTINCT FROM methodology_version
+     AND p_coordinates->>'methodology_digest'             IS NOT DISTINCT FROM methodology_digest
+     AND p_coordinates->>'engine'                         IS NOT DISTINCT FROM engine
+     AND p_coordinates->>'engine_version'                 IS NOT DISTINCT FROM engine_version
+     AND p_coordinates->>'gate_policy_version'            IS NOT DISTINCT FROM gate_policy_version
+    INTO v_same
+    FROM metric_audit.intrinsic_authority_pin WHERE pin_uid = v_pred;
+  IF v_same THEN
+    RAISE EXCEPTION 'authority-pin supersede refused: successor coordinates are identical to the current pin (no-op)' USING ERRCODE='check_violation'; END IF;
+  -- 5. canonical recompute — the load-bearing control. Coordinates cannot be slipped past the
+  --    digest the reviewers accepted, because the digest is recomputed here from the coordinates.
+  SELECT '{' || string_agg(to_json(k)::text || ':' || to_json(val)::text, ',' ORDER BY k COLLATE "C") || '}'
+    INTO v_canonical
+    FROM (VALUES
+      ('schema_version',                'c5-intrinsic-authority-pin-v1'),
+      ('source_authority_revision',     p_coordinates->>'source_authority_revision'),
+      ('authority_revision',            p_coordinates->>'authority_revision'),
+      ('source_authority_policy_digest',p_coordinates->>'source_authority_policy_digest'),
+      ('package_hash_algorithm',        p_coordinates->>'package_hash_algorithm'),
+      ('methodology_version',           p_coordinates->>'methodology_version'),
+      ('methodology_digest',            p_coordinates->>'methodology_digest'),
+      ('engine',                        p_coordinates->>'engine'),
+      ('engine_version',                p_coordinates->>'engine_version'),
+      ('gate_policy_version',           p_coordinates->>'gate_policy_version')
+    ) AS t(k, val);
+  v_computed := 'sha256:' || encode(sha256(convert_to(v_canonical, 'UTF8')), 'hex');
+  IF v_computed <> p_expected_successor_digest THEN
+    RAISE EXCEPTION 'authority-pin supersede refused: computed digest % != expected %', v_computed, p_expected_successor_digest USING ERRCODE='check_violation'; END IF;
+  -- 6. immutable successor pin (is_current=false: currentness moves along the chain)
+  INSERT INTO metric_audit.intrinsic_authority_pin (
+    source_authority_revision, authority_revision, source_authority_policy_digest, package_hash_algorithm,
+    methodology_version, methodology_digest, engine, engine_version, gate_policy_version, is_current, pinned_by)
+  VALUES (
+    p_coordinates->>'source_authority_revision', p_coordinates->>'authority_revision',
+    p_coordinates->>'source_authority_policy_digest', p_coordinates->>'package_hash_algorithm',
+    p_coordinates->>'methodology_version', p_coordinates->>'methodology_digest', p_coordinates->>'engine',
+    p_coordinates->>'engine_version', p_coordinates->>'gate_policy_version', false, p_created_by)
+  RETURNING pin_uid INTO v_new;
+  -- 7. append the supersede event, same tx — the attestations ARE the authority record
+  INSERT INTO metric_audit.intrinsic_authority_pin_event (
+    event_kind, predecessor_pin_uid, successor_pin_uid, successor_pin_digest,
+    methodology_release_ratification_ref, methodology_release_ratification_sha256,
+    operator_authorization_ref, operator_authorization_sha256,
+    accepted_review_response_ref, accepted_review_response_sha256, reason, created_by)
+  VALUES (
+    'supersede_current', v_pred, v_new, p_expected_successor_digest,
+    p_methodology_release_ratification_ref, p_methodology_release_ratification_sha256,
+    p_operator_authorization_ref, p_operator_authorization_sha256,
+    p_accepted_review_response_ref, p_accepted_review_response_sha256, p_reason, p_created_by);
+  -- 8. post-check: the resolver must now return exactly the successor, else abort
   v_resolved := metric_audit.fn_intrinsic_authority_pin_current();
   IF v_resolved IS DISTINCT FROM v_new THEN
     RAISE EXCEPTION 'authority-pin supersede post-check failed: resolver=% != successor=%', v_resolved, v_new USING ERRCODE='check_violation'; END IF;
@@ -463,9 +587,117 @@ BEGIN
 END $function$
 ```
 
+### `metric_audit.fn_canonical_payload_source`
+
+Reads/writes: `ev.payload_digest`, `metric_audit.audit_run_artifact`, `metric_audit.checker_verdict_artifact`, `metric_audit.feed_event`
+
+```sql
+CREATE OR REPLACE FUNCTION metric_audit.fn_canonical_payload_source(p_feed_event_uid uuid, p_payload_digest text, p_expected_schema text, p_entity text)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'pg_catalog'
+AS $function$
+DECLARE ev metric_audit.feed_event%ROWTYPE; art metric_audit.checker_verdict_artifact%ROWTYPE; v_bytes bytea;
+BEGIN
+  IF p_feed_event_uid IS NOT NULL THEN
+    -- exchange origin: the verified feed event is the byte source (pre-Arm-C semantics, verbatim)
+    SELECT * INTO ev FROM metric_audit.feed_event WHERE event_uid = p_feed_event_uid;
+    IF ev.event_uid IS NULL THEN RAISE EXCEPTION '% cites a non-existent feed_event %', p_entity, p_feed_event_uid; END IF;
+    IF ev.payload_schema_version IS DISTINCT FROM p_expected_schema THEN
+      RAISE EXCEPTION '% feed_event is not a % event', p_entity, p_expected_schema; END IF;
+    IF p_payload_digest IS DISTINCT FROM ev.payload_digest THEN
+      RAISE EXCEPTION '% payload digest != feed_event.payload_digest', p_entity; END IF;
+    -- "both origins" unrepresentable, half 2 (half 1 refuses at artifact insert)
+    IF EXISTS (SELECT 1 FROM metric_audit.checker_verdict_artifact ca
+                WHERE ca.verdict_payload_digest = p_payload_digest
+                   OR ca.report_payload_digest  = p_payload_digest) THEN
+      RAISE EXCEPTION '% exchange-origin projection refused: a checker artifact also carries payload % — dual origin is unrepresentable', p_entity, p_payload_digest; END IF;
+    RETURN convert_from(ev.canonical_payload,'UTF8')::jsonb;
+  END IF;
+  -- run origin (D541 arm): the certification run's own artifact is the byte source. Platform-
+  -- authored decisions are NOT imports — trust is the recorded panel act (c8) + run corroboration
+  -- (c13); THIS arm supplies byte custody only. Kind is bound to schema so a report digest can
+  -- never satisfy a decision projection.
+  DECLARE
+    ra metric_audit.audit_run_artifact%ROWTYPE;
+    v_kind text;
+  BEGIN
+    v_kind := CASE p_expected_schema
+      WHEN 'metric-audit-decision-v2' THEN 'decision_payload'
+      WHEN 'metric-audit-report-v5' THEN 'report_payload'
+      ELSE NULL END;
+    IF v_kind IS NOT NULL THEN
+      SELECT * INTO ra FROM metric_audit.audit_run_artifact
+        WHERE content_digest = p_payload_digest AND artifact_kind = v_kind;
+      IF ra.audit_run_artifact_uid IS NOT NULL THEN
+        -- dual-origin unrepresentable, extended: a run artifact AND a checker artifact carrying
+        -- the same digest is a forgery surface, not a convenience
+        IF EXISTS (SELECT 1 FROM metric_audit.checker_verdict_artifact ca
+                    WHERE ca.verdict_payload_digest = p_payload_digest
+                       OR ca.report_payload_digest  = p_payload_digest) THEN
+          RAISE EXCEPTION '% run-origin projection refused: a checker artifact also carries payload % — dual origin is unrepresentable', p_entity, p_payload_digest; END IF;
+        IF 'sha256:' || encode(public.digest(ra.content_bytes,'sha256'),'hex') IS DISTINCT FROM p_payload_digest THEN
+          RAISE EXCEPTION '% run artifact bytes do not recompute to % — custody violation', p_entity, p_payload_digest; END IF;
+        RETURN convert_from(ra.content_bytes,'UTF8')::jsonb;
+      END IF;
+    END IF;
+  END;
+  -- checker origin (Arm C): the imported checker artifact is the byte source
+  IF p_expected_schema = 'metric-audit-decision-v2' THEN
+    SELECT * INTO art FROM metric_audit.checker_verdict_artifact WHERE verdict_payload_digest = p_payload_digest;
+    v_bytes := art.decision_payload_bytes;
+  ELSIF p_expected_schema = 'metric-audit-report-v5' THEN
+    SELECT * INTO art FROM metric_audit.checker_verdict_artifact WHERE report_payload_digest = p_payload_digest;
+    v_bytes := art.report_payload_bytes;
+  ELSE
+    RAISE EXCEPTION '% checker-origin projection refused: schema % has no checker byte source (NC projections are exchange-only)', p_entity, p_expected_schema;
+  END IF;
+  IF art.artifact_uid IS NULL THEN
+    RAISE EXCEPTION '% checker-origin projection refused: no checker artifact for payload % (origin unresolvable)', p_entity, p_payload_digest; END IF;
+  -- custody: the digest is RECOMPUTED from the stored bytes on every read, never trusted
+  IF 'sha256:' || encode(public.digest(v_bytes,'sha256'),'hex') IS DISTINCT FROM p_payload_digest THEN
+    RAISE EXCEPTION '% checker artifact bytes do not recompute to % — custody violation', p_entity, p_payload_digest; END IF;
+  RETURN convert_from(v_bytes,'UTF8')::jsonb;
+END $function$
+```
+
+### `metric_audit.fn_checker_verdict_artifact_guard`
+
+Reads/writes: `metric_audit.checker_registration`, `metric_audit.decision`, `new.report_payload_digest`, `new.verdict_payload_digest`
+
+```sql
+CREATE OR REPLACE FUNCTION metric_audit.fn_checker_verdict_artifact_guard()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog', 'public'
+AS $function$
+DECLARE reg metric_audit.checker_registration%ROWTYPE;
+BEGIN
+  IF 'sha256:' || encode(digest(NEW.decision_payload_bytes,'sha256'),'hex') IS DISTINCT FROM NEW.verdict_payload_digest THEN
+    RAISE EXCEPTION 'checker artifact: verdict_payload_digest does not recompute from stored decision bytes'; END IF;
+  IF 'sha256:' || encode(digest(NEW.report_payload_bytes,'sha256'),'hex') IS DISTINCT FROM NEW.report_payload_digest THEN
+    RAISE EXCEPTION 'checker artifact: report_payload_digest does not recompute from stored report bytes'; END IF;
+  SELECT * INTO reg FROM metric_audit.checker_registration WHERE registration_uid = NEW.checker_registration_uid;
+  IF reg.registration_uid IS NULL THEN RAISE EXCEPTION 'checker artifact cites no registration'; END IF;
+  IF NEW.imported_at < reg.valid_from OR (reg.valid_to IS NOT NULL AND NEW.imported_at >= reg.valid_to) THEN
+    RAISE EXCEPTION 'checker registration % not valid at import time', NEW.checker_registration_uid; END IF;
+  IF NEW.imported_by_name = reg.checker_principal THEN
+    RAISE EXCEPTION 'importer principal equals checker principal — the maker/importer must not be the verdict author (D535 invariant 4)'; END IF;
+  -- an artifact may never shadow an EXCHANGE decision: refuse when a decision with this payload
+  -- digest already exists carrying a feed event ("both origins" unrepresentable, half 1;
+  -- half 2 lives in fn_decision_guard's exchange branch in part 2).
+  IF EXISTS (SELECT 1 FROM metric_audit.decision d
+             WHERE d.decision_payload_digest = NEW.verdict_payload_digest AND d.feed_event_uid IS NOT NULL) THEN
+    RAISE EXCEPTION 'checker artifact refused: an exchange-origin decision already carries this payload digest'; END IF;
+  RETURN NEW;
+END $function$
+```
+
 ### `metric_audit.fn_decision_finalize`
 
-Reads/writes: `metric_audit.decision_nc_reference`, `metric_audit.feed_event`, `metric_audit.nc_reference`, `metric_audit.report_raised_nc`, `metric_audit.report_reference`, `rr.closure_root`, `rr.contextual_decision`, `rr.contextual_definition_score`, `rr.contextual_formula_score`, `rr.contextual_input_semantics_score`, `rr.contextual_overall_score`, `rr.exactness_result`, `rr.foundation_verdict`, `rr.metric_contract_version_uid`, `rr.package_snapshot_digest`, `rr.semantic_conformance_verdict`, `rr.structural_verdict`
+Reads/writes: `metric_audit.decision_nc_reference`, `metric_audit.nc_reference`, `metric_audit.report_raised_nc`, `metric_audit.report_reference`, `rr.closure_root`, `rr.contextual_decision`, `rr.contextual_definition_score`, `rr.contextual_formula_score`, `rr.contextual_input_semantics_score`, `rr.contextual_overall_score`, `rr.exactness_result`, `rr.foundation_verdict`, `rr.metric_contract_version_uid`, `rr.package_snapshot_digest`, `rr.semantic_conformance_verdict`, `rr.structural_verdict`
 
 ```sql
 CREATE OR REPLACE FUNCTION metric_audit.fn_decision_finalize()
@@ -474,11 +706,11 @@ CREATE OR REPLACE FUNCTION metric_audit.fn_decision_finalize()
  SECURITY DEFINER
  SET search_path TO 'pg_catalog'
 AS $function$
-DECLARE ev metric_audit.feed_event%ROWTYPE; p jsonb; rr metric_audit.report_reference%ROWTYPE;
+DECLARE p jsonb; rr metric_audit.report_reference%ROWTYPE;
         v_exp_block int; v_exp_nonblock int; v_act int; v_req_code text; v_raised int; v_proj int;
 BEGIN
-  SELECT * INTO ev FROM metric_audit.feed_event WHERE event_uid = NEW.feed_event_uid;
-  p := convert_from(ev.canonical_payload,'UTF8')::jsonb;
+  p := metric_audit.fn_canonical_payload_source(NEW.feed_event_uid, NEW.decision_payload_digest,
+         'metric-audit-decision-v2', 'decision finalize');
   IF NEW.decision_code = 'REVOKE' THEN
     SELECT count(*) INTO v_act FROM metric_audit.decision_nc_reference WHERE decision_uid = NEW.decision_uid;
     IF v_act <> 0 THEN RAISE EXCEPTION 'REVOKE decision % must have an empty NC child set', NEW.decision_uid; END IF;
@@ -508,6 +740,8 @@ BEGIN
   -- review P0-2: BEFORE deriving the expected NC set, prove EXACT closure — every report-raised NC has
   -- exactly one same-report nc_reference. An inner join alone silently drops an unprojected raised NC,
   -- collapsing the expected set to empty and false-passing a childless decision. Assert counts match first.
+  -- (Arm C note: nc_reference REQUIRES an NC feed event, so a checker-origin report with raised NCs can
+  -- never satisfy this closure — checker-origin NC-carrying verdicts FAIL CLOSED here, by design.)
   SELECT count(*) INTO v_raised FROM metric_audit.report_raised_nc WHERE report_uid = NEW.report_uid;
   SELECT count(*) INTO v_proj
     FROM metric_audit.report_raised_nc rn JOIN metric_audit.nc_reference nr
@@ -539,7 +773,7 @@ END $function$
 
 ### `metric_audit.fn_decision_guard`
 
-Reads/writes: `ev.feed_mode`, `ev.payload_digest`, `metric_audit.decision`, `metric_audit.feed_event`, `metric_audit.report_reference`, `metric_audit.request_publication`, `new.metric_contract_version_uid`, `rr.report_payload_digest`, `rr.request_digest`, `rr.request_uid`, `tgt.decision_digest`
+Reads/writes: `metric_audit.decision`, `metric_audit.feed_event`, `metric_audit.report_reference`, `metric_audit.request_publication`, `new.metric_contract_version_uid`, `rr.report_payload_digest`, `rr.request_digest`, `rr.request_uid`, `tgt.decision_digest`
 
 ```sql
 CREATE OR REPLACE FUNCTION metric_audit.fn_decision_guard()
@@ -548,16 +782,22 @@ CREATE OR REPLACE FUNCTION metric_audit.fn_decision_guard()
  SECURITY DEFINER
  SET search_path TO 'pg_catalog'
 AS $function$
-DECLARE ev metric_audit.feed_event%ROWTYPE; p jsonb; pub metric_audit.request_publication%ROWTYPE; req jsonb;
+DECLARE p jsonb; pub metric_audit.request_publication%ROWTYPE; req jsonb;
         v_head uuid; tgt metric_audit.decision%ROWTYPE; rr metric_audit.report_reference%ROWTYPE;
 BEGIN
-  SELECT * INTO ev FROM metric_audit.feed_event WHERE event_uid = NEW.feed_event_uid;
-  IF ev.event_uid IS NULL THEN RAISE EXCEPTION 'decision cites a non-existent feed_event %', NEW.feed_event_uid; END IF;
-  IF ev.payload_schema_version IS DISTINCT FROM 'metric-audit-decision-v2' THEN
-    RAISE EXCEPTION 'decision feed_event is not a metric-audit-decision-v2 event'; END IF;
-  IF NEW.decision_payload_digest IS DISTINCT FROM ev.payload_digest THEN
-    RAISE EXCEPTION 'decision decision_payload_digest != feed_event.payload_digest'; END IF;
-  p := convert_from(ev.canonical_payload,'UTF8')::jsonb;
+  p := metric_audit.fn_canonical_payload_source(NEW.feed_event_uid, NEW.decision_payload_digest,
+         'metric-audit-decision-v2', 'decision');
+  -- U2b (D536): panel binding. Checker branch binds the recorded panel run; exchange branch
+  -- keeps the contextual object CLOSED (payload panel fields refuse; column stays NULL).
+  IF NEW.feed_event_uid IS NULL THEN
+    IF NEW.panel_run_uid IS DISTINCT FROM (p#>>'{verdict_summary,contextual,panel_run_uid}')::uuid THEN
+      RAISE EXCEPTION 'decision panel_run_uid detached from payload'; END IF;
+  ELSE
+    IF (p#>'{verdict_summary,contextual}') ?| ARRAY['panel_run_uid','panel_input_hash','roster_registration_uid'] THEN
+      RAISE EXCEPTION 'exchange-origin decision payload must not carry panel fields'; END IF;
+    IF NEW.panel_run_uid IS NOT NULL THEN
+      RAISE EXCEPTION 'exchange-origin decision must not cite a panel run'; END IF;
+  END IF;
   -- core payload binds
   IF NEW.decision_uid IS DISTINCT FROM (p->>'decision_uid')::uuid
      OR NEW.decision_digest IS DISTINCT FROM p->>'decision_digest'
@@ -584,12 +824,27 @@ BEGIN
      OR NEW.citations_json IS DISTINCT FROM p->'citations'                        -- P0-3: bound
      OR NEW.revocation_json IS DISTINCT FROM NULLIF(p->'revocation','null'::jsonb) THEN  -- P0-3: exact (null-normalized)
     RAISE EXCEPTION 'decision projection is detached from the signed decision payload'; END IF;
-  -- feed_mode from the verified event AND agrees with payload.feed.feed_mode
-  IF NEW.feed_mode IS DISTINCT FROM ev.feed_mode OR NEW.feed_mode IS DISTINCT FROM p#>>'{feed,feed_mode}' THEN
+  -- feed_mode binds to payload.feed.feed_mode in BOTH arms; exchange arm ALSO binds the event's mode
+  IF NEW.feed_mode IS DISTINCT FROM p#>>'{feed,feed_mode}' THEN
+    RAISE EXCEPTION 'decision feed_mode detached from payload'; END IF;
+  IF NEW.feed_event_uid IS NOT NULL
+     AND NEW.feed_mode IS DISTINCT FROM (SELECT feed_mode FROM metric_audit.feed_event WHERE event_uid = NEW.feed_event_uid) THEN
     RAISE EXCEPTION 'decision feed_mode detached from feed_event/payload'; END IF;
   -- v4 P0-1 + review P0-1: the cited request MUST be a signed publication, AND the decision must agree with
   -- the published request payload (V-D2 in the DB backstop, every decision code). request_digest here is the
   -- request SELF-identity (== published request's own request_digest), NOT the transport payload_digest.
+  -- V-D2 runs UNCHANGED in both arms — the request lane survived D535 (GOV-ERR-003) exactly for this.
+  IF NEW.audit_run_uid IS NOT NULL THEN
+    -- run-origin (D541 s6): NO published request exists and the payload must not fabricate one.
+    -- The run reference must travel IN THE SIGNED BYTES (mirror of the U2b panel binding): a
+    -- column-only reference would let the signed payload stay silent about its own ancestry.
+    IF p->'request_ref' IS NOT NULL AND p->'request_ref' <> 'null'::jsonb THEN
+      RAISE EXCEPTION 'run-origin decision payload must not carry request_ref'; END IF;
+    IF NEW.request_uid IS NOT NULL OR NEW.request_digest IS NOT NULL THEN
+      RAISE EXCEPTION 'run-origin decision must not cite a request'; END IF;
+    IF NEW.audit_run_uid IS DISTINCT FROM (p#>>'{audit_run_ref,audit_run_uid}')::uuid THEN
+      RAISE EXCEPTION 'decision audit_run_uid detached from payload'; END IF;
+  ELSE
   SELECT * INTO pub FROM metric_audit.request_publication WHERE request_uid = NEW.request_uid;
   IF pub.request_uid IS NULL THEN RAISE EXCEPTION 'decision request % is not a signed publication', NEW.request_uid; END IF;
   req := convert_from(pub.canonical_payload,'UTF8')::jsonb;
@@ -600,6 +855,7 @@ BEGIN
      OR NEW.package_snapshot_digest IS DISTINCT FROM req#>>'{package,package_snapshot_digest}'
      OR NEW.closure_root IS DISTINCT FROM req->>'closure_root' THEN
     RAISE EXCEPTION 'decision V-D2: fields disagree with the published request payload'; END IF;
+  END IF;
   -- REVOKE identity (V-D7)
   IF NEW.decision_code = 'REVOKE' THEN
     IF NEW.supersedes_decision_uid IS DISTINCT FROM (p#>>'{revocation,revoked_decision_uid}')::uuid THEN
@@ -629,6 +885,9 @@ BEGIN
     IF rr.report_uid IS NULL THEN RAISE EXCEPTION 'decision cites report % with no projection', NEW.report_uid; END IF;
     IF NEW.report_digest IS DISTINCT FROM rr.report_payload_digest THEN
       RAISE EXCEPTION 'decision report_digest != report_reference.report_payload_digest'; END IF;
+    -- Arm coherence: a decision and its bound report must share ONE origin
+    IF (NEW.feed_event_uid IS NULL) <> (rr.feed_event_uid IS NULL) THEN
+      RAISE EXCEPTION 'decision origin (checker/exchange) != bound report origin'; END IF;
     -- review P0-1: a PASS/REJECT decision's request must equal the bound report's request (one audit chain)
     IF NEW.request_uid IS DISTINCT FROM rr.request_uid OR NEW.request_digest IS DISTINCT FROM rr.request_digest THEN
       RAISE EXCEPTION 'decision request (uid/digest) != bound report request'; END IF;
@@ -649,7 +908,7 @@ END $function$
 
 ### `metric_audit.fn_decision_nc_reference_membership`
 
-Reads/writes: `metric_audit.decision`, `metric_audit.feed_event`
+Reads/writes: `metric_audit.decision`
 
 ```sql
 CREATE OR REPLACE FUNCTION metric_audit.fn_decision_nc_reference_membership()
@@ -658,12 +917,12 @@ CREATE OR REPLACE FUNCTION metric_audit.fn_decision_nc_reference_membership()
  SECURITY DEFINER
  SET search_path TO 'pg_catalog'
 AS $function$
-DECLARE ev metric_audit.feed_event%ROWTYPE; p jsonb; n jsonb; found boolean := false; v_expected_blocking boolean;
+DECLARE p jsonb; n jsonb; found boolean := false; v_expected_blocking boolean; v_ev_uid uuid; v_digest text;
 BEGIN
-  SELECT fe.* INTO ev FROM metric_audit.decision d JOIN metric_audit.feed_event fe ON fe.event_uid = d.feed_event_uid
-    WHERE d.decision_uid = NEW.decision_uid;
-  IF ev.event_uid IS NULL THEN RAISE EXCEPTION 'decision_nc_reference cites a decision with no verified feed_event %', NEW.decision_uid; END IF;
-  p := convert_from(ev.canonical_payload,'UTF8')::jsonb;
+  SELECT d.feed_event_uid, d.decision_payload_digest INTO v_ev_uid, v_digest
+    FROM metric_audit.decision d WHERE d.decision_uid = NEW.decision_uid;
+  IF v_digest IS NULL THEN RAISE EXCEPTION 'decision_nc_reference cites a decision with no projection %', NEW.decision_uid; END IF;
+  p := metric_audit.fn_canonical_payload_source(v_ev_uid, v_digest, 'metric-audit-decision-v2', 'decision_nc_reference');
   -- search blocking set
   FOR n IN SELECT jsonb_array_elements(coalesce(p->'unresolved_blocking_ncs','[]'::jsonb)) LOOP
     IF (n->>'nc_uid')::uuid = NEW.nc_uid THEN v_expected_blocking := true; found := true;
@@ -1095,15 +1354,16 @@ $function$
 
 ### `metric_audit.fn_intrinsic_decision_refusal`
 
-Refusal codes: `c1_state_not_audit_pending`, `c2_snapshot_not_computed`, `c6_no_effective_pass_decision`, `c3_head_evidence_signature_mismatch`, `c4_closure_root_mismatch`, `c5_no_operative_realization`, `c7_structural_or_foundation_not_pass`, `c8_contextual_below_threshold`, `c9_exactness_disagreement`, `c10_unresolved_blocking_nc`, `c11_feed_not_enforcement`, `c11_enforcement_registration_invalid`, `c11_registration_direction_invalid`, `c11_registration_signer_mismatch`, `c11_registration_signer_invalid`, `c11_feed_checkpoint_regressed`, `c12_effectively_invalidated`
+Refusal codes: `c1_state_not_audit_pending`, `c2_snapshot_not_computed`, `c6_no_effective_pass_decision`, `c3_head_evidence_signature_mismatch`, `c4_closure_root_mismatch`, `c5_no_operative_realization`, `c7_structural_or_foundation_not_pass`, `c8_contextual_below_threshold`, `c9_exactness_disagreement`, `c10_unresolved_blocking_nc`, `c11_feed_not_enforcement`, `c11_enforcement_registration_invalid`, `c11_registration_direction_invalid`, `c11_registration_signer_mismatch`, `c11_registration_signer_invalid`, `c11_feed_checkpoint_regressed`, `c11_run_artifact_custody_invalid`, `c11_origin_unresolvable`, `c11_checker_registration_invalid`, `c11_checker_identity_invalid`, `c11_checker_artifact_custody_invalid`, `c12_effectively_invalidated`, `c14_authoring_panel_missing`, `c13_certification_run_missing`, `c13_certification_run_not_completed`, `c13_certification_run_subject_mismatch`, `c13_certification_run_panel_mismatch`, `c13_certification_run_package_mismatch`, `c13_eligibility_basis_incoherent`
 
-Reads/writes: `dec.closure_root`, `dec.request_uid`, `fev.signer_key_id`, `mcf.exactness_reproof_evidence`, `mcf.mcv_package_snapshot`, `mcf.metric_contract_version`, `metric_audit.admission_recomputation_evidence`, `metric_audit.decision`, `metric_audit.decision_nc_reference`, `metric_audit.feed_checkpoint`, `metric_audit.feed_event`, `metric_audit.feed_registration`, `metric_audit.intrinsic_authority_pin`, `metric_audit.nc_reference`, `pin.authority_revision`, `pin.engine`, `pin.engine_version`, `pin.gate_policy_version`, `pin.methodology_digest`, `pin.methodology_version`, `pin.package_hash_algorithm`, `pin.source_authority_policy_digest`, `pin.source_authority_revision`, `snap.hash_algorithm_version`, `snap.metric_contract_uid`, `snap.metric_contract_version_uid`, `snap.package_signature_hash`, `snap.version_code`
+Reads/writes: `dec.closure_root`, `dec.decision_payload_digest`, `dec.feed_event_uid`, `dec.panel_run_uid`, `dec.request_uid`, `fev.signer_key_id`, `mcf.certification_record`, `mcf.exactness_reproof_evidence`, `mcf.mcv_package_snapshot`, `mcf.metric_authoring_panel_run`, `mcf.metric_contract_version`, `metric_audit.admission_recomputation_evidence`, `metric_audit.audit_run`, `metric_audit.audit_run_artifact`, `metric_audit.audit_run_event`, `metric_audit.checker_registration`, `metric_audit.checker_verdict_artifact`, `metric_audit.decision`, `metric_audit.decision_nc_reference`, `metric_audit.feed_checkpoint`, `metric_audit.feed_event`, `metric_audit.feed_registration`, `metric_audit.intrinsic_authority_pin`, `metric_audit.nc_reference`, `pin.authority_revision`, `pin.engine`, `pin.engine_version`, `pin.gate_policy_version`, `pin.methodology_digest`, `pin.methodology_version`, `pin.package_hash_algorithm`, `pin.source_authority_policy_digest`, `pin.source_authority_revision`, `snap.hash_algorithm_version`, `snap.metric_contract_uid`, `snap.metric_contract_version_uid`, `snap.package_signature_hash`, `snap.version_code`
 
 ```sql
 CREATE OR REPLACE FUNCTION metric_audit.fn_intrinsic_decision_refusal(p_mcv uuid)
  RETURNS text[]
  LANGUAGE plpgsql
- STABLE
+ STABLE SECURITY DEFINER
+ SET search_path TO 'pg_catalog'
 AS $function$
 DECLARE
   v_fail text[] := ARRAY[]::text[];
@@ -1119,6 +1379,8 @@ DECLARE
   v_pin uuid;
   pin metric_audit.intrinsic_authority_pin%ROWTYPE;
   v_ckpt_seq bigint;
+  art metric_audit.checker_verdict_artifact%ROWTYPE;
+  creg metric_audit.checker_registration%ROWTYPE;
 BEGIN
   SELECT governance_state_code INTO v_state FROM mcf.metric_contract_version WHERE metric_contract_version_uid = p_mcv;
   IF v_state IS DISTINCT FROM 'audit_pending' THEN v_fail := array_append(v_fail, 'c1_state_not_audit_pending'); END IF;
@@ -1171,14 +1433,26 @@ BEGIN
   END IF;
   IF v_decision IS NULL OR dec.structural_verdict IS DISTINCT FROM 'PASS' OR dec.foundation_verdict IS DISTINCT FROM 'PASS' THEN
     v_fail := array_append(v_fail, 'c7_structural_or_foundation_not_pass'); END IF;
-  IF v_decision IS NULL
-     OR coalesce(dec.contextual_definition_score, 0)       < 4
-     OR coalesce(dec.contextual_formula_score, 0)          < 4
-     OR coalesce(dec.contextual_input_semantics_score, 0)  < 4
-     OR coalesce(dec.contextual_overall_score, 0)          < 4
-     OR dec.contextual_decision IS NULL
-     OR dec.contextual_decision NOT IN ('HIGH_CONFIDENCE','VERIFIED') THEN
-    v_fail := array_append(v_fail, 'c8_contextual_below_threshold'); END IF;
+  -- c8 (D536): TWO labelled origin arms, derived from dec.feed_event_uid — the c11 discriminator.
+  IF v_decision IS NULL THEN
+    v_fail := array_append(v_fail, 'c8_contextual_below_threshold');
+  ELSIF dec.feed_event_uid IS NOT NULL THEN
+    -- Arm E (exchange): pre-D536 body VERBATIM (shared NULL clause hoisted above).
+    IF coalesce(dec.contextual_definition_score, 0)       < 4
+       OR coalesce(dec.contextual_formula_score, 0)          < 4
+       OR coalesce(dec.contextual_input_semantics_score, 0)  < 4
+       OR coalesce(dec.contextual_overall_score, 0)          < 4
+       OR dec.contextual_decision IS NULL
+       OR dec.contextual_decision NOT IN ('HIGH_CONFIDENCE','VERIFIED') THEN
+      v_fail := array_append(v_fail, 'c8_contextual_below_threshold'); END IF;
+  ELSE
+    -- Arm C (checker/panel): the semantic axis must be a RECORDED panel act. HIGH_CONFIDENCE
+    -- is never a checker-origin substitute for PANEL_VERIFIED (spec v2 §2; Codex answer 4).
+    IF dec.contextual_decision IS DISTINCT FROM 'PANEL_VERIFIED'
+       OR dec.panel_run_uid IS NULL
+       OR NOT mcf.fn_audit_panel_run_valid(dec) THEN
+      v_fail := array_append(v_fail, 'c8_contextual_below_threshold'); END IF;
+  END IF;
   -- c9 (UNIT K, dec-414ba2): exactness-basis coherence. Three LABELLED arms; each reads a different
   -- evidence class; no arm substitutes for another (D532 condition 1). Absent decision fails as before.
   IF v_decision IS NULL OR snap.mcv_package_snapshot_uid IS NULL THEN
@@ -1217,9 +1491,11 @@ BEGIN
          JOIN metric_audit.nc_reference nr ON nr.nc_uid = dn.nc_uid
         WHERE dn.decision_uid = v_decision AND dn.is_blocking AND nr.status = 'OPEN') THEN
     v_fail := array_append(v_fail, 'c10_unresolved_blocking_nc'); END IF;
+  -- c11 (D535): TWO labelled origin arms, DERIVED from dec.feed_event_uid — never declared.
   IF v_decision IS NULL OR dec.feed_mode IS DISTINCT FROM 'enforcement' THEN
     v_fail := array_append(v_fail, 'c11_feed_not_enforcement');
-  ELSE
+  ELSIF dec.feed_event_uid IS NOT NULL THEN
+    -- Arm E (exchange/feed-event origin): pre-D535 c11 body VERBATIM.
     SELECT * INTO fev FROM metric_audit.feed_event WHERE event_uid = dec.feed_event_uid;
     IF fev.event_uid IS NOT NULL THEN
       v_reg := metric_audit.fn_effective_feed_registration(fev.feed_name);
@@ -1246,9 +1522,90 @@ BEGIN
       IF v_ckpt_seq IS NULL OR v_ckpt_seq < fev.feed_sequence THEN
         v_fail := array_append(v_fail, 'c11_feed_checkpoint_regressed'); END IF;
     END IF;
+  ELSIF dec.audit_run_uid IS NOT NULL THEN
+    -- Arm R (run origin, D541): the decision is platform-authored FROM the recorded panel act.
+    -- Semantic trust = c8 (panel) + c13 (run corroboration); this arm verifies BYTE custody only:
+    -- the canonical decision payload must live as an artifact ON THE CITED RUN, recomputing to
+    -- the decision's payload digest. No checker registration — the dual-model property lives in
+    -- the panel roster itself (three seats, three families).
+    IF NOT EXISTS (
+      SELECT 1 FROM metric_audit.audit_run_artifact ra
+       WHERE ra.audit_run_uid = dec.audit_run_uid
+         AND ra.artifact_kind = 'decision_payload'
+         AND ra.content_digest = dec.decision_payload_digest
+         AND 'sha256:' || encode(public.digest(ra.content_bytes,'sha256'),'hex') = dec.decision_payload_digest) THEN
+      v_fail := array_append(v_fail, 'c11_run_artifact_custody_invalid'); END IF;
+  ELSE
+    -- Arm C (checker-artifact origin, D535): the imported dual-model verdict is the origin.
+    SELECT * INTO art FROM metric_audit.checker_verdict_artifact
+      WHERE verdict_payload_digest = dec.decision_payload_digest;
+    IF art.artifact_uid IS NULL THEN
+      -- "neither" origin: no feed event AND no checker artifact
+      v_fail := array_append(v_fail, 'c11_origin_unresolvable');
+    ELSE
+      SELECT * INTO creg FROM metric_audit.checker_registration
+        WHERE registration_uid = art.checker_registration_uid;
+      -- D535 invariant 1 (different family, ALWAYS) + registration validity at import time
+      IF creg.registration_uid IS NULL
+         OR art.imported_at < creg.valid_from
+         OR (creg.valid_to IS NOT NULL AND art.imported_at >= creg.valid_to)
+         OR creg.checker_model_family = creg.maker_model_family THEN
+        v_fail := array_append(v_fail, 'c11_checker_registration_invalid'); END IF;
+      -- D535 invariant 4 (checker authors its own verdicts): the importer may not BE the checker
+      IF creg.registration_uid IS NOT NULL AND art.imported_by_name = creg.checker_principal THEN
+        v_fail := array_append(v_fail, 'c11_checker_identity_invalid'); END IF;
+      -- custody: bytes re-digest to the decision's payload digest; git pin is a full 40-hex commit
+      IF 'sha256:' || encode(public.digest(art.decision_payload_bytes,'sha256'),'hex') IS DISTINCT FROM dec.decision_payload_digest
+         OR art.artifact_commit !~ '^[0-9a-f]{40}$' THEN
+        v_fail := array_append(v_fail, 'c11_checker_artifact_custody_invalid'); END IF;
+    END IF;
   END IF;
   IF metric_audit.fn_mcv_effectively_invalidated(p_mcv) THEN
     v_fail := array_append(v_fail, 'c12_effectively_invalidated'); END IF;
+  -- c14 (D541): PANEL-1 ancestry. Every MCV was born through the M12 authoring panel; until now
+  -- that was a service-side convention (354/354 covered, ZERO db enforcement). This converts the
+  -- convention into a gate while it is still unbroken.
+  IF NOT EXISTS (
+    SELECT 1 FROM mcf.certification_record c
+      JOIN mcf.metric_authoring_panel_run p ON p.panel_run_uid = c.panel_run_uid
+     WHERE c.primitive_id::text = p_mcv::text) THEN
+    v_fail := array_append(v_fail, 'c14_authoring_panel_missing'); END IF;
+  -- c13 (D541 / DEC-c48b0f, PLN-457cd0 v12 SS11.A.2): certification-run corroboration.
+  -- Fires ONLY for in-process decisions (audit_run_uid set, S1 XOR). The decision's own columns
+  -- already pass c8/c9/c11; c13 verifies the RUN the decision cites: it exists, COMPLETED, judged
+  -- by the SAME panel act the decision carries, over the SAME frozen bytes as the snapshot, and
+  -- opened through the D532 eligibility gate with a basis coherent with the decision's claimed
+  -- exactness basis. Request-lane decisions (audit_run_uid NULL) are untouched by this arm.
+  IF v_decision IS NOT NULL AND dec.audit_run_uid IS NOT NULL THEN
+    DECLARE
+      run metric_audit.audit_run%ROWTYPE;
+      v_basis text;
+    BEGIN
+      SELECT * INTO run FROM metric_audit.audit_run WHERE audit_run_uid = dec.audit_run_uid;
+      IF run.audit_run_uid IS NULL THEN
+        v_fail := array_append(v_fail, 'c13_certification_run_missing');
+      ELSE
+        IF run.terminal_status IS DISTINCT FROM 'COMPLETED' THEN
+          v_fail := array_append(v_fail, 'c13_certification_run_not_completed'); END IF;
+        IF run.metric_contract_version_uid IS DISTINCT FROM p_mcv THEN
+          v_fail := array_append(v_fail, 'c13_certification_run_subject_mismatch'); END IF;
+        IF run.panel_run_uid IS NULL OR run.panel_run_uid IS DISTINCT FROM dec.panel_run_uid THEN
+          v_fail := array_append(v_fail, 'c13_certification_run_panel_mismatch'); END IF;
+        IF snap.mcv_package_snapshot_uid IS NULL
+           OR run.package_snapshot_digest IS DISTINCT FROM snap.package_signature_hash THEN
+          v_fail := array_append(v_fail, 'c13_certification_run_package_mismatch'); END IF;
+        SELECT e.detail_json->>'basis' INTO v_basis
+          FROM metric_audit.audit_run_event e
+         WHERE e.audit_run_uid = dec.audit_run_uid AND e.event_kind = 'ELIGIBILITY_RESOLVED'
+         ORDER BY e.event_seq ASC LIMIT 1;
+        IF v_basis IS NULL
+           OR (v_basis = 'EXACT' AND dec.exactness_basis NOT IN ('EXACT_SNAPSHOT','EXACT_REPROOF'))
+           OR (v_basis = 'REPRODUCIBLE' AND dec.exactness_basis IS DISTINCT FROM 'REPRODUCIBLE')
+           OR (v_basis NOT IN ('EXACT','REPRODUCIBLE')) THEN
+          v_fail := array_append(v_fail, 'c13_eligibility_basis_incoherent'); END IF;
+      END IF;
+    END;
+  END IF;
   RETURN v_fail;
 END
 $function$
@@ -1509,7 +1866,7 @@ BEGIN RAISE EXCEPTION 'governed table %.% is append-only (Invariant III): % reje
 
 ### `metric_audit.fn_report_finding_membership`
 
-Reads/writes: `metric_audit.feed_event`, `metric_audit.report_reference`
+Reads/writes: `metric_audit.report_reference`
 
 ```sql
 CREATE OR REPLACE FUNCTION metric_audit.fn_report_finding_membership()
@@ -1518,12 +1875,12 @@ CREATE OR REPLACE FUNCTION metric_audit.fn_report_finding_membership()
  SECURITY DEFINER
  SET search_path TO 'pg_catalog'
 AS $function$
-DECLARE ev metric_audit.feed_event%ROWTYPE; p jsonb; f jsonb; found boolean := false;
+DECLARE p jsonb; f jsonb; found boolean := false; v_ev_uid uuid; v_digest text;
 BEGIN
-  SELECT fe.* INTO ev FROM metric_audit.report_reference r JOIN metric_audit.feed_event fe ON fe.event_uid = r.feed_event_uid
-    WHERE r.report_uid = NEW.report_uid;
-  IF ev.event_uid IS NULL THEN RAISE EXCEPTION 'report_finding cites a report with no verified feed_event %', NEW.report_uid; END IF;
-  p := convert_from(ev.canonical_payload,'UTF8')::jsonb;
+  SELECT r.feed_event_uid, r.report_payload_digest INTO v_ev_uid, v_digest
+    FROM metric_audit.report_reference r WHERE r.report_uid = NEW.report_uid;
+  IF v_digest IS NULL THEN RAISE EXCEPTION 'report_finding cites a report with no projection %', NEW.report_uid; END IF;
+  p := metric_audit.fn_canonical_payload_source(v_ev_uid, v_digest, 'metric-audit-report-v5', 'report_finding');
   FOR f IN SELECT jsonb_array_elements(p->'findings') LOOP
     IF (f->>'finding_uid')::uuid = NEW.finding_uid THEN
       IF NEW.finding_kind IS DISTINCT FROM f->>'finding_kind'
@@ -1542,7 +1899,7 @@ END $function$
 
 ### `metric_audit.fn_report_raised_nc_membership`
 
-Reads/writes: `metric_audit.feed_event`, `metric_audit.report_reference`
+Reads/writes: `metric_audit.report_reference`
 
 ```sql
 CREATE OR REPLACE FUNCTION metric_audit.fn_report_raised_nc_membership()
@@ -1551,12 +1908,12 @@ CREATE OR REPLACE FUNCTION metric_audit.fn_report_raised_nc_membership()
  SECURITY DEFINER
  SET search_path TO 'pg_catalog'
 AS $function$
-DECLARE ev metric_audit.feed_event%ROWTYPE; p jsonb;
+DECLARE p jsonb; v_ev_uid uuid; v_digest text;
 BEGIN
-  SELECT fe.* INTO ev FROM metric_audit.report_reference r JOIN metric_audit.feed_event fe ON fe.event_uid = r.feed_event_uid
-    WHERE r.report_uid = NEW.report_uid;
-  IF ev.event_uid IS NULL THEN RAISE EXCEPTION 'report_raised_nc cites a report with no verified feed_event %', NEW.report_uid; END IF;
-  p := convert_from(ev.canonical_payload,'UTF8')::jsonb;
+  SELECT r.feed_event_uid, r.report_payload_digest INTO v_ev_uid, v_digest
+    FROM metric_audit.report_reference r WHERE r.report_uid = NEW.report_uid;
+  IF v_digest IS NULL THEN RAISE EXCEPTION 'report_raised_nc cites a report with no projection %', NEW.report_uid; END IF;
+  p := metric_audit.fn_canonical_payload_source(v_ev_uid, v_digest, 'metric-audit-report-v5', 'report_raised_nc');
   IF NOT (p->'ncs_raised' @> to_jsonb(NEW.nc_uid::text)) THEN
     RAISE EXCEPTION 'report_raised_nc % is not in the signed report ncs_raised set', NEW.nc_uid; END IF;
   RETURN NEW;
@@ -1565,7 +1922,7 @@ END $function$
 
 ### `metric_audit.fn_report_reference_finalize`
 
-Reads/writes: `metric_audit.feed_event`, `metric_audit.report_finding`, `metric_audit.report_raised_nc`
+Reads/writes: `metric_audit.report_finding`, `metric_audit.report_raised_nc`
 
 ```sql
 CREATE OR REPLACE FUNCTION metric_audit.fn_report_reference_finalize()
@@ -1574,10 +1931,10 @@ CREATE OR REPLACE FUNCTION metric_audit.fn_report_reference_finalize()
  SECURITY DEFINER
  SET search_path TO 'pg_catalog'
 AS $function$
-DECLARE ev metric_audit.feed_event%ROWTYPE; p jsonb; v_exp_findings int; v_act_findings int; v_exp_ncs int; v_act_ncs int;
+DECLARE p jsonb; v_exp_findings int; v_act_findings int; v_exp_ncs int; v_act_ncs int;
 BEGIN
-  SELECT * INTO ev FROM metric_audit.feed_event WHERE event_uid = NEW.feed_event_uid;
-  p := convert_from(ev.canonical_payload,'UTF8')::jsonb;
+  p := metric_audit.fn_canonical_payload_source(NEW.feed_event_uid, NEW.report_payload_digest,
+         'metric-audit-report-v5', 'report_reference finalize');
   v_exp_findings := jsonb_array_length(coalesce(p->'findings','[]'::jsonb));
   SELECT count(*) INTO v_act_findings FROM metric_audit.report_finding WHERE report_uid = NEW.report_uid;
   IF v_act_findings <> v_exp_findings THEN
@@ -1592,7 +1949,7 @@ END $function$
 
 ### `metric_audit.fn_report_reference_guard`
 
-Reads/writes: `ev.payload_digest`, `metric_audit.feed_event`, `metric_audit.request_publication`
+Reads/writes: `metric_audit.audit_run`, `metric_audit.request_publication`
 
 ```sql
 CREATE OR REPLACE FUNCTION metric_audit.fn_report_reference_guard()
@@ -1601,15 +1958,20 @@ CREATE OR REPLACE FUNCTION metric_audit.fn_report_reference_guard()
  SECURITY DEFINER
  SET search_path TO 'pg_catalog'
 AS $function$
-DECLARE ev metric_audit.feed_event%ROWTYPE; p jsonb; pub metric_audit.request_publication%ROWTYPE; req jsonb;
+DECLARE p jsonb; pub metric_audit.request_publication%ROWTYPE; req jsonb;
 BEGIN
-  SELECT * INTO ev FROM metric_audit.feed_event WHERE event_uid = NEW.feed_event_uid;
-  IF ev.event_uid IS NULL THEN RAISE EXCEPTION 'report_reference cites a non-existent feed_event %', NEW.feed_event_uid; END IF;
-  IF ev.payload_schema_version IS DISTINCT FROM 'metric-audit-report-v5' THEN
-    RAISE EXCEPTION 'report_reference feed_event is not a metric-audit-report-v5 event'; END IF;
-  IF NEW.report_payload_digest IS DISTINCT FROM ev.payload_digest THEN
-    RAISE EXCEPTION 'report_reference report_payload_digest != feed_event.payload_digest'; END IF;
-  p := convert_from(ev.canonical_payload,'UTF8')::jsonb;
+  p := metric_audit.fn_canonical_payload_source(NEW.feed_event_uid, NEW.report_payload_digest,
+         'metric-audit-report-v5', 'report_reference');
+  -- U2b (D536): panel binding — same discipline as the decision guard.
+  IF NEW.feed_event_uid IS NULL THEN
+    IF NEW.panel_run_uid IS DISTINCT FROM (p#>>'{contextual,panel_run_uid}')::uuid THEN
+      RAISE EXCEPTION 'report_reference panel_run_uid detached from payload'; END IF;
+  ELSE
+    IF (p->'contextual') ?| ARRAY['panel_run_uid','panel_input_hash','roster_registration_uid'] THEN
+      RAISE EXCEPTION 'exchange-origin report payload must not carry panel fields'; END IF;
+    IF NEW.panel_run_uid IS NOT NULL THEN
+      RAISE EXCEPTION 'exchange-origin report must not cite a panel run'; END IF;
+  END IF;
   IF NEW.report_uid IS DISTINCT FROM (p->>'report_uid')::uuid
      OR NEW.request_uid IS DISTINCT FROM (p#>>'{request_ref,request_uid}')::uuid
      OR NEW.request_digest IS DISTINCT FROM p#>>'{request_ref,request_digest}'
@@ -1642,7 +2004,18 @@ BEGIN
   -- published request PAYLOAD (self-digest + subject/package/closure). request_ref.request_digest is the
   -- request's canonical SELF-identity (== the published request's own request_digest), NOT the transport
   -- payload_digest — we compare self-to-self here, never to payload_digest.
-  SELECT * INTO pub FROM metric_audit.request_publication WHERE request_uid = NEW.request_uid;
+  -- V-D2's report-side twin runs UNCHANGED in both arms (request lane preserved, GOV-ERR-003).
+  IF NEW.request_uid IS NULL THEN
+    -- run-origin (D541 s6): no published request. The wire audit_run_uid (historically the external
+    -- engine's run id, no FK) must NAME A REAL certification run — identity stays honest.
+    IF p->'request_ref' IS NOT NULL AND p->'request_ref' <> 'null'::jsonb THEN
+      RAISE EXCEPTION 'run-origin report payload must not carry request_ref'; END IF;
+    IF NEW.request_digest IS NOT NULL THEN
+      RAISE EXCEPTION 'run-origin report must not cite a request digest'; END IF;
+    IF NOT EXISTS (SELECT 1 FROM metric_audit.audit_run ar WHERE ar.audit_run_uid = NEW.audit_run_uid) THEN
+      RAISE EXCEPTION 'run-origin report audit_run_uid % is not a certification run', NEW.audit_run_uid; END IF;
+  ELSE
+    SELECT * INTO pub FROM metric_audit.request_publication WHERE request_uid = NEW.request_uid;
   IF pub.request_uid IS NULL THEN RAISE EXCEPTION 'report_reference request % is not a signed publication', NEW.request_uid; END IF;
   req := convert_from(pub.canonical_payload,'UTF8')::jsonb;
   IF NEW.request_digest IS DISTINCT FROM req->>'request_digest'
@@ -1653,11 +2026,14 @@ BEGIN
      OR (NEW.metric_contract_uid IS NOT NULL
          AND NEW.metric_contract_uid IS DISTINCT FROM (req#>>'{subject,metric_contract_uid}')::uuid) THEN
     RAISE EXCEPTION 'report_reference disagrees with the published request payload (subject/mc/package/closure/digest)'; END IF;
+  END IF;
   RETURN NEW;
 END $function$
 ```
 
 ### `metric_audit.fn_request_outbox_guard`
+
+Reads/writes: `halt.halt_artifact_sha`, `halt.prior_request_uid`, `halt.refused_audit_run_uid`, `metric_audit.auditor_infrastructure_halt_cause`, `metric_audit.decision`, `metric_audit.request_outbox`, `new.metric_contract_version_uid`, `prior.closure_root`, `prior.package_snapshot_digest`
 
 ```sql
 CREATE OR REPLACE FUNCTION metric_audit.fn_request_outbox_guard()
@@ -1666,7 +2042,7 @@ CREATE OR REPLACE FUNCTION metric_audit.fn_request_outbox_guard()
  SECURITY DEFINER
  SET search_path TO 'pg_catalog'
 AS $function$
-DECLARE p jsonb;
+DECLARE p jsonb; prior RECORD; halt RECORD;
 BEGIN
   IF NEW.request_digest <> 'sha256:' || encode(sha256(NEW.request_canonical_bytes),'hex') THEN
     RAISE EXCEPTION 'request_outbox request_digest != sha256(request_canonical_bytes) [transport digest]'; END IF;
@@ -1683,6 +2059,36 @@ BEGIN
      OR NEW.authority_revision IS DISTINCT FROM p->>'authority_revision'
      OR NEW.feed_name IS DISTINCT FROM p#>>'{feed,feed_name}' THEN
     RAISE EXCEPTION 'request_outbox columns are detached from the canonical request payload'; END IF;
+  -- OPT-B recovery branch (design r2 §1): every invariant that compares against the NEW
+  -- request is enforced HERE — writer-independent, with the producer as the typed mirror.
+  IF NEW.trigger_kind = 'auditor_infrastructure_recovery' THEN
+    IF NEW.cause_kind IS DISTINCT FROM 'auditor_infrastructure_halt' THEN
+      RAISE EXCEPTION 'auditor_infrastructure_recovery requires cause_kind=auditor_infrastructure_halt'; END IF;
+    SELECT * INTO halt FROM metric_audit.auditor_infrastructure_halt_cause
+      WHERE cause_uid = NEW.cause_uid::uuid;
+    IF NOT FOUND THEN
+      RAISE EXCEPTION 'auditor_infrastructure_recovery cites cause_uid % with no halt-cause row', NEW.cause_uid; END IF;
+    SELECT * INTO prior FROM metric_audit.request_outbox
+      WHERE request_uid = halt.prior_request_uid;
+    IF NOT FOUND THEN
+      RAISE EXCEPTION 'halt cause cites prior request % not present in request_outbox', halt.prior_request_uid; END IF;
+    IF prior.metric_contract_version_uid IS DISTINCT FROM NEW.metric_contract_version_uid THEN
+      RAISE EXCEPTION 'recovery request MCV % != cited prior request MCV %',
+        NEW.metric_contract_version_uid, prior.metric_contract_version_uid; END IF;
+    IF EXISTS (SELECT 1 FROM metric_audit.decision d WHERE d.request_uid = halt.prior_request_uid) THEN
+      RAISE EXCEPTION 'prior request % carries a decision — this lane is for unjudged infrastructure halts only', halt.prior_request_uid; END IF;
+    IF NEW.package_snapshot_digest IS DISTINCT FROM prior.package_snapshot_digest THEN
+      RAISE EXCEPTION 'recovery package digest % != prior request package digest % (a drifted package needs a governed package successor, not this lane)',
+        NEW.package_snapshot_digest, prior.package_snapshot_digest; END IF;
+    IF NEW.closure_root IS DISTINCT FROM prior.closure_root THEN
+      RAISE EXCEPTION 'recovery closure root != prior request closure root (a drifted closure needs a governed package successor, not this lane)'; END IF;
+    IF (p#>>'{trigger,recovery_ref,prior_request_uid}')::uuid IS DISTINCT FROM halt.prior_request_uid
+       OR (p#>>'{trigger,recovery_ref,refused_audit_run_uid}')::uuid IS DISTINCT FROM halt.refused_audit_run_uid
+       OR p#>>'{trigger,recovery_ref,halt_artifact_sha256}' IS DISTINCT FROM halt.halt_artifact_sha256 THEN
+      RAISE EXCEPTION 'recovery payload recovery_ref is detached from the cited halt-cause row'; END IF;
+    IF p#>>'{trigger,lifecycle_transition,from_state}' IS DISTINCT FROM 'audit_pending' THEN
+      RAISE EXCEPTION 'auditor_infrastructure_recovery requires lifecycle from_state=audit_pending'; END IF;
+  END IF;
   RETURN NEW;
 END $function$
 ```
@@ -1711,6 +2117,16 @@ BEGIN
     RAISE EXCEPTION 'request_publication feed % != outbox feed % ', NEW.feed_name, o.feed_name; END IF;
   IF NEW.payload_digest IS DISTINCT FROM o.request_digest THEN
     RAISE EXCEPTION 'request_publication payload_digest != outbox request_digest'; END IF;
+  -- DEC-793e13 (D540): an IN-PROCESS request carries no transport. Everything above this line has
+  -- already bound it to its outbox row: payload_digest recomputes from canonical_payload, the bytes
+  -- equal the outbox request bytes, and the digests agree. Below this line is envelope, signer, feed
+  -- and chain validation -- none of which exists for a request that was never published to anyone.
+  -- Branching EXPLICITLY rather than letting NULL comparisons fall through: a guard that passes by NULL
+  -- propagation is indistinguishable from a guard that silently is not running. The table's
+  -- chk_request_publication_transport_xor guarantees a NULL envelope means NULL transport entirely.
+  IF NEW.signed_envelope_json IS NULL THEN
+    RETURN NEW;
+  END IF;
   -- the duplicated columns must equal the signed envelope contents
   env := NEW.signed_envelope_json;
   IF env->>'payload_digest' IS DISTINCT FROM NEW.payload_digest
@@ -1866,6 +2282,111 @@ BEGIN
     RAISE EXCEPTION 'orphan audit cert: MCV % is in state %, cert % requires to_state % by commit',
       NEW.primitive_id, v_state, NEW.action_code, NEW.to_state_code USING ERRCODE='check_violation'; END IF;
   RETURN NULL;
+END $function$
+```
+
+### `mcf.fn_audit_panel_run_guard`
+
+Reads/writes: `mcf.audit_panel_roster_registration`, `new.adversary_scores_json`, `new.assessor_scores_json`, `new.moderator_scores_json`
+
+```sql
+CREATE OR REPLACE FUNCTION mcf.fn_audit_panel_run_guard()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog'
+AS $function$
+DECLARE
+  axes text[] := ARRAY['definition','formula','canonical_input_semantics'];
+  ax text; a int; b int; m int; f int;
+  reg mcf.audit_panel_roster_registration%ROWTYPE;
+BEGIN
+  -- PR-539 P1: the score projections must EQUAL the raw seat outputs — the recorded act is the
+  -- raw output; a projection detached from it is the D536 failure class in a new form.
+  IF NEW.assessor_scores_json IS NOT NULL
+     AND (NEW.seat_outputs_json#>'{assessor,scores}') IS DISTINCT FROM NEW.assessor_scores_json THEN
+    RAISE EXCEPTION 'assessor score projection detached from raw seat output'; END IF;
+  IF NEW.adversary_scores_json IS NOT NULL
+     AND (NEW.seat_outputs_json#>'{adversary,scores}') IS DISTINCT FROM NEW.adversary_scores_json THEN
+    RAISE EXCEPTION 'adversary score projection detached from raw seat output'; END IF;
+  IF NEW.moderator_scores_json IS NOT NULL
+     AND (NEW.seat_outputs_json#>'{moderator,scores}') IS DISTINCT FROM NEW.moderator_scores_json THEN
+    RAISE EXCEPTION 'moderator score projection detached from raw seat output'; END IF;
+  SELECT * INTO reg FROM mcf.audit_panel_roster_registration WHERE registration_uid = NEW.roster_registration_uid;
+  IF reg.registration_uid IS NULL THEN RAISE EXCEPTION 'panel run cites no roster registration'; END IF;
+  IF NEW.created_at < reg.valid_from OR (reg.valid_to IS NOT NULL AND NEW.created_at >= reg.valid_to) THEN
+    RAISE EXCEPTION 'roster registration % not valid at run time', NEW.roster_registration_uid; END IF;
+  IF NOT NEW.escalated THEN
+    -- non-escalated: valid ONLY as unanimous verification
+    IF NEW.assessor_scores_json IS NULL OR NEW.adversary_scores_json IS NULL THEN
+      RAISE EXCEPTION 'non-escalated run requires assessor and adversary scores'; END IF;
+    IF NEW.moderator_scores_json IS NOT NULL THEN
+      RAISE EXCEPTION 'non-escalated run must not carry moderator scores'; END IF;
+    IF NEW.adversary_refuted THEN
+      RAISE EXCEPTION 'refuted run must escalate (refusal sticks until a moderator rules)'; END IF;
+    IF NEW.final_decision IS DISTINCT FROM 'PANEL_VERIFIED' THEN
+      RAISE EXCEPTION 'PANEL_REJECTED requires escalation — every rejection is moderator-ruled'; END IF;
+    FOREACH ax IN ARRAY axes LOOP
+      a := (NEW.assessor_scores_json->>ax)::int; b := (NEW.adversary_scores_json->>ax)::int;
+      f := (NEW.final_scores_json->>ax)::int;
+      IF a IS NULL OR b IS NULL OR f IS NULL THEN RAISE EXCEPTION 'axis % missing a score', ax; END IF;
+      IF a < 1 OR a > 5 OR b < 1 OR b > 5 THEN RAISE EXCEPTION 'axis % score out of range', ax; END IF;
+      IF abs(a - b) > 1 OR a < 4 OR b < 4 THEN
+        RAISE EXCEPTION 'axis %: spread > 1 or a seat below 4 — the run must escalate', ax; END IF;
+      IF f IS DISTINCT FROM least(a, b) THEN
+        RAISE EXCEPTION 'axis %: final score % is not LEAST(assessor %, adversary %) — forged final refused', ax, f, a, b; END IF;
+    END LOOP;
+  ELSE
+    -- escalated: finals bind to the moderator verbatim; the RULING governs
+    IF NEW.moderator_scores_json IS NULL THEN
+      RAISE EXCEPTION 'escalated run requires moderator scores'; END IF;
+    FOREACH ax IN ARRAY axes LOOP
+      m := (NEW.moderator_scores_json->>ax)::int; f := (NEW.final_scores_json->>ax)::int;
+      IF m IS NULL OR f IS NULL THEN RAISE EXCEPTION 'axis % missing a score', ax; END IF;
+      IF m < 1 OR m > 5 THEN RAISE EXCEPTION 'axis % moderator score out of range', ax; END IF;
+      IF f IS DISTINCT FROM m THEN
+        RAISE EXCEPTION 'axis %: final score % is not the moderator score % — forged final refused', ax, f, m; END IF;
+      IF NEW.final_decision = 'PANEL_VERIFIED' AND m < 4 THEN
+        RAISE EXCEPTION 'PANEL_VERIFIED ruling with axis % below 4 refused', ax; END IF;
+    END LOOP;
+    -- PANEL_REJECTED with all axes >= 4 is VALID: a refutation upheld on non-numeric grounds.
+  END IF;
+  RETURN NEW;
+END $function$
+```
+
+### `mcf.fn_audit_panel_run_valid`
+
+Reads/writes: `mcf.audit_contextual_panel_run`, `mcf.audit_panel_roster_registration`, `p_decision.metric_contract_version_uid`, `p_decision.package_snapshot_digest`
+
+```sql
+CREATE OR REPLACE FUNCTION mcf.fn_audit_panel_run_valid(p_decision metric_audit.decision)
+ RETURNS boolean
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'pg_catalog'
+AS $function$
+DECLARE run mcf.audit_contextual_panel_run%ROWTYPE; d int; f int; c int;
+BEGIN
+  SELECT * INTO run FROM mcf.audit_contextual_panel_run WHERE panel_run_uid = p_decision.panel_run_uid;
+  IF run.panel_run_uid IS NULL THEN RETURN false; END IF;
+  IF run.metric_contract_version_uid IS DISTINCT FROM p_decision.metric_contract_version_uid THEN RETURN false; END IF;
+  IF run.package_signature_hash IS DISTINCT FROM p_decision.package_snapshot_digest THEN RETURN false; END IF;
+  IF run.final_decision IS DISTINCT FROM 'PANEL_VERIFIED' THEN RETURN false; END IF;
+  IF run.adversary_refuted AND NOT run.escalated THEN RETURN false; END IF;
+  IF NOT EXISTS (SELECT 1 FROM mcf.audit_panel_roster_registration r
+                  WHERE r.registration_uid = run.roster_registration_uid
+                    AND run.created_at >= r.valid_from
+                    AND (r.valid_to IS NULL OR run.created_at < r.valid_to)) THEN RETURN false; END IF;
+  d := (run.final_scores_json->>'definition')::int;
+  f := (run.final_scores_json->>'formula')::int;
+  c := (run.final_scores_json->>'canonical_input_semantics')::int;
+  IF d IS NULL OR f IS NULL OR c IS NULL OR d < 4 OR f < 4 OR c < 4 THEN RETURN false; END IF;
+  IF p_decision.contextual_definition_score IS DISTINCT FROM d
+     OR p_decision.contextual_formula_score IS DISTINCT FROM f
+     OR p_decision.contextual_input_semantics_score IS DISTINCT FROM c
+     OR p_decision.contextual_overall_score IS DISTINCT FROM least(d, f, c) THEN RETURN false; END IF;
+  RETURN true;
 END $function$
 ```
 
@@ -2743,7 +3264,7 @@ Columns: 3 | **NOT NULL:** `role_name`, `created_by_m40`, `metric_audit_usage_pr
 
 ### `metric_audit.admission_recomputation_evidence`
 
-Columns: 12 | **NOT NULL:** `evidence_uid`, `metric_contract_version_uid`, `effective_decision_uid`, `request_uid`, `expected_snapshot_signature_hash`, `recomputed_package_signature_hash`, `recomputed_closure_root`, `recompute_txid`, `recomputed_at`, `actor`, `evidence_digest`
+Columns: 12 | **NOT NULL:** `evidence_uid`, `metric_contract_version_uid`, `effective_decision_uid`, `expected_snapshot_signature_hash`, `recomputed_package_signature_hash`, `recomputed_closure_root`, `recompute_txid`, `recomputed_at`, `actor`, `evidence_digest`
 
 | Kind | Name | Definition |
 |---|---|---|
@@ -2780,18 +3301,113 @@ Triggers:
 - `trg_artifact_import`: `trg_artifact_import BEFORE INSERT ON metric_audit.artifact_import FOR EACH ROW EXECUTE FUNCTION metric_audit.fn_artifact_import_guard()`
 - `trg_auditor_artifact_import_immutable`: `trg_auditor_artifact_import_immutable BEFORE DELETE OR UPDATE ON metric_audit.artifact_import FOR EACH ROW EXECUTE FUNCTION metric_audit.fn_reject_mutation()`
 
+### `metric_audit.audit_run`
+
+Columns: 13 | **NOT NULL:** `audit_run_uid`, `metric_contract_version_uid`, `package_snapshot_digest`, `closure_root`, `methodology_digest`, `gate_policy_version`, `opened_by_name`, `opened_at`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `chk_audit_run_closed_pair` | `CHECK ((((terminal_status IS NULL) AND (closed_at IS NULL)) OR ((terminal_status IS NOT NULL) AND (closed_at IS NOT NULL))))` |
+| FK | `fk_audit_run_batch` | `FOREIGN KEY (reintake_batch_uid) REFERENCES metric_audit.reintake_batch(reintake_batch_uid)` |
+| FK | `fk_audit_run_mcv` | `FOREIGN KEY (metric_contract_version_uid) REFERENCES mcf.metric_contract_version(metric_contract_version_uid)` |
+| FK | `fk_audit_run_panel_run` | `FOREIGN KEY (panel_run_uid) REFERENCES mcf.audit_contextual_panel_run(panel_run_uid)` |
+| PK | `audit_run_pkey` | `PRIMARY KEY (audit_run_uid)` |
+
+### `metric_audit.audit_run_artifact`
+
+Columns: 8 | **NOT NULL:** `audit_run_artifact_uid`, `audit_run_uid`, `artifact_kind`, `content_digest`, `media_type`, `created_at`, `created_by_name`
+
+| Kind | Name | Definition |
+|---|---|---|
+| FK | `fk_audit_run_artifact_run` | `FOREIGN KEY (audit_run_uid) REFERENCES metric_audit.audit_run(audit_run_uid)` |
+| PK | `audit_run_artifact_pkey` | `PRIMARY KEY (audit_run_artifact_uid)` |
+| UNIQUE | `uq_audit_run_artifact` | `UNIQUE (audit_run_uid, artifact_kind, content_digest)` |
+
+### `metric_audit.audit_run_event`
+
+Columns: 7 | **NOT NULL:** `audit_run_event_uid`, `event_seq`, `audit_run_uid`, `event_kind`, `recorded_at`, `recorded_by_name`
+
+| Kind | Name | Definition |
+|---|---|---|
+| FK | `fk_audit_run_event_run` | `FOREIGN KEY (audit_run_uid) REFERENCES metric_audit.audit_run(audit_run_uid)` |
+| PK | `audit_run_event_pkey` | `PRIMARY KEY (audit_run_event_uid)` |
+
+### `metric_audit.audit_run_refusal`
+
+Columns: 5 | **NOT NULL:** `audit_run_refusal_uid`, `audit_run_uid`, `refusal_code`, `detail_text`, `refused_at`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `chk_audit_run_refusal_code` | `CHECK ((refusal_code ~ '^[A-Z][A-Z0-9_]{2,63}$'::text))` |
+| FK | `fk_audit_run_refusal_run` | `FOREIGN KEY (audit_run_uid) REFERENCES metric_audit.audit_run(audit_run_uid)` |
+| PK | `audit_run_refusal_pkey` | `PRIMARY KEY (audit_run_refusal_uid)` |
+
+### `metric_audit.auditor_infrastructure_halt_cause`
+
+Columns: 7 | **NOT NULL:** `cause_uid`, `prior_request_uid`, `refused_audit_run_uid`, `halt_artifact_path`, `halt_artifact_sha256`, `created_at`, `created_by_name`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `auditor_infrastructure_halt_cause_halt_artifact_sha256_check` | `CHECK ((halt_artifact_sha256 ~ '^[a-f0-9]{64}$'::text))` |
+| FK | `fk_aihc_prior_request` | `FOREIGN KEY (prior_request_uid) REFERENCES metric_audit.request_outbox(request_uid)` |
+| PK | `auditor_infrastructure_halt_cause_pkey` | `PRIMARY KEY (cause_uid)` |
+
+Triggers:
+
+- `tg_aihc_immutable`: `tg_aihc_immutable BEFORE DELETE OR UPDATE ON metric_audit.auditor_infrastructure_halt_cause FOR EACH ROW EXECUTE FUNCTION metric_audit.fn_aihc_immutable()`
+
+### `metric_audit.checker_registration`
+
+Columns: 9 | **NOT NULL:** `registration_uid`, `checker_principal`, `checker_model_family`, `maker_model_family`, `allowed_artifact_schema`, `governing_decision_uid`, `importer_role`, `valid_from`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `checker_registration_checker_model_family_check` | `CHECK ((length(checker_model_family) >= 3))` |
+| CHECK | `checker_registration_checker_principal_check` | `CHECK ((length(checker_principal) >= 3))` |
+| CHECK | `checker_registration_maker_model_family_check` | `CHECK ((length(maker_model_family) >= 3))` |
+| CHECK | `ck_checker_registration_family_distinct` | `CHECK ((checker_model_family <> maker_model_family))` |
+| PK | `checker_registration_pkey` | `PRIMARY KEY (registration_uid)` |
+
+Triggers:
+
+- `trg_checker_registration_immutable`: `trg_checker_registration_immutable BEFORE DELETE OR UPDATE ON metric_audit.checker_registration FOR EACH ROW EXECUTE FUNCTION metric_audit.fn_reject_mutation()`
+
+### `metric_audit.checker_verdict_artifact`
+
+Columns: 13 | **NOT NULL:** `artifact_uid`, `verdict_payload_digest`, `report_payload_digest`, `decision_payload_bytes`, `report_payload_bytes`, `checker_registration_uid`, `artifact_repo`, `artifact_commit`, `artifact_path`, `artifact_digest`, `imported_by_name`, `imported_at`, `created_at`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `checker_verdict_artifact_artifact_commit_check` | `CHECK ((artifact_commit ~ '^[0-9a-f]{40}$'::text))` |
+| CHECK | `checker_verdict_artifact_artifact_digest_check` | `CHECK ((artifact_digest ~ '^sha256:[a-f0-9]{64}$'::text))` |
+| CHECK | `checker_verdict_artifact_imported_by_name_check` | `CHECK ((length(imported_by_name) >= 3))` |
+| CHECK | `checker_verdict_artifact_report_payload_digest_check` | `CHECK ((report_payload_digest ~ '^sha256:[a-f0-9]{64}$'::text))` |
+| CHECK | `checker_verdict_artifact_verdict_payload_digest_check` | `CHECK ((verdict_payload_digest ~ '^sha256:[a-f0-9]{64}$'::text))` |
+| FK | `checker_verdict_artifact_checker_registration_uid_fkey` | `FOREIGN KEY (checker_registration_uid) REFERENCES metric_audit.checker_registration(registration_uid)` |
+| PK | `checker_verdict_artifact_pkey` | `PRIMARY KEY (artifact_uid)` |
+| UNIQUE | `checker_verdict_artifact_report_payload_digest_key` | `UNIQUE (report_payload_digest)` |
+| UNIQUE | `checker_verdict_artifact_verdict_payload_digest_key` | `UNIQUE (verdict_payload_digest)` |
+
+Triggers:
+
+- `trg_checker_verdict_artifact_guard`: `trg_checker_verdict_artifact_guard BEFORE INSERT ON metric_audit.checker_verdict_artifact FOR EACH ROW EXECUTE FUNCTION metric_audit.fn_checker_verdict_artifact_guard()`
+- `trg_checker_verdict_artifact_immutable`: `trg_checker_verdict_artifact_immutable BEFORE DELETE OR UPDATE ON metric_audit.checker_verdict_artifact FOR EACH ROW EXECUTE FUNCTION metric_audit.fn_reject_mutation()`
+
 ### `metric_audit.decision`
 
-Columns: 40 | **NOT NULL:** `decision_uid`, `feed_event_uid`, `decision_payload_digest`, `decision_digest`, `metric_contract_version_uid`, `metric_contract_uid`, `version_code`, `decision_code`, `feed_mode`, `request_uid`, `request_digest`, `package_hash_algorithm`, `package_snapshot_digest`, `closure_root`, `authority_revision`, `methodology_version`, `methodology_digest`, `gate_policy_version`, `engine`, `engine_version`, `source_authority_revision`, `source_authority_policy_digest`, `citations_json`, `decided_by`, `decided_at`, `created_at`, `exactness_basis`
+Columns: 42 | **NOT NULL:** `decision_uid`, `decision_payload_digest`, `decision_digest`, `metric_contract_version_uid`, `metric_contract_uid`, `version_code`, `decision_code`, `feed_mode`, `package_hash_algorithm`, `package_snapshot_digest`, `closure_root`, `authority_revision`, `methodology_version`, `methodology_digest`, `gate_policy_version`, `engine`, `engine_version`, `source_authority_revision`, `source_authority_policy_digest`, `citations_json`, `decided_by`, `decided_at`, `created_at`, `exactness_basis`
 
 | Kind | Name | Definition |
 |---|---|---|
 | CHECK | `chk_decision_basis_result_coherent` | `CHECK (((exactness_result IS NULL) OR ((exactness_basis = ANY (ARRAY['EXACT_SNAPSHOT'::text, 'EXACT_REPROOF'::text])) AND (exactness_result = ANY (ARRAY['EXACT'::text, 'NOT_PROVEN'::text]))) OR ((exactness_basis = 'REPRODUCIBLE'::text) AND (exactness_result = ANY (ARRAY['REPRODUCIBLE'::text, 'NOT_PROVEN'::text])))))` |
 | CHECK | `chk_decision_exactness_basis` | `CHECK ((exactness_basis = ANY (ARRAY['EXACT_SNAPSHOT'::text, 'EXACT_REPROOF'::text, 'REPRODUCIBLE'::text])))` |
+| CHECK | `chk_decision_provenance_xor` | `CHECK ((((request_uid IS NOT NULL) AND (audit_run_uid IS NULL)) OR ((request_uid IS NULL) AND (audit_run_uid IS NOT NULL))))` |
 | CHECK | `chk_decision_report_by_code` | `CHECK ((((decision_code = 'REVOKE'::text) AND (report_uid IS NULL) AND (report_digest IS NULL) AND (structural_verdict IS NULL) AND (foundation_verdict IS NULL) AND (exactness_result IS NULL) AND (contextual_overall_score IS NULL) AND (contextual_decision IS NULL) AND (semantic_conformance_verdict IS NULL)) OR ((decision_code = ANY (ARRAY['PASS'::text, 'REJECT'::text])) AND (report_uid IS NOT NULL) AND (report_digest IS NOT NULL) AND (structural_verdict IS NOT NULL) AND (foundation_verdict IS NOT NULL) AND (exactness_result IS NOT NULL) AND (contextual_definition_score IS NOT NULL) AND (contextual_formula_score IS NOT NULL) AND (contextual_input_semantics_score IS NOT NULL) AND (contextual_overall_score IS NOT NULL) AND (contextual_decision IS NOT NULL) AND (semantic_conformance_verdict IS NOT NULL))))` |
 | CHECK | `chk_decision_revoke_xor` | `CHECK (((decision_code = 'REVOKE'::text) = (revocation_json IS NOT NULL)))` |
+| CHECK | `ck_decision_panel_checker_only` | `CHECK (((panel_run_uid IS NULL) OR (feed_event_uid IS NULL)))` |
+| CHECK | `ck_decision_panel_vocab_requires_run` | `CHECK (((contextual_decision IS NULL) OR (contextual_decision <> ALL (ARRAY['PANEL_VERIFIED'::text, 'PANEL_REJECTED'::text])) OR (panel_run_uid IS NOT NULL)))` |
 | CHECK | `decision_closure_root_check` | `CHECK ((closure_root ~ '^sha256:[a-f0-9]{64}$'::text))` |
-| CHECK | `decision_contextual_decision_check` | `CHECK ((contextual_decision = ANY (ARRAY['VERIFIED'::text, 'HIGH_CONFIDENCE'::text, 'CONDITIONAL'::text, 'REJECT'::text])))` |
+| CHECK | `decision_contextual_decision_check` | `CHECK ((contextual_decision = ANY (ARRAY['VERIFIED'::text, 'HIGH_CONFIDENCE'::text, 'CONDITIONAL'::text, 'REJECT'::text, 'PANEL_VERIFIED'::text, 'PANEL_REJECTED'::text])))` |
 | CHECK | `decision_contextual_definition_score_check` | `CHECK (((contextual_definition_score >= 1) AND (contextual_definition_score <= 5)))` |
 | CHECK | `decision_contextual_formula_score_check` | `CHECK (((contextual_formula_score >= 1) AND (contextual_formula_score <= 5)))` |
 | CHECK | `decision_contextual_input_semantics_score_check` | `CHECK (((contextual_input_semantics_score >= 1) AND (contextual_input_semantics_score <= 5)))` |
@@ -2813,9 +3429,11 @@ Columns: 40 | **NOT NULL:** `decision_uid`, `feed_event_uid`, `decision_payload_
 | CHECK | `decision_version_code_check` | `CHECK ((version_code ~ '^v[0-9]+$'::text))` |
 | FK | `decision_feed_event_uid_fkey` | `FOREIGN KEY (feed_event_uid) REFERENCES metric_audit.feed_event(event_uid)` |
 | FK | `decision_metric_contract_version_uid_fkey` | `FOREIGN KEY (metric_contract_version_uid) REFERENCES mcf.metric_contract_version(metric_contract_version_uid)` |
+| FK | `decision_panel_run_uid_fkey` | `FOREIGN KEY (panel_run_uid) REFERENCES mcf.audit_contextual_panel_run(panel_run_uid)` |
 | FK | `decision_report_uid_fkey` | `FOREIGN KEY (report_uid) REFERENCES metric_audit.report_reference(report_uid)` |
 | FK | `decision_request_uid_fkey` | `FOREIGN KEY (request_uid) REFERENCES metric_audit.request_publication(request_uid)` |
 | FK | `decision_supersedes_decision_uid_fkey` | `FOREIGN KEY (supersedes_decision_uid) REFERENCES metric_audit.decision(decision_uid)` |
+| FK | `fk_decision_audit_run` | `FOREIGN KEY (audit_run_uid) REFERENCES metric_audit.audit_run(audit_run_uid)` |
 | PK | `decision_pkey` | `PRIMARY KEY (decision_uid)` |
 | t | `trg_c6_deferred_revoke` | `TRIGGER DEFERRABLE INITIALLY DEFERRED` |
 | t | `trg_decision_finalize` | `TRIGGER DEFERRABLE INITIALLY DEFERRED` |
@@ -2849,6 +3467,16 @@ Triggers:
 - `trg_c6_deferred_blocking_nc`: `CREATE CONSTRAINT TRIGGER trg_c6_deferred_blocking_nc AFTER INSERT ON metric_audit.decision_nc_reference DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION metric_audit.fn_c6_deferred_blocking_nc()`
 - `trg_decision_nc_reference_immutable`: `trg_decision_nc_reference_immutable BEFORE DELETE OR UPDATE ON metric_audit.decision_nc_reference FOR EACH ROW EXECUTE FUNCTION metric_audit.fn_reject_mutation()`
 - `trg_decision_nc_reference_membership`: `trg_decision_nc_reference_membership BEFORE INSERT ON metric_audit.decision_nc_reference FOR EACH ROW EXECUTE FUNCTION metric_audit.fn_decision_nc_reference_membership()`
+
+### `metric_audit.evidence_object`
+
+Columns: 9 | **NOT NULL:** `evidence_uid`, `audit_run_uid`, `coordinate_json`, `coordinate_digest`, `content_digest`, `media_type`, `retrieved_at`, `retrieved_by_name`
+
+| Kind | Name | Definition |
+|---|---|---|
+| FK | `fk_evidence_object_run` | `FOREIGN KEY (audit_run_uid) REFERENCES metric_audit.audit_run(audit_run_uid)` |
+| PK | `evidence_object_pkey` | `PRIMARY KEY (evidence_uid)` |
+| UNIQUE | `uq_evidence_object_run_coord` | `UNIQUE (audit_run_uid, coordinate_digest)` |
 
 ### `metric_audit.feed_checkpoint`
 
@@ -3163,12 +3791,14 @@ Triggers:
 
 ### `metric_audit.report_reference`
 
-Columns: 29 | **NOT NULL:** `report_uid`, `feed_event_uid`, `report_payload_digest`, `request_uid`, `request_digest`, `metric_contract_version_uid`, `package_snapshot_digest`, `closure_root`, `audit_run_uid`, `engine`, `engine_version`, `methodology_version`, `methodology_digest`, `authority_revision`, `gate_policy_version`, `source_authority_revision`, `audited_at`, `overall_assessment`, `structural_verdict`, `foundation_verdict`, `contextual_definition_score`, `contextual_formula_score`, `contextual_input_semantics_score`, `contextual_overall_score`, `contextual_decision`, `semantic_conformance_verdict`, `exactness_result`, `created_at`
+Columns: 30 | **NOT NULL:** `report_uid`, `report_payload_digest`, `metric_contract_version_uid`, `package_snapshot_digest`, `closure_root`, `audit_run_uid`, `engine`, `engine_version`, `methodology_version`, `methodology_digest`, `authority_revision`, `gate_policy_version`, `source_authority_revision`, `audited_at`, `overall_assessment`, `structural_verdict`, `foundation_verdict`, `contextual_definition_score`, `contextual_formula_score`, `contextual_input_semantics_score`, `contextual_overall_score`, `contextual_decision`, `semantic_conformance_verdict`, `exactness_result`, `created_at`
 
 | Kind | Name | Definition |
 |---|---|---|
+| CHECK | `ck_report_panel_checker_only` | `CHECK (((panel_run_uid IS NULL) OR (feed_event_uid IS NULL)))` |
+| CHECK | `ck_report_panel_vocab_requires_run` | `CHECK (((contextual_decision IS NULL) OR (contextual_decision <> ALL (ARRAY['PANEL_VERIFIED'::text, 'PANEL_REJECTED'::text])) OR (panel_run_uid IS NOT NULL)))` |
 | CHECK | `report_reference_closure_root_check` | `CHECK ((closure_root ~ '^sha256:[a-f0-9]{64}$'::text))` |
-| CHECK | `report_reference_contextual_decision_check` | `CHECK ((contextual_decision = ANY (ARRAY['VERIFIED'::text, 'HIGH_CONFIDENCE'::text, 'CONDITIONAL'::text, 'REJECT'::text])))` |
+| CHECK | `report_reference_contextual_decision_check` | `CHECK ((contextual_decision = ANY (ARRAY['VERIFIED'::text, 'HIGH_CONFIDENCE'::text, 'CONDITIONAL'::text, 'REJECT'::text, 'PANEL_VERIFIED'::text, 'PANEL_REJECTED'::text])))` |
 | CHECK | `report_reference_contextual_definition_score_check` | `CHECK (((contextual_definition_score >= 1) AND (contextual_definition_score <= 5)))` |
 | CHECK | `report_reference_contextual_formula_score_check` | `CHECK (((contextual_formula_score >= 1) AND (contextual_formula_score <= 5)))` |
 | CHECK | `report_reference_contextual_input_semantics_score_check` | `CHECK (((contextual_input_semantics_score >= 1) AND (contextual_input_semantics_score <= 5)))` |
@@ -3184,6 +3814,7 @@ Columns: 29 | **NOT NULL:** `report_uid`, `feed_event_uid`, `report_payload_dige
 | CHECK | `report_reference_structural_verdict_check` | `CHECK ((structural_verdict = ANY (ARRAY['PASS'::text, 'REJECT'::text])))` |
 | FK | `report_reference_feed_event_uid_fkey` | `FOREIGN KEY (feed_event_uid) REFERENCES metric_audit.feed_event(event_uid)` |
 | FK | `report_reference_metric_contract_version_uid_fkey` | `FOREIGN KEY (metric_contract_version_uid) REFERENCES mcf.metric_contract_version(metric_contract_version_uid)` |
+| FK | `report_reference_panel_run_uid_fkey` | `FOREIGN KEY (panel_run_uid) REFERENCES mcf.audit_contextual_panel_run(panel_run_uid)` |
 | FK | `report_reference_request_uid_fkey` | `FOREIGN KEY (request_uid) REFERENCES metric_audit.request_publication(request_uid)` |
 | PK | `report_reference_pkey` | `PRIMARY KEY (report_uid)` |
 | t | `trg_report_reference_finalize` | `TRIGGER DEFERRABLE INITIALLY DEFERRED` |
@@ -3201,12 +3832,12 @@ Columns: 14 | **NOT NULL:** `request_uid`, `metric_contract_version_uid`, `packa
 
 | Kind | Name | Definition |
 |---|---|---|
-| CHECK | `request_outbox_cause_kind_check` | `CHECK ((cause_kind = ANY (ARRAY['certification_record'::text, 'audit_migration_batch'::text, 'compliance_report'::text, 'invalidation'::text, 'metric_correction'::text])))` |
+| CHECK | `request_outbox_cause_kind_check` | `CHECK ((cause_kind = ANY (ARRAY['certification_record'::text, 'audit_migration_batch'::text, 'compliance_report'::text, 'invalidation'::text, 'metric_correction'::text, 'auditor_infrastructure_halt'::text])))` |
 | CHECK | `request_outbox_closure_root_check` | `CHECK ((closure_root ~ '^sha256:[a-f0-9]{64}$'::text))` |
 | CHECK | `request_outbox_package_snapshot_digest_check` | `CHECK ((package_snapshot_digest ~ '^sha256:[a-f0-9]{64}$'::text))` |
 | CHECK | `request_outbox_projection_inputs_digest_check` | `CHECK ((projection_inputs_digest ~ '^sha256:[a-f0-9]{64}$'::text))` |
 | CHECK | `request_outbox_request_digest_check` | `CHECK ((request_digest ~ '^sha256:[a-f0-9]{64}$'::text))` |
-| CHECK | `request_outbox_trigger_kind_check` | `CHECK ((trigger_kind = ANY (ARRAY['approved_transition'::text, 'migration_batch'::text, 'remediation_re_audit'::text, 'governed_recovery'::text])))` |
+| CHECK | `request_outbox_trigger_kind_check` | `CHECK ((trigger_kind = ANY (ARRAY['approved_transition'::text, 'migration_batch'::text, 'remediation_re_audit'::text, 'governed_recovery'::text, 'auditor_infrastructure_recovery'::text])))` |
 | FK | `request_outbox_metric_contract_version_uid_fkey` | `FOREIGN KEY (metric_contract_version_uid) REFERENCES mcf.metric_contract_version(metric_contract_version_uid)` |
 | PK | `request_outbox_pkey` | `PRIMARY KEY (request_uid)` |
 
@@ -3237,11 +3868,12 @@ Triggers:
 
 ### `metric_audit.request_publication`
 
-Columns: 15 | **NOT NULL:** `publication_uid`, `request_uid`, `feed_name`, `feed_sequence`, `signed_envelope_json`, `canonical_payload`, `payload_digest`, `envelope_digest`, `signature_b64`, `signature_algorithm`, `platform_signer_key_id`, `platform_signer_fingerprint`, `published_at`, `published_by_name`
+Columns: 15 | **NOT NULL:** `publication_uid`, `request_uid`, `feed_name`, `canonical_payload`, `payload_digest`, `published_at`, `published_by_name`
 
 | Kind | Name | Definition |
 |---|---|---|
 | CHECK | `chk_request_publication_seq_prior` | `CHECK (((feed_sequence = 1) = (prior_event_digest IS NULL)))` |
+| CHECK | `chk_request_publication_transport_xor` | `CHECK ((((signed_envelope_json IS NOT NULL) AND (feed_sequence IS NOT NULL) AND (envelope_digest IS NOT NULL) AND (signature_b64 IS NOT NULL) AND (signature_algorithm IS NOT NULL) AND (platform_signer_key_id IS NOT NULL) AND (platform_signer_fingerprint IS NOT NULL)) OR ((signed_envelope_json IS NULL) AND (feed_sequence IS NULL) AND (envelope_digest IS NULL) AND (signature_b64 IS NULL) AND (signature_algorithm IS NULL) AND (platform_signer_key_id IS NULL) AND (platform_signer_fingerprint IS NULL) AND (prior_event_digest IS NULL))))` |
 | CHECK | `request_publication_envelope_digest_check` | `CHECK ((envelope_digest ~ '^sha256:[a-f0-9]{64}$'::text))` |
 | CHECK | `request_publication_payload_digest_check` | `CHECK ((payload_digest ~ '^sha256:[a-f0-9]{64}$'::text))` |
 | CHECK | `request_publication_platform_signer_fingerprint_check` | `CHECK ((platform_signer_fingerprint ~ '^sha256:[a-f0-9]{64}$'::text))` |
@@ -3293,8 +3925,8 @@ Columns: 11 | **NOT NULL:** `transition_evidence_uid`, `certification_record_id`
 
 | Kind | Name | Definition |
 |---|---|---|
-| CHECK | `chk_transition_evidence_shape` | `CHECK ((((action_code = 'audit_migrate'::text) AND (from_state_code = 'approved'::text) AND (to_state_code = 'audit_pending'::text) AND (request_uid IS NOT NULL) AND (decision_uid IS NULL) AND (block_reason_kind IS NULL)) OR ((action_code = 'metric_correction'::text) AND (from_state_code = 'superseded'::text) AND (to_state_code = 'audit_pending'::text) AND (request_uid IS NOT NULL) AND (decision_uid IS NULL) AND (block_reason_kind IS NULL)) OR ((action_code = 'audit_block'::text) AND (to_state_code = 'audit_blocked'::text) AND (from_state_code = ANY (ARRAY['active'::text, 'audit_pending'::text])) AND (decision_uid IS NOT NULL) AND (block_reason_kind IS NOT NULL) AND (request_uid IS NULL)) OR ((action_code = 'audit_admit'::text) AND (from_state_code = 'audit_pending'::text) AND (to_state_code = 'active'::text) AND (decision_uid IS NOT NULL) AND (request_uid IS NULL) AND (block_reason_kind IS NULL)) OR ((action_code = 'audit_reintake'::text) AND (from_state_code = 'active'::text) AND (to_state_code = 'audit_pending'::text) AND (request_uid IS NULL) AND (decision_uid IS NULL) AND (block_reason_kind IS NULL))))` |
-| CHECK | `transition_evidence_action_code_check` | `CHECK ((action_code = ANY (ARRAY['audit_migrate'::text, 'audit_block'::text, 'audit_remediate'::text, 'audit_admit'::text, 'metric_correction'::text, 'audit_reintake'::text])))` |
+| CHECK | `chk_transition_evidence_shape` | `CHECK ((((action_code = 'audit_migrate'::text) AND (from_state_code = 'approved'::text) AND (to_state_code = 'audit_pending'::text) AND (request_uid IS NOT NULL) AND (decision_uid IS NULL) AND (block_reason_kind IS NULL)) OR ((action_code = 'metric_correction'::text) AND (from_state_code = 'superseded'::text) AND (to_state_code = 'audit_pending'::text) AND (request_uid IS NOT NULL) AND (decision_uid IS NULL) AND (block_reason_kind IS NULL)) OR ((action_code = 'audit_block'::text) AND (to_state_code = 'audit_blocked'::text) AND (from_state_code = ANY (ARRAY['active'::text, 'audit_pending'::text])) AND (decision_uid IS NOT NULL) AND (block_reason_kind IS NOT NULL) AND (request_uid IS NULL)) OR ((action_code = 'audit_admit'::text) AND (from_state_code = 'audit_pending'::text) AND (to_state_code = 'active'::text) AND (decision_uid IS NOT NULL) AND (request_uid IS NULL) AND (block_reason_kind IS NULL)) OR ((action_code = 'audit_reintake'::text) AND (from_state_code = 'active'::text) AND (to_state_code = 'audit_pending'::text) AND (request_uid IS NULL) AND (decision_uid IS NULL) AND (block_reason_kind IS NULL)) OR ((action_code = 'audit_rerequest'::text) AND (from_state_code = 'audit_pending'::text) AND (to_state_code = 'audit_pending'::text) AND (request_uid IS NOT NULL) AND (decision_uid IS NULL) AND (block_reason_kind IS NULL))))` |
+| CHECK | `transition_evidence_action_code_check` | `CHECK ((action_code = ANY (ARRAY['audit_migrate'::text, 'audit_block'::text, 'audit_remediate'::text, 'audit_admit'::text, 'metric_correction'::text, 'audit_reintake'::text, 'audit_rerequest'::text])))` |
 | CHECK | `transition_evidence_block_reason_kind_check` | `CHECK ((block_reason_kind = ANY (ARRAY['rejected_decision'::text, 'revoked_decision'::text])))` |
 | FK | `transition_evidence_certification_record_id_fkey` | `FOREIGN KEY (certification_record_id) REFERENCES mcf.certification_record(certification_record_id)` |
 | FK | `transition_evidence_decision_uid_fkey` | `FOREIGN KEY (decision_uid) REFERENCES metric_audit.decision(decision_uid)` |
@@ -3312,14 +3944,56 @@ Triggers:
 
 ## 4. Platform substrate constraints — `mcf`
 
+### `mcf.audit_contextual_panel_run`
+
+Columns: 15 | **NOT NULL:** `panel_run_uid`, `metric_contract_version_uid`, `package_signature_hash`, `panel_input_hash`, `roster_registration_uid`, `seat_outputs_json`, `adversary_refuted`, `escalated`, `final_scores_json`, `final_decision`, `executed_by_name`, `created_at`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `audit_contextual_panel_run_executed_by_name_check` | `CHECK ((length(executed_by_name) >= 3))` |
+| CHECK | `audit_contextual_panel_run_final_decision_check` | `CHECK ((final_decision = ANY (ARRAY['PANEL_VERIFIED'::text, 'PANEL_REJECTED'::text])))` |
+| CHECK | `audit_contextual_panel_run_package_signature_hash_check` | `CHECK ((package_signature_hash ~ '^sha256:[a-f0-9]{64}$'::text))` |
+| CHECK | `audit_contextual_panel_run_panel_input_hash_check` | `CHECK ((panel_input_hash ~ '^sha256:[a-f0-9]{64}$'::text))` |
+| FK | `audit_contextual_panel_run_roster_registration_uid_fkey` | `FOREIGN KEY (roster_registration_uid) REFERENCES mcf.audit_panel_roster_registration(registration_uid)` |
+| PK | `audit_contextual_panel_run_pkey` | `PRIMARY KEY (panel_run_uid)` |
+
+Triggers:
+
+- `trg_audit_panel_run_guard`: `trg_audit_panel_run_guard BEFORE INSERT ON mcf.audit_contextual_panel_run FOR EACH ROW EXECUTE FUNCTION mcf.fn_audit_panel_run_guard()`
+- `trg_audit_panel_run_immutable`: `trg_audit_panel_run_immutable BEFORE DELETE OR UPDATE ON mcf.audit_contextual_panel_run FOR EACH ROW EXECUTE FUNCTION metric_audit.fn_reject_mutation()`
+
+### `mcf.audit_panel_roster_registration`
+
+Columns: 13 | **NOT NULL:** `registration_uid`, `assessor_model`, `assessor_family`, `adversary_model`, `adversary_family`, `moderator_model`, `moderator_family`, `governing_decision_uid`, `calibration_evidence_ref`, `authorized_by`, `valid_from`, `created_at`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `audit_panel_roster_registration_adversary_family_check` | `CHECK ((length(adversary_family) >= 3))` |
+| CHECK | `audit_panel_roster_registration_adversary_model_check` | `CHECK ((length(adversary_model) >= 3))` |
+| CHECK | `audit_panel_roster_registration_assessor_family_check` | `CHECK ((length(assessor_family) >= 3))` |
+| CHECK | `audit_panel_roster_registration_assessor_model_check` | `CHECK ((length(assessor_model) >= 3))` |
+| CHECK | `audit_panel_roster_registration_authorized_by_check` | `CHECK ((length(authorized_by) >= 3))` |
+| CHECK | `audit_panel_roster_registration_calibration_evidence_ref_check` | `CHECK ((calibration_evidence_ref ~ '^[^=[:space:]]+=sha256:[a-f0-9]{64}$'::text))` |
+| CHECK | `audit_panel_roster_registration_governing_decision_uid_check` | `CHECK ((governing_decision_uid = 'DEC-c48b0f'::text))` |
+| CHECK | `audit_panel_roster_registration_moderator_family_check` | `CHECK ((length(moderator_family) >= 3))` |
+| CHECK | `audit_panel_roster_registration_moderator_model_check` | `CHECK ((length(moderator_model) >= 3))` |
+| CHECK | `ck_audit_roster_families_canonical` | `CHECK (((assessor_family = lower(btrim(assessor_family))) AND (adversary_family = lower(btrim(adversary_family))) AND (moderator_family = lower(btrim(moderator_family)))))` |
+| CHECK | `ck_audit_roster_families_distinct` | `CHECK (((assessor_family <> adversary_family) AND (assessor_family <> moderator_family) AND (adversary_family <> moderator_family)))` |
+| CHECK | `ck_audit_roster_no_anthropic` | `CHECK (((assessor_family <> 'anthropic'::text) AND (adversary_family <> 'anthropic'::text) AND (moderator_family <> 'anthropic'::text)))` |
+| PK | `audit_panel_roster_registration_pkey` | `PRIMARY KEY (registration_uid)` |
+
+Triggers:
+
+- `trg_audit_panel_roster_immutable`: `trg_audit_panel_roster_immutable BEFORE DELETE OR UPDATE ON mcf.audit_panel_roster_registration FOR EACH ROW EXECUTE FUNCTION metric_audit.fn_reject_mutation()`
+
 ### `mcf.certification_record`
 
 Columns: 25 | **NOT NULL:** `certification_record_id`, `primitive_type`, `primitive_id`, `action_code`, `to_state_code`, `gate_results_json`, `advisory_verdicts_json`, `certifier_sub`, `certifier_role_at_action`, `created_at`, `policy_version`, `subject_kind`
 
 | Kind | Name | Definition |
 |---|---|---|
-| CHECK | `certification_record_action_code_check` | `CHECK ((action_code = ANY (ARRAY['metric_create'::text, 'metric_transition'::text, 'metric_supersede'::text, 'metric_correction'::text, 'audit_admit'::text, 'audit_block'::text, 'audit_remediate'::text, 'audit_migrate'::text, 'metric_approve'::text, 'audit_reintake'::text])))` |
-| CHECK | `certification_record_action_state_check` | `CHECK ((((action_code = 'metric_create'::text) AND (from_state_code IS NULL) AND (to_state_code = 'draft'::text)) OR ((action_code = 'metric_transition'::text) AND (from_state_code = 'approved'::text) AND (to_state_code = 'active'::text)) OR ((action_code = 'metric_supersede'::text) AND (from_state_code = 'active'::text) AND (to_state_code = 'superseded'::text)) OR ((action_code = 'metric_correction'::text) AND (from_state_code = 'superseded'::text) AND (to_state_code = 'active'::text)) OR ((action_code = 'metric_correction'::text) AND (from_state_code = 'superseded'::text) AND (to_state_code = 'audit_pending'::text)) OR ((action_code = 'audit_migrate'::text) AND (from_state_code = 'approved'::text) AND (to_state_code = 'audit_pending'::text)) OR ((action_code = 'audit_migrate'::text) AND (from_state_code = 'active'::text) AND (to_state_code = 'audit_pending'::text)) OR ((action_code = 'audit_reintake'::text) AND (from_state_code = 'active'::text) AND (to_state_code = 'audit_pending'::text)) OR ((action_code = 'audit_block'::text) AND (from_state_code = 'active'::text) AND (to_state_code = 'audit_blocked'::text)) OR ((action_code = 'audit_block'::text) AND (from_state_code = 'audit_pending'::text) AND (to_state_code = 'audit_blocked'::text)) OR ((action_code = 'audit_remediate'::text) AND (from_state_code = 'audit_blocked'::text) AND (to_state_code = 'audit_pending'::text)) OR ((action_code = 'audit_admit'::text) AND (from_state_code = 'audit_pending'::text) AND (to_state_code = 'active'::text)) OR ((action_code = 'metric_approve'::text) AND (from_state_code = 'review'::text) AND (to_state_code = 'approved'::text))))` |
+| CHECK | `certification_record_action_code_check` | `CHECK ((action_code = ANY (ARRAY['metric_create'::text, 'metric_transition'::text, 'metric_supersede'::text, 'metric_correction'::text, 'audit_admit'::text, 'audit_block'::text, 'audit_remediate'::text, 'audit_migrate'::text, 'metric_approve'::text, 'audit_reintake'::text, 'audit_rerequest'::text])))` |
+| CHECK | `certification_record_action_state_check` | `CHECK ((((action_code = 'metric_create'::text) AND (from_state_code IS NULL) AND (to_state_code = 'draft'::text)) OR ((action_code = 'metric_transition'::text) AND (from_state_code = 'approved'::text) AND (to_state_code = 'active'::text)) OR ((action_code = 'metric_supersede'::text) AND (from_state_code = 'active'::text) AND (to_state_code = 'superseded'::text)) OR ((action_code = 'metric_correction'::text) AND (from_state_code = 'superseded'::text) AND (to_state_code = 'active'::text)) OR ((action_code = 'metric_correction'::text) AND (from_state_code = 'superseded'::text) AND (to_state_code = 'audit_pending'::text)) OR ((action_code = 'audit_migrate'::text) AND (from_state_code = 'approved'::text) AND (to_state_code = 'audit_pending'::text)) OR ((action_code = 'audit_migrate'::text) AND (from_state_code = 'active'::text) AND (to_state_code = 'audit_pending'::text)) OR ((action_code = 'audit_reintake'::text) AND (from_state_code = 'active'::text) AND (to_state_code = 'audit_pending'::text)) OR ((action_code = 'audit_block'::text) AND (from_state_code = 'active'::text) AND (to_state_code = 'audit_blocked'::text)) OR ((action_code = 'audit_block'::text) AND (from_state_code = 'audit_pending'::text) AND (to_state_code = 'audit_blocked'::text)) OR ((action_code = 'audit_remediate'::text) AND (from_state_code = 'audit_blocked'::text) AND (to_state_code = 'audit_pending'::text)) OR ((action_code = 'audit_admit'::text) AND (from_state_code = 'audit_pending'::text) AND (to_state_code = 'active'::text)) OR ((action_code = 'metric_approve'::text) AND (from_state_code = 'review'::text) AND (to_state_code = 'approved'::text)) OR ((action_code = 'audit_rerequest'::text) AND (from_state_code = 'audit_pending'::text) AND (to_state_code = 'audit_pending'::text))))` |
 | CHECK | `certification_record_supersedes_check` | `CHECK ((((action_code = 'metric_supersede'::text) AND (supersedes_primitive_id IS NOT NULL)) OR ((action_code <> 'metric_supersede'::text) AND (supersedes_primitive_id IS NULL))))` |
 | CHECK | `mcf_cert_certifier_role_chk` | `CHECK ((certifier_role_at_action = ANY (ARRAY['panel'::text, 'operator'::text, 'system'::text])))` |
 | CHECK | `mcf_cert_grounding_chk` | `CHECK (((grounding_check_result IS NULL) OR (grounding_check_result = ANY (ARRAY['pass'::text, 'quarantined'::text]))))` |
@@ -3879,6 +4553,7 @@ Columns: 17 | **NOT NULL:** `member_uid`, `group_id`, `member_code`, `display_na
 Triggers:
 
 - `trg_member_frozen`: `trg_member_frozen BEFORE UPDATE ON metric_directory.member FOR EACH ROW EXECUTE FUNCTION metric_directory.fn_member_frozen_guard()`
+- `trg_member_grain_preserve`: `trg_member_grain_preserve BEFORE UPDATE ON metric_directory.member FOR EACH ROW EXECUTE FUNCTION metric_directory.fn_member_grain_preserve_guard()`
 - `trg_member_legacy_pointer`: `trg_member_legacy_pointer BEFORE INSERT OR UPDATE ON metric_directory.member FOR EACH ROW EXECUTE FUNCTION metric_directory.fn_legacy_pointer_freeze()`
 
 ### `metric_directory.member_feasibility_result`
@@ -4318,6 +4993,412 @@ BEGIN
     p_prior_envelope_digest, p_report_envelope_digest, p_decision_envelope_digest,
     p_publication_preflight_digest, p_signer_key_id, p_signer_fingerprint,
     p_transport_receipt_digest, p_publication_input_digest, p_published_at, p_publication_hash
+  ) RETURNING * INTO inserted;
+  RETURN inserted;
+END;
+$function$
+```
+
+### `audit_execution.append_outbound_feed_publication_retirement`
+
+Reads/writes: `audit_execution.outbound_feed_bootstrap`, `audit_execution.outbound_feed_publication`, `audit_execution.outbound_feed_publication_retirement`, `audit_execution.response_packet_outbox`, `audit_execution.response_packet_pickup`
+
+```sql
+CREATE OR REPLACE FUNCTION audit_execution.append_outbound_feed_publication_retirement(p_retirement_uid uuid, p_feed_name text, p_retired_publication_uid uuid, p_retired_outbox_uid uuid, p_retired_sequence bigint, p_retired_event_kind text, p_retired_payload_schema_version text, p_retired_envelope_digest text, p_retirement_envelope_digest text, p_retirement_payload_digest text, p_retirement_payload_json text, p_retirement_reason_code text, p_retirement_evidence_ref text, p_signer_key_id text, p_signer_fingerprint text, p_published_at text, p_retirement_hash text, p_retirement_body_json text)
+ RETURNS audit_execution.outbound_feed_publication_retirement
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog', 'audit_execution', 'public'
+AS $function$
+DECLARE
+  bootstrap audit_execution.outbound_feed_bootstrap;
+  retired_publication audit_execution.outbound_feed_publication;
+  retired_outbox audit_execution.response_packet_outbox;
+  existing audit_execution.outbound_feed_publication_retirement;
+  inserted audit_execution.outbound_feed_publication_retirement;
+  expected_sequence bigint;
+  expected_prior text;
+  expected_body jsonb;
+BEGIN
+  PERFORM pg_advisory_xact_lock(hashtextextended(p_feed_name, 0));
+  SELECT * INTO existing
+  FROM audit_execution.outbound_feed_publication_retirement
+  WHERE retired_publication_uid = p_retired_publication_uid
+     OR retired_outbox_uid = p_retired_outbox_uid
+     OR (feed_name = p_feed_name AND retired_sequence = p_retired_sequence);
+  IF FOUND THEN
+    IF existing.retirement_envelope_digest <> p_retirement_envelope_digest
+      OR existing.retirement_payload_digest <> p_retirement_payload_digest
+      OR existing.retirement_hash <> p_retirement_hash THEN
+      RAISE EXCEPTION 'outbound retirement replay conflict' USING ERRCODE = '23505';
+    END IF;
+    RETURN existing;
+  END IF;
+  SELECT * INTO retired_publication
+  FROM audit_execution.outbound_feed_publication
+  WHERE publication_uid = p_retired_publication_uid;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'retired outbound publication not found' USING ERRCODE = 'P0002';
+  END IF;
+  SELECT * INTO retired_outbox
+  FROM audit_execution.response_packet_outbox
+  WHERE outbox_uid = p_retired_outbox_uid;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'retired response packet outbox not found' USING ERRCODE = 'P0002';
+  END IF;
+  IF retired_publication.audit_run_uid <> retired_outbox.audit_run_uid
+    OR retired_publication.feed_name <> p_feed_name THEN
+    RAISE EXCEPTION 'retirement coordinates do not match retired publication/outbox' USING ERRCODE = '22000';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM audit_execution.response_packet_pickup WHERE outbox_uid = p_retired_outbox_uid
+  ) THEN
+    RAISE EXCEPTION 'cannot retire publication whose primary packet was already picked up' USING ERRCODE = '22000';
+  END IF;
+  IF p_retired_sequence = retired_publication.report_sequence THEN
+    IF p_retired_envelope_digest <> retired_publication.report_envelope_digest
+      OR p_retired_event_kind <> 'METRIC_AUDIT_REPORT'
+      OR p_retired_payload_schema_version <> 'metric-audit-report-v5' THEN
+      RAISE EXCEPTION 'retired report coordinates mismatch' USING ERRCODE = '22000';
+    END IF;
+  ELSIF p_retired_sequence = retired_publication.decision_sequence THEN
+    IF p_retired_envelope_digest <> retired_publication.decision_envelope_digest
+      OR p_retired_event_kind <> 'METRIC_AUDIT_DECISION'
+      OR p_retired_payload_schema_version <> 'metric-audit-decision-v2' THEN
+      RAISE EXCEPTION 'retired decision coordinates mismatch' USING ERRCODE = '22000';
+    END IF;
+  ELSE
+    RAISE EXCEPTION 'retired sequence is not part of retired publication' USING ERRCODE = '22000';
+  END IF;
+  SELECT * INTO bootstrap
+  FROM audit_execution.outbound_feed_bootstrap
+  WHERE feed_name = p_feed_name;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'outbound feed bootstrap not registered' USING ERRCODE = '22000';
+  END IF;
+  IF bootstrap.signer_key_id <> p_signer_key_id
+    OR bootstrap.signer_fingerprint <> p_signer_fingerprint THEN
+    RAISE EXCEPTION 'outbound signer does not match feed bootstrap' USING ERRCODE = '22000';
+  END IF;
+  expected_sequence := retired_publication.report_sequence + 1;
+  expected_prior := retired_publication.report_envelope_digest;
+  IF p_retired_sequence <> expected_sequence THEN
+    RAISE EXCEPTION 'retirement sequence must immediately follow the platform-importable report' USING ERRCODE = '22000';
+  END IF;
+  IF (p_retirement_payload_json::jsonb #>> '{feed,feed_name}') <> p_feed_name
+    OR (p_retirement_payload_json::jsonb ->> 'retired_sequence')::bigint <> p_retired_sequence
+    OR p_retirement_payload_json::jsonb ->> 'retired_envelope_digest' <> p_retired_envelope_digest
+    OR p_retirement_payload_json::jsonb ->> 'retired_publication_uid' <> p_retired_publication_uid::text
+    OR p_retirement_payload_json::jsonb ->> 'retired_outbox_uid' <> p_retired_outbox_uid::text THEN
+    RAISE EXCEPTION 'retirement payload fields do not match append coordinates' USING ERRCODE = '22000';
+  END IF;
+  IF p_retirement_payload_digest <> 'sha256:' || encode(digest(convert_to(p_retirement_payload_json, 'UTF8'), 'sha256'), 'hex') THEN
+    RAISE EXCEPTION 'retirement payload digest mismatch' USING ERRCODE = '22000';
+  END IF;
+  expected_body := jsonb_build_object(
+    'retirement_uid', p_retirement_uid::text,
+    'feed_name', p_feed_name,
+    'retired_publication_uid', p_retired_publication_uid::text,
+    'retired_outbox_uid', p_retired_outbox_uid::text,
+    'retired_sequence', p_retired_sequence,
+    'retired_event_kind', p_retired_event_kind,
+    'retired_payload_schema_version', p_retired_payload_schema_version,
+    'retired_envelope_digest', p_retired_envelope_digest,
+    'retirement_envelope_digest', p_retirement_envelope_digest,
+    'retirement_payload_digest', p_retirement_payload_digest,
+    'retirement_payload', p_retirement_payload_json::jsonb,
+    'retirement_reason_code', p_retirement_reason_code,
+    'retirement_evidence_ref', p_retirement_evidence_ref,
+    'signer_key_id', p_signer_key_id,
+    'signer_fingerprint', p_signer_fingerprint,
+    'published_at', p_published_at
+  );
+  IF p_retirement_body_json::jsonb <> expected_body THEN
+    RAISE EXCEPTION 'outbound retirement body fields do not match coordinates' USING ERRCODE = '22000';
+  END IF;
+  IF p_retirement_hash <> 'sha256:' || encode(digest(convert_to(p_retirement_body_json, 'UTF8'), 'sha256'), 'hex') THEN
+    RAISE EXCEPTION 'outbound retirement hash mismatch' USING ERRCODE = '22000';
+  END IF;
+  INSERT INTO audit_execution.outbound_feed_publication_retirement (
+    retirement_uid, feed_name, retired_publication_uid, retired_outbox_uid,
+    retired_sequence, retired_event_kind, retired_payload_schema_version,
+    retired_envelope_digest, retirement_envelope_digest, retirement_payload_digest,
+    retirement_payload_json, retirement_reason_code, retirement_evidence_ref,
+    signer_key_id, signer_fingerprint, published_at, retirement_hash
+  ) VALUES (
+    p_retirement_uid, p_feed_name, p_retired_publication_uid, p_retired_outbox_uid,
+    p_retired_sequence, p_retired_event_kind, p_retired_payload_schema_version,
+    p_retired_envelope_digest, p_retirement_envelope_digest, p_retirement_payload_digest,
+    p_retirement_payload_json, p_retirement_reason_code, p_retirement_evidence_ref,
+    p_signer_key_id, p_signer_fingerprint, p_published_at, p_retirement_hash
+  ) RETURNING * INTO inserted;
+  RETURN inserted;
+END;
+$function$
+```
+
+### `audit_execution.append_outbound_feed_repair_publication`
+
+Reads/writes: `audit_execution.outbound_feed_bootstrap`, `audit_execution.outbound_feed_publication`, `audit_execution.outbound_feed_repair_publication`, `audit_execution.response_packet_pickup`, `audit_execution.response_packet_repair_outbox`, `audit_execution.response_packet_repair_pickup`
+
+```sql
+CREATE OR REPLACE FUNCTION audit_execution.append_outbound_feed_repair_publication(p_publication_uid uuid, p_supersedes_publication_uid uuid, p_repair_outbox_uid uuid, p_audit_run_uid uuid, p_feed_name text, p_report_sequence bigint, p_decision_sequence bigint, p_prior_envelope_digest text, p_report_envelope_digest text, p_decision_envelope_digest text, p_signer_key_id text, p_signer_fingerprint text, p_repair_reason_code text, p_repair_evidence_ref text, p_published_at text, p_publication_hash text, p_publication_body_json text)
+ RETURNS audit_execution.outbound_feed_repair_publication
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog', 'audit_execution', 'public'
+AS $function$
+DECLARE
+  bootstrap audit_execution.outbound_feed_bootstrap;
+  superseded_publication audit_execution.outbound_feed_publication;
+  repair_outbox audit_execution.response_packet_repair_outbox;
+  existing audit_execution.outbound_feed_repair_publication;
+  inserted audit_execution.outbound_feed_repair_publication;
+  head_record record;
+  expected_sequence bigint;
+  expected_prior text;
+  expected_body jsonb;
+BEGIN
+  PERFORM pg_advisory_xact_lock(hashtextextended(p_feed_name, 0));
+  SELECT * INTO existing
+  FROM audit_execution.outbound_feed_repair_publication
+  WHERE supersedes_publication_uid = p_supersedes_publication_uid
+     OR repair_outbox_uid = p_repair_outbox_uid;
+  IF FOUND THEN
+    IF existing.repair_outbox_uid <> p_repair_outbox_uid
+      OR existing.audit_run_uid <> p_audit_run_uid
+      OR existing.feed_name <> p_feed_name
+      OR existing.report_envelope_digest <> p_report_envelope_digest
+      OR existing.decision_envelope_digest <> p_decision_envelope_digest
+      OR existing.publication_hash <> p_publication_hash THEN
+      RAISE EXCEPTION 'outbound repair publication replay conflict' USING ERRCODE = '23505';
+    END IF;
+    RETURN existing;
+  END IF;
+  SELECT * INTO superseded_publication
+  FROM audit_execution.outbound_feed_publication
+  WHERE publication_uid = p_supersedes_publication_uid;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'superseded outbound publication not found' USING ERRCODE = 'P0002';
+  END IF;
+  SELECT * INTO repair_outbox
+  FROM audit_execution.response_packet_repair_outbox
+  WHERE outbox_uid = p_repair_outbox_uid;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'repair outbox row not found' USING ERRCODE = 'P0002';
+  END IF;
+  IF repair_outbox.audit_run_uid <> p_audit_run_uid
+    OR superseded_publication.audit_run_uid <> p_audit_run_uid
+    OR superseded_publication.feed_name <> p_feed_name THEN
+    RAISE EXCEPTION 'repair publication coordinates do not match superseded publication' USING ERRCODE = '22000';
+  END IF;
+  IF repair_outbox.repair_reason_code <> p_repair_reason_code
+    OR repair_outbox.repair_evidence_ref <> p_repair_evidence_ref THEN
+    RAISE EXCEPTION 'repair publication evidence does not match repair outbox' USING ERRCODE = '22000';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM audit_execution.response_packet_pickup WHERE outbox_uid = repair_outbox.supersedes_outbox_uid
+  ) OR EXISTS (
+    SELECT 1 FROM audit_execution.response_packet_repair_pickup WHERE outbox_uid = p_repair_outbox_uid
+  ) THEN
+    RAISE EXCEPTION 'cannot publish repair for packet already picked up by the platform' USING ERRCODE = '22000';
+  END IF;
+  SELECT * INTO bootstrap
+  FROM audit_execution.outbound_feed_bootstrap
+  WHERE feed_name = p_feed_name;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'outbound feed bootstrap not registered' USING ERRCODE = '22000';
+  END IF;
+  IF bootstrap.signer_key_id <> p_signer_key_id
+    OR bootstrap.signer_fingerprint <> p_signer_fingerprint THEN
+    RAISE EXCEPTION 'outbound signer does not match feed bootstrap' USING ERRCODE = '22000';
+  END IF;
+  SELECT decision_sequence, decision_envelope_digest INTO head_record
+  FROM (
+    SELECT decision_sequence, decision_envelope_digest
+    FROM audit_execution.outbound_feed_publication
+    WHERE feed_name = p_feed_name
+    UNION ALL
+    SELECT decision_sequence, decision_envelope_digest
+    FROM audit_execution.outbound_feed_repair_publication
+    WHERE feed_name = p_feed_name
+  ) all_publications
+  ORDER BY decision_sequence DESC
+  LIMIT 1;
+  IF FOUND THEN
+    expected_sequence := head_record.decision_sequence + 1;
+    expected_prior := head_record.decision_envelope_digest;
+  ELSE
+    expected_sequence := bootstrap.next_sequence;
+    expected_prior := bootstrap.prior_envelope_digest;
+  END IF;
+  IF p_report_sequence <> expected_sequence OR p_decision_sequence <> expected_sequence + 1 THEN
+    RAISE EXCEPTION 'outbound repair feed sequence discontinuity' USING ERRCODE = '22000';
+  END IF;
+  IF p_prior_envelope_digest IS DISTINCT FROM expected_prior THEN
+    RAISE EXCEPTION 'outbound repair feed prior digest discontinuity' USING ERRCODE = '22000';
+  END IF;
+  expected_body := jsonb_build_object(
+    'publication_uid', p_publication_uid::text,
+    'supersedes_publication_uid', p_supersedes_publication_uid::text,
+    'repair_outbox_uid', p_repair_outbox_uid::text,
+    'audit_run_uid', p_audit_run_uid::text,
+    'feed_name', p_feed_name,
+    'report_sequence', p_report_sequence,
+    'decision_sequence', p_decision_sequence,
+    'prior_envelope_digest', p_prior_envelope_digest,
+    'report_envelope_digest', p_report_envelope_digest,
+    'decision_envelope_digest', p_decision_envelope_digest,
+    'signer_key_id', p_signer_key_id,
+    'signer_fingerprint', p_signer_fingerprint,
+    'repair_reason_code', p_repair_reason_code,
+    'repair_evidence_ref', p_repair_evidence_ref,
+    'published_at', p_published_at
+  );
+  IF p_publication_body_json::jsonb <> expected_body THEN
+    RAISE EXCEPTION 'outbound repair publication body fields do not match coordinates' USING ERRCODE = '22000';
+  END IF;
+  IF p_publication_hash <> 'sha256:' || encode(digest(convert_to(p_publication_body_json, 'UTF8'), 'sha256'), 'hex') THEN
+    RAISE EXCEPTION 'outbound repair publication hash mismatch' USING ERRCODE = '22000';
+  END IF;
+  INSERT INTO audit_execution.outbound_feed_repair_publication (
+    publication_uid, supersedes_publication_uid, repair_outbox_uid, audit_run_uid,
+    feed_name, report_sequence, decision_sequence, prior_envelope_digest,
+    report_envelope_digest, decision_envelope_digest, signer_key_id, signer_fingerprint,
+    repair_reason_code, repair_evidence_ref, published_at, publication_hash
+  ) VALUES (
+    p_publication_uid, p_supersedes_publication_uid, p_repair_outbox_uid, p_audit_run_uid,
+    p_feed_name, p_report_sequence, p_decision_sequence, p_prior_envelope_digest,
+    p_report_envelope_digest, p_decision_envelope_digest, p_signer_key_id, p_signer_fingerprint,
+    p_repair_reason_code, p_repair_evidence_ref, p_published_at, p_publication_hash
+  ) RETURNING * INTO inserted;
+  RETURN inserted;
+END;
+$function$
+```
+
+### `audit_execution.append_outbound_feed_repair_reissue_publication`
+
+Reads/writes: `audit_execution.outbound_feed_bootstrap`, `audit_execution.outbound_feed_publication_retirement`, `audit_execution.outbound_feed_repair_publication`, `audit_execution.outbound_feed_repair_reissue_publication`, `audit_execution.response_packet_repair_pickup`, `audit_execution.response_packet_repair_reissue_outbox`, `audit_execution.response_packet_repair_reissue_pickup`
+
+```sql
+CREATE OR REPLACE FUNCTION audit_execution.append_outbound_feed_repair_reissue_publication(p_publication_uid uuid, p_supersedes_repair_publication_uid uuid, p_repair_reissue_outbox_uid uuid, p_retirement_uid uuid, p_audit_run_uid uuid, p_feed_name text, p_report_sequence bigint, p_decision_sequence bigint, p_prior_envelope_digest text, p_report_envelope_digest text, p_decision_envelope_digest text, p_signer_key_id text, p_signer_fingerprint text, p_repair_reason_code text, p_reissue_reason_code text, p_repair_evidence_ref text, p_published_at text, p_publication_hash text, p_publication_body_json text)
+ RETURNS audit_execution.outbound_feed_repair_reissue_publication
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog', 'audit_execution', 'public'
+AS $function$
+DECLARE
+  bootstrap audit_execution.outbound_feed_bootstrap;
+  superseded audit_execution.outbound_feed_repair_publication;
+  reissue_outbox audit_execution.response_packet_repair_reissue_outbox;
+  retirement audit_execution.outbound_feed_publication_retirement;
+  existing audit_execution.outbound_feed_repair_reissue_publication;
+  inserted audit_execution.outbound_feed_repair_reissue_publication;
+  expected_body jsonb;
+BEGIN
+  PERFORM pg_advisory_xact_lock(hashtextextended(p_feed_name, 0));
+  SELECT * INTO existing
+  FROM audit_execution.outbound_feed_repair_reissue_publication
+  WHERE supersedes_repair_publication_uid = p_supersedes_repair_publication_uid
+     OR repair_reissue_outbox_uid = p_repair_reissue_outbox_uid;
+  IF FOUND THEN
+    IF existing.report_envelope_digest <> p_report_envelope_digest
+      OR existing.decision_envelope_digest <> p_decision_envelope_digest
+      OR existing.publication_hash <> p_publication_hash THEN
+      RAISE EXCEPTION 'outbound repair reissue publication replay conflict' USING ERRCODE = '23505';
+    END IF;
+    RETURN existing;
+  END IF;
+  SELECT * INTO superseded
+  FROM audit_execution.outbound_feed_repair_publication
+  WHERE publication_uid = p_supersedes_repair_publication_uid;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'superseded repair publication not found' USING ERRCODE = 'P0002';
+  END IF;
+  SELECT * INTO reissue_outbox
+  FROM audit_execution.response_packet_repair_reissue_outbox
+  WHERE outbox_uid = p_repair_reissue_outbox_uid;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'repair reissue outbox row not found' USING ERRCODE = 'P0002';
+  END IF;
+  SELECT * INTO retirement
+  FROM audit_execution.outbound_feed_publication_retirement
+  WHERE retirement_uid = p_retirement_uid;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'retirement row not found' USING ERRCODE = 'P0002';
+  END IF;
+  IF reissue_outbox.supersedes_repair_publication_uid <> p_supersedes_repair_publication_uid
+    OR reissue_outbox.retirement_uid <> p_retirement_uid
+    OR reissue_outbox.audit_run_uid <> p_audit_run_uid
+    OR superseded.audit_run_uid <> p_audit_run_uid
+    OR superseded.feed_name <> p_feed_name
+    OR retirement.feed_name <> p_feed_name THEN
+    RAISE EXCEPTION 'repair reissue publication coordinates do not match outbox/retirement' USING ERRCODE = '22000';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM audit_execution.response_packet_repair_pickup WHERE outbox_uid = superseded.repair_outbox_uid
+  ) OR EXISTS (
+    SELECT 1 FROM audit_execution.response_packet_repair_reissue_pickup WHERE outbox_uid = p_repair_reissue_outbox_uid
+  ) THEN
+    RAISE EXCEPTION 'cannot publish repair reissue for packet already picked up by the platform' USING ERRCODE = '22000';
+  END IF;
+  IF p_report_sequence <> superseded.report_sequence
+    OR p_decision_sequence <> superseded.decision_sequence
+    OR p_prior_envelope_digest <> retirement.retirement_envelope_digest THEN
+    RAISE EXCEPTION 'repair reissue feed coordinates must reuse superseded sequences and chain to retirement' USING ERRCODE = '22000';
+  END IF;
+  IF p_report_envelope_digest = superseded.report_envelope_digest
+    OR p_decision_envelope_digest = superseded.decision_envelope_digest THEN
+    RAISE EXCEPTION 'repair reissue envelope digests must differ from superseded repair' USING ERRCODE = '22000';
+  END IF;
+  SELECT * INTO bootstrap
+  FROM audit_execution.outbound_feed_bootstrap
+  WHERE feed_name = p_feed_name;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'outbound feed bootstrap not registered' USING ERRCODE = '22000';
+  END IF;
+  IF bootstrap.signer_key_id <> p_signer_key_id
+    OR bootstrap.signer_fingerprint <> p_signer_fingerprint THEN
+    RAISE EXCEPTION 'outbound signer does not match feed bootstrap' USING ERRCODE = '22000';
+  END IF;
+  expected_body := jsonb_build_object(
+    'publication_uid', p_publication_uid::text,
+    'supersedes_repair_publication_uid', p_supersedes_repair_publication_uid::text,
+    'repair_reissue_outbox_uid', p_repair_reissue_outbox_uid::text,
+    'retirement_uid', p_retirement_uid::text,
+    'audit_run_uid', p_audit_run_uid::text,
+    'feed_name', p_feed_name,
+    'report_sequence', p_report_sequence,
+    'decision_sequence', p_decision_sequence,
+    'prior_envelope_digest', p_prior_envelope_digest,
+    'report_envelope_digest', p_report_envelope_digest,
+    'decision_envelope_digest', p_decision_envelope_digest,
+    'signer_key_id', p_signer_key_id,
+    'signer_fingerprint', p_signer_fingerprint,
+    'repair_reason_code', p_repair_reason_code,
+    'reissue_reason_code', p_reissue_reason_code,
+    'repair_evidence_ref', p_repair_evidence_ref,
+    'published_at', p_published_at
+  );
+  IF p_publication_body_json::jsonb <> expected_body THEN
+    RAISE EXCEPTION 'outbound repair reissue publication body fields do not match coordinates' USING ERRCODE = '22000';
+  END IF;
+  IF p_publication_hash <> 'sha256:' || encode(digest(convert_to(p_publication_body_json, 'UTF8'), 'sha256'), 'hex') THEN
+    RAISE EXCEPTION 'outbound repair reissue publication hash mismatch' USING ERRCODE = '22000';
+  END IF;
+  INSERT INTO audit_execution.outbound_feed_repair_reissue_publication (
+    publication_uid, supersedes_repair_publication_uid, repair_reissue_outbox_uid,
+    retirement_uid, audit_run_uid, feed_name, report_sequence, decision_sequence,
+    prior_envelope_digest, report_envelope_digest, decision_envelope_digest,
+    signer_key_id, signer_fingerprint, repair_reason_code, reissue_reason_code,
+    repair_evidence_ref, published_at, publication_hash
+  ) VALUES (
+    p_publication_uid, p_supersedes_repair_publication_uid, p_repair_reissue_outbox_uid,
+    p_retirement_uid, p_audit_run_uid, p_feed_name, p_report_sequence, p_decision_sequence,
+    p_prior_envelope_digest, p_report_envelope_digest, p_decision_envelope_digest,
+    p_signer_key_id, p_signer_fingerprint, p_repair_reason_code, p_reissue_reason_code,
+    p_repair_evidence_ref, p_published_at, p_publication_hash
   ) RETURNING * INTO inserted;
   RETURN inserted;
 END;
@@ -4879,6 +5960,221 @@ END;
 $function$
 ```
 
+### `audit_execution.publish_response_packet_repair_outbox`
+
+Reads/writes: `audit_execution.audit_cohort_member`, `audit_execution.audit_run`, `audit_execution.response_packet_outbox`, `audit_execution.response_packet_pickup`, `audit_execution.response_packet_repair_outbox`
+
+```sql
+CREATE OR REPLACE FUNCTION audit_execution.publish_response_packet_repair_outbox(p_outbox_uid uuid, p_supersedes_outbox_uid uuid, p_work_item_uid uuid, p_audit_run_uid uuid, p_request_uid uuid, p_subject_uid uuid, p_terminal_status text, p_response_packet_digest text, p_response_packet_json text, p_repair_reason_code text, p_repair_evidence_ref text, p_outbox_hash text, p_ready_at text, p_outbox_body_json text)
+ RETURNS audit_execution.response_packet_repair_outbox
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog', 'audit_execution', 'public'
+AS $function$
+DECLARE
+  superseded audit_execution.response_packet_outbox;
+  existing audit_execution.response_packet_repair_outbox;
+  inserted audit_execution.response_packet_repair_outbox;
+  expected_body jsonb;
+BEGIN
+  SELECT * INTO superseded
+  FROM audit_execution.response_packet_outbox
+  WHERE outbox_uid = p_supersedes_outbox_uid;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'superseded response packet outbox row not found' USING ERRCODE = 'P0002';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM audit_execution.response_packet_pickup WHERE outbox_uid = p_supersedes_outbox_uid
+  ) THEN
+    RAISE EXCEPTION 'cannot repair an outbox row already picked up by the platform' USING ERRCODE = '22000';
+  END IF;
+  IF superseded.work_item_uid <> p_work_item_uid
+    OR superseded.audit_run_uid <> p_audit_run_uid
+    OR superseded.request_uid <> p_request_uid
+    OR superseded.subject_uid <> p_subject_uid
+    OR superseded.terminal_status <> p_terminal_status THEN
+    RAISE EXCEPTION 'repair coordinates do not match superseded outbox row' USING ERRCODE = '22000';
+  END IF;
+  IF superseded.response_packet_digest = p_response_packet_digest THEN
+    RAISE EXCEPTION 'repair packet must not be byte-identical to superseded packet' USING ERRCODE = '22000';
+  END IF;
+  SELECT * INTO existing
+  FROM audit_execution.response_packet_repair_outbox
+  WHERE supersedes_outbox_uid = p_supersedes_outbox_uid;
+  IF FOUND THEN
+    IF existing.response_packet_digest <> p_response_packet_digest OR existing.outbox_hash <> p_outbox_hash THEN
+      RAISE EXCEPTION 'response packet repair replay conflict' USING ERRCODE = '23505';
+    END IF;
+    RETURN existing;
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM audit_execution.audit_cohort_member
+    WHERE work_item_uid = p_work_item_uid
+      AND request_uid = p_request_uid
+      AND subject_uid = p_subject_uid
+  ) THEN
+    RAISE EXCEPTION 'repair packet coordinates do not match cohort member' USING ERRCODE = '22000';
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM audit_execution.audit_run
+    WHERE audit_run_uid = p_audit_run_uid
+      AND work_item_uid = p_work_item_uid
+      AND request_uid = p_request_uid
+      AND metric_contract_version_uid = p_subject_uid
+  ) THEN
+    RAISE EXCEPTION 'repair packet coordinates do not match retained audit run' USING ERRCODE = '22000';
+  END IF;
+  IF p_response_packet_digest <> p_response_packet_json::jsonb ->> 'response_packet_digest' THEN
+    RAISE EXCEPTION 'repair packet digest coordinate mismatch' USING ERRCODE = '22000';
+  END IF;
+  expected_body := jsonb_build_object(
+    'outbox_uid', p_outbox_uid::text,
+    'supersedes_outbox_uid', p_supersedes_outbox_uid::text,
+    'work_item_uid', p_work_item_uid::text,
+    'audit_run_uid', p_audit_run_uid::text,
+    'request_uid', p_request_uid::text,
+    'subject_uid', p_subject_uid::text,
+    'terminal_status', p_terminal_status,
+    'response_packet_digest', p_response_packet_digest,
+    'response_packet', p_response_packet_json::jsonb,
+    'repair_reason_code', p_repair_reason_code,
+    'repair_evidence_ref', p_repair_evidence_ref,
+    'ready_at', p_ready_at
+  );
+  IF p_outbox_body_json::jsonb <> expected_body THEN
+    RAISE EXCEPTION 'repair outbox body fields do not match append coordinates' USING ERRCODE = '22000';
+  END IF;
+  IF p_outbox_hash <> 'sha256:' || encode(digest(convert_to(p_outbox_body_json, 'UTF8'), 'sha256'), 'hex') THEN
+    RAISE EXCEPTION 'repair outbox hash mismatch' USING ERRCODE = '22000';
+  END IF;
+  INSERT INTO audit_execution.response_packet_repair_outbox (
+    outbox_uid, supersedes_outbox_uid, work_item_uid, audit_run_uid, request_uid,
+    subject_uid, terminal_status, response_packet_digest, response_packet_json,
+    repair_reason_code, repair_evidence_ref, outbox_hash, ready_at
+  ) VALUES (
+    p_outbox_uid, p_supersedes_outbox_uid, p_work_item_uid, p_audit_run_uid, p_request_uid,
+    p_subject_uid, p_terminal_status, p_response_packet_digest, p_response_packet_json,
+    p_repair_reason_code, p_repair_evidence_ref, p_outbox_hash, p_ready_at
+  ) RETURNING * INTO inserted;
+  RETURN inserted;
+END;
+$function$
+```
+
+### `audit_execution.publish_response_packet_repair_reissue_outbox`
+
+Reads/writes: `audit_execution.outbound_feed_publication_retirement`, `audit_execution.outbound_feed_repair_publication`, `audit_execution.response_packet_pickup`, `audit_execution.response_packet_repair_outbox`, `audit_execution.response_packet_repair_pickup`, `audit_execution.response_packet_repair_reissue_outbox`
+
+```sql
+CREATE OR REPLACE FUNCTION audit_execution.publish_response_packet_repair_reissue_outbox(p_outbox_uid uuid, p_supersedes_repair_outbox_uid uuid, p_supersedes_repair_publication_uid uuid, p_retirement_uid uuid, p_work_item_uid uuid, p_audit_run_uid uuid, p_request_uid uuid, p_subject_uid uuid, p_terminal_status text, p_response_packet_digest text, p_response_packet_json text, p_repair_reason_code text, p_repair_evidence_ref text, p_reissue_reason_code text, p_outbox_hash text, p_ready_at text, p_outbox_body_json text)
+ RETURNS audit_execution.response_packet_repair_reissue_outbox
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog', 'audit_execution', 'public'
+AS $function$
+DECLARE
+  superseded_repair audit_execution.response_packet_repair_outbox;
+  superseded_publication audit_execution.outbound_feed_repair_publication;
+  retirement audit_execution.outbound_feed_publication_retirement;
+  existing audit_execution.response_packet_repair_reissue_outbox;
+  inserted audit_execution.response_packet_repair_reissue_outbox;
+  expected_body jsonb;
+BEGIN
+  SELECT * INTO existing
+  FROM audit_execution.response_packet_repair_reissue_outbox
+  WHERE supersedes_repair_outbox_uid = p_supersedes_repair_outbox_uid
+     OR supersedes_repair_publication_uid = p_supersedes_repair_publication_uid;
+  IF FOUND THEN
+    IF existing.response_packet_digest <> p_response_packet_digest OR existing.outbox_hash <> p_outbox_hash THEN
+      RAISE EXCEPTION 'response packet repair reissue replay conflict' USING ERRCODE = '23505';
+    END IF;
+    RETURN existing;
+  END IF;
+  SELECT * INTO superseded_repair
+  FROM audit_execution.response_packet_repair_outbox
+  WHERE outbox_uid = p_supersedes_repair_outbox_uid;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'superseded repair outbox row not found' USING ERRCODE = 'P0002';
+  END IF;
+  SELECT * INTO superseded_publication
+  FROM audit_execution.outbound_feed_repair_publication
+  WHERE publication_uid = p_supersedes_repair_publication_uid;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'superseded repair publication not found' USING ERRCODE = 'P0002';
+  END IF;
+  SELECT * INTO retirement
+  FROM audit_execution.outbound_feed_publication_retirement
+  WHERE retirement_uid = p_retirement_uid;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'retirement row not found' USING ERRCODE = 'P0002';
+  END IF;
+  IF superseded_publication.repair_outbox_uid <> p_supersedes_repair_outbox_uid
+    OR superseded_repair.audit_run_uid <> p_audit_run_uid
+    OR superseded_publication.audit_run_uid <> p_audit_run_uid
+    OR retirement.retired_outbox_uid <> superseded_repair.supersedes_outbox_uid
+    OR retirement.feed_name <> superseded_publication.feed_name THEN
+    RAISE EXCEPTION 'repair reissue coordinates do not match superseded repair and retirement' USING ERRCODE = '22000';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM audit_execution.response_packet_pickup WHERE outbox_uid = superseded_repair.supersedes_outbox_uid
+  ) OR EXISTS (
+    SELECT 1 FROM audit_execution.response_packet_repair_pickup WHERE outbox_uid = p_supersedes_repair_outbox_uid
+  ) THEN
+    RAISE EXCEPTION 'cannot reissue repair for packet already picked up by the platform' USING ERRCODE = '22000';
+  END IF;
+  IF superseded_repair.work_item_uid <> p_work_item_uid
+    OR superseded_repair.request_uid <> p_request_uid
+    OR superseded_repair.subject_uid <> p_subject_uid
+    OR superseded_repair.terminal_status <> p_terminal_status
+    OR superseded_repair.repair_reason_code <> p_repair_reason_code
+    OR superseded_repair.repair_evidence_ref <> p_repair_evidence_ref THEN
+    RAISE EXCEPTION 'repair reissue outbox coordinates do not match superseded repair outbox' USING ERRCODE = '22000';
+  END IF;
+  IF superseded_repair.response_packet_digest = p_response_packet_digest THEN
+    RAISE EXCEPTION 'repair reissue packet must differ from superseded repair packet' USING ERRCODE = '22000';
+  END IF;
+  IF p_response_packet_digest <> p_response_packet_json::jsonb ->> 'response_packet_digest' THEN
+    RAISE EXCEPTION 'repair reissue packet digest coordinate mismatch' USING ERRCODE = '22000';
+  END IF;
+  expected_body := jsonb_build_object(
+    'outbox_uid', p_outbox_uid::text,
+    'supersedes_repair_outbox_uid', p_supersedes_repair_outbox_uid::text,
+    'supersedes_repair_publication_uid', p_supersedes_repair_publication_uid::text,
+    'retirement_uid', p_retirement_uid::text,
+    'work_item_uid', p_work_item_uid::text,
+    'audit_run_uid', p_audit_run_uid::text,
+    'request_uid', p_request_uid::text,
+    'subject_uid', p_subject_uid::text,
+    'terminal_status', p_terminal_status,
+    'response_packet_digest', p_response_packet_digest,
+    'response_packet', p_response_packet_json::jsonb,
+    'repair_reason_code', p_repair_reason_code,
+    'repair_evidence_ref', p_repair_evidence_ref,
+    'reissue_reason_code', p_reissue_reason_code,
+    'ready_at', p_ready_at
+  );
+  IF p_outbox_body_json::jsonb <> expected_body THEN
+    RAISE EXCEPTION 'repair reissue outbox body fields do not match append coordinates' USING ERRCODE = '22000';
+  END IF;
+  IF p_outbox_hash <> 'sha256:' || encode(digest(convert_to(p_outbox_body_json, 'UTF8'), 'sha256'), 'hex') THEN
+    RAISE EXCEPTION 'repair reissue outbox hash mismatch' USING ERRCODE = '22000';
+  END IF;
+  INSERT INTO audit_execution.response_packet_repair_reissue_outbox (
+    outbox_uid, supersedes_repair_outbox_uid, supersedes_repair_publication_uid,
+    retirement_uid, work_item_uid, audit_run_uid, request_uid, subject_uid,
+    terminal_status, response_packet_digest, response_packet_json, repair_reason_code,
+    repair_evidence_ref, reissue_reason_code, outbox_hash, ready_at
+  ) VALUES (
+    p_outbox_uid, p_supersedes_repair_outbox_uid, p_supersedes_repair_publication_uid,
+    p_retirement_uid, p_work_item_uid, p_audit_run_uid, p_request_uid, p_subject_uid,
+    p_terminal_status, p_response_packet_digest, p_response_packet_json, p_repair_reason_code,
+    p_repair_evidence_ref, p_reissue_reason_code, p_outbox_hash, p_ready_at
+  ) RETURNING * INTO inserted;
+  RETURN inserted;
+END;
+$function$
+```
+
 ### `audit_execution.record_audit_run_refusal`
 
 Reads/writes: `audit_execution.audit_run`, `audit_execution.audit_run_refusal`, `audit_execution.audit_run_refusal_code`, `audit_execution.audit_run_side_effect_status`, `prior.refusal_hash`
@@ -4972,6 +6268,106 @@ BEGIN
     RAISE EXCEPTION 'response packet pickup hash mismatch' USING ERRCODE = '22000';
   END IF;
   INSERT INTO audit_execution.response_packet_pickup (
+    pickup_uid, outbox_uid, platform_receipt_json, platform_receipt_digest, pickup_hash, picked_up_at
+  ) VALUES (
+    p_pickup_uid, p_outbox_uid, p_platform_receipt_json, p_platform_receipt_digest, p_pickup_hash, p_picked_up_at
+  ) RETURNING * INTO inserted;
+  RETURN inserted;
+END;
+$function$
+```
+
+### `audit_execution.record_response_packet_repair_pickup`
+
+Reads/writes: `audit_execution.response_packet_repair_pickup`
+
+```sql
+CREATE OR REPLACE FUNCTION audit_execution.record_response_packet_repair_pickup(p_pickup_uid uuid, p_outbox_uid uuid, p_platform_receipt_json text, p_platform_receipt_digest text, p_pickup_hash text, p_picked_up_at text, p_pickup_body_json text)
+ RETURNS audit_execution.response_packet_repair_pickup
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog', 'audit_execution', 'public'
+AS $function$
+DECLARE
+  existing audit_execution.response_packet_repair_pickup;
+  inserted audit_execution.response_packet_repair_pickup;
+  expected_body jsonb;
+BEGIN
+  SELECT * INTO existing FROM audit_execution.response_packet_repair_pickup WHERE outbox_uid = p_outbox_uid;
+  IF FOUND THEN
+    IF existing.platform_receipt_digest <> p_platform_receipt_digest OR existing.pickup_hash <> p_pickup_hash THEN
+      RAISE EXCEPTION 'response packet repair pickup replay conflict' USING ERRCODE = '23505';
+    END IF;
+    RETURN existing;
+  END IF;
+  IF p_platform_receipt_digest <> 'sha256:' || encode(digest(convert_to(p_platform_receipt_json, 'UTF8'), 'sha256'), 'hex') THEN
+    RAISE EXCEPTION 'platform repair pickup receipt digest mismatch' USING ERRCODE = '22000';
+  END IF;
+  expected_body := jsonb_build_object(
+    'pickup_uid', p_pickup_uid::text,
+    'outbox_uid', p_outbox_uid::text,
+    'platform_receipt', p_platform_receipt_json::jsonb,
+    'platform_receipt_digest', p_platform_receipt_digest,
+    'picked_up_at', p_picked_up_at
+  );
+  IF p_pickup_body_json::jsonb <> expected_body THEN
+    RAISE EXCEPTION 'repair pickup body fields do not match append coordinates' USING ERRCODE = '22000';
+  END IF;
+  IF p_pickup_hash <> 'sha256:' || encode(digest(convert_to(p_pickup_body_json, 'UTF8'), 'sha256'), 'hex') THEN
+    RAISE EXCEPTION 'repair pickup hash mismatch' USING ERRCODE = '22000';
+  END IF;
+  INSERT INTO audit_execution.response_packet_repair_pickup (
+    pickup_uid, outbox_uid, platform_receipt_json, platform_receipt_digest, pickup_hash, picked_up_at
+  ) VALUES (
+    p_pickup_uid, p_outbox_uid, p_platform_receipt_json, p_platform_receipt_digest, p_pickup_hash, p_picked_up_at
+  ) RETURNING * INTO inserted;
+  RETURN inserted;
+END;
+$function$
+```
+
+### `audit_execution.record_response_packet_repair_reissue_pickup`
+
+Reads/writes: `audit_execution.response_packet_repair_reissue_pickup`
+
+```sql
+CREATE OR REPLACE FUNCTION audit_execution.record_response_packet_repair_reissue_pickup(p_pickup_uid uuid, p_outbox_uid uuid, p_platform_receipt_json text, p_platform_receipt_digest text, p_pickup_hash text, p_picked_up_at text, p_pickup_body_json text)
+ RETURNS audit_execution.response_packet_repair_reissue_pickup
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog', 'audit_execution', 'public'
+AS $function$
+DECLARE
+  existing audit_execution.response_packet_repair_reissue_pickup;
+  inserted audit_execution.response_packet_repair_reissue_pickup;
+  expected_body jsonb;
+BEGIN
+  SELECT * INTO existing
+  FROM audit_execution.response_packet_repair_reissue_pickup
+  WHERE outbox_uid = p_outbox_uid;
+  IF FOUND THEN
+    IF existing.platform_receipt_digest <> p_platform_receipt_digest OR existing.pickup_hash <> p_pickup_hash THEN
+      RAISE EXCEPTION 'response packet repair reissue pickup replay conflict' USING ERRCODE = '23505';
+    END IF;
+    RETURN existing;
+  END IF;
+  IF p_platform_receipt_digest <> 'sha256:' || encode(digest(convert_to(p_platform_receipt_json, 'UTF8'), 'sha256'), 'hex') THEN
+    RAISE EXCEPTION 'platform repair reissue pickup receipt digest mismatch' USING ERRCODE = '22000';
+  END IF;
+  expected_body := jsonb_build_object(
+    'pickup_uid', p_pickup_uid::text,
+    'outbox_uid', p_outbox_uid::text,
+    'platform_receipt', p_platform_receipt_json::jsonb,
+    'platform_receipt_digest', p_platform_receipt_digest,
+    'picked_up_at', p_picked_up_at
+  );
+  IF p_pickup_body_json::jsonb <> expected_body THEN
+    RAISE EXCEPTION 'repair reissue pickup body fields do not match append coordinates' USING ERRCODE = '22000';
+  END IF;
+  IF p_pickup_hash <> 'sha256:' || encode(digest(convert_to(p_pickup_body_json, 'UTF8'), 'sha256'), 'hex') THEN
+    RAISE EXCEPTION 'repair reissue pickup hash mismatch' USING ERRCODE = '22000';
+  END IF;
+  INSERT INTO audit_execution.response_packet_repair_reissue_pickup (
     pickup_uid, outbox_uid, platform_receipt_json, platform_receipt_digest, pickup_hash, picked_up_at
   ) VALUES (
     p_pickup_uid, p_outbox_uid, p_platform_receipt_json, p_platform_receipt_digest, p_pickup_hash, p_picked_up_at
@@ -5494,6 +6890,110 @@ Triggers:
 - `outbound_feed_publication_no_delete`: `outbound_feed_publication_no_delete BEFORE DELETE ON audit_execution.outbound_feed_publication FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
 - `outbound_feed_publication_no_update`: `outbound_feed_publication_no_update BEFORE UPDATE ON audit_execution.outbound_feed_publication FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
 
+### `audit_execution.outbound_feed_publication_retirement`
+
+Columns: 17 | **NOT NULL:** `retirement_uid`, `feed_name`, `retired_publication_uid`, `retired_outbox_uid`, `retired_sequence`, `retired_event_kind`, `retired_payload_schema_version`, `retired_envelope_digest`, `retirement_envelope_digest`, `retirement_payload_digest`, `retirement_payload_json`, `retirement_reason_code`, `retirement_evidence_ref`, `signer_key_id`, `signer_fingerprint`, `published_at`, `retirement_hash`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `outbound_feed_publication_re_retired_payload_schema_versi_check` | `CHECK ((length(btrim(retired_payload_schema_version)) > 0))` |
+| CHECK | `outbound_feed_publication_reti_retirement_envelope_digest_check` | `CHECK ((retirement_envelope_digest ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_publication_retir_retirement_payload_digest_check` | `CHECK ((retirement_payload_digest ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_publication_retirem_retired_envelope_digest_check` | `CHECK ((retired_envelope_digest ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_publication_retirem_retirement_evidence_ref_check` | `CHECK ((length(btrim(retirement_evidence_ref)) > 0))` |
+| CHECK | `outbound_feed_publication_retirem_retirement_payload_json_check` | `CHECK ((jsonb_typeof((retirement_payload_json)::jsonb) = 'object'::text))` |
+| CHECK | `outbound_feed_publication_retireme_retirement_reason_code_check` | `CHECK ((retirement_reason_code = 'SUPERSEDED_UNCONSUMED_DEFECTIVE_PUBLICATION'::text))` |
+| CHECK | `outbound_feed_publication_retirement_check` | `CHECK ((retirement_envelope_digest <> retired_envelope_digest))` |
+| CHECK | `outbound_feed_publication_retirement_retired_event_kind_check` | `CHECK ((length(btrim(retired_event_kind)) > 0))` |
+| CHECK | `outbound_feed_publication_retirement_retired_sequence_check` | `CHECK ((retired_sequence > 0))` |
+| CHECK | `outbound_feed_publication_retirement_retirement_hash_check` | `CHECK ((retirement_hash ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_publication_retirement_signer_fingerprint_check` | `CHECK ((signer_fingerprint ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_publication_retirement_signer_key_id_check` | `CHECK ((length(btrim(signer_key_id)) > 0))` |
+| FK | `outbound_feed_publication_retireme_retired_publication_uid_fkey` | `FOREIGN KEY (retired_publication_uid) REFERENCES audit_execution.outbound_feed_publication(publication_uid) ON DELETE RESTRICT` |
+| FK | `outbound_feed_publication_retirement_feed_name_fkey` | `FOREIGN KEY (feed_name) REFERENCES audit_execution.outbound_feed_bootstrap(feed_name) ON DELETE RESTRICT` |
+| FK | `outbound_feed_publication_retirement_retired_outbox_uid_fkey` | `FOREIGN KEY (retired_outbox_uid) REFERENCES audit_execution.response_packet_outbox(outbox_uid) ON DELETE RESTRICT` |
+| PK | `outbound_feed_publication_retirement_pkey` | `PRIMARY KEY (retirement_uid)` |
+| UNIQUE | `outbound_feed_publication_retire_feed_name_retired_sequence_key` | `UNIQUE (feed_name, retired_sequence)` |
+| UNIQUE | `outbound_feed_publication_retire_retirement_envelope_digest_key` | `UNIQUE (retirement_envelope_digest)` |
+| UNIQUE | `outbound_feed_publication_retiremen_retired_publication_uid_key` | `UNIQUE (retired_publication_uid)` |
+| UNIQUE | `outbound_feed_publication_retirement_retired_outbox_uid_key` | `UNIQUE (retired_outbox_uid)` |
+| UNIQUE | `outbound_feed_publication_retirement_retirement_hash_key` | `UNIQUE (retirement_hash)` |
+
+Triggers:
+
+- `outbound_feed_publication_retirement_no_delete`: `outbound_feed_publication_retirement_no_delete BEFORE DELETE ON audit_execution.outbound_feed_publication_retirement FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+- `outbound_feed_publication_retirement_no_update`: `outbound_feed_publication_retirement_no_update BEFORE UPDATE ON audit_execution.outbound_feed_publication_retirement FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+
+### `audit_execution.outbound_feed_repair_publication`
+
+Columns: 16 | **NOT NULL:** `publication_uid`, `supersedes_publication_uid`, `repair_outbox_uid`, `audit_run_uid`, `feed_name`, `report_sequence`, `decision_sequence`, `report_envelope_digest`, `decision_envelope_digest`, `signer_key_id`, `signer_fingerprint`, `repair_reason_code`, `repair_evidence_ref`, `published_at`, `publication_hash`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `outbound_feed_repair_publication_check` | `CHECK ((decision_sequence = (report_sequence + 1)))` |
+| CHECK | `outbound_feed_repair_publication_decision_envelope_digest_check` | `CHECK ((decision_envelope_digest ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_repair_publication_prior_envelope_digest_check` | `CHECK (((prior_envelope_digest IS NULL) OR (prior_envelope_digest ~ '^sha256:[0-9a-f]{64}$'::text)))` |
+| CHECK | `outbound_feed_repair_publication_publication_hash_check` | `CHECK ((publication_hash ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_repair_publication_repair_evidence_ref_check` | `CHECK ((length(btrim(repair_evidence_ref)) > 0))` |
+| CHECK | `outbound_feed_repair_publication_repair_reason_code_check` | `CHECK ((repair_reason_code = 'ENVELOPE_PAYLOAD_FEED_MISMATCH'::text))` |
+| CHECK | `outbound_feed_repair_publication_report_envelope_digest_check` | `CHECK ((report_envelope_digest ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_repair_publication_report_sequence_check` | `CHECK ((report_sequence > 0))` |
+| CHECK | `outbound_feed_repair_publication_signer_fingerprint_check` | `CHECK ((signer_fingerprint ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_repair_publication_signer_key_id_check` | `CHECK ((length(btrim(signer_key_id)) > 0))` |
+| FK | `outbound_feed_repair_publicatio_supersedes_publication_uid_fkey` | `FOREIGN KEY (supersedes_publication_uid) REFERENCES audit_execution.outbound_feed_publication(publication_uid) ON DELETE RESTRICT` |
+| FK | `outbound_feed_repair_publication_audit_run_uid_fkey` | `FOREIGN KEY (audit_run_uid) REFERENCES audit_execution.audit_run(audit_run_uid) ON DELETE RESTRICT` |
+| FK | `outbound_feed_repair_publication_feed_name_fkey` | `FOREIGN KEY (feed_name) REFERENCES audit_execution.outbound_feed_bootstrap(feed_name) ON DELETE RESTRICT` |
+| FK | `outbound_feed_repair_publication_repair_outbox_uid_fkey` | `FOREIGN KEY (repair_outbox_uid) REFERENCES audit_execution.response_packet_repair_outbox(outbox_uid) ON DELETE RESTRICT` |
+| PK | `outbound_feed_repair_publication_pkey` | `PRIMARY KEY (publication_uid)` |
+| UNIQUE | `outbound_feed_repair_publicatio_feed_name_decision_sequence_key` | `UNIQUE (feed_name, decision_sequence)` |
+| UNIQUE | `outbound_feed_repair_publication_decision_envelope_digest_key` | `UNIQUE (decision_envelope_digest)` |
+| UNIQUE | `outbound_feed_repair_publication_feed_name_report_sequence_key` | `UNIQUE (feed_name, report_sequence)` |
+| UNIQUE | `outbound_feed_repair_publication_publication_hash_key` | `UNIQUE (publication_hash)` |
+| UNIQUE | `outbound_feed_repair_publication_repair_outbox_uid_key` | `UNIQUE (repair_outbox_uid)` |
+| UNIQUE | `outbound_feed_repair_publication_report_envelope_digest_key` | `UNIQUE (report_envelope_digest)` |
+| UNIQUE | `outbound_feed_repair_publication_supersedes_publication_uid_key` | `UNIQUE (supersedes_publication_uid)` |
+
+Triggers:
+
+- `outbound_feed_repair_publication_no_delete`: `outbound_feed_repair_publication_no_delete BEFORE DELETE ON audit_execution.outbound_feed_repair_publication FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+- `outbound_feed_repair_publication_no_update`: `outbound_feed_repair_publication_no_update BEFORE UPDATE ON audit_execution.outbound_feed_repair_publication FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+
+### `audit_execution.outbound_feed_repair_reissue_publication`
+
+Columns: 18 | **NOT NULL:** `publication_uid`, `supersedes_repair_publication_uid`, `repair_reissue_outbox_uid`, `retirement_uid`, `audit_run_uid`, `feed_name`, `report_sequence`, `decision_sequence`, `prior_envelope_digest`, `report_envelope_digest`, `decision_envelope_digest`, `signer_key_id`, `signer_fingerprint`, `repair_reason_code`, `reissue_reason_code`, `repair_evidence_ref`, `published_at`, `publication_hash`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `outbound_feed_repair_reissue_pub_decision_envelope_digest_check` | `CHECK ((decision_envelope_digest ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_repair_reissue_publi_report_envelope_digest_check` | `CHECK ((report_envelope_digest ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_repair_reissue_public_prior_envelope_digest_check` | `CHECK ((prior_envelope_digest ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_repair_reissue_publicat_reissue_reason_code_check` | `CHECK ((reissue_reason_code = 'REPAIR_PRIOR_DIGEST_REISSUE_AFTER_RETIREMENT'::text))` |
+| CHECK | `outbound_feed_repair_reissue_publicat_repair_evidence_ref_check` | `CHECK ((length(btrim(repair_evidence_ref)) > 0))` |
+| CHECK | `outbound_feed_repair_reissue_publicati_repair_reason_code_check` | `CHECK ((repair_reason_code = 'ENVELOPE_PAYLOAD_FEED_MISMATCH'::text))` |
+| CHECK | `outbound_feed_repair_reissue_publicati_signer_fingerprint_check` | `CHECK ((signer_fingerprint ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_repair_reissue_publication_check` | `CHECK ((decision_sequence = (report_sequence + 1)))` |
+| CHECK | `outbound_feed_repair_reissue_publication_publication_hash_check` | `CHECK ((publication_hash ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `outbound_feed_repair_reissue_publication_report_sequence_check` | `CHECK ((report_sequence > 0))` |
+| CHECK | `outbound_feed_repair_reissue_publication_signer_key_id_check` | `CHECK ((length(btrim(signer_key_id)) > 0))` |
+| FK | `outbound_feed_repair_reissue__supersedes_repair_publicatio_fkey` | `FOREIGN KEY (supersedes_repair_publication_uid) REFERENCES audit_execution.outbound_feed_repair_publication(publication_uid) ON DELETE RESTRICT` |
+| FK | `outbound_feed_repair_reissue_pub_repair_reissue_outbox_uid_fkey` | `FOREIGN KEY (repair_reissue_outbox_uid) REFERENCES audit_execution.response_packet_repair_reissue_outbox(outbox_uid) ON DELETE RESTRICT` |
+| FK | `outbound_feed_repair_reissue_publication_audit_run_uid_fkey` | `FOREIGN KEY (audit_run_uid) REFERENCES audit_execution.audit_run(audit_run_uid) ON DELETE RESTRICT` |
+| FK | `outbound_feed_repair_reissue_publication_feed_name_fkey` | `FOREIGN KEY (feed_name) REFERENCES audit_execution.outbound_feed_bootstrap(feed_name) ON DELETE RESTRICT` |
+| FK | `outbound_feed_repair_reissue_publication_retirement_uid_fkey` | `FOREIGN KEY (retirement_uid) REFERENCES audit_execution.outbound_feed_publication_retirement(retirement_uid) ON DELETE RESTRICT` |
+| PK | `outbound_feed_repair_reissue_publication_pkey` | `PRIMARY KEY (publication_uid)` |
+| UNIQUE | `outbound_feed_repair_reissue__supersedes_repair_publication_key` | `UNIQUE (supersedes_repair_publication_uid)` |
+| UNIQUE | `outbound_feed_repair_reissue_pu_feed_name_decision_sequence_key` | `UNIQUE (feed_name, decision_sequence)` |
+| UNIQUE | `outbound_feed_repair_reissue_publ_feed_name_report_sequence_key` | `UNIQUE (feed_name, report_sequence)` |
+| UNIQUE | `outbound_feed_repair_reissue_publ_repair_reissue_outbox_uid_key` | `UNIQUE (repair_reissue_outbox_uid)` |
+| UNIQUE | `outbound_feed_repair_reissue_publi_decision_envelope_digest_key` | `UNIQUE (decision_envelope_digest)` |
+| UNIQUE | `outbound_feed_repair_reissue_publica_report_envelope_digest_key` | `UNIQUE (report_envelope_digest)` |
+| UNIQUE | `outbound_feed_repair_reissue_publication_publication_hash_key` | `UNIQUE (publication_hash)` |
+
+Triggers:
+
+- `outbound_feed_repair_reissue_publication_no_delete`: `outbound_feed_repair_reissue_publication_no_delete BEFORE DELETE ON audit_execution.outbound_feed_repair_reissue_publication FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+- `outbound_feed_repair_reissue_publication_no_update`: `outbound_feed_repair_reissue_publication_no_update BEFORE UPDATE ON audit_execution.outbound_feed_repair_reissue_publication FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+
 ### `audit_execution.response_packet_outbox`
 
 Columns: 10 | **NOT NULL:** `outbox_uid`, `work_item_uid`, `audit_run_uid`, `request_uid`, `subject_uid`, `terminal_status`, `response_packet_digest`, `response_packet_json`, `outbox_hash`, `ready_at`
@@ -5536,6 +7036,100 @@ Triggers:
 
 - `response_packet_pickup_no_delete`: `response_packet_pickup_no_delete BEFORE DELETE ON audit_execution.response_packet_pickup FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
 - `response_packet_pickup_no_update`: `response_packet_pickup_no_update BEFORE UPDATE ON audit_execution.response_packet_pickup FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+
+### `audit_execution.response_packet_repair_outbox`
+
+Columns: 13 | **NOT NULL:** `outbox_uid`, `supersedes_outbox_uid`, `work_item_uid`, `audit_run_uid`, `request_uid`, `subject_uid`, `terminal_status`, `response_packet_digest`, `response_packet_json`, `repair_reason_code`, `repair_evidence_ref`, `outbox_hash`, `ready_at`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `response_packet_repair_outbox_outbox_hash_check` | `CHECK ((outbox_hash ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `response_packet_repair_outbox_repair_evidence_ref_check` | `CHECK ((length(btrim(repair_evidence_ref)) > 0))` |
+| CHECK | `response_packet_repair_outbox_repair_reason_code_check` | `CHECK ((repair_reason_code = 'ENVELOPE_PAYLOAD_FEED_MISMATCH'::text))` |
+| CHECK | `response_packet_repair_outbox_response_packet_digest_check` | `CHECK ((response_packet_digest ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `response_packet_repair_outbox_response_packet_json_check` | `CHECK ((jsonb_typeof((response_packet_json)::jsonb) = 'object'::text))` |
+| CHECK | `response_packet_repair_outbox_terminal_status_check` | `CHECK ((length(btrim(terminal_status)) > 0))` |
+| FK | `response_packet_repair_outbox_audit_run_uid_fkey` | `FOREIGN KEY (audit_run_uid) REFERENCES audit_execution.audit_run(audit_run_uid) ON DELETE RESTRICT` |
+| FK | `response_packet_repair_outbox_supersedes_outbox_uid_fkey` | `FOREIGN KEY (supersedes_outbox_uid) REFERENCES audit_execution.response_packet_outbox(outbox_uid) ON DELETE RESTRICT` |
+| FK | `response_packet_repair_outbox_work_item_uid_fkey` | `FOREIGN KEY (work_item_uid) REFERENCES audit_execution.audit_cohort_member(work_item_uid) ON DELETE RESTRICT` |
+| PK | `response_packet_repair_outbox_pkey` | `PRIMARY KEY (outbox_uid)` |
+| UNIQUE | `response_packet_repair_outbox_outbox_hash_key` | `UNIQUE (outbox_hash)` |
+| UNIQUE | `response_packet_repair_outbox_response_packet_digest_key` | `UNIQUE (response_packet_digest)` |
+| UNIQUE | `response_packet_repair_outbox_supersedes_outbox_uid_key` | `UNIQUE (supersedes_outbox_uid)` |
+
+Triggers:
+
+- `response_packet_repair_outbox_no_delete`: `response_packet_repair_outbox_no_delete BEFORE DELETE ON audit_execution.response_packet_repair_outbox FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+- `response_packet_repair_outbox_no_update`: `response_packet_repair_outbox_no_update BEFORE UPDATE ON audit_execution.response_packet_repair_outbox FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+
+### `audit_execution.response_packet_repair_pickup`
+
+Columns: 6 | **NOT NULL:** `pickup_uid`, `outbox_uid`, `platform_receipt_json`, `platform_receipt_digest`, `pickup_hash`, `picked_up_at`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `response_packet_repair_pickup_pickup_hash_check` | `CHECK ((pickup_hash ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `response_packet_repair_pickup_platform_receipt_digest_check` | `CHECK ((platform_receipt_digest ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `response_packet_repair_pickup_platform_receipt_json_check` | `CHECK ((jsonb_typeof((platform_receipt_json)::jsonb) = 'object'::text))` |
+| FK | `response_packet_repair_pickup_outbox_uid_fkey` | `FOREIGN KEY (outbox_uid) REFERENCES audit_execution.response_packet_repair_outbox(outbox_uid) ON DELETE RESTRICT` |
+| PK | `response_packet_repair_pickup_pkey` | `PRIMARY KEY (pickup_uid)` |
+| UNIQUE | `response_packet_repair_pickup_outbox_uid_key` | `UNIQUE (outbox_uid)` |
+| UNIQUE | `response_packet_repair_pickup_pickup_hash_key` | `UNIQUE (pickup_hash)` |
+| UNIQUE | `response_packet_repair_pickup_platform_receipt_digest_key` | `UNIQUE (platform_receipt_digest)` |
+
+Triggers:
+
+- `response_packet_repair_pickup_no_delete`: `response_packet_repair_pickup_no_delete BEFORE DELETE ON audit_execution.response_packet_repair_pickup FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+- `response_packet_repair_pickup_no_update`: `response_packet_repair_pickup_no_update BEFORE UPDATE ON audit_execution.response_packet_repair_pickup FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+
+### `audit_execution.response_packet_repair_reissue_outbox`
+
+Columns: 16 | **NOT NULL:** `outbox_uid`, `supersedes_repair_outbox_uid`, `supersedes_repair_publication_uid`, `retirement_uid`, `work_item_uid`, `audit_run_uid`, `request_uid`, `subject_uid`, `terminal_status`, `response_packet_digest`, `response_packet_json`, `repair_reason_code`, `repair_evidence_ref`, `reissue_reason_code`, `outbox_hash`, `ready_at`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `response_packet_repair_reissue_out_response_packet_digest_check` | `CHECK ((response_packet_digest ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `response_packet_repair_reissue_outbo_response_packet_json_check` | `CHECK ((jsonb_typeof((response_packet_json)::jsonb) = 'object'::text))` |
+| CHECK | `response_packet_repair_reissue_outbox_outbox_hash_check` | `CHECK ((outbox_hash ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `response_packet_repair_reissue_outbox_reissue_reason_code_check` | `CHECK ((reissue_reason_code = 'REPAIR_PRIOR_DIGEST_REISSUE_AFTER_RETIREMENT'::text))` |
+| CHECK | `response_packet_repair_reissue_outbox_repair_evidence_ref_check` | `CHECK ((length(btrim(repair_evidence_ref)) > 0))` |
+| CHECK | `response_packet_repair_reissue_outbox_repair_reason_code_check` | `CHECK ((repair_reason_code = 'ENVELOPE_PAYLOAD_FEED_MISMATCH'::text))` |
+| CHECK | `response_packet_repair_reissue_outbox_terminal_status_check` | `CHECK ((length(btrim(terminal_status)) > 0))` |
+| FK | `response_packet_repair_reissu_supersedes_repair_outbox_uid_fkey` | `FOREIGN KEY (supersedes_repair_outbox_uid) REFERENCES audit_execution.response_packet_repair_outbox(outbox_uid) ON DELETE RESTRICT` |
+| FK | `response_packet_repair_reissu_supersedes_repair_publicatio_fkey` | `FOREIGN KEY (supersedes_repair_publication_uid) REFERENCES audit_execution.outbound_feed_repair_publication(publication_uid) ON DELETE RESTRICT` |
+| FK | `response_packet_repair_reissue_outbox_audit_run_uid_fkey` | `FOREIGN KEY (audit_run_uid) REFERENCES audit_execution.audit_run(audit_run_uid) ON DELETE RESTRICT` |
+| FK | `response_packet_repair_reissue_outbox_retirement_uid_fkey` | `FOREIGN KEY (retirement_uid) REFERENCES audit_execution.outbound_feed_publication_retirement(retirement_uid) ON DELETE RESTRICT` |
+| FK | `response_packet_repair_reissue_outbox_work_item_uid_fkey` | `FOREIGN KEY (work_item_uid) REFERENCES audit_execution.audit_cohort_member(work_item_uid) ON DELETE RESTRICT` |
+| PK | `response_packet_repair_reissue_outbox_pkey` | `PRIMARY KEY (outbox_uid)` |
+| UNIQUE | `response_packet_repair_reissu_supersedes_repair_publication_key` | `UNIQUE (supersedes_repair_publication_uid)` |
+| UNIQUE | `response_packet_repair_reissue_outbo_response_packet_digest_key` | `UNIQUE (response_packet_digest)` |
+| UNIQUE | `response_packet_repair_reissue_outbox_outbox_hash_key` | `UNIQUE (outbox_hash)` |
+| UNIQUE | `response_packet_repair_reissue_supersedes_repair_outbox_uid_key` | `UNIQUE (supersedes_repair_outbox_uid)` |
+
+Triggers:
+
+- `response_packet_repair_reissue_outbox_no_delete`: `response_packet_repair_reissue_outbox_no_delete BEFORE DELETE ON audit_execution.response_packet_repair_reissue_outbox FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+- `response_packet_repair_reissue_outbox_no_update`: `response_packet_repair_reissue_outbox_no_update BEFORE UPDATE ON audit_execution.response_packet_repair_reissue_outbox FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+
+### `audit_execution.response_packet_repair_reissue_pickup`
+
+Columns: 6 | **NOT NULL:** `pickup_uid`, `outbox_uid`, `platform_receipt_json`, `platform_receipt_digest`, `pickup_hash`, `picked_up_at`
+
+| Kind | Name | Definition |
+|---|---|---|
+| CHECK | `response_packet_repair_reissue_pi_platform_receipt_digest_check` | `CHECK ((platform_receipt_digest ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| CHECK | `response_packet_repair_reissue_pick_platform_receipt_json_check` | `CHECK ((jsonb_typeof((platform_receipt_json)::jsonb) = 'object'::text))` |
+| CHECK | `response_packet_repair_reissue_pickup_pickup_hash_check` | `CHECK ((pickup_hash ~ '^sha256:[0-9a-f]{64}$'::text))` |
+| FK | `response_packet_repair_reissue_pickup_outbox_uid_fkey` | `FOREIGN KEY (outbox_uid) REFERENCES audit_execution.response_packet_repair_reissue_outbox(outbox_uid) ON DELETE RESTRICT` |
+| PK | `response_packet_repair_reissue_pickup_pkey` | `PRIMARY KEY (pickup_uid)` |
+| UNIQUE | `response_packet_repair_reissue_pick_platform_receipt_digest_key` | `UNIQUE (platform_receipt_digest)` |
+| UNIQUE | `response_packet_repair_reissue_pickup_outbox_uid_key` | `UNIQUE (outbox_uid)` |
+| UNIQUE | `response_packet_repair_reissue_pickup_pickup_hash_key` | `UNIQUE (pickup_hash)` |
+
+Triggers:
+
+- `response_packet_repair_reissue_pickup_no_delete`: `response_packet_repair_reissue_pickup_no_delete BEFORE DELETE ON audit_execution.response_packet_repair_reissue_pickup FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
+- `response_packet_repair_reissue_pickup_no_update`: `response_packet_repair_reissue_pickup_no_update BEFORE UPDATE ON audit_execution.response_packet_repair_reissue_pickup FOR EACH ROW EXECUTE FUNCTION audit_system.reject_mutation()`
 
 ### `audit_execution.work_context`
 
@@ -5725,5 +7319,5 @@ SELECT count(*) AS active_current,
 FROM act;
 ```
 
-Live at generation time: active=340, arm_exact_snapshot=56, arm_exact_reproof=38, arm_reproducible=70, no_computed_snapshot=167
+Live at generation time: active=296, arm_exact_snapshot=37, arm_exact_reproof=13, arm_reproducible=70, no_computed_snapshot=167
 
