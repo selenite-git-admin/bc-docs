@@ -2,7 +2,7 @@
 
 **GENERATED — do not edit.** Regenerate: `node scripts/docs-control/generate_enforcement_surface_map.mjs`
 
-Generated: 2026-08-02T05:30:49.645Z
+Generated: 2026-08-02T07:32:33.069Z
 Sources: bc_platform_dev + bc_audit_dev (live), bc-core@c923f2a, auditor@05106574
 
 **Usage rule (operator, 2026-07-26):** no design, no ADR applied-instance, and no population count
@@ -7319,5 +7319,5 @@ SELECT count(*) AS active_current,
 FROM act;
 ```
 
-Live at generation time: active=296, arm_exact_snapshot=37, arm_exact_reproof=13, arm_reproducible=70, no_computed_snapshot=167
+Live at generation time: active=297, arm_exact_snapshot=38, arm_exact_reproof=13, arm_reproducible=70, no_computed_snapshot=167
 
