@@ -2,7 +2,7 @@
 uid: DEC-d9fa49
 title: "Legacy metric-contract activation retired with a governed refusal — F-018 disposition (accidental dead-signal freeze replaced)"
 description: "ContractService.transitionState refuses category='metric' → 'active' with an explicit Gone-class refusal; the MLS-14 gate wiring (whose R3-dropped-table query was the only thing freezing the route, behind an @Optional injection that would fail OPEN if absent) is removed from the service. Metric activation is exclusively the MCF certification lane (D541 C8 gate)."
-status: decided
+status: implemented
 date: 2026-08-02T17:02:45.562Z
 project: bc-core
 domain: contracts
