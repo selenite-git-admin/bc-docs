@@ -124,16 +124,22 @@ push('');
 
 // ── Section 10: canonical eligibility queries ──────────────────────────────────────────────────
 push('## 10. Canonical population queries (COUNT FROM THE GATE, NOT FROM A TABLE)', '');
-push('The ONLY sanctioned way to claim eligibility counts. These mirror the c9 arms verbatim:', '');
+push('### 10.0 The canonical liveness definition — `mcf.mcv_live` (MEMO-d548, operator DBCP 2026-08-03)', '');
+push('LIVE means all three legs: `active` + `is_current` + parent `mc.archived_at IS NULL`. An active-state',
+  'MCV under an archived parent is a retire/abandon audit relic (Invariant III), NEVER live. Every population,',
+  'liveness, or duplicate claim over mcf MUST go through this view. Definition, read live from the substrate:', '');
+const viewDef = psql('bc_platform_dev', `SELECT pg_get_viewdef('mcf.mcv_live'::regclass, true)`)
+  .map((r) => r.join('')).join('\n');
+push('```sql', `CREATE VIEW mcf.mcv_live AS`, String(viewDef).trimEnd(), '```', '');
+push('The ONLY sanctioned way to claim eligibility counts. These mirror the c9 arms verbatim, over LIVE MCVs:', '');
 push('```sql',
-  `-- c9 eligibility partition over active current MCVs (arms are mutually exclusive by evidence shape)`,
+  `-- c9 eligibility partition over LIVE MCVs (mcf.mcv_live; arms are mutually exclusive by evidence shape)`,
   `WITH act AS (`,
   `  SELECT v.metric_contract_version_uid AS mcv, s.exactness_result AS snap_exact,`,
   `         s.binary64_activation_eligible AS b64, s.package_signature_hash AS pkg, s.disposition_code AS disp`,
-  `  FROM mcf.metric_contract_version v`,
-  `  LEFT JOIN mcf.mcv_package_snapshot s USING (metric_contract_version_uid)`,
-  `  WHERE v.is_current AND v.governance_state_code='active')`,
-  `SELECT count(*) AS active_current,`,
+  `  FROM mcf.mcv_live v`,
+  `  LEFT JOIN mcf.mcv_package_snapshot s USING (metric_contract_version_uid))`,
+  `SELECT count(*) AS live_mcvs,`,
   `  count(*) FILTER (WHERE snap_exact='EXACT' AND b64 IS TRUE) AS arm_exact_snapshot,`,
   `  count(*) FILTER (WHERE EXISTS (SELECT 1 FROM mcf.exactness_reproof_evidence e WHERE e.metric_contract_version_uid=act.mcv`,
   `    AND e.prover_algorithm_version='mcf-exactness-v2' AND e.verdict_code='EXACT' AND e.package_signature_hash=act.pkg)) AS arm_exact_reproof,`,
@@ -143,8 +149,8 @@ push('```sql',
   `FROM act;`,
   '```', '');
 // live snapshot of that query, dated — so the map carries the current truth too
-const snap = psql('bc_platform_dev', `WITH act AS (SELECT v.metric_contract_version_uid AS mcv, s.exactness_result AS snap_exact, s.binary64_activation_eligible AS b64, s.package_signature_hash AS pkg, s.disposition_code AS disp FROM mcf.metric_contract_version v LEFT JOIN mcf.mcv_package_snapshot s USING (metric_contract_version_uid) WHERE v.is_current AND v.governance_state_code='active') SELECT count(*), count(*) FILTER (WHERE snap_exact='EXACT' AND b64 IS TRUE), count(*) FILTER (WHERE EXISTS (SELECT 1 FROM mcf.exactness_reproof_evidence e WHERE e.metric_contract_version_uid=act.mcv AND e.prover_algorithm_version='mcf-exactness-v2' AND e.verdict_code='EXACT' AND e.package_signature_hash=act.pkg)), count(*) FILTER (WHERE EXISTS (SELECT 1 FROM mcf.exactness_reproof_evidence e WHERE e.metric_contract_version_uid=act.mcv AND e.prover_algorithm_version='mcf-reproducibility-v1' AND e.verdict_code='REPRODUCIBLE' AND e.package_signature_hash=act.pkg)), count(*) FILTER (WHERE disp IS DISTINCT FROM 'computed') FROM act`)[0];
-push(`Live at generation time: active=${snap[0]}, arm_exact_snapshot=${snap[1]}, arm_exact_reproof=${snap[2]}, arm_reproducible=${snap[3]}, no_computed_snapshot=${snap[4]}`, '');
+const snap = psql('bc_platform_dev', `WITH act AS (SELECT v.metric_contract_version_uid AS mcv, s.exactness_result AS snap_exact, s.binary64_activation_eligible AS b64, s.package_signature_hash AS pkg, s.disposition_code AS disp FROM mcf.mcv_live v LEFT JOIN mcf.mcv_package_snapshot s USING (metric_contract_version_uid)) SELECT count(*), count(*) FILTER (WHERE snap_exact='EXACT' AND b64 IS TRUE), count(*) FILTER (WHERE EXISTS (SELECT 1 FROM mcf.exactness_reproof_evidence e WHERE e.metric_contract_version_uid=act.mcv AND e.prover_algorithm_version='mcf-exactness-v2' AND e.verdict_code='EXACT' AND e.package_signature_hash=act.pkg)), count(*) FILTER (WHERE EXISTS (SELECT 1 FROM mcf.exactness_reproof_evidence e WHERE e.metric_contract_version_uid=act.mcv AND e.prover_algorithm_version='mcf-reproducibility-v1' AND e.verdict_code='REPRODUCIBLE' AND e.package_signature_hash=act.pkg)), count(*) FILTER (WHERE disp IS DISTINCT FROM 'computed') FROM act`)[0];
+push(`Live at generation time: live_mcvs=${snap[0]}, arm_exact_snapshot=${snap[1]}, arm_exact_reproof=${snap[2]}, arm_reproducible=${snap[3]}, no_computed_snapshot=${snap[4]}`, '');
 
 writeFileSync(OUT, lines.join('\n') + '\n');
 console.log(`wrote ${OUT} (${lines.length} lines)`);
