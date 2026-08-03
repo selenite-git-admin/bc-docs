@@ -35,15 +35,25 @@ This chapter defines the authority model under which platform documentation and 
 
 ## Authority ladder
 
-The authority model has three levels. A lower level does not silently override a higher level. Conflicts are resolved only through an explicit higher-level decision, an Errata Ledger entry, or both.
+The authority model has five levels (extended from three by DEC-5a9dee, which placed the two
+previously implicit claimant classes — the generated enforcement map and the live substrate —
+explicitly). A lower level does not silently override a higher level. Conflicts are resolved only
+through an explicit higher-level decision, an Errata Ledger entry, or both.
 
-| Level | Artifacts | Governs | Change mechanism |
+| Level | Artifacts | Governs | Change mechanism / conflict rule |
 |---|---|---|---|
-| Foundation | Foundation, The Invariants through The Evaluation Boundaries, and locked Foundation documents | Invariants, object taxonomy, contract grammar taxonomy, and boundary model | Changed only through a governed platform-version change recorded by ADR and reflected in errata where needed |
-| ADR and Errata layer | Decisions, Errata, and their governed source records | Decisions, supersessions, reversals, and temporary authority over Foundation contradictions | Changed through new ADRs, supersession pairs, and errata state transitions |
-| Descriptive layer | Sources and the Catalog through Risk and Vendor Management, appendices other than F and G, SOPs, runbooks, and development guides | Operational detail, implementation description, audit mapping, and platform use | Updated through chapter editing and session records, subject to higher-level authority |
+| Foundation | Foundation, The Invariants through The Evaluation Boundaries, and locked Foundation documents | Invariants, object taxonomy, grammar taxonomy (including admitted families and their state names; transition detail is delegated), and boundary model | Changed only through a governed platform-version change recorded by ADR and reflected in errata where needed |
+| ADR and Errata layer | Decisions, Errata, and their governed source records | INTENT: decisions, supersessions, reversals, and temporary authority over Foundation contradictions | Changed through new ADRs, supersession pairs, and errata state transitions |
+| Generated enforcement map | `docs/reference/enforcement-surface-map.md` and sibling generated renderings | WHAT IS ENFORCED: SQL bodies, transition matrices, gate logic — derived from substrate | Regenerated after every substrate change; a map/ADR disagreement is a FINDING (drift) resolved by an ADR or a fix — never by editing the map |
+| Live substrate | The running database objects: functions, triggers, constraints | FACT: what actually enforces | A map/substrate disagreement means the map is stale — regenerate; substrate wins as fact, the ADR layer wins as intent |
+| Descriptive layer | Sources and the Catalog through Risk and Vendor Management, appendices other than F and G, SOPs, runbooks, development guides, and runtime read-model consumers | Operational detail, implementation description, audit mapping, and platform use | Updated through chapter editing and session records, subject to higher-level authority; never authority itself |
 
-The ladder is distinguished by scope and by recording discipline. Foundation defines what the platform is. ADRs and errata define how change is governed. Descriptive layers explain how the governed system operates and is implemented.
+The ladder is distinguished by scope and by recording discipline. Foundation defines what the
+platform is — it names identities, not enforcement. ADRs and errata define how change is
+governed. The generated map is the bridge between intent and fact and must be regenerated, never
+hand-corrected. The substrate is the fact layer. Descriptive layers explain how the governed
+system operates. Operating doctrine, one line: **map beats memory, substrate beats map** —
+with Foundation above both.
 
 ## Foundation authority
 
@@ -53,7 +63,7 @@ Foundation is the top authority level. All other artifacts are validated against
 |---|---|
 | Execution invariants | Six invariants govern execution (The Invariants) |
 | Authoritative object types | Six object types are recognized: four progression objects and two proof objects (The Object Model) |
-| Grammar artifacts | Twelve governed grammar artifacts are recognized (The Contract Grammar) |
+| Grammar artifacts | Fifteen governed grammar artifacts are recognized (The Contract Grammar; extended by DEC-5a9dee under the authority-creation admission test) |
 | Evaluation boundaries | Four evaluation boundaries produce authoritative state (The Evaluation Boundaries) |
 
 Foundation does not change through descriptive editing. A Foundation-level change requires all of the following:
@@ -70,6 +80,8 @@ The adopted errata register includes:
 - `FND-ERR-004` Source-to-Canonical cardinality N:1
 - `FND-ERR-005` Object count clarification
 - `FND-ERR-006` Evaluation boundary count clarification
+- `FND-ERR-007` Live authority-creating families (MCF, Business Concept Registry, Metric Directory) outside the grammar taxonomy until DEC-5a9dee
+- `FND-ERR-008` Legacy five-state lifecycle stated linear/no-rollback; implementing machine allowed `review→draft` and `draft→active`
 
 These errata do not lower Foundation authority. They record where the current canonical reading is governed while Foundation text is aligned.
 
