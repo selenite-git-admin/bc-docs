@@ -361,8 +361,10 @@ separately dispositioned (DEC-21ca17).
 
 ### Business Concept Registry family
 
-Registry concepts follow the five-state lifecycle (`draft`, `review`, `approved`, `active`,
-`superseded`) per DEC-02f5a9. Change doctrine is decided and governs: supersession cascades
+Registry concepts follow a six-state lifecycle (`draft`, `review`, `approved`, `active`,
+`superseded`, `archived`) — the five DEC-02f5a9 states plus the `archived` terminal introduced by
+admission-error withdrawal (DEC-1fbaf1); state vocabulary derived from the substrate CHECKs and
+rendered in the generated lifecycle map. Change doctrine is decided and governs: supersession cascades
 fail closed on live consumers (DEC-9d27a9); admission-error withdrawal is distinct from
 supersession (DEC-1fbaf1); active definitions are immutable atoms — editorial amendment is the
 narrow path and meaning-bearing change requires supersession (DEC-26b6e2, DEC-fb0b12).
