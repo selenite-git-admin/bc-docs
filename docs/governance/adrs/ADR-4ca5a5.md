@@ -2,7 +2,8 @@
 uid: DEC-4ca5a5
 title: "Metric Landscape — single-page UI consolidation of three overlapping metric-lifecycle surfaces"
 description: "Consolidates the bc-admin Lifecycle Funnel (Platform tab + Tenant tab) and Tenant Metrics pages into one canonical page at /catalog/metrics/landscape that mirrors the 7-stage canonical lifecycle ladder from DEC-a8b33e. Old routes redirect for one compatibility release. All counts read from MetricFunnelService.getLadder()."
-status: decided
+status: superseded
+superseded_by: DEC-b049f6
 date: 2026-05-09T09:32:24.132Z
 project: bc-admin
 domain: metrics

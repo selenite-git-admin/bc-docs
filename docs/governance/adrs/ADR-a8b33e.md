@@ -2,7 +2,8 @@
 uid: DEC-a8b33e
 title: "Metric Lifecycle Funnel — canonical 7-stage ladder + single-service ownership"
 description: "Locks a 7-stage funnel ladder (Seed → Contracted → Active → Platform Ready → Tenant Ready → Tenant Evaluated → Live) with strict subset semantics, named side buckets per drop, and one MetricFunnelService.getLadder() as the truth source."
-status: decided
+status: superseded
+superseded_by: DEC-b049f6
 date: 2026-05-09T08:50:03.404Z
 project: bc-core
 domain: metrics
