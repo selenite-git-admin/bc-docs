@@ -2,7 +2,7 @@
 
 **GENERATED — do not edit.** Regenerate: `node scripts/docs-control/generate_enforcement_surface_map.mjs`
 
-Generated: 2026-08-02T07:32:33.069Z
+Generated: 2026-08-03T06:00:08.727Z
 Sources: bc_platform_dev + bc_audit_dev (live), bc-core@c923f2a, auditor@05106574
 
 **Usage rule (operator, 2026-07-26):** no design, no ADR applied-instance, and no population count
@@ -7299,17 +7299,49 @@ Status: `PROPOSED_NOT_ACCEPTED_RELEASE` | Governing framework: `[object Object]`
 
 ## 10. Canonical population queries (COUNT FROM THE GATE, NOT FROM A TABLE)
 
-The ONLY sanctioned way to claim eligibility counts. These mirror the c9 arms verbatim:
+### 10.0 The canonical liveness definition — `mcf.mcv_live` (MEMO-d548, operator DBCP 2026-08-03)
+
+LIVE means all three legs: `active` + `is_current` + parent `mc.archived_at IS NULL`. An active-state
+MCV under an archived parent is a retire/abandon audit relic (Invariant III), NEVER live. Every population,
+liveness, or duplicate claim over mcf MUST go through this view. Definition, read live from the substrate:
 
 ```sql
--- c9 eligibility partition over active current MCVs (arms are mutually exclusive by evidence shape)
+CREATE VIEW mcf.mcv_live AS
+ SELECT mcv.metric_contract_version_uid,
+    mcv.metric_contract_uid,
+    mcv.version_code,
+    mcv.version_seq,
+    mcv.is_current,
+    mcv.description_text,
+    mcv.function_code,
+    mcv.subfunction_code,
+    mcv.owner_json,
+    mcv.tags,
+    mcv.threshold_json,
+    mcv.governance_state_code,
+    mcv.created_at,
+    mcv.created_by_name,
+    mcv.supersedes_version_uid,
+    mcv.formula_ast_canonical_json,
+    mcv.aggregation_currency_code,
+    mcv.grain_entity_version_id,
+    mc.mc_name AS mc_name_parent,
+    mc.grain_entity_id AS grain_entity_id_parent
+   FROM mcf.metric_contract_version mcv
+     JOIN mcf.metric_contract mc ON mc.metric_contract_uid = mcv.metric_contract_uid
+  WHERE mcv.governance_state_code = 'active'::text AND mcv.is_current AND mc.archived_at IS NULL;
+```
+
+The ONLY sanctioned way to claim eligibility counts. These mirror the c9 arms verbatim, over LIVE MCVs:
+
+```sql
+-- c9 eligibility partition over LIVE MCVs (mcf.mcv_live; arms are mutually exclusive by evidence shape)
 WITH act AS (
   SELECT v.metric_contract_version_uid AS mcv, s.exactness_result AS snap_exact,
          s.binary64_activation_eligible AS b64, s.package_signature_hash AS pkg, s.disposition_code AS disp
-  FROM mcf.metric_contract_version v
-  LEFT JOIN mcf.mcv_package_snapshot s USING (metric_contract_version_uid)
-  WHERE v.is_current AND v.governance_state_code='active')
-SELECT count(*) AS active_current,
+  FROM mcf.mcv_live v
+  LEFT JOIN mcf.mcv_package_snapshot s USING (metric_contract_version_uid))
+SELECT count(*) AS live_mcvs,
   count(*) FILTER (WHERE snap_exact='EXACT' AND b64 IS TRUE) AS arm_exact_snapshot,
   count(*) FILTER (WHERE EXISTS (SELECT 1 FROM mcf.exactness_reproof_evidence e WHERE e.metric_contract_version_uid=act.mcv
     AND e.prover_algorithm_version='mcf-exactness-v2' AND e.verdict_code='EXACT' AND e.package_signature_hash=act.pkg)) AS arm_exact_reproof,
@@ -7319,5 +7351,5 @@ SELECT count(*) AS active_current,
 FROM act;
 ```
 
-Live at generation time: active=297, arm_exact_snapshot=38, arm_exact_reproof=13, arm_reproducible=70, no_computed_snapshot=167
+Live at generation time: live_mcvs=75, arm_exact_snapshot=39, arm_exact_reproof=14, arm_reproducible=1, no_computed_snapshot=21
 
