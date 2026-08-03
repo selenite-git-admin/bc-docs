@@ -56,9 +56,11 @@ state — the families are decoupled by design.
 4. **2026-08-01 (DEC-c48b0f):** doctrine catches up — certification is an MCF lifecycle act;
    "an MCV reaches `active` only with a certification record."
 5. **2026-08-02 (DEC-21ca17):** the grandfathered population is dispositioned — 226 never-audited
-   legacy actives demoted to `audit_pending` through governed reintake; **31 named residue**
-   remain active pending directory-identity minting (hard deadline: before the first real
-   tenant). Their labelled line is `residue_legacy_active`.
+   legacy actives demoted to `audit_pending` through governed reintake (batch `89952e2c`; a
+   named residue without resolvable directory identity remained active, pending identity
+   minting — hard deadline: before the first real tenant). **The residue's current count is
+   read from the readiness projection's `residue_legacy_active` line, never from this
+   document** — it shrinks as its disposition completes.
 
 Consequently the readiness projection (DEC-b049f6) renders `active` as a three-way split —
 `certified_active` / `residue_legacy_active` / `unattributed_active` (an anomaly bucket, exposed
@@ -137,8 +139,9 @@ reference only. Two rules with teeth:
 
 ## 9. The historical record, kept honest
 
-The pre-C8 population (343 activation-era certs; 257 live at disposition; 226 demoted + 31
-named residue) is HISTORY, not shame: every activation was sanctioned under the meaning of its
+The pre-C8 population (at the disposition act of 2026-08-02: 257 live subjects, of which 226
+were demoted in batch `89952e2c` and the remainder held as named residue) is HISTORY, not
+shame: every activation was sanctioned under the meaning of its
 day, the M14 certs remain live as the record of those acts, and the disposition (DEC-21ca17)
 carries its own stopping condition — complete before the first real tenant onboards. Foundation
 errata FND-ERR-007/008 record the documentation gaps the same way. The platform's rule for its
@@ -151,3 +154,10 @@ to `reference/enforcement-surface-map.md` for verbatim gate bodies — and regen
 any substrate change before citing either. For intent behind any rule, chain-walk the ADR.
 For any enforcement claim: cite the map, never memory (operator law, 2026-07-26 — now Foundation
 doctrine via the DEC-5a9dee ladder).
+
+**The numbers rule (operator, 2026-08-03):** this document — and every hand-authored durable
+document — carries only **event-scoped historical constants**: numbers frozen by a completed,
+dated act (a batch size, a cert count of a closed era), always anchored to the act that froze
+them. **Live population counts never appear here**: anything a future act can change is read
+from the generated maps or derived projections at the moment of use. A number without a date
+and an act is a stat pretending to be history — remove it or anchor it.
