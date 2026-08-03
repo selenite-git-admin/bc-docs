@@ -29,7 +29,7 @@
     "docs:report:inventory": "python scripts/docs-control/report_inventory.py",
     "docs:report:mutable-claims": "python scripts/docs-control/report_mutable_claims.py",
     "docs:report:cleanup": "python scripts/docs-control/report_cleanup_queues.py",
-    "docs:report:migration": "python scripts/docs-control/report_migration_plan.py"
+    "docs:report:migration": "python scripts/docs-control/report_migration_plan.py",
+    "docs:generate:lifecycle-map": "node scripts/docs-control/generate_lifecycle_map.mjs"
   }
 }
-
