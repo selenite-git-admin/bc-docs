@@ -2,8 +2,8 @@
 
 **GENERATED — do not edit.** Regenerate: `node scripts/docs-control/generate_enforcement_surface_map.mjs`
 
-Generated: 2026-08-03T06:00:08.727Z
-Sources: bc_platform_dev + bc_audit_dev (live), bc-core@c923f2a, auditor@05106574
+Generated: 2026-08-03T06:38:32.856Z
+Sources: bc_platform_dev + bc_audit_dev (live), bc-core@7ff2fd8, auditor@05106574
 
 **Usage rule (operator, 2026-07-26):** no design, no ADR applied-instance, and no population count
 is claimed without citing this map. Counts are computed from the gate predicates below, never from
@@ -7203,70 +7203,79 @@ Rule codes with their emitting lines (extracted; the file is the authority):
 
 | Line | Rule text |
 |---|---|
-| 590 | `if (isDirectory && !nonNull) out.push(`V-R8: projection_inputs.${key} must be non-null for DIRECTORY_ORIGINATED`);` |
-| 591 | `if (!isDirectory && nonNull) out.push(`V-R8: projection_inputs.${key} must be null unless DIRECTORY_ORIGINATED`);` |
-| 594 | `if (isOffPool && !offPoolNonNull) out.push('V-R8: projection_inputs.off_pool_exception must be non-null for OFF_POOL/LEGACY');` |
-| 595 | `if (!isOffPool && offPoolNonNull) out.push('V-R8: projection_inputs.off_pool_exception must be null unless OFF_POOL/LEGACY');` |
-| 623 | `if (cause === null) out.push(`V-R4: trigger.cause_ref must not be null for trigger_kind ${kind}`);` |
-| 625 | `out.push(`V-R4: trigger_kind ${kind} requires from_state ${rule.from.join('\|')}, got ${fromState}`);` |
-| 628 | `out.push(`V-R4: trigger_kind ${kind} requires cause_kind ${rule.causes.join('\|')}, got ${causeKind}`);` |
-| 666 | `out.push(`V-R3: evidence_coordinates has duplicate evidence_kind "${kind}"`);` |
-| 671 | `if (pkgEntries.length !== 1) out.push('V-R3: evidence_coordinates must contain exactly one package_snapshot entry');` |
-| 672 | `if (closureEntries.length !== 1) out.push('V-R3: evidence_coordinates must contain exactly one closure_manifest entry');` |
-| 676 | `out.push('V-R3: package_snapshot evidence content_digest must equal package.package_snapshot_digest');` |
-| 680 | `out.push('V-R3: closure_manifest evidence content_digest must equal closure_root');` |
-| 685 | `if (!byKind.has(kind)) out.push(`V-R3: DIRECTORY_ORIGINATED requires an evidence coordinate of kind "${kind}"`);` |
-| 689 | `out.push('V-R3: OFF_POOL/LEGACY requires an evidence coordinate of kind "off_pool_exception"');` |
-| 716 | `out.push('V-R6: trigger.occurred_at must be <= created_at');` |
-| 719 | `out.push('V-R1: request_digest does not equal the canonical self-digest of the payload without request_digest');` |
-| 774 | `checkContextualMath({ min: 'V-D4', table: 'V-D4' }, scores, overall, decision, label, out);` |
-| 798 | `out.push('V-D9: exactness_basis REPRODUCIBLE cannot carry exactness_result EXACT — a reproducible basis never asserts exactness');` |
-| 800 | `out.push('V-D9: exactness_result REPRODUCIBLE requires exactness_basis REPRODUCIBLE — the basis label is mandatory, never inferred');` |
-| 803 | `out.push('V-D9: exactness_result REPRODUCIBLE requires exactness_basis REPRODUCIBLE — the basis label is mandatory, never inferred');` |
-| 846 | `out.push('V-D8: authority.source_authority_revision/source_authority_policy_digest do not equal the revision '` |
-| 853 | `if (!isRecord(payload.revocation)) out.push('V-D7: decision_code REVOKE requires a non-null revocation object');` |
-| 854 | `if (payload.verdict_summary !== null) out.push('V-D7: decision_code REVOKE requires verdict_summary null');` |
-| 855 | `if (payload.report_ref !== null) out.push('V-D7: decision_code REVOKE requires report_ref null');` |
-| 859 | `out.push(`V-D7: decision_code REVOKE requires ${key} to be empty`);` |
-| 865 | `out.push('V-D7: REVOKE requires supersedes_decision_uid equal to revocation.revoked_decision_uid '` |
-| 869 | `out.push('V-D7: REVOKE must not revoke itself (revocation.revoked_decision_uid equals decision_uid)');` |
-| 894 | `out.push('V-D7: revocation.reason_statement must be at least 40 characters');` |
-| 906 | `out.push('V-D3: decision_code PASS requires unresolved_blocking_ncs to be empty');` |
-| 910 | `if (summary.structural_verdict !== 'PASS') out.push('V-D3: PASS requires verdict_summary.structural_verdict PASS');` |
-| 911 | `if (summary.foundation_verdict !== 'PASS') out.push('V-D3: PASS requires verdict_summary.foundation_verdict PASS');` |
-| 913 | `out.push('V-D3: PASS requires semantic_conformance_verdict PASS or NOT_APPLICABLE');` |
-| 919 | `out.push('V-D3: PASS requires exactness_result EXACT or (labelled) REPRODUCIBLE');` |
-| 926 | `out.push(`V-D3: PASS requires contextual.${axis}.score >= 4`);` |
-| 931 | `out.push('V-D3: PASS requires contextual.decision VERIFIED or HIGH_CONFIDENCE');` |
-| 956 | `if (view.maxScore !== undefined) checkGradeFloor('V-D8', view.maxScore, citations, 'decision citations vs max axis', out);` |
-| 965 | `out.push('V-D1: decision_digest does not equal the canonical self-digest of the payload without decision_digest');` |
-| 1000 | `if (value === payload.decision_uid) out.push('V-D6: supersedes_decision_uid must not equal decision_uid');` |
-| 1129 | `out.push(`CF-R11: ${entryLabel}.evidence_digest does not reference a citation of this axis`);` |
-| 1186 | `out.push(`CF-R4: ${label}.citations must contain at least one closure-bound citation`);` |
-| 1210 | `checkContextualMath({ min: 'CF-R1', table: 'CF-R2' }, scores, overall, decision, 'contextual', out);` |
-| 1227 | `out.push('CF-R8: semantic_conformance.applicable === false must pair exactly with verdict NOT_APPLICABLE');` |
-| 1287 | `if (new Set(raisedUids).size !== raisedUids.length) out.push('CF-R6: ncs_raised contains duplicates');` |
-| 1294 | `if (!raisedSet.has(uid)) out.push(`CF-R6: finding nc_uid ${uid} is missing from ncs_raised`);` |
-| 1297 | `if (!carriedSet.has(uid)) out.push(`CF-R6: ncs_raised ${uid} has no CRITICAL/MAJOR/MINOR finding carrying it`);` |
-| 1360 | `out.push('CF-R9: ncs_raised is non-empty so re_audit.required must be true');` |
-| 1363 | `out.push('CF-R9: re_audit.required false requires trigger_kind "none"');` |
-| 1366 | `out.push('CF-R9: re_audit.required true requires a non-"none" trigger_kind');` |
-| 1391 | `out.push(`CF-R4: contextual.${axis} score ${axisView.score} exceeds the source-authority policy cap ${cap} `` |
-| 1449 | `out.push(`CF-R3: overall_assessment must recompute to ${expected} (structural, foundation, contextual, `` |
-| 1471 | `out.push(`V-R8: source_authority_revision "${payload.source_authority_revision}" does not equal the policy `` |
-| 1798 | `out.push('V-D2: decision.request_ref.request_uid does not equal request.request_uid');` |
-| 1801 | `out.push('V-D2: decision.request_ref.request_digest does not equal request.request_digest');` |
-| 1806 | `out.push(`V-D2: decision.subject.${key} does not equal request.subject.${key}`);` |
-| 1810 | `out.push('V-D2: decision.package.package_snapshot_digest does not equal the request package snapshot digest');` |
-| 1813 | `out.push('V-D2: decision.closure_root does not equal request.closure_root');` |
-| 1822 | `out.push('CF-R10: envelope.subject.subject_uid does not equal report.subject.metric_contract_version_uid');` |
-| 1825 | `out.push('CF-R10: envelope.subject.package_signature_hash does not equal report.subject.package_snapshot_digest');` |
-| 1828 | `out.push('CF-R10: envelope.subject.closure_root does not equal report.subject.closure_root');` |
-| 1831 | `out.push('CF-R10: envelope.payload_digest does not equal the canonical digest of the report payload');` |
-| 1990 | `return ['V-D7: revokeDecisionIdentity requires a REVOKE decision with a revocation object'];` |
-| 1993 | `out.push('V-D7: revocation.revoked_decision_uid does not equal the prior decision_uid');` |
-| 1996 | `out.push('V-D7: revocation.revoked_decision_digest does not equal the exact prior decision_digest');` |
-| 1999 | `out.push('V-D7: REVOKE subject does not equal the revoked decision subject');` |
+| 601 | `if (isDirectory && !nonNull) out.push(`V-R8: projection_inputs.${key} must be non-null for DIRECTORY_ORIGINATED`);` |
+| 602 | `if (!isDirectory && nonNull) out.push(`V-R8: projection_inputs.${key} must be null unless DIRECTORY_ORIGINATED`);` |
+| 605 | `if (isOffPool && !offPoolNonNull) out.push('V-R8: projection_inputs.off_pool_exception must be non-null for OFF_POOL/LEGACY');` |
+| 606 | `if (!isOffPool && offPoolNonNull) out.push('V-R8: projection_inputs.off_pool_exception must be null unless OFF_POOL/LEGACY');` |
+| 634 | `if (cause === null) out.push(`V-R4: trigger.cause_ref must not be null for trigger_kind ${kind}`);` |
+| 636 | `out.push(`V-R4: trigger_kind ${kind} requires from_state ${rule.from.join('\|')}, got ${fromState}`);` |
+| 639 | `out.push(`V-R4: trigger_kind ${kind} requires cause_kind ${rule.causes.join('\|')}, got ${causeKind}`);` |
+| 653 | `if (recovery !== undefined) out.push(`V-R4: trigger.recovery_ref is only valid for auditor_infrastructure_recovery, not ${kind}`);` |
+| 657 | `out.push('V-R4: auditor_infrastructure_recovery requires trigger.recovery_ref object');` |
+| 700 | `out.push(`V-R3: evidence_coordinates has duplicate evidence_kind "${kind}"`);` |
+| 705 | `if (pkgEntries.length !== 1) out.push('V-R3: evidence_coordinates must contain exactly one package_snapshot entry');` |
+| 706 | `if (closureEntries.length !== 1) out.push('V-R3: evidence_coordinates must contain exactly one closure_manifest entry');` |
+| 710 | `out.push('V-R3: package_snapshot evidence content_digest must equal package.package_snapshot_digest');` |
+| 714 | `out.push('V-R3: closure_manifest evidence content_digest must equal closure_root');` |
+| 719 | `if (!byKind.has(kind)) out.push(`V-R3: DIRECTORY_ORIGINATED requires an evidence coordinate of kind "${kind}"`);` |
+| 723 | `out.push('V-R3: OFF_POOL/LEGACY requires an evidence coordinate of kind "off_pool_exception"');` |
+| 750 | `out.push('V-R6: trigger.occurred_at must be <= created_at');` |
+| 753 | `out.push('V-R1: request_digest does not equal the canonical self-digest of the payload without request_digest');` |
+| 805 | `const { branch } = detectContextualBranch(ctx, label, 'V-D10', out, origin);` |
+| 807 | `if (branch === 'panel') validatePanelFields(ctx, label, 'V-D10', out);` |
+| 813 | `checkPanelContextualMath('V-D10', scores, overall, decision, label, out);` |
+| 815 | `checkContextualMath({ min: 'V-D4', table: 'V-D4' }, scores, overall, decision, label, out);` |
+| 840 | `out.push('V-D9: exactness_basis REPRODUCIBLE cannot carry exactness_result EXACT — a reproducible basis never asserts exactness');` |
+| 842 | `out.push('V-D9: exactness_result REPRODUCIBLE requires exactness_basis REPRODUCIBLE — the basis label is mandatory, never inferred');` |
+| 845 | `out.push('V-D9: exactness_result REPRODUCIBLE requires exactness_basis REPRODUCIBLE — the basis label is mandatory, never inferred');` |
+| 888 | `out.push('V-D8: authority.source_authority_revision/source_authority_policy_digest do not equal the revision '` |
+| 895 | `if (!isRecord(payload.revocation)) out.push('V-D7: decision_code REVOKE requires a non-null revocation object');` |
+| 896 | `if (payload.verdict_summary !== null) out.push('V-D7: decision_code REVOKE requires verdict_summary null');` |
+| 897 | `if (payload.report_ref !== null) out.push('V-D7: decision_code REVOKE requires report_ref null');` |
+| 901 | `out.push(`V-D7: decision_code REVOKE requires ${key} to be empty`);` |
+| 907 | `out.push('V-D7: REVOKE requires supersedes_decision_uid equal to revocation.revoked_decision_uid '` |
+| 911 | `out.push('V-D7: REVOKE must not revoke itself (revocation.revoked_decision_uid equals decision_uid)');` |
+| 936 | `out.push('V-D7: revocation.reason_statement must be at least 40 characters');` |
+| 948 | `out.push('V-D3: decision_code PASS requires unresolved_blocking_ncs to be empty');` |
+| 952 | `if (summary.structural_verdict !== 'PASS') out.push('V-D3: PASS requires verdict_summary.structural_verdict PASS');` |
+| 953 | `if (summary.foundation_verdict !== 'PASS') out.push('V-D3: PASS requires verdict_summary.foundation_verdict PASS');` |
+| 955 | `out.push('V-D3: PASS requires semantic_conformance_verdict PASS or NOT_APPLICABLE');` |
+| 961 | `out.push('V-D3: PASS requires exactness_result EXACT or (labelled) REPRODUCIBLE');` |
+| 968 | `out.push(`V-D3: PASS requires contextual.${axis}.score >= 4`);` |
+| 976 | `? 'V-D3: PASS requires contextual.decision PANEL_VERIFIED'` |
+| 977 | `: 'V-D3: PASS requires contextual.decision VERIFIED or HIGH_CONFIDENCE');` |
+| 1039 | `checkGradeFloor('V-D8', view.maxScore, citations, 'decision citations vs max axis', out);` |
+| 1049 | `out.push('V-D1: decision_digest does not equal the canonical self-digest of the payload without decision_digest');` |
+| 1084 | `if (value === payload.decision_uid) out.push('V-D6: supersedes_decision_uid must not equal decision_uid');` |
+| 1226 | `out.push(`CF-R11: ${entryLabel}.evidence_digest does not reference a citation of this axis`);` |
+| 1300 | `out.push(`CF-R4: ${label}.citations must contain at least one closure-bound citation`);` |
+| 1321 | `const { branch } = detectContextualBranch(ctx, 'contextual', 'V-R10', out, origin);` |
+| 1323 | `if (branch === 'panel') validatePanelFields(ctx, 'contextual', 'V-R10', out);` |
+| 1330 | `checkPanelContextualMath('V-R10', scores, overall, decision, 'contextual', out);` |
+| 1332 | `checkContextualMath({ min: 'CF-R1', table: 'CF-R2' }, scores, overall, decision, 'contextual', out);` |
+| 1350 | `out.push('CF-R8: semantic_conformance.applicable === false must pair exactly with verdict NOT_APPLICABLE');` |
+| 1410 | `if (new Set(raisedUids).size !== raisedUids.length) out.push('CF-R6: ncs_raised contains duplicates');` |
+| 1417 | `if (!raisedSet.has(uid)) out.push(`CF-R6: finding nc_uid ${uid} is missing from ncs_raised`);` |
+| 1420 | `if (!carriedSet.has(uid)) out.push(`CF-R6: ncs_raised ${uid} has no CRITICAL/MAJOR/MINOR finding carrying it`);` |
+| 1483 | `out.push('CF-R9: ncs_raised is non-empty so re_audit.required must be true');` |
+| 1486 | `out.push('CF-R9: re_audit.required false requires trigger_kind "none"');` |
+| 1489 | `out.push('CF-R9: re_audit.required true requires a non-"none" trigger_kind');` |
+| 1514 | `out.push(`CF-R4: contextual.${axis} score ${axisView.score} exceeds the source-authority policy cap ${cap} `` |
+| 1572 | `out.push(`CF-R3: overall_assessment must recompute to ${expected} (structural, foundation, contextual, `` |
+| 1596 | `out.push(`V-R8: source_authority_revision "${payload.source_authority_revision}" does not equal the policy `` |
+| 1930 | `out.push('V-D2: decision.request_ref.request_uid does not equal request.request_uid');` |
+| 1933 | `out.push('V-D2: decision.request_ref.request_digest does not equal request.request_digest');` |
+| 1938 | `out.push(`V-D2: decision.subject.${key} does not equal request.subject.${key}`);` |
+| 1942 | `out.push('V-D2: decision.package.package_snapshot_digest does not equal the request package snapshot digest');` |
+| 1945 | `out.push('V-D2: decision.closure_root does not equal request.closure_root');` |
+| 1954 | `out.push('CF-R10: envelope.subject.subject_uid does not equal report.subject.metric_contract_version_uid');` |
+| 1957 | `out.push('CF-R10: envelope.subject.package_signature_hash does not equal report.subject.package_snapshot_digest');` |
+| 1960 | `out.push('CF-R10: envelope.subject.closure_root does not equal report.subject.closure_root');` |
+| 1963 | `out.push('CF-R10: envelope.payload_digest does not equal the canonical digest of the report payload');` |
+| 2122 | `return ['V-D7: revokeDecisionIdentity requires a REVOKE decision with a revocation object'];` |
+| 2125 | `out.push('V-D7: revocation.revoked_decision_uid does not equal the prior decision_uid');` |
+| 2128 | `out.push('V-D7: revocation.revoked_decision_digest does not equal the exact prior decision_digest');` |
+| 2131 | `out.push('V-D7: REVOKE subject does not equal the revoked decision subject');` |
 
 ## 9. Checker rule catalogue (CRV) — `references/contextual-reference-rule-catalog-v1.json`
 

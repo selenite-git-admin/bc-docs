@@ -2,7 +2,7 @@
 
 **GENERATED — do not edit.** Regenerate: `node scripts/docs-control/generate_lifecycle_map.mjs`
 
-Generated: 2026-08-03T05:58:41.904Z
+Generated: 2026-08-03T06:40:53.090Z
 Source: bc_platform_dev (live substrate, read-only)
 
 **Authority position (DEC-5a9dee / the Authority Model ladder):** this map is a level-3
