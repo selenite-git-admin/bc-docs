@@ -2,7 +2,7 @@
 uid: DEC-5a9dee
 title: "Foundation grammar taxonomy admits the live authority-creating families — MCF, BCF, Metric Directory — with states-plus-delegation; five-level authority ladder (F-032 disposition)"
 description: "One governed act: the taxonomy catches up with the live platform under the authority-creation admission test (D422 D3). MCF Metric Contract, Business Concept Registry, and Metric Directory (as a governed intent/directory family) enter the grammar; the legacy Metric Contract row flips Superseded/Frozen; the lifecycle section goes family-scoped with state names + delegation of transition matrices to the generated enforcement-surface map; FND-ERR-007/008 record the gap; the authority ladder extends to five levels. Executed via Foundation's own change mechanism (ADR + errata + coordinated edits)."
-status: decided
+status: implemented
 date: 2026-08-03T01:59:35.939Z
 project: bc-docs
 domain: governance
