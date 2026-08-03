@@ -2,7 +2,7 @@
 uid: DEC-b049f6
 title: "MCF-native readiness projection replaces the legacy metric funnel, dials, and Landscape source — F-021/F-023 disposition"
 description: "One thin read-model projection over existing SSOTs (seed ledger, MCV governance states, certification records, mcv_chain_status overlay) replaces MetricFunnelService.getLadder() and every surface that made it canonical; legacy funnel/dial endpoints retire 410-Gone; residue shown as a mandatory labelled sub-line; nightly seed-ledger reconcile added. Supersedes DEC-a8b33e (D397), DEC-28b176, DEC-4ca5a5."
-status: decided
+status: implemented
 date: 2026-08-03T00:31:26.816Z
 project: bc-core
 domain: metrics
