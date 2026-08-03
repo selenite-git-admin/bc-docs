@@ -43,11 +43,13 @@ word_target: 5000
 
 ## Scope
 
-This chapter defines the twelve grammar artifacts in the platform's contract-grammar taxonomy. Four of them — the three vocabulary primitives and the Canonical Mapping supporting schema — are superseded by the Business Concept Registry (DEC-02f5a9); the Artifact classification and Vocabulary sections state which artifacts govern and which persist only as the physical taxonomy retained until the greenfield cutover. The chapter classifies each artifact, defines the common envelope and header used by contract-family instances, describes the family-specific body shape each active family declares, and states the versioning, immutability, binding, and lifecycle rules that apply across the grammar. It does not describe contract storage in the database (Data Model and Schema), API validation and publication workflows (API Surface), or the runtime behavior of Readers and evaluators that apply these artifacts (Sources and the Catalog through Chain Completeness and Verdict).
+This chapter defines the fifteen grammar artifacts in the platform's contract-grammar taxonomy (extended from twelve by DEC-5a9dee, which admitted the MCF Metric Contract, the Business Concept Registry, and the Metric Directory Member under the authority-creation test — see FND-ERR-007). Four of them — the three vocabulary primitives and the Canonical Mapping supporting schema — are superseded by the Business Concept Registry (DEC-02f5a9); the Artifact classification and Vocabulary sections state which artifacts govern and which persist only as the physical taxonomy retained until the greenfield cutover. The chapter classifies each artifact, defines the common envelope and header used by contract-family instances, describes the family-specific body shape each active family declares, and states the versioning, immutability, binding, and lifecycle rules that apply across the grammar. It does not describe contract storage in the database (Data Model and Schema), API validation and publication workflows (API Surface), or the runtime behavior of Readers and evaluators that apply these artifacts (Sources and the Catalog through Chain Completeness and Verdict).
 
 ## Artifact classification
 
-The platform grammar taxonomy comprises twelve artifacts. Six are active contract families. One is a provisional family and one is retired. The remaining four — one supporting schema (Canonical Mapping) and three primitives (Business Object, Business Field, Canonical Field) — are superseded by the Business Concept Registry (DEC-02f5a9) and remain only as the physical taxonomy retained until the greenfield cutover. Together they define the grammar referenced by publication, binding, and boundary evaluation.
+The platform grammar taxonomy comprises fifteen artifacts. The admission test is doctrine, not enumeration: **a family enters the taxonomy iff it creates authority** (DEC-c3e57f Decision 3; adopted as the taxonomy rule by DEC-5a9dee). Six contract families are active at runtime — Source, Admission, Observation, Canonical, Intervention, and the MCF Metric Contract; the legacy Metric Contract family is superseded and frozen (authoring door DEC-7bdd03; activation retired DEC-d9fa49; corpus empty since the M17 transition). One vocabulary family (the Business Concept Registry) and one governed intent/directory family (the Metric Directory Member) create authority alongside the contract families. One family is provisional (AI Contract) and one retired (Extraction Contract). The remaining four — one supporting schema (Canonical Mapping) and three primitives (Business Object, Business Field, Canonical Field) — are superseded by the Business Concept Registry (DEC-02f5a9) and remain only as the physical taxonomy retained until the greenfield cutover. Together they define the grammar referenced by publication, binding, and boundary evaluation.
+
+Recorded exclusions under the admission test (DEC-5a9dee §6): the seed-metric reservoir informs authoring and never creates authority, so it stays outside the taxonomy; Reader flavors carry an operational draft→active gate but are Operating-Model runtime configuration — their admission, if ever, is its own considered act.
 
 | Artifact | Classification | Status | Primary governing record | Active at runtime |
 |---|---|---|---|---|
@@ -55,7 +57,10 @@ The platform grammar taxonomy comprises twelve artifacts. Six are active contrac
 | Admission Contract | Contract family | Active | DEC-0e3c64 | Yes |
 | Observation Contract | Contract family | Active | DEC-0e3c64, DEC-136a23, DEC-1edaaa | Yes |
 | Canonical Contract | Contract family | Active | Canonical family schema | Yes |
-| Metric Contract | Contract family | Active | DEC-29c324 | Yes |
+| Metric Contract (legacy) | Contract family | Superseded / Frozen (DEC-7bdd03, DEC-d9fa49) | DEC-29c324 | No |
+| MCF Metric Contract | Contract family | Active | DEC-c3e57f, DEC-c48b0f | Yes |
+| Business Concept Registry | Vocabulary family | Active | DEC-02f5a9, DEC-149ab2 | Yes |
+| Metric Directory Member | Intent/directory family | Active | DEC-b5c7ff, DEC-5842d4 | Yes (governance identity; references realized MCF authority) |
 | Intervention Contract | Contract family | Active | Intervention family schema | Yes |
 | Canonical Mapping | Supporting schema | Superseded (DEC-02f5a9) | DEC-136a23 | Yes |
 | Business Object | Primitive | Superseded (DEC-02f5a9) | Primitive specification | No |
@@ -318,7 +323,17 @@ This three-level model is recorded in D233. Tenant customization occurs only at 
 
 ## Lifecycle and deprecation policy
 
-The `governance.state` field in the common header uses a five-state linear lifecycle. Rollback does not occur within a version.
+Lifecycle is FAMILY-SCOPED (DEC-5a9dee). Foundation names each admitted family's states and the
+authority that holds its transition detail; it does not embed transition matrices — those are
+enforced in substrate and canonically rendered by the generated enforcement-surface map
+(`docs/reference/enforcement-surface-map.md`), regenerated after every substrate change.
+
+### Legacy contract-family envelope (frozen)
+
+The `governance.state` field in the legacy common header uses a five-state linear lifecycle.
+Rollback does not occur within a version. (Historical looseness recorded in FND-ERR-008: the
+implementing state machine additionally allowed `review → draft` and `draft → active`; the family
+is frozen and the text is errata-noted rather than rewritten.)
 
 | State | Meaning | Entry rule |
 |---|---|---|
@@ -334,9 +349,35 @@ When a new version enters `active`, the prior version moves to `superseded`, and
 
 Family-level retirement occurs only through a governance act recorded as an ADR. D069 retired the Extraction Contract family. Family-level provisional status indicates a declared but not yet operational family, as with the AI Contract.
 
+### MCF Metric Contract family
+
+Seven states: `draft`, `review`, `approved`, `audit_pending`, `active`, `audit_blocked`,
+`superseded`. Certification gates activation: an MCV reaches `active` only with a certification
+record (DEC-c48b0f). The ten-transition matrix — including the C6 invalidation cascade, the C7
+reintake gate, and the C8 activation gate — is enforced by substrate triggers and canonically
+rendered by the generated enforcement-surface map. `active` asserts panel certification
+(DEC-793e13, as restated by DEC-c48b0f); the historical `metric_transition`-era population is
+separately dispositioned (DEC-21ca17).
+
+### Business Concept Registry family
+
+Registry concepts follow the five-state lifecycle (`draft`, `review`, `approved`, `active`,
+`superseded`) per DEC-02f5a9. Change doctrine is decided and governs: supersession cascades
+fail closed on live consumers (DEC-9d27a9); admission-error withdrawal is distinct from
+supersession (DEC-1fbaf1); active definitions are immutable atoms — editorial amendment is the
+narrow path and meaning-bearing change requires supersession (DEC-26b6e2, DEC-fb0b12).
+
+### Metric Directory Member family
+
+A governed intent/directory family — not a contract family, and never realized metric
+authority. A Member owns its intent state (`planned` | `blocked` + reason) and its versioned
+spec; realized state is DERIVED from the MCF substrate through the realization relation, never
+cached (DEC-b5c7ff). Directory identity is load-bearing for lifecycle acts: governed
+reintake requires the member identity tuple (DEC-21ca17 records the operative proof).
+
 ## Chapter boundaries
 
-This chapter has defined the twelve grammar artifacts, the common envelope and header used by contract-family instances, the family-specific bodies of the six active families, the Business Concept Registry that supersedes the three vocabulary primitives and the Canonical Mapping supporting schema (DEC-02f5a9), and the versioning, governance, and lifecycle rules that apply across the grammar. It has deferred:
+This chapter has defined the fifteen grammar artifacts, the common envelope and header used by contract-family instances, the family-specific bodies of the six active families, the Business Concept Registry that supersedes the three vocabulary primitives and the Canonical Mapping supporting schema (DEC-02f5a9), and the versioning, governance, and lifecycle rules that apply across the grammar. It has deferred:
 
 - Evaluation boundary semantics and once-only application rules (The Evaluation Boundaries).
 - The authority model and ADR mechanism governing grammar change (The Authority Model).
