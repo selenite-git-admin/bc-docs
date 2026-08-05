@@ -57,7 +57,7 @@ The procedure assumes these are true at the moment Step 1 begins. A precondition
 |---|---|
 | Cognito authenticated session for the actor | Every catalog mutation is `@PlatformOnly()` JWT-guarded at the API surface |
 | Provider, system, version, and module identifiers are known | The DTO rejects sentinel module codes; identifier resolution is upstream of the catalog |
-| Seed Catalog populated for the system being registered | Steps 2-3 read tables and fields from the Seed Catalog only; no manual table or field entry is admitted (D269 in the v2 SOP shorthand) |
+| Seed Catalog populated for the system being registered | Steps 2-3 read tables and fields from the Seed Catalog only; no manual table or field entry is admitted (D269 in the v2 SOP shorthand). Per DEC-0b5a4c the seed store is transitioning from MongoDB to Postgres (`source.seed_source_table`); registration reads Postgres for systems seeded there (Odoo first) and Mongo otherwise — per-system source of truth, never both |
 | AI verification surface reachable | Each catalog artifact passes maker-checker-gate before its catalog row is created with `verificationStatus: verified` |
 
 The actor's role is not part of the catalog's governance state. Catalog rows record the actor identity and the AI verification verdict; the actor's permissions are evaluated at the API surface, not in the catalog data.

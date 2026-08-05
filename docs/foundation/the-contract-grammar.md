@@ -149,6 +149,8 @@ The six active contract families share the envelope and common header defined ab
 
 **Body elements.** The body declares the referenced Source Contract, field-level required and nullable rules, business-key composition, observation timestamp discipline, and admissibility rules defining rejection versus warning behavior.
 
+The body may declare `semantic_preconditions[]` (DEC-8849c8): conditions on the source system under which the contract's field meanings hold at all. Each entry names `precondition_code`, `subject_kind` (`system_config` | `module_presence` | `field_semantics` | `scoping`), `subject_ref`, `expected_value`, `rationale_text`, and `on_violation` (`block` | `warn`). Preconditions are versioned with the contract and immutable per version — a precondition is part of what a field means (Invariant I). They are declarations only: verification against a connected instance is an execution-plane concern (the tenant-level Scanner), which reads declarations and never invents checks.
+
 **Governs.** The admission evaluation boundary (The Evaluation Boundaries). Each admitted observation is validated against an Admission Contract at the boundary. Rejected observations emit Evidence but do not emit Source Objects.
 
 **Referenced by.** Readers and admission services at runtime (Admission and Observation).
@@ -165,6 +167,8 @@ The six active contract families share the envelope and common header defined ab
 **Purpose.** An Observation Contract declares field selection from a Source Contract to business-vocabulary fields and defines the resulting Source Object shape preserved at admission.
 
 **Body elements.** The body declares the referenced Source Contract, `observation_field_map`, and the resulting `observation_schema`. Each `observation_field_map` entry binds one source field to one Business Concept together with role and nullability (DEC-02f5a9; formerly Business Field).
+
+The body may declare `semantic_preconditions[]` (DEC-8849c8) with the same entry shape as on the Admission Contract: the conditions under which the mapped fields carry the meaning the map asserts (e.g. an accounting mode that must be enabled for a cost field to be populated, a costing method under which a price field denotes what the binding assumes, a module whose absence removes the concept, or company-scoped fields whose value depends on the reading company). Declarations are versioned with the contract; the Scanner verifies them, never defines them.
 
 **Governs.** Field selection and business-vocabulary binding at admission. The Observation Contract is the governed source of this mapping. A denormalized runtime copy may appear on Reader Flavor artifacts, but the governed source remains the Observation Contract.
 
