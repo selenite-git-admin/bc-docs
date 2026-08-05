@@ -29,3 +29,25 @@ The MongoDB Seed Catalog (bc_seed.seed_tables) is destined to retire as the seed
 4. D269's rule survives unchanged in meaning: the seed catalog remains the ONLY entry point for tables and fields into Source Registration; only the store moves. Authoring remains script-only; the Postgres path additionally gains what Mongo could never give — the platform's own audit substrate sees the writes.
 
 Onboarding chapters (seed-catalog-management.md, source-registration.md) are annotated with this direction; they continue to describe the Mongo as-built until migration lands.
+
+---
+
+## Amendment 1 (2026-08-05, operator-led design debate) — direct admission; the seed class splits three ways; no Postgres seed store
+
+The original decision conflated three senses of "seed" that the debate separated:
+
+1. **Forage** — raw material gathered before platform shape or consumer existed (the reason `bc_seed` was Mongo: schema-on-read for scraped SAP tables, XBRL, IFRS, ISO 20022, crosswalks). This POSTURE is what is retiring — collect-and-hoard has no buyer. Forage gets per-collection DISPOSITION (promote / archive-to-files / discard), never wholesale migration: rebuilding the hoard in Postgres would recreate the maintenance cost that triggered retirement.
+2. **Admission input** — curated, shape-known, provenance-bound input to a governed path. For source schemas this needs NO standing store at all (see below).
+3. **Bootstrap fixtures** — dev-database seeding. The word "seed" is reserved for this sense only (schema name `db_bootstrap` if one is ever needed).
+
+**Direct admission replaces the staging store.** The SAP scenario was gathering-before-the-platform: a hoard was necessary because there was nowhere else to stand, and its admission is substantially DONE (30,842 of 46,921 scraped objects already registered in `source.*`). Odoo is the opposite: the instance is ours, the extract is version-exact and hash-bound, and the admission target (Source Registration, AI-gated) is live. Odoo therefore admits DIRECTLY: extract manifest → registration, with the manifest/log discipline attached to the admission run. D269's rule is amended in intent-preserving form: registration admits no human-invented schema; its input is the Seed Catalog **or a manifest-bound instance extract**.
+
+**Effect on the r2-accepted substrate (Codex disposition bb56b0ce…):**
+- `source.seed_source_table` — DROP (never loaded; its role does not exist for Odoo and is finished for SAP).
+- `source.seed_store_authority` — DROP. The accepted boundary 1 guarded dual-store resolution; this amendment ELIMINATES the guarded condition (Mongo becomes archive, never a served store).
+- `operations.seed_load_log` — KEEP, RENAMED (`operations.extract_manifest_log`): boundary 2's manifest-before-anything discipline and its time-coherence CHECK survive, re-homed onto admission runs.
+- Boundary 3 (`fields_json` shape) dissolves with its table; the shape discipline moves to extract-file validation and the F1 conservation proof, which SURVIVES as the extractor's exit gate (boundary 4). Boundary 5 (SAP excluded) holds: the un-admitted SAP residue is archive-disposition, not a queue.
+
+**New homes:** `reference.*` schema for pure reference corpora (ifrs_taxonomy, xbrl_gaap, iso_20022, likely bo_crosswalk; `bcf.oagis_seed` is reference-class under a seed name — disposition study decides move vs grandfather). No `admission_queue.*` for source (the metric side already has its queue in `mcf.seed_metric` + intake, grandfathered; catalog_status/verification_status already stage gradual admission on the registered side).
+
+Point 3 of the original decision (SAP migrates into the Postgres seed store) is WITHDRAWN; point 4's meaning survives via the amended D269 form. Points 1–2 are superseded by direct admission.
