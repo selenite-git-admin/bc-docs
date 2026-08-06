@@ -83,6 +83,51 @@ contract would make drift detection compare against a moved reference and report
 strengthens point 4 rather than qualifying it, and it was missing from the consumer analysis in
 the supporting design note.
 
+## Amendment 1 (2026-08-06) — field derivation identity is in scope
+
+Codex design consultation `7f4f7de28553d3c808bdecacb0e7bde4137627c1e5ab07fa0b990dd062befc6a`
+confirmed the corrected reading in §Context (source-computed values are not categorically
+forbidden by Invariant I) and found D552 **necessary but not sufficient**: `semantic_preconditions[]`
+declares the source-side *conditions* under which a binding's meaning holds, but records nothing
+about the *derivation nature* of the field itself. Their next-gated-act offered broadening this
+ADR while it is still `proposed` and unapplied. That is taken.
+
+**8. FIELD DERIVATION IS PART OF CATALOG IDENTITY.** A source catalog records, per field and
+hash-bound to the artefact, what kind of value the field is: storage (stored / virtual), derivation
+(raw / computed / related / computed_related / unknown), the related path where one exists, the
+declared dependency set, and a stable compute reference or hash where the source exposes one.
+`store = true` is **not** a proxy for raw — `account.move.amount_residual` is stored *and*
+computed — so the two axes are recorded separately rather than collapsed.
+
+**9. THE SPLIT BETWEEN FACT AND ASSUMPTION.** Source-reality *facts* live in the catalog: this
+field is stored-computed, depends on these fields, is related through this path. Source-side
+*assumptions* live in `semantic_preconditions[]` per D552: this binding assumes this costing
+method, this module set, this company scoping. A binding that consumes a derived field must be
+able to state which derivation class it bound to; a contract-wide precondition cannot say that,
+because it does not name a field.
+
+**10. BINDING ASSERTION IS A SEPARATE GOVERNED ACT, NOT PART OF THIS ONE.** The field-level
+assertion belongs in the Observation Contract body. Measured: `contract.observation_field_map`
+holds **0 rows** while all 56 live observation-contract versions carry their mappings in
+`contract_json->body->field_mappings`, whose shape is governed by an active meta-schema with
+`additionalProperties: false`. Changing it is therefore a **contract meta-schema change request**
+(13 have gone through that path), not a database change. Putting a grammar change through a
+database-change protocol would be the wrong gate, so it is deliberately excluded here and should
+be designed against a real authored Odoo binding rather than an imagined one.
+
+**Negative examples this ADR exists to make impossible** (required by the consultation):
+
+| # | the mistake | what makes it detectable |
+|---|---|---|
+| N1 | a **stored-computed** field bound as though it were raw | storage and derivation are separate recorded axes, so `stored + computed` cannot read as `raw` |
+| N2 | a **related** field bound as a scalar with its cross-model path unstated | `related_path` is recorded in the catalog; a binding that neither cites it nor decomposes into the underlying Source Objects is incomplete |
+| N3 | a **virtual computed** field bound without deciding how it is preserved | storage = virtual is recorded, forcing an explicit choice: observe as source-provided state at extraction time, or refuse it for that contract |
+| N4 | a field whose meaning depends on source configuration, bound with **no semantic precondition** | derivation facts in the catalog and D552 preconditions on the contract are separately present or absent, so the gap is visible rather than implied |
+
+**Scope unchanged:** points 1–7 stand. This amendment adds field-level identity beneath artefact
+identity; it does not alter the bootstrap prohibition, the extraction-method taxonomy, or the SAP
+withdrawal sequencing.
+
 ## Consequences
 
 - 241 green chain statuses go red or unresolvable, 80 active metric contract versions lose their chain, and the readiness dial darkens until Odoo contracts exist. Acceptable pre-production; stated so it is expected rather than discovered.
