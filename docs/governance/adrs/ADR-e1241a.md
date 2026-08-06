@@ -46,6 +46,43 @@ A source catalog version MUST be bound to a specific, hash-identified artefact b
 
 7. WHAT SURVIVES A SOURCE CHANGE. BCF concepts and entities, and MC definitions, are source-agnostic and durable. SC/AC/OC/CC are the binding layer and are disposable per source. Concept-to-field knowledge is salvaged as a separate non-FK, hash-bound artefact carrying per-row provenance that distinguishes contract-authored mappings from advisory hints.
 
+## Relationship to existing decisions
+
+This ADR was first recorded without this section, having been written from memory rather than
+from a decision search. The search was then run and found four adjacent decisions, none of
+which had been cited. Recorded here rather than silently corrected, because the omission is
+the kind that produces contradiction without anyone noticing.
+
+**DEC-0b5a4c (D551) — source seed catalog to Postgres.** D551 as originally decided said Odoo
+"seeds greenfield from the live pilot instance" through a `source.seed_source_table` seed
+store. That store was created by its DBCP-1 and **removed by DBCP-2** following the operator's
+design correction to direct admission; `source.*` today holds only the original six tables.
+This ADR **refines and does not contradict** D551 as amended: extraction *from* a live instance
+is exactly how a self-describing artefact is obtained. What is prohibited is re-deriving at
+*bootstrap*, which is a different act — one is a dated extraction that produces a frozen,
+hashed artefact, the other is an unversioned head resolution standing in for one.
+
+**DEC-ddc13e (D500) — concept↔source soft-reference layer.** D500 establishes that
+`concept_source_reference.source_field_id` FKs the onboarded catalog specifically so that
+"FK-to-catalog forbids un-onboarded refs so SDG/SC/AC/OC share one source-of-truth". Point 7's
+requirement that concept-to-field salvage live *outside* that table is therefore not a
+workaround for an awkward constraint — it is a consequence of a deliberate one. The FK is
+working as designed; salvage simply is not a reference and must not pretend to be.
+
+**DEC-f4084d (D511) — `registerSourceStack`.** `POST /api/source-catalog/stacks` already
+provides the governed one-call channel: registers the object if absent under the D284 veracity
+gate, registers missing fields, authors SC v1 + AC v1, activates both. **Odoo admission uses
+this existing channel.** This ADR adds artefact identity beneath it; it does not design a new
+admission path, and nothing here justifies bypassing that endpoint or writing to `source.*`
+directly.
+
+**DEC-29f134 — runtime drift detection.** The admission-boundary probe diffs observed payload
+field-sets against the source catalog and dispatches per the contract's validation policy. It
+is therefore a consumer of catalog identity: a catalog that silently changed underneath a
+contract would make drift detection compare against a moved reference and report nothing. This
+strengthens point 4 rather than qualifying it, and it was missing from the consumer analysis in
+the supporting design note.
+
 ## Consequences
 
 - 241 green chain statuses go red or unresolvable, 80 active metric contract versions lose their chain, and the readiness dial darkens until Odoo contracts exist. Acceptable pre-production; stated so it is expected rather than discovered.
