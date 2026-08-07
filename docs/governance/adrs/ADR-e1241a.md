@@ -2,7 +2,7 @@
 uid: DEC-e1241a
 title: "Source catalog artefacts carry identity; derivability verifies but never substitutes"
 description: "A source catalog is admitted as a hash-identified artefact with declared extraction method and module set; re-derivation is a verification check, never a bootstrap authority."
-status: proposed
+status: decided
 date: 2026-08-06T03:07:04.085Z
 project: platform
 domain: sources
@@ -143,4 +143,12 @@ withdrawal sequencing.
 
 ## Status note
 
-`proposed`, not `decided`. The DBCP it depends on is unapplied and unauthorized, and three open items above are unresolved. It moves to `decided` when those close.
+Superseded by Amendment 2 below: `decided` as scoped there (2026-08-07). The identity DBCP remains unapplied and unauthorized — its apply is a separate gate under the Database Change Protocol; `decided` here authorizes the decision, not the apply.
+
+## Amendment 2 (2026-08-07, operator disposal — DEC-908548/D555 lane) — decided as identity substrate; SAP withdrawal deferred, not decided
+
+**Decided scope: points 1–5 and Amendment 1's points 8–9.** Artefact identity, module-set-as-identity, the extraction-method taxonomy with its scraped-never-verified CHECK, the bootstrap prohibition, method-gated admission, and field derivation identity. Point 10 remains excluded by its own text (contract meta-schema change, designed against a real authored Odoo binding).
+
+**Points 6–7 (SAP withdrawal, catalog and contracts, plus the concept-to-field salvage artefact) are REMOVED from the decided scope. They are deferred, not decided and not rejected.** Operator rationale (2026-08-07): reduce the blast radius while Odoo is brought up — the identity substrate already quarantines the SAP scrape honestly (point 3's CHECK means the scraped artefacts can never be marked verified; all three SAP `source_version` rows stay `unverified` forever), the gap is survivable while every admission is grandfathered (this ADR's own Context), and withdrawing now would darken 241 green chain statuses, orphan 80 active MCVs, kill 91 `concept_source_reference` rows, force the 58 reader-flavor and D525 (audit-on-SAP-ECC) questions, and consume operator bandwidth the Odoo lane needs. **Re-entry triggers for the withdrawal decision:** Odoo maturely in place and operator bandwidth available, OR first-hand DDIC access arrives (which converts withdraw-and-re-enter into replace-with-the-genuine-article). Deferral pointer: parked task in DevHub (bc-core). The Consequences section below describes the *withdrawal* consequences and is therefore also deferred with points 6–7; no chain goes red under this disposal.
+
+**Open item 1 closed by measurement (2026-08-07, live bc_platform_dev):** the 6 unresolved live source contracts are confirmed NULL `source_version_id` rows — `sc__ecc__anep`, `anla`, `anlb`, `bkpf`, `kurgv`, `mbew` — and **all 6 resolve to a system via their `source_object_id` path** (no orphans). One anomaly the inference missed: **`sc__ecc__bkpf` resolves via its source object to `s4hana`, not `ecc`** — a cross-system misbinding in the live chain, recorded as its own parked defect task; not repaired here. Measurement also established that OC bodies store the source-contract id under the JSON key `sc_version_id` (all 27 distinct refs match `source_contract.source_contract_id`) — a shape wrinkle any future withdrawal dependency-analysis must know. Open items 2 (D525 carve-out) and 3 (re-anchoring scope) are mooted by this deferral and travel with the deferred withdrawal.
