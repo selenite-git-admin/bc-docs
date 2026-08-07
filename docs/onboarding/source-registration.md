@@ -185,3 +185,15 @@ Additional decisions that govern the catalog's hierarchy and verification surfac
 - legacy-v2/docs/sops/source-registration-sop.md (predecessor SOP)
 - outline.md §4.6: Onboarding
 
+
+## Amendment note (2026-08-07, DEC-3078ce / D557)
+
+The AI verification surface this chapter cites (`POST /api/ai/suggest/source-verify`, `table-verify`)
+does not exist in bc-core — it was orphaned by the D483 bc-ai retirement and never migrated
+in-process; `operations.catalog_verification_log` correspondingly had no writer. Per DEC-3078ce the
+verification model for newly onboarded systems changes: rows are born `registered`/`unverified`
+through manifest-bound extract admission (DEC-0b5a4c Amendment 1), verification is a mechanical
+governed act citing the `source_catalog_artefact` (DEC-e1241a pt 4), approval is an explicit
+operator transition, and SC/AC authoring follows approval. This chapter's Step 1–3 verification
+matrix describes the retired model and is retained as historical record pending the chapter's
+rewrite.
