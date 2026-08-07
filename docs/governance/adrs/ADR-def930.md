@@ -35,3 +35,7 @@ Spec: barecount-devhub/.claude/SPEC-pilot-master-data-framework-2026-07-29.md. S
 ## Amendment 1 — Odoo suite (ERP + CRM) as the base world engine (founder, 2026-07-29)
 
 Odoo CRM (crm + sale, Community/LGPL) is installed alongside ERP in the same instance, and the Odoo suite becomes the **base/world system**: the generation driver writes only the funnel head (leads/opportunities + conversion + payment-behavior dials); Odoo's native flows materialize the correlated world (opportunity → SO → invoice → payment → GL on one res.partner spine) with vendor-enforced integrity — replacing the hand-authored O2C correlation stream. Downstream systems become projections of this one world: SFDC ← Odoo CRM (REST re-post), BC ← Odoo ERP documents (re-posted through BC's own engine), and — future, out of trio scope — SAP-shaped projections from Odoo GL to feed the SDG simulator/demo path. Boundaries: the neutral spine remains the master-identity registry + generation-intent driver (Odoo is the materialization engine, not the definition of truth; projections consciously map Odoo→target semantics); Odoo-as-pilot-source (D524 portability proof) and Odoo-as-base-engine are separate roles of the same instance, never conflated in claims.
+
+## Amendment (2026-08-07, DEC-908548 / D555)
+
+The scope boundary "no SC/AC/OC/CC or metrics (Track-C-gated)" is AMENDED per DEC-908548: SC + AC authoring for Odoo and D500 soft-references are RELEASED (Track-C condition satisfied by the D541 successor state). OC/CC + metric realization remain held. All other content of this ADR stands.
