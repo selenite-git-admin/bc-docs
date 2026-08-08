@@ -33,3 +33,14 @@ Measured context (2026-08-07, SES-20d4d3, live substrate + code): the enforcemen
 5. **SC/AC authoring FOLLOWS approval.** The one-call fused stack (create object+fields+SC+AC born-approved) is retired for new-system onboarding: `registerSourceStack` survives unchanged as the post-approval SC/AC author (it already handles existing objects), but its object/field-creation leg is not the birth path for extract-admitted systems. Sequence: admit → verify → approve → author SC/AC → (chain continues per SOPs).
 
 **Consequences accepted:** bc-admin catalog screens that PATCH statuses will need repointing to the transition surface (follow-up task); the source-registration Onboarding chapter is annotated in the same change (its AI-verify endpoints are dead references post-D483); UNIT-2 (in flight) is reworked to these semantics before review. The workflow deliberately does NOT add: panels, couriers, certification records, or any transport — certification-grade ceremony is reserved for the metric lane.
+
+## Amendment 1 (2026-08-08, DEC-3b2ff9 / D558) — identity-tier approval is derived, not asserted
+
+D557 governed object/field approval but left the catalog identity tier (system/version/module)
+unspecified. DEC-3b2ff9 fills that gap: a module/version/system is 'approved' as a DERIVED
+PROJECTION — approved iff it transitively contains an approved (evidence-verified) object; no
+born-approved and no PATCH-to-approved on the identity tier (extending pt 3's status-strip
+upward); computed on read, never stored (D162 r2), analogous to D548's readiness projection.
+The identity tier's stored, operator-controlled lifecycle is retirement only
+(registered → deprecated → archived). Implementation (read-model derivation + SAP reconciliation)
+is reviewed follow-up units. See ADR-3b2ff9.
