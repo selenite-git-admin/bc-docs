@@ -98,13 +98,17 @@ module-backed; it must not branch on "which module."
 
 What happens when an installation lacks a module whose fields the union SC declares? Decided:
 
-- **DEC-8849c8 (decided):** AC/OC grammars gain `semantic_preconditions[]` — each entry declares
-  `subject_kind` (including **`module_presence`**, e.g. `module:mrp`), `expected_value`, and
-  `on_violation: block | warn`. Preconditions are versioned with the contract and are part of its meaning
-  (Inv I). Declared absence is handled by the declared policy — expected absence is not an error.
-- **DEC-b51b48 (planned):** the Landscape Scanner discovers an installation's actual modules/entities and
-  produces the compatibility report (active modules, coverage, activatable KPIs). **The Scanner verifies
-  declarations; it never invents them.**
+- **DEC-8849c8 (decided 2026-08-05; ADR file landed on bc-docs main 2026-08-09 after being stranded on a
+  work branch — surfaced by external citation review):** AC/OC grammars gain `semantic_preconditions[]` —
+  each entry declares `subject_kind` (including **`module_presence`**, e.g. `module:mrp`),
+  `expected_value`, and `on_violation: block | warn`. Preconditions are versioned with the contract and are
+  part of its meaning (Inv I). Declared absence is handled by the declared policy — expected absence is not
+  an error. Concrete storage lands with the implementing DBCP (per the ADR's own scope).
+- **DEC-b51b48 (implemented — SAP-specific):** the **SAP** Landscape Scanner discovers an installation's
+  entities/modules via connector `$metadata` + authorization probes and produces the compatibility report
+  (active modules, coverage, activatable KPIs). **The Scanner verifies declarations; it never invents
+  them.** A cross-source (e.g. Odoo) scanner is the natural generalization but **has no authority yet** —
+  building one is future work, not a decided fact; do not cite this chapter as its authorization.
 
 Realizability is therefore **variant-gated**: a chain is realizable on an installation iff its required
 origin modules ⊆ the installation's module set (artefact identity) — checked, not assumed.
@@ -112,10 +116,12 @@ origin modules ⊆ the installation's module set (artefact identity) — checked
 ### 6. Tenant-custom is a **separate, deferred axis** (`z_extension`)
 
 `z_extension` on the SC field body means *tenant-scoped custom* (SAP `Y*/Z*`, Salesforce `__c`) — one
-specific tenant's additions, carried via `contract_binding.extensions_json`. It is **not** the variant
-axis: a variant module (`l10n_in`) is shared by every tenant on that installation and is nobody's
-customization. The platform's standing position (standard-tables-first) defers tenant-custom metrics;
-nothing in this chapter changes that. **Do not overload the tenant mechanism to represent variants.**
+specific tenant's additions. **Current runtime carrier:** `tenant.contract_binding.override_json`, whose
+`z_field_mappings[]` feed the provisioner's `tenantZFields` — a dedicated `extensions_json` column is
+**future-facing** (named by D369 §1a; not yet in the schema). It is **not** the variant axis: a variant
+module (`l10n_in`) is shared by every tenant on that installation and is nobody's customization. The
+platform's standing position (standard-tables-first) defers tenant-custom metrics; nothing in this chapter
+changes that. **Do not overload the tenant mechanism to represent variants.**
 
 ## The three origin axes, side by side
 
@@ -123,7 +129,7 @@ nothing in this chapter changes that. **Do not overload the tenant mechanism to 
 |---|---|---|---|
 | **standard** | everyone | `res.partner.name` | union SC; derivation identity → core module |
 | **system-variant** | every tenant on that install | `l10n_in_gst_treatment` | derivation identity (field) + artefact `module_set_json` (install) + preconditions (absence) |
-| **tenant-custom** | one tenant | a `ZZ_`/`x_`/`__c` field | `z_extension` + `contract_binding.extensions_json` (deferred) |
+| **tenant-custom** | one tenant | a `ZZ_`/`x_`/`__c` field | `z_extension` + `contract_binding.override_json.z_field_mappings[]` today (`extensions_json` future-facing); deferred |
 
 ## Anti-patterns (each nearly happened, 2026-08-09)
 
