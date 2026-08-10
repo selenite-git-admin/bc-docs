@@ -40,3 +40,16 @@ NULL target is semantically overloaded (polymorphic vs. capture-failure); the di
 `native_type_text` and rests on extractor discipline, not schema enforcement. No observed defect justifies
 a net; if one appears, the declarative tightening is a polymorphism marker on the governed per-version type
 mapping.
+
+## Amendment 1 (2026-08-10) — a FOURTH surface was missed at merge
+
+The original three-surface fix (DB CHECK, source-v1 file, specs) was INCOMPLETE. Contract authoring
+validates against the **runtime `contract.contract_meta_schema` DB row**, not the JSON file (the file is
+compiled only in tests). The runtime store still carried the pre-amendment reference arm
+(`required: [type, reference_target, cardinality]`), so the first live SC author (`product.document`,
+Phase B) failed on `res_id` with 422 — while the dry-run (which only builds, never validates) passed.
+
+Synced 2026-08-10 via the governed meta-schema change-request path (proposal → approve, which UPDATEs the
+row + invalidates the AJV validator cache); runtime reference arm now `[type, cardinality]`. **Process gap:**
+amending a meta-schema FILE must be paired with a migration/seed update to `contract.contract_meta_schema`,
+or the amendment is enforced only in tests, not at runtime. Tracked for a reproducible seed/migration.
