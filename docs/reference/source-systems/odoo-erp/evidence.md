@@ -25,11 +25,23 @@ governing_adrs:
 Zero-claims rule (D385): no external "we work with Odoo" claim runs ahead of a first-hand entry. First-hand
 proof is **entity/scope-specific**, never a whole-system promotion. Cover: [index.md](index.md).
 
-## Ungoverned historical background (simulator / sandbox — NOT a maturity claim)
+## Connector-scope reachability evidence (2026-08-10) — NOT admission, NOT a maturity claim
 
-**None.** Unlike SAP ECC (which has an ungoverned bc-sdg simulator run as historical background), Odoo ERP has
-**no prior coverage of any kind**: no executor has been built, no simulator profile exists, and no Odoo instance
-— real or simulated — has ever been exercised. `proof_status` is **`designed`** on design documentation alone.
+A JSON-RPC reader executor (`OdooJsonRpcProtocolReader`) has been **built** (bc-core PR #675, DEC-12558e) and
+registered as connectors (`odoo-jsonrpc` + `odoo-ent-v19`, status `available`), and the real `pilot_ent` Odoo 19
+EE instance has been **exercised for connector reachability**: rung-1 (container-internal, authenticated —
+`login_uid=2`, res.company + 49,720 account.move + 366 res.partner) and rung-3 (external endpoint reachable, Odoo
+`19.0+e-20260806`, 200/96ms). Both read-only (S-32).
+
+This is **connector-reach evidence, not admission**: no Source Object / Canonical Object / Metric Snapshot has
+been produced through the BareCount chain (OC/CC/MC held under **D555**), and **no governed
+source-realization/audit object has been minted**. `proof_status` therefore stays **`designed`** — the maturity
+ladder measures admission/realization evidence, which connector reachability does not satisfy. Governance trail
+for the reachability evidence: bc-core #675 (`d78e1747`) / #676, DevHub CHG-4a10b5; minting a governed
+proof-scope/evidence object to formally advance `proof_status` is a pending follow-up.
+
+(No simulator/sandbox profile exists for Odoo ERP — unlike SAP ECC's ungoverned bc-sdg run. The evidence above is
+against the real `pilot_ent` instance, connector-scope only.)
 
 ## Audit-grade coordinates for the first evidence object (all ⧗ PENDING)
 

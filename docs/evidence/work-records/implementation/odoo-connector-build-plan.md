@@ -2,7 +2,7 @@
 uid: odoo-connector-build-plan
 title: Odoo 19 EE Connector — Build Plan (Part 1)
 description: Sequenced plan to author a platform Odoo 19 Enterprise JSON-RPC Connector (catalog row + reader-runtime executor + Odoo credential resolution + reachability proof) so a Reader can reach the Odoo source for admission. Part 1 of a two-part arc; the live-source Scanner is Part 2 (deferred, depends on the parked field-capability ADR DEC-7a18af). Anchors on DEC-731c15 (pilot connector-read release) and DEC-95687d (connector = primary onboarding trigger). Under review — not yet a design; design (ADR + PR to Codex) follows plan sign-off.
-status: draft
+status: complete
 date: 2026-08-10
 project: bc-core
 domain: connectors
@@ -14,9 +14,18 @@ focus: build-plan
 
 ## 0. Status & provenance
 
-**Status:** DRAFT — under operator review. This is a plan, not a design. Per the agreed drill:
-**plan (this doc, reviewed) → design (ADR + PR to Codex for disposition) → execute (on ACCEPT + operator authorization).**
-No ADR, migration, or code has been written for this work.
+**Status: COMPLETE (2026-08-10).** Delivered end-to-end via the drill (plan → design → Codex disposition → execute):
+- **Design:** ADR **DEC-12558e (D568)** — Odoo as a proprietary JSON-RPC connector (`transport_type=http`,
+  `executor_class=OdooJsonRpcProtocolReader`, reuse `basic` auth). Codex ACCEPTED-WITH-BOUNDARY.
+- **Code:** `OdooJsonRpcExecutor` merged (bc-core PR #675, `d78e1747`) — read-only, 10 unit tests.
+- **Registration:** `odoo-jsonrpc` (generic) + `odoo-ent-v19` (source-bound) rows registered via `POST /connectors`,
+  now `available` (after the TSK-813287 status-vocab DBCP, PR #676).
+- **Reachability ladder complete:** rung-1 (container-internal, authenticated — `login_uid=2`, 49,720 account.move)
+  + rung-3 (external — `15.207.106.146:8169`, Odoo `19.0+e-20260806`).
+- **Boundary held:** Reader Flavor / Connection / live observation deferred behind the OC hold (**D555**); the
+  live-source Scanner is Part 2 (**DEC-7a18af**, parked).
+
+The original plan text follows unchanged for the record.
 
 Grounded by a read-only study (2026-08-10) of the platform model (bc-docs) and the bc-core implementation:
 - Connector concept: `docs/reference/glossary/README.md`, `docs/operating-model/admission-and-observation.md`, `docs/implementation/internal-modules.md`.
