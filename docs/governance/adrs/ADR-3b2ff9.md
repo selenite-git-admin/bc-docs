@@ -2,13 +2,15 @@
 uid: DEC-3b2ff9
 title: "Source-system approval is a derived projection of leaf approval — the identity tier is never asserted approved"
 description: "Extends DEC-3078ce/D557 to the catalog identity tier: a module/version/system is 'approved' iff it transitively contains an approved (evidence-verified) object; approval is derived on read, never born-approved and never PATCH-set on the identity tier. Registered = admitted; approved = has evidence-verified content."
-status: decided
+status: implemented
 date: 2026-08-08T06:02:07.306Z
 project: bc-core
 domain: sources
 subdomain: source-catalog
 focus: governance
 ---
+
+> **Implemented 2026-08-10** — bc-core PR #673 (merge `a73608e`), scoped to the **system tier only** per Codex disposition ACCEPTED-WITH-BOUNDARY (SHA-256 `D4D28893…C9D73F`). `effectiveCatalogStatus` is computed on read across the plain, enriched, and detail source-system paths (approved iff stored=`approved` OR an approved descendant object EXISTS); the `approved` filter is effective-aware. Live-verified: odoo stored=`registered` → effective=`approved`; grandfathered SAP rows unaffected. Version/module tiers deferred to TSK-3e933a. Companion bc-admin UI merged (`2875135`).
 
 # Source-system approval is a derived projection of leaf approval — the identity tier is never asserted approved
 
