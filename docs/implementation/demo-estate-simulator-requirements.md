@@ -249,6 +249,22 @@ adapter opens `KR-S/msbc` empty and fills it via doc-mining + probing before cod
 | S-10 | v19 renames: `payment.ref`→`memo`, `groups_id`→`group_ids`, `product.type`∈{combo,consu,service}+`is_storable`, `uom_po_id` gone, `ir.property` gone, `hr.contract` gone, `sale.order` no `done` | field-registry harness (CI) |
 | S-11 | `odoo shell` needs `-c /etc/odoo/odoo.conf`; returns date objects; host modules not importable inside | adapter/ops test |
 
+**Live register:** as of 2026-08-10 the authoritative, machine-readable register is
+`bc-demo/tests/knowledge/registry.yml` (integrity-tested in CI; statuses tracked per fact). The
+tables above are the founding snapshot. **Mining additions (feeders a/b/c, 2026-08-10):** G-7
+re-read-the-substrate · G-8 failure-inject every check · G-9 candidate-set config resolution ·
+G-10 no post-install environmental defaults — S-12 m2m commands · S-13 create() defaults resolve
+against the session company · S-14 category properties unset post-install · S-15 the four
+`res.company.account_*` fields (l10n_in template sets none) · S-16 chart-identity + default-pricelist
+currency — S-17 **payment routing is journal-config-dependent** (no outstanding accounts ⇒ no
+outstanding leg; sweep logic must assert config) · S-18 draft-reconciliation sequencing · S-19
+recon models can auto-mint invoices · S-20 `procurement.group`→`stock.reference` (SO→MO trace) ·
+S-21 perpetual-vs-periodic close modes · S-22 XML-RPC→JSON-2 timeline · S-23 `read_group`
+deprecated · S-24 19.3 chart changes (pinned 19.0) · S-25 l10n_in TDS/TCS identifier instability —
+and `KR-S/msbc` opens with B-1..B-6 from the Contoso study (real posting codeunits; staged bank-rec;
+no prod-order path; module/layer/AdjustDate patterns; single-window + zero-calibration limits
+confirmed — reinforcing §11's differentiation).
+
 **Three feeder work items** (build-phase, before adapter code):
 1. **v1 mining** — W1–W22 commit history + runbook §15; anything found joins a register as a test.
 2. **Systematic doc-mining (operator direction)** — read the Odoo developer documentation *before*
