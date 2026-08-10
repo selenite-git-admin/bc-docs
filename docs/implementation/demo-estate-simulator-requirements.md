@@ -80,9 +80,35 @@ maps business phrase → system realization. R-1..R-12 below are the mfg-in prof
 | R-11 | valuation tie | GL Stock Valuation == physical on-hand to the rupee at close | held (keep) |
 | R-12 | articulation | BS balances; RE ties to cumulative P&L; double-entry integrity | held (keep) |
 
-**R-13 (reserved): Codex remediation acceptance criteria** — the independent auditor's criteria
-(requested in evidence-v2, `bc-external-audit db1f5070`) are adopted verbatim as requirements when
-they land. The regenerated books must move Codex off the adverse opinion.
+**R-13: Codex remediation acceptance criteria (LANDED 2026-08-10, adopted verbatim).** Source:
+Codex completed-findings disposition (CHANGES REQUIRED for dataset acceptance; adverse sustained;
+original operating-flow finding withdrawn per erratum). The regenerated books are accepted only
+when all seven hold:
+
+> 1. AR/AP open-item ledgers must tie to GL control accounts at every FY-end and final date within
+>    rounding only, with documented composition.
+> 2. Outstanding Receipts, Outstanding Payments, and Bank Suspense must roll down to immaterial
+>    close balances or have matched post-close support.
+> 3. 365+ AR/AP must be immaterial or explicitly supported by ageing policy, impairment/
+>    provisioning, and partner-level explanations.
+> 4. Invoice payment states must reconcile to payment entries and residuals; no large
+>    in_payment/partial/not-paid backlog without matching open-item support.
+> 5. Bank/cash and OD presentation must be classified correctly, with no material credit balance
+>    left as asset_cash.
+> 6. SO→invoice, PO→bill, MO→stock/cost traces must exist and reconcile for sampled and aggregate
+>    flows.
+> 7. A regenerated evidence pack must include the same schedules as v2, plus MO→cost traceability
+>    and bank-statement or ledger-equivalent reconciliation.
+
+Coverage map (criterion → this spec): AC-1 → **new gate** (subledger↔GL tie, added to FR-9 monthly
+invariants; open items computed on `amount_residual`, see G-11) · AC-2 → R-4 + the S-26/S-27 sweep
+mechanism · AC-3 → R-1/R-2 (immaterial-by-construction; ageing/provisioning policy documented in
+the profile) · AC-4 → R-2 + S-26 · AC-5 → R-5 **plus a presentation requirement**: material credit
+cash presents as OD/CC liability, never asset_cash · AC-6 → traceability gates (S-20-aware) ·
+AC-7 → the release evidence-pack spec (v2 schedules + MO→cost + bank reconciliation schedule).
+AC-1's tie discipline also governs our own evidence tooling: v2's pack computed open items on line
+`balance`, overstating open ageing vs GL on partially-reconciled lines — regenerated packs use
+`amount_residual` (disclosed to the auditor with the regenerated pack).
 
 ## 2b. Locales (GLOBAL engine, LOCAL packs)
 
