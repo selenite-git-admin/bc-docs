@@ -45,3 +45,39 @@ LEFT BYTE-IDENTICAL. D564's contamination branch, source.catalog_expunge_log, th
 ROLLBACK. Paired -rollback.sql following D564's own pattern: drop catalog_retirement_log and restore the prior guard body verbatim. Because the amendment is additive and the contamination branch is untouched, rollback cannot disturb D564 behaviour.
 
 NOT AUTHORISED BY THIS DECISION. No migration is applied, no object is deleted. Execution requires Codex disposition, a reviewed migration plus rollback, a reviewed retirement service (no service writes catalog_expunge_log today either — only its Drizzle schema exists), clone rehearsal, and explicit operator apply-authorization under the Database Change Protocol.
+
+## Disposition — external audit, 2026-08-10
+
+**ACCEPTED WITH BOUNDARY.** Response artifact
+`RESPONSE-Codex-sibling-retirement-carveout-disposition-2026-08-10.md`,
+sha256 `1f9b6cb9cf65ed7de0c0896773c4290253a8fdc63c7c62225d7ee00261b855ba`.
+
+Accepted as designed: the separate `source.catalog_retirement_log` relation, the additive
+table-only `source_object` guard branch, version coherence, per-object rows, and `decision_ref`
+as a marker.
+
+### The boundary, and the obligation it creates
+
+`decision_ref` is acceptable **only** as pattern-checked discipline — **never** as database proof
+that the cited ADR exists, is `decided`, or governs the object being deleted. The trigger cannot
+establish authority and must not be read as though it had. **The migration, the retirement service,
+and the runbook must verify ADR authority outside the trigger**, and that verification is a
+precondition of writing any retirement row — not a post-hoc check on rows already written.
+
+Concretely, the execution unit inherits three obligations:
+
+1. **The service resolves the decision before it writes.** Given `decision_ref`, it must confirm
+   the ADR file exists in bc-docs, that its `uid` matches, and that its status admits execution.
+   Absent that resolution, no retirement row is written and therefore no delete becomes possible —
+   the guard's fail-closed posture is preserved by refusing upstream, not by being asked to judge.
+2. **The scope the ADR names is the scope that may be retired.** The service must not accept an
+   object set wider than the cited decision describes. A valid `DEC-` string paired with an
+   out-of-scope object is precisely the hole the pattern check cannot see.
+3. **The runbook records the authority check as an evidence line**, alongside the manifest sha and
+   row counts, so an auditor can see that authority was established and where.
+
+### Status
+
+D570 remains **`proposed`**. This disposition authorises **nothing**: no migration, no DDL, no
+service, no rehearsal, no live apply. Each of those requires its own review and, for anything
+touching the database, explicit operator authorization under the Database Change Protocol.
