@@ -181,3 +181,49 @@ v2 or v3 — which is why it is pinned here explicitly rather than left to be re
 re-derivation that yields a different digest is expected and indicates the version boundary, not
 tampering. The view phase, when it runs, will produce a **v3** digest carrying field-level assurance
 the table phase's v1 digest does not.
+
+## View + container clear — the lean path, 2026-08-11 (completes the retirement)
+
+**The remaining SAP catalog — 234 S/4HANA views, 7,337 view fields, all containers, and the SAP
+runtime — was cleared by direct SQL in one transaction, not by a governed service.** With SAP
+catalog retirement now complete, this ADR records what actually happened rather than the elaborate
+machinery that was briefly built for it.
+
+**Why the lean path.** Building `CatalogExpungeService` (bc-core PR #681) — typed lineage columns, a
+guard amendment requiring decision_ref + manifest + version, an authority boundary, five rounds of
+adversarial review — was disproportionate to removing 234 rows from the dev platform database. The
+operator named it: a power substation to remove a bulb. The table phase (30,608 objects) had a real
+case for care; the view + container remainder did not. PR #681 is **closed and parked** as hardening
+for a future real-SAP-DDIC world; its migration is unapplied.
+
+**What was done, child-first, one transaction (operator-authorised).** The live guard admits a
+non-table delete when any `catalog_expunge_log` row exists for the object — the D564 Part-B
+mechanism. So: 234 evidence rows written, then 7,337 fields, 234 views, and the containers and
+runtime that hung off them —
+
+| what | rows |
+|---|---|
+| `catalog_expunge_log` evidence written | 234 |
+| `source_field` (view fields) | 7,337 |
+| `source_object` (views) | 234 |
+| `runtime.reader_binding` / `reader_flavor` | 1 / 1 |
+| `runtime.connection` (+ cascaded config/check) | 2 |
+| `runtime.connector_protocol` / `connector_provenance` / `connector` | 2 / 1 / 2 |
+| `source_module` | 65 |
+| `source_version` (+ cascaded `source_type_mapping`) | 3 |
+| `source_system` (ecc, s4hana) | 2 |
+
+`runtime.admission_run` rows (4) were kept, refs SET NULL — run history is not catalog.
+
+**Verified live:** the only remaining source system is **odoo** (36 modules / 303 objects / 9,766
+fields); zero `ecc`/`s4hana` systems, versions, modules, objects, fields, or connectors; Odoo's
+runtime untouched. `catalog_expunge_log` holds 244 rows (10 D564 Part B + 234 from this act).
+
+**Reversal.** `_dbcp-backups/20260811T-d564-containers.dump`, sha256
+`006cde25acbbb2a28ccb1caf7c1540018e6f0608fcbd880204117f0d1529ff8b`, covering `source` + `runtime` +
+`concept_registry`, taken and **restore-verified** into a throwaway database before any delete.
+
+**SAP CATALOG RETIREMENT IS NOW COMPLETE.** The table phase (30,608 objects, D570 governed service,
+2026-08-11) and this view + container phase together retire the whole of ECC and S/4HANA. The
+disjoint-union closure the earlier phases anticipated is satisfied: 30,608 tables + 234 views =
+30,842 objects; 474,640 table fields + 7,337 view fields = 481,977 fields; nothing SAP remains.
