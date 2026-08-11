@@ -155,15 +155,18 @@ anything was deleted.
 
 The table phase digest **`5ff9f312237a546bfa3889e5982784e462be6a02d475e6f40b62553f850dbdbf`** is a
 **v1 object-manifest digest** and is recorded as such. External review of the sibling view service
-established that manifest v1 hashed object rows and per-object field *counts* but did **not** bind
-field *population* to the transaction: a field added, removed, or swapped between plan and execute
-would leave the v1 digest unchanged, and v1 was computed before the writing transaction.
+established that manifest v1 hashed object rows only — object id, system, name, kind and version —
+and bound **neither** per-object field counts **nor** field identity, and was computed before the
+writing transaction. A field added, removed, or swapped between plan and execute left the v1 digest
+unchanged. (v2 added the per-object field count; the view service additionally binds a field-id
+fingerprint inside the transaction. v1 has neither.)
 
 **This is a historical assurance limitation of the completed act, not a defect to be corrected in
 place.** The table phase is irreversible and closed. Its evidence is **not** rewritten, is **not**
 retroactively relabelled v2, and the operation is **not** re-run. What is recorded is the honest
-scope of the guarantee `5ff9f312…` provides: it binds the object set and per-object field counts as
-they stood at plan time, and no more.
+scope of the guarantee `5ff9f312…` provides: it binds the object set (id, system, name, kind,
+version) as it stood at plan time, and **no field-level assurance at all** — not counts, not
+identity.
 
 Both services were subsequently moved to **manifest v2** (field count inside the hashed body, a
 version marker inside the body so v1 and v2 cannot collide), and the view service additionally binds
