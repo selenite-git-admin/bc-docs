@@ -22,7 +22,7 @@ A separate relation was chosen over a discriminator column on catalog_expunge_lo
 
 The guard is the right location because it is the enforcement floor: the place where "may this row be deleted" is actually decided. A retirement permission expressed anywhere else would be a convention that a driver could bypass, which is precisely what D557 and D564 exist to prevent. The upper-layer decision already exists (D569); what is missing is the substrate's ability to admit it.
 
-This ADR is opened as proposed rather than decided because it changes deletion semantics for the whole source catalog, not only for the SAP retirement that motivated it. The SAP case is the first application, not the justification.
+This ADR was opened as proposed rather than decided because it changes deletion semantics for the whole source catalog, not only for the SAP retirement that motivated it. The SAP case is the first application, not the justification. It moved to decided on 2026-08-11, when both capability units merged with lineage verified (bc-core #677 fa9cfed, #678 445f9ea). Decided is not implemented: no migration has been applied and no object has been retired.
 
 ## Decision
 
@@ -78,6 +78,12 @@ Concretely, the execution unit inherits three obligations:
 
 ### Status
 
-D570 remains **`proposed`**. This disposition authorises **nothing**: no migration, no DDL, no
-service, no rehearsal, no live apply. Each of those requires its own review and, for anything
-touching the database, explicit operator authorization under the Database Change Protocol.
+At the time of that disposition D570 was **`proposed`**, and the disposition authorised **nothing**.
+
+**Status now: `decided`** (2026-08-11), on the merge of both capability units — the migration and
+rollback (#677, `fa9cfed`) and the retirement service (#678, `445f9ea`), reviewed head `f16cd61`,
+lineage verified. What has NOT changed: no migration is applied, no DDL has run against any
+database, no object has been retired, and no interlock has been granted. The status records that
+the decision is settled, not that it has been carried out; `implemented` waits on application.
+Each remaining step — apply under the Database Change Protocol, clone rehearsal, operator
+apply-authorization — still requires its own review.
