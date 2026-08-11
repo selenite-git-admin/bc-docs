@@ -150,3 +150,24 @@ plus the individually-authored rows held out of scope).
 `7efba1b39756c59639a9f1cc6aa4e55aaae37cb6cded6f87870dff7e8b9b626a`, taken immediately before the
 act and **restore-verified** into a throwaway database with all seven row counts matching before
 anything was deleted.
+
+## Manifest assurance note — the table phase ran under manifest v1 (2026-08-11)
+
+The table phase digest **`5ff9f312237a546bfa3889e5982784e462be6a02d475e6f40b62553f850dbdbf`** is a
+**v1 object-manifest digest** and is recorded as such. External review of the sibling view service
+established that manifest v1 hashed object rows and per-object field *counts* but did **not** bind
+field *population* to the transaction: a field added, removed, or swapped between plan and execute
+would leave the v1 digest unchanged, and v1 was computed before the writing transaction.
+
+**This is a historical assurance limitation of the completed act, not a defect to be corrected in
+place.** The table phase is irreversible and closed. Its evidence is **not** rewritten, is **not**
+retroactively relabelled v2, and the operation is **not** re-run. What is recorded is the honest
+scope of the guarantee `5ff9f312…` provides: it binds the object set and per-object field counts as
+they stood at plan time, and no more.
+
+Both services were subsequently moved to **manifest v2** (field count inside the hashed body, a
+version marker inside the body so v1 and v2 cannot collide), and the view service additionally binds
+a **field-id fingerprint inside the transaction**. Because v2 changes the hashed body, `5ff9f312…`
+is by construction not reproducible under v2 — which is why it is pinned here explicitly rather than
+left to be recomputed. A future re-derivation that yields a different digest is expected and does
+not indicate tampering; it indicates the version boundary.
