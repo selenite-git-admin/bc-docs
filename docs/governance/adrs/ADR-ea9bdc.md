@@ -89,3 +89,64 @@ PRESERVED BEFORE EXECUTION. All 91 concept_registry.concept_source_reference row
 EXECUTION REMAINS GATED. This declaration authorises nothing by itself, and the retirement_scope block in the frontmatter is a bound on what may be retired, never a permission to retire it. Execution requires, in order: the D570 migration applied under the Database Change Protocol; a clone rehearsal; the conjunctive preflight gate (approved = 30594, registered = 14, total = 30608, plan.objectCount = plan.manifestLines = 30608, and the authorization naming plan.manifestSha256 verbatim — a ceiling refuses MORE and cannot detect absence); explicit operator apply-authorization; and BC_RETIREMENT_AUTHORIZED = DEC-ea9bdc, which binds the grant to this decision and does not generalise.
 
 A TABLE-ONLY PHASE IS EXPLICITLY PARTIAL. The table path has a governed service (CatalogRetirementService, bc-core #678); the D564 view path does not — no service writes catalog_expunge_log, only its Drizzle schema exists, and D564 Part B was driven externally. Raw expunge-log inserts are not an acceptable substitute. A table phase may therefore proceed on its own, but its closure must prove: 30,608 tables and 474,640 table fields retired; 30,608 coherent D570 evidence rows; 234 views and 7,337 view fields unchanged; no shared module, version, system or container row deleted; and NO claim that SAP catalog retirement is complete. Full catalog completion stays blocked on a reviewed D564 view service with its own machine-readable authority boundary, a separate 234-object manifest, rehearsal, and authorization.
+
+## Execution record — table phase, 2026-08-11
+
+**EXECUTED. PARTIAL BY CONSTRUCTION.** Operator apply-authorization given 2026-08-11; run against
+`bc_platform_dev` under `BC_RETIREMENT_AUTHORIZED=DEC-ea9bdc`.
+
+**Authority as resolved at execution time**
+
+```
+AUTHORITY DEC-ea9bdc status=decided adr=docs/governance/adrs/ADR-ea9bdc.md
+  adr_sha256_canonical=1958987468ba074a4ee19384ebe5f382776b5d21e56f83f19d0387213f185499
+  adr_sha256_raw=878f5cb78f00ff4b2f7bd0a4d17d95263d42a83c4a1507936a106fa26dee122d  eol=crlf
+  scope.systems=[ecc,s4hana] scope.types=[table] scope.maxObjects=30608
+```
+
+Both hashes are recorded, and only the canonical one is comparable across machines (TSK-42fa32).
+
+**Preflight gate — asserted in code before the run, not read off a screen**
+
+`objects=30608`, `manifestLines=30608`, `fields=474640`, `blockers=0`, and the manifest equal to
+`5ff9f312237a546bfa3889e5982784e462be6a02d475e6f40b62553f850dbdbf` — the same value computed against
+the live catalog days earlier and rehearsed on a clone. The population authorised is the population
+retired.
+
+**Result**
+
+```
+evidenceRowsWritten=30608  evidenceRowsPreexisting=0
+fieldsDeleted=474640  objectsDeleted=30608  elapsed=74.5s
+```
+
+**Closure criteria, all five**
+
+| # | criterion | result |
+|---|---|---|
+| 1 | 30,608 tables and 474,640 table fields retired | tables_left **0**, table_fields_left **0** |
+| 2 | 30,608 coherent D570 evidence rows | **30,608** — all citing `DEC-ea9bdc`, all carrying the run manifest, all `object_type_code='table'`, 30,608 distinct object_ids, `sum(fields_retired)=474,640` |
+| 3 | 234 views and 7,337 view fields unchanged | **234** / **7,337** |
+| 4 | no shared module/version/system/provider deleted | `101\|4\|3\|2`, identical to pre-run |
+| 5 | no claim of completeness | see below |
+
+`source.catalog_expunge_log` untouched at 10 rows. Odoo untouched at 303 objects / 9,766 fields.
+
+**SAP CATALOG RETIREMENT IS NOT COMPLETE.** 30,608 of 30,842 SAP objects are retired. The **234
+S/4HANA views and their 7,337 fields remain**, and will until the D564 path has a reviewed service
+with its own machine-readable authority boundary, a separate 234-object manifest, rehearsal and
+authorization. Raw `catalog_expunge_log` inserts are not an acceptable substitute.
+
+**Precondition cleared outside a service, and recorded as such.** The contract layer over these
+objects was removed first by direct SQL in one transaction — 91 concept references, 30,376
+admission-contract versions, 30,376 admission contracts, 30,378 source-contract versions, 30,377
+source contracts. No service exists for contract retirement; this decision already declared that
+layer contamination, and the operator authorised the mechanism on 2026-08-11. It is named here
+rather than left to inference, because a direct write against governed substrate should never be
+discoverable only from row counts. 306 source contracts and 305 admission contracts survive (Odoo
+plus the individually-authored rows held out of scope).
+
+**Reversal.** `_dbcp-backups/20260811-d570-source-contract-concept.dump`, sha256
+`7efba1b39756c59639a9f1cc6aa4e55aaae37cb6cded6f87870dff7e8b9b626a`, taken immediately before the
+act and **restore-verified** into a throwaway database with all seven row counts matching before
+anything was deleted.
