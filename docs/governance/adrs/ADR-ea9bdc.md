@@ -149,7 +149,7 @@ plus the individually-authored rows held out of scope).
 **Reversal.** `_dbcp-backups/20260811-d570-source-contract-concept.dump`, sha256
 `7efba1b39756c59639a9f1cc6aa4e55aaae37cb6cded6f87870dff7e8b9b626a`, taken immediately before the
 act and **restore-verified** into a throwaway database with all seven row counts matching before
-anything was deleted.
+anything was deleted. Now held in S3 (`s3://barecount-dev-artifacts/dbcp-backups/`, region ap-south-1), SHA256-verified on upload; the local copy was removed.
 
 ## Manifest assurance note — the table phase ran under manifest v1 (2026-08-11)
 
@@ -221,7 +221,9 @@ runtime untouched. `catalog_expunge_log` holds 244 rows (10 D564 Part B + 234 fr
 
 **Reversal.** `_dbcp-backups/20260811T-d564-containers.dump`, sha256
 `006cde25acbbb2a28ccb1caf7c1540018e6f0608fcbd880204117f0d1529ff8b`, covering `source` + `runtime` +
-`concept_registry`, taken and **restore-verified** into a throwaway database before any delete.
+`concept_registry`, taken and **restore-verified** into a throwaway database before any delete. Now
+held in S3 (`s3://barecount-dev-artifacts/dbcp-backups/`, region ap-south-1), SHA256-verified on
+upload; the local copy was removed. (The Aug-9 D564 Part-B backup bundle moved to the same prefix.)
 
 **SAP CATALOG RETIREMENT IS NOW COMPLETE.** The table phase (30,608 objects, D570 governed service,
 2026-08-11) and this view + container phase together retire the whole of ECC and S/4HANA. The
