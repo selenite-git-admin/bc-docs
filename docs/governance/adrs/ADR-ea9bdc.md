@@ -168,9 +168,16 @@ scope of the guarantee `5ff9f312…` provides: it binds the object set (id, syst
 version) as it stood at plan time, and **no field-level assurance at all** — not counts, not
 identity.
 
-Both services were subsequently moved to **manifest v2** (field count inside the hashed body, a
-version marker inside the body so v1 and v2 cannot collide), and the view service additionally binds
-a **field-id fingerprint inside the transaction**. Because v2 changes the hashed body, `5ff9f312…`
-is by construction not reproducible under v2 — which is why it is pinned here explicitly rather than
-left to be recomputed. A future re-derivation that yields a different digest is expected and does
-not indicate tampering; it indicates the version boundary.
+Manifest versions are now distinct by format, each with its marker inside the hashed body so they
+cannot collide or be confused:
+- **v1** — object rows only (id, system, name, kind, version). The completed table phase.
+- **v2** — v1 plus the per-object field count. The retirement (table) service.
+- **v3** — v2 plus a **field-id fingerprint line**, so the digest binds field identity; the field
+  population is additionally re-bound under a `FOR UPDATE` lock inside the writing transaction. The
+  view (expunge) service.
+
+Because each version changes the hashed body, `5ff9f312…` is by construction not reproducible under
+v2 or v3 — which is why it is pinned here explicitly rather than left to be recomputed. A future
+re-derivation that yields a different digest is expected and indicates the version boundary, not
+tampering. The view phase, when it runs, will produce a **v3** digest carrying field-level assurance
+the table phase's v1 digest does not.
