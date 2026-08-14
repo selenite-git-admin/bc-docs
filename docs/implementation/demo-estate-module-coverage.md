@@ -43,15 +43,19 @@ EQUIVALENCE_GREEN).
 
 | module | function | proposed disposition |
 |---|---|---|
-| l10n_in_edi | e-invoice (IRN) submission | **Limitation candidate L-007**: the world POSTS GST-correct invoices but does not simulate statutory e-invoice filing — filing is an exchange with government infrastructure, not bookkeeping |
-| l10n_in_edi_gstr, l10n_in_reports, l10n_in_reports_gstr_pos | GSTR return preparation/filing | same family — L-007; GSTR data *content* is derivable from posted documents if a demo ever needs it |
-| l10n_in_ewaybill (+_irn, +_stock) | e-waybill for goods movement | same family — L-007; movement documents exist, waybill filing does not |
+| l10n_in_edi | e-invoice (IRN) | **U6 (rc3, 2026-08-14) — SIMULATED**: `l10n_in_edi` installed; the `einvoice_stamp` close act sets `l10n_in_edi_status='sent'` on every posted customer invoice (2,223/2,223 in v2rwrc3) with a synthetic IRN. No live IRP call. |
+| l10n_in_ewaybill | e-waybill for goods movement | **U6 (rc3) — SIMULATED**: `l10n_in_ewaybill` installed; `ewaybill_stamp` creates a native `l10n.in.ewaybill` record (state `generated`, synthetic number/dates) per qualifying >₹50k outward invoice (2,223 in v2rwrc3). No live NIC call. |
+| GSTR-1 / GSTR-3B returns | GSTR return preparation/filing | **U6 (rc3) — SIMULATED (self-contained)**: `gstr_filing` records a monthly GSTR-1/3B filing per company as an `ir.attachment` with a synthetic ARN (123 = 41mo×3co in v2rwrc3). `l10n_in_reports` NOT installed (requires the `pyjwt` package, absent from the estate image); the GSTR-1↔3B↔books reconciliation is pure GL and needs no native module. |
 | l10n_in_pos (+_urban_piper) | point-of-sale | out of industry — B2B manufacturer |
 
-**Assessment:** the installed set is the correct *bookkeeping* superset; every uninstalled
-member is a *statutory-filing or channel* surface. Recommend one limitations entry (L-007,
-"statutory filings not simulated — documents carry filing-ready data") rather than installs.
-⏳ Operator confirms at review.
+**Assessment (revised 2026-08-14, rc3):** the installed set is the correct *bookkeeping* superset,
+**now extended with the U6 statutory-filing surface** (e-invoice + e-waybill + GSTR). **L-007 is
+REFINED, not deleted**: the filing *lifecycle* IS simulated with **clearly-synthetic, deterministic
+demo artifacts** (IRN/e-waybill number/ARN + filing status/dates), unlocking the tax/compliance
+metric slate; the world does **NOT** submit to real IRP/GSTN/NIC infrastructure — the artifacts are
+demo stand-ins, never presented as genuine government filings. Proven in v2rwrc3 (BUILDDONE GREEN;
+100% e-invoice coverage, e-waybill per qualifying invoice, GSTR per company-month). `l10n_in_pos`
+and the other channel surfaces remain out of profile-1 by decision.
 
 ## 3. Profile naming (operator point 5)
 
