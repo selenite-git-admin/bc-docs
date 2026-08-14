@@ -42,16 +42,19 @@ verdict per subfunction, measured against what the mfg-in world actually produce
 | fixed_assets | 34 | **Strong** — opening register, monthly depreciation, capex | no asset revaluation/impairment (annual list) |
 | financial_reporting | 28 | **Strong** — trial-balance-level; Schedule III is presentation-layer | — |
 | treasury | 28 | **Strong** — term loans (non-current, W15), CC revolve, OD, bank recon | — |
-| tax | 20 | **Strong** — GST set-off (D556 act 1), monthly income tax | advance-tax phasing = L-004; ITC ordering = L-001 |
+| tax | 20 | **Full (rc3)** — GST set-off (D556 act 1), monthly income tax, **+ U6 statutory filing: e-invoice/IRN status, e-waybill records, monthly GSTR-1/3B filings (synthetic artifacts)** unlocking filing-timeliness / e-invoice-coverage / GSTR↔books-reconciliation compliance metrics | advance-tax phasing = L-004; ITC ordering = L-001; live IRP/GSTN submission not simulated (L-007, refined) |
 | credit_and_collections | 13 | **Full** — terms, credit limits, ageing-capable data | — |
 | cash_flow_management | 12 | **Full** — statement headers + lines, suspense cycle | — |
 | fpa | 11 | **Partial** — actuals only; no budget objects in world | budgets = candidate close/master content, operator call |
 | cost_accounting | 10 | **Strong** — perpetual AVCO, work-centre absorption, WIP (W14) | overhead apportionment beyond routing = close-content list |
 | billing | 5 | **Full** | — |
 
-**Soft target: ~340 of 380 members supportable at gate-green world state**; the ~40-member
-remainder sits behind named, already-tracked decisions (fpa budgets, doubtful-debt provision,
-apportionment depth) — no silent gaps.
+**Soft target: ~340 of 380 members supportable at gate-green world state** (→ **high-370s with rc3's
+U6 statutory-filing surface**, which sources the previously-out-of-scope tax/compliance filing
+metrics); the small remainder sits behind named, already-tracked decisions (fpa budgets,
+doubtful-debt provision, apportionment depth) — no silent gaps. Proven in v2rwrc3 (BUILDDONE GREEN,
+2026-08-14): finance + adjacent slates all world-sourced, economics in-band (per-FY PAT 6.8/6.8/10.7%),
+U6 filing at 100% e-invoice / e-waybill-per-qualifying / GSTR-per-company-month.
 
 ## 2. Adjacent worlds — THIN (one layer, seed-grounded, each names its prerequisite)
 
