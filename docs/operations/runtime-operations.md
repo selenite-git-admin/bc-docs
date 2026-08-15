@@ -50,7 +50,8 @@ Every engine invocation carries exactly one declared trigger mode, recorded on t
 
 States: `running → completed | failed | deferred_inputs_unavailable | abandoned | superseded`. Rules:
 
-- Every run row carries a heartbeat; a reaper finalizes stale `running` rows to `abandoned`. Silent zombie runs are a defect class (TSK-560481), not an accepted state.
+- **Scoped rule (source-filter design v9/v10, TSK-a83188):** the heartbeat + reaper lifecycle applies to the run surfaces that carry that substrate (e.g. the chain-authoring run's lease/epoch lifecycle) — it is **not** a universal property of every run row. Silent zombie runs remain a defect class (TSK-560481), not an accepted state, on the surfaces that have the substrate.
+- **Admission runs are deliberately different:** `runtime.admission_run` has **no heartbeat, no reaper, and no auto-expiry**. Its states are `running → completed | failed` (internal runtime transitions), `cancelled` (dedicated operator operation), and `reconciled` (dedicated operator operation for crashed/stale runs). A stale `running` admission run **blocks reader binding flips** (the quiesce rule) until an operator records a reconciliation via the dedicated operation — actor-attributed, reason ≥ 40 characters, append-only disposition evidence written in the same transaction. The generic admission-run update surface has **no lifecycle authority**, and no automatic process ever finalizes an admission run. The no-auto-expiry rule is a rule, not an omission.
 - Re-evaluating the same (metric, period) never mutates prior runs or snapshots — the earlier evaluation is superseded **on read** by the accepted evaluation selected for that period. Invariant III: history is never rewritten.
 - `deferred_inputs_unavailable` is retried within the owning campaign once upstreams land — it is not a terminal state under a campaign.
 

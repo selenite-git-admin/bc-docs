@@ -45,12 +45,14 @@ The platform recognizes six active contract families in the contract chain. Each
 |---|---|---|---|---|---|
 | 1 | Source Contract | Source Catalog entries; Business Vocabulary | Declare observable Source Fields and select Business Fields | Business Field codes scoped to a Business Object | Admission Contract; Observation Contract |
 | 2 | Admission Contract | Source Contract version | Declare structural and quality validation rules | Validation rules keyed to Business Field codes | Observation Contract; admission boundary |
-| 3 | Observation Contract | Source Contract; Admission Contract; Business Object | Map Source Field paths to Business Field codes and direct the Reader | Field-mapping declaration for Source Object payload admission | Canonical Contract; admission boundary |
+| 3 | Observation Contract | Source Contract; Admission Contract; Business Object | Map Source Field paths to Business Field codes, declare the optional `source_filter` row selection, and direct the Reader | Field-mapping + row-selection declaration for Source Object payload admission | Canonical Contract; admission boundary |
 | 4 | Canonical Contract | Business Object code; Canonical Fields; Canonical Mapping | Declare Canonical Object shape and bind Business Fields to Canonical Fields | Canonical Field codes selected by `field_selection` | Metric Contract; canonical evaluation boundary |
 | 5 | Metric Contract | One or more Canonical Contract versions; Canonical Field codes | Bind formula variables to Canonical Field codes and declare grain, temporal gate, and thresholds | Metric value with classification on the emitted Metric Snapshot | Intervention Contract; metric evaluation boundary |
 | 6 | Intervention Contract | Metric Contract version | Declare action triggers and outcome resolution against Metric Snapshots | Action Object emission terms | Action evaluation boundary |
 
 Each link is governed and versioned. Each link reads prior outputs by explicit reference. Composition is forward-only: a later link cannot supply input to an earlier link.
+
+Explicit reference means **native version pairs**: an Observation Contract pins its Source and Admission contracts as `(contract_id, version_code)` pairs, and an Admission Contract declares its parent Source Contract the same way (source-filter design v5, TSK-a83188). A bare contract UUID is not a version pin — the runtime cross-checks these pairs at resolution and refuses any mismatch as a chain-integrity failure.
 
 **Governing source.** The Contract Grammar; Business Vocabulary; The Object Model; The Evaluation Boundaries.
 

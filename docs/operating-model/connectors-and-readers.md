@@ -39,10 +39,13 @@ The platform recognizes five adapter artifacts. Four are platform-scoped and gov
 | Connector | Technical capability to reach a source system over a declared protocol | Platform | `runtime.connector` and supporting protocol tables |
 | Reader | Business-Object-oriented admission component implementing the UniBAT pattern | Platform | `runtime.reader` |
 | Reader Flavor | Reader variant bound to one Connector, one Observation Contract, and one source-system version context | Platform | `runtime.reader_flavor` |
-| Reader Binding | Platform-governed binding from a Reader Flavor to a Source Contract version and execution context | Platform | `runtime.reader_binding` |
+| Reader Binding | Platform-governed **Admission-Contract binding** for an execution context — despite its historical column name, `reader_binding.source_contract_id` carries an **admission-contract id**; the pair `(source_contract_id, version_code)` is the effective AC version pin (substrate fact, source-filter design v4) | Platform | `runtime.reader_binding` |
+| Reader Observation Binding | Platform-governed **Observation-Contract pin** per `(reader, flavor, environment, source entity)` — the declaration a given admission run executes under | Platform | `runtime.reader_observation_binding` |
 | Connection | Tenant-scoped credentials and access record for a Reader Flavor against a tenant-owned source system | Tenant | Tenant connection store |
 
-Connector, Reader, Reader Flavor, and Reader Binding are governed centrally and reused across tenants. The Connection is tenant-scoped under DEC-771baf and carries credentials and per-tenant access configuration; the platform-side artifacts do not carry tenant credentials.
+Connector, Reader, Reader Flavor, and both bindings are governed centrally and reused across tenants. The Connection is tenant-scoped under DEC-771baf and carries credentials and per-tenant access configuration; the platform-side artifacts do not carry tenant credentials.
+
+**Binding resolution (source-filter design v5–v12, TSK-a83188).** An admission run resolves its governing chain **once, before any fetch**, from the exact context `(reader, flavor, environment, source entity)`: the Observation binding is the four-way exact row (exactly one, active); the **effective Admission Contract** is selected flavor-specific first, with a reader-level (`flavor_id IS NULL`) row as the only fallback, exactly one at the winning level; the Observation Contract's AC pair must equal the effective AC pair, and its SC pair must equal the effective AC version's declared parent pair. Any missing, ambiguous, inactive, or mismatched coordinate is a **chain-integrity refusal of the whole invocation** — there is no table-name fallback, no first-match selection, and no scenario/configuration substitute. The resolved context (all pairs, the winning level, and the normalized filter digest) travels with the run into Evidence and Lineage.
 
 **Governing source.** Platform P05 Runtime Definitions; DEC-771baf.
 

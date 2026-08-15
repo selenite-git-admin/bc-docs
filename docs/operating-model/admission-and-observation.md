@@ -53,6 +53,14 @@ The Reader applies the Admission Contract as governed. It does not override defa
 
 **Governing source.** the Admission Contract section of The Contract Grammar; Contract Schemas reference; Platform P05 Runtime Definitions.
 
+## Source-Filter Re-evaluation (row selection)
+
+When the governing Observation Contract declares a `source_filter` (The Contract Grammar; source-filter design v1–v12, TSK-a83188), the Reader re-evaluates the filter **after Admission Contract record validation and before Observation Contract field mapping and Source Object emission**. The connector's pushdown of the same predicate is a derived fetch optimization only; the admission-time re-evaluation is the enforcement authority, so a connector that returns out-of-slice records produces refusals, never admissions.
+
+- A record that fails the filter is a **`source_filter_mismatch`** — a recorded **per-record refusal** through the standard rejection surfaces, not silent exclusion and not run telemetry.
+- Evaluation is two-valued: a null or absent field fails every value predicate (`eq`, `ne`, `in`, `not_in`); only `is_set` / `is_not_set` address presence.
+- Rejection Evidence and emitted Source Object Lineage carry the **applied coordinates** — the OC, effective AC, and parent SC version pairs of the resolved context plus the normalized filter digest — so every admitted or refused record is traceable to the exact declaration that governed it.
+
 ## Observation Contract Application
 
 The Observation Contract governs how validated source data is selected and represented as Source Object content. The Contract Grammar defines the Observation Contract as the governed source of field selection and preserved Source Object shape. The exact runtime body fields are governed by the Contract Schemas reference and Platform P05 Runtime Definitions. This section describes runtime use.
