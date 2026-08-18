@@ -30,7 +30,7 @@ diagrams: []
 
 This chapter records the governed sequence by which a **Reader definition** is created. A Reader is the platform's implementation of the UniBAT pattern (Universal Business-Aware Transactions Reader), the governed definition of the only authorized path through which source data enters BareCount. The Reader is a **definition**; the machine that executes it at admission is the **Runner** (DEC-0d5b39). This chapter authors the definition; it does not perform admission.
 
-The chapter names the four-artifact runtime model (`runtime.reader`, `runtime.reader_flavor`, `runtime.reader_binding`, `runtime.reader_observation_binding`), the **Registry-Entity Reader convention** (DEC-0d5b39, which whole-supersedes DEC-129417 and amends the grouping doctrine of DEC-17112b) that anchors one non-archived Reader to one Business Concept Registry Entity (`admitted_entity_id`), with per-source Flavors identified by `(source_system, scenario)` and **per-entity** Observation- and Admission-Contract bindings, the three creation tracks (D209 fast-track from OC, manual via API, the seven-step wizard at D200), the seven chain integrity checks (CR-QG-RDR-003) that determine whether a Reader is operational, and the multi-flavor pattern for adding a second source system to an existing Reader. It records the boundary between Reader creation and the Connection (whose configuration is platform-held and tenant-owned, credentials external) that supplies runtime credentials. It records the as-built drift between the procedure and the platform's current Reader state.
+The chapter names the four-artifact runtime model (`runtime.reader`, `runtime.reader_flavor`, `runtime.reader_binding`, `runtime.reader_observation_binding`), the **Registry-Entity Reader convention** (DEC-0d5b39, which whole-supersedes DEC-129417 and amends the grouping doctrine of DEC-17112b) that anchors one non-archived Reader to one Business Concept Registry Entity (`admitted_entity_id`), with per-source Flavors identified by `(source_system, scenario)` and **per-entity** Observation- and Admission-Contract bindings, the governed authoring sequence over the `/api/reader-authoring/*` routes (the legacy D209 fast-track and D200 wizard are closed / non-operative), the five-reason chain-resolvability gate that governs Flavor activation, and the multi-flavor pattern for adding a second source system to an existing Reader. It records the boundary between Reader creation and the Connection (whose configuration is platform-held and tenant-owned, credentials external) that supplies runtime credentials. It records the as-built drift between the procedure and the platform's current Reader state.
 
 This chapter does not redefine the UniBAT Reader pattern (Connectors and Readers), the admission and observation runtime acts the Runner performs (Admission and Observation), the Observation Contract the Runner applies (Observation Contract Creation), or the Connection that resolves credentials at runtime (Tenancy and Binding). It uses the **Business Concept Registry** vocabulary (a Business Concept and its properties, `entity.property`); the former Business Object / Business Field / Canonical Field identity is superseded (DEC-02f5a9).
 
@@ -40,10 +40,10 @@ This chapter does not redefine the UniBAT Reader pattern (Connectors and Readers
 
 | Artifact | Persistent store | Created by |
 |---|---|---|
-| Reader identity (Registry-Entity-anchored: `admitted_entity_id`) | `runtime.reader` | Step 1 (or D209 fast-track) |
-| Reader Flavor (`(source_system, scenario)` specialization) | `runtime.reader_flavor` | Step 2 (or D209 fast-track) |
-| Reader Binding (per-entity Admission-Contract pin: `(reader, flavor, source_entity, environment)` or the reader-level fallback with null `flavor_id`) | `runtime.reader_binding` | Step 4 (or auto via D209) |
-| Reader Observation Binding (per-entity Observation-Contract pin: `(reader, flavor, source_entity, environment)`) | `runtime.reader_observation_binding` | D209 fast-track / bind step |
+| Reader identity (Registry-Entity-anchored: `admitted_entity_id`) | `runtime.reader` | `POST /api/reader-authoring/readers` |
+| Reader Flavor (`(source_system, scenario)` specialization) | `runtime.reader_flavor` | `POST /api/reader-authoring/flavors` |
+| Reader Binding (per-entity Admission-Contract pin: `(reader, flavor, source_entity, environment)` or the reader-level fallback with null `flavor_id`) | `runtime.reader_binding` | `POST /api/reader-authoring/admission-bindings` (flavor-specific) or `POST /api/readers/:readerId/bindings` (reader-level) |
+| Reader Observation Binding (per-entity Observation-Contract pin: `(reader, flavor, source_entity, environment)`) | `runtime.reader_observation_binding` | `POST /api/reader-authoring/observation-bindings` |
 
 Per the Registry-Entity convention (DEC-0d5b39), one non-archived Reader is anchored to one Business Concept Registry Entity (`admitted_entity_id`; the authoring service validates it against an active `concept_registry.entity`, error `R-C2`). Each source system is a Flavor `(source_system, scenario)` under that Reader; a Flavor observes **many** source entities, each pinned to its own Observation Contract through `reader_observation_binding`. Adding a second source system adds a Flavor; it does not add a new Reader.
 
@@ -149,7 +149,15 @@ POST /api/reader-authoring/admission-bindings
   "environmentCode": "dev", "sourceContractId": "<admission-contract-uuid>", "versionCode": "1.0.0" }
 ```
 
-`sourceContractId` carries the admission-contract id (historical column name). A conflicting occupied coordinate **refuses (`409`)**, never a silent no-op. The **reader-level fallback** (null-Flavor, coordinate `(reader, source_entity, environment)`) is exposed by the separately mounted `POST /api/readers/:readerId/bindings` surface — a distinct route from the authoring `admission-bindings` endpoint, which requires a Flavor.
+`sourceContractId` carries the admission-contract id (historical column name). A conflicting occupied coordinate **refuses (`409`)**, never a silent no-op. The **reader-level fallback** (null-Flavor, coordinate `(reader, source_entity, environment)`) is exposed by the separately mounted `POST /api/readers/:readerId/bindings` surface — a distinct route with a distinct DTO from the authoring `admission-bindings` endpoint (which requires a Flavor). Its `CreateReaderBindingDto` uses different field names, and `readerId` is the path parameter:
+
+```
+POST /api/readers/<readerId>/bindings          // reader-level fallback: omit flavorId
+{ "contractId": "<admission-contract-uuid>", "version": "1.0.0",
+  "sourceEntity": "account.move", "environment": "dev" }
+```
+
+Omitting `flavorId` selects the reader-level `(reader, source_entity, environment)` scope; supplying it scopes the binding to that Flavor. Note the field names (`contractId`/`version`/`environment`) differ from the authoring endpoint’s (`sourceContractId`/`versionCode`/`environmentCode`).
 
 ### 5. Activate the Flavor — `POST /api/reader-authoring/flavors/:flavorId/activate`
 
@@ -199,7 +207,7 @@ The governed activation act enforces one gate set; other checks named in prior p
 
 | # | Requirement | Break reason |
 |---|---|---|
-| 1 | An active `reader_binding` (flavor-specific or reader-level) admits the entity | `no_ac_binding` |
+| 1 | An active `reader_binding` (flavor-specific or reader-level) admits the entity | `no_ac_binding` (see the as-built note) |
 | 2 | The AC binding's SC/AC version resolves to an active version | `ac_version_unresolvable` |
 | 3 | An active `reader_observation_binding` exists for the entity | `no_oc_binding` |
 | 4 | The bound OC + version is active (not draft/superseded/archived) | `oc_inactive` |
@@ -208,6 +216,8 @@ The governed activation act enforces one gate set; other checks named in prior p
 A determinism gate additionally refuses (`409`) an activation that would create a conflicting active `(reader, source_system, scenario)`.
 
 **Reason #5 is a bounded proxy.** The current `oc_cc_chain_resolves` input checks for a non-empty `field_mappings` set, not full canonical-coverage. Treat it as a presence proxy, not a proof of complete OC→CC resolution.
+
+**As-built gap — `no_ac_binding` is not currently emitted.** The five reasons above are the *pure resolver's* taxonomy. The live `ReaderChainResolutionService.buildFlavorInput` enumerates entities **only** from the flavor's AC bindings and sets `hasAcBinding: true` for each, so an entity with no AC binding (or a Flavor with no AC bindings at all) yields an empty entity set and `resolveFlavor` returns `activatable: false` with `breaks: []` — the mounted endpoint reports the refusal but cannot currently surface the `no_ac_binding` reason. Fixing the service's entity enumeration to also enumerate OC-only entities (so the exact reason is named, per the DEC-17112b fail-closed requirement) is a separately governed platform unit (TSK-5a1e6e), not part of this docs unit.
 
 ### Not enforced by the governed surface (gaps)
 
@@ -263,7 +273,7 @@ A determinism gate additionally refuses (`409`) an activation that would create 
 | DEC-90faff | Establishes the canonical-driven reader creation sequence (top-down assembly) |
 | DEC-36d78f | Establishes the Reader observation schema with selective observation and standard field naming |
 
-The Registry-Entity Reader convention is decided in DEC-0d5b39, which whole-supersedes DEC-129417 (per-subfunction consolidation) and amends the grouping doctrine of DEC-17112b (retaining its four-layer model, per-entity Observation Contract binding, chain-resolvability activation gate, policies P2-P6, and flavor topology P-F1..P-F8). The Business Concept Registry supersedes the former BO/BF/CF identity (DEC-02f5a9). The operational config presets (D043 fast-track, D200 wizard, D205, D209) are referenced in the v2 SOP; their record lives in `legacy-v2/docs/sops/reader-creation-sop.md` and in this chapter.
+The Registry-Entity Reader convention is decided in DEC-0d5b39, which whole-supersedes DEC-129417 (per-subfunction consolidation) and amends the grouping doctrine of DEC-17112b (retaining its four-layer model, per-entity Observation Contract binding, chain-resolvability activation gate, policies P2-P6, and flavor topology P-F1..P-F8). The Business Concept Registry supersedes the former BO/BF/CF identity (DEC-02f5a9). The operational config presets (D043 fast-track, D200 wizard, D205, D209) are referenced in the v2 SOP; their record lives in `legacy-v2/docs/sops/reader-creation-sop.md`. The operative preset procedure is not part of this chapter (the D209/D200 surfaces that carried it are closed / non-operative; see Non-Operative Legacy Surfaces).
 
 **Governing source.** Decisions: ADR Registry.
 
