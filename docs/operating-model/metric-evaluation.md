@@ -144,7 +144,7 @@ Each Metric Evaluator invocation executes a fixed sequence at the metric evaluat
 | 4 | The Evaluator binds formula variables to Canonical Field values, aligns grain as required, and applies the formula deterministically | Metric Contract |
 | 5 | The Evaluator classifies the formula result against the governed thresholds | Metric Contract |
 | 6 | The Evaluator emits the act's Metric Snapshots and attempts proof. **Required (DEC-ebb3cd D-2):** one act-level Evidence and one act-level Lineage referencing the consumed Canonical Object versions and carrying the emitted Snapshot identities (per-act cardinality, not per-snapshot). **As-built:** the governed orchestrator writes the Evidence but **no Lineage**; the legacy path writes one narrower `contract:<MC>:<version> → metric_evaluation:<id>` Lineage without consumed-CO or per-snapshot references (see Evidence and Lineage at metric evaluation). | Object Model; Invariant VI; DEC-ebb3cd D-2 |
-| 7 | The Evaluator writes the tenant-scoped Metric Evaluation Run with applied governed versions, input references (`selection.resolved`), and evaluation outcome. The Run references the Evidence attempt; it does not substitute for a per-act Lineage where none is written. | DEC-771baf; DEC-f02230; Data Model and Schema |
+| 7 | The Evaluator writes the tenant-scoped Metric Evaluation Run (`progression.metric_run`): run identity, Metric Contract id/version, environment, status, timing, counters, error/trace. The governed selection (`selection.resolved`) is recorded on the **Metric Evaluation record** (`progression.metric_evaluation.input_references_json`), **not** on the Run. The **Evidence Object references the Run** (`subjectRef → metric_run:<id>`); the Run carries no inverse proof-reference column, and does not substitute for a per-act Lineage where none is written. | DEC-771baf; DEC-f02230; Data Model and Schema |
 
 Three consequences follow from this sequence.
 
@@ -177,7 +177,7 @@ The Metric Evaluation Run is the tenant-scoped execution record for one Evaluato
 | Scope | Tenant |
 | Store class | Tenant metric-run store in the progression-oriented tenant execution layer |
 | Initiated by | Evaluator invocation against one evaluation target |
-| Records | Metric Contract version applied, interpreted `metric_binding`, gathered Canonical Object references, gate outcome, formula result, classification outcome, and references to emitted proof |
+| Records (as mounted, `progression.metric_run`) | Run identity; Metric Contract id/version; environment; status; start/finish/duration; evaluation/computation/failure counters; error fields; trace id. It does **not** hold the interpreted binding, Canonical Object references, formula/classification results, or proof references — the governed selection (`selection.resolved`) lives on the Metric Evaluation record (`input_references_json`), and the Evidence Object references the Run (`subjectRef → metric_run:<id>`), not the reverse |
 | Lifecycle | Queued or running state followed by a terminal outcome state (`emitted`, `gated`, or `failed`) |
 | Retention | Append-only operational history |
 

@@ -56,7 +56,7 @@ POST /api/t/metric-evaluation-campaigns
   "defaultReaderId": "<uuid>", "readerIdBySubfunction": { "accounts_payable": "<uuid>" },
   "triggerModeCode": "manual" | "test", "environmentCode": "dev" }
 ```
-- `mode:test` is a chained dry-run: computes and reports, persists **nothing** (no snapshots, no evidence, no watermark movement). Composites and filter/grouping metrics honest-refuse as `unsupported` in test mode (v1 limitation) — they evaluate normally in `manual` mode.
+- `mode:test` is a metric-only dry-run: computes and reports, producing **no authoritative boundary output or state** — it suppresses metric runs, Metric Snapshots, Evidence, runtime events, and watermark movement. It **does** persist diagnostic `progression.evaluation_campaign` + `evaluation_campaign_run` rows (those rows are the report). Composites and filter/grouping metrics honest-refuse as `unsupported` in test mode (v1 limitation) — they evaluate normally in `manual` mode.
 - DAG-ordered (base before composite), deferred inputs retried in-campaign (attempt 2), idempotent per (campaign, metric, period), resumable.
 - Status: `GET /api/t/metric-evaluation-campaigns/{campaignId}` (campaign + per-run outcomes) or `GET /api/t/runtime-console/campaigns`.
 - Re-evaluation never rewrites history: newer accepted evaluations supersede **on read**.
@@ -107,7 +107,7 @@ Restore with `pg_restore -d <db> <dump>`. Production backup/DR (RDS snapshots, P
 
 Admission load-test measurements, including the retired per-row path and the DEC-4472ca batch-write path, are preserved in [Runtime Retirement Register Evidence](../evidence/ledgers/operations/runtime-retirement-register.md). Rerun recipe: use the isolated load-test tenant and load-test reader, regenerate datasets via the simulator volume knobs, compare typed payloads against the simulator source, and record fresh measurements in the evidence ledger.
 
-Crash recovery (sessions): `devhub_session_boot` surfaces orphans → read plan + checkpoints → resume or close. Runtime recovery: stale `running` rows are finalized `abandoned` by the run reconciler (nightly step 1); campaigns are resumable by relaunching with the same scope/periods (idempotent per metric×period).
+Crash recovery (sessions): `devhub_session_boot` surfaces orphans → read plan + checkpoints → resume or close. Runtime recovery: stale `running` rows are finalized `abandoned` by the run reconciler (nightly step 1) **only on the run surfaces that carry the heartbeat/reaper lifecycle substrate**. **Admission runs are excluded:** `runtime.admission_run` has no heartbeat, reaper, or auto-expiry — a stale `running` admission run requires a **dedicated, actor-attributed cancel/reconcile operation** (reason ≥ 40 chars, append-only disposition), never automatic abandonment. Campaigns are resumable by relaunching with the same scope/periods (idempotent per metric×period).
 
 ## 10. Known limitations (v1)
 
