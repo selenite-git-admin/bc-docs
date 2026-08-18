@@ -93,222 +93,142 @@ If any prerequisite is missing, the prerequisite procedure runs first (Business 
 
 **Governing source.** Connectors and Readers; Observation Contract Creation.
 
-## Track A: D209 Fast-Track (Recommended When OC Exists)
+## Governed Authoring Sequence
 
-The fast-track surface at `POST /api/readers/create-from-oc` is the primary path for bulk reader creation when OCs are already created. It runs the sub-steps in one call.
+Reader authoring is governed. The ungoverned legacy surfaces (`POST /api/readers`, `POST /api/readers/create-from-oc`, `POST /api/readers/:id/flavors`, `PATCH .../flavors/:id`) are **closed** — each throws `ForbiddenException` (G2 / D560 / Unit A; recovery design F6). All creation flows through `POST /api/reader-authoring/*`. The sequence is: create the Reader (create-or-reuse per Entity), add a Flavor, bind the Observation and Admission Contracts per source entity, then activate the Flavor.
+
+### 1. Create the Reader — `POST /api/reader-authoring/readers`
 
 ```
-POST /api/readers/create-from-oc
+POST /api/reader-authoring/readers
 {
-  "observationContractId": "<oc-uuid>",
-  "connectorId": "<connector-uuid>",
-  "executionMode": "full",
-  "backfillMode": "none",
-  "schedulePreset": "daily-business",
-  "retryStrategy": "conservative",
-  "circuitBreaker": "standard",
-  "alertPreset": "default"
+  "admittedEntityId": "<active concept_registry.entity uuid>",
+  "functionCode": "finance",
+  "subfunctionCode": "accounts_receivable",
+  "sourceCategoryCode": "enterprise",     // optional
+  "displayName": "Journal Entry Reader",  // optional; defaults to the Entity canonical name
+  "description": "..."                     // optional
 }
 ```
 
-The schedule presets:
+`admittedEntityId` is validated against an active `concept_registry.entity` (violation → `422 R-C2`). The service **creates-or-reuses** per Entity: identity is an opaque `reader_uid`, deduplicated on the one-non-archived-Reader-per-`admitted_entity_id` constraint. `functionCode`/`subfunctionCode` are master-checked classification (snake_case), not identity. The DTO carries **no** `name`/`tags`/operational-config fields.
 
-| Preset | Cron | Cadence |
-|---|---|---|
-| `realtime` | `* * * * *` | Every minute |
-| `hourly` | `0 * * * *` | Top of every hour |
-| `daily-business` | `0 6 * * 1-5` | Weekdays 06:00 UTC |
-| `daily-offpeak` | `0 2 * * *` | Daily 02:00 UTC |
-| `weekly` | `0 6 * * 1` | Mondays 06:00 UTC |
-| `monthly` | `0 6 1 * *` | First of month 06:00 UTC |
-
-> Note: schedule presets are stored operational config. Under the accepted orchestration doctrine (DEC-01bd6b) admission runs on governed, version-pinned commands on the source axis, not as cron-as-trigger; the preset is the current mechanism pending that orchestration build.
-
-The retry strategies:
-
-| Strategy | Backoff posture | Use |
-|---|---|---|
-| `conservative` | Bounded exponential retry profile | Default for enterprise readers |
-| `aggressive` | Higher-attempt linear retry profile | Fast retry when source throttling risk is low |
-| `none` | No retry | Use only when retries would be unsafe |
-
-The circuit breaker presets:
-
-| Preset | Open threshold | Cooldown posture |
-|---|---|---|
-| `sensitive` | Low failure threshold | Short cooldown |
-| `standard` | Balanced failure threshold | Standard cooldown |
-| `relaxed` | Higher failure threshold | Longer cooldown |
-
-Default recommendation for enterprise readers: `daily-business` schedule, `conservative` retry, `standard` circuit breaker.
-
-The service creates one `runtime.reader` row (draft, anchored to the OC's Registry Entity), one `runtime.reader_flavor` row (draft) for the source `(source_system, scenario)`, and the per-entity `reader_observation_binding` pinning the OC for the source entity.
-
-**Governing source.** Connectors and Readers.
-
-## Track B: Manual via API
-
-For one-off reader creation or fine-grained control, the actor calls the per-artifact endpoints directly:
+### 2. Add a Flavor — `POST /api/reader-authoring/flavors`
 
 ```
-POST /api/readers
+POST /api/reader-authoring/flavors
 {
-  "name": "<entity-slug>-reader",
-  "displayName": "<Registry Entity Display Name> Reader",
-  "admittedEntityId": "<concept_registry.entity uuid>",
-  "sourceCategory": "enterprise",
-  "function": "<function_code>",
-  "subfunction": "<subfunction_code>",
-  "description": "Reader for <Registry Entity name>",
-  "tags": ["<entity>"]
+  "readerId": "<reader-uuid>",
+  "sourceSystemCode": "odoo",           // snake_case (P-F2)
+  "scenarioCode": "default",            // optional; defaults to "default" (P-F3)
+  "displayName": "Odoo (production)",   // optional
+  "connectionId": "<connection-uuid>",  // optional — the Connection reference
+  "connectorId": "<connector-uuid>"     // optional — retained substrate debt (TSK-ccc82c)
 }
 ```
 
-`function`/`subfunction` are non-identity classification; the identity is `admittedEntityId`.
+The Flavor is identified by `(source_system, scenario)`; its name is server-derived (P-F7); one active Flavor per `(reader, source_system, scenario)` (violation → `409`). The **Connector is resolved through the Connection** (`connectionId` → `Connection.connector_id`); `connectorId` on the Flavor is retained compatibility substrate (TSK-ccc82c), not the governing authority. Both are optional in the DTO — see the gap note under Quality Gates.
 
-Then add a Flavor for a source `(source_system, scenario)`:
-
-```
-POST /api/readers/<readerId>/flavors
-{
-  "name": "<source_system>-<scenario>",
-  "displayName": "<Registry Entity> -- <System Name>",
-  "sourceSystem": "<source_system>",
-  "scenario": "default",
-  "status": "draft"
-}
-```
-
-Pin the Observation Contract for a source entity (per-entity binding):
+### 3. Bind the Observation Contract per source entity — `POST /api/reader-authoring/observation-bindings`
 
 ```
-POST /api/readers/<readerId>/bindings   (observation binding, per source entity)
-{
-  "flavorId": "<flavor-uuid>",
-  "sourceEntity": "account.move",
-  "environmentCode": "dev",
-  "observationContractId": "<oc-uuid>",
-  "versionCode": "1.0.0"
-}
+POST /api/reader-authoring/observation-bindings
+{ "readerId": "...", "flavorId": "...", "sourceEntity": "account.move",
+  "environmentCode": "dev", "observationContractId": "<oc-uuid>", "versionCode": "1.0.0" }
 ```
 
-Pin the Admission Contract for the same source entity (flavor-specific, or reader-level with `flavorId: null`):
+Version-safe: at most one active OC pin per `(reader, flavor, source_entity, environment)`.
+
+### 4. Bind the Admission Contract per source entity
+
+Flavor-specific (governed authoring) — `POST /api/reader-authoring/admission-bindings` (**requires** `flavorId`):
 
 ```
-POST /api/readers/<readerId>/bindings   (admission binding, per source entity)
-{
-  "flavorId": "<flavor-uuid | null for reader-level fallback>",
-  "sourceContractId": "<admission-contract-uuid>",
-  "versionCode": "1.0.0",
-  "sourceEntity": "account.move",
-  "environmentCode": "dev"
-}
+POST /api/reader-authoring/admission-bindings
+{ "readerId": "...", "flavorId": "...", "sourceEntity": "account.move",
+  "environmentCode": "dev", "sourceContractId": "<admission-contract-uuid>", "versionCode": "1.0.0" }
 ```
 
-The Connector and credentials are supplied through the Connection at runtime; they are not on the Reader or Flavor.
+`sourceContractId` carries the admission-contract id (historical column name). A conflicting occupied coordinate **refuses (`409`)**, never a silent no-op. The **reader-level fallback** (null-Flavor, coordinate `(reader, source_entity, environment)`) is exposed by the separately mounted `POST /api/readers/:readerId/bindings` surface — a distinct route from the authoring `admission-bindings` endpoint, which requires a Flavor.
 
-**Governing source.** Connectors and Readers.
+### 5. Activate the Flavor — `POST /api/reader-authoring/flavors/:flavorId/activate`
 
-## Track C: Reader Constructor Wizard (D200)
+```
+POST /api/reader-authoring/flavors/<flavorId>/activate
+{ "readerId": "<reader-uuid>", "environmentCode": "dev" }   // environmentCode defaults to "dev"
+```
 
-The seven-step wizard orchestrates the full chain from Registry Entity selection through reader activation:
+Activation is **fail-closed behind the chain-resolvability gate + a determinism gate**. A refusal returns `422` with the exact `breaks`; a determinism conflict returns `409` with the conflicting flavor ids. There is **no Reader-activation endpoint** — a Reader is live when it has at least one activatable/active Flavor (a Reader may be partially live: one Flavor active, another still draft). Flavors and Readers are retired via `POST /api/reader-authoring/flavors/:flavorId/archive` and `.../readers/:readerId/archive` (reversible via `archived_at`).
 
-| Step | Action |
+**Governing source.** Connectors and Readers; Reader Authoring (governed surface).
+
+## Non-Operative Legacy Surfaces (closed)
+
+These surfaces are recorded because prior procedure and UI reference them; they do not create governed state.
+
+| Surface | State |
 |---|---|
-| 1 | Select Business Concept Registry Entity |
-| 2 | Select Canonical Contract |
-| 3 | Select or create Observation Contract (per source entity) |
-| 4 | Select Connector (resolved through the Connection) |
-| 5 | Select Source Version |
-| 6 | Create Reader plus Flavor and per-entity bindings (calls D209 fast-track internally) |
-| 7 | Review and Activate |
+| `POST /api/readers` | Closed — `ForbiddenException` (G2 / D560 / Unit A). Use `POST /api/reader-authoring/readers` |
+| `POST /api/readers/create-from-oc` (D209 fast-track) | Closed — hard-refusing stub (G2 / D560 / Unit A). No operative bulk fast-track exists; a governed bulk path is a tracked gap |
+| `POST /api/readers/:id/flavors` | Closed — `ForbiddenException` (recovery design F6). Use `POST /api/reader-authoring/flavors` |
+| `PATCH /api/readers/:id/flavors/:id` | Closed — legacy Flavor mutation refused. Use `.../flavors/:id/activate` and `.../archive` |
+| D200 seven-step wizard | Not operative — the current bc-admin surface is a three-step OC/config/review UI that calls the closed `create-from-oc`; a governed Registry-Entity wizard is a gap, not a track |
 
-The wizard is the appropriate path when OCs do not yet exist and guided creation is preferred. For bulk operations where OCs exist, Track A is faster.
-
-**Governing source.** Connectors and Readers.
-
-## Activation
-
-Readers are created as `draft`. The actor activates the Flavor first (after CR-QG-RDR-002 readiness checks pass) and then the Reader (once the Reader has at least one active Flavor):
-
-```
-PATCH /api/readers/<readerId>/flavors/<flavorId>
-{ "status": "active" }
-
-PATCH /api/readers/<readerId>
-{ "status": "active" }
-```
-
-Activation requires CR-QG-RDR-003 (the seven chain integrity checks below) to pass. A draft Flavor or a Flavor with no active per-entity OC binding cannot be activated.
-
-**Governing source.** Connectors and Readers.
+**Governing source.** Reader Authoring; bc-core reader service (closed legacy handlers).
 
 ## Adding a Second Flavor (Multi-Source Reader)
 
-When a Registry Entity needs data from multiple source systems, the actor adds a Flavor to the existing Reader rather than creating a new Reader. The procedure:
+When a Registry Entity needs data from multiple source systems, add a Flavor to the existing Reader rather than creating a new Reader:
 
 1. Create the OC for the second source system's source entity (Observation Contract Creation).
-2. Add a Flavor `(source_system, scenario)` to the existing Reader.
-3. Pin the new OC to the new Flavor per source entity via `reader_observation_binding`, and pin the Admission Contract via `reader_binding`.
-4. Activate the new Flavor when readiness checks pass.
+2. `POST /api/reader-authoring/flavors` with the new `(sourceSystemCode, scenarioCode)`.
+3. Bind the new OC (`observation-bindings`) and AC (`admission-bindings`) per source entity.
+4. Activate the new Flavor (`.../activate`) once the chain-resolvability gate passes.
 
-Both Flavors admit the same Registry Entity (same Business Concept properties) but read from different source systems. The Reader's Entity-anchored identity remains; the Flavor count grows.
+Both Flavors specialize the same Registry Entity for different source systems; the Runner executes the Reader definition for the selected Flavor and context. The Reader's Entity-anchored identity is unchanged; the Flavor count grows.
 
 **Governing source.** Connectors and Readers.
 
 ## Quality Gates
 
-The Reader creation enforces three classes of gate.
+The governed activation act enforces one gate set; other checks named in prior procedure are **not** enforced by the current governed surfaces and are recorded as gaps.
 
-### CR-QG-RDR-001: Reader Creation Gate
+### Flavor activation — chain-resolvability gate (five contract-chain reasons)
 
-| # | Check |
-|---|---|
-| 1 | Entity anchored: `admitted_entity_id` references an active Business Concept Registry Entity (`R-C2`) |
-| 2 | Name unique: no existing Reader with the same `reader_name` |
-| 3 | Function valid: `function_code` matches a registered business function (classification only) |
-| 4 | Operational config valid: schedule cron is parseable; retry config has valid values |
+`POST /api/reader-authoring/flavors/:flavorId/activate` is fail-closed behind the activation resolver. Per admitted source entity it requires all of the following, else the activation is refused (`422`, `breaks`) with the exact reason:
 
-### CR-QG-RDR-002: Flavor Readiness Gate
+| # | Requirement | Break reason |
+|---|---|---|
+| 1 | An active `reader_binding` (flavor-specific or reader-level) admits the entity | `no_ac_binding` |
+| 2 | The AC binding's SC/AC version resolves to an active version | `ac_version_unresolvable` |
+| 3 | An active `reader_observation_binding` exists for the entity | `no_oc_binding` |
+| 4 | The bound OC + version is active (not draft/superseded/archived) | `oc_inactive` |
+| 5 | The OC→CC chain resolves for the bound OC | `oc_cc_chain_unresolvable` |
 
-| # | Check |
-|---|---|
-| 1 | OC pinned: at least one active `reader_observation_binding` pins an active OC for a source entity |
-| 2 | Connector resolvable: the Connection resolves an active Connector (`connector_id`) |
-| 3 | AC pinned: an active `reader_binding` (flavor-specific or reader-level fallback) pins an active Admission Contract for the source entity |
-| 4 | Status active: Flavor `status_code` is `active` (after the activation step) |
+A determinism gate additionally refuses (`409`) an activation that would create a conflicting active `(reader, source_system, scenario)`.
 
-### CR-QG-RDR-003: Reader Chain Integrity (Seven Checks)
+**Reason #5 is a bounded proxy.** The current `oc_cc_chain_resolves` input checks for a non-empty `field_mappings` set, not full canonical-coverage. Treat it as a presence proxy, not a proof of complete OC→CC resolution.
 
-A Reader is chain-complete when all seven checks pass (mirroring the runtime resolver's break-reason taxonomy):
+### Not enforced by the governed surface (gaps)
 
-| # | Check |
-|---|---|
-| 1 | Entity anchored: `reader.admitted_entity_id` is non-null and references an active Registry Entity |
-| 2 | Registry Entity active: the anchored `concept_registry.entity` is active (not archived) |
-| 3 | Has active flavor: at least one `reader_flavor` with `status: active` |
-| 4 | Flavor has OC binding: an active `reader_observation_binding` exists for the entity (else resolver `no_oc_binding`) and the OC/version is active (else `oc_inactive`) |
-| 5 | Connector resolvable: the Connection resolves an active Connector |
-| 6 | Has AC binding: an active `reader_binding` exists for the entity (else `no_ac_binding`) and its AC/SC version resolves active (else `ac_version_unresolvable`) |
-| 7 | OC→CC chain resolves: the bound OC's canonical chain resolves (else `oc_cc_chain_unresolvable`) |
+- **Connection/Connector resolvability** is **not** checked by the activation resolver. A Flavor with no `connectionId` (and thus no resolvable Connector) can pass activation. Establishing and checking the Connection context is a platform gap.
+- **Reader-to-active-Registry-Entity integrity at activation** is not re-checked by the resolver (it is enforced once at creation via `R-C2`).
+- **Generic Reader `PATCH`** is not chain-gated; there is no governed Reader-activation act.
+- **`reader_name` uniqueness** and **operational-config validation** named in prior procedure are retired/absent: identity is the opaque `reader_uid` with per-`admitted_entity_id` dedup, and `CreateReaderDto` carries no operational config.
 
-Only chain-complete Readers can execute Admission Runs; every break is a named, fail-closed resolver reason, not a silent miss. The checks are run on demand via the integrity surface and on every Reader status change.
-
-**Governing source.** Connectors and Readers; Quality Gates and Chain Integrity.
+**Governing source.** Reader Authoring; reader chain-resolution (activation resolver).
 
 ## Forbidden Patterns
-
-The chapter records five forbidden patterns. Each one breaks the platform's UniBAT discipline at a specific layer.
 
 | Forbidden | Why |
 |---|---|
 | One Reader per subfunction (grouping many Entities) | A Reader is anchored to one Business Concept Registry Entity (DEC-0d5b39, one non-archived Reader per `admitted_entity_id`); the former subfunction grouping (DEC-129417 whole-superseded; DEC-17112b grouping amended) no longer holds |
 | One Reader per source table | Source entities are per-entity bindings, not Readers |
-| Skip OC binding | A Reader with no active `reader_observation_binding` for an entity cannot admit it (resolver `no_oc_binding`); the per-entity OC binding is the contract-bearing layer |
-| Hardcode credentials in Reader or Flavor config | Connector and credentials are resolved through the Connection (configuration platform-held, tenant-owned, credentials external); they are not on the Reader or Flavor |
-| Anchor a Reader to an inactive or absent Registry Entity | The authoring service refuses (`R-C2`); a Reader must anchor to an active `concept_registry.entity` |
+| Create through the closed legacy surfaces | `POST /api/readers`, `create-from-oc`, and `/flavors` are closed (`ForbiddenException`); use the `/api/reader-authoring/*` governed routes |
+| Make the Flavor the Connector authority | The Connector resolves through the Connection (`connectionId` → `Connection.connector_id`); the retained `reader_flavor.connector_id` is substrate debt (TSK-ccc82c), never the governing edge |
+| Anchor a Reader to an inactive or absent Registry Entity | The governed `createReader` refuses (`422 R-C2`); a Reader must anchor to an active `concept_registry.entity` |
 
-**Governing source.** Connectors and Readers; Tenancy and Binding.
+**Governing source.** Connectors and Readers; Reader Authoring.
 
 ## Boundary with Other Onboarding Chapters
 
@@ -327,7 +247,7 @@ The chapter records five forbidden patterns. Each one breaks the platform's UniB
 
 | Drift item | Form |
 |---|---|
-| `create-from-oc` derives Reader name from OC display name | The fast-track surface produces Reader names that may include the source-entity component. The actor renames via PATCH if entity-anchoring discipline requires; recorded as a known cosmetic drift |
+| No governed bulk creation path | The legacy `create-from-oc` fast-track is closed (`ForbiddenException`); a governed bulk creation path over the `/api/reader-authoring/*` routes is a tracked gap. Creation is currently one governed call per artifact |
 | Flavor Connector/Connection columns retained | `reader_flavor.connector_id`/`connection_id` remain live columns (compatibility substrate) even though `Connection.connector_id` is the decided sole authority; retirement tracked under TSK-ccc82c |
 | Connector inventory is small | The readiness-baseline platform Connector list is short. Other source families are connector gaps recorded in Connectors and Readers |
 | Activation gate failures surface at bind/activation | A Flavor with no active per-entity OC binding can be created in `draft`; the break surfaces at activation as a named resolver reason (`no_oc_binding`), not at create. The actor reads the chain integrity report to identify the missing binding |
