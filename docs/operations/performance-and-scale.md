@@ -11,6 +11,7 @@ governing_sources:
   - Infrastructure
 governing_adrs:
   - DEC-c0290f (Metric evaluation engine; grain-aware GROUP BY; schedule-driven orchestration)
+  - DEC-01bd6b (Runtime Orchestration — governed scheduled commands; no-read-trigger; immutable forward acts; target doctrine)
   - DEC-bebaec (Chain Completeness SSOT)
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules)
   - DEC-771baf (Tenant database topology; one tenant database per tenant)
@@ -76,7 +77,7 @@ The aggregate scale (many tenants under the platform umbrella) is bounded by:
 
 ## Metric Engine Performance Posture
 
-DEC-c0290f establishes the metric evaluation engine. The engine is grain-aware (`GROUP BY` on grain keys at the database layer, not in application memory), schedule-driven (the cron in `temporal_gate.schedule` triggers evaluation), and formula-driven (formulas own aggregation per DEC-35b34b).
+DEC-c0290f establishes the metric evaluation engine. The engine is grain-aware (`GROUP BY` on grain keys at the database layer, not in application memory), governed-command-driven (the cron in `temporal_gate.schedule` **issues a governed evaluation command**; a schedule commands evaluation, it is not itself the evaluation authority — DEC-01bd6b, and reads/schedules never trigger evaluation as meaning), and formula-driven (formulas own aggregation per DEC-35b34b).
 
 Engine performance characteristics:
 
@@ -85,8 +86,8 @@ Engine performance characteristics:
 | Per-CO grain GROUP BY | Done at the database layer; the engine builds the GROUP BY clause from the MC's grain declaration |
 | Per-formula evaluation | One formula evaluation per grain group; `mathjs` parser interprets the formula expression |
 | Schedule cadence | Per-MC `temporal_gate.schedule.cron`; ranges from realtime to monthly per the cron preset |
-| Idempotency | Per-grain-group, per-period idempotent; re-evaluation produces the same Metric Snapshot row (or supersedes it on value change) |
-| Verification path | The mc-verify.mjs script (per MC Chain Integrity) re-evaluates against demo-selenite and diffs old vs new snapshot values |
+| Idempotency | Per-grain-group, per-period idempotent for an unchanged input. A **changed** value yields a **new** Metric Snapshot version — the prior row is never mutated or reused, and is superseded **on read** (Invariant III; matching the Runtime Operations run-lifecycle rule) |
+| Verification path | Verification **reads preserved state**: it compares recorded Metric Snapshot values against expected/reference values; it does not re-evaluate the metric (Invariant V — evaluation is non-replayable; a verification read never triggers a boundary act). **As-built divergence:** where the current `mc-verify.mjs` re-evaluates against a dataset and diffs old vs new values, that is a verification-that-evaluates pattern to be reconciled to a read-only comparison against preserved state |
 
 The chapter does not assert per-MC latency figures. Engine benchmark data lives in CLAUDE.md memory files (e.g., the `session_metric_engine_apr12.md` file records benchmark figures at one point in time); current per-MC latency is read from the bc-core engine logs and the bc-ai evidence table when AI is involved in the evaluation.
 
