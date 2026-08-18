@@ -12,6 +12,9 @@ governing_adrs:
   - DEC-136a23 (Reader Observation Schema dual-layer)
   - DEC-1edaaa (One Observation Contract per system per Reader)
   - DEC-771baf (Tenant database architecture; tenant-scoped Connection)
+  - DEC-0d5b39 (Reader anchored to one Registry Entity; source-agnostic; Connection authority)
+  - DEC-81cd26 (Connection configuration platform-held)
+  - DEC-ecd55c (Connection tenant ownership; external secrets)
 errata_referenced:
   - FND-ERR-002
 v2_sources:
@@ -41,7 +44,7 @@ The platform recognizes five adapter artifacts. Four are platform-scoped and gov
 | Reader Flavor | Reader variant bound to one Connector, one Observation Contract, and one source-system version context | Platform | `runtime.reader_flavor` |
 | Reader Binding | Platform-governed **Admission-Contract binding** for an execution context — despite its historical column name, `reader_binding.source_contract_id` carries an **admission-contract id**; the pair `(source_contract_id, version_code)` is the effective AC version pin (substrate fact, source-filter design v4) | Platform | `runtime.reader_binding` |
 | Reader Observation Binding | Platform-governed **Observation-Contract pin** per `(reader, flavor, environment, source entity)` — the declaration a given admission run executes under | Platform | `runtime.reader_observation_binding` |
-| Connection | Tenant-scoped credentials and access record for a Reader Flavor against a tenant-owned source system | Tenant | Tenant connection store |
+| Connection | Tenant-owned access record for a Reader Flavor; configuration platform-held, credentials external | Platform-held config, tenant-owned | Platform runtime.connection + external secret store |
 
 Connector, Reader, Reader Flavor, and both bindings are governed centrally and reused across tenants. The Connection is tenant-scoped under DEC-771baf and carries credentials and per-tenant access configuration; the platform-side artifacts do not carry tenant credentials.
 
@@ -78,15 +81,15 @@ Connector, Reader, Reader Flavor, and both bindings are governed centrally and r
 
 ## Reader
 
-**Purpose.** A Reader is the platform runtime component that performs admission for a Business Object family against a declared source system, implementing the UniBAT pattern (Universal Business-Aware Transactions Reader).
+**Purpose.** A Reader is the platform runtime component that performs admission for one Business Concept Registry Entity, implementing the UniBAT pattern (Universal Business-Aware Transactions Reader).
 
-**Scope.** A Reader covers the admission orchestration for one Business Object family: Connector access, Admission Contract validation, Observation Contract mapping, Source Object emission, and Admission Run recording. It does not cover canonical evaluation, metric evaluation, action evaluation, or any operation that produces objects beyond the Source Object.
+**Scope.** A Reader covers the admission orchestration for one Business Concept Registry Entity: Connector access, Admission Contract validation, Observation Contract mapping, Source Object emission, and Admission Run recording. It does not cover canonical evaluation, metric evaluation, action evaluation, or any operation that produces objects beyond the Source Object.
 
-**Behavior.** A Reader is registered with a reader code, the Business Object family it admits, and references to the Connector and contract artifacts that govern it. At invocation time, the Reader coordinates the act sequence defined in Admission and Observation: it obtains records via the Connector, applies the governed Admission Contract for validation, applies the governed Observation Contract for mapping and identity composition, emits Source Objects together with Evidence and Lineage, and writes the tenant-scoped Admission Run.
+**Behavior.** A Reader is registered with a reader code, the Business Concept Registry Entity it admits, and references to the Connector and contract artifacts that govern it. At invocation time, the Reader coordinates the act sequence defined in Admission and Observation: it obtains records via the Connector, applies the governed Admission Contract for validation, applies the governed Observation Contract for mapping and identity composition, emits Source Objects together with Evidence and Lineage, and writes the tenant-scoped Admission Run.
 
 **Constraints.**
 
-- A Reader admits one Business Object family. A second family requires a second Reader.
+- A Reader admits one Business Concept Registry Entity — one non-archived Reader per Entity (DEC-0d5b39). A second Entity requires a second Reader. A Reader carries no source system; source specialization lives in its per-source Flavors.
 - A Reader does not infer fields not declared by the governed Observation Contract.
 - A Reader does not apply Canonical Contract logic.
 - A Reader does not modify previously emitted Source Objects.
@@ -151,7 +154,7 @@ The pattern's three structural consequences:
 
 - A Reader Flavor binds to exactly one Reader.
 - A Reader Flavor binds to exactly one Connector.
-- A Reader Flavor binds to exactly one Observation Contract version. Per DEC-1edaaa, one governed Observation Contract per system per Reader.
+- A Reader Flavor binds Observation Contracts per source entity via reader_observation_binding; one Flavor observes many entities, each under its own Observation Contract binding. This amends the former one-Observation-Contract-per-Flavor reading of DEC-1edaaa (see DEC-0d5b39 and DEC-17112b).
 - A Reader Flavor's runtime copy is derived from the governed Observation Contract and is not independently edited.
 - A Reader Flavor does not declare validation rules or canonical translations independently of its bound contracts.
 
@@ -192,7 +195,7 @@ The pattern's three structural consequences:
 
 ## Connection
 
-**Purpose.** A Connection is the tenant-scoped record of credentials and access configuration that authorizes a Reader Flavor's Connector to reach a tenant-owned source system.
+**Purpose.** A Connection is the tenant-owned access record — configuration platform-held in runtime.connection, owned by the tenant identity, with credentials external (the secret-management surface) — that authorizes a Reader Flavor's Connector to reach a tenant-owned source system.
 
 **Scope.** A Connection covers tenant credentials, environment-specific access URLs or hostnames, rotation windows, and per-tenant access constraints (rate limits, allowed time windows). It does not cover the platform-side Connector definition (that is the Connector artifact), the Reader Flavor binding (that is the Reader Flavor artifact), or any contract content.
 
@@ -200,7 +203,7 @@ The pattern's three structural consequences:
 
 **Constraints.**
 
-- A Connection is tenant-scoped. Platform-side artifacts (Connector, Reader, Flavor, Binding) do not carry tenant credentials.
+- A Connection's configuration is platform-held (runtime.connection) and tenant-owned (by tenant identity); credentials are external (the secret-management surface), per DEC-81cd26 / DEC-ecd55c. Platform-side artifacts (Connector, Reader, Flavor, Binding) do not carry tenant credentials.
 - A Connection authorizes one Reader Flavor against one tenant-owned source system. Multi-Flavor or multi-tenant credential bundles are separate Connections.
 - A Connection does not declare validation rules, mapping rules, or contract content. It declares access only.
 - A Connection's credentials are not preserved on the Connection record itself; only a credential reference is recorded.
