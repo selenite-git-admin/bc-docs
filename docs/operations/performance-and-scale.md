@@ -77,7 +77,7 @@ The aggregate scale (many tenants under the platform umbrella) is bounded by:
 
 ## Metric Engine Performance Posture
 
-DEC-c0290f establishes the metric evaluation engine. The engine is grain-aware (`GROUP BY` on grain keys at the database layer, not in application memory), governed-command-driven (the cron in `temporal_gate.schedule` **issues a governed evaluation command**; a schedule commands evaluation, it is not itself the evaluation authority — DEC-01bd6b, and reads/schedules never trigger evaluation as meaning), and formula-driven (formulas own aggregation per DEC-35b34b).
+DEC-c0290f establishes the metric evaluation engine. The engine is grain-aware (`GROUP BY` on grain keys at the database layer, not in application memory) and formula-driven (formulas own aggregation per DEC-35b34b). Its scheduling posture — target vs mounted — is stated in the Schedule cadence row below: per-MC `temporal_gate.schedule` command issuance is **DEC-01bd6b target doctrine** (a schedule *commands* evaluation, it is not the evaluation authority; reads/schedules never trigger evaluation as meaning), while the **mounted** scheduler runs one nightly full-catalog campaign and does not read a per-MC cron.
 
 Engine performance characteristics:
 

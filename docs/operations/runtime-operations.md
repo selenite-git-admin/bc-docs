@@ -43,12 +43,14 @@ The platform evaluates at exactly four boundaries (Foundation, the-evaluation-bo
 
 Every engine invocation carries exactly one declared trigger mode, recorded on the run row:
 
-| Mode | Meaning | Status |
+Each row separates the **accepted/target meaning** from the **mounted status** so a reader never reads target doctrine as current capability.
+
+| Mode | Accepted / target meaning | Mounted status (as-built) |
 |---|---|---|
-| `manual` | operator/API call | live in the readiness baseline |
-| `test` | dry-run — see below | partial (admission only; R2 completes) |
-| `scheduled` | cron-driven | R2; **scheduled admission is gated on watermark/delta discipline at fetch** (admission itself remains correctly non-idempotent — every admission is a distinct immutable observation act) |
-| `event` | chained from an upstream engine's completion event via the persisted outbox | R2 |
+| `manual` | operator/API-commanded engine act | live in the readiness baseline |
+| `test` | diagnostic dry-run — not a boundary act (see Dry-run) | **live but bounded:** admission dry-run, and a **metric-only** campaign dry-run (`dryEvaluateMetricForPeriod`; composites `unsupported`); it persists diagnostic `evaluation_campaign`/`_run` rows and **no** boundary object/run/snapshot/Evidence/event/watermark. It is not "admission only" |
+| `scheduled` | governed scheduled **command** on the source axis (admission) / metric axis (evaluation), version-pinned (DEC-01bd6b) | **as-built: reader-keyed** — `RuntimeSchedulerService.runScheduledAdmissions` reads `BC_SCHEDULE_ADMISSION_READERS` (`readerId:flavorId`) → `ReaderRuntimeService.executeReader`; watermark/delta-gated at fetch (admission remains non-idempotent — every admission is a distinct immutable observation act). Source-axis keying is target, not mounted |
+| `event` | evaluation chained from an upstream act's completion event, version-pinned | **as-built: not an evaluation invoker** — `RuntimeEventService.emit` persists the event and drives only the boundary-ticket and webhook consumers; **no** consumer invokes canonical/metric/campaign evaluation. Event-driven evaluation chaining is target vocabulary, not mounted |
 
 **Orchestration doctrine (DEC-01bd6b, target).** A trigger mode names *how* an engine act is initiated; it is never an authority to evaluate on read. Under the accepted two-orchestrator model, two axis-orchestrators drive the engines by governed, version-pinned commands: the **Admission Orchestrator** on the **source axis** (source cycles coordinating admission runs) and the **Evaluation Orchestrator** on the **metric axis** (governed, target-pinned, command-triggered evaluation). **Reads never trigger evaluation** (ORCH-5/6; Invariant). The `scheduled` (cron) and `event` (outbox) mechanics above are the **as-built** initiation surface pending the DEC-01bd6b orchestration build — and the as-built differs from the target on three points: (1) mounted `scheduled` admission is **reader-keyed** (`RuntimeSchedulerService.runScheduledAdmissions` reads `BC_SCHEDULE_ADMISSION_READERS` = `readerId:flavorId` pairs and calls `ReaderRuntimeService.executeReader`); source-axis keying is DEC-01bd6b target doctrine, not the mounted identity. (2) the runtime **outbox does not invoke evaluation** — `RuntimeEventService.emit` persists the event and drives only the boundary-ticket and webhook consumers; no event consumer invokes canonical, metric, or campaign evaluation, so `event` is a trigger-mode/outbox vocabulary, not a mounted evaluation invoker. (3) the schedule *commands* an admission, but version-pinned command selection is target doctrine (see Campaigns). None of these mount the two-orchestrator model yet.
 
