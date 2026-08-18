@@ -13,6 +13,9 @@ governing_adrs:
   - DEC-29c324 (N:1 Metric Contract to Canonical Contract cardinality)
   - DEC-771baf (Tenant database architecture and run scope)
   - DEC-f02230 (Tenant DB schema organization)
+  - DEC-0d5b39 (Evaluator umbrella — Canonical/Metric/Action Evaluators as distinct boundary acts; Runner/Evaluator machine split)
+  - DEC-0f3e57 (Secondary metrics — metric-over-metric-snapshot descriptive DAG; composite runtime)
+  - DEC-483f1e (The General Metric Runtime — substrate-driven, shape-dispatch; later expansion)
 errata_referenced:
   - FND-ERR-003
 v2_sources:
@@ -27,7 +30,7 @@ v2_sources:
 
 This chapter defines the runtime components and execution behavior at the metric evaluation boundary under the current Foundation execution model. It describes the Metric Evaluator and the tenant-scoped Metric Evaluation Run; defines how the Metric Contract is applied at runtime; defines how the Metric Contract's `metric_binding` is interpreted at runtime; defines deterministic formula application over Canonical Field values; defines the readiness gate and threshold classification at the level authorized by the current contract grammar; defines the evaluation sequence that produces one Metric Snapshot together with Evidence and Lineage; and defines the tenant-scoped run record that preserves invocation outcomes. It distinguishes contract authority from runtime application so that governed contract shape and operational behavior are not conflated. It does not redefine the contract grammar (The Contract Grammar), the metric evaluation boundary as an execution-model concept (The Evaluation Boundaries), the canonical evaluation components that produce Canonical Objects (Canonical Evaluation), tenant-scoped binding records (Tenancy and Binding), the full relational schema (Data Model and Schema), or the API surface for evaluator operations (API Surface).
 
-This chapter follows the current authoritative Foundation reading in which a metric evaluation act consumes one or more Canonical Object versions and emits one Metric Snapshot. Where the metric grammar and object model acknowledge a secondary metric chain, that chain is recognized as a permitted lineage shape but is not operationally expanded here beyond the conditional statement already present in the Metric evaluation boundary section of The Evaluation Boundaries and the Metric Snapshot section of The Object Model. Full runtime treatment of secondary metric evaluation requires corresponding updates to the Foundation spine before it becomes authoritative here.
+The **Metric Evaluator** is one of the three boundary machines under the Evaluator umbrella (Canonical, Metric, Action — DEC-0d5b39); each is an independently invoked Foundation boundary act, and the umbrella is a naming convenience that never collapses the boundaries. A primary metric evaluation act consumes one or more Canonical Object versions and emits one Metric Snapshot. A **secondary** metric evaluation act — a Metric Snapshot whose Lineage references other Metric Snapshots — is a **descriptive** directed acyclic graph (DEC-0f3e57) and already has an **operative composite runtime** (the composite evaluator, governed persistence through `progression.metric_evaluation`, the `fact.ms_*` projection tables, and `evidence.lineage_object`). It is **not** a deferred runtime; its one outstanding correctness repair is **E6 / FND-R2-1** (see Secondary metric evaluation), and broader shape-dispatch expansion is governed by DEC-483f1e.
 
 ## Runtime inventory
 
@@ -51,7 +54,7 @@ The Metric Evaluator is governed centrally and reused across tenants. Metric Eva
 - The Evaluator does not modify a previously emitted Metric Snapshot.
 - The Evaluator does not produce metric values outside the metric evaluation boundary.
 - The Evaluator does not treat read-time or dashboard computation as authoritative metric evaluation.
-- The Evaluator does not operationalize secondary metric-chain execution in this chapter's authoritative scope.
+- Secondary metric-chain execution is performed by the composite evaluator (see Secondary metric evaluation), a distinct act from this primary single-target path; the two are never collapsed.
 
 **Failure modes.** Evaluator failures decompose into gate failures, input-resolution failures, formula-evaluation failures, and classification failures. A gate failure records a terminal gated outcome on the Run and emits no Metric Snapshot. An input-resolution or formula-evaluation failure records a terminal failed outcome on the Run and emits no Metric Snapshot. A classification failure records a terminal failed outcome on the Run and emits no Metric Snapshot when the governed threshold structure cannot be applied to the computed result.
 
@@ -177,11 +180,23 @@ DEC-771baf governs tenant ownership of execution data. DEC-f02230 and its active
 
 The Metric Evaluation Run is an operational record. It is authoritative for run accounting and invocation history. It does not replace Metric Snapshots, Evidence, or Lineage as the authoritative outcome of metric evaluation.
 
+## Secondary metric evaluation (composite runtime)
+
+A secondary Metric Snapshot is a Metric Snapshot whose Lineage references other Metric Snapshots — a **descriptive** DAG of metric dependencies (DEC-0f3e57). Traversal reads preserved Lineage and never triggers recomputation (Invariant V); a changed upstream yields a new forward evaluation act, never an in-place recompute (Invariant III).
+
+The composite runtime is **operative today**, not deferred. The composite evaluator (`CompositeMetricEvaluationService`) resolves each declared upstream input to a fixed upstream Metric Snapshot **scoped to an exact fiscal period** (`as_of_period_end` / `period_matched` read the evaluation period's snapshot; `prior_period_end` reads the immediately preceding period and fails closed — DEFER upstream — when no snapshot exists), applies the governed composite formula, and persists one Metric Snapshot through the same governed surfaces as the primary path (`progression.metric_evaluation`, the `fact.ms_*` projection, `evidence.lineage_object`).
+
+**Outstanding repair — E6 / FND-R2-1.** Current upstream resolution selects `WHERE metric_contract_id = <upstream MC> AND fiscal_period = <period> AND status = 'accepted' ORDER BY evaluated_at DESC LIMIT 1` and records the upstream **Metric Contract UID** in the resolved selection, not the exact consumed **Metric Snapshot** (`metric_evaluation_id`). That makes the reference implicit (latest-accepted for the MC and period) rather than an explicit pin to the exact object, weakening Invariant IV (references explicit) and Invariant VI (evidence exact, not reconstructed). The repair is to select and record the exact consumed `metric_evaluation_id` in Lineage. Until it lands, secondary-metric Lineage is period-exact but not snapshot-exact.
+
+**Later expansion.** The general, substrate-driven, shape-dispatch metric runtime is governed by DEC-483f1e; this chapter records the current composite runtime and the E6 repair, not that expansion.
+
+**Governing source.** DEC-0f3e57; DEC-483f1e; The Object Model (Metric Snapshot); The Evaluation Boundaries.
+
 ## Chapter boundaries
 
-This chapter has defined the Metric Evaluator, runtime application of the Metric Contract and its `metric_binding`, deterministic formula application over Canonical Field values, the temporal-gate runtime effect, threshold classification, the ordered evaluation sequence, per-snapshot proof emission, and the tenant-scoped Metric Evaluation Run, all under the current Foundation authoritative reading in which metric evaluation consumes Canonical Object versions and emits one Metric Snapshot per evaluation act. It has deferred:
+This chapter has defined the Metric Evaluator, runtime application of the Metric Contract and its `metric_binding`, deterministic formula application over Canonical Field values, the temporal-gate runtime effect, threshold classification, the ordered evaluation sequence, per-snapshot proof emission, the tenant-scoped Metric Evaluation Run, and the operative secondary-metric composite runtime with its outstanding E6/FND-R2-1 repair. Under the current Foundation authoritative reading a primary metric evaluation act consumes Canonical Object versions and emits one Metric Snapshot; a secondary act consumes fixed upstream Metric Snapshots. It has deferred:
 
-- Full operational treatment of secondary metric evaluation, pending Foundation update.
+- Broader shape-dispatch expansion of the metric runtime (DEC-483f1e) beyond the current composite runtime, and the E6/FND-R2-1 exact-consumed-Snapshot-ID repair (Secondary metric evaluation) — the composite secondary runtime itself is operative, not deferred.
 - Action evaluation and Action Object emission (Action Evaluation).
 - Tenant-scoped binding records that pair a Metric Contract with environment-specific configuration (Tenancy and Binding).
 - Relational schema details and exact persistent-store names for runtime and tenant execution records (Data Model and Schema).
