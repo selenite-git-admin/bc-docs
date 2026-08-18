@@ -13,6 +13,7 @@ governing_adrs:
   - DEC-b228ec (D018 Source Catalog and Integration as separate trees)
   - DEC-90faff (D069 Canonical-driven reader creation sequence; top-down assembly)
   - DEC-36d78f (D069 Reader observation schema; selective observation with standard field naming)
+  - DEC-0d5b39 (Reader anchored to one Registry Entity; supersedes DEC-129417; amends DEC-17112b grouping)
 governing_sops:
   - legacy-v2/docs/sops/reader-creation-sop.md
 errata_referenced: []
@@ -26,7 +27,7 @@ diagrams: []
 
 ## Scope
 
-This chapter records the governed sequence by which a Reader is created. The Reader is the platform's implementation of the UniBAT pattern (Universal Business-Aware Transactions Reader), the only authorized path through which source data enters BareCount. The chapter names the three-table model (`runtime.reader`, `runtime.reader_flavor`, `runtime.reader_binding`), the subfunction-scoped Reader convention (D312 in the v2 SOP shorthand) that groups all BOs in a subfunction under one Reader with one Flavor per (source system, BO) pair, the three creation tracks (D209 fast-track from OC, manual via API, the seven-step wizard at D200), the seven chain integrity checks (CR-QG-RDR-003) that determine whether a Reader is operational, and the multi-flavor pattern for adding a second source system to an existing Reader. It records the boundary between Reader creation and the Tenant Connection that supplies runtime credentials. It records the as-built drift between the procedure and the platform's current Reader state.
+This chapter records the governed sequence by which a Reader is created. The Reader is the platform's implementation of the UniBAT pattern (Universal Business-Aware Transactions Reader), the only authorized path through which source data enters BareCount. The chapter names the three-table model (`runtime.reader`, `runtime.reader_flavor`, `runtime.reader_binding`), the Registry-Entity Reader convention (DEC-0d5b39, which whole-supersedes DEC-129417 and amends the grouping doctrine of DEC-17112b) that anchors one non-archived Reader to one Business Concept Registry Entity (admitted_entity_id), with per-source Flavors and per-entity Observation Contract bindings, the three creation tracks (D209 fast-track from OC, manual via API, the seven-step wizard at D200), the seven chain integrity checks (CR-QG-RDR-003) that determine whether a Reader is operational, and the multi-flavor pattern for adding a second source system to an existing Reader. It records the boundary between Reader creation and the Tenant Connection that supplies runtime credentials. It records the as-built drift between the procedure and the platform's current Reader state.
 
 This chapter does not redefine the UniBAT Reader pattern (Connectors and Readers), the admission and observation runtime acts (Admission and Observation), the OC the Reader executes (Observation Contract Creation), or the Tenant Connection that supplies credentials at runtime (Tenancy and Binding).
 
@@ -41,7 +42,7 @@ This chapter does not redefine the UniBAT Reader pattern (Connectors and Readers
 | Reader Binding (concrete source entity, environment) | `runtime.reader_binding` | Step 4 (or auto via D209) |
 | OC back-reference | `contract.observation_contract.reader_id` | D209 fast-track only |
 
-Per the subfunction-scoped convention, one Reader covers all BOs in a subfunction. Each (source system, BO) pair is a Flavor under that Reader. Adding a second source system for a BO adds a Flavor; it does not add a new Reader.
+Per the Registry-Entity convention (DEC-0d5b39), one non-archived Reader is anchored to one Business Concept Registry Entity (admitted_entity_id). Each source system is a Flavor under that Reader, each Flavor carrying per-entity Observation Contract bindings. Adding a second source system adds a Flavor; it does not add a new Reader.
 
 **Governing source.** Connectors and Readers.
 
@@ -51,7 +52,7 @@ The Reader is decomposed across three tables, each with a distinct concern.
 
 | Table | Concern |
 |---|---|
-| `runtime.reader` | Identity: function code, subfunction code, operational config (schedule, retry policy, circuit breaker, alerts) |
+| `runtime.reader` | Identity: `admitted_entity_id` (the Business Concept Registry Entity; one non-archived Reader per Entity). `function_code`/`subfunction_code` are non-identity classification. Operational config (schedule, retry policy, circuit breaker, alerts) |
 | `runtime.reader_flavor` | Source adapter: source system reference, BO reference, Connector reference, OC reference, observation schema |
 | `runtime.reader_binding` | Concrete source entity: SC reference, version code, source entity (table or endpoint), environment code |
 
@@ -152,7 +153,6 @@ POST /api/readers
   "sourceCategory": "enterprise",
   "function": "<function_code>",
   "subfunction": "<subfunction_code>",
-  "sourceSystem": "<source_system_name>",
   "description": "Reader for <BO name>",
   "tags": ["<system>", "<bo>"]
 }
@@ -242,7 +242,7 @@ When a BO needs data from multiple source systems, the actor adds a Flavor to th
 3. Bind the new OC to the new Flavor via PATCH.
 4. Activate the new Flavor when readiness checks pass.
 
-Both Flavors emit the same business fields (same BO) but read from different source systems. The Reader's subfunction-scoped identity remains; the Flavor count grows.
+Both Flavors emit the same business fields (same BO) but read from different source systems. The Reader's Entity-anchored identity remains; the Flavor count grows.
 
 **Governing source.** Connectors and Readers.
 
@@ -254,7 +254,7 @@ The Reader creation enforces three classes of gate.
 
 | # | Check |
 |---|---|
-| 1 | BO linked: `business_object_id` references an existing BO |
+| 1 | Entity anchored: `admitted_entity_id` references an active Business Concept Registry Entity |
 | 2 | Name unique: no existing Reader with the same `reader_name` |
 | 3 | Function valid: `function_code` matches a registered business function |
 | 4 | Operational config valid: schedule cron is parseable; retry config has valid values |
@@ -274,7 +274,7 @@ A Reader is chain-complete when all seven checks pass:
 
 | # | Check |
 |---|---|
-| 1 | BO linked: `reader.business_object_id` is non-null |
+| 1 | Entity anchored: `reader.admitted_entity_id` is non-null and references an active Registry Entity |
 | 2 | BO approved: the referenced BO has `approved` status |
 | 3 | Has active flavor: at least one `reader_flavor` with `status: active` |
 | 4 | Flavor has OC: the active flavor has non-null `observation_contract_id` |
@@ -292,10 +292,10 @@ The chapter records five forbidden patterns. Each one breaks the platform's UniB
 
 | Forbidden | Why |
 |---|---|
-| One Reader per BO | Readers are subfunction-scoped (D312 in the v2 SOP shorthand); multiple BOs in the same subfunction share one Reader with one Flavor per (source system, BO) pair |
+| One Reader per subfunction (grouping many Entities) | A Reader is anchored to one Business Concept Registry Entity (DEC-0d5b39, one non-archived Reader per `admitted_entity_id`); the former subfunction grouping (DEC-129417 whole-superseded; DEC-17112b grouping amended) no longer holds |
 | One Reader per source table | Source tables are Bindings, not Readers |
 | Skip OC binding | A Reader without an OC-bound Flavor cannot execute Admission Runs; the Flavor is the contract-bearing layer |
-| Hardcode credentials in Reader config | Credentials live in `runtime.connection` (tenant-scoped), not in the Reader |
+| Hardcode credentials in Reader config | Connection configuration is platform-held (`runtime.connection`) and tenant-owned; credentials are external (secret-management surface), not in the Reader |
 | Create Readers for BOs that lack OCs | The Reader executes the OC; without an OC there is nothing to execute |
 
 **Governing source.** Connectors and Readers; Tenancy and Binding.
@@ -333,7 +333,7 @@ The chapter records five forbidden patterns. Each one breaks the platform's UniB
 | DEC-90faff | Establishes the canonical-driven reader creation sequence (top-down assembly) |
 | DEC-36d78f | Establishes the Reader observation schema with selective observation and standard field naming |
 
-The subfunction-scoped Reader convention (D312 in the v2 SOP shorthand) and the operational config presets (D043 fast-track, D200 wizard, D205, D209) are referenced in the v2 SOP without standalone ADR files in the reviewed source set; their record lives in `legacy-v2/docs/sops/reader-creation-sop.md` and in this chapter.
+The Registry-Entity Reader convention is decided in DEC-0d5b39, which whole-supersedes DEC-129417 (per-subfunction consolidation) and amends the grouping doctrine of DEC-17112b (retaining its four-layer model, per-entity Observation Contract binding, chain-resolvability activation gate, policies P2-P6, and flavor topology P-F1..P-F8). The operational config presets (D043 fast-track, D200 wizard, D205, D209) are referenced in the v2 SOP; their record lives in `legacy-v2/docs/sops/reader-creation-sop.md` and in this chapter.
 
 **Governing source.** Decisions: ADR Registry.
 
