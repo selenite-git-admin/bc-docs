@@ -25,11 +25,11 @@ v2_sources: []
 
 ## Scope
 
-This chapter is the section opener for Operating Model. It states what the section is and what it is not, names the architectural through-line that binds the chapters in the section, maps the eighteen chapters that follow into reading groups, gives a recommended reading sequence, and declares the boundaries between Operating Model and the other five sections of the documentation. It does not redefine any Operating Model chapter's governed behavior.
+This chapter is the section opener for Operating Model. It states what the section is and what it is not, names the architectural through-line that binds the chapters in the section, maps the nineteen chapters that follow into reading groups, gives a recommended reading sequence, and declares the boundaries between Operating Model and the other five sections of the documentation. It does not redefine any Operating Model chapter's governed behavior.
 
 Operating Model chapters named here are mapped as section navigation and bounded role summaries. The overview may point to a later Operating Model chapter without depending on that later chapter for correctness; authority-bearing details remain governed by the chapter that owns them. Where this overview states a section-wide invariant, the governing source is Foundation, the current outline, a cited ADR, or an already-governing Foundation chapter.
 
-This chapter exists so that a reader who opens Operating Model cold can locate any specific chapter without having read the prior chapters, and so that a reader who has finished Operating Model can hold the section's claims as one coherent set rather than eighteen independent files.
+This chapter exists so that a reader who opens Operating Model cold can locate any specific chapter without having read the prior chapters, and so that a reader who has finished Operating Model can hold the section's claims as one coherent set rather than nineteen independent files.
 
 **Governing source.** Foundation; The Object Model; The Contract Grammar; The Evaluation Boundaries; The Authority Model; outline.md §4.2.
 
@@ -86,7 +86,7 @@ This overview remains the section entry point: a reader who opens Operating Mode
 | Time | Fiscal Time and Temporal Gates | Fiscal period as a per-Canonical-Object attribute resolved at canonical evaluation; the calendar stack that holds the resolution rules; the boundary that separates fiscal time from observation time and from invocation time. |
 | Readiness | Chain Completeness and Verdict | The locked definition of complete (L1-L7 + C1-C5 + E1-E2 for global chain status), tenant/source E3 readiness, the chain verdict set, and the persisted stores that preserve those readiness answers at their correct grains. |
 
-The ten groups cover the section without overlap. A chapter that does not fit a group is a chapter that does not belong in this section.
+The eleven groups cover the section without overlap. A chapter that does not fit a group is a chapter that does not belong in this section.
 
 **Governing source.** outline.md §4.2; Foundation.
 
