@@ -32,6 +32,8 @@ All `/api/t/*` calls need `Authorization: Bearer <admin JWT>` + `x-tenant-id: <s
 
 Off by default. Enable with env `BC_SCHEDULER_ENABLED=1` on bc-core; runs at 02:00 (`@Cron('0 2 * * *')`): run reconcile → scheduled admissions (`BC_SCHEDULE_ADMISSION_READERS` = comma-separated `readerId:flavorId` pairs) → nightly campaign → chain-status refresh → value audit. Scheduled admission is watermark-gated: each fetch starts after the per-entity `progression.reader_watermark` mark, so re-runs fetch only deltas.
 
+> **As-built / source-axis pending (DEC-01bd6b, register C8).** `BC_SCHEDULE_ADMISSION_READERS` is a **reader-keyed** initiation surface. Under the accepted two-axis orchestration, admission scheduling is a **source-axis** cycle keyed on source-cycle / run identity, not on `readerId:flavorId`, and it commands a governed admission (the schedule is not itself the authority — reads/schedules never trigger evaluation). The move to source-cycle identity lands with the source-axis doctrine (register C8); until then this env var is the operative surface.
+
 ## 3. Admission (manual)
 
 ```
@@ -40,6 +42,8 @@ POST /api/t/readers/{readerId}/execute
 ```
 - 422 "No active admission contract binding … in environment 'production'" → pass `environment: 'dev'`.
 - A completed run emits `admission_run_completed` to the outbox; watermarks advance only on success.
+
+> **As-built (reader-keyed).** Manual admission is invoked reader-keyed at `/readers/{readerId}/execute`; the executor is the **Runner** executing that Reader definition for the given `(flavor, environment)` (DEC-0d5b39 — the Reader is the definition, the Runner is the machine). Under the source-axis doctrine this becomes a source-cycle-scoped command (register C8); the endpoint name is retained as the current operative surface.
 - Watermark state: `GET /api/t/runtime-console/watermarks` or the bc-admin Events & Webhooks page.
 
 ## 4. Evaluation campaigns
