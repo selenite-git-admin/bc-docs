@@ -68,12 +68,15 @@ The six claims interlock. A chapter that violates any of them is wrong against t
 
 ## Chapter Map
 
-The eighteen chapters that follow this overview fall into ten groups by concern. The grouping is for reader navigation; chapter order in the section is fixed by the outline and by chapter dependencies, and is not the same as group order.
+The nineteen chapters that follow this overview fall into eleven groups by concern. The grouping is for reader navigation; chapter order in the section is fixed by the outline and by chapter dependencies, and is not the same as group order.
+
+This overview remains the section entry point: a reader who opens Operating Model cold starts here. The cross-cutting machine/artifact **map and taxonomy** is owned by a distinct chapter, **The Runtime Ecosystem** (DEC-0d5b39, DEC-01bd6b) — it names the Runner and the Evaluator umbrella against the artifacts they execute, inherits Foundation by citation, and delegates every behavioral claim to the owning chapters. Route to it for the whole-execution-layer picture; this overview is not superseded by it.
 
 | Group | Chapters | What the group covers |
 |---|---|---|
 | Catalog and Vocabulary | Sources and the Catalog; Business Vocabulary | The platform's record of observable source structure across six hierarchy entities, and the platform's internal vocabulary of Business Fields, Business Objects, and Canonical Fields. |
 | Chain Assembly and Authoring Gates | Contract Chain Assembly; Quality Gates and Chain Integrity | The six-link relay that turns a source-system field into a trusted metric value, and the quality gates that govern every authoring act on the chain. |
+| Runtime Map | The Runtime Ecosystem | The cross-cutting map and machine-versus-artifact taxonomy of the execution layer: the Runner (admission machine) and the Evaluator umbrella (Canonical, Metric, Action Evaluators) versus the artifacts they execute (Connector, Connection, Reader and its Flavors). It inherits Foundation by citation and delegates all behavior to the owning chapters; it is a map, not a second entry point (DEC-0d5b39, DEC-01bd6b). |
 | The Reader Stack | Connectors and Readers | Connector, Reader, Reader Flavor, Reader Binding, and Connection. The UniBAT pattern: source-system-agnostic on input, business-aware on output. |
 | The Four Boundary Acts | Admission and Observation; Canonical Evaluation; Metric Evaluation; Action Evaluation | The runtime acts at the four evaluation boundaries that produce authoritative state. Each act has its own Run record, its own contract family, and its own proof emission. |
 | The Metric Catalog | Metric Catalog | The platform-scoped registry of metric definitions: classification, lifecycle, formula tests, registration gates, and tenant view. |
@@ -181,6 +184,7 @@ Operating Model chapters that carry diagrams in this snapshot:
 - Business Vocabulary
 - Contract Chain Assembly
 - Quality Gates and Chain Integrity
+- The Runtime Ecosystem
 - Connectors and Readers
 - Admission and Observation
 - Canonical Evaluation
