@@ -2,7 +2,8 @@
 uid: DEC-d785d4
 title: "Reader → Business Object FK — SO Shape Enforcement via BO Constraint"
 description: "Add business_object_id FK to runtime.reader so all flavors are structurally constrained to produce the same SO shape defined by the BO's field composition."
-status: implemented
+status: superseded
+superseded_by: DEC-0d5b39
 subdomain: contract-chain
 focus: so-shape-enforcement-bo-fk
 date: 2026-03-24
