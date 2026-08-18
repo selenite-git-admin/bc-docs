@@ -42,14 +42,14 @@ The platform recognizes six adapter artifacts. Five are platform-scoped and gove
 |---|---|---|---|
 | Connector | Technical capability to reach a source system over a declared protocol; reached at runtime through `Connection.connector_id` | Platform | `runtime.connector` and supporting protocol tables |
 | Reader | Registry-Entity-anchored admission **definition** (`admitted_entity_id`; one non-archived Reader per Entity, across draft and active) implementing the UniBAT pattern; executed by the Runner | Platform | `runtime.reader` |
-| Reader Flavor | Source specialization identified by `(source_system, scenario)` — one active Flavor per `(reader, source_system, scenario)`; a Flavor reads **many** entities and carries **no** Connector edge (retired, register D3) | Platform | `runtime.reader_flavor` |
-| Reader Binding | Platform-governed **per-entity Admission-Contract binding**, coordinate `(reader, flavor, source_entity, environment)` — despite its historical column name, `reader_binding.source_contract_id` carries an **admission-contract id**; the pair `(source_contract_id, version_code)` is the effective AC version pin (substrate fact, source-filter design v4) | Platform | `runtime.reader_binding` |
+| Reader Flavor | Source specialization identified by `(source_system, scenario)` — one active Flavor per `(reader, source_system, scenario)`; a Flavor reads **many** entities. The governing Connector-resolution authority is the Connection (`connector_id`); the retained `reader_flavor.connector_id`/`connection_id` columns are current compatibility substrate, not a governing edge (retirement decided DEC-0d5b39 D3, not yet implemented — TSK-ccc82c) | Platform | `runtime.reader_flavor` |
+| Reader Binding | Platform-governed **per-entity Admission-Contract binding** at two levels — flavor-specific `(reader, flavor, source_entity, environment)` and reader-level fallback `(reader, source_entity, environment)` with `flavor_id IS NULL` (resolver selects flavor-specific first). `reader_binding.source_contract_id` carries an **admission-contract id** (historical column name); `(source_contract_id, version_code)` is the effective AC version pin (source-filter design v4) | Platform | `runtime.reader_binding` |
 | Reader Observation Binding | Platform-governed **per-entity Observation-Contract pin**, coordinate `(reader, flavor, source_entity, environment)` → `(observation_contract_id, version_code)` — the declaration a given admission run executes under (the deprecated `reader_flavor.observation_contract_id` is retired, 0 rows) | Platform | `runtime.reader_observation_binding` |
 | Connection | Access record naming the Connector (`connector_id`, the runtime Connector-resolution edge); **configuration platform-held** in `runtime.connection`, **tenant-owned** by tenant identity, **credentials external** (secret reference only on the record) | Platform-held config, tenant-owned | Platform `runtime.connection` + external secret store |
 
 Connector, Reader, Reader Flavor, and both bindings are governed centrally and reused across tenants. The Connection's configuration is platform-held in `runtime.connection` (DEC-81cd26, reversing D163) and tenant-owned through the tenant identity; it names the Connector via `connector_id`, carries only a credential reference, and the credentials themselves live in the external secret-management surface (DEC-ecd55c). No platform-side artifact carries tenant credentials.
 
-**Single Connector topology (DEC-0d5b39 D2/D3).** The Connector is reached through **`Connection.connector_id`** — the one runtime Connector-resolution edge. The `reader_flavor.connector_id` edge is **retired**; there is no independent Flavor-to-Connector authority.
+**Single Connector topology (DEC-0d5b39 D2/D3).** The Connector is reached through **`Connection.connector_id`** — the one runtime Connector-resolution **authority**. DEC-0d5b39 D3 **decides** the retirement of the independent Flavor-to-Connector edge; the platform substrate has **not** completed it — `reader_flavor.connector_id` and `connection_id` remain live columns still written by the reader-authoring service, tracked for removal under TSK-ccc82c. This chapter treats `Connection.connector_id` as the sole governing authority and the flavor columns as current compatibility substrate pending that retirement.
 
 **Binding resolution (source-filter design v5–v12, TSK-a83188).** An admission run resolves its governing chain **once, before any fetch**, from the exact context `(reader, flavor, environment, source entity)`: the Observation binding is the four-way exact row (exactly one, active); the **effective Admission Contract** (`reader_binding`) is selected flavor-specific first, with a reader-level (`flavor_id IS NULL`) row as the only fallback, exactly one at the winning level; the Observation Contract's AC pair must equal the effective AC pair, and its SC pair must equal the effective AC version's declared parent pair. Any missing, ambiguous, inactive, or mismatched coordinate is a **chain-integrity refusal of the whole invocation** — there is no table-name fallback, no first-match selection, and no scenario/configuration substitute. The resolved context (all pairs, the winning level, and the normalized filter digest) travels with the run into Evidence and Lineage.
 
@@ -78,7 +78,7 @@ Connector, Reader, Reader Flavor, and both bindings are governed centrally and r
 - If a protocol error occurs (malformed response, version mismatch), the Connector returns the error and the invocation terminates; failure is recorded on the Admission Run.
 - Connector failures are recorded as operational Evidence per the rejection semantics defined in Admission and Observation.
 
-**Interactions.** The Connector is resolved through the invoking **Connection** (`connector_id`) and invoked by the **Runner** at admission time. The Connection resolves the credential the Runner supplies to the Connector at invocation. The Reader Flavor names no Connector.
+**Interactions.** The Connector is resolved through the invoking **Connection** (`connector_id`) and invoked by the **Runner** at admission time. The Connection resolves the credential the Runner supplies to the Connector at invocation. The governing Connector authority is the Connection, not the Flavor; the retained `reader_flavor.connector_id` column is compatibility substrate pending retirement (TSK-ccc82c).
 
 **Governing source.** Platform P05 Runtime Definitions, Connector dossier; DEC-0d5b39; The Contract Grammar.
 
@@ -126,7 +126,7 @@ The pattern's three structural consequences:
 
 | Consequence | Effect |
 |---|---|
-| Source-system portability | Migrating a source system adds or replaces a Reader Flavor and repoints the Connection's Connector; the Source Contract, Observation Contract, and Canonical Contract continue to apply unchanged because the Business Concept property identifiers persist |
+| Source-system portability | A source-system migration preserves the governed **Business Concept identity** and a compatible downstream Canonical Contract. It generally requires **new Source Contract, Admission Contract, and Observation Contract versions** (and new bindings) whenever source shape, validation, selection, or mapping changes — the Source Contract is specific to a source table/API shape and source-system version, and the Observation Contract binds source paths. Portability is stability of Business Concept identity and downstream compatible authority, **not** unchanged contracts |
 | No transformation step | The platform does not maintain a separate transformation layer between source observation and canonical evaluation; the Observation Contract carries the binding rules and the governed Canonical Contract carries the canonical resolution |
 | Audit traceability | Every Business Concept property value on a Source Object is traceable to a source field path through the governed Observation Contract version pinned, per source entity, by the Reader Observation Binding at admission time |
 
@@ -147,7 +147,7 @@ The pattern's three structural consequences:
 
 ## Reader Flavor
 
-**Purpose.** A Reader Flavor is a Reader's source specialization identified by `(source_system, scenario)`. It carries the per-source-entity Observation Contract pins (through the Reader Observation Binding) that produce the runtime-ready specialization the Runner invokes. It names no Connector; the Connector is resolved through the Connection.
+**Purpose.** A Reader Flavor is a Reader's source specialization identified by `(source_system, scenario)`. It carries the per-source-entity Observation Contract pins (through the Reader Observation Binding) that produce the runtime-ready specialization the Runner invokes. The governing Connector-resolution authority is the Connection (`connector_id`), not the Flavor.
 
 **Scope.** A Reader Flavor covers the `(source_system, scenario)` it specializes and the per-source-entity Observation Contract bindings that map to Business Concept properties for that source. It does not cover the Connector (resolved through the Connection), tenant credentials (resolved through the Connection from the external secret store), or the effective Admission Contract version (named by the Reader Binding, per source entity).
 
@@ -156,14 +156,14 @@ The pattern's three structural consequences:
 **Constraints.**
 
 - A Reader Flavor is identified by `(source_system, scenario)`; **exactly one active Flavor per `(reader, source_system, scenario)`** (`uq_reader_flavor__active_scenario`; DEC-0d5b39 topology P-F1…P-F8).
-- A Reader Flavor carries **no Connector edge** — the Connector is resolved through the Connection (`connector_id`); the historical `reader_flavor.connector_id` authority is retired.
+- The governing Connector-resolution authority for a Flavor is the **Connection** (`connector_id`), not the Flavor. DEC-0d5b39 D3 decides retirement of the Flavor→Connector edge; the retained `reader_flavor.connector_id`/`connection_id` columns are current compatibility substrate (still written by the authoring service), tracked for removal under TSK-ccc82c, and carry no governing authority.
 - A Reader Flavor binds Observation Contracts **per source entity** via `reader_observation_binding`; one Flavor observes **many** entities, each under its own Observation Contract pin. This amends the former one-Observation-Contract-per-Flavor reading of DEC-1edaaa (see DEC-0d5b39 and DEC-17112b). No single Observation Contract is identified directly on the Flavor (the deprecated `reader_flavor.observation_contract_id` is retired, 0 rows).
 - A Reader Flavor's runtime copy is derived from the governed Observation Contract and is not independently edited.
 - A Reader Flavor does not declare validation rules or canonical translations independently of its bound contracts.
 
 **Failure modes.**
 
-- If a Flavor's pinned Observation Contract version (for a source entity) is superseded, the Reader Observation Binding continues to reference the named version. Adopting the superseding version requires a tracked authoring act on the binding. The Runner does not silently re-bind to a superseding version (Invariant IV).
+- If a Flavor's pinned Observation Contract version (for a source entity) is superseded or non-active, the Reader Observation Binding continues to reference the named version (pin immutability; no silent rebind, Invariant IV), and the resolver **refuses** the invocation as fail-closed (`oc_inactive`) until a governed successor Observation-Contract binding is installed. Adopting the superseding version requires a tracked authoring act on the binding; the Runner never executes superseded OC content.
 - If the Connector resolved through the invoking Connection is unavailable at invocation, the admission act records the unavailability and pauses pending Connector availability.
 - If a Reader Flavor's runtime copy diverges from the governed Observation Contract (for example, due to manual edit of the runtime copy), the divergence is detected at admission-act validation and the runtime copy is regenerated from the governed source.
 
@@ -173,7 +173,7 @@ The pattern's three structural consequences:
 
 ## Reader Binding
 
-**Purpose.** A Reader Binding records the governed **per-source-entity Admission Contract version** the Runner applies for a specific admission context, keyed by `(reader, flavor, source_entity, environment)`.
+**Purpose.** A Reader Binding records the governed **per-source-entity Admission Contract version** the Runner applies for a specific admission context, at either of two coordinates: **flavor-specific** `(reader, flavor, source_entity, environment)` or the **reader-level fallback** `(reader, source_entity, environment)` with `flavor_id IS NULL`. The resolver loads both and selects flavor-specific first, reader-level second.
 
 **Scope.** A Reader Binding covers the platform-governed binding from a `(reader, flavor)` and a specific `(source_entity, environment)` to one effective Admission Contract version. It does not cover tenant-side configuration; tenant-side variation lives on the Connection or on Contract Bindings, both described in Tenancy and Binding.
 
@@ -181,14 +181,14 @@ The pattern's three structural consequences:
 
 **Constraints.**
 
-- A Reader Binding references exactly one `(reader, flavor)` and one `(source_entity, environment)` coordinate.
+- A Reader Binding is unique-active at one of two coordinates: flavor-specific `(reader, flavor, source_entity, environment)` (`uq_reader_binding_active_flavor`) or the reader-level fallback `(reader, source_entity, environment)` with null `flavor_id` (`uq_reader_binding_active_reader`). The fallback row carries no Flavor.
 - A Reader Binding references exactly one effective Admission Contract version.
 - A Reader Binding does not rewrite governed contract content; it records which version is applied for the coordinate.
 - A Reader Binding is platform-governed. Tenant-specific access configuration (credential reference, environment URLs, rotation windows) is not on the Reader Binding; it is on the Connection.
 
 **Failure modes.**
 
-- If the Admission Contract version named by the Reader Binding is superseded, the Binding continues to reference the named version. The Runner applies the named (superseded) version unless the binding is governance-updated to reference the superseding version. The Runner does not silently route invocations to a superseding version (Invariant IV).
+- If the Admission Contract version named by the Reader Binding is superseded or otherwise non-active, the Binding continues to reference the named (pinned) version — pin immutability holds and the Runner never silently rebinds to a superseding version (Invariant IV). But the resolver requires the effective AC (and its parent SC, and the entity's OC) version `governance_state_code` to be **active** and **refuses** any non-active/superseded version: the invocation **fails closed** until a governed successor binding is installed. The Runner never executes superseded contract content.
 - If, for the resolved context, the per-entity Observation Contract does not satisfy the AC/SC pair equalities named in Binding Resolution, the Runner rejects the invocation; the inconsistency is recorded as a chain-integrity failure.
 - If no active binding exists for the exact `(reader, flavor, source_entity, environment)` (or its reader-level fallback), the Runner refuses the whole invocation; there is no first-match substitute.
 
