@@ -15,6 +15,7 @@ governing_adrs:
   - DEC-771baf (Tenant database architecture; platform-tenant one-way dependency)
   - DEC-81cd26 (Connections are platform-scoped; reverses D163 connection-table placement — amends DEC-771baf for Connections)
   - DEC-ecd55c (Connection authority reconciled — config in platform runtime.connection, credentials in AWS Secrets Manager)
+  - DEC-02f5a9 (Business Concept Registry supersedes Business Object / Business Field / Canonical Field identity)
   - DEC-ce6e2b (Section rename: The Runtime → The Operating Model)
   - DEC-9c58c6 (Article-drop refinement: section name canonical form is "Operating Model")
 errata_referenced: []
@@ -25,7 +26,7 @@ v2_sources: []
 
 ## Scope
 
-This chapter is the section opener for Operating Model. It states what the section is and what it is not, names the architectural through-line that binds the chapters in the section, maps the nineteen chapters that follow into reading groups, gives a recommended reading sequence, and declares the boundaries between Operating Model and the other five sections of the documentation. It does not redefine any Operating Model chapter's governed behavior.
+This chapter is the section opener for Operating Model. It states what the section is and what it is not, names the architectural through-line that binds the chapters in the section, maps the nineteen chapters that follow into reading groups, gives a recommended reading sequence, and declares the boundaries between Operating Model and the other seven sections of the documentation. It does not redefine any Operating Model chapter's governed behavior.
 
 Operating Model chapters named here are mapped as section navigation and bounded role summaries. The overview may point to a later Operating Model chapter without depending on that later chapter for correctness; authority-bearing details remain governed by the chapter that owns them. Where this overview states a section-wide invariant, the governing source is Foundation, the current outline, a cited ADR, or an already-governing Foundation chapter.
 
@@ -74,7 +75,7 @@ This overview remains the section entry point: a reader who opens Operating Mode
 
 | Group | Chapters | What the group covers |
 |---|---|---|
-| Catalog and Vocabulary | Sources and the Catalog; Business Vocabulary | The platform's record of observable source structure across six hierarchy entities, and the platform's internal vocabulary of Business Fields, Business Objects, and Canonical Fields. |
+| Catalog and Vocabulary | Sources and the Catalog; Business Vocabulary | The platform's record of observable source structure across six hierarchy entities, and the platform's internal business vocabulary — the **Business Concept Registry** (Registry Entities and their properties, `entity.property`), which supersedes the former Business Object / Business Field / Canonical Field identity model (DEC-02f5a9). |
 | Chain Assembly and Authoring Gates | Contract Chain Assembly; Quality Gates and Chain Integrity | The six-link relay that turns a source-system field into a trusted metric value, and the quality gates that govern every authoring act on the chain. |
 | Runtime Map | The Runtime Ecosystem | The cross-cutting map and machine-versus-artifact taxonomy of the execution layer: the Runner (admission machine) and the Evaluator umbrella (Canonical, Metric, Action Evaluators) versus the artifacts they execute (Connector, Connection, Reader and its Flavors). It inherits Foundation by citation and delegates all behavior to the owning chapters; it is a map, not a second entry point (DEC-0d5b39, DEC-01bd6b). |
 | The Reader Stack | Connectors and Readers | Connector, Reader, Reader Flavor, Reader Binding, and Connection. The UniBAT pattern: source-system-agnostic on input, business-aware on output. |
