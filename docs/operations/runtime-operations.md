@@ -16,6 +16,10 @@ refs:
     label: "DEC-20eefe (D212) — per-run evidence (decided, partially implemented)"
   - type: decision
     label: "DEC-26f75a (D480) — period_aggregate anchor_field (decided, engine support implemented)"
+  - type: decision
+    label: "DEC-01bd6b — Runtime Orchestration (two-axis Admission/Evaluation Orchestrators; explicit-command / no-read-trigger; target doctrine)"
+  - type: decision
+    label: "DEC-0d5b39 — Reader-definition / Runner-machine split; the runtime ecosystem map"
 ---
 
 # Runtime Operations
@@ -37,14 +41,18 @@ The platform evaluates at exactly four boundaries (Foundation, the-evaluation-bo
 
 ## Trigger modes
 
-Every engine invocation carries exactly one declared trigger mode, recorded on the run row:
+Every engine invocation carries exactly one declared trigger mode. **Target durability (DEC-01bd6b):** the mode is recorded on the invocation's Run row. **As-built:** `trigger_mode_code` is mounted only on `progression.evaluation_campaign` — none of the four boundary Run schemas (`progression.admission_run`, `canonical_run`, `metric_run`, `intervention_run`) carries a trigger-mode column yet. So the one-mode-per-invocation contract holds, but per-Run-row durability is target, not current schema.
 
-| Mode | Meaning | Status |
+Each row separates the **accepted/target meaning** from the **mounted status** so a reader never reads target doctrine as current capability.
+
+| Mode | Accepted / target meaning | Mounted status (as-built) |
 |---|---|---|
-| `manual` | operator/API call | live in the readiness baseline |
-| `test` | dry-run — see below | partial (admission only; R2 completes) |
-| `scheduled` | cron-driven | R2; **scheduled admission is gated on watermark/delta discipline at fetch** (admission itself remains correctly non-idempotent — every admission is a distinct immutable observation act) |
-| `event` | chained from an upstream engine's completion event via the persisted outbox | R2 |
+| `manual` | operator/API-commanded engine act | live in the readiness baseline |
+| `test` | diagnostic dry-run — not a boundary act (see Dry-run) | **live but bounded:** admission dry-run, and a **metric-only** campaign dry-run (`dryEvaluateMetricForPeriod`; composites `unsupported`); it persists diagnostic `evaluation_campaign`/`_run` rows and **no** boundary object/run/snapshot/Evidence/event/watermark. It is not "admission only" |
+| `scheduled` | governed scheduled **command** on the source axis (admission) / metric axis (evaluation), version-pinned (DEC-01bd6b) | **as-built: reader-keyed** — `RuntimeSchedulerService.runScheduledAdmissions` reads `BC_SCHEDULE_ADMISSION_READERS` (`readerId:flavorId`) → `ReaderRuntimeService.executeReader`; watermark/delta-gated at fetch (admission remains non-idempotent — every admission is a distinct immutable observation act). Source-axis keying is target, not mounted |
+| `event` | evaluation chained from an upstream act's completion event, version-pinned | **as-built: not an evaluation invoker** — `RuntimeEventService.emit` persists the event and drives only the boundary-ticket and webhook consumers; **no** consumer invokes canonical/metric/campaign evaluation. Event-driven evaluation chaining is target vocabulary, not mounted |
+
+**Orchestration doctrine (DEC-01bd6b, target).** A trigger mode names *how* an engine act is initiated; it is never an authority to evaluate on read. Under the accepted two-orchestrator model, two axis-orchestrators drive the engines by governed, version-pinned commands: the **Admission Orchestrator** on the **source axis** (source cycles coordinating admission runs) and the **Evaluation Orchestrator** on the **metric axis** (governed, target-pinned, command-triggered evaluation). **Reads never trigger evaluation** (ORCH-5/6; Invariant). Of the mechanics above, **only `scheduled` admission is a mounted evaluation/admission initiation path** pending the DEC-01bd6b orchestration build; `event` is mounted **outbox vocabulary and consumption infrastructure, not a mounted evaluation initiation surface**. The as-built differs from the target on three points: (1) mounted `scheduled` admission is **reader-keyed** (`RuntimeSchedulerService.runScheduledAdmissions` reads `BC_SCHEDULE_ADMISSION_READERS` = `readerId:flavorId` pairs and calls `ReaderRuntimeService.executeReader`); source-axis keying is DEC-01bd6b target doctrine, not the mounted identity. (2) the runtime **outbox does not invoke evaluation** — `RuntimeEventService.emit` persists the event and drives only the boundary-ticket and webhook consumers; no event consumer invokes canonical, metric, or campaign evaluation, so `event` is a trigger-mode/outbox vocabulary, not a mounted evaluation invoker. (3) the schedule *commands* an admission, but version-pinned command selection is target doctrine (see Campaigns). None of these mount the two-orchestrator model yet.
 
 ## Run lifecycle
 
@@ -57,7 +65,9 @@ States: `running → completed | failed | deferred_inputs_unavailable | abandone
 
 ## Dry-run (test mode)
 
-A dry-run is **not a boundary act**: it computes and reports, but emits no progression object, no evidence, touches no watermark, and advances no state that downstream consumers read. Under the boundary-independent rules this is a diagnostic read, which is why it is safe at every engine and chainable: a campaign in `mode: test` walks admission → canonical → metric end-to-end and produces a report instead of persistence. Reproducible chain dry-runs require deterministic source state — the SDG dataset registry (R7).
+A dry-run is **not a boundary act**: it computes and reports, but emits no progression object, no evidence, touches no watermark, and advances no state that downstream consumers read. Under the boundary-independent rules this is a diagnostic read. **As-built scope:** the mounted campaign dry-run is **metric-only** — it calls `MetricEvaluationOrchestrator.dryEvaluateMetricForPeriod`, and composites explicitly return `unsupported`; an end-to-end admission → canonical → metric chained dry-run is a **target**, not mounted. A `mode: test` campaign also **persists diagnostic campaign and per-item report rows** (`progression.evaluation_campaign` / `evaluation_campaign_run`) — that is the report — while emitting **no** boundary object, run, snapshot, Evidence, event, or watermark. Reproducible dry-runs require deterministic source state — the SDG dataset registry (R7).
+
+A dry-run produces **no authoritative meaning** (Invariant I — meaning is produced only at its boundary): its computed values are diagnostic only, are never surfaced or read as a metric's value, and never substitute for a governed evaluation act. It is a read *about* the chain, not an evaluation of it; to make a value authoritative, a governed evaluation command must run and persist it.
 
 ## Campaigns
 
@@ -66,7 +76,7 @@ Multi-metric, multi-period evaluation is a first-class object (R1):
 - Declares scope (metrics / families / all), period range, and mode.
 - Executes DAG-ordered: base metrics before composites (metric_input edges).
 - Writes a campaign row and per-run outcomes; retries deferred inputs in-campaign; resumable; idempotent per (campaign, metric, period).
-- Campaigns are the unit the scheduler and the event spine invoke — and the vehicle for re-evaluation waves (e.g. post-M15 re-mints).
+- A campaign **names governed targets**. Under DEC-01bd6b it is the Evaluation Orchestrator's metric-axis unit and pins **fixed input versions** — but that version-pinning is **target** doctrine: the as-built `resolveScope` selects whichever Metric Contract **versions are active when the campaign begins** (scoped by all-metrics / MC UIDs / subfunction), `evaluation_campaign.scope_json` preserves only that scope, and `evaluation_campaign_run` stores the Metric Contract UID, period, status, and run id — **not** the selected MCV UID or exact input identities. A campaign that re-evaluates after a supersession (e.g. post-M15) issues **new forward evaluation acts** — never an in-place recompute and never a history rewrite (Invariant III); prior snapshots stand and are superseded on read.
 
 ## Period close
 

@@ -2,15 +2,19 @@
 """Seed reader navigation from imported v4 target documents."""
 from __future__ import annotations
 
+import os
 import sqlite3
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-DB_PATH = ROOT / "docs-control" / "docs-control.db"
-NAV_DOC_PATH = ROOT / "docs" / "NAVIGATION.md"
-REPORT_PATH = ROOT / "docs-control" / "reports" / "navigation-report.md"
+# Paths are env-overridable so a rescan/reseed can be proven in isolation
+# (against a copy of docs-control.db) without mutating the live control DB or
+# the committed NAVIGATION.md. Unset env → the canonical in-repo paths.
+DB_PATH = Path(os.environ.get("DOCS_CONTROL_DB", ROOT / "docs-control" / "docs-control.db"))
+NAV_DOC_PATH = Path(os.environ.get("DOCS_CONTROL_NAV_DOC", ROOT / "docs" / "NAVIGATION.md"))
+REPORT_PATH = Path(os.environ.get("DOCS_CONTROL_NAV_REPORT", ROOT / "docs-control" / "reports" / "navigation-report.md"))
 
 NAV_SECTIONS = [
     (
@@ -47,6 +51,7 @@ NAV_SECTIONS = [
             "contract-chain-assembly.md",
             "quality-gates-and-chain-integrity.md",
             "connectors-and-readers.md",
+            "the-runtime-ecosystem.md",
             "admission-and-observation.md",
             "canonical-evaluation.md",
             "metric-evaluation.md",

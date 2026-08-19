@@ -12,6 +12,7 @@ governing_sources:
   - The Evaluation Boundaries, Canonical evaluation boundary section
 governing_adrs:
   - DEC-97bb94 (N:1 Source Object to Canonical Object cardinality)
+  - DEC-0d5b39 (Evaluator umbrella — Canonical/Metric/Action Evaluators as distinct boundary acts)
   - DEC-136a23 (Canonical Mapping)
   - DEC-771baf (Tenant database architecture and run scope)
   - DEC-f02230 (Tenant DB schema organization)
@@ -31,7 +32,7 @@ v2_sources:
 
 This chapter defines the runtime components and execution behavior at the canonical evaluation boundary under the current Foundation execution model. It describes the Canonical Evaluator and the tenant-scoped Canonical Evaluation Run; defines how the Canonical Contract and Canonical Mapping are applied at runtime; defines the readiness gate at the level authorized by the current contract grammar; defines the evaluation sequence that produces a Canonical Object together with Evidence and Lineage; and defines the tenant-scoped run record that preserves invocation outcomes. It distinguishes contract authority from runtime application so that governed contract shape and operational behavior are not conflated. It does not redefine the contract grammar (The Contract Grammar), the canonical evaluation boundary as an execution-model concept (The Evaluation Boundaries), the admission components that produce Source Objects (Admission and Observation), tenant-scoped binding records (Tenancy and Binding), the full relational schema (Data Model and Schema), or the API surface for evaluator operations (API Surface).
 
-This chapter follows the current authoritative Foundation reading in which canonical evaluation consumes Source Objects and emits Canonical Objects. Broader derivative patterns, if introduced later by ADR adoption, require corresponding updates to the Foundation spine before they become authoritative here.
+The **Canonical Evaluator** is one of the three boundary machines under the Evaluator umbrella (Canonical, Metric, Action — DEC-0d5b39); each is an independently invoked Foundation boundary act, and the umbrella is a naming convenience that never collapses the boundaries. Canonical evaluation consumes **Source Objects only** and emits Canonical Objects: the canonical boundary input is Source-Objects-only, and there is no secondary Canonical Object (a Canonical Object never takes another Canonical Object as input). Broader derivative patterns, if introduced later by ADR adoption, require corresponding updates to the Foundation spine before they become authoritative here.
 
 ## Runtime inventory
 
@@ -72,7 +73,7 @@ The Canonical Contract referenced by an evaluation target governs canonical eval
 | Grain resolution | The Evaluator applies `grain[]` to identify the dimensional identity of the Canonical Object being produced. Grain identity determines which Source Objects compose into the same Canonical Object. |
 | Input gathering | The Evaluator gathers the Source Objects required by the Contract for the resolved grain identity. Per FND-ERR-004 and DEC-97bb94, a single canonical evaluation act may consume N Source Objects across N Source Contracts to produce one Canonical Object version. |
 | Field selection | The Evaluator applies `field_selection[]` to determine which Canonical Fields must be populated in the emitted Canonical Object. |
-| Resolution | The Evaluator applies `resolution_rules[]` to reduce one or more mapped Business Field inputs into one resolved value per selected Canonical Field. Resolution semantics are described in the Resolution rules at runtime section. |
+| Resolution | The Evaluator applies `resolution_rules[]` to reduce one or more mapped Business Concept property inputs (`entity.property`, carried on the Source Objects) into one resolved value per selected Canonical Field. Resolution semantics are described in the Resolution rules at runtime section. |
 | Schema conformance | The Evaluator verifies that the resolved Canonical Object payload conforms to `resolved_schema`. Evaluations that fail schema conformance do not emit a Canonical Object. |
 | Semantic evaluation | The Evaluator applies `semantic_rules[]` over the resolved payload. Semantic-rule outcomes are recorded as Evidence; rule severity governs whether the Canonical Object is emitted. |
 | Gate application | The Evaluator applies `temporal_gate` to determine whether the evaluation act is eligible to proceed for the current target and input interval. Gate behavior is described in the Temporal gate and readiness section. |
@@ -88,7 +89,7 @@ The Canonical Mapping referenced by the active Canonical Contract version govern
 | Runtime application step | Runtime behavior |
 |---|---|
 | Mapping resolution | The Evaluator resolves the Canonical Mapping version associated with the active Canonical Contract version. |
-| Per-field binding | For each mapping entry, the Evaluator binds one or more input Business Field values carried on Source Objects to one Canonical Field declared by the Canonical Contract. Where a single Canonical Field is sourced from multiple Business Fields, the entry records the admissible reduction basis. |
+| Per-field binding | For each mapping entry, the Evaluator binds one or more input Business Concept property values (`entity.property`) carried on Source Objects to one Canonical Field declared by the Canonical Contract. Where a single Canonical Field is sourced from multiple Business Fields, the entry records the admissible reduction basis. |
 | Coverage check | The Evaluator confirms that every Canonical Field declared in `field_selection[]` has a corresponding mapping entry. |
 
 The Canonical Mapping is platform-scoped. Tenant variation does not modify it. Binding-level variation, where permitted elsewhere in the contract model, cannot remove platform-declared mapped fields or alter governed mapping rules.

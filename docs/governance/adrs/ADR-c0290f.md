@@ -173,3 +173,7 @@ Cron trigger → readiness check → evaluate if ready → wait if not. Clean se
 - Make grain mandatory, add ABS(), constant value field, temporal gate pre-check, per-grain rejection evidence
 
 **Phase 2-4:** Extract to Lambda, Step Functions, DAG, rolling calculations, D210 typed tables
+
+
+## Amendment (DEC-01bd6b, 2026-08-18)
+Amended clauses: `best_effort` "evaluate with whatever is available" (replaced by governed version-pinned selection) and single-engine orchestration (superseded by the two-orchestrator model - Admission on the source axis, Evaluation on the metric axis). The schedule survives as one governed trigger among several. Status remains `implemented`.
