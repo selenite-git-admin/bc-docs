@@ -1,0 +1,25 @@
+name: ADR Hygiene
+
+# Minimal bc-docs CI: gates the merge-blocking ADR supersession-pair check
+# (DEC-623f8f / D370). scripts/docs-control/audit_adrs.py exits non-zero only when
+# supersessionIssues > 0; pre-existing advisories (stuck-proposed, missing
+# subdomain/focus) are reported but do not fail the run. Pure Python stdlib — no deps.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  adr-hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: ADR supersession-pair audit (merge-blocking on supersessionIssues)
+        run: python scripts/docs-control/audit_adrs.py
