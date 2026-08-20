@@ -2,13 +2,20 @@
 uid: DEC-e4eb7c
 title: "Multi-company shared party master for the demo group (join-key identity successor-6)"
 description: "Kaveri demo group's 3 companies share ONE party master; a party trading with >1 company is one CUST/VEND id, no ' 2' suffix (resolves QA-024/061)."
-status: decided
+status: superseded
+superseded_by: DEC-64ad7c
 date: 2026-08-20T02:46:38.939Z
 project: bc-synth
 domain: sources
 subdomain: demo-estate/party-identity
 focus: identity
 ---
+
+> **SUPERSEDED by DEC-64ad7c (2026-08-20):** the shared party master proved operationally complex and
+> economically risky (the ' 2' twins carry ~0.9 of revenue weight; merging shifts the calibration). The demo
+> does not claim a realism percentage, so the simpler company-scoped canonical-name fix was adopted instead —
+> keep the twins as separate per-company records with the canonical name (no ' 2'), retire the old ids +
+> fresh-allocate. No shared entity, no economic change. See ADR-64ad7c.
 
 # Multi-company shared party master for the demo group (join-key identity successor-6)
 
