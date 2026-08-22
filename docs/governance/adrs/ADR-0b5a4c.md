@@ -1,7 +1,7 @@
 ---
 uid: DEC-0b5a4c
-title: "Source seed catalog moves to Postgres — Mongo bc_seed destined to retire; Odoo seeds greenfield through the new shape"
-description: "Mongo bc_seed.seed_tables destined to retire; new source.seed_source_table (Postgres) is the seed store; Odoo 17 seeds greenfield from the live pilot instance; SAP migrates later one-then-many"
+title: "Source schema admission: direct, manifest-bound extract admission replaces the seed store — Mongo bc_seed retires as forage; no Postgres seed store (Amendment 1 governs)"
+description: "Amendment 1 (2026-08-05) governs: source schemas admit directly (extract manifest → Source Registration); source.seed_source_table and seed_store_authority were created and dropped unloaded; operations.seed_load_log is now extract_manifest_log; Mongo bc_seed is forage with per-collection disposition (promote / archive / discard), never a served store. Original points 1–3 (Postgres seed store, SAP migration into it) are superseded/withdrawn."
 status: decided
 date: 2026-08-05T01:59:54.169Z
 project: bc-core
@@ -10,7 +10,9 @@ subdomain: sources/seed-catalog
 focus: schema
 ---
 
-# Source seed catalog moves to Postgres — Mongo bc_seed destined to retire; Odoo seeds greenfield through the new shape
+# Source schema admission: direct, manifest-bound extract admission replaces the seed store — Mongo bc_seed retires as forage; no Postgres seed store (Amendment 1 governs)
+
+> **Amendment 1 (2026-08-05) governs this ADR.** The *Context* and *Decision* sections below are retained verbatim as the history of the original proposal; its points 1–3 are superseded/withdrawn by Amendment 1 and point 4 survives only in the amended D269 form stated there. Substrate as built (bc-core): `source.seed_source_table` and `source.seed_store_authority` were created by migration `20260805-tsk-f7fc55-1` and dropped unloaded by `20260805-tsk-f7fc55-2`; `operations.seed_load_log` was renamed `operations.extract_manifest_log`; the admission surface is `POST /api/source-catalog/extract-admissions` (+ `/verifications`, `/approvals`, DEC-3078ce/D557). The onboarding chapters (`seed-catalog-management.md`, `source-registration.md`) describe the direct-admission model, not a store migration.
 
 ## Context
 

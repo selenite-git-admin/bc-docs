@@ -19,18 +19,7 @@ diagrams: []
 
 # Seed Catalog Management
 
-> **Direction (DEC-0b5a4c, 2026-08-05): the MongoDB store this chapter describes is destined to
-> retire.** The seed store for source-system schema moves to Postgres
-> (`source.seed_source_table`, shape proposed in the ADR; table creation is a DBCP), following
-> the pattern already executed for metric seeds (`mcf.seed_metric`). Odoo 17 is the first system
-> seeded greenfield through the new shape, with `instance-extract` provenance from the pilot
-> instance; SAP ecc/s4hana migrate later under one-then-many (D268), after which the Mongo store
-> freezes read-only and retires at its own gate. During transition, Source Registration reads
-> Postgres for systems present there and Mongo otherwise — per-system source of truth, never a
-> dual-write. **D269's meaning survives unchanged: the seed catalog remains the only entry point
-> for tables and fields; only the store moves** — and the Postgres path brings seed writes under
-> the audit substrate, closing the known limitation recorded in this chapter's as-built drift.
-> Everything below describes the Mongo as-built, which remains operative until migration lands.
+> **Direction (DEC-0b5a4c as amended — Amendment 1, 2026-08-05): the MongoDB store this chapter describes is retiring as *forage*, and nothing replaces it.** There is no Postgres seed store: `source.seed_source_table` was created and dropped unloaded (bc-core migrations `20260805-tsk-f7fc55-1` / `-2`). A new source system does not pass through a seed catalog at all — its schema enters by **manifest-bound extract admission**: a version-exact, hash-bound instance extract is admitted directly into Source Registration (`POST /api/source-catalog/extract-admissions`; rows are born `registered`/`unverified`, verification is a mechanical governed act and approval an explicit operator transition per DEC-3078ce/D557; the manifest discipline is recorded in `operations.extract_manifest_log`). Odoo was onboarded this way. D269 survives in its amended, intent-preserving form: registration admits no human-invented schema — its input is the Seed Catalog **or a manifest-bound instance extract**. `bc_seed` content receives per-collection disposition (promote / archive-to-files / discard): the SAP tables already registered from it stay registered, the un-admitted residue is archive, not a queue, and there is no transitional Mongo/Postgres read — Mongo is never a served store again. Everything below describes the Mongo as-built for the record; do not use it to onboard a new system.: the MongoDB store this chapter describes is destined to
 
 ## Scope
 
