@@ -2,7 +2,7 @@
 uid: DEC-9f7c18
 title: "D531 authority caps are origin-scoped: not applicable to panel-origin certification payloads, retained for external-evidence origins"
 description: "V-D8/CF-R4 citation caps are origin-scoped: skipped for declared run-origin (panel act IS the authority; citations must stay empty), retained byte-identically for exchange/checker; report exchange-era workflow blocks origin-gated likewise"
-status: decided
+status: implemented
 date: 2026-08-01T17:39:38.594Z
 project: bc-core
 domain: metrics

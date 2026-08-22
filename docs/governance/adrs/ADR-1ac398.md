@@ -2,7 +2,7 @@
 uid: DEC-1ac398
 title: "Metric Catalog rebuild — governed attributes, panel-time enrichment, knowledge import, and the two-strip trust view"
 description: "Catalog lists governed MCF contracts; enrichment moves into the M12 panel with a one-time governed knowledge import from the pre-reset snapshot (1,241 rows); locked attribute list with seed/panel/evidence sources incl. master-normalized Function/Subfunction; per-metric two-strip trust view (lifecycle transitions + SC-AC-OC-(BCF)-CC-MC chain integrity) replacing KPI-map and integrity screens."
-status: decided
+status: implemented
 date: 2026-06-10T06:25:56.886Z
 project: bc-core
 domain: metrics

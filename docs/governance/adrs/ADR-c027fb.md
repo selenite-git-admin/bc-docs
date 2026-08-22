@@ -2,7 +2,7 @@
 uid: DEC-c027fb
 title: "Identity tuple v3: aggregation currency policy is a metric identity element"
 description: "identity_tuple_hash gains the effective aggregation currency policy as an optional trailing element under hash_algorithm_version mcf-hash-v3, stamped on newly-created MCs only; amends the D470 hash authority using its own backward-compatible precedent"
-status: decided
+status: implemented
 date: 2026-08-02T02:25:29.077Z
 project: bc-core
 domain: metrics

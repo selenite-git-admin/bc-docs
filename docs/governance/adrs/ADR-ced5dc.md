@@ -2,7 +2,7 @@
 uid: DEC-ced5dc
 title: "BCF Enrichment Program-2 — non-finance vocabulary buildout to max coverage"
 description: "Enrich the P3 Business-Concept layer across 112 non-finance entity shells to max coverage via the Path-A panel, unblocking first-client MCF onboarding across all functions."
-status: decided
+status: implemented
 date: 2026-07-04T05:42:52.257Z
 project: bc-core
 domain: contracts

@@ -2,7 +2,7 @@
 uid: DEC-327d4e
 title: "MCF identity_tuple_hash v2 — include the computed-dimension kernel (amends hash-authority D-M7-8)"
 description: "A grouped (distribution/top-N) metric is a distinct metric identity from its ungrouped scalar base, so the §10 identity_tuple_hash includes the computed-dimension kernel (appended only when non-empty -> ungrouped v2 is byte-identical to v1). Bumps mcf-hash-v1 -> v2, NO restamp (the v1 corpus is immutable per Invariant III); L-V1h dedup compares stored hashes across versions. Unblocks the CB-008 customer-axis grouping cohort (DEC-2c2849/D469). Amended 2026-06-30: restamp design rejected by the immutability trigger; replaced with the backward-compatible tuple."
-status: decided
+status: implemented
 date: 2026-06-30T10:59:40.517Z
 project: bc-core
 domain: metrics

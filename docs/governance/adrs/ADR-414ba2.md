@@ -2,7 +2,7 @@
 uid: DEC-414ba2
 title: "Correctly-rounded reproducibility is a distinct, labelled basis for metric audit eligibility"
 description: "Ratio metrics (divide/avg) can never be EXACT; recognise DEC-545a4d prong (b) REPRODUCIBLE as a sufficient but distinctly labelled eligibility basis, under three conditions."
-status: decided
+status: implemented
 date: 2026-07-24T13:49:33.156Z
 project: bc-core
 domain: metrics

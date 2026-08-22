@@ -2,7 +2,7 @@
 uid: DEC-f4b2b0
 title: "Aggregation-currency declaration for amount metrics"
 description: "Every amount metric must declare its aggregation-currency basis; PE-MC must enforce single-currency aggregation or explicit multi-currency policy"
-status: decided
+status: implemented
 date: 2026-07-06T13:10:05.608Z
 project: bc-core
 domain: metrics

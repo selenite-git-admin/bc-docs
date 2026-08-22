@@ -2,7 +2,7 @@
 uid: DEC-6636ae
 title: "Canonical derivation 'group_sum_where' — grain-group-scoped conditional aggregation for co-located plan/actual fields"
 description: "Canonical derivation 'group_sum_where' — grain-group-scoped conditional aggregation for co-located plan/actual fields"
-status: decided
+status: implemented
 date: 2026-07-11T07:05:29.078Z
 project: bc-core
 domain: data-platform

@@ -2,7 +2,7 @@
 uid: DEC-e1312a
 title: "Governed retirement as a distinct deletion class — a sibling carve-out in the source-catalog delete guard, with its own evidence relation"
 description: "Adds source.catalog_retirement_log and a table-objects-only guard branch, so a catalog retired by decision is deletable without widening D564's contamination carve-out. Contamination and retirement stay separable forever."
-status: decided
+status: implemented
 date: 2026-08-10T14:20:28.216Z
 project: bc-core
 domain: sources

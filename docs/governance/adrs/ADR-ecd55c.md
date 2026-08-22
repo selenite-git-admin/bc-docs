@@ -2,7 +2,7 @@
 uid: DEC-ecd55c
 title: "Connection authority reconciled — config in platform runtime.connection (D168), credentials in AWS Secrets Manager"
 description: "Connection config = platform runtime.connection + tenant_id (D168); credentials = AWS Secrets Manager by reference (never any DB). Reconciles the D168/771baf/95687d location tension; amends 95687d §3 cred-in-tenant-DB in-part."
-status: decided
+status: implemented
 date: 2026-07-01T14:17:07.684Z
 project: bc-core
 domain: connectors

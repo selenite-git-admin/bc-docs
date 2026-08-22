@@ -2,7 +2,7 @@
 uid: DEC-4472ca
 title: "Reader Batch Write Model — per-run operations, not per-row"
 description: "Replace row-by-row writes with batch operations per run. One evidence record per run, not per row. Chunked at 5K per INSERT"
-status: decided
+status: implemented
 subdomain: evidence-model
 focus: batch-write-performance
 date: 2026-03-24
