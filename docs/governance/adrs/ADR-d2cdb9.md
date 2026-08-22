@@ -2,12 +2,13 @@
 uid: DEC-d2cdb9
 title: "SAP data admission stance under SAP API Policy v.4/2026"
 description: "BareCount admits SAP customer data only through SAP-sanctioned Published APIs / CDS Published views / BDC Connect — no ODP RFCs, no undocumented OData, no scraping of customer systems."
-status: decided
+status: superseded
 date: 2026-04-28T13:08:47.018Z
 project: barecount-devhub
 domain: sources
 subdomain: sap
 focus: governance
+superseded_by: DEC-ea9bdc
 ---
 
 # SAP data admission stance under SAP API Policy v.4/2026

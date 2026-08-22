@@ -2,7 +2,7 @@
 uid: DEC-4aa2fd
 title: "Subscription-plan-driven contract binding automation (metric entitlement is the control surface)"
 description: "Plan's metric entitlement is the sole control input; tenant contract bindings + fact provisioning derive from it by reverse-walking each entitled MC's chain."
-status: proposed
+status: reversed
 date: 2026-07-02T05:17:22.959Z
 project: bc-core
 domain: tenants

@@ -2,7 +2,7 @@
 uid: DEC-aa6251
 title: "Contract Primitives — BO and BF as First-Class Governed Artifacts"
 description: "Business Objects and Business Fields are Contract Primitives — governed identically to contracts (D253 shape, x-governance), but not contract families. 2 Primitives + 6 Contracts = 8 governed artifacts."
-status: implemented
+status: superseded
 subdomain: contract-primitive
 focus: governance
 date: 2026-04-02
@@ -10,6 +10,7 @@ project: bc-docs
 domain: contracts
 authority: authoritative
 migrated_from: legacy v2 archive
+superseded_by: DEC-a19428
 ---
 
 # D255: Contract Primitives — BO and BF as First-Class Governed Artifacts

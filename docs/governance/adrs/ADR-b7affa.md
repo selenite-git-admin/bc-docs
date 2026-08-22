@@ -2,12 +2,13 @@
 uid: DEC-b7affa
 title: "Amendment to DEC-a17d0f: BF-CF semantic-family compatibility gate (G11)"
 description: "Adds gate G11 (BF-CF semantic-family compatibility) to the SDA gate set defined in DEC-a17d0f §4. Extends G5 to BFs (same gate, broader scope). Names DBCP-1g for the future BF.semantic_family column. Catches measure↔temporal/dimension and amount↔currency-ratio mismatches deterministically (Apex Cases A and B); defers code↔code vocabulary mismatch (G11b sub-gate). Compatibility matrix encoded as static config in service code; refined per matrix-review M1-M3 against 246 Apex variable inputs. Operates at cc_field_mapping authoring time, sequence G9 → G11 → G10. G11 abstains when BF source is compute__derived."
-status: decided
+status: superseded
 date: 2026-05-12T08:44:10.839Z
 project: platform
 domain: contracts
 subdomain: semantic-vocabulary
 focus: governance
+superseded_by: DEC-02f5a9
 ---
 
 # Amendment to DEC-a17d0f: BF-CF semantic-family compatibility gate (G11)

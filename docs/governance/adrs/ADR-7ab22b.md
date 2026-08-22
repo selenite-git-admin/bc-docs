@@ -8,6 +8,9 @@ project: bc-core
 domain: metrics
 subdomain: metrics/mcf-materialization
 focus: governance
+supersedes:
+  - DEC-804874
+  - DEC-bebaec
 ---
 
 # MCF-materialized metrics governed by MCF M13/M14, not legacy D305 chain_status

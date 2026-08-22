@@ -8,6 +8,8 @@ project: bc-core
 domain: contracts
 subdomain: contracts/canonical
 focus: derived-canonical-field
+supersedes:
+  - DEC-637072
 ---
 
 # D461 derivation home — canonical-boundary 1-hop derived fields; cross-concept comparison at the metric boundary (corrects DEC-bc6be2 observation-boundary mechanism + design-doc L2/L3)

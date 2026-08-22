@@ -2,12 +2,13 @@
 uid: DEC-253be2
 title: "External metric audit — intrinsic vs source-realization audit-request split, per-realization claim scoping, SAP ECC as first realization-audit ground"
 description: "Metric onboarding emits two audit requests (intrinsic C1 unchanged + future source-system-realization-audit-request-v1); realization failure blocks only per-source calculator-grade claim; ~370 audit population stays on SAP ECC, Oracle Fusion later as coexisting second realization program"
-status: decided
+status: superseded
 date: 2026-07-13T07:36:27.688Z
 project: platform
 domain: metrics
 subdomain: external-audit
 focus: audit-request-identity
+superseded_by: DEC-c48b0f
 ---
 
 # External metric audit — intrinsic vs source-realization audit-request split, per-realization claim scoping, SAP ECC as first realization-audit ground

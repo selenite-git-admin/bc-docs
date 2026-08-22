@@ -2,11 +2,12 @@
 uid: DEC-9361cd
 title: "CC Field Mapping: 1-BF-to-Many-CFs + Filter + Canonical Uniqueness"
 description: "CC Field Mapping: 1-BF-to-Many-CFs + Filter + Canonical Uniqueness"
-status: implemented
+status: superseded
 date: 2026-04-10T05:46:17.921Z
 project: platform
 domain: contracts
 migrated_from: legacy v2 archive
+superseded_by: DEC-a19428
 ---
 
 # CC Field Mapping: 1-BF-to-Many-CFs + Filter + Canonical Uniqueness

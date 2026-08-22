@@ -2,7 +2,7 @@
 uid: DEC-523a5d
 title: "S/4HANA CDS View Catalog — Three Public Sources + Two Customer Access Models"
 description: "Two-track CDS view strategy: public sources (GitHub JSON, CDS Finder Excel, se80.co.uk) + customer system access models"
-status: implemented
+status: superseded
 subdomain: sap-catalog
 focus: cds-catalog-access-models
 date: 2026-03-07
@@ -10,6 +10,7 @@ project: bc-core
 domain: database
 authority: authoritative
 migrated_from: legacy v2 archive
+superseded_by: DEC-ea9bdc
 ---
 
 

@@ -2,7 +2,7 @@
 uid: DEC-77f4b5
 title: "Demo-to-Contract Strategy — Synthetic Data Hook + SAP Licensing Gate"
 description: "Demos use synthetic data (no system access). Production onboarding requires Schedule B for SAP licensing obligations as a contractual gate."
-status: implemented
+status: superseded
 subdomain: go-to-market
 focus: demo-strategy
 date: 2026-03-07
@@ -13,6 +13,7 @@ refs:
     label: "D187"
 authority: authoritative
 migrated_from: legacy v2 archive
+superseded_by: DEC-ea9bdc
 ---
 
 

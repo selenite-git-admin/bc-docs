@@ -8,7 +8,9 @@ project: bc-core
 domain: platform
 subdomain: bcf-panel
 focus: runtime
-supersedes: DEC-14fb98
+supersedes:
+  - DEC-14fb98
+  - DEC-e9294b
 ---
 
 # Retire bc-ai — port the BCF registry-authoring panel in-process into bc-core, roster preserved

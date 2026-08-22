@@ -2,12 +2,13 @@
 uid: DEC-1ce490
 title: "contract.business_field is the certified BF-BO catalog"
 description: "BF admission requires evidence-backed contextual correctness via six gates; OAGIS is evidence, not authority; certification is ledgered, not inferred."
-status: decided
+status: superseded
 date: 2026-05-16T03:53:50.346Z
 project: bc-core
 domain: contract
 subdomain: business-field-catalog
 focus: admission, governance
+superseded_by: DEC-a19428
 ---
 
 # contract.business_field is the certified BF-BO catalog

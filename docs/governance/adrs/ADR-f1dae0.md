@@ -2,7 +2,7 @@
 uid: DEC-f1dae0
 title: "Standards-First BF/BO Creation — OAGIS Primary, Metrics Validate"
 description: "BF/BO sourced from OAGIS/CCTS standards, not metric formulas. BO→CC is 1:N (CCTS ACC→ABIE). PII on BF. D225 data deleted."
-status: implemented
+status: superseded
 subdomain: business-object-model
 focus: governance
 date: 2026-04-06T02:40:38.766Z
@@ -10,6 +10,7 @@ project: bc-docs
 domain: contracts
 supersedes: DEC-6d8be5
 migrated_from: legacy v2 archive
+superseded_by: DEC-a19428
 ---
 
 # Standards-First BF/BO Creation — OAGIS Primary, Metrics Validate

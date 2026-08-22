@@ -2,7 +2,7 @@
 uid: DEC-fc41a3
 title: "Source Chain Contract Generation — SAP ECC Finance"
 description: "Source chain contracts for SAP ECC Finance — SC/AC per source object, BO-centric readers, two-tier BFs"
-status: implemented
+status: superseded
 subdomain: source-onboarding
 focus: sap-ecc-generation
 date: 2026-03-29
@@ -10,6 +10,7 @@ project: bc-core
 domain: contracts
 authority: authoritative
 migrated_from: legacy v2 archive
+superseded_by: DEC-ea9bdc
 ---
 
 

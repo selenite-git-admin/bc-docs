@@ -2,7 +2,7 @@
 uid: DEC-75cb8a
 title: "Machine-enforced metric-authoring drift guard — two layers: bc-core deterministic gates (authority) + DevHub MCP preflight/orchestrator (ergonomics)"
 description: "Move metric-authoring rule compliance from human vigilance to machine gates: bc-core PE-MC source-agnostic-literal check + panel fail-fast (authority), DevHub MCP preflight + step-gated orchestrator (ergonomics)."
-status: proposed
+status: implemented
 date: 2026-07-06T02:10:31.032Z
 project: bc-core
 domain: metrics

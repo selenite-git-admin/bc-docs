@@ -2,7 +2,7 @@
 uid: DEC-cbc07b
 title: "Type Conformance Enforcement — Source Object through Metric Snapshot"
 description: "Every field flowing through the chain (SO → AR → CO → MS) must conform to its Business Field's declared data_type; normalization happens at admission, not at metric evaluation"
-status: proposed
+status: superseded
 date: 2026-04-15
 project: bc-core
 domain: contracts
@@ -26,6 +26,7 @@ refs:
     label: "Contract Chain Assembly (SO → AR → CO → MS flow)"
 migrated_from: legacy v2 archive
 devhub_registration: doc-registry indexed; decision-registry row absent (FILE_ONLY_UNEXPLAINED per Decision-Registration Integrity Audit 2026-06-22). Note PATH_MISMATCH context — the DevHub decision row DEC-4a8abb has title "Type Conformance Enforcement" with file_path docs/adrs/ADR-cbc07b.md, i.e. the registry tracks this decision under DEC-4a8abb but its own file_path correctly points here. File-side UID DEC-cbc07b is the authority used by inbound cross-references; preservation over re-mint per operator doctrine.
+superseded_by: DEC-c48b0f
 ---
 
 # Type Conformance Enforcement — Source Object through Metric Snapshot
