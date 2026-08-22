@@ -1,5 +1,6 @@
 ---
-uid: DEC-7a1c98
+uid: DEC-7a1c98
+
 decision_code: D585
 title: "Vocabulary Lock for the Opaque Workflow-Code Family — MMS / MCF doctrinal renaming policy"
 description: "Operationally locks the semantic-naming policy for the opaque workflow-code family that accumulated inside MCF and the adjacent BCF surfaces — M-track process codes (M12, M12.5, M13, M14, M15, broader M0–M20 where used as process names), publication / coverage / precondition codes (PE-MC-*, L-V1*, C-FX-*), and BCF-style process / action shorthand (B6, C5, F3, C1/C2/F1/F2 where used as process names). Semantic names become primary in new doctrine, new docs, new operator-facing labels, new code identifiers, new route aliases, and future enum aliases; legacy codes survive only in inline comments, log metadata, persisted historical evidence, and migration appendices, and historical evidence is never rewritten (Foundation Invariant III). Names the canonical six-step Controlled Semantic Refactor sequence (Doctrine → Operator-facing docs/UI → Code identifiers → HTTP route aliases → DB enum aliases additive-only → per-metric controller quarantine). Names the MMS hierarchy — MMS umbrella; MCF grammar/substrate layer not renamed; Metric Engine runtime executor; Creation/Recovery/Runtime/Evolution Tracks. Filing this ADR completes Step 1 only; Steps 2–6 each require their own future operator authorization. Decision identifiers (DEC-…, D-…, ADR UIDs) are explicitly NOT renamed. This ADR renames nothing by itself; it is the authority future refactor sessions cite."
