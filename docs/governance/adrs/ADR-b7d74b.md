@@ -2,7 +2,7 @@
 uid: DEC-b7d74b
 title: "Retire the signed audit courier; preserve dual-model maker/checker trust and the admission gate at full strength"
 description: "Courier retired (signing/feeds/epochs/one-shot identity/pickups); gate, CRV rules and dual-model maker/checker preserved; distinct provenance label mandatory; priority redirected to avg-family doctrine and legacy actives"
-status: decided
+status: implemented
 date: 2026-07-25T14:47:16.986Z
 project: bc-core
 domain: metrics

@@ -2,7 +2,7 @@
 uid: DEC-83fda0
 title: "Route B — As-of/Stock/Balance metrics via open-item canonical (postings−clearings netting) + unified temporal-gate grammar"
 description: "Enable as-of/stock/balance finance metrics via a postings−clearings netting model on open-item canonical surfaces + a single unified temporal-gate grammar; AR-first, phased ADR→declaration→runtime."
-status: decided
+status: implemented
 date: 2026-06-29T04:40:41.878Z
 project: bc-core
 domain: contracts

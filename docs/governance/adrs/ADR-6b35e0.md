@@ -2,7 +2,7 @@
 uid: DEC-6b35e0
 title: "Source vocabulary discipline at the Metric Contract boundary"
 description: "MC filter clauses must not bind to source-system-specific document codes such as SAP BLART, SHKZG, etc. Source codes belong at OC via a code_lookup value-map; MC filters bind to canonical concepts with canonical value sets. document_type_code is diagnostic, not strategic-filter. Existing cleared_invoice_amount remains active but transitional pending a canonical-event successor."
-status: decided
+status: implemented
 date: 2026-06-13T07:00:38.058Z
 project: bc-core
 domain: mcf

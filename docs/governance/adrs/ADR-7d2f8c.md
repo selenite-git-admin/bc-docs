@@ -2,7 +2,7 @@
 uid: DEC-7d2f8c
 title: "D461 derivation home — canonical-boundary 1-hop derived fields; cross-concept comparison at the metric boundary (corrects DEC-bc6be2 observation-boundary mechanism + design-doc L2/L3)"
 description: "D461 derivation lives in the CC body (1-hop, inputs directly observed); cross-concept comparison with a derived input is a metric-boundary op (secondary-metric DAG); corrects DEC-bc6be2's observation-boundary date_offset and the design-doc canonical_mapping/transitive choices."
-status: decided
+status: implemented
 date: 2026-06-28T02:42:15.210Z
 project: bc-core
 domain: contracts

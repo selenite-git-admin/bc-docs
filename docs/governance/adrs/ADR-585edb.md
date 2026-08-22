@@ -2,7 +2,7 @@
 uid: DEC-585edb
 title: "OC-v2 join reduce strategy 'sum' — many→one numeric aggregation over join children"
 description: "OC-v2 join reduce strategy 'sum' — many→one numeric aggregation over join children"
-status: decided
+status: implemented
 date: 2026-07-11T04:16:05.180Z
 project: bc-core
 domain: data-platform

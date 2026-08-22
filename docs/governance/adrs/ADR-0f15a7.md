@@ -2,7 +2,7 @@
 uid: DEC-0f15a7
 title: "date_add — additive D330 compute function for net-due-date derivation"
 description: "date_add — additive D330 compute function for net-due-date derivation"
-status: decided
+status: implemented
 date: 2026-06-29T15:28:06.616Z
 project: bc-core
 domain: contracts

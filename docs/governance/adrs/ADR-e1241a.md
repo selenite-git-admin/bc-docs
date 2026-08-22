@@ -2,7 +2,7 @@
 uid: DEC-e1241a
 title: "Source catalog artefacts carry identity; derivability verifies but never substitutes"
 description: "A source catalog is admitted as a hash-identified artefact with declared extraction method and module set; re-derivation is a verification check, never a bootstrap authority."
-status: decided
+status: implemented
 date: 2026-08-06T03:07:04.085Z
 project: platform
 domain: sources

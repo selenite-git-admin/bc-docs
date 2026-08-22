@@ -2,7 +2,7 @@
 uid: DEC-14f5b6
 title: "Measurement semantics for amount and quantity Business Concepts — currency is row-data, vocabulary declares the dependency"
 description: "Amount-role BCs are classed monetary (mandatory currency-context sibling reference) vs fixed_unit (unit field, never ISO 4217); quantity BCs require UOM context; engine enforces mixed-currency refusal at PE-MC against mcv.aggregation_currency_code. Schema columns DBCP-deferred per DEC-a6258b precedent."
-status: decided
+status: implemented
 date: 2026-07-06T15:15:20.761Z
 project: bc-core
 domain: contracts

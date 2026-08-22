@@ -2,7 +2,7 @@
 uid: DEC-31dc55
 title: "GL sign-convention and currency-declaration doctrine — ledger-signed canonical, metric-layer presentation, mandatory declarations"
 description: "GL sign-convention and currency-declaration doctrine — ledger-signed canonical, metric-layer presentation, mandatory declarations"
-status: decided
+status: implemented
 date: 2026-07-11T10:09:43.149Z
 project: bc-core
 domain: data-platform
