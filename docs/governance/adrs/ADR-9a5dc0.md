@@ -1,5 +1,6 @@
 ---
 uid: DEC-9a5dc0
+decision_code: D586
 title: "CF Boundary — Reporting Standards Promote to Canonical Fields"
 description: "BFs that represent financial reporting concepts (US_GAAP, IFRS, COSO, IIA) promote to canonical fields. BFs remain source-observable only. Eliminates dual chain routes and misclassified integrity breaks."
 status: superseded
