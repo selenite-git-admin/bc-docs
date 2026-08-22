@@ -106,25 +106,14 @@ metric consumes.
 
 ---
 
-## Open, NOT accepted — these are defects being fixed, listed so they are not mistaken for limitations
-
-| Ref | Defect | Status |
-|---|---|---|
-| TSK-98235d | GST input credit never set off — output paid gross in cash | Being fixed |
-| TSK-bcc138 / D556 | Period close welded to the backfill driver; nothing runs it after cutoff | Being fixed |
-| — | Overhead apportionment/absorption into WIP absent — breaks COGS, gross margin, inventory value | Ranked for operator review |
-| — | Prepaid/deferred expense amortization absent | Ranked for operator review |
-| — | Provision for doubtful debts absent | Ranked for operator review |
-| — | TDS on vendor payments absent (s.194C contractors, s.194J professional fees, s.194I rent) — verified absent | **Proposed as a limitation; awaiting operator decision at the realism review** — not accepted, not numbered (analysis below) |
-
-### Proposed limitation awaiting operator decision — TDS on vendor payments
+## L-006 · TDS is deducted on salaries but not on vendor payments
 
 **Diverges:** salary TDS (s.192) IS deducted, via `statutory.py` against the profile's declared
 workforce bands. TDS on vendor payments — s.194C contractors, s.194J professional fees,
 s.194I rent — is not. The l10n_in chart carries the accounts (`TDS Deducted`,
 `TDS (Withholding Control)`) but no driver uses them, so service vendors are paid gross.
 
-**Why proposed as a limitation (not yet accepted):** TDS applies to *service* payments at 1–10%, not to goods.
+**Why accepted:** TDS applies to *service* payments at 1–10%, not to goods.
 For a manufacturer the affected slice is contractors, professional fees and rent — real, but a
 modest share of total spend. Building it means a per-vendor-category withholding rule and a
 separate remittance stream, which is a meaningful build for a small correction.
@@ -136,4 +125,16 @@ COGS and inventory are unaffected — no TDS applies there.
 **Fingerprint:** service vendor payments that exactly equal the invoice gross, with no
 withholding line, and a TDS liability sourced only from payroll.
 
-**Status:** awaiting operator decision at the realism review. Until the operator accepts it, this item is an open divergence, not a numbered limitation; on acceptance it moves above with a new L-number and this entry is removed.
+**Status:** **Accepted** — operator (anant) accepted this limitation on 2026-08-22 at the realism review (acceptance recorded in barecount-devhub session SES-e8ffeb plan/change record, and on bc-docs PR #8 as the re-review comment for review 5000717885). Deduct-at-source on service vendors is out of scope for the mfg-in world unless a metric demands it.
+
+---
+
+## Open, NOT accepted — these are defects being fixed, listed so they are not mistaken for limitations
+
+| Ref | Defect | Status |
+|---|---|---|
+| TSK-98235d | GST input credit never set off — output paid gross in cash | Being fixed |
+| TSK-bcc138 / D556 | Period close welded to the backfill driver; nothing runs it after cutoff | Being fixed |
+| — | Overhead apportionment/absorption into WIP absent — breaks COGS, gross margin, inventory value | Ranked for operator review |
+| — | Prepaid/deferred expense amortization absent | Ranked for operator review |
+| — | Provision for doubtful debts absent | Ranked for operator review |
