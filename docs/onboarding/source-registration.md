@@ -57,7 +57,7 @@ The procedure assumes these are true at the moment Step 1 begins. A precondition
 |---|---|
 | Cognito authenticated session for the actor | Every catalog mutation is `@PlatformOnly()` JWT-guarded at the API surface |
 | Provider, system, version, and module identifiers are known | The DTO rejects sentinel module codes; identifier resolution is upstream of the catalog |
-| Seed Catalog populated for the system being registered | Steps 2-3 read tables and fields from the Seed Catalog only; no manual table or field entry is admitted (D269 in the v2 SOP shorthand) |
+| Seed Catalog populated for the system — **or** a manifest-bound instance extract admitted | Steps 2-3 read tables and fields from the Seed Catalog or from the admitted extract; no manual table or field entry is admitted (D269, amended by DEC-0b5a4c Amendment 1: registration admits no human-invented schema — its input is the Seed Catalog *or a manifest-bound instance extract*). New systems use extract admission (`POST /api/source-catalog/extract-admissions`; see the Amendment note at the end of this chapter). There is no seed-store transition: no Postgres seed store exists (`source.seed_source_table` was dropped unloaded) and there is no Mongo/Postgres dual read — Mongo `bc_seed` is SAP-era forage retiring by per-collection disposition |
 | AI verification surface reachable | Each catalog artifact passes maker-checker-gate before its catalog row is created with `verificationStatus: verified` |
 
 The actor's role is not part of the catalog's governance state. Catalog rows record the actor identity and the AI verification verdict; the actor's permissions are evaluated at the API surface, not in the catalog data.

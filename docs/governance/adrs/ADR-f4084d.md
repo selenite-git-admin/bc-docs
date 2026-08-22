@@ -20,7 +20,7 @@ G4 (same program): fold the devhub preflight live legs (mcp-server.js:2761-2931 
 FOUNDATION: composition at the authoring surface — every artifact still passes the unchanged B-layer validators (meta-schema, D430, D431, strict_backward); the ChainSpec→body projection is mechanical, meaning is still declared by the author once (Invariant IV strengthened: single statement of each fact eliminates OC/CC restatement drift). Repair-location: none of A–F is altered; this is tooling over B-writes. No DB change.
 
 BUILD PLAN (phases, each a coordinated non-panel window where bc-core code is touched): B1 substrate resolver (read-only, safe) → B2 registerSourceStack → B3 publishChain + dryRun + GOLDEN PARITY TESTS (derive the live cc__asset v2 and cc__journal_entry_line v5 bodies from specs and diff against the actual live contract_json — one-then-many built in: the capability must reproduce what was hand-proven before it authors anything new) → B4 thin devhub MCP clients → B5 G4 fold-in. Tracked under TSK-539bbe."
-status: decided
+status: implemented
 date: 2026-07-10T02:16:22.309Z
 project: bc-core
 domain: metric-runtime

@@ -2,7 +2,7 @@
 uid: DEC-545a4d
 title: "Numeric admission classes v2: scaled-decimal exactness + correctly-rounded reproducibility"
 description: "Unblocks 182 NOT_PROVEN members: scaled-decimal sums become provably EXACT (~96); division shapes admit under a bit-reproducible correctly-rounded class (~86); additive re-proof evidence, no snapshot mutation."
-status: decided
+status: implemented
 date: 2026-07-19T08:33:36.573Z
 project: bc-core
 domain: metrics

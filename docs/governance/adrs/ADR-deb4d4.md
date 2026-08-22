@@ -2,7 +2,7 @@
 uid: DEC-deb4d4
 title: "Feed-integrity hardening package: rehearsal lane, zero-deferral rule, lane-retired supersession, enforcement-3 cut, evidence retention, vector siblings"
 description: "Rehearsal lane gates all live audit traffic; zero-deferral in the signing path; enforcement-3 cut; lane-retired supersession un-strands 12; byte retention + cross-engine vector siblings"
-status: decided
+status: implemented
 date: 2026-07-25T09:08:17.526Z
 project: bc-core
 domain: metrics

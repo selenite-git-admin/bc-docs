@@ -2,7 +2,7 @@
 uid: DEC-26f75a
 title: "period_aggregate anchor_field — event-date period membership for flow metrics (temporal grammar ADR #2)"
 description: "period_aggregate gains optional anchor_field (event-date period membership); default = stamped posting fiscal_period; fixes the clearing-date-declared flow metrics (audit SES-b54f06); completes the D472-deferred ADR #2"
-status: decided
+status: implemented
 date: 2026-07-03T01:05:28.857Z
 project: bc-core
 domain: metrics

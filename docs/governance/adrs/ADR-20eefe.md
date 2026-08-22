@@ -2,7 +2,7 @@
 uid: DEC-20eefe
 title: "Evidence as Structural Lineage — per-run summaries in RDS, detailed archive on S3"
 description: "Per-run evidence summaries in RDS (not per-row). Detailed archive on S3 WORM. Eliminates 5x write amplification while preserving audit safety."
-status: decided
+status: implemented
 subdomain: evidence-architecture
 focus: per-run-summaries-s3-detail
 date: 2026-03-25

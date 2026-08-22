@@ -2,7 +2,7 @@
 uid: DEC-3078ce
 title: "Source catalog onboarding workflow — evidence-bound verification, explicit transitions, no born-approved rows"
 description: "Catalog governance v2: extract admission is the sole birth path for new-system rows (born registered/unverified, artefact-bound); verification is a mechanical governed act citing the artefact (D553 pt 4), not an AI panel; approval is an explicit operator transition; promotion stripped from PATCH; retirement is archival, never DELETE, for approved rows; SC/AC authoring follows approval."
-status: decided
+status: implemented
 date: 2026-08-07T16:46:57.739Z
 project: bc-core
 domain: sources

@@ -2,7 +2,7 @@
 uid: DEC-9d27a9
 title: "BCF supersession-cascade: fail-closed guard on supersede + systematic consumer remediation"
 description: "supersedeBusinessConcept gains a fail-closed guard blocking supersession while live consumers exist; existing stranded consumers remediated systematically."
-status: decided
+status: implemented
 date: 2026-06-27T03:00:46.784Z
 project: bc-core
 domain: contracts

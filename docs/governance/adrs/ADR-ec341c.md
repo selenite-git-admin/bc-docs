@@ -2,7 +2,7 @@
 uid: DEC-ec341c
 title: "Admission scope as primary policy axis (cross_function / function_scoped / industry_scoped)"
 description: "Replace the F4-v2 v1 binary \"global vs everything-else\" admission gate with admission_scope as the primary policy axis. Three valid scopes (cross_function, function_scoped, industry_scoped) admit; five invalid scopes (source_system_specific, local_alias, implementation_artifact, source_field_copy, semantic_duplicate) reject. Function-scoped and industry-scoped admissions each carry five explicit preconditions. The non-APPROVE writer guard at registry-authoring-orchestrator.service.ts:293 stays intact — the fix is in the verdict-policy rubric (bc-ai Maker/Checker/Moderator) and the parallel bc-core validator (recommendation.validator.ts validateVocabularyFields), not in the writer-side authorization. classification ('global' / 'industry_specific' / 'system_specific' / 'alias_localization_candidate' / 'reject') becomes derived from admission_scope during a compat window, then removed. References §1.5 doctrine correction in bcf-oagis-pass-1-c1-rp2-parked-row-analysis-2026-06-25.md."
-status: decided
+status: implemented
 date: 2026-06-24T12:54:50.003Z
 project: bc-docs
 domain: contracts

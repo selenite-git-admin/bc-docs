@@ -2,7 +2,7 @@
 uid: DEC-d3492b
 title: "as_of selection mode 'latest_observation' — per-series latest-snapshot governed selection (per-period balances)"
 description: "as_of selection mode 'latest_observation' — per-series latest-snapshot governed selection (per-period balances)"
-status: decided
+status: implemented
 date: 2026-07-11T08:18:36.713Z
 project: bc-core
 domain: data-platform

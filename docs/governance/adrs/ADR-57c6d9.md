@@ -2,7 +2,7 @@
 uid: DEC-57c6d9
 title: "Platform metric trust strip ends at Activated; tenant-runtime stages move to bc-portal"
 description: "Platform trust strip = 4 platform stages; bound/evaluated/producing are tenant-scoped and move to bc-portal (refines D438)"
-status: decided
+status: implemented
 date: 2026-06-27T05:57:05.007Z
 project: bc-core
 domain: metrics
