@@ -209,6 +209,47 @@ The gate consumes the L-node verdict; it does not author the verdict. The verdic
 
 **Governing source.** DEC-623f8f; CLAUDE.md.
 
+## Meta-Schema Change Control (DEC-2d5418 / D573)
+
+`contract.contract_meta_schema` — the DB residence of the contract grammar — is
+editable ONLY through the hardened change-request mechanism (bc-core
+`MetaSchemaChangeRequestService`, PR #693; substrate = migration 61). Direct
+UPDATEs are not a sanctioned path for any actor.
+
+The mechanism, in one pass:
+
+1. **Create** (single or batch): each request captures an immutable baseline —
+   the ACTIVE target schema's JSON plus its canonical `schemaDigest` — and the
+   AUTHENTICATED author principal. Coupled grammar changes are created as one
+   batch (shared `batch_uid`); a batch approves all-or-none.
+2. **Approve** (operator act): ONE database transaction across every schema
+   write and every terminal transition — FOR-UPDATE locks on requests and
+   targets, baseline CAS (a live row that drifted from its captured baseline
+   REFUSES; nothing is overwritten), proposed-schema pre-compilation, and
+   exactly-one-affected-row proofs. The reviewer is the authenticated
+   principal; self-approval refuses; `changeRecordUid` (session/task UID) and
+   `auditorResponseRef` (the acceptance exchange commit) are REQUIRED and
+   recorded.
+3. **The DB guard** (migration 61, `BEFORE INSERT OR UPDATE`): new requests are
+   born `pending` carrying their captured facts (a terminal row cannot be
+   fabricated by insertion, even with forged evidence); captured facts are
+   immutable; terminal rows freeze entirely; terminal transitions require
+   their evidence. Digest citation rule: any memo or verification pins the
+   service's named `schemaDigest` algorithm — never an ad-hoc canonicalizer.
+4. **Cache coherence:** validators are digest-keyed and re-resolved per
+   validation — every process observes an applied change on its next
+   validation; no invalidation broadcast exists or is needed.
+
+**Author/reviewer separation in practice:** the agent-author identity
+`bc-ai-service@selenite.co` authors requests (DevHub token tool
+`user: 'service'`; credentials operator-provisioned in bc-core `.env`, never
+assistant-held); the operator approves under their own principal. With a single
+identity on both sides, the guard refuses the approval — by design.
+
+First governed use: the 2026-08-15 OC/AC grammar sync (observation/v2
+pair + `source_filter`, admission/v1 pair parent; batch `00c48cbf`, auditor
+acceptance `ae250de5`).
+
 ## Boundaries with Other Chapters
 
 | Chapter | What it owns | What this chapter records |
@@ -235,4 +276,5 @@ The gate consumes the L-node verdict; it does not author the verdict. The verdic
 - DEC-ebf0b4 (Session Discipline and Data Integrity Rules)
 - DEC-804874 (L-Node Verification with Semantic Family Classification)
 - DEC-3395bc (bc-docs SSOT cutover)
+- DEC-2d5418 (Hardened meta-schema change control + agent-author identity)
 - CLAUDE.md (Session Protocol section, Architecture Decision Records section, Session Discipline section)

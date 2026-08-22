@@ -18,12 +18,15 @@ governing_adrs:
   - DEC-683cf3 (BO tiers basic vs derived)
   - DEC-9a5dc0 (CF Boundary)
   - DEC-b5631b (Field Data Type Quality Gate)
+  - DEC-02f5a9 (Business Concept Registry supersedes BO/BF/CF and Canonical Mapping identity)
 errata_referenced: []
 v2_sources: []
 word_target: 3500
 ---
 
 # Business Vocabulary
+
+> **Vocabulary supersession (DEC-02f5a9).** Business Field, Business Object, Canonical Field, and the Canonical Mapping identity model described in parts of this chapter are **superseded** by the Business Concept Registry (Entity / Property / Business Concept). New authoring uses the Registry vocabulary; this chapter is retained for historical continuity pending its full rewrite. See The Contract Grammar and The Object Model for the Registry model.
 
 ## Scope
 

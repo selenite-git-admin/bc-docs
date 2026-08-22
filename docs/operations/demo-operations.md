@@ -24,6 +24,8 @@ diagrams: []
 
 # Demo Operations
 
+> **⚠ Superseded premise — historical reference only; do not follow for current demo operations.** This chapter describes the **apex** tenant bound to a **SAP S/4HANA** reader chain (DEC-076521). That premise is superseded on three counts: **apex is a historical estate**, **SAP has been retired in favor of Odoo** (D564 contamination expunge → Odoo-only), and the current demo program is **bc-demo-v2** (D566, Odoo-based). The chapter is retained as historical reference for the apex/SAP demo; it is **not authoritative for current demo operations**, and its apex/SAP procedures must not be executed as current demo operations. It also predates the Registry-Entity reader model (DEC-0d5b39) and the Business Concept Registry vocabulary (DEC-02f5a9). The full rebase to the Odoo / demo-v2 estate is tracked at **TSK-892697** (bc-docs); an operator-approved retirement/reference transition of this chapter (status/authority flip) is deferred to that work.
+
 The demo is BareCount's permanent sales surface. It runs autonomously, refreshes its own data, monitors its own coherence, and is built on the same architectural rails as a real customer tenant — by design, never with a real customer's data. This chapter documents the operating model and the hard contracts implementations must meet. Implementation specifics (Lambda function names, EventBridge rule schedules, bc-sdg module structure, cost line items) live in Phase 1 and Phase 4 ADRs filed when those decisions land.
 
 ## Why a separate operations chapter

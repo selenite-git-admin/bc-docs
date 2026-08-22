@@ -16,6 +16,8 @@ governing_adrs:
   - DEC-97bb94 (N:1 SO to CO multi-source canonical evaluation)
   - DEC-771baf (Tenant database architecture and admission-run scope)
   - DEC-f02230 (Tenant DB schema organization)
+  - DEC-0d5b39 (Reader-definition / Runner-machine split; admission machine verbs are the Runner’s)
+  - DEC-02f5a9 (Business Concept Registry supersedes Business Field / Business Object / Canonical Field identity)
 errata_referenced:
   - FND-ERR-002
   - FND-ERR-004
@@ -29,9 +31,11 @@ v2_sources:
 
 ## Scope
 
-This chapter defines the runtime act of admission. It defines how the Admission Contract and Observation Contract are applied to records observed by a Reader, the ordered admission sequence that produces Source Objects together with Evidence and Lineage, the rejection semantics that record outcomes for records the contracts do not admit, the tenant-scoped Admission Run that preserves invocation outcomes, and the boundary clarification that the Reader admits and observes but does not interpret canonical meaning.
+This chapter defines the runtime act of admission. It defines how the Admission Contract and Observation Contract are applied by the Runner to records observed from the source, the ordered admission sequence that produces Source Objects together with Evidence and Lineage, the rejection semantics that record outcomes for records the contracts do not admit, the tenant-scoped Admission Run that preserves invocation outcomes, and the boundary clarification that the admission act admits and observes but does not interpret canonical meaning.
 
-This chapter does not define the Reader inventory itself; Connector, Reader, Reader Flavor, Reader Binding, and Connection are defined in Connectors and Readers. This chapter does not redefine the contract grammar (The Contract Grammar), the admission boundary as an execution-model concept (The Evaluation Boundaries), the catalog (Sources and the Catalog), tenant binding generally (Tenancy and Binding), the relational schema (Data Model and Schema), or the API surface for reader operations (API Surface).
+Admission is performed by the **Runner** — the admission machine (DEC-0d5b39) that executes the Reader’s governed definition. Throughout this chapter the runtime acts (validate, re-evaluate the source filter, map, compose identity, emit, write the Run) are the Runner’s; the Reader supplies the governed definition the Runner executes, and the admission-boundary rules are unchanged by the naming split. The chapter uses the Business Concept Registry vocabulary (`entity.property`); the former Business Field identity is superseded (DEC-02f5a9).
+
+This chapter does not define the Reader inventory itself; Connector, Reader, Reader Flavor, Reader Binding, Reader Observation Binding, and Connection are defined in Connectors and Readers. This chapter does not redefine the contract grammar (The Contract Grammar), the admission boundary as an execution-model concept (The Evaluation Boundaries), the catalog (Sources and the Catalog), tenant binding generally (Tenancy and Binding), the relational schema (Data Model and Schema), or the API surface for reader operations (API Surface).
 
 **Governing source.** Foundation; The Contract Grammar; The Evaluation Boundaries; Connectors and Readers.
 
@@ -41,17 +45,25 @@ The Admission Contract governs runtime validation at the admission boundary. The
 
 | Runtime application step | Runtime behavior |
 |---|---|
-| Structural checks | The Reader evaluates the governed structural validation surface before any field-level or record-level rule execution. Records that fail structural checks do not proceed to later validation steps. |
-| Field-level rules | The Reader evaluates governed field rules for each declared field on structurally valid records. |
-| Record-level rules | The Reader evaluates governed cross-field rules on records that passed prior steps. |
-| Observation-age enforcement | The Reader evaluates the governed freshness rule for records that remain eligible after prior validation. |
-| Batch threshold evaluation | The Reader aggregates per-record outcomes and applies the governed batch disposition rule before Source Object emission. |
+| Structural checks | The Runner evaluates the governed structural validation surface before any field-level or record-level rule execution. Records that fail structural checks do not proceed to later validation steps. |
+| Field-level rules | The Runner evaluates governed field rules for each declared field on structurally valid records. |
+| Record-level rules | The Runner evaluates governed cross-field rules on records that passed prior steps. |
+| Observation-age enforcement | The Runner evaluates the governed freshness rule for records that remain eligible after prior validation. |
+| Batch threshold evaluation | The Runner aggregates per-record outcomes and applies the governed batch disposition rule before Source Object emission. |
 
 Validation order is fixed. Structural validation occurs first. Field-level and record-level validation occur only on surviving records. Batch threshold evaluation occurs before Source Object emission so that final batch disposition is known before authoritative objects are created.
 
-The Reader applies the Admission Contract as governed. It does not override default actions, downgrade a blocking rule to a warning at runtime, or introduce undeclared validation logic.
+The Runner applies the Admission Contract as governed. It does not override default actions, downgrade a blocking rule to a warning at runtime, or introduce undeclared validation logic; the Reader definition it executes carries the governed content unchanged.
 
 **Governing source.** the Admission Contract section of The Contract Grammar; Contract Schemas reference; Platform P05 Runtime Definitions.
+
+## Source-Filter Re-evaluation (row selection)
+
+When the governing Observation Contract declares a `source_filter` (The Contract Grammar; source-filter design v1–v12, TSK-a83188), the Runner re-evaluates the filter **after Admission Contract record validation and before Observation Contract field mapping and Source Object emission**. The connector's pushdown of the same predicate is a derived fetch optimization only; the admission-time re-evaluation is the enforcement authority, so a connector that returns out-of-slice records produces refusals, never admissions.
+
+- A record that fails the filter is a **`source_filter_mismatch`** — a recorded **per-record refusal** through the standard rejection surfaces, not silent exclusion and not run telemetry.
+- Evaluation is two-valued: a null or absent field fails every value predicate (`eq`, `ne`, `in`, `not_in`); only `is_set` / `is_not_set` address presence.
+- Rejection Evidence and emitted Source Object Lineage carry the **applied coordinates** — the OC, effective AC, and parent SC version pairs of the resolved context plus the normalized filter digest — so every admitted or refused record is traceable to the exact declaration that governed it.
 
 ## Observation Contract Application
 
@@ -59,9 +71,9 @@ The Observation Contract governs how validated source data is selected and repre
 
 | Runtime application step | Runtime behavior |
 |---|---|
-| Source-context resolution | The Reader resolves the governed source context required by the Observation Contract and its bound Source Contract. Resolution covers non-semantic context (lookup tables, master-data references) named by the contract; it does not perform business composition across Source Objects. Multi-Source-Object composition is the canonical evaluation boundary's responsibility, governed by DEC-97bb94 and FND-ERR-004. |
-| Field mapping | The Reader applies the governed field map from source fields to Business Field values. |
-| Identity composition | The Reader applies the governed identity semantics to form Source Object identity for each admitted record. |
+| Source-context resolution | The Runner resolves the governed source context required by the Observation Contract and its bound Source Contract. Resolution covers non-semantic context (lookup tables, master-data references) named by the contract; it does not perform business composition across Source Objects. Multi-Source-Object composition is the canonical evaluation boundary's responsibility, governed by DEC-97bb94 and FND-ERR-004. |
+| Field mapping | The Runner applies the governed field map from source fields to Business Concept property values (`entity.property`). |
+| Identity composition | The Runner applies the governed identity semantics to form Source Object identity for each admitted record. |
 | Source Object shape | The emitted Source Object conforms to the governed observation schema. |
 
 The Observation Contract remains the authoritative mapping source. Runtime copies or precomputed forms exist only as derived operational artifacts (per the Reader Flavor dual-layer arrangement defined in Connectors and Readers).
@@ -75,7 +87,7 @@ The `FND-ERR-002` entry records the dual-layer mapping arrangement governed by D
 | Layer | Location | Authority | Purpose |
 |---|---|---|---|
 | Governed mapping | Observation Contract | Authoritative | Versioned, immutable mapping and shape definition |
-| Runtime copy | Reader Flavor derived configuration | Derived | Precomputed form used by the Reader during admission |
+| Runtime copy | Reader Flavor derived configuration | Derived | Precomputed form used by the Runner during admission |
 
 The runtime copy is generated from the governed Observation Contract. It is not independently edited. Reactivation or regeneration replaces the derived copy from the governed source.
 
@@ -83,17 +95,18 @@ The runtime copy is generated from the governed Observation Contract. It is not 
 
 ## Admission Sequence
 
-Each Reader invocation executes a fixed admission sequence. The sequence is ordered and non-skippable.
+Each admission invocation — the Runner executing a Reader against its governed bindings — executes a fixed admission sequence. The sequence is ordered and non-skippable.
 
 | Step | Action | Governing authority |
 |---|---|---|
 | 1 | The Connector reaches the source system and returns observed records | Connectors and Readers |
-| 2 | The Reader applies Admission Contract structural checks | Admission Contract |
-| 3 | The Reader applies Admission Contract field-level, record-level, and observation-age validation | Admission Contract |
-| 4 | The Reader applies Observation Contract mapping and identity composition to records that remain eligible for admission | Observation Contract |
-| 5 | The Reader computes batch-level outcome thresholds and final batch disposition | Admission Contract |
-| 6 | The Reader emits Source Objects for records whose final disposition permits admission, and emits Evidence and per-object Lineage for the boundary act | The Object Model and The Evaluation Boundaries |
-| 7 | The Reader writes the tenant-scoped Admission Run with outcome counts, applied governed versions, and run-level references | DEC-771baf; DEC-f02230; Data Model and Schema |
+| 2 | The Runner applies Admission Contract structural checks | Admission Contract |
+| 3 | The Runner applies Admission Contract field-level, record-level, and observation-age validation | Admission Contract |
+| 4 | The Runner re-evaluates the governing Observation Contract `source_filter` (the authoritative enforcement, after AC validation and before OC mapping); a record outside the slice is a `source_filter_mismatch` — an Evidence-only per-record refusal (no Source Object, no Lineage). Connector pushdown of the same predicate is a derived fetch optimization only | Observation Contract; source-filter design v1–v12 |
+| 5 | The Runner applies Observation Contract mapping and identity composition to records that remain eligible for admission | Observation Contract |
+| 6 | The Runner computes batch-level outcome thresholds and final batch disposition | Admission Contract |
+| 7 | The Runner emits Source Objects for records whose final disposition permits admission, and emits per-record Evidence and per-object Lineage — Lineage only for emitted Source Objects (refused records emit Evidence only, FND-1) | The Object Model and The Evaluation Boundaries |
+| 8 | The Runner writes the tenant-scoped Admission Run with outcome counts, applied governed versions, and run-level references | DEC-771baf; DEC-f02230; Data Model and Schema |
 
 Two consequences follow from this sequence.
 
@@ -104,7 +117,7 @@ Two consequences follow from this sequence.
 
 ## Rejection Semantics
 
-Rejection at admission is a recorded outcome, not the absence of a trace. Rejected observations emit Evidence and contribute to run totals. Source Object emission depends on final per-record and batch-level disposition.
+Rejection at admission is a recorded outcome, not the absence of a trace. Rejected observations emit **Evidence only — never Lineage** (Lineage is emitted per emitted Source Object; a record that was not admitted has no Source Object and receives no Lineage, FND-1). Rejected observations contribute to run totals. Source Object emission depends on final per-record and batch-level disposition.
 
 | Outcome | Source Object emitted | Evidence emitted | Run effect |
 |---|---|---|---|
@@ -133,7 +146,7 @@ Run-level operational references may exist for diagnostics or reporting, but the
 
 ## Admission Run
 
-Admission Run is the tenant-scoped execution record for one Reader invocation at the admission boundary.
+Admission Run is the tenant-scoped execution record for one admission invocation (the Runner executing a Reader) at the admission boundary.
 
 | Property | Value |
 |---|---|
@@ -152,9 +165,9 @@ The Admission Run is an operational record. It is authoritative for run accounti
 
 ## Reader Does Not Interpret
 
-The Reader admits and observes. It does not resolve business meaning. Canonical interpretation begins only at the canonical evaluation boundary.
+Admission — the Runner executing a Reader — admits and observes. It does not resolve business meaning. Canonical interpretation begins only at the canonical evaluation boundary.
 
-| Reader does | Reader does not |
+| Admission does | Admission does not |
 |---|---|
 | Apply Admission Contract validation | Apply Canonical Contract resolution |
 | Apply Observation Contract field selection and identity rules | Reconcile cross-source business meaning |
@@ -162,7 +175,7 @@ The Reader admits and observes. It does not resolve business meaning. Canonical 
 | Emit Evidence and Lineage for admission | Modify Source Objects after emission |
 | Write Admission Run | Rewrite governed contract content at runtime |
 
-A Reader that performs canonical resolution is incorrect under the execution model.
+An admission act (a Runner executing a Reader) that performs canonical resolution is incorrect under the execution model.
 
 **Governing source.** The Object Model; The Evaluation Boundaries; Canonical Evaluation.
 

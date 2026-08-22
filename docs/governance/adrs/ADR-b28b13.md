@@ -1,7 +1,7 @@
 ---
 uid: DEC-b28b13
 title: "Connector lifecycle: status enum replaces available boolean"
-description: "Connectors use a status enum (draft, active, deprecated, archived) instead of a simple available boolean flag."
+description: "Connectors use a status enum (draft, available, deprecated, retired) instead of a simple available boolean flag."
 status: implemented
 subdomain: connectors
 focus: connector-status-enum
@@ -14,6 +14,15 @@ migrated_from: legacy v2 archive
 
 
 # Connector lifecycle: status enum replaces available boolean
+
+> **DB alignment 2026-08-10 (TSK-813287)** — the app layer implemented this vocabulary everywhere
+> (master-status seed `context='connector'`, `create-connector.dto`, connector controller enum,
+> `core-map.service` `available→healthy` logic, bc-admin badges, connector seeds), but the
+> `runtime.connector.status_code` CHECK was left at the generic platform default
+> `{draft, active, deprecated}`, which made the seed's `available` unwritable and API promotion
+> impossible. A DBCP (migration `20260810-tsk-813287-connector-status-vocab.sql`) widens the CHECK to
+> `{draft, available, deprecated, retired}` and migrates the 2 legacy `active` rows to `available`.
+> The description line above was also corrected (it read `active/archived`, contradicting this body).
 
 ## Context
 

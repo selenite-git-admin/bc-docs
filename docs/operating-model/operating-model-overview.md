@@ -13,6 +13,9 @@ governing_sources:
   - The Authority Model
 governing_adrs:
   - DEC-771baf (Tenant database architecture; platform-tenant one-way dependency)
+  - DEC-81cd26 (Connections are platform-scoped; reverses D163 connection-table placement — amends DEC-771baf for Connections)
+  - DEC-ecd55c (Connection authority reconciled — config in platform runtime.connection, credentials in AWS Secrets Manager)
+  - DEC-02f5a9 (Business Concept Registry supersedes Business Object / Business Field / Canonical Field identity)
   - DEC-ce6e2b (Section rename: The Runtime → The Operating Model)
   - DEC-9c58c6 (Article-drop refinement: section name canonical form is "Operating Model")
 errata_referenced: []
@@ -23,11 +26,11 @@ v2_sources: []
 
 ## Scope
 
-This chapter is the section opener for Operating Model. It states what the section is and what it is not, names the architectural through-line that binds the chapters in the section, maps the eighteen chapters that follow into reading groups, gives a recommended reading sequence, and declares the boundaries between Operating Model and the other five sections of the documentation. It does not redefine any Operating Model chapter's governed behavior.
+This chapter is the section opener for Operating Model. It states what the section is and what it is not, names the architectural through-line that binds the chapters in the section, maps the nineteen chapters that follow into reading groups, gives a recommended reading sequence, and declares the boundaries between Operating Model and the other seven sections of the documentation. It does not redefine any Operating Model chapter's governed behavior.
 
 Operating Model chapters named here are mapped as section navigation and bounded role summaries. The overview may point to a later Operating Model chapter without depending on that later chapter for correctness; authority-bearing details remain governed by the chapter that owns them. Where this overview states a section-wide invariant, the governing source is Foundation, the current outline, a cited ADR, or an already-governing Foundation chapter.
 
-This chapter exists so that a reader who opens Operating Model cold can locate any specific chapter without having read the prior chapters, and so that a reader who has finished Operating Model can hold the section's claims as one coherent set rather than eighteen independent files.
+This chapter exists so that a reader who opens Operating Model cold can locate any specific chapter without having read the prior chapters, and so that a reader who has finished Operating Model can hold the section's claims as one coherent set rather than nineteen independent files.
 
 **Governing source.** Foundation; The Object Model; The Contract Grammar; The Evaluation Boundaries; The Authority Model; outline.md §4.2.
 
@@ -57,7 +60,7 @@ Six claims bind every chapter in this section.
 | Four boundary acts produce all authoritative state | The Evaluation Boundaries | Admission produces Source Objects; canonical evaluation produces Canonical Objects; metric evaluation produces Metric Snapshots; action evaluation produces Action Objects. No other act produces authoritative state. |
 | Read access never triggers evaluation | The Evaluation Boundaries | A read of authoritative state returns the recorded value. It does not invoke admission, canonical evaluation, metric evaluation, or action evaluation. |
 | Proof is emitted at the act, not deferred | The Object Model; Evidence and Lineage | Evidence and Lineage are produced by the same act that produces authoritative state. They are not synthesized later from logs or reconstructed from runtime telemetry. |
-| Tenants own execution data; the platform owns contracts | Tenancy and Binding (DEC-771baf) | Source Objects, Canonical Objects, Metric Snapshots, Action Objects, Evidence, Lineage, Run records, Connections, and Bindings live in the tenant database. Contract registry records, the Source Catalog, and global chain status live in the platform database. The dependency direction is one-way: tenants depend on platform contracts, platform does not read tenant state to produce platform-level outputs. |
+| Tenants own execution data; the platform owns contracts | Tenancy and Binding (DEC-771baf) | Source Objects, Canonical Objects, Metric Snapshots, Action Objects, Evidence, Lineage, Run records, and tenant Contract Bindings live in the tenant database. Connection configuration is platform-held in `runtime.connection` (DEC-81cd26, reversing D163), tenant-owned through the tenant identity, with credentials external in AWS Secrets Manager (DEC-ecd55c); platform Reader Bindings (which contract versions a reader applies) are platform-scoped, distinct from tenant Contract Bindings. Contract registry records, the Source Catalog, and global chain status live in the platform database. The dependency direction is one-way: tenants depend on platform contracts, platform does not read tenant state to produce platform-level outputs. |
 | Read-only validation is separate from authoritative state production | Chain Completeness and Verdict | The chain integrity check is a registry-side governance asset that records global chain readiness and tenant/source readiness. It does not produce, modify, or replace any authoritative state, and it does not run as part of the four boundary acts. |
 
 The six claims interlock. A chapter that violates any of them is wrong against this section's architecture; a chapter that obeys all six can be located, audited, and extended within the section's discipline.
@@ -66,13 +69,16 @@ The six claims interlock. A chapter that violates any of them is wrong against t
 
 ## Chapter Map
 
-The eighteen chapters that follow this overview fall into ten groups by concern. The grouping is for reader navigation; chapter order in the section is fixed by the outline and by chapter dependencies, and is not the same as group order.
+The nineteen chapters that follow this overview fall into eleven groups by concern. The grouping is for reader navigation; chapter order in the section is fixed by the outline and by chapter dependencies, and is not the same as group order.
+
+This overview remains the section entry point: a reader who opens Operating Model cold starts here. The cross-cutting machine/artifact **map and taxonomy** is owned by a distinct chapter, **The Runtime Ecosystem** (DEC-0d5b39, DEC-01bd6b) — it names the Runner and the Evaluator umbrella against the artifacts they execute, inherits Foundation by citation, and delegates every behavioral claim to the owning chapters. Route to it for the whole-execution-layer picture; this overview is not superseded by it.
 
 | Group | Chapters | What the group covers |
 |---|---|---|
-| Catalog and Vocabulary | Sources and the Catalog; Business Vocabulary | The platform's record of observable source structure across six hierarchy entities, and the platform's internal vocabulary of Business Fields, Business Objects, and Canonical Fields. |
+| Catalog and Vocabulary | Sources and the Catalog; Business Vocabulary | The platform's record of observable source structure across six hierarchy entities, and the platform's internal business vocabulary — the **Business Concept Registry** (Registry Entities and their properties, `entity.property`), which supersedes the former Business Object / Business Field / Canonical Field identity model (DEC-02f5a9). |
 | Chain Assembly and Authoring Gates | Contract Chain Assembly; Quality Gates and Chain Integrity | The six-link relay that turns a source-system field into a trusted metric value, and the quality gates that govern every authoring act on the chain. |
-| The Reader Stack | Connectors and Readers | Connector, Reader, Reader Flavor, Reader Binding, and Connection. The UniBAT pattern: source-system-agnostic on input, business-aware on output. |
+| Runtime Map | The Runtime Ecosystem | The cross-cutting map and machine-versus-artifact taxonomy of the execution layer: the Runner (admission machine) and the Evaluator umbrella (Canonical, Metric, Action Evaluators) versus the artifacts they execute (Connector, Connection, Reader and its Flavors). It inherits Foundation by citation and delegates all behavior to the owning chapters; it is a map, not a second entry point (DEC-0d5b39, DEC-01bd6b). |
+| The Reader Stack | Connectors and Readers | Connector, Reader, Reader Flavor, Reader Binding, Reader Observation Binding, and Connection. The UniBAT pattern: source-system-agnostic on input, business-aware on output. |
 | The Four Boundary Acts | Admission and Observation; Canonical Evaluation; Metric Evaluation; Action Evaluation | The runtime acts at the four evaluation boundaries that produce authoritative state. Each act has its own Run record, its own contract family, and its own proof emission. |
 | The Metric Catalog | Metric Catalog | The platform-scoped registry of metric definitions: classification, lifecycle, formula tests, registration gates, and tenant view. |
 | Metric Management | Metric Management System; Metric Management System — Recovery Track | The Metric Management System (MMS) umbrella for the full lifecycle of a metric — creation, activation, runtime evaluation, recovery from stuck states, evolution (supersession / retirement), and catalog visibility — organised into four tracks (Creation, Recovery, Runtime, Evolution) above the Metric Contract Framework (MCF) grammar layer. The parent chapter (`metric-management-system.md`) carries the Creation Track flow, the gate inventory, the recovery-route enumeration, and the cross-track touchpoints for Runtime and Evolution. The Recovery Track child chapter (`metric-management-system-recovery-track.md`) carries the per-route operational policy for Stage 7's eight recovery routes (R1–R8), multi-route conflict discipline, catalog-visibility consequences, and the recommended route plans for recorded stuck Metric Contract Versions. Both chapters are operator-ratified draft-authoritative. Runtime Track and Evolution Track doctrines remain future artifacts and will land as peer chapters when drafted. |
@@ -81,7 +87,7 @@ The eighteen chapters that follow this overview fall into ten groups by concern.
 | Time | Fiscal Time and Temporal Gates | Fiscal period as a per-Canonical-Object attribute resolved at canonical evaluation; the calendar stack that holds the resolution rules; the boundary that separates fiscal time from observation time and from invocation time. |
 | Readiness | Chain Completeness and Verdict | The locked definition of complete (L1-L7 + C1-C5 + E1-E2 for global chain status), tenant/source E3 readiness, the chain verdict set, and the persisted stores that preserve those readiness answers at their correct grains. |
 
-The ten groups cover the section without overlap. A chapter that does not fit a group is a chapter that does not belong in this section.
+The eleven groups cover the section without overlap. A chapter that does not fit a group is a chapter that does not belong in this section.
 
 **Governing source.** outline.md §4.2; Foundation.
 
@@ -140,7 +146,7 @@ The constraints below apply to Operating Model as a whole and are inherited by e
 |---|---|
 | Section is self-contained for the contract-execution runtime | Every claim a chapter in this section makes is grounded in Foundation, in another chapter in this section, or in a governed ADR or Errata entry. The section does not depend on chapters in Implementation, AI, Development, Onboarding, Operations, or Compliance for its own correctness. |
 | Drafted authority only | Chapters cite drafted authorities. Forward references to queued chapters use bounded role language rather than chapter names per the authoring conventions for this documentation. |
-| Tenant-scoped artifacts are tenant-scoped | Source Objects, Canonical Objects, Metric Snapshots, Action Objects, Evidence, Lineage, Run records, Connections, and Bindings live in the tenant database. Operating Model does not place tenant-scoped artifacts in the platform database, and the platform does not read tenant state to produce platform-level outputs. |
+| Tenant-scoped artifacts are tenant-scoped | Source Objects, Canonical Objects, Metric Snapshots, Action Objects, Evidence, Lineage, Run records, and tenant Contract Bindings live in the tenant database. Connection configuration is platform-held in `runtime.connection` (DEC-81cd26, reversing D163), tenant-owned through the tenant identity, with credentials external in AWS Secrets Manager (DEC-ecd55c); platform Reader Bindings (which contract versions a reader applies) are platform-scoped, distinct from tenant Contract Bindings. Operating Model does not place tenant-scoped artifacts in the platform database, and the platform does not read tenant state to produce platform-level outputs. |
 | Authoritative state is produced only at the four boundaries | No chapter introduces an act that produces a Source Object, Canonical Object, Metric Snapshot, or Action Object outside the four governed evaluation boundaries. |
 | Read access is non-evaluating | No chapter introduces a read path that triggers admission, canonical evaluation, metric evaluation, or action evaluation as a side effect of the read. |
 | Proof at the act | No chapter defers proof emission to a later act, a separate logging path, or a reconstruction step. Evidence and Lineage are emitted at the boundary act that produces authoritative state. |
@@ -179,6 +185,7 @@ Operating Model chapters that carry diagrams in this snapshot:
 - Business Vocabulary
 - Contract Chain Assembly
 - Quality Gates and Chain Integrity
+- The Runtime Ecosystem
 - Connectors and Readers
 - Admission and Observation
 - Canonical Evaluation

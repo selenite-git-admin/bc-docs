@@ -30,6 +30,7 @@ Generated from `docs-control/docs-control.db` by `scripts/docs-control/seed_navi
 - [Contract Chain Assembly](operating-model/contract-chain-assembly.md)
 - [Quality Gates and Chain Integrity](operating-model/quality-gates-and-chain-integrity.md)
 - [Connectors and Readers](operating-model/connectors-and-readers.md)
+- [The Runtime Ecosystem](operating-model/the-runtime-ecosystem.md)
 - [Admission and Observation](operating-model/admission-and-observation.md)
 - [Canonical Evaluation](operating-model/canonical-evaluation.md)
 - [Metric Evaluation](operating-model/metric-evaluation.md)

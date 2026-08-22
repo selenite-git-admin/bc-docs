@@ -37,6 +37,14 @@ their *execution* by reference to emitted receipts. One entry per onboarding att
 ## Execution log
 | Date | Session | Instance (pseudonymous UID) | Path | Outcome | Receipt UID/digest |
 |---|---|---|---|---|---|
-| _no onboarding run of any kind yet_ | — | — | — | — | — (no executor exists; no instance — real or simulated — ever exercised; see [evidence.md](evidence.md)) |
+| _no admission onboarding run yet_ | — | `pilot_ent` — exercised for **connector reachability only** (2026-08-10) | JSON-RPC `/jsonrpc` | Connector reachability PROVEN (rung-1 authenticated + rung-3 external); executor built + registered `available`. **No admission** produced through the chain (OC/CC/MC held, D555). See [evidence.md](evidence.md). | connector-scope trail: bc-core #675 (`d78e1747`) · #676 · DevHub CHG-4a10b5 — a governed *admission* onboarding-session receipt is still pending |
 
 <Per-run detail blocks below, newest first, when onboarding begins.>
+
+### 2026-08-10 — Connector build + reachability (connector-scope; NOT an admission run)
+The Odoo JSON-RPC **connector** was built, registered, and reachability-proven end-to-end (DEC-12558e / D568):
+`OdooJsonRpcProtocolReader` executor (read-only) merged (bc-core #675); `odoo-jsonrpc` + `odoo-ent-v19` rows
+registered and promoted `available` (after the TSK-813287 status-vocab DBCP, #676); rung-1 (container-internal,
+`login_uid=2`, 49,720 account.move) + rung-3 (external, Odoo `19.0+e-20260806`) proven. This establishes *how to
+reach* the source; it does **not** admit, evaluate, or produce a metric snapshot (those need OC/CC/MC, held under
+D555). No governed source-realization/audit object minted — `proof_status` stays `designed`.

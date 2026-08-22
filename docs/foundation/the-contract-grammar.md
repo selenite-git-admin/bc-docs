@@ -166,11 +166,13 @@ The body may declare `semantic_preconditions[]` (DEC-8849c8): conditions on the 
 
 **Purpose.** An Observation Contract declares field selection from a Source Contract to business-vocabulary fields and defines the resulting Source Object shape preserved at admission.
 
-**Body elements.** The body declares the referenced Source Contract, `observation_field_map`, and the resulting `observation_schema`. Each `observation_field_map` entry binds one source field to one Business Concept together with role and nullability (DEC-02f5a9; formerly Business Field).
+**Body elements.** The body declares the referenced Source Contract, `observation_field_map`, and the resulting `observation_schema`. Each `observation_field_map` entry binds one source field to one Business Concept together with role and nullability (DEC-02f5a9; formerly Business Field). The source-reference leg pins its governing contracts as **native version pairs** — `(sc_contract_id, sc_version_code)` and `(ac_contract_id, ac_version_code)` — the platform's version identity (composite keys); a single contract UUID is not a version pin (reader-admission source-filter design v5, TSK-a83188).
 
 The body may declare `semantic_preconditions[]` (DEC-8849c8) with the same entry shape as on the Admission Contract: the conditions under which the mapped fields carry the meaning the map asserts (e.g. an accounting mode that must be enabled for a cost field to be populated, a costing method under which a price field denotes what the binding assumes, a module whose absence removes the concept, or company-scoped fields whose value depends on the reading company). Declarations are versioned with the contract; the Scanner verifies them, never defines them.
 
-**Governs.** Field selection and business-vocabulary binding at admission. The Observation Contract is the governed source of this mapping. A denormalized runtime copy may appear on Reader Flavor artifacts, but the governed source remains the Observation Contract.
+**Row selection (`source_filter`).** The source-reference leg MAY declare a `source_filter`: an immutable, versioned **row selection at admission** — the row-axis of the same observation declaration whose column-axis is field selection. It is an AND-only conjunction of predicates (`eq`, `ne`, `in`, `not_in`, `is_set`, `is_not_set`) over the leg's own cataloged source fields; absence means whole-table observation. The filter selects *what is observed*; it is not canonical logic, not an Admission Contract rule, and never a flavor or runtime configuration. Changing a slice means a new Observation Contract version. Enforcement is dual: connector pushdown (derived optimization) plus admission-time re-evaluation of every returned record (the authority); a record outside the slice is refused with recorded evidence, never admitted.
+
+**Governs.** Field selection, row selection, and business-vocabulary binding at admission. The Observation Contract is the governed source of this mapping. A denormalized runtime copy may appear on Reader Flavor artifacts, but the governed source remains the Observation Contract.
 
 **Referenced by.** Readers at runtime (Admission and Observation) and Canonical Contracts through the shared business vocabulary.
 
@@ -178,6 +180,7 @@ The body may declare `semantic_preconditions[]` (DEC-8849c8) with the same entry
 - An Observation Contract declares canonical evaluation logic.
 - A runtime Reader Flavor diverges from the governed Observation Contract rather than being regenerated from it.
 - An Observation Contract maps the same source field to multiple Business Concepts without a declared role distinction.
+- A source slice is expressed anywhere other than the Observation Contract's `source_filter` — scenario labels, flavor configuration, and connector behavior carry no row-selection authority.
 
 **Governing source.** DEC-0e3c64, DEC-136a23, DEC-1edaaa; FND-ERR-001 and FND-ERR-002.
 

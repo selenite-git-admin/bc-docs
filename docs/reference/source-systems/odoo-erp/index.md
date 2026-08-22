@@ -10,7 +10,7 @@ subdomain: odoo
 focus: governance
 authority_role: projection        # D526 Amendment 1 — projection, not an authority
 # --- evidence maturity (D385): what evidence exists, at what scope. NOT an audit verdict. Requires governed evidence. ---
-proof_status: designed            # NO governed evidence object exists; no executor built; no instance (real or simulated) ever exercised (see evidence.md). Promote only when a governed proof-scope/evidence object is minted.
+proof_status: designed            # No governed evidence object minted yet. Connector-scope reachability PROVEN 2026-08-10 (OdooJsonRpcProtocolReader built — bc-core #675; pilot_ent exercised rung-1 authenticated + rung-3 external) but NO admission/canonical/metric through the chain (D555). See evidence.md. Promote only when a governed proof-scope/evidence object is minted.
 proof_scope_refs: []              # governed source-proof-scope UID — none yet
 source_realization_refs: []       # governed source-realization-package UID — none yet
 audit_decision_refs: []           # signed audit-decision UID — none (no realization audit run for Odoo ERP)
@@ -82,9 +82,15 @@ Two orthogonal vocabularies — never infer one from the other (D526 Amendment 1
 **Evidence maturity — `designed`** as of 2026-07-13. Evidence maturity requires *governed* evidence; none exists
 for Odoo ERP, so no maturity above `designed` can be projected.
 
-- **No ungoverned historical background exists either** (unlike SAP ECC's simulator run): no reader executor for
-  any Odoo external API has been built, no Odoo instance — real or simulated — has ever been exercised, and no
-  admission has been produced through the BareCount chain.
+- **Connector-scope evidence now exists (2026-08-10), but no admission has been produced.** A JSON-RPC reader
+  executor IS built — `OdooJsonRpcProtocolReader` (bc-core PR #675, DEC-12558e) — and registered as connectors
+  (`odoo-jsonrpc` + `odoo-ent-v19`, status `available`). The real `pilot_ent` Odoo 19 EE instance HAS been
+  exercised for **connector reachability only**: rung-1 (container-internal, authenticated — `login_uid=2`,
+  res.company + 49,720 account.move) and rung-3 (external endpoint, Odoo `19.0+e-20260806`). No admission /
+  canonical / metric snapshot has been produced through the BareCount chain (OC/CC/MC held under **D555**), and
+  no governed source-realization/audit object has been minted — so `proof_status` stays `designed` pending that
+  governed object (the maturity ladder measures admission/realization evidence, which connector reachability
+  does not satisfy).
 - Promotion to `shape_tested` requires a **minted governed proof-scope/evidence object** with
   `proof_scope_refs[]` / `source_realization_refs[]` populated; `first_hand_proven` requires a real-instance
   entity/scope-specific governed evidence entry — **never** a whole-system promotion of "Odoo ERP."
@@ -101,12 +107,13 @@ UID/digest, never as its own authority.
 ## 2. Reader Flavor Binding
 
 **No reader flavor is registered for Odoo ERP** — `reader_flavors: []` and `reader_flavor_versions: []` are
-empty because no executor exists and no flavor identity has been minted in the registry. Candidate flavor
-*labels* from prior research (design intent only, not registered identities):
+empty because no flavor identity has been minted in the registry (a Reader Flavor binds an **Observation
+Contract**, held under **D555**). The JSON-RPC **executor** a flavor would bind is, however, now **built and
+reachability-proven** (`OdooJsonRpcProtocolReader`, bc-core #675, DEC-12558e). Candidate flavor *labels*:
 
 | Candidate label | Target | Executor | AC version |
 |---|---|---|---|
-| `odoo-erp-jsonrpc` | Odoo v14–v18 via `/jsonrpc` | — (not built) | — |
+| `odoo-erp-jsonrpc` | Odoo (v19 EE proven; executor is version-generic) via `/jsonrpc` | **`OdooJsonRpcProtocolReader` — built (#675)** | — (OC held, D555) |
 | `odoo-erp-json2` | Odoo v19+ via JSON-2 API | — (not built) | — |
 
 A dedicated XML-RPC executor is not planned: it overlaps JSON-RPC capability and both sit on the same official

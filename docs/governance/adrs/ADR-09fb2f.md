@@ -1,0 +1,21 @@
+---
+uid: DEC-09fb2f
+title: "Tenant evidence-chain immutability + runtime identity separation (platform prerequisite)"
+description: "Make the tenant evidence chain genuinely append-only at the DB boundary for every tenant + provisioning path, under a non-superuser runtime identity that cannot bypass the guard; gates any feature relying on Evidence/Lineage as authoritative immutable proof."
+status: proposed
+date: 2026-08-17T03:13:51.009Z
+project: bc-core
+domain: tenants
+subdomain: evidence/immutability
+focus: infrastructure
+---
+
+# Tenant evidence-chain immutability + runtime identity separation (platform prerequisite)
+
+## Context
+
+Surfaced by the A0/D574 legal-entity-binding work: the lean-lineage design (accepted) put the A0 realization proof on the tenant evidence chain on the premise it is DB-trigger-immutable, which was verified false against the substrate. Codex sustained the finding (deployment/provisioning defect: 0022 immutability triggers exist but are not wired into baseline or provisioner) and ruled Option B required — tenant evidence immutability is a platform prerequisite; an A0 support row cannot replace Foundation-authoritative Evidence/Lineage. This ADR opens the fix as a standalone platform thread because the gap is real independent of A0 (evidence is mutable in every tenant today, undermining the Foundation's central integrity guarantee for every boundary), and because it is the correct home for the non-superuser runtime identity separation that the A0 descope deferred as a platform-wide decision rather than an A0 rider.
+
+## Decision
+
+The Foundation mandates that Evidence Objects and Lineage Objects are immutable, append-only, authoritative proof emitted synchronously at each boundary (Invariant VI; the-object-model.md). The tenant substrate does not enforce this: evidence.evidence_object/evidence_record/lineage_object have no UPDATE/DELETE guard in any tenant (0 triggers in pilot1; evidence.prevent_mutation() absent), the immutability triggers were written (drizzle/0022_immutability_triggers.sql) but never deployed (baseline docker/redesign/03-tenant-db.sql:320-365 and provisioner tenant-provisioning.service.ts createEvidenceTables create tables+indexes only), and the runtime app connects as barecount (superuser+owner) which can DISABLE TRIGGER / set session_replication_role / bypass. Consequence platform-wide: a post-commit UPDATE/DELETE can silently rewrite or erase the authoritative proof of any boundary act. Decision-in-principle (per Codex ruling e6bae9cd, Option B): make the tenant evidence chain genuinely append-only at the DB boundary. Part A — deploy evidence append-only enforcement (BEFORE UPDATE OR DELETE refuse; INSERT permitted; the drizzle/0022 prevent_mutation shape) into the LIVE baseline, the provisioner, AND a reconciled migration for already-provisioned tenants (a lone Drizzle file is insufficient). Part B — runtime identity separation: the tenant evidence writer must operate under a non-superuser, non-owner role that cannot disable/replace/bypass the guard; barecount.immutability_bypass is not an acceptable production escape hatch; any privileged-operator exception is explicitly infrastructure authority, never a feature-level guarantee. This is the same non-superuser identity separation the A0 descope deferred, now correctly sited as a platform decision made once for all evidence. Proof: on an isolated tenant clone under the actual runtime role, prove UPDATE/DELETE against each protected table fail, a bypass attempt fails, the governed INSERT still succeeds, plus existing-row migration posture and baseline/provisioner parity. This is platform-wide (admission/canonical/metric/intervention evidence, not A0) and gates A0 + any feature relying on Evidence/Lineage as authoritative immutable proof; the subsequent A0 review pins this accepted prerequisite and does not inherit prior approval. Companion platform-evidence gaps (the archive_key-null WORM handoff; the D387 fail-open canonical-evaluation emission) are related but distinct and may be folded in or kept separate. Design-only; anchors the thread artifacts/platform-evidence-immutability/DESIGN-tenant-evidence-immutability-prerequisite-2026-08-17.md (barecount-devhub@8fd2cde). No code, DDL, DBCP, or activation authorized.

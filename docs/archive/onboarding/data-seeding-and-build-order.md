@@ -2,8 +2,8 @@
 id: data-seeding-and-build-order
 order: 62
 title: "Data Seeding and Build Order"
-status: drafting
-authority: authoritative
+status: retired
+authority: reference
 depends_on: [the-object-model, the-contract-grammar, contract-chain-assembly, source-registration, seed-catalog-management, business-field-and-business-object-onboarding, canonical-field-seeding, source-and-admission-contract-creation, observation-contract-creation, canonical-contract-creation, metric-contract-creation, reader-creation]
 governing_sources:
   - The Contract Grammar
@@ -19,6 +19,8 @@ diagrams: []
 ---
 
 # Data Seeding and Build Order
+
+> **RETIRED (2026-08-18, DEC-0d5b39).** This chapter is historical reference only. It carries legacy Business Object / Business Field / Reader-binding schema and raw-delete guidance that the current Registry / Reader model supersedes. It is removed from active navigation. Do not follow its build-order or schema instructions.
 
 ## Scope
 

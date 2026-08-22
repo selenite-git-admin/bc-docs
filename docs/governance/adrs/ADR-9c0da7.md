@@ -37,3 +37,7 @@ SES-0422da grounded study: the mechanics are correct (value-proven by SES-b54f06
 **9. Failure routing.** Every engine failure/blocker/deferral raises a boundary ticket via the governed-engine ticket surface (R2 ports BoundaryTicketService beyond the legacy paths) with flood discipline; ticket-worthy events also publish to the outbound webhook registry (ticketing is the first consumer; external stakeholder alerting attaches later without engine changes).
 
 Authoritative doc: bc-docs-v3 docs/operations/runtime-operations.md (created with this ADR) — including the Retirement Register.
+
+
+## Amendment (DEC-01bd6b, 2026-08-18)
+Amended clauses: "Action engine does not exist / out of the Runtime Spine" (superseded by the four-boundary spine including the Action boundary + Intervention Contract); "latest accepted evaluation per period on read" (replaced by governed version-pinned selection recorded in Lineage); and "dry-run as a diagnostic read that computes" (reads never trigger evaluation). Status remains `decided`.
