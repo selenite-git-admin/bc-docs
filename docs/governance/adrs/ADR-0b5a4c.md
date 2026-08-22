@@ -8,6 +8,8 @@ project: bc-core
 domain: sources
 subdomain: sources/seed-catalog
 focus: schema
+supersedes:
+  - DEC-316f3c
 ---
 
 # Source schema admission: direct, manifest-bound extract admission replaces the seed store — Mongo bc_seed retires as forage; no Postgres seed store (Amendment 1 governs)

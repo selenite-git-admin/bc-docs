@@ -2,13 +2,14 @@
 uid: DEC-316f3c
 title: "bc-seed — Standalone Catalog Sourcing Service (MongoDB, Port 4200)"
 description: "bc-seed: standalone Node.js + MongoDB service for catalog sourcing. Port 4200. On-demand scraping, S3 import, field-level query API."
-status: implemented
+status: superseded
 subdomain: catalog-sourcing
 focus: bc-seed-service
 date: 2026-04-03T07:03:15.008Z
 project: bc-core
 domain: sources
 migrated_from: legacy v2 archive
+superseded_by: DEC-0b5a4c
 ---
 
 # bc-seed — Standalone Catalog Sourcing Service (MongoDB, Port 4200)

@@ -8,6 +8,9 @@ project: bc-synth
 domain: sources
 subdomain: sources/demo-estates
 focus: strategy
+supersedes:
+  - DEC-076521
+  - DEC-3b23de
 ---
 
 # Demo estates, not pilots: few-deep flagships per (domain × geography), Odoo-base, isolated per install
