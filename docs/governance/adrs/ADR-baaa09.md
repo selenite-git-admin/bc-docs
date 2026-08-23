@@ -2,7 +2,7 @@
 uid: DEC-baaa09
 title: "Source contracts are business-function-agnostic — function_code belongs on canonical/metric layer only"
 description: "Source contracts never carry function_code. Business function assignment happens at canonical and metric contract layers only."
-status: decided
+status: implemented
 subdomain: contract-primitive
 focus: schema
 date: 2026-03-25
@@ -30,3 +30,7 @@ N/A
 ## Consequences
 
 N/A
+
+## Implementation record
+
+Implemented 2026-08-23 under an operator-approved Database Change Protocol (DevHub SES-b50e90). `function_code` / `subfunction_code` and their indexes were dropped from `contract.source_contract` and `contract.admission_contract` (pre-apply: 305 rows per table, 0 populated; dry-run rolled back, then applied; post-apply: 0 function columns, 0 function indexes, rows intact). Code: bc-core PR #706 — authoritative DDL, Drizzle schemas, migration `20260823-dec-baaa09-drop-sc-ac-function-code.sql` + rollback, family-aware contract repository (`familyCarriesFunction`), chain-enrichment probes, harness AC packet, and guard spec `dec-baaa09-function-agnostic.spec.ts`. Observation, canonical and metric contracts keep their function codes.
