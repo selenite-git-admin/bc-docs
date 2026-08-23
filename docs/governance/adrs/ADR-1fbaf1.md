@@ -6,6 +6,8 @@ status: decided
 date: 2026-06-26T10:06:55.345Z
 project: bc-core
 domain: platform
+subdomain: vocabulary-lifecycle
+focus: lifecycle
 ---
 
 # BCF admission-error withdrawal — archival of vocabulary admitted in error, distinct from supersession
@@ -44,11 +46,6 @@ BCF `concept_registry` characteristic + business_concept. `withdrawEntity` is a 
 
 ## Distinct from supersession
 
-supersede = active -> superseded WITH successor (correction); withdraw = active/draft -> archived WITHOUT successor (admission error). Editorial amendment (`amendCharacteristicDefinition`) = same id+term, definition updated in place (same meaning).</decision_text>
-<status>decided</status>
-<domain_text>concept-registry</domain_text>
-<subdomain_text>vocabulary-lifecycle</subdomain_text>
-<focus_text>lifecycle</focus_text>
-</invoke>
-<invoke name="Read">
-<parameter name="file_path">C:\MyProjects\bc-core\src\registry\concept-registry\registry-authoring.service.ts
+supersede = active -> superseded WITH successor (correction); withdraw = active/draft -> archived WITHOUT successor (admission error). Editorial amendment (`amendCharacteristicDefinition`) = same id+term, definition updated in place (same meaning).
+
+> Provenance: on 2026-08-23 (DevHub SES-a1d30b, TSK-3c6e02) leaked tool-call markup was removed from the tail of this file and from its registry row; the frontmatter classification (subdomain, focus) was restored verbatim from the parameters that had leaked — nothing was re-authored.

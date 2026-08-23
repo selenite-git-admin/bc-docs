@@ -240,6 +240,6 @@ Codes for deferred lifecycle modes (`pre_m12_audit`, `pre_m14_audit`, `pre_runti
 - D441 source-literal guard (ADR-46ff0a / ADR-61850f / ADR-6b35e0) — substrate enabling C4
 - D444 Phase 1 panel composition v3 (ADR-5cb154)
 - Foundation invariants `bc-docs-v3/docs/foundation/the-invariants.md`
-- Evaluation boundaries `bc-docs-v3/docs/foundation/the-evaluation-boundaries.md`</decision_text>
-<parameter name="status">decided</parameter>
-<parameter name="domain_code">governance
+- Evaluation boundaries `bc-docs-v3/docs/foundation/the-evaluation-boundaries.md`
+
+> Provenance: on 2026-08-23 (DevHub SES-a1d30b, TSK-3c6e02) leaked tool-call markup was removed from the tail of this file and from its registry row; nothing else was changed.
