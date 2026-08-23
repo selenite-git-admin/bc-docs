@@ -2,12 +2,13 @@
 uid: DEC-c338b3
 title: "BF/BO versioning model for supersede-active (Model E)"
 description: "Adopt a nullable supersedes_id self-FK on business_field/business_object for C7 supersede-active; two-act supersession completed via C5 operatorAdvance."
-status: decided
+status: superseded
 date: 2026-05-20T04:01:06.983Z
 project: bc-core
 domain: contracts
 subdomain: framework-approval
 focus: lifecycle
+superseded_by: DEC-b390ef
 ---
 
 # BF/BO versioning model for supersede-active (Model E)

@@ -2,7 +2,7 @@
 uid: DEC-b51b48
 title: "SAP Landscape Scanner — connector-level discovery + compatibility report"
 description: "SAP landscape scanner discovers installed modules and tables per system, produces compatibility report for reader coverage."
-status: implemented
+status: superseded
 subdomain: sap-catalog
 focus: sap-landscape-scanner
 date: 2026-03-02
@@ -10,6 +10,7 @@ project: bc-admin
 domain: database
 authority: authoritative
 migrated_from: legacy v2 archive
+superseded_by: DEC-b390ef
 ---
 
 

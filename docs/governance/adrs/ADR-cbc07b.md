@@ -2,7 +2,7 @@
 uid: DEC-cbc07b
 title: "Type Conformance Enforcement — Source Object through Metric Snapshot"
 description: "Every field flowing through the chain (SO → AR → CO → MS) must conform to its Business Field's declared data_type; normalization happens at admission, not at metric evaluation"
-status: proposed
+status: reversed
 date: 2026-04-15
 project: bc-core
 domain: contracts

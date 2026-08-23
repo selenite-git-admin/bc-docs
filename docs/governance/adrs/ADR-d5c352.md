@@ -2,7 +2,7 @@
 uid: DEC-d5c352
 title: "SAP Data Acquisition Strategy — Phase 1: sapdatasheet.org"
 description: "Use sapdatasheet.org as primary source for SAP table metadata. Airbyte, PyRFC, Cloudification Repo all rejected for Phase 1 due to coverage gaps."
-status: implemented
+status: superseded
 subdomain: data-acquisition
 focus: sap-source-strategy
 date: 2026-03-08
@@ -10,6 +10,7 @@ project: platform
 domain: database
 authority: authoritative
 migrated_from: legacy v2 archive
+superseded_by: DEC-b390ef
 ---
 
 
