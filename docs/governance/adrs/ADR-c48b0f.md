@@ -9,6 +9,7 @@ domain: metrics
 subdomain: metric-lifecycle/certification
 focus: governance
 
+supersedes: DEC-3d6eeb
 ---
 
 # Metric certification is an MCF lifecycle act — second panel certifies before activation; the "external audit" framing is retired
