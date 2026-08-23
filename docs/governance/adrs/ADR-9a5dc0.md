@@ -3,7 +3,7 @@ uid: DEC-9a5dc0
 decision_code: D586
 title: "CF Boundary — Reporting Standards Promote to Canonical Fields"
 description: "BFs that represent financial reporting concepts (US_GAAP, IFRS, COSO, IIA) promote to canonical fields. BFs remain source-observable only. Eliminates dual chain routes and misclassified integrity breaks."
-status: decided
+status: superseded
 date: 2026-04-11
 project: bc-core
 domain: contracts
@@ -19,6 +19,7 @@ refs:
     label: "BF-SF Alias SOP — defines alias as 1:1 source field mapping"
 migrated_from: legacy v2 archive
 devhub_registration: doc-registry indexed; decision-registry row absent (FILE_ONLY_UNEXPLAINED per Decision-Registration Integrity Audit 2026-06-22). File-side authority preserved per Foundation Invariant III; no successor minted, no UID re-allocation.
+superseded_by: DEC-b390ef
 ---
 
 # CF Boundary — Reporting Standards Promote to Canonical Fields

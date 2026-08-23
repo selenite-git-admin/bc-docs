@@ -2,13 +2,14 @@
 uid: DEC-9bffcd
 title: "BF-SF aliases as relational table, not JSONB"
 description: "BF-SF alias mapping uses contract.business_field_alias table (D162-compliant), deprecating business_field.source_aliases JSONB column"
-status: implemented
+status: superseded
 subdomain: payload-storage
 focus: schema
 date: 2026-04-09T03:03:37.378Z
 project: bc-core
 domain: contracts
 migrated_from: legacy v2 archive
+superseded_by: DEC-b390ef
 ---
 
 # BF-SF aliases as relational table, not JSONB

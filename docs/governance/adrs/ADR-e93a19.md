@@ -2,7 +2,7 @@
 uid: DEC-e93a19
 title: "SAP Table Reference — separate catalog table"
 description: "Store 50K+ SAP table names in a lightweight sap_table_reference table, separate from the 6-tier source hierarchy which requires moduleId FK."
-status: implemented
+status: superseded
 subdomain: sap-catalog
 focus: sap-table-reference-index
 date: 2026-03-06
@@ -10,6 +10,7 @@ project: platform
 domain: database
 authority: authoritative
 migrated_from: legacy v2 archive
+superseded_by: DEC-b390ef
 ---
 
 
