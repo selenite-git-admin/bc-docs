@@ -26,7 +26,6 @@ refs:
     uid: DEC-ebf0b4
     label: "D268 Session Discipline & Data Integrity"
 migrated_from: legacy v2 archive
-
 ---
 
 # Chain Completeness SSOT — Definition of Complete + Persisted Chain Status

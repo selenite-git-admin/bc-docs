@@ -10,7 +10,6 @@ project: bc-docs
 domain: contracts
 supersedes: DEC-6d8be5
 migrated_from: legacy v2 archive
-
 ---
 
 # Standards-First BF/BO Creation — OAGIS Primary, Metrics Validate

@@ -8,7 +8,6 @@ project: bc-core
 domain: platform
 subdomain: bcf-panel
 focus: runtime
-
 supersedes: DEC-14fb98
 ---
 

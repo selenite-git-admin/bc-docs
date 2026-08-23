@@ -42,7 +42,6 @@ refs:
     label: "UinBAT Reader Component Reference"
 authority: evolving
 migrated_from: legacy v2 archive
-
 ---
 
 # bc-ai — Platform AI Orchestration Service

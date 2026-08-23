@@ -12,7 +12,6 @@ retirement_scope:
   systems: [ecc, s4hana]
   object_type_codes: [table]
   max_objects: 30608
-
 ---
 
 # The SAP source catalogs (ECC + S/4HANA) and the contract chain over them are declared CONTAMINATION and authorised for governed retirement

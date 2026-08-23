@@ -19,7 +19,6 @@ refs:
     label: "BF-SF Alias SOP — defines alias as 1:1 source field mapping"
 migrated_from: legacy v2 archive
 devhub_registration: doc-registry indexed; decision-registry row absent (FILE_ONLY_UNEXPLAINED per Decision-Registration Integrity Audit 2026-06-22). File-side authority preserved per Foundation Invariant III; no successor minted, no UID re-allocation.
-
 ---
 
 # CF Boundary — Reporting Standards Promote to Canonical Fields

@@ -9,7 +9,6 @@ date: 2026-04-07T09:40:59.162Z
 project: platform
 domain: contracts
 migrated_from: legacy v2 archive
-
 ---
 
 # company_code is a shared dimension BF (5th D292 exception)

@@ -10,7 +10,6 @@ project: bc-core
 domain: database
 authority: authoritative
 migrated_from: legacy v2 archive
-
 ---
 
 

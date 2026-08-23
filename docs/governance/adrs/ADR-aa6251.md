@@ -10,7 +10,6 @@ project: bc-docs
 domain: contracts
 authority: authoritative
 migrated_from: legacy v2 archive
-
 ---
 
 # D255: Contract Primitives — BO and BF as First-Class Governed Artifacts

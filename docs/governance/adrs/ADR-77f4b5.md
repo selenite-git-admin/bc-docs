@@ -13,7 +13,6 @@ refs:
     label: "D187"
 authority: authoritative
 migrated_from: legacy v2 archive
-
 ---
 
 

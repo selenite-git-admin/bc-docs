@@ -8,7 +8,6 @@ project: bc-docs
 domain: contracts
 subdomain: catalog
 focus: governance
-
 ---
 
 # BF-BO Catalog Expansion Factory

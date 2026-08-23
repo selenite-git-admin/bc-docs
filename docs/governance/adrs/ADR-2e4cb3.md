@@ -7,7 +7,6 @@ date: 2026-04-09T10:13:22.682Z
 project: bc-core
 domain: contracts
 migrated_from: legacy v2 archive
-
 ---
 
 # BO/BF is organizational grouping, not computational node in contract chain

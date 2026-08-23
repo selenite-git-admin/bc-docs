@@ -8,7 +8,6 @@ project: bc-core
 domain: metrics
 subdomain: metrics/mcf-materialization
 focus: governance
-
 ---
 
 # MCF-materialized metrics governed by MCF M13/M14, not legacy D305 chain_status

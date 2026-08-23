@@ -10,7 +10,6 @@ project: bc-admin
 domain: readers
 authority: authoritative
 migrated_from: legacy v2 archive
-
 ---
 
 

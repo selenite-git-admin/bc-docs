@@ -8,7 +8,6 @@ project: bc-core
 domain: metrics
 subdomain: metric-lifecycle/certification
 focus: governance
-
 supersedes: DEC-3d6eeb
 ---
 

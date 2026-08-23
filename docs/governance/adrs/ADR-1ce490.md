@@ -8,7 +8,6 @@ project: bc-core
 domain: contract
 subdomain: business-field-catalog
 focus: admission, governance
-
 ---
 
 # contract.business_field is the certified BF-BO catalog

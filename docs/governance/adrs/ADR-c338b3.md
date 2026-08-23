@@ -8,7 +8,6 @@ project: bc-core
 domain: contracts
 subdomain: framework-approval
 focus: lifecycle
-
 ---
 
 # BF/BO versioning model for supersede-active (Model E)

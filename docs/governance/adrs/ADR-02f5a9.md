@@ -8,7 +8,6 @@ project: platform
 domain: contracts
 subdomain: semantic-vocabulary
 focus: architecture
-
 supersedes: DEC-a17d0f
 ---
 

@@ -8,7 +8,6 @@ project: barecount-devhub
 domain: sources
 subdomain: sap
 focus: governance
-
 ---
 
 # SAP data admission stance under SAP API Policy v.4/2026

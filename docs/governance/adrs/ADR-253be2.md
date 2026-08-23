@@ -8,7 +8,6 @@ project: platform
 domain: metrics
 subdomain: external-audit
 focus: audit-request-identity
-
 ---
 
 # External metric audit — intrinsic vs source-realization audit-request split, per-realization claim scoping, SAP ECC as first realization-audit ground

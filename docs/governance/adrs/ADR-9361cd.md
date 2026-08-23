@@ -7,7 +7,6 @@ date: 2026-04-10T05:46:17.921Z
 project: platform
 domain: contracts
 migrated_from: legacy v2 archive
-
 ---
 
 # CC Field Mapping: 1-BF-to-Many-CFs + Filter + Canonical Uniqueness

@@ -9,7 +9,6 @@ date: 2026-04-09T03:03:37.378Z
 project: bc-core
 domain: contracts
 migrated_from: legacy v2 archive
-
 ---
 
 # BF-SF aliases as relational table, not JSONB

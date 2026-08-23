@@ -8,7 +8,6 @@ project: platform
 domain: contracts
 subdomain: semantic-vocabulary
 focus: governance
-
 ---
 
 # Amendment to DEC-a17d0f: BF-CF semantic-family compatibility gate (G11)
