@@ -2,7 +2,7 @@
 uid: DEC-e9294b
 title: "bc-ai — Platform AI Orchestration Service (MCP + REST)"
 description: "Standalone AI service providing maker-checker intelligence for all BareCount apps — model registry, prompt flows, evidence audit, budget controls"
-status: superseded
+status: implemented
 subdomain: model-orchestration
 focus: platform-ai-service
 date: 2026-03-27
@@ -42,7 +42,7 @@ refs:
     label: "UinBAT Reader Component Reference"
 authority: evolving
 migrated_from: legacy v2 archive
-superseded_by: DEC-ffee4e
+
 ---
 
 # bc-ai — Platform AI Orchestration Service

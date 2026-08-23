@@ -2,7 +2,7 @@
 uid: DEC-683cf3
 title: "Business Object tiers — basic (business events) vs derived (accounting artifacts)"
 description: "BOs classified via tier_code: basic (real business events like invoices) vs derived (computed artifacts like GL entries from basic BOs)."
-status: superseded
+status: implemented
 subdomain: business-object-model
 focus: schema
 date: 2026-03-23
@@ -10,7 +10,7 @@ project: platform
 domain: contracts
 authority: authoritative
 migrated_from: legacy v2 archive
-superseded_by: DEC-a19428
+
 ---
 
 

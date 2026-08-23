@@ -2,7 +2,7 @@
 uid: DEC-bebaec
 title: "Chain Completeness SSOT — Definition of Complete + Persisted Chain Status"
 description: "Persisted chain status SSOT with locked 7-link definition of complete and version-aware tracing"
-status: superseded
+status: implemented
 date: 2026-04-13
 project: bc-core
 domain: contracts
@@ -26,7 +26,7 @@ refs:
     uid: DEC-ebf0b4
     label: "D268 Session Discipline & Data Integrity"
 migrated_from: legacy v2 archive
-superseded_by: DEC-7ab22b
+
 ---
 
 # Chain Completeness SSOT — Definition of Complete + Persisted Chain Status

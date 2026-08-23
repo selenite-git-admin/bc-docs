@@ -2,7 +2,7 @@
 uid: DEC-010bf9
 title: "Connection simulation — bc-sdg serves as mock SAP system for end-to-end demo"
 description: "bc-sdg runs as a mock SAP landscape for full-stack demo: connection, reader, admission, canonical, metric, action — no hand-waving."
-status: superseded
+status: implemented
 subdomain: e2e-demo
 focus: mock-sap-runtime
 date: 2026-03-02
@@ -10,7 +10,7 @@ project: bc-admin
 domain: readers
 authority: authoritative
 migrated_from: legacy v2 archive
-superseded_by: DEC-ea9bdc
+
 ---
 
 

@@ -8,10 +8,7 @@ project: platform
 domain: contracts
 subdomain: semantic-vocabulary
 focus: architecture
-supersedes:
-  - DEC-b7affa
-  - DEC-a17d0f
-  - DEC-9a5dc0
+
 ---
 
 # Business Concept Registry: vocabulary identity model and greenfield rebuild

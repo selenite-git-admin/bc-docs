@@ -2,13 +2,13 @@
 uid: DEC-b8ec00
 title: "BF-BO Catalog Expansion Factory"
 description: "D409 — multi-agent BF-BO catalog expansion: agents recommend, only governed endpoints/DBCPs mutate state. Closed-set verdicts + role split + write boundaries."
-status: superseded
+status: decided
 date: 2026-05-17T07:36:46.549Z
 project: bc-docs
 domain: contracts
 subdomain: catalog
 focus: governance
-superseded_by: DEC-a19428
+
 ---
 
 # BF-BO Catalog Expansion Factory

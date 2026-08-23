@@ -8,10 +8,7 @@ project: bc-core
 domain: metrics
 subdomain: metric-lifecycle/certification
 focus: governance
-supersedes:
-  - DEC-cbc07b
-  - DEC-3d6eeb
-  - DEC-253be2
+
 ---
 
 # Metric certification is an MCF lifecycle act — second panel certifies before activation; the "external audit" framing is retired

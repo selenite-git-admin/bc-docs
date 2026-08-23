@@ -2,12 +2,12 @@
 uid: DEC-2e4cb3
 title: "BO/BF is organizational grouping, not computational node in contract chain"
 description: "Clarifies that BO/BF is organizational metadata, not a computational node. MC binds to CC outputs directly. Proven by DSO chain (first complete SC→AC→OC→CC→MC)."
-status: superseded
+status: implemented
 date: 2026-04-09T10:13:22.682Z
 project: bc-core
 domain: contracts
 migrated_from: legacy v2 archive
-superseded_by: DEC-a19428
+
 ---
 
 # BO/BF is organizational grouping, not computational node in contract chain

@@ -2,14 +2,14 @@
 uid: DEC-68f2c7
 title: "company_code is a shared dimension BF (5th D292 exception)"
 description: "Adds company_code as 5th shared BF exception to D292. Updates bf-bo-onboarding-sop shared list from 4 to 5."
-status: superseded
+status: implemented
 subdomain: business-vocabulary
 focus: shared-dimensions
 date: 2026-04-07T09:40:59.162Z
 project: platform
 domain: contracts
 migrated_from: legacy v2 archive
-superseded_by: DEC-a19428
+
 ---
 
 # company_code is a shared dimension BF (5th D292 exception)
