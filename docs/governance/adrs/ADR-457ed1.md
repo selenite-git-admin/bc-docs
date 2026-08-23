@@ -2,7 +2,7 @@
 uid: DEC-457ed1
 title: "Prong (b) licensed rounding operations: any single correctly-rounded arithmetic operation"
 description: "Amends DEC-545a4d prong (b): the licensed rounding set becomes divide, avg, multiply, plus, minus (one correctly-rounded op per node) over EXACT/REPRODUCIBLE operands; unblocks the 48 percentage-idiom members."
-status: proposed
+status: decided
 date: 2026-07-20T06:22:03.893Z
 project: bc-core
 domain: metrics

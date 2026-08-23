@@ -1,5 +1,6 @@
 ---
 uid: DEC-e8a4d2
+decision_code: D587
 title: "Definition is the canonical parent — fold contract page into definition page, drop reverse FK"
 description: "Metric Definition is the parent of MC; surfaces fold under it. Forward FK on metric_contract.metric_definition_id is the single source of truth; promoted_contract_id reverse column dropped."
 status: implemented
