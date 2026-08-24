@@ -111,17 +111,17 @@ The local development environment is fully formalized and serves as the primary 
 | PostgreSQL | `postgres:17.8-alpine` | 5434 (host) to 5432 (container) | `postgres_data:/var/lib/postgresql/data` | Three DDL files in `bc-core/docker/redesign/` mount into `/docker-entrypoint-initdb.d/` and run on first start |
 | Redis | `redis:7.4.7-alpine` | 6379 | `redis_data:/data` | None |
 
-The PostgreSQL container creates the `bc_platform` database with user `barecount` and password `barecount_dev` on first start. The three DDL files initialize the schema:
+The PostgreSQL container (`bc-postgres`) creates the `bc_platform_dev` database with user `barecount` and password `barecount_dev` on first start. The three compose-mounted files (`01/02/03`) create the base schema on a fresh volume; the remaining `docker/redesign/` change files evolve it thereafter (see DEC-b1a286):
 
 | DDL file | Effect |
 |---|---|
 | `01-platform-schemas.sql` | Enables `pgcrypto`; creates the platform schema set |
-| `02-platform-tables.sql` | Creates the platform table set; generated from the bc-docs architecture DBML; ISO 11179 snake_case naming throughout |
+| `02-platform-tables.sql` | Creates the platform table set; a hand-maintained aggregate that must become generated from the modular `02-platform-tables/` source set (DEC-b1a286); ISO 11179 snake_case naming throughout |
 | `03-tenant-db.sql` | Creates the tenant schema set plus fixed tables for the tenant database pattern; dynamic fact tables are created per contract activation by the SchemaProvisionerModule |
 
-A parallel `docker-compose.redesign.yml` exists for schema redesign work; it brings up an isolated PostgreSQL instance on port 5435 with the same DDL files, container name `bc-postgres-redesign`. The two compose files are not run concurrently in normal operation.
+The active local stack is `docker-compose.yml` (container `bc-postgres`, port 5435). The former `docker-compose.redesign.yml` / `bc-postgres-redesign` instance is retired.
 
-The DDL files are the authoritative schema source per CLAUDE.md; the Drizzle schema definitions in `bc-core/src/database/schema/` mirror them and are reconciled at build time.
+The schema-change files under `docker/redesign/` are the schema-change mechanism and the live database is current-state ground truth (DEC-b1a286); the Drizzle schema definitions in `bc-core/src/database/schema/` are the app-facing type surface, reconciled by introspection.
 
 **Governing source.** `bc-core/docker-compose.yml`; `bc-core/docker/redesign/01-platform-schemas.sql`; `bc-core/docker/redesign/02-platform-tables.sql`; `bc-core/docker/redesign/03-tenant-db.sql`.
 

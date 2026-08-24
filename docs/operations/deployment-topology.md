@@ -108,7 +108,7 @@ The local development environment is fully formalized. Every engineer brings up 
 | PostgreSQL | `postgres:17.8-alpine` | 5434 | Three DDL files in `bc-core/docker/redesign/` mount into `/docker-entrypoint-initdb.d/` and run on first start |
 | Redis | `redis:7.4.7-alpine` | 6379 | None |
 
-A parallel `docker-compose.redesign.yml` brings up an isolated PostgreSQL on port 5435 with the same DDL files (container name `bc-postgres-redesign`); the two compose files are not run concurrently in normal operation.
+The active local stack is `docker-compose.yml` (container `bc-postgres`, port 5435). The former `docker-compose.redesign.yml` / `bc-postgres-redesign` instance is retired.
 
 Services running on the engineer's host:
 

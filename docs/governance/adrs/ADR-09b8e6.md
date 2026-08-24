@@ -20,6 +20,8 @@ migrated_from: legacy v2 archive
 
 # Unified Source Catalog — status-driven 6-tier hierarchy with object/view support
 
+> **Errata (DEC-b1a286, 2026-08-24):** the seed commands referenced in this ADR (`npm run seed`, `seed:masters`, `seed:catalog`, `seed:catalog:objects`) no longer exist. Reference/catalog seeding is now `npm run seed:registry`.
+
 ## Context
 
 Original rationale plus:

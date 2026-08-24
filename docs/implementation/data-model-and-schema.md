@@ -64,7 +64,7 @@ The two-database split is the architectural commitment recorded in Architecture 
 
 ## Authoritative DDL
 
-The authoritative source for all schema definitions is three SQL files plus a migrations directory under `bc-core/docker/redesign/`. The Drizzle ORM definitions in `bc-core/src/database/schema/` mirror the DDL and are the runtime-side type surface; when the two diverge, the DDL wins.
+The schema-change mechanism is the set of platform schema files under `bc-core/docker/redesign/` (base `01/02/03` + numbered files + `migrations/`, ~200 in total), applied in order and recorded in `infrastructure.schema_migration_event`; the live database is the authority on current state (see DEC-b1a286). The Drizzle ORM definitions in `bc-core/src/database/schema/` are the app-facing type surface, not a schema-change mechanism; when they diverge, the DDL and live database win.
 
 | File | Role |
 |---|---|
