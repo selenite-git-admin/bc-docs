@@ -2,7 +2,7 @@
 id: evaluation-evidence-dbcp-application
 order: 33.5
 title: "Evaluation-Evidence DBCP Application (E6-B singleton index, Invariant VI)"
-status: drafting
+status: authoritative
 authority: authoritative
 depends_on: [operations-overview, evidence-and-lineage, metric-evaluation, tenant-lifecycle-and-subscription, upgrade-and-migration]
 governing_adrs:
