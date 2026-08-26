@@ -26,6 +26,8 @@ diagrams: []
 
 # Canonical Field Seeding
 
+> **Bridging note.** Where this chapter refers to Business Field, Business Object, or Canonical Field, the semantic-identity role those primitives served is superseded by the **Business Concept Framework (BCF)** — the `concept_registry` schema (Entity / Characteristic / Business Concept), authored through governed ceremonies (AI panel + C5 operator-confirm + F3 write). The legacy `contract.business_field` / `contract.business_object` / canonical-field tables remain in use for OC/CC `field_selection` binding, so the mechanics described here stay valid for that purpose; for semantic identity — "what does this field mean?" — consult the BCF registry. Governing ADRs: DEC-02f5a9 (greenfield), DEC-61850f (adoption). See The Contract Grammar and The Object Model for the Registry model.
+
 ## Scope
 
 This chapter records the governed sequence by which Canonical Fields (CFs) are admitted to the platform vocabulary. It names the demand signal that drives CF creation (metric formula variables), the naming rules that distinguish CFs from BFs, the role of the five shared dimensions in CF naming, the registration procedure (single and bulk), and the verification gate that confirms every metric formula variable has a corresponding registered CF. It records the boundary between Canonical Field Seeding and the contract families that consume CFs (Canonical Contract Creation, Metric Contract Creation). It records the as-built drift between the procedure and the platform's current CF state.

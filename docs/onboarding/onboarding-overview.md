@@ -24,6 +24,8 @@ diagrams: []
 
 # Onboarding: Overview
 
+> **Bridging note.** Where this chapter refers to Business Field, Business Object, or Canonical Field, the semantic-identity role those primitives served is superseded by the **Business Concept Framework (BCF)** — the `concept_registry` schema (Entity / Characteristic / Business Concept), authored through governed ceremonies (AI panel + C5 operator-confirm + F3 write). The legacy `contract.business_field` / `contract.business_object` / canonical-field tables remain in use for OC/CC `field_selection` binding, so the mechanics described here stay valid for that purpose; for semantic identity — "what does this field mean?" — consult the BCF registry. Governing ADRs: DEC-02f5a9 (greenfield), DEC-61850f (adoption). See The Contract Grammar and The Object Model for the Registry model.
+
 ## Scope
 
 This chapter is the section opener for Onboarding. It states what Onboarding is and what role it plays in the documentation, maps the fifteen chapters that follow this overview into reading groups, gives a recommended reading sequence by audience, declares the boundaries between Onboarding and the other sections of the documentation, and records the as-built discipline under which Onboarding chapters are written.

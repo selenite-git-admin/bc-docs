@@ -22,6 +22,8 @@ diagrams: []
 
 # Metric Workstream Playbook
 
+> **Bridging note.** Where this chapter refers to Business Field, Business Object, or Canonical Field, the semantic-identity role those primitives served is superseded by the **Business Concept Framework (BCF)** — the `concept_registry` schema (Entity / Characteristic / Business Concept), authored through governed ceremonies (AI panel + C5 operator-confirm + F3 write). The legacy `contract.business_field` / `contract.business_object` / canonical-field tables remain in use for OC/CC `field_selection` binding, so the mechanics described here stay valid for that purpose; for semantic identity — "what does this field mean?" — consult the BCF registry. Governing ADRs: DEC-02f5a9 (greenfield), DEC-61850f (adoption). See The Contract Grammar and The Object Model for the Registry model.
+
 ## Scope and authority
 
 This playbook is reference guidance for metric work; Foundation chapters, ADRs, contracts, and authoritative onboarding SOPs prevail on conflict.
