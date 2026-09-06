@@ -2,7 +2,7 @@
 uid: DEC-0a614d
 title: "Retain the real-SAP OData executors dormant (do not retire) — corollary of D524"
 description: "Keep bc-core SapOdataV4Executor + SapOdataV2Executor dormant (inert, protocol-stable, tested) rather than retiring them during the bc-sdg archival; supersedes no ADR — corollary of D524's SAP retention."
-status: proposed
+status: decided
 date: 2026-09-06T13:18:34.603Z
 project: bc-core
 domain: readers
@@ -45,3 +45,7 @@ An explicit decision that SAP is permanently off BareCount's roadmap. That is a 
 ## Adjacent hygiene note (not acted on here)
 
 DEC-b0839a ("SDG Coherent Snapshots and Multi-Projection Architecture") is still `decided` yet describes the now-archived bc-sdg SDG-snapshot path. It is orthogonal to this decision (SDG snapshot architecture, not the transport executors) and is NOT superseded here — this ADR is not its successor. Flag for a separate ADR-hygiene review.
+
+## Operator decision record
+
+Ruled `proposed → decided` by anant on 2026-09-06 (DevHub session SES-bef51e). The decision was delegated to Claude (co-owner / Principal Architect) on 2026-09-06 and drafted as `proposed`; the operator reviewed and ruled it decided. Supersedes no ADR; no other ADR status changed.
