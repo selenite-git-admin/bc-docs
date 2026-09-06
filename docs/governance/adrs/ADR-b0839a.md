@@ -2,7 +2,8 @@
 uid: DEC-b0839a
 title: "SDG Coherent Snapshots and Multi-Projection Architecture"
 description: "One SDG with many profiles and many projection adapters; Apex demo source data is a coherence-gated active snapshot, not a running source system. Extends DEC-076521 for the demo path."
-status: decided
+status: superseded
+superseded_by: DEC-76aea4
 date: 2026-05-10T06:57:03.577Z
 project: bc-synth
 domain: metrics
