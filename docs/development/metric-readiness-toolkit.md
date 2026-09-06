@@ -152,7 +152,7 @@ broken-token reasons:
   no_mapping       <count>   ← CF unmapped, easy fix
 ```
 
-The reason categorization is the prioritization. When `null_in_tenant` dominates, the work is in source-data emission (bc-sdg / SAP simulator), not chain authoring. Use the endpoint for live counts; this chapter preserves the interpretation shape only.
+The reason categorization is the prioritization. When `null_in_tenant` dominates, the work is in source-data emission (the source world — the bc-demo Odoo world; the former bc-sdg / SAP simulator was archived 2026-09-06 when SAP was retired), not chain authoring. Use the endpoint for live counts; this chapter preserves the interpretation shape only.
 
 ## Curated binding (Readiness pillar's only writer)
 
