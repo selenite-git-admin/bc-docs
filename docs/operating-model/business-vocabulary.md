@@ -4,219 +4,201 @@ order: 8.5
 title: "Business Vocabulary"
 status: drafting
 authority: authoritative
-depends_on: [the-contract-grammar, sources-and-the-catalog]
+depends_on: [the-contract-grammar, sources-and-the-catalog, business-concept-registry]
 governing_sources:
   - Foundation (scope and non-negotiability)
+  - The BareCount Business Concept Registry (the model)
 governing_adrs:
+  - DEC-02f5a9 (Business Concept Registry — supersedes BO/BF/CF and Canonical Mapping identity; D414)
+  - DEC-61850f (Business Concept Registry adoption)
+superseded_adrs:
   - DEC-aa6251 (D255 BO and BF as Contract Primitives)
   - DEC-616e02 (D103 Business Object Model)
   - DEC-d72560 (D301 Canonical Field as 3rd Contract Primitive)
   - DEC-f66378 (D292 BO-Scoped BF Composition)
-  - DEC-68f2c7 (D294 company_code as 5th shared dimension)
-  - DEC-339c97 (External standards provenance)
-  - DEC-5017fe (Standard Field Registry)
   - DEC-683cf3 (BO tiers basic vs derived)
   - DEC-9a5dc0 (CF Boundary)
-  - DEC-b5631b (Field Data Type Quality Gate)
-  - DEC-02f5a9 (Business Concept Registry supersedes BO/BF/CF and Canonical Mapping identity)
 errata_referenced: []
 v2_sources: []
-word_target: 3500
+word_target: 2200
 ---
 
 # Business Vocabulary
 
-> **Vocabulary supersession (DEC-02f5a9).** Business Field, Business Object, Canonical Field, and the Canonical Mapping identity model described in parts of this chapter are **superseded** by the Business Concept Registry (Entity / Property / Business Concept). New authoring uses the Registry vocabulary; this chapter is retained for historical continuity pending its full rewrite. See The Contract Grammar and The Object Model for the Registry model.
+> **This chapter teaches the current model.** The platform's business vocabulary is the **Business
+> Concept Registry** (Entity / Property / Business Concept), adopted by DEC-02f5a9 and DEC-61850f. The
+> earlier three-primitive model — Business Field, Business Object, Canonical Field, joined by a Canonical
+> Mapping — is **superseded**. The deep model lives in *The BareCount Business Concept Registry*
+> (`implementation/business-concept-registry.md`); this chapter is the operating-model view of it. Where a
+> BF/BO/CF **table** is still named in an onboarding procedure, it is a **binding mechanism** at the chain
+> boundary, not a vocabulary identity — see *What Survives* below.
 
 ## Scope
 
-This chapter defines the platform's internal vocabulary: Business Field, Business Object, and Canonical Field. It defines each primitive's role, the relationship between the primitives, the standards-sourcing discipline that authorizes each primitive, the BO-scoped composition rule for Business Fields, the five shared-dimension exceptions, and the certification lifecycle that makes a primitive available to contract authoring.
+This chapter defines the platform's internal business vocabulary — what a business concept *is*, how it is
+identified, and the discipline that admits one. It states the model an author works with (Entity, Property,
+Business Concept), the single identity rule, the two failure modes the registry makes structurally
+impossible, how the retired primitives map onto the registry, the BCF/MCF boundary, the role of standards,
+and the certification substrate that admits a concept.
 
-This chapter does not redefine the contract grammar that uses these primitives, the Source Catalog from which observed fields originate, or canonical evaluation runtime behavior. The Contract Grammar defines the grammar role of primitives. Sources and the Catalog defines observable external structure. Canonical Evaluation applies the vocabulary at runtime.
+This chapter does not redefine the registry's deep model (*The Business Concept Registry* owns that), the
+contract grammar that references concepts (*The Contract Grammar*), the Source Catalog observed fields come
+from (*Sources and the Catalog*), or canonical evaluation runtime behavior (*Canonical Evaluation*).
 
-**Governing source.** Foundation; The Contract Grammar; Sources and the Catalog.
+**Governing source.** Foundation; The Business Concept Registry; The Contract Grammar.
 
-## Vocabulary Inventory
+## The Model
 
-The platform recognizes three vocabulary primitives. Each primitive is governed and versioned like a contract-family artifact, but no primitive carries a contract envelope and no primitive emits authoritative state by itself.
+The vocabulary is one governed registry. Three constructs:
 
-| Primitive | Role | Used by |
-|---|---|---|
-| Business Field | Atomic business-side field definition with name, data type, description, and standards provenance | Source Contract field selection, Observation Contract source-to-business mapping, Canonical Mapping source-side identifier |
-| Business Object | Composition of Business Fields representing a domain concept | Canonical Contract `business_object_code`, Observation Contract `business_object_code`, contract-chain assembly |
-| Canonical Field | Atomic canonical-side field definition produced at canonical evaluation | Canonical Contract `field_selection`, Metric Contract variable bindings, Canonical Mapping target-side identifier |
-
-The platform operates two vocabularies. Business Field is the source-side business vocabulary, and Business Object scopes Business Field composition. Canonical Field is the canonical-side vocabulary. Canonical Mapping translates from Business Field to Canonical Field at canonical evaluation.
-
-**Governing source.** The Contract Grammar; DEC-aa6251; DEC-d72560.
-
-## Business Field
-
-**Purpose.** A Business Field is the atomic business-side field definition that contracts reference when they select, validate, or map data from Source Tables.
-
-**Scope.** A Business Field covers a single business-side field definition with a code, data type, description, standards provenance, and any controlled-list constraints required for validation. Source-side identifiers are Source Fields. Canonical-side identifiers are Canonical Fields. Runtime values belong to admission acts, not to the vocabulary record.
-
-**Behavior.** Each Business Field is registered with a unique business field code, declared data type, registered business description, and standards provenance. The platform composes Business Fields into Business Objects through membership records. Each membership record carries per-Business-Object metadata, including required status, business-key status, ordinal position, and semantic role.
-
-**Constraints.**
-
-- A Business Field has exactly one data type. Type widening or narrowing requires a new Business Field.
-- A Business Field is BO-scoped unless it is one of the declared shared-dimension exceptions.
-- A Business Field does not carry tenant-specific values.
-- A Business Field must be certified before a contract version can reference it.
-
-**Failure modes.**
-
-- If a contract references an uncertified Business Field, contract publication is blocked.
-- If a contract references a Business Field whose declared data type is incompatible with the observed Source Field type, admission rejects the affected records under the type-conformance rule.
-- If a Business Field is registered without standards provenance, vocabulary registration rejects the record.
-
-**Interactions.** Business Fields compose into Business Objects through membership records. Source Contracts select Business Fields by code. Observation Contracts map Source Field paths to Business Field codes. Canonical Mapping identifies the source-side Business Field used for Canonical Field translation.
-
-**Governing source.** DEC-aa6251; DEC-616e02; DEC-b5631b; The Contract Grammar.
-
-## Business Object
-
-**Purpose.** A Business Object is a named composition of Business Fields that represents a domain concept.
-
-**Scope.** A Business Object covers the domain concept it represents, the industry and function classification under which it sits, the Business Fields composed within it, the tier classification assigned to it, and the certification status of the composition. Tenant-specific schemas, source-system-specific tables, and runtime evaluation logic are outside this chapter.
-
-**Behavior.** A Business Object is registered with a business object code, domain classification, tier classification, description, and standards provenance. Member Business Fields are added through membership records. The certification lifecycle approves the composition before contract versions can reference the Business Object.
-
-**Constraints.**
-
-- Each Business Object has exactly one tier classification: basic or derived.
-- A basic Business Object represents a business event. A derived Business Object represents an accounting artifact.
-- Member Business Fields are BO-scoped except for the five shared-dimension exceptions.
-- A Business Object does not carry runtime data.
-- A Business Object must be certified before a contract version can reference it.
-
-**Failure modes.**
-
-- If a Canonical Contract references an uncertified Business Object, contract publication is blocked.
-- If a membership record violates the BO-scoped composition rule, vocabulary registration rejects the membership.
-- If the tier classification conflicts with the member Business Fields, certification blocks approval pending correction.
-
-**Interactions.** Business Objects are composed of Business Fields. Canonical Contracts and Observation Contracts identify scope by Business Object code. Contract-chain assembly uses Business Object identity to align observation, canonical evaluation, and metric evaluation against the same domain concept. Canonical Mapping records Business Field to Canonical Field translation per Business Object and Canonical Contract version.
-
-**Governing source.** DEC-aa6251; DEC-616e02; DEC-683cf3; The Contract Grammar.
-
-## Canonical Field
-
-**Purpose.** A Canonical Field is the atomic canonical-side field definition produced at the canonical evaluation boundary.
-
-**Scope.** A Canonical Field covers any single canonical-side field that a Canonical Contract emits or that a Metric Contract reads through a formula variable binding. Business Fields are the source-side vocabulary. Canonical evaluation runtime logic and tenant-specific extensions are outside this chapter.
-
-**Behavior.** Each Canonical Field is registered with a canonical field code, declared data type, description, and standards provenance. Canonical Mapping records the Business Field to Canonical Field translation per Canonical Contract version. Canonical evaluation applies the mapping deterministically and produces a Canonical Object whose payload is keyed by Canonical Field codes.
-
-**Constraints.**
-
-- A Canonical Field is not implicit. Every Canonical Object payload key is a registered Canonical Field code.
-- A Canonical Field has exactly one data type. Type widening or narrowing requires a new Canonical Field.
-- A Canonical Field is admitted only when promoted from an authoritative reporting standard or otherwise governed under the CF Boundary rule.
-- A Canonical Field must be certified before a Canonical Contract can reference it.
-
-**Failure modes.**
-
-- If a Canonical Contract references an uncertified Canonical Field, contract publication is blocked.
-- If Canonical Mapping targets a Canonical Field whose data type is incompatible with the source Business Field, mapping registration is rejected.
-- If a Canonical Field is registered without standards provenance, the CF Boundary rule rejects the registration.
-
-**Interactions.** Canonical Fields are produced through Canonical Mapping at canonical evaluation. Canonical Contracts declare `field_selection` by Canonical Field code. Metric Contracts bind formula variables to Canonical Field codes. Chain-readiness checks read Canonical Field certification status before a metric chain becomes available.
-
-**Governing source.** DEC-d72560; DEC-9a5dc0; The Contract Grammar; The Evaluation Boundaries.
-
-## Vocabulary Sourcing
-
-The platform admits vocabulary primitives only when each primitive is sourced from an authoritative external standard or governed equivalent. The sourcing discipline applies to registration, certification, and contract authoring.
-
-**Primary standards.** OAGIS is the primary source for Business Objects and Business Fields when an OAGIS equivalent exists. XBRL, IFRS, and US-GAAP are admissible secondary sources when OAGIS does not cover the domain concept. Reporting-standard sources also promote Canonical Fields under the CF Boundary rule.
-
-**Standards provenance record.** Each Business Field, Business Object, and Canonical Field carries a standards provenance record. The record names the source standard, the citation reference within that standard, and the registration timestamp. The provenance record is registered with the primitive and is not edited in place.
-
-**Standard Field Registry.** The Standard Field Registry applies ISO 11179 metadata-registry conventions to vocabulary registration. The registry validates field names, data types, and descriptions before admitting a registration.
-
-**Multi-standard onboarding.** The platform can admit primitives sourced from multiple standards when the same domain concept has overlapping coverage. Multi-standard onboarding produces one registered primitive with multiple provenance records. It does not produce duplicate primitives for the same concept.
-
-**Failure modes.**
-
-- If a primitive is registered without a standards provenance record, registration is rejected.
-- If a provenance reference does not resolve to an admissible standard, registration is rejected pending revision.
-- If two primitive registrations have overlapping provenance and overlapping semantics, the Standard Field Registry flags the duplicate and certification withholds approval until the duplication is resolved.
-
-**Governing source.** DEC-339c97; DEC-5017fe; DEC-9a5dc0; The Contract Grammar.
-
-## BO-Scoped Composition And Shared Dimensions
-
-The platform applies a BO-scoped composition rule to Business Field membership. The rule has five named exceptions for shared dimensions. The rule and the exceptions define how Business Fields compose into Business Objects.
-
-**Rule.** A Business Field is scoped to one Business Object. Its name and semantic role belong to that Business Object's composition. A field concept that appears in two different Business Objects is registered as two separate Business Fields, each scoped to its own Business Object. The rule prevents silent reuse across unrelated domain concepts.
-
-**Shared-dimension exceptions.** Five Business Fields are exempt from BO-scoped composition because they are universal grain dimensions used identically across Business Objects. The exception list is closed.
-
-| Shared dimension | Role |
+| Construct | What it is |
 |---|---|
-| `company_code` | Legal entity identifier shared across all Business Objects |
-| `currency_code` | ISO 4217 currency identifier shared across monetary Business Fields |
-| `language_code` | ISO 639 language identifier shared across localizable Business Fields |
-| `country_code` | ISO 3166 country identifier shared across geographic Business Fields |
-| `unit_of_measure` | Unit identifier shared across measurable Business Fields |
+| **Entity** | A globally governed, **role-bearing** business concept — `Customer`, `Supplier`, `Invoice`, `Inventory Position`. Simple, or composite (identity = an ordered/named set of identity-bearing properties). Not a physical thing: `Customer` and `Supplier` are distinct entities even when one real party plays both roles. |
+| **Property** | Belongs to exactly one entity. `kind = value` (a scalar — `credit_limit`, `balance`) or `reference` (points to another entity, carries a role — `invoice.bill_to → Customer`). `identity_role = identity_bearing | descriptive`. |
+| **Business Concept** | The addressable, observable unit of vocabulary. **Identity = `entity.property`.** This is the unit the contract chain references. |
 
-A metric formula that reads multiple Canonical Contracts can use a shared-dimension Business Field as a grain key across Canonical Objects from different Business Objects. The exception is required for cross-Business-Object metric evaluation.
+The entity graph *is* nothing more than the set of reference-properties. A property term decomposes into a
+**characteristic** (`credit limit`, `balance`, `status`) and a **representation term** (`amount`, `date`,
+`code`, `quantity`, `count`, `indicator`, `identifier`, `text`) — the representation set is a small closed
+list, seeded from ISO 11179 then owned.
 
-**Constraints.**
+## Identity
 
-- A new shared-dimension exception requires a governed authority change.
-- The five exception identifiers are reserved.
-- A Business Object cannot register a reserved identifier under a non-shared-dimension role.
-- An exception identifier carries the same name and data type wherever it appears.
+A concept's identity is exactly **`entity.property`** — two levels, nothing else.
 
-**Failure modes.**
+- **Entities are globally unique by ID** (a surrogate). Entity *names* need not be globally unique, but a
+  canonical name must be **self-disambiguating in its own wording** (`Employment Position` vs
+  `Market Position`) — never disambiguated by a namespace prefix.
+- **Family / owner-domain / tags are classification, not identity.** An entity is the same concept
+  regardless of how it is filed.
 
-- If a Business Field registration uses a reserved identifier under a non-shared-dimension role, registration is rejected.
-- If a Business Object registration includes a non-exception Business Field that already belongs to another Business Object, membership is rejected.
-- If a metric formula uses a non-exception field as a cross-Business-Object grain key, chain-readiness validation rejects the metric chain.
+## The Two Failure Modes the Registry Governs
 
-**Governing source.** DEC-f66378; DEC-68f2c7; DEC-9a5dc0; The Contract Grammar.
+The registry exists to make two Invariant-I violations **structurally impossible**, not merely detected:
+
+- **Synonyms** (many names, one meaning — `credit_limit` / `credit_cap` / `credit_ceiling`). Guarantee:
+  identity is `(entity, property)`, unique by construction (`UNIQUE(entity_id, property_id)`) — a second
+  concept for the same identity cannot be created.
+- **Homonyms / false unifiers** (one name, many meanings — `Invoice` = AR + AP; `Account` = customer vs GL;
+  `Position` = employment vs market). Guarantee: globally unique entity IDs with **forced-distinct
+  definitions** — a coarse name cannot silently merge two concepts.
+
+The mechanism is **structure**, not after-the-fact detection. A duplicate that reached `active` would be
+irreversible historical damage (Invariant III), so detection would be too late.
+
+## How the Retired Primitives Map
+
+The prior model is superseded, not merely renamed. The mapping, for readers coming from older procedures:
+
+| Retired primitive | Registry equivalent |
+|---|---|
+| **Business Object** | ≈ **Entity** (a role-bearing concept; the old free-text `object_class` becomes the Entity — a governed reference, not a string) |
+| **Business Field** | ≈ **Business Concept** (`entity.property`, value or reference) |
+| **Canonical Field** | ≈ **Business Concept** — there is no separate canonical-side identity; one concept serves both sides |
+| **Canonical Mapping (as identity binding BF↔CF)** | **Eliminated** — with one concept there is no BF↔CF identity to bind. Canonical Mapping as *transformation* content (unit/type/reduction) survives in the chain / MCF. |
+| **`basic` vs `derived` BO tiers** | Not an identity axis; a value that arrives stored is a BCF property, a value the platform computes is an MCF metric (see below) |
+
+## The BCF / MCF Boundary
+
+**BCF governs observable concepts; MCF governs computed metrics.** The line is *who computes it*:
+
+- A value that arrives **stored** — even if the source system derived it internally — is a **BCF property**
+  (`invoice.net_amount`).
+- A value the **platform** computes over grain, time, filters, and formula is an **MCF metric**
+  (`days_sales_outstanding`, `gross_margin_rate`).
+
+**Grain is structural.** A metric's grain *is* the composite entity it measures over. In MCF, grain is a
+**typed reference to a registry entity**, not a free-text parameter — so an incoherent grain cannot be
+declared. (This replaces the old "five shared-dimension Business Fields" device: cross-concept grain keys
+such as legal entity or currency are entities/properties referenced through the registry and reconciled at
+the binding layer, not special shared fields.)
+
+## The Role of Standards
+
+Standards (OAGIS, ISO 20022, US-GAAP / XBRL, IFRS, …) play exactly two roles plus one bounded content
+contribution — and are **never identity authority**:
+
+- **Provenance evidence** — "this concept traces to standard X" satisfies the no-fabrication rule.
+- **Candidate source / recognition** — a seed catalog to *suggest* vocabulary and *recognize* a tenant's
+  source fields at onboarding.
+- **One bounded content contribution** — the closed representation-term set, seeded from ISO 11179 then
+  owned.
+
+"Standards-compliant" is a claim about traceability, not correctness; the correctness property is the
+registry's internal one-meaning-per-concept. You cannot be governed by mutually-contradictory standards —
+that impossibility is the proof standards are not the authority.
+
+## The Role of the AI Panel
+
+With identity made structural, the authoring panel is **not a duplicate checker** — it is a
+**concept-placement assistant**: given a candidate, is this an existing entity or a new one? an existing
+property or a new one? is a proposed term a synonym of a governed term? is the definition disciplined? is
+the standard/source reference evidence (not authority)? — admit, reject, or route to operator review. The
+irreversible-uniqueness guarantee comes from the registry's **structure**, not from the panel. The panel
+assists framing within a governed surface; **it does not own identity.** (Since D483 the panel runs
+in-process in bc-core; see AI Gates.)
 
 ## Certification Lifecycle
 
-Each vocabulary primitive passes through a certification lifecycle before it becomes available to contract authoring. The lifecycle applies to Business Fields, Business Objects, and Canonical Fields.
+A concept passes the Foundation five-state lifecycle before it is admissible to contract authoring, and
+`active` concepts are immutable (Invariant III):
 
-| State | Meaning | Permitted next states |
+| State | Meaning | Next |
 |---|---|---|
-| `proposed` | The primitive is registered with provenance but not yet reviewed | `reviewing`, `withdrawn` |
-| `reviewing` | The primitive is under review against the certification gate set | `certified`, `proposed`, `withdrawn` |
-| `certified` | The primitive is admissible to contract authoring | `superseded` |
-| `superseded` | A newer primitive replaces this one for new authoring; historical references remain addressable | terminal |
-| `withdrawn` | The primitive was rejected before certification | terminal |
+| `proposed` | Registered with provenance, not yet reviewed | `reviewing`, `withdrawn` |
+| `reviewing` | Under review against the certification gate set | `certified`, `proposed`, `withdrawn` |
+| `certified` | Admissible to contract authoring | `superseded` |
+| `superseded` | A newer concept replaces it for new authoring; historical references stay addressable | terminal |
+| `withdrawn` | Rejected before certification | terminal |
 
-Only `certified` primitives are admissible to new contract authoring. A `superseded` primitive remains addressable for historical contract versions. Supersession does not retroactively invalidate a contract version that already references the prior primitive.
+**Supersession rule.** Changing an entity's **identity-bearing** property set is supersession — a new
+entity. Adding a **descriptive** property is additive — non-superseding. Supersession never retroactively
+invalidates a contract version that already references the prior concept.
 
-**Gate set.** Certification records standards provenance, data type validity, name conformance with ISO 11179 conventions, BO-scoped composition for Business Fields, tier consistency for Business Objects, and CF Boundary compliance for Canonical Fields. AI-assisted verification can produce advisory output, but the governed certification record is authoritative only when preserved through the authoring path.
+The governed certification substrate — the panel-output record, certification record, framework policy,
+calibration and phase state, and the intake / rejection-log services — is unchanged by the model switch: it
+governs *whatever* the vocabulary is, and it stands.
 
-**Constraints.**
+## What Survives (and why onboarding procedures still name BF/BO/CF tables)
 
-- A primitive cannot bypass the lifecycle.
-- A primitive cannot register directly into `certified`.
-- A primitive's data type cannot change during the lifecycle.
-- Standards provenance is appended, not edited in place.
+The model switch does **not** invalidate, and explicitly preserves:
 
-**Failure modes.**
+- the four **evaluation boundaries** (admission, canonical, metric, action);
+- the **active contract families** — Source, Admission, Observation, Canonical, Intervention — other than
+  the vocabulary primitives;
+- the five-state **lifecycle, versioning, and immutability**;
+- **source-field binding at the chain boundary** — the admission / observation boundary binds a tenant's
+  source fields to concepts. A source field is *not* vocabulary. The legacy
+  `contract.business_field` / `contract.business_object` / canonical-field tables **persist physically**
+  until the greenfield cutover (DEC-02f5a9 §6) and still carry OC/CC `field_selection` binding. So where an
+  onboarding chapter says "select the Business Field" or "the Business Object code," the **mechanics remain
+  valid for binding** — but the *semantic identity* of what is being bound is the registry concept, not the
+  legacy row.
+- **transformation logic** — unit conversion, type coercion, reduction over grain, temporal interpretation
+  — wherever grain / unit / reduction are genuinely real. It remains authored content, in the chain or MCF.
 
-- If a primitive is registered directly as `certified`, registration is rejected.
-- If certification lacks a required gate result, certification is blocked.
-- If a new contract version references a superseded primitive, publication is rejected and the authoring path identifies the superseding primitive.
+## Governing Decisions
 
-**Governing source.** The Authority Model; The Contract Grammar; The Dual-Layer Interaction Model; DEC-b5631b.
+| Decision | Scope in this chapter |
+|---|---|
+| DEC-02f5a9 | Adopts the Business Concept Registry; supersedes the BO/BF/CF three-primitive model and Canonical Mapping identity |
+| DEC-61850f | Business Concept Registry adoption |
+
+The superseded decisions (DEC-aa6251, DEC-616e02, DEC-d72560, DEC-f66378, DEC-683cf3, DEC-9a5dc0) are
+retained in the ADR registry for historical continuity; contract versions authored under them stay
+addressable.
+
+**Governing source.** Decisions: ADR Registry.
 
 ## References
 
+- The BareCount Business Concept Registry (`implementation/business-concept-registry.md`) — the deep model
 - Foundation: Scope and Non-Negotiability
-- The Object Model: The Object Model
-- The Contract Grammar: The Contract Grammar
-- The Evaluation Boundaries: The Evaluation Boundaries
-- The Authority Model: The Authority Model
-- The Dual-Layer Interaction Model: The Dual-Layer Interaction Model
-- Sources and the Catalog: Sources and the Catalog
-- Canonical Evaluation: Canonical Evaluation
+- The Object Model
+- The Contract Grammar
+- The Evaluation Boundaries
+- Sources and the Catalog
+- Canonical Evaluation
+- AI Gates
+- DEC-02f5a9: Business Concept Registry
+- DEC-61850f: Business Concept Registry adoption
