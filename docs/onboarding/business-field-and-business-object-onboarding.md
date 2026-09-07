@@ -1,285 +1,205 @@
 ---
 id: business-field-and-business-object-onboarding
 order: 53
-title: "Business Field and Business Object Onboarding"
+title: "Business Concept Authoring (BCF)"
 status: drafting
 authority: authoritative
-depends_on: [the-object-model, the-contract-grammar, business-vocabulary, sources-and-the-catalog, source-registration, ai-gates, ai-trust-and-verification, data-model-and-schema]
+depends_on: [the-object-model, the-contract-grammar, business-vocabulary, business-concept-registry, ai-gates, ai-trust-and-verification, data-model-and-schema]
 governing_sources:
+  - The BareCount Business Concept Registry (the model)
   - Business Vocabulary
-  - The Contract Grammar
   - AI Gates
 governing_adrs:
-  - DEC-f66378 (D292 BO-scoped BF naming; D290 standards-sourced BFs; D294 five shared dimensions are absorbed into this ADR's body)
-governing_sops:
-  - legacy-v2-archive/docs/sops/bf-bo-onboarding-sop.md
-  - legacy-v2-archive/docs/sops/bf-sf-alias-sop.md
+  - DEC-02f5a9 (Business Concept Registry — supersedes BO/BF/CF vocabulary; D414)
+  - DEC-61850f (Business Concept Registry adoption)
+  - DEC-ffee4e (D483 — BCF panels run in-process in bc-core; calibration-locked roster)
+superseded_adrs:
+  - DEC-f66378 (D292 BO-scoped BF naming; five shared dimensions)
 errata_referenced: []
-v2_sources:
-  - sops/bf-bo-onboarding-sop.md
-  - sops/bf-sf-alias-sop.md
-diagrams: []
+v2_sources: []
+word_target: 2200
 ---
 
-# Business Field and Business Object Onboarding
+# Business Concept Authoring (BCF)
 
-> **Bridging note (2026-07-07).** The semantic identity role that Business Fields and Business Objects served has been superseded by the **Business Concept Framework (BCF)** — the `concept_registry` schema (DEC-02f5a9 greenfield, DEC-61850f adoption). BCF uses an Entity / Characteristic / Business Concept model with governed authoring ceremonies (AI panel + C5 operator-confirm + F3 write). The legacy `contract.business_field` and `contract.business_object` tables remain in use for OC/CC `field_selection` binding, so this procedure is still valid for that purpose. For semantic identity — "what does this field mean?" — consult the BCF registry (136 active entities, ~630 active BCs, 173 active characteristics as of the BCF audit remediation closeout). Governing ADRs: DEC-02f5a9, DEC-61850f, DEC-14f5b6 (D496 measurement semantics), DEC-1fbaf1 (withdrawal). Program closeout: `docs/implementation/bcf-audit-remediation-closeout-2026-07-07.md`.
+> **This chapter replaces "Business Field and Business Object Onboarding."** The BF/BO/CF vocabulary and
+> its standards-derivation / BO-scoped-naming ceremony are **superseded** by the Business Concept Registry
+> (DEC-02f5a9, DEC-61850f). This chapter is the governed procedure for authoring **business concepts** —
+> Entities, Business Concepts (`entity.property`), and their Characteristics — into the `concept_registry`.
+> The file id is retained for link stability. The **model** (what a concept *is*) lives in
+> *The BareCount Business Concept Registry*; this chapter is the **procedure** for admitting one.
 
 ## Scope
 
-This chapter records the governed sequence by which Business Fields (BFs) and Business Objects (BOs) are admitted to the platform vocabulary from authoritative external standards (OAGIS as the primary tier; ISO 20022, XBRL, IFRS, and UN/CEFACT as secondary tiers; BareCount Standard as the last resort tier). It names the derivation rules that map a standard's structure to BFs and BOs, the BO-scoped naming discipline (DEC-f66378) and its five shared dimension exceptions, the certification and approval gates each artifact passes, and the BF to source-field alias table that later Observation Contracts consume. It records the boundary between vocabulary onboarding and the contract families that consume the vocabulary. It records the as-built drift between the procedure and the platform's current vocabulary state.
+This chapter records the governed sequence by which a business concept is authored into the registry: the
+two maker routes (the in-process AI panel and the operator-direct surface), the recommendation artifact each
+produces, the operator-confirm gate for high-consequence acts, and the certification-and-write chain that
+makes a concept `active`. It names the authoring actions the registry supports (concept authoring,
+characteristic admission, entity- and concept-version amendment, correction, orphan repair) and the
+supersession rule that distinguishes an amendment from a new entity.
 
-This chapter does not redefine the BF and BO taxonomy itself (Business Vocabulary), the contract families that bind BOs (Source and Admission Contract Creation, Observation Contract Creation, Canonical Contract Creation, Metric Contract Creation), the AI maker-checker-gate envelope (AI Gates), or the source catalog the alias table refers to (Sources and the Catalog).
+This chapter does not redefine the registry model (*The Business Concept Registry* — Entity / Property /
+Business Concept, identity `entity.property`, the two structurally-impossible failure modes), the AI
+maker-checker-moderator envelope (*AI Gates*), or **source-field binding** — binding a tenant's source
+fields to concepts happens at the admission/observation boundary and is authored in *Observation Contract
+Creation* and *Canonical Contract Creation*, not here. A source field is not vocabulary.
 
-**Governing source.** outline.md §4.6; Business Vocabulary.
+**Governing source.** The Business Concept Registry; Business Vocabulary; AI Gates.
 
 ## What the Procedure Produces
 
-A complete vocabulary onboarding produces three classes of artifact plus an alias trail per BF.
-
 | Artifact | Persistent store | Created by |
 |---|---|---|
-| Certified Business Field | `contract.business_field` | Step 3 of the per-domain run |
-| Approved Business Object with composition | `contract.business_object` plus `contract.business_object_field` | Step 5 of the per-domain run |
-| BF-to-source-field alias | `contract.business_field_alias` | The alias procedure (Steps A1-A2) |
-| Standard provenance trail | `business_field.source_standard`, `business_field.standard_ref`, `business_object.source_standard`, `business_object.standard_ref` | Steps 1-5 |
+| Recommendation artifact (the shaped candidate + evidence) | `bcf.panel_output_record` | The maker route (panel or operator-direct) |
+| Registry-shape certification (C5) | `bcf.certification_record` | The confirm act |
+| Active Entity / Business Concept / Characteristic (F3 write) | `concept_registry.*` | The post-confirm executor |
 
-Every BF and BO carries a `source_standard` value identifying the tier it was sourced from; the value is one of `oagis`, `iso_20022`, `xbrl_gaap`, `ifrs`, `uncefact`, `bc_standard`, or `computed` (for output BFs that later Metric Contracts produce). The chapter governs the first six values; the `computed` value is governed by Metric Contract Creation.
+A business concept's identity is `entity.property`; concepts are `value` or `reference` kind, and
+`identity_bearing` or `descriptive`. `active` concepts are immutable (Invariant III).
 
-**Governing source.** Business Vocabulary; The Contract Grammar.
+**Governing source.** The Business Concept Registry.
 
 ## Prerequisites
 
-| Precondition | Why it is required |
+| Precondition | Why |
 |---|---|
-| Cognito authenticated session for a platform actor | Vocabulary mutations are `@PlatformOnly()` JWT-guarded |
-| Standard source data is loaded in MongoDB or available as an extract | OAGIS lives in `seed_oagis_components`; ISO 20022 lives in `seed_iso20022`; XBRL lives in `seed_xbrl_gaap`; new tier-2 standards arrive as JSON or XSD extracts |
-| BF and BO endpoints are reachable | `GET /api/business-fields?limit=1` and `GET /api/business-objects?limit=1` return 200 |
-| AI verification surface is reachable | The certification and approval gates call AI verification; absence of the surface forces unverified-status admission with explicit drift recording |
-| The five shared dimension list is current | `company_code`, `currency_code`, `language_code`, `country_code`, `unit_of_measure` are the only BFs admissible without a BO prefix (D294 in the v2 SOP shorthand; the policy is recorded in DEC-f66378's body) |
+| Cognito-authenticated platform actor | Registry mutations are `@PlatformOnly()` JWT-guarded |
+| The target Entity exists (or is being authored in the same act) | A Business Concept is `entity.property`; the property attaches to a governed Entity |
+| Source citation(s) for the concept | Standards/source are **evidence** (no-fabrication rule), never identity authority — a concept carries structured citations |
+| bc-core BCF surface reachable | The panel run and confirm endpoints are in-process in bc-core (DEC-ffee4e); no external bc-ai service |
 
-The procedure is the same regardless of caller. Bulk programmatic loads call the same endpoints the bc-admin UI calls; the gates are enforced at the service layer, not at the UI.
+**Governing source.** The Business Concept Registry §9; AI Gates.
 
-**Governing source.** Business Vocabulary; AI Gates.
+## The Two Maker Routes
 
-## BO Derivation Rules from a Standard
+A concept candidate is shaped by exactly one of two makers; both produce a recommendation artifact in
+`bcf.panel_output_record` that the **same** confirm chain consumes.
 
-The OAGIS source structures the platform's primary tier. Each OAGIS Noun (Invoice, PurchaseOrder, etc.) carries one or more Components (Header, Line, SubLine, Schedule). The platform's BO derivation maps one Component to one BO, not one Noun to one BO.
-
-The mapping rules are explicit:
-
-| Rule | Form | Example |
+| Route | When | What runs |
 |---|---|---|
-| One Component is one BO | A multi-component Noun produces multiple BOs, one per Component | `invoice-header` becomes BO `invoice_hdr`; `invoice-line` becomes BO `invoice_line` |
-| Single-component Nouns produce one BO without an infix | The Noun slug is the BO name | `party-master` becomes BO `party_master` |
-| Multi-component Nouns use an infix | `hdr` for header, `line` for line, `sub` for sub-line | `purchase_order_hdr`, `purchase_order_line` |
-| BO display name is the OAGIS Component title | Verbatim from the standard | "Purchase Order Header" |
-| BO definition is the OAGIS Component description | Verbatim from the standard; no `inferBO()` heuristics | From `comp.description` |
-| BO `source_standard` is `oagis` | Always for OAGIS-derived BOs | |
-| BO `standard_ref` is the Noun slug | The full provenance | `purchase-order` |
-| BO `industry_code` is `universal` unless domain-specific | OAGIS Nouns are cross-industry by default | |
-| BO `function_code` and `subfunction_code` come from the Noun's domain mapping | Remapped to BareCount's master taxonomy | |
-| BO `tier_code` is `basic` by default | `derived` only when the Noun description names a derivation source | |
-| Header-to-Line relations are `composes` edges in `business_object_relation` | Metadata only; cross-BO joins are handled by metric contracts that bind multiple CCs | |
+| **AI panel (B6)** | Default suggestion / placement assistance | `POST /api/bcf/registry-authoring-runs` — the in-process Maker / Checker / Moderator panel (roster calibration-locked by DEC-ffee4e). Produces an AI-consensus recommendation. Historically the panel path locks a new concept to `kind=value` + `descriptive`. |
+| **Operator-direct** | Authoring **identity-bearing** value concepts or **reference** concepts (which the panel path does not mint) | No LLM runs — the **operator is the maker**. The artifact carries `provenanceKind: 'operator-direct'`. It lives in the same `panel_output_record` table but must not be read as a panel run. |
 
-The one-Component-to-one-BO rule has four reasons. ERP source systems store headers and lines in separate tables (SAP `VBRK` and `VBRP`); one canonical contract maps one source table to one BO. Header-level metrics (Invoice Count) and line-level metrics (Average Line Amount) compute at different grains; separate BOs preserve grain boundaries. OAGIS Nouns can carry multiple Components; flattening them produces oversized objects with mixed grain. Metric contracts that need both header and line data bind to both canonical contracts; no special join logic is needed.
+The panel is a **concept-placement assistant, not a duplicate checker** — identity uniqueness is guaranteed
+by the registry's *structure* (`UNIQUE(entity_id, property_id)` + forced-distinct entity definitions), not
+by the panel. The panel assists framing within a governed surface; it does not own identity.
 
-**Governing source.** Business Vocabulary.
+**Governing source.** The Business Concept Registry §10; AI Gates; DEC-ffee4e.
 
-## BF Derivation Rules from a Standard
+## The Confirm-and-Write Gate
 
-Each OAGIS Component carries scalar and complex fields. The platform's BF derivation admits scalar fields only and assigns BO-scoped names.
+A recommendation does not write to the registry by itself. High-consequence acts (e.g. `createCharacteristic`)
+park as `awaiting_operator_confirm`. The operator completes the act:
 
-The naming rules are explicit per DEC-f66378:
+```
+POST /api/bcf/registry-shape-certifications/confirm
+{ panelRunUid, subjectKind, actionCode, rationale }   // rationale ≥ 40 chars
+```
 
-| Rule | Form | Example |
-|---|---|---|
-| BF name is `{noun}_{infix}_{oagis_field_name}` | BO-scoped, globally unique | `invoice_hdr_total_amount` |
-| Single-component Nouns omit the infix | `{noun}_{oagis_field_name}` | `party_master_tax_identifier` |
-| Maximum length is 64 characters | DTO regex constraint; abbreviate the noun slug if exceeded | `haz_mat_ship_doc_hdr_...` |
-| ISO 11179 decomposition splits BF into object_class plus property | `object_class` is the BO name; `property` is the OAGIS field slug | `object_class=invoice_hdr`, `property=total_amount` |
+This runs `FrameworkApprovalService.confirmRegistryShapeCertification` → the registry-authoring
+post-confirm executor → the F3 writer (`RegistryAuthoringService`), which performs the actual
+`concept_registry` write. So the chain is: **recommendation → C5 certification → F3 write.** No write occurs
+without the confirm; the confirm records who authorized it and why (the ≥40-char rationale is the governed
+justification).
 
-The BO-scoped naming rule has one reason: OAGIS shares CCT (Core Component Type) field names across Nouns. `total_amount` appears in Invoice and PurchaseOrder. Without disambiguation, a metric contract that binds both BOs cannot tell which `total_amount` it is consuming. BO-scoped names eliminate the ambiguity at the platform vocabulary layer.
+**Governing source.** AI Gates; The Authority Model.
 
-The shared dimension exceptions are five and only five (D294 in the v2 SOP shorthand; the list is recorded directly in DEC-f66378's body):
+## The Authoring Actions
 
-| Shared BF | Reason for the exception |
+The registry-authoring surface supports a fixed set of actions, each a recommendation family that resolves
+through the same confirm-and-write gate:
+
+| Action | What it authors / changes |
 |---|---|
-| `company_code` | Universal grain dimension; metric evaluation requires identical company across COs |
-| `currency_code` | ISO 4217 lookup code; same meaning everywhere |
-| `language_code` | ISO 639 lookup code; same meaning everywhere |
-| `country_code` | ISO 3166 lookup code; same meaning everywhere |
-| `unit_of_measure` | UN/CEFACT lookup code; same meaning everywhere |
+| **Concept authoring** | A new Business Concept (`entity.property`), value or reference, identity-bearing or descriptive |
+| **Characteristic admission** | A new governed characteristic term (the property's characteristic half; representation terms are a closed set) — high-consequence, parks for operator confirm |
+| **Entity-version amendment** | A change to an entity that is a **supersession** (see below) |
+| **Concept-version amendment** | A governed change to a concept version |
+| **Correction** | Shape / reference / entity correction of an existing registry row (governed, not a hand-edit) |
+| **Orphan repair** | Governed repair of orphaned registry rows |
 
-A BF that the procedure considers shareable must be a universal dimension or lookup code that carries identical semantics across all BOs. A BF that could be measured, summed, or that represents a BO-specific attribute is not shareable; it is BO-scoped.
+Each action names its `subjectKind` + `actionCode` at the confirm call. Corrections and repairs are governed
+acts through the same gate — the registry is never hand-edited.
 
-The metadata rules are explicit:
+**Governing source.** The Business Concept Registry; AI Gates.
 
-| Field | Source |
+## Supersession Rule (amend vs. new entity)
+
+- Changing an entity's **identity-bearing** property set is **supersession** — a new entity (e.g. changing
+  `Inventory Position`'s identity from `(Material, Warehouse)` to `(Material, Warehouse, Batch)` changes its
+  grain).
+- Adding a **descriptive** property is **additive** — non-superseding (e.g. `Customer.loyalty_tier`).
+
+Supersession never retroactively invalidates a contract version that already references the prior concept;
+historical references stay addressable (Invariant III).
+
+**Governing source.** The Business Concept Registry §7.
+
+## What the Chain Consumes
+
+Downstream chapters reference the authored concepts — they do not re-author vocabulary:
+
+| Chapter | Consumes |
 |---|---|
-| `definition` | The OAGIS field `description`, verbatim; no `inferBF()` heuristics |
-| `data_type` | The OAGIS field `data_type` (string, number, date, etc.) |
-| `representation_term` | The OAGIS field `representation_term` (Amount, Code, Identifier, etc.) |
-| `semantic_role` | The OAGIS field `semantic_role` (identifier, measure, dimension, temporal, descriptor) |
-| `pii_classification` | Default `none`; AI PII classifier runs at certification (gate 7) |
-| `source_standard` | `oagis` for OAGIS-derived BFs |
-| `standard_ref` | `{noun_slug}/{component_slug}/{field_slug}` |
+| Observation Contract Creation | Concepts as `field_mappings[]` targets (source field → business concept); the binding is the OC's job, per-source |
+| Canonical Contract Creation | The Entity a Canonical Contract declares (`business_object_code` names an Entity under DEC-02f5a9) and its concepts in `field_selection[]` |
+| Metric Contract Creation | Concepts as formula inputs; grain as a **typed reference to a registry Entity** (MCF cannot declare an incoherent grain) |
 
-**Governing source.** Business Vocabulary; The Contract Grammar.
+**Legacy binding tables.** The `contract.business_field` / `contract.business_object` / canonical-field
+tables persist physically until the greenfield cutover (DEC-02f5a9 §6) and still carry OC/CC
+`field_selection` binding. Where an onboarding chapter names them, that is a **binding mechanic**, not a
+vocabulary identity — the identity is the registry concept authored here.
 
-## BF Certification Gate
-
-A BF moves from `draft` to `certified` when all of the following pass at `POST /api/business-fields/{id}/certify`:
-
-| Check | What is validated |
-|---|---|
-| Name | Non-null, unique, snake_case (`/^[a-z][a-z0-9_]*$/`) |
-| Definition | Non-null and not a placeholder; the gate rejects `TBD`, `TODO`, `placeholder` per the platform's no-placeholder discipline |
-| Object Class | Non-null |
-| Property | Non-null |
-| Representation Term | From the controlled vocabulary: Amount, Code, Date, DateTime, Identifier, Indicator, Name, Number, Percent, Quantity, Rate, Text |
-| Data Type | From the controlled vocabulary: string, number, integer, date, timestamp, boolean, code |
-| PII Classification | Non-null; if the candidate is `none`, the AI PII classifier at `POST /api/ai/suggest/bf-pii-classify` runs; if AI classifies the BF as PII, the BF is updated and certification is held until human confirmation |
-| Semantic Dedup | AI maker-checker-gate compares the candidate against existing certified BFs (same `object_class`, similar `property`, same `data_type`); a `red` verdict blocks certification and returns the duplicate's identifier |
-| BO-Scoped Naming | When the BF will compose into a BO, its name is BO-scoped (`{bo_prefix}_{oagis_field}`) unless it is one of the five shared dimensions |
-
-A standards-sourced BF (where `source_standard` is non-null) with all nine checks passing is auto-certified. An AI spot-check runs asynchronously per batch; the active sample rate belongs to implementation configuration or the governing SOP. A BareCount-originated BF (no standard provenance) requires explicit human review at certification.
-
-**Governing source.** Business Vocabulary; AI Gates.
-
-## BO Approval Gate
-
-A BO moves from `draft` to `approved` when all of the following pass at `POST /api/business-objects/{id}/approve`:
-
-| Check | What is validated |
-|---|---|
-| Domain taxonomy | `industry_code`, `function_code`, `subfunction_code` are all populated |
-| Minimum composition | At least one `identifier` role, one `dimension` role, one `temporal` role; at least one `is_business_key`; at least four fields total |
-| Tier validity | If `tier_code` is `derived`, at least one `derives_from` relation exists in `business_object_relation` |
-| Semantic dedup | AI maker-checker-gate compares the BO against existing approved BOs by name and definition; field-overlap dedup is disabled because OAGIS shares CCT field names across Nouns and the overlap creates false positives |
-| AI verification | The CR-BO-007 verification (entity coherence, role distribution, naming consistency, duplicate detection, domain alignment, tier validation) returns a non-red verdict |
-| All BFs certified | Every BF in the composition has `status: certified` |
-| No shared observation BFs | Every BF in the composition is BO-scoped except the five shared dimensions (D294 in the v2 SOP shorthand; the policy is recorded in DEC-f66378's body) |
-
-A non-shared BF that appears in two approved BOs fails the seventh check; the second BO is held in `draft` until the BF is renamed BO-scoped or moved to one BO only.
-
-**Governing source.** Business Vocabulary; AI Gates.
-
-## BF-to-Source-Field Alias Procedure
-
-A certified BF carries a registry of source-system aliases in `contract.business_field_alias`. The alias table answers the question: when an observation contract maps source fields to BFs, which source field name in this system corresponds to this BF?
-
-The alias procedure runs in two levels.
-
-### Level 1: Vocabulary Alias Population
-
-For a given source system (typically SAP), the procedure populates the alias table from three inputs:
-
-| Input | Provenance code | Confidence |
-|---|---|---|
-| Hardcoded SAP_PATTERNS dictionary (legacy) | `dictionary` | High; migrated from `field-mapping.service.ts` |
-| BF-driven enrichment per BO | `dictionary` | High when name plus description plus type all align; medium otherwise |
-| Standards cross-reference (where the standard publishes a SAP equivalent) | `seed` | Highest; rare because OAGIS-to-SAP cross-references are sparse |
-
-The procedure is BF-first: for each BF in a target BO, the procedure asks "what is this BF called in this source system?" rather than asking "which BF does this source field map to?" The BF-first orientation matches the demand-pull chain (metric demand drives BF resolution drives source field discovery).
-
-A row in `contract.business_field_alias` carries `(field_id, system_type_code, source_field_name, provenance_code)` and is unique on `(system_type_code, source_field_name)` and on `(field_id, system_type_code)`.
-
-### Level 2: OC-Level Mapping with Backflow
-
-When an observation contract is created (Observation Contract Creation), each confirmed `field_mappings[]` entry triggers a write back to `contract.business_field_alias` with `provenance_code: confirmed`. The backflow (D299 in the v2 SOP shorthand for the alias-table backflow rule) enriches Level 1 for future observation contracts that reference the same BF in the same system. Confirmation is the trust upgrade; aliases that originate from the OC layer carry stronger provenance than `dictionary` aliases.
-
-The alias table is informational. The observation contract's `field_mappings[]` is the contractual binding; the alias table is the AI's hint database for the suggestion engine.
-
-**Governing source.** Business Vocabulary; Observation Contract Creation; Sources and the Catalog.
-
-## Track A: Manual Plus AI
-
-The bc-admin UI at `/business-definitions/register` presents the OAGIS seed by domain. The actor browses Nouns, expands a Noun to view its Components and fields, toggles fields on or off (excluding integration fields like Extension, MetadataReference, SecurityClassification, ActionCode), and clicks Create BFs plus BO. The service auto-creates BFs from the selected fields, runs auto-certification on the standards-sourced batch, auto-creates the BO with the inferred composition, runs AI verification (CR-BO-007), and presents the verdict for human approval.
-
-The actor reviews the AI verdict, fixes any red findings, re-verifies, and approves. After approval, the actor optionally adds `business_object_relation` rows for `composes` (parent-to-child), `relates_to` (peer association), and `derives_from` (derived-to-basic).
-
-**Governing source.** Business Vocabulary.
-
-## Track B: Programmatic
-
-The same endpoints serve agent-driven onboarding. The bulk BF endpoint (`POST /api/business-fields/bulk`) and the bulk certification endpoint (`POST /api/business-fields/bulk-certify`) honor the D268 one-then-many discipline: the first item in the batch passes the full certification gate; if it fails, the entire batch is rejected. Subsequent items are admitted in sequence with per-item dedup checks.
-
-Bulk BO creation (`POST /api/business-objects/bulk`) honors the same discipline. Field references inside the BO composition use `field_name` rather than `field_id`; the service resolves the name to the certified BF identifier via the unique index. A reference to a BF that does not exist or is not certified rejects the BO creation with an explicit error naming the missing BF.
-
-The two tracks call the same service layer (`BusinessDefinitionService`); the gates are enforced at the service, not at the UI. There are no service-layer shortcuts that bypass the gates for programmatic callers.
-
-**Governing source.** Business Vocabulary; AI Gates.
+**Governing source.** Observation Contract Creation; Canonical Contract Creation; Metric Contract Creation.
 
 ## Quality Gates
 
-The procedure enforces three classes of gate.
-
-| Class | Where enforced | What it checks |
+| Gate | Where | What it enforces |
 |---|---|---|
-| BF certification (CR-QG-001) | `POST /api/business-fields/{id}/certify` | Nine checks listed above |
-| BO approval (CR-QG-002) | `POST /api/business-objects/{id}/approve` | Seven checks listed above |
-| Alias validation (AL-QG-001) | `PATCH /api/business-fields/{id}/aliases` or the bulk-alias surface | BF exists, system type valid, source field exists, no duplicate at system level, no duplicate at BF level, provenance valid |
+| Structural identity | Registry schema | `UNIQUE(entity_id, property_id)`; globally-unique entity IDs; acyclic identity-reference graph (a composite entity's identity references form a DAG) |
+| Placement (advisory) | AI panel (B6) | Existing entity vs new? existing property vs new? synonym of a governed term? disciplined definition? evidence (not authority) for the source reference? |
+| Operator confirm | `registry-shape-certifications/confirm` | High-consequence acts require an operator confirm with a ≥40-char rationale before the F3 write |
 
-A row that lands in any of the three tables (`business_field`, `business_object`, `business_field_alias`) without passing the corresponding gate is in the table but is not the platform's authoritative content; the audit substrate flags it for review.
+The irreversible-uniqueness guarantee is **structural**, not detective — a duplicate cannot be created, so
+there is no after-the-fact cleanup of a duplicate that reached `active`.
 
-**Governing source.** Business Vocabulary; AI Gates.
-
-## Boundary with Other Onboarding Chapters
-
-| Chapter | Consumes from this chapter | Does not consume |
-|---|---|---|
-| Canonical Field Seeding | Nothing directly; canonical fields are metric-vocabulary, not source-vocabulary | The BF taxonomy; CFs are the metric-side counterpart |
-| Source and Admission Contract Creation | Nothing directly; SC and AC operate on the source catalog, not on the BF or BO registry | |
-| Observation Contract Creation | Certified BFs (for `field_mappings[].business_field_code`); approved BOs (for `business_object_code` selection); the alias table (for AI-assisted mapping suggestions) | The source catalog itself; OC reads it via SC references |
-| Canonical Contract Creation | Approved BOs (for `business_object_code` selection); certified BFs (via BO composition); the BO `tier_code` (to set evaluation tier) | The alias table; CC operates on BO composition only |
-| Metric Contract Creation | Computed output BFs (registered by MC creation with `source_standard: computed`); cited BFs through CC field selection | The alias table; MC operates on CF names, not BF names |
-| Multi-Standard Onboarding | The same procedure with tier-2 and tier-3 source standards (ISO 20022, XBRL, IFRS, BC Standard) | OAGIS-specific Noun-to-BO rules; tier-2 standards have their own structural mapping rules |
-
-**Governing source.** Canonical Field Seeding; Observation Contract Creation; Canonical Contract Creation; Metric Contract Creation; Multi-Standard Onboarding.
+**Governing source.** The Business Concept Registry §6, §10; AI Gates.
 
 ## Drift Inventory
 
 | Drift item | Form |
 |---|---|
-| `inferBF` heuristics deprecated | Earlier versions of the service used `inferBF()` to synthesize BF names from field descriptions when the OAGIS metadata was sparse. The heuristic produced circular definitions and wrong amount-field assignments in historical data. The procedure forbids it; cleanup of historical rows is queued |
-| `business_field.source_aliases` JSONB column dropped | The platform moved aliases from a JSONB column on `business_field` to the dedicated `contract.business_field_alias` table (D299 in the v2 SOP shorthand). The drop is complete in the schema; any code or query that still references the JSONB column is failing closed |
-| Auto-certification spot-check is asynchronous | The AI spot-check fires after the bulk-certify call returns. A spot-check that flags a previously auto-certified BF results in a follow-up review row, not an automatic decertification |
-| Tier-2 standards loading is partial | OAGIS is loaded; ISO 20022 is partially loaded (the currently loaded ISO 20022 subset); XBRL US GAAP is loaded as reference for metric naming validation but no BFs are derived from it; IFRS and UN/CEFACT have not been onboarded as BF-and-BO sources. The procedure supports them; the data has not been loaded |
-| Domain coverage is incomplete | Domain completion varies by function; the audit substrate reports per-domain BO and BF counts on demand |
+| Panel path kind/identity lock | The B6 panel path historically minted only `value` + `descriptive` concepts; identity-bearing and reference concepts are authored through the operator-direct surface (paired with the extended S1 validator) |
+| Legacy BF/BO/CF tables persist | The `contract.business_field` / `business_object` / canonical-field tables are physically present until the greenfield cutover (DEC-02f5a9 §6); they serve binding, not identity |
+| Predecessor chapter | This chapter previously documented BF/BO onboarding (standards-derivation, BO-scoped naming, the five shared dimensions, the BF-to-source-field alias table). That ceremony is superseded; its record remains in the ADR registry and the archived v2 SOPs |
 
-**Governing source.** Business Vocabulary; Audit and Activity Logging.
+**Governing source.** The Business Concept Registry; Audit and Activity Logging.
 
 ## Governing Decisions
 
 | Decision | Scope in this chapter |
 |---|---|
-| DEC-f66378 | Establishes BO-scoped BF naming and the five shared dimension exceptions; absorbs the policy that BFs and BOs are sourced from authoritative standards rather than from metric formulas (D290 in the v2 SOP shorthand), the BO-scoping rule itself (D292), and the shared dimension list (D294) |
+| DEC-02f5a9 | Adopts the Business Concept Registry; supersedes the BO/BF/CF model this chapter formerly taught |
+| DEC-61850f | Business Concept Registry adoption |
+| DEC-ffee4e | BCF panels run in-process in bc-core; the maker/checker/moderator roster is calibration-locked |
 
-The `business_field_alias` table (D299) and the standards-sourced provenance discipline (D290) are governance points referenced in the v2 SOP without standalone ADR files; their record lives in the SOP plus this chapter. New ADR files for these may be filed if the policies are restated outside the v2 SOP.
+The superseded DEC-f66378 (BO-scoped BF naming, five shared dimensions) is retained in the ADR registry for
+historical continuity.
 
 **Governing source.** Decisions: ADR Registry.
 
 ## References
 
+- The BareCount Business Concept Registry (`implementation/business-concept-registry.md`) — the model
 - Business Vocabulary
+- The Object Model
 - The Contract Grammar
-- Sources and the Catalog
-- Source Registration
 - AI Gates
 - AI Trust and Verification
-- Canonical Field Seeding
 - Observation Contract Creation
 - Canonical Contract Creation
 - Metric Contract Creation
-- Multi-Standard Onboarding
 - Data Model and Schema
-- DEC-f66378: BO-scoped BF naming and shared dimension list
-- legacy-v2-archive/docs/sops/bf-bo-onboarding-sop.md (predecessor SOP)
-- legacy-v2-archive/docs/sops/bf-sf-alias-sop.md (predecessor SOP)
-- outline.md §4.6: Onboarding
-
-
-
-
-
+- DEC-02f5a9: Business Concept Registry
+- DEC-61850f: Business Concept Registry adoption
+- DEC-ffee4e: In-process BCF panels; calibration-locked roster
