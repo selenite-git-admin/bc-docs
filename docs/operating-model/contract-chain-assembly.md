@@ -27,6 +27,8 @@ word_target: 4000
 
 # Contract Chain Assembly
 
+> **Bridging note (BCF).** Where this chapter uses *Business Field*, *Business Object*, or *Canonical Field*, the semantic-identity role those primitives served is superseded by the **Business Concept Framework (BCF)** — the `concept_registry` schema (Entity / Characteristic / Business Concept), authored through governed ceremonies (AI panel + operator-confirm certification + single-writer). The legacy `contract.business_field` / `contract.business_object` / canonical-field tables remain in use for OC/CC `field_selection` binding, so the mechanics described here stay valid for that purpose; for semantic identity — "what does this field mean?" — consult the BCF registry. Governing ADRs: DEC-02f5a9 (greenfield), DEC-61850f (adoption). See Business Concept Registry.
+
 ## Scope
 
 This chapter defines how the six active contract families compose into the governed chain that connects an observed Source Field to a trusted metric value and an associated action. It defines each link's assembly role, the value identifier each link passes forward, the cardinality rules for multi-source canonical evaluation and multi-canonical metric binding, and the assembly-level integrity rules that determine whether the chain is complete.

@@ -53,9 +53,9 @@ The procedural-and-gated discipline is the section's defining trait. A reader wh
 
 **Governing source.** outline.md §4.6; The Authority Model.
 
-## The Fifteen Chapters That Follow
+## The Chapters That Follow
 
-Onboarding has sixteen chapters: this overview plus the fifteen chapters that follow. The grouping below is for navigation; section order is fixed by the outline and by chapter dependencies.
+Onboarding currently has **thirteen** live chapters: this overview plus twelve that follow. (Five metric-side SOPs — Metric Contract Creation, Metric Registration, MC Chain Integrity, Metric Seed Catalog Management, and Data Seeding and Build Order — have been moved to `docs/archive/onboarding/`; the live metric procedure is the reference playbook **Metric workstream**, and the current cross-cutting index of platform workflows is the **[Platform-Side Workflow Catalog](../reference/platform-workflow-catalog.md)**.) The grouping below is for navigation; entries for the archived chapters remain pending a full refresh of this section.
 
 | Group | Chapters | What the group covers |
 |---|---|---|
