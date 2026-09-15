@@ -2,7 +2,8 @@
 uid: DEC-2c79c8
 title: "Full per-tenant SQL isolation — all boundary + evidence tables move to tenant schemas"
 description: "All 12 boundary tables and 3 evidence tables move from shared schema into per-tenant t_{slug} schemas"
-status: implemented
+status: superseded
+superseded_by: DEC-7df811
 subdomain: tenant-topology
 focus: schema
 date: 2026-03-17
@@ -11,6 +12,10 @@ domain: database
 authority: authoritative
 migrated_from: legacy v2 archive
 ---
+
+> **Superseded by DEC-7df811 (2026-09-15).** The running system isolates tenant
+> data by database-per-tenant (`tbc_<slug>`), not by schema-per-tenant
+> (`t_<slug>`) as decided here. See ADR-7df811 for the current isolation model.
 
 
 # Full per-tenant SQL isolation — all boundary + evidence tables move to tenant schemas
