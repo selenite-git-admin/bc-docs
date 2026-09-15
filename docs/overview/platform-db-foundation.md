@@ -7,7 +7,7 @@ authority: authoritative
 depends_on:
   - platform-overview
 governing_sources:
-  - "bc-core: docs/design/platform-db-foundation-requirements.md (the program requirements / blueprint)"
+  - "The program requirements / blueprint — docs/implementation/platform-db-foundation-requirements.md"
   - "bc-db: the platform database spine and machinery (DB as a product)"
   - Database Change Protocol
 governing_adrs:
@@ -66,21 +66,20 @@ W1 built and proved, on the pinned engine, in disposable containers and then on 
 
 ## Governance
 
-- The program runs under an **approval-only operating model** (DEC-0e4547): the operator approves; design and implementation proceed as independently reviewable units, each accepted by an **independent auditor** at an exact commit, and — where a change touches a database — applied only under the **Database Change Protocol**.
-- **Four operator-only live gates** remain in force: (1) live capture authorization, (2) DDL apply / live adoption, (3) scope/golden/baseline ratification, (4) promotion beyond local development. Gate (4) has not been exercised.
+- The program runs under an **approval-only operating model** (DEC-0e4547): the operator sets high-level direction, and the **builder (Claude) and independent auditor (Codex) hold full architectural responsibility**. Design and delivery proceed as **independently reviewable units** that do not need per-unit operator sign-off — each accepted by the auditor at an exact commit, and reviewed record/documentation and code units merge under the operator's **standing authorization** with green CI. Escalation to the operator is limited to a **genuine unresolved design dispute or Gate ④**; every change touching a database is applied only under the **Database Change Protocol**.
+- **Four live gates.** Under the operator's standing authorization, gates ① live capture, ② DDL apply / live adoption, and ③ scope/golden/baseline ratification are **pre-approved within their recorded safeguards** (evidence conditions, machine-evidenced preflight, fail-closed); **only gate ④ — promotion beyond local development — requires direct operator authorization.** Gate ④ has not been exercised.
 - Every reviewed artifact and its evidence are held in **byte-immutable custody** in the external audit mirror, independently re-verifiable.
 
 ## Where things live
 
 - **Spine + machinery, and the authoritative technical record:** the `bc-db` repository.
-- **Program requirements / blueprint:** `bc-core` — `docs/design/platform-db-foundation-requirements.md`.
+- **Program requirements / blueprint:** bc-docs — `docs/implementation/platform-db-foundation-requirements.md`.
 - **Decisions:** the ADR Registry (Appendix F), UIDs listed in `governing_adrs` above.
 - **Reviewed-unit evidence and custody:** the external audit mirror.
 
-## Open decisions and boundary
+## Later waves and what gates them
 
-Product decisions and budget gate the **start** of the relevant later waves; each of those units still requires its own design, implementation, evidence and independent acceptance before it can be considered done. What is outstanding:
+The later waves (W2–W5) are not started; each still requires its own design, implementation, evidence and independent acceptance. Under the operator's standing authorization the builder and independent auditor hold **full architectural responsibility**, so the material decisions those waves turn on are resolved as **reviewable proposals in the autonomous builder–auditor design process**, not held for per-unit operator sign-off:
 
-- **Product decisions:** tenant-DB source-of-truth and BYO-DB posture, curated-content escrow, the recovery objective, data residency, and tenant hosting preference.
-- **Budget:** cloud capture/adoption (W1.6) and cloud durability (W4).
-- **Gate (4):** any promotion beyond local development is operator-only.
+- **Resolved in the design process:** tenant-DB source of truth and BYO-DB posture (D5), hosting-by-environment (D4), curated-content escrow (D9), recovery objectives (D10), data residency (D11), and tenant hosting preference. Escalation to the operator is limited to a genuine unresolved design dispute.
+- **Directly the operator's:** the **budget** behind any cloud realization (W1.6 capture/adoption, W4 durability), and **Gate ④** — any promotion beyond local development.
