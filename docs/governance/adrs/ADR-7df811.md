@@ -2,7 +2,7 @@
 uid: DEC-7df811
 title: "Tenant onboarding state model and isolation model"
 description: "Fixes the tenant subscription, onboarding-record and status lifecycles and the database-per-tenant isolation model as an exact-head builder-auditor decision; defers the tenant schema count to live measurement."
-status: proposed
+status: decided
 subdomain: tenant-topology
 focus: state-model-and-isolation
 date: 2026-09-15
