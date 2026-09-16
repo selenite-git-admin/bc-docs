@@ -2,7 +2,7 @@
 uid: DEC-5eed17
 title: "Master-data seeding through the spine"
 description: "Deterministic master data (e.g. the Free pricing package) is seeded by idempotent forward migrations on the same governed spine — not a separate mechanism, an app-startup seed, or a direct insert — so build == dump == live holds for data-of-record."
-status: proposed
+status: decided
 subdomain: spine
 focus: master-data-seed
 date: 2026-09-16
