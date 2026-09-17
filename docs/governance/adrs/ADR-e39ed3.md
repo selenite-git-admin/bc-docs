@@ -55,7 +55,7 @@ Adding a domain is a registry amendment; there is no catch-all. Security groups 
 
 ### 3. Role registry (closed, per domain)
 
-Roles are drawn from a closed, versioned allow-list, e.g. `pg`, `sg`, `client-sg`, `key`, `master`, `nat`, `igw`, `egress`, `role`, `exec-role`, `task-role`, `project`, `logs`, `bucket`, `fn`, `cluster`, `service`, `tg`. A new role is a registry amendment. This keeps `-sg` from drifting into `-security-group`, and so on.
+Roles are drawn from a **closed, versioned, machine-readable registry** — the implementation contract the Aspect loads, not prose examples. The registry is `reference/schemas/aws-naming-registry.v1.json` (versioned by filename; amendments bump the version). It defines a `_common` role set (`role`, `exec-role`, `task-role`, `logs`, `key`, `sg`, `client-sg`) plus per-domain roles (e.g. `dbs`: `pg`, `master`, `subnet-group`, `param-group`; `dbap`/`ntw`: `project`, `nat`, `igw`, `egress`, `public`, `nat-eip`, `public-rt`, `egress-rt`, `flow-log`). Adding a role is a registry-version amendment; there is no free-form role. This keeps `-sg` from drifting into `-security-group`.
 
 ### 4. Tenant identity — immutable id in names, slug in tags
 
@@ -72,19 +72,26 @@ Some namespaces are global across all AWS accounts, so region alone is insuffici
 - **S3 buckets** append the account id: `{base}-{role}-{account}` (≤ 63 chars, no uppercase or underscore).
 - **Cognito hosted-UI domain prefixes** append the account id, or use a custom domain.
 
-### 7. Enforcement — a CDK Aspect at synth time (fail-closed)
+### 7. Named-resource class vs non-nameable resources
 
-A guardrail Aspect (in the shared guardrails package) enforces, and fails synth on violation:
+Not every AWS resource has a settable physical name, so "every physical name follows the format" cannot be the rule. The registry (§3 file) partitions resource types into two classes and the Aspect treats each accordingly:
 
-1. Every physical name begins with its stack base; **unresolved CDK tokens fail closed** (concrete names are required, per the no-auto-id rule).
+- **Nameable** — types with a configurable physical-name property; the property MUST equal the convention name. The registry maps each type to its property: `AWS::RDS::DBInstance`→`DBInstanceIdentifier`, `AWS::EC2::SecurityGroup`→`GroupName`, `AWS::IAM::Role`→`RoleName`, `AWS::S3::Bucket`→`BucketName`, `AWS::Lambda::Function`→`FunctionName`, `AWS::CodeBuild::Project`→`Name`, `AWS::SecretsManager::Secret`→`Name`, `AWS::KMS::Alias`→`AliasName`, `AWS::Logs::LogGroup`→`LogGroupName`, `AWS::ElasticLoadBalancingV2::TargetGroup`→`Name`, … .
+- **Non-nameable** — types CloudFormation names itself with no useful configurable property (`AWS::KMS::Key`, `AWS::EC2::VPC`/`Subnet`/`RouteTable`/`InternetGateway`/`NatGateway`/`EIP`/`FlowLog`, `AWS::IAM::Policy`, subnet/route associations, …). These are identified by their **`Name` tag**, which MUST equal the convention name, and by their membership in the stack. A **KMS key** is the canonical case: the key has no name, so it is identified by its companion **alias** `alias/{base}-key` (a nameable resource) plus a `Name` tag `{base}-key` on the key itself.
+
+### 8. Enforcement — a CDK Aspect at synth time (fail-closed)
+
+A guardrail Aspect (in the shared guardrails package) loads the §3 registry and enforces, failing synth on violation:
+
+1. For a **nameable** type, its mapped physical-name property equals the convention name (begins with the stack base; `{dom}`/`{role}`/`{tenant}` valid). For a **non-nameable** type, its `Name` tag equals the convention name. **Unresolved CDK tokens fail closed** (concrete names are required, per the no-auto-id rule).
 2. The `{region}` segment equals the short code of the stack's deploy region.
-3. `{dom}` and `{role}` are members of their registries; `{tenant}` matches `^[a-z0-9]{1,12}$`.
-4. The name fits the target service's length limit (RDS identifier ≤ 63, IAM role ≤ 64, S3 ≤ 63, ELB/target-group ≤ 32, KMS alias ≤ 256, …).
-5. All required tags are present.
+3. `{dom}` and `{role}` are members of the registry; `{tenant}` matches `^[a-z0-9]{1,12}$`.
+4. The name fits the target service's length limit (from the registry's `lengthLimits`: RDS identifier ≤ 63, IAM role ≤ 64, S3 ≤ 63, ELB/target-group ≤ 32, KMS alias ≤ 256, …).
+5. All required tags are present; global-namespace types (registry `globalNamespaceExceptions`: S3, Cognito domain) additionally carry the account suffix.
 
-The Aspect maps each resource type to its physical-name property (`bucketName`, `roleName`, `functionName`, …).
+The type→name-property map, the non-nameable set, the length limits, and the exception map all live in the versioned registry file, so the Aspect is data-driven, not hardcoded.
 
-### 8. Standing rules from the adversarial review
+### 9. Standing rules from the adversarial review
 
 - **Development secrets** are created with force-delete (no recovery window), so a dev rebuild can reuse the deterministic secret name immediately.
 - **Tenant-facing load balancers / target groups** (32-char cap) do not put the tenant id in the resource name; they use one shared load balancer with host/path routing (tenant in the rule) or a hashed token.
@@ -93,7 +100,7 @@ The Aspect maps each resource type to its physical-name property (`bucketName`, 
 
 ## Worked example (region ap-south-1 = `aps1`)
 
-- Database stack `bcp-dev-aps1-dbs` → `bcp-dev-aps1-dbs-pg`, `bcp-dev-aps1-dbs-sg`, `bcp-dev-aps1-dbs-client-sg`, `alias/bcp-dev-aps1-dbs-key`, `bcp-dev-aps1-dbs-master`.
+- Database stack `bcp-dev-aps1-dbs` → RDS instance `bcp-dev-aps1-dbs-pg`, SGs `bcp-dev-aps1-dbs-sg` / `bcp-dev-aps1-dbs-client-sg`, secret `bcp-dev-aps1-dbs-master`. The **KMS alias** (nameable) is `alias/bcp-dev-aps1-dbs-key`; the **KMS key** (non-nameable) carries `Name = bcp-dev-aps1-dbs-key` and is identified by that alias — the Aspect checks the alias name and the key's Name tag, not a key name.
 - Schema-apply stack `bcp-dev-aps1-dbap` → `bcp-dev-aps1-dbap-project`, `bcp-dev-aps1-dbap-nat`, `bcp-dev-aps1-dbap-egress`, `bcp-dev-aps1-dbap-role`.
 - Future tenant database → `bct-dev-aps1-dbs-{tenantid}-pg`, `bct-dev-aps1-dbs-{tenantid}-sg`, with `tenant-slug` in tags.
 
