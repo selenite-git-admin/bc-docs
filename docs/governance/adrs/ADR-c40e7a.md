@@ -94,4 +94,4 @@ Every Layer-B unit states a cost ceiling and a teardown plan; the numbers below 
 1. The DB foundation becomes reproducible on a managed instance by the same spine that CI proves — `build == dump == live` extends from local/disposable to RDS.
 2. W1.6 is realized and the W2 cloud exit items (#4 credentials, #6 recovery drill) are completed on real infrastructure; W4 durability is opened with explicit objectives.
 3. The rejected Aurora option is removed from bc-infra, ending the dormant-construct drift (aligns with DEC-1918d0).
-4. No resource is created by this brief; every provisioning step is confirm-first and production remains operator-only (Gate-④).
+4. No resource is created by this brief; non-production provisioning proceeds under the standing conditions (auditor-reviewed unit + stated cost ceiling + teardown plan), and production remains operator-only (Gate-④).
