@@ -152,7 +152,6 @@
     "properties": {
       "AWS::RDS::DBInstance": "DBInstanceIdentifier",
       "AWS::RDS::DBSubnetGroup": "DBSubnetGroupName",
-      "AWS::RDS::DBParameterGroup": "DBParameterGroupName",
       "AWS::EC2::SecurityGroup": "GroupName",
       "AWS::IAM::Role": "RoleName",
       "AWS::S3::Bucket": "BucketName",
@@ -179,7 +178,8 @@
       "AWS::EC2::InternetGateway",
       "AWS::EC2::NatGateway",
       "AWS::EC2::EIP",
-      "AWS::EC2::FlowLog"
+      "AWS::EC2::FlowLog",
+      "AWS::RDS::DBParameterGroup"
     ],
     "identityMapping": {
       "AWS::KMS::Key": "identified by its companion AWS::KMS::Alias (alias/{base}-key, classA) plus a Name tag {base}-key"
