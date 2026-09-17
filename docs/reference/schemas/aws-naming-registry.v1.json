@@ -223,5 +223,9 @@
     "tenantNotInLoadBalancerName": true,
     "tenantIdImmutableSlugInTagsOnly": true,
     "explicitPhysicalNamesNoCdkAutoIds": "classA only"
-  }
+  },
+  "tagExempt": [
+    "AWS::KMS::Alias"
+  ],
+  "$tagExempt": "nameable (or taggable-class) types that do NOT support resource tags — the Aspect checks their name but skips the required-tags check. KMS aliases cannot carry tags."
 }

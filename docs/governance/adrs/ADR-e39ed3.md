@@ -88,7 +88,7 @@ A guardrail Aspect (in the shared guardrails package) loads the §3 registry and
 2. The `{region}` segment equals the short code of the stack's deploy region.
 3. `{dom}` and `{role}` are members of the registry; `{tenant}` matches `^[a-z0-9]{1,12}$`.
 4. The name fits the target service's length limit (from the registry's `lengthLimits`: RDS identifier ≤ 63, IAM role ≤ 64, S3 ≤ 63, ELB/target-group ≤ 32, KMS alias ≤ 256, Cognito domain ≤ 63, …).
-5. Class A and B resources carry all required tags; class C is exempt (not taggable). Global-namespace class-A types (registry `globalNamespaceExceptions`: S3 bucket, Cognito `UserPoolDomain`) additionally append the account suffix.
+5. Class A and B resources carry all required tags; class C is exempt (not taggable), as are registry `tagExempt` types (e.g. `AWS::KMS::Alias`, which is nameable but cannot carry tags — name-checked, tag-skipped). Global-namespace class-A types (registry `globalNamespaceExceptions`: S3 bucket, Cognito `UserPoolDomain`) additionally append the account suffix.
 
 The type→name-property map, the non-nameable set, the length limits, and the exception map all live in the versioned registry file, so the Aspect is data-driven, not hardcoded.
 
