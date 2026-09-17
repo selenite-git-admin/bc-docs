@@ -3,8 +3,15 @@
   "version": "1",
   "governingAdr": "DEC-e39ed3",
   "format": "{scope}-{stage}-{region}-{dom}[-{tenant}]-{role}",
-  "scopes": ["bcp", "bct"],
-  "stages": ["dev", "stg", "prod"],
+  "scopes": [
+    "bcp",
+    "bct"
+  ],
+  "stages": [
+    "dev",
+    "stg",
+    "prod"
+  ],
   "regionShort": {
     "ap-south-1": "aps1",
     "us-east-1": "use1",
@@ -15,37 +22,136 @@
     "ap-southeast-2": "apse2",
     "ap-northeast-1": "apne1"
   },
-  "domains": ["ntw", "aut", "dbs", "dbap", "sto", "cmp", "cch", "api", "msg", "evt", "dns", "cdn", "sct", "reg", "waf", "cer", "obs"],
+  "domains": [
+    "ntw",
+    "aut",
+    "dbs",
+    "dbap",
+    "sto",
+    "cmp",
+    "cch",
+    "api",
+    "msg",
+    "evt",
+    "dns",
+    "cdn",
+    "sct",
+    "reg",
+    "waf",
+    "cer",
+    "obs"
+  ],
   "tenantIdPattern": "^[a-z0-9]{1,12}$",
-  "requiredTags": ["project", "track", "env", "unit", "Name"],
+  "requiredTags": [
+    "project",
+    "track",
+    "env",
+    "unit",
+    "Name"
+  ],
   "roles": {
-    "_common": ["role", "exec-role", "task-role", "logs", "key", "sg", "client-sg"],
-    "ntw": ["vpc", "igw", "nat", "nat-eip", "public", "egress", "private", "public-rt", "egress-rt", "private-rt", "flow-log"],
-    "aut": ["pool", "client", "domain"],
-    "dbs": ["pg", "master", "subnet-group", "param-group"],
-    "dbap": ["project", "nat", "igw", "nat-eip", "public", "egress", "public-rt", "egress-rt"],
-    "sto": ["bucket"],
-    "cmp": ["cluster", "service", "task", "fn"],
-    "cch": ["cluster", "subnet-group"],
-    "api": ["api", "alb", "tg", "listener"],
-    "msg": ["queue", "dlq", "topic"],
-    "evt": ["bus", "rule"],
-    "dns": ["zone", "record"],
-    "cdn": ["dist"],
-    "sct": ["secret"],
-    "reg": ["repo"],
-    "waf": ["acl"],
-    "cer": ["cert"],
-    "obs": ["dashboard", "alarm"]
+    "_common": [
+      "role",
+      "exec-role",
+      "task-role",
+      "logs",
+      "key",
+      "sg",
+      "client-sg"
+    ],
+    "ntw": [
+      "vpc",
+      "igw",
+      "nat",
+      "nat-eip",
+      "public",
+      "egress",
+      "private",
+      "public-rt",
+      "egress-rt",
+      "private-rt",
+      "flow-log"
+    ],
+    "aut": [
+      "pool",
+      "client",
+      "domain"
+    ],
+    "dbs": [
+      "pg",
+      "master",
+      "subnet-group",
+      "param-group"
+    ],
+    "dbap": [
+      "project",
+      "nat",
+      "igw",
+      "nat-eip",
+      "public",
+      "egress",
+      "public-rt",
+      "egress-rt"
+    ],
+    "sto": [
+      "bucket"
+    ],
+    "cmp": [
+      "cluster",
+      "service",
+      "task",
+      "fn"
+    ],
+    "cch": [
+      "cluster",
+      "subnet-group"
+    ],
+    "api": [
+      "api",
+      "alb",
+      "tg",
+      "listener"
+    ],
+    "msg": [
+      "queue",
+      "dlq",
+      "topic"
+    ],
+    "evt": [
+      "bus",
+      "rule"
+    ],
+    "dns": [
+      "zone",
+      "record"
+    ],
+    "cdn": [
+      "dist"
+    ],
+    "sct": [
+      "secret"
+    ],
+    "reg": [
+      "repo"
+    ],
+    "waf": [
+      "acl"
+    ],
+    "cer": [
+      "cert"
+    ],
+    "obs": [
+      "dashboard",
+      "alarm"
+    ]
   },
   "unclassifiedPolicy": "fail-closed",
-  "$classes": "Every governed resource type MUST appear in exactly one of: classA_nameable, classB_nonNameableTaggable, classC_nonNameableNonTaggable. The Aspect fails synth on any encountered type that is in none (forces a registry amendment).",
+  "$classes": "Every governed resource type MUST appear in exactly one of: classA_nameable, classB_nonNameableTaggable, classC_nonNameableNonTaggable, classD_contractNamed. The Aspect fails synth on any encountered type that is in none (forces a registry amendment).",
   "classA_nameable": {
     "$comment": "has a configurable physical-name property; the property MUST equal the convention name; carries requiredTags",
     "properties": {
       "AWS::RDS::DBInstance": "DBInstanceIdentifier",
       "AWS::RDS::DBSubnetGroup": "DBSubnetGroupName",
-      "AWS::RDS::DBParameterGroup": "DBParameterGroupName",
       "AWS::EC2::SecurityGroup": "GroupName",
       "AWS::IAM::Role": "RoleName",
       "AWS::S3::Bucket": "BucketName",
@@ -72,19 +178,23 @@
       "AWS::EC2::InternetGateway",
       "AWS::EC2::NatGateway",
       "AWS::EC2::EIP",
-      "AWS::EC2::FlowLog"
+      "AWS::EC2::FlowLog",
+      "AWS::RDS::DBParameterGroup"
     ],
     "identityMapping": {
       "AWS::KMS::Key": "identified by its companion AWS::KMS::Alias (alias/{base}-key, classA) plus a Name tag {base}-key"
     }
   },
   "classC_nonNameableNonTaggable": {
-    "$comment": "structural glue: no name property AND not taggable, so neither the name check nor the tag check applies. Identity is the CDK construct path / CFN logical id within its (already-conformant) stack. Exempt from name + tag assertions.",
+    "$comment": "structural glue: no name property AND not taggable. Neither the name check nor the tag check applies. Identity is the CFN logical id within its (already-conformant) stack.",
     "types": [
       "AWS::EC2::Route",
       "AWS::EC2::VPCGatewayAttachment",
       "AWS::EC2::SubnetRouteTableAssociation",
-      "AWS::IAM::Policy"
+      "AWS::IAM::Policy",
+      "AWS::EC2::SecurityGroupIngress",
+      "AWS::SecretsManager::SecretTargetAttachment",
+      "AWS::CDK::Metadata"
     ],
     "identityRule": "identified by CDK construct path / CFN logical id within the stack; the Aspect asserts neither a physical name nor tags for these"
   },
@@ -112,5 +222,18 @@
     "tenantNotInLoadBalancerName": true,
     "tenantIdImmutableSlugInTagsOnly": true,
     "explicitPhysicalNamesNoCdkAutoIds": "classA only"
+  },
+  "tagExempt": [
+    "AWS::KMS::Alias"
+  ],
+  "$tagExempt": "nameable (or taggable-class) types that do NOT support resource tags — the Aspect checks their name but skips the required-tags check. KMS aliases cannot carry tags.",
+  "classD_contractNamed": {
+    "$comment": "taggable resources named by a SEPARATE path/domain contract, not the {scope}-{stage}-... convention. The required tags ARE enforced; the name property is validated against the contract pattern.",
+    "properties": {
+      "AWS::SSM::Parameter": "Name"
+    },
+    "patterns": {
+      "AWS::SSM::Parameter": "^/bc/(dev|stg|prod)/[a-z][a-z0-9-]*(/[a-z][a-z0-9-]*)+$"
+    }
   }
 }
