@@ -3,8 +3,15 @@
   "version": "1",
   "governingAdr": "DEC-e39ed3",
   "format": "{scope}-{stage}-{region}-{dom}[-{tenant}]-{role}",
-  "scopes": ["bcp", "bct"],
-  "stages": ["dev", "stg", "prod"],
+  "scopes": [
+    "bcp",
+    "bct"
+  ],
+  "stages": [
+    "dev",
+    "stg",
+    "prod"
+  ],
   "regionShort": {
     "ap-south-1": "aps1",
     "us-east-1": "use1",
@@ -15,28 +22,128 @@
     "ap-southeast-2": "apse2",
     "ap-northeast-1": "apne1"
   },
-  "domains": ["ntw", "aut", "dbs", "dbap", "sto", "cmp", "cch", "api", "msg", "evt", "dns", "cdn", "sct", "reg", "waf", "cer", "obs"],
+  "domains": [
+    "ntw",
+    "aut",
+    "dbs",
+    "dbap",
+    "sto",
+    "cmp",
+    "cch",
+    "api",
+    "msg",
+    "evt",
+    "dns",
+    "cdn",
+    "sct",
+    "reg",
+    "waf",
+    "cer",
+    "obs"
+  ],
   "tenantIdPattern": "^[a-z0-9]{1,12}$",
-  "requiredTags": ["project", "track", "env", "unit", "Name"],
+  "requiredTags": [
+    "project",
+    "track",
+    "env",
+    "unit",
+    "Name"
+  ],
   "roles": {
-    "_common": ["role", "exec-role", "task-role", "logs", "key", "sg", "client-sg"],
-    "ntw": ["vpc", "igw", "nat", "nat-eip", "public", "egress", "private", "public-rt", "egress-rt", "private-rt", "flow-log"],
-    "aut": ["pool", "client", "domain"],
-    "dbs": ["pg", "master", "subnet-group", "param-group"],
-    "dbap": ["project", "nat", "igw", "nat-eip", "public", "egress", "public-rt", "egress-rt"],
-    "sto": ["bucket"],
-    "cmp": ["cluster", "service", "task", "fn"],
-    "cch": ["cluster", "subnet-group"],
-    "api": ["api", "alb", "tg", "listener"],
-    "msg": ["queue", "dlq", "topic"],
-    "evt": ["bus", "rule"],
-    "dns": ["zone", "record"],
-    "cdn": ["dist"],
-    "sct": ["secret"],
-    "reg": ["repo"],
-    "waf": ["acl"],
-    "cer": ["cert"],
-    "obs": ["dashboard", "alarm"]
+    "_common": [
+      "role",
+      "exec-role",
+      "task-role",
+      "logs",
+      "key",
+      "sg",
+      "client-sg"
+    ],
+    "ntw": [
+      "vpc",
+      "igw",
+      "nat",
+      "nat-eip",
+      "public",
+      "egress",
+      "private",
+      "public-rt",
+      "egress-rt",
+      "private-rt",
+      "flow-log"
+    ],
+    "aut": [
+      "pool",
+      "client",
+      "domain"
+    ],
+    "dbs": [
+      "pg",
+      "master",
+      "subnet-group",
+      "param-group"
+    ],
+    "dbap": [
+      "project",
+      "nat",
+      "igw",
+      "nat-eip",
+      "public",
+      "egress",
+      "public-rt",
+      "egress-rt"
+    ],
+    "sto": [
+      "bucket"
+    ],
+    "cmp": [
+      "cluster",
+      "service",
+      "task",
+      "fn"
+    ],
+    "cch": [
+      "cluster",
+      "subnet-group"
+    ],
+    "api": [
+      "api",
+      "alb",
+      "tg",
+      "listener"
+    ],
+    "msg": [
+      "queue",
+      "dlq",
+      "topic"
+    ],
+    "evt": [
+      "bus",
+      "rule"
+    ],
+    "dns": [
+      "zone",
+      "record"
+    ],
+    "cdn": [
+      "dist"
+    ],
+    "sct": [
+      "secret"
+    ],
+    "reg": [
+      "repo"
+    ],
+    "waf": [
+      "acl"
+    ],
+    "cer": [
+      "cert"
+    ],
+    "obs": [
+      "dashboard",
+      "alarm"
+    ]
   },
   "unclassifiedPolicy": "fail-closed",
   "$classes": "Every governed resource type MUST appear in exactly one of: classA_nameable, classB_nonNameableTaggable, classC_nonNameableNonTaggable. The Aspect fails synth on any encountered type that is in none (forces a registry amendment).",
@@ -79,12 +186,16 @@
     }
   },
   "classC_nonNameableNonTaggable": {
-    "$comment": "structural glue: no name property AND not taggable, so neither the name check nor the tag check applies. Identity is the CDK construct path / CFN logical id within its (already-conformant) stack. Exempt from name + tag assertions.",
+    "$comment": "structural glue or contract/tool-named resources: no convention-name property AND (not taggable OR named by a separate contract). Neither the name check nor the tag check applies. SSM::Parameter is governed by the SSM path contract (/bc/{stage}/{domain}); CDK::Metadata is tool-injected. Identity is the CFN logical id within its (already-conformant) stack.",
     "types": [
       "AWS::EC2::Route",
       "AWS::EC2::VPCGatewayAttachment",
       "AWS::EC2::SubnetRouteTableAssociation",
-      "AWS::IAM::Policy"
+      "AWS::IAM::Policy",
+      "AWS::EC2::SecurityGroupIngress",
+      "AWS::SecretsManager::SecretTargetAttachment",
+      "AWS::SSM::Parameter",
+      "AWS::CDK::Metadata"
     ],
     "identityRule": "identified by CDK construct path / CFN logical id within the stack; the Aspect asserts neither a physical name nor tags for these"
   },
