@@ -36,7 +36,7 @@ This decision fixes one convention for every AWS resource, chosen so that a name
 {scope}-{stage}-{region}-{dom}[-{tenant}]-{role}
 ```
 
-Lowercase, ASCII, hyphen-delimited. Physical names are always set explicitly; CDK auto-generated ids are not used.
+Lowercase, ASCII, hyphen-delimited. **Nameable** resources (§7 class A) always get an explicit physical name — CDK auto-generated ids are not used; non-nameable resources are identified per §7 rather than by a physical name.
 
 - **`{scope}`** — `bcp` = BareCount Platform (and shared/cross-cutting infrastructure such as the VPC) · `bct` = BareCount Tenant.
 - **`{stage}`** — `dev` · `stg` · `prod`.
@@ -72,22 +72,23 @@ Some namespaces are global across all AWS accounts, so region alone is insuffici
 - **S3 buckets** append the account id: `{base}-{role}-{account}` (≤ 63 chars, no uppercase or underscore).
 - **Cognito hosted-UI domain prefixes** append the account id, or use a custom domain.
 
-### 7. Named-resource class vs non-nameable resources
+### 7. Resource classes — three, mutually exclusive
 
-Not every AWS resource has a settable physical name, so "every physical name follows the format" cannot be the rule. The registry (§3 file) partitions resource types into two classes and the Aspect treats each accordingly:
+Not every AWS resource has a settable physical name, and not every non-nameable one is taggable, so a single "every physical name follows the format" rule is impossible. The registry (§3 file) partitions **every governed resource type into exactly one of three classes**, and the Aspect fails synth on any encountered type that is in none (forcing a registry amendment — the classification is complete by construction):
 
-- **Nameable** — types with a configurable physical-name property; the property MUST equal the convention name. The registry maps each type to its property: `AWS::RDS::DBInstance`→`DBInstanceIdentifier`, `AWS::EC2::SecurityGroup`→`GroupName`, `AWS::IAM::Role`→`RoleName`, `AWS::S3::Bucket`→`BucketName`, `AWS::Lambda::Function`→`FunctionName`, `AWS::CodeBuild::Project`→`Name`, `AWS::SecretsManager::Secret`→`Name`, `AWS::KMS::Alias`→`AliasName`, `AWS::Logs::LogGroup`→`LogGroupName`, `AWS::ElasticLoadBalancingV2::TargetGroup`→`Name`, … .
-- **Non-nameable** — types CloudFormation names itself with no useful configurable property (`AWS::KMS::Key`, `AWS::EC2::VPC`/`Subnet`/`RouteTable`/`InternetGateway`/`NatGateway`/`EIP`/`FlowLog`, `AWS::IAM::Policy`, subnet/route associations, …). These are identified by their **`Name` tag**, which MUST equal the convention name, and by their membership in the stack. A **KMS key** is the canonical case: the key has no name, so it is identified by its companion **alias** `alias/{base}-key` (a nameable resource) plus a `Name` tag `{base}-key` on the key itself.
+- **Class A — nameable** (`classA_nameable`): a configurable physical-name property that MUST equal the convention name; carries the required tags. The registry maps each type to its property: `AWS::RDS::DBInstance`→`DBInstanceIdentifier`, `AWS::EC2::SecurityGroup`→`GroupName`, `AWS::IAM::Role`→`RoleName`, `AWS::S3::Bucket`→`BucketName`, `AWS::KMS::Alias`→`AliasName`, `AWS::Cognito::UserPoolDomain`→`Domain`, `AWS::Logs::LogGroup`→`LogGroupName`, … .
+- **Class B — non-nameable but taggable** (`classB_nonNameableTaggable`): CloudFormation names it and it has no useful name property, but it IS taggable, so it is identified by its **`Name` tag** (= convention name) plus the required tags: `AWS::KMS::Key`, `AWS::EC2::VPC`/`Subnet`/`RouteTable`/`InternetGateway`/`NatGateway`/`EIP`/`FlowLog`. A **KMS key** is the canonical case — no key name, so identified by its companion alias `alias/{base}-key` (class A) plus a `Name` tag `{base}-key`.
+- **Class C — non-nameable and non-taggable** (`classC_nonNameableNonTaggable`): structural glue with neither a name property nor tag support, so neither the name check nor the tag check can apply: `AWS::EC2::Route`, `AWS::EC2::VPCGatewayAttachment`, `AWS::EC2::SubnetRouteTableAssociation`, `AWS::IAM::Policy` (inline). Identity is the CDK construct path / CFN logical id within its (already-conformant) stack; the Aspect asserts neither a physical name nor tags for these.
 
 ### 8. Enforcement — a CDK Aspect at synth time (fail-closed)
 
 A guardrail Aspect (in the shared guardrails package) loads the §3 registry and enforces, failing synth on violation:
 
-1. For a **nameable** type, its mapped physical-name property equals the convention name (begins with the stack base; `{dom}`/`{role}`/`{tenant}` valid). For a **non-nameable** type, its `Name` tag equals the convention name. **Unresolved CDK tokens fail closed** (concrete names are required, per the no-auto-id rule).
+1. **Class dispatch by resource type.** Class A: the mapped physical-name property equals the convention name. Class B: the `Name` tag equals the convention name. Class C: no name/tag assertion (identity is the logical id). **Any type in none of the three classes fails synth closed** (must be added to the registry). **Unresolved CDK tokens also fail closed** (concrete names required, per the no-auto-id rule).
 2. The `{region}` segment equals the short code of the stack's deploy region.
 3. `{dom}` and `{role}` are members of the registry; `{tenant}` matches `^[a-z0-9]{1,12}$`.
-4. The name fits the target service's length limit (from the registry's `lengthLimits`: RDS identifier ≤ 63, IAM role ≤ 64, S3 ≤ 63, ELB/target-group ≤ 32, KMS alias ≤ 256, …).
-5. All required tags are present; global-namespace types (registry `globalNamespaceExceptions`: S3, Cognito domain) additionally carry the account suffix.
+4. The name fits the target service's length limit (from the registry's `lengthLimits`: RDS identifier ≤ 63, IAM role ≤ 64, S3 ≤ 63, ELB/target-group ≤ 32, KMS alias ≤ 256, Cognito domain ≤ 63, …).
+5. Class A and B resources carry all required tags; class C is exempt (not taggable). Global-namespace class-A types (registry `globalNamespaceExceptions`: S3 bucket, Cognito `UserPoolDomain`) additionally append the account suffix.
 
 The type→name-property map, the non-nameable set, the length limits, and the exception map all live in the versioned registry file, so the Aspect is data-driven, not hardcoded.
 

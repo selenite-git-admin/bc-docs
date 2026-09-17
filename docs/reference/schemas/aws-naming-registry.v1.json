@@ -1,5 +1,5 @@
 {
-  "$comment": "BareCount AWS naming & tagging registry — implementation contract for the CDK guardrail Aspect. Governed by ADR DEC-e39ed3. Versioned by filename; amendments bump the version (v2, ...).",
+  "$comment": "BareCount AWS naming & tagging registry — implementation contract for the CDK guardrail Aspect. Governed by ADR DEC-e39ed3. Versioned by filename; amendments bump the version (v2, ...). Every governed resource type is in exactly ONE of the three classes below; a type in none fails synth closed (must be classified).",
   "version": "1",
   "governingAdr": "DEC-e39ed3",
   "format": "{scope}-{stage}-{region}-{dom}[-{tenant}]-{role}",
@@ -38,47 +38,58 @@
     "cer": ["cert"],
     "obs": ["dashboard", "alarm"]
   },
-  "nameable": {
-    "$comment": "resource type -> the physical-name property the Aspect checks against the convention name",
-    "AWS::RDS::DBInstance": "DBInstanceIdentifier",
-    "AWS::RDS::DBSubnetGroup": "DBSubnetGroupName",
-    "AWS::RDS::DBParameterGroup": "DBParameterGroupName",
-    "AWS::EC2::SecurityGroup": "GroupName",
-    "AWS::IAM::Role": "RoleName",
-    "AWS::S3::Bucket": "BucketName",
-    "AWS::Lambda::Function": "FunctionName",
-    "AWS::CodeBuild::Project": "Name",
-    "AWS::SecretsManager::Secret": "Name",
-    "AWS::KMS::Alias": "AliasName",
-    "AWS::Logs::LogGroup": "LogGroupName",
-    "AWS::ECS::Cluster": "ClusterName",
-    "AWS::ECS::Service": "ServiceName",
-    "AWS::ElasticLoadBalancingV2::LoadBalancer": "Name",
-    "AWS::ElasticLoadBalancingV2::TargetGroup": "Name",
-    "AWS::ECR::Repository": "RepositoryName"
+  "unclassifiedPolicy": "fail-closed",
+  "$classes": "Every governed resource type MUST appear in exactly one of: classA_nameable, classB_nonNameableTaggable, classC_nonNameableNonTaggable. The Aspect fails synth on any encountered type that is in none (forces a registry amendment).",
+  "classA_nameable": {
+    "$comment": "has a configurable physical-name property; the property MUST equal the convention name; carries requiredTags",
+    "properties": {
+      "AWS::RDS::DBInstance": "DBInstanceIdentifier",
+      "AWS::RDS::DBSubnetGroup": "DBSubnetGroupName",
+      "AWS::RDS::DBParameterGroup": "DBParameterGroupName",
+      "AWS::EC2::SecurityGroup": "GroupName",
+      "AWS::IAM::Role": "RoleName",
+      "AWS::S3::Bucket": "BucketName",
+      "AWS::Lambda::Function": "FunctionName",
+      "AWS::CodeBuild::Project": "Name",
+      "AWS::SecretsManager::Secret": "Name",
+      "AWS::KMS::Alias": "AliasName",
+      "AWS::Logs::LogGroup": "LogGroupName",
+      "AWS::ECS::Cluster": "ClusterName",
+      "AWS::ECS::Service": "ServiceName",
+      "AWS::ElasticLoadBalancingV2::LoadBalancer": "Name",
+      "AWS::ElasticLoadBalancingV2::TargetGroup": "Name",
+      "AWS::ECR::Repository": "RepositoryName",
+      "AWS::Cognito::UserPoolDomain": "Domain"
+    }
   },
-  "nonNameable": {
-    "$comment": "types CloudFormation names itself; identified by the Name tag (= convention name) + stack membership",
+  "classB_nonNameableTaggable": {
+    "$comment": "CloudFormation names it; no useful name property, but IS taggable — identified by its Name tag (= convention name) + carries requiredTags",
     "types": [
       "AWS::KMS::Key",
       "AWS::EC2::VPC",
       "AWS::EC2::Subnet",
       "AWS::EC2::RouteTable",
-      "AWS::EC2::Route",
-      "AWS::EC2::SubnetRouteTableAssociation",
       "AWS::EC2::InternetGateway",
-      "AWS::EC2::VPCGatewayAttachment",
       "AWS::EC2::NatGateway",
       "AWS::EC2::EIP",
-      "AWS::EC2::FlowLog",
-      "AWS::IAM::Policy"
+      "AWS::EC2::FlowLog"
     ],
     "identityMapping": {
-      "AWS::KMS::Key": "identified by its companion AWS::KMS::Alias (alias/{base}-key) plus a Name tag {base}-key"
+      "AWS::KMS::Key": "identified by its companion AWS::KMS::Alias (alias/{base}-key, classA) plus a Name tag {base}-key"
     }
   },
+  "classC_nonNameableNonTaggable": {
+    "$comment": "structural glue: no name property AND not taggable, so neither the name check nor the tag check applies. Identity is the CDK construct path / CFN logical id within its (already-conformant) stack. Exempt from name + tag assertions.",
+    "types": [
+      "AWS::EC2::Route",
+      "AWS::EC2::VPCGatewayAttachment",
+      "AWS::EC2::SubnetRouteTableAssociation",
+      "AWS::IAM::Policy"
+    ],
+    "identityRule": "identified by CDK construct path / CFN logical id within the stack; the Aspect asserts neither a physical name nor tags for these"
+  },
   "globalNamespaceExceptions": {
-    "$comment": "namespaces global across ALL accounts; append the account id after the role for uniqueness",
+    "$comment": "namespaces global across ALL accounts; the classA name additionally appends the account id for uniqueness",
     "AWS::S3::Bucket": "append-account",
     "AWS::Cognito::UserPoolDomain": "append-account"
   },
@@ -93,12 +104,13 @@
     "AWS::Logs::LogGroup": 512,
     "AWS::ElasticLoadBalancingV2::LoadBalancer": 32,
     "AWS::ElasticLoadBalancingV2::TargetGroup": 32,
-    "AWS::ECR::Repository": 256
+    "AWS::ECR::Repository": 256,
+    "AWS::Cognito::UserPoolDomain": 63
   },
   "standingRules": {
     "devSecretsForceDelete": true,
     "tenantNotInLoadBalancerName": true,
     "tenantIdImmutableSlugInTagsOnly": true,
-    "explicitPhysicalNamesNoCdkAutoIds": true
+    "explicitPhysicalNamesNoCdkAutoIds": "classA only"
   }
 }
