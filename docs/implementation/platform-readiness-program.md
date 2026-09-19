@@ -30,16 +30,16 @@ related: >
 
 ## 1. What "readiness" means — and the platform/tenant split
 
-**Readiness = the mechanics are `streamlined · governed · documented · proven-once-end-to-end`.** The first three are confirmable by inspection; the fourth is the guard against declaring readiness from a checklist while the front door never opened.
+**Readiness = the mechanics are `streamlined · governed · documented · proven-once-end-to-end`.** The first three are confirmable by inspection; the fourth is the guard against declaring readiness from a checklist while the front door never opened. **All four are required** and they map across tracks: **streamlined** = Track T (gates), **governed + proven-once-E2E** = Track R (runtime trust), **documented + legible / no-black-boxes** = Track L (§4a). No single track is sufficient — Track R is the *critical path*, not the whole bar.
 
-**Readiness is two-layered, along the Object Life States ladder (DEC-c9e623):**
+**Readiness is two-layered, along the Metric Lifecycle States ladder (DEC-c9e623):**
 
-| Layer | OLS range | Lanes | What it means | Proven by |
+| Layer | MLS range | Lanes | What it means | Proven by |
 |---|---|---|---|---|
-| **Platform readiness** | **OLS 01–14** | **L1–L9** + runtime-engine conformance | The platform machinery (authoring → certification → activation, and the runtime engines that execute a chain) is streamlined, governed, documented, and **Foundation-conformant** — up to platform activation (OLS-14). | A **controlled conformance run on a fixture/sandbox tenant** (e.g. `probe_unit4`): fixture data crosses every platform boundary to a snapshot with complete evidence, all fail-closed. **No customer onboarding required.** |
-| **Tenant readiness** | **OLS 15–25** | **L10** + the runtime | A real tenant is onboarded and its KPI surfaces (OLS-23 snapshot → OLS-24 proof → OLS-25 KPI). | The **Kaveri pilot** (a real tenant end-to-end). **Depends on** platform readiness (OLS-14 active) **and** Platform DB Foundation W2. |
+| **Platform readiness** | **MLS 01–14** | **L1–L9** + runtime-engine conformance | The platform machinery (authoring → certification → activation, and the runtime engines that execute a chain) is streamlined, governed, documented, and **Foundation-conformant** — up to platform activation (MLS-14). | A **controlled conformance run on a fixture/sandbox tenant** (e.g. `probe_unit4`): fixture data crosses every platform boundary to a snapshot with complete evidence, all fail-closed. **No customer onboarding required.** |
+| **Tenant readiness** | **MLS 15–25** | **L10** + the runtime | A real tenant is onboarded and its KPI surfaces (MLS-23 snapshot → MLS-24 proof → MLS-25 KPI). | The **Kaveri pilot** (a real tenant end-to-end). **Depends on** platform readiness (MLS-14 active) **and** Platform DB Foundation W2. |
 
-The handoff is **OLS-14 → OLS-15**: a tenant cannot enter OLS-15 for an MC until that MC's platform row is `active` at OLS-14. **Platform readiness is the arc this program owns; tenant readiness (the Kaveri pilot) rides on it and is a downstream milestone, not the platform gate.** (This corrects an earlier framing that used the Kaveri tenant walk as the platform proof.)
+The handoff is **MLS-14 → MLS-15**: a tenant cannot enter MLS-15 for an MC until that MC's platform row is `active` at MLS-14. **Platform readiness is the arc this program owns; tenant readiness (the Kaveri pilot) rides on it and is a downstream milestone, not the platform gate.** (This corrects an earlier framing that used the Kaveri tenant walk as the platform proof.)
 
 ## 2. The model — three cuts of one space
 
@@ -56,7 +56,7 @@ A lane is an *artifact family*; a track is a *work programme*; a **workflow** (e
 Ordering rule **T → (R ∥ L) → S** — S moves the very files R changes.
 
 - **T — Tooling & executable gates (no behavior change). ✅ CLOSED (2026-08-25).** T1 doctor, T2 column linter, T3 QA consolidation (D589), T4 import/controller-DB metadata gates, T5 architecture-spec typecheck, T6 route/provider/persisted-code snapshots — all merged. Lesson carried: pin the declared enforcement surface (exact positive validation), don't out-parse an adversary.
-- **R — Runtime Foundation conformance (behavior changes). 🟡 THE GATE / critical path.** The units that decide whether a metric can be trusted: **E6-B / FND-VI** ("metric emits its own evidence, not inferred"; DEC-48d222), converting the **six fail-open proof paths** to fail-closed, the **readiness-dispatcher cascade** (DEC-01bd6b §62), **RuntimeScheduler retirement**, **D575 provisioner parity**, and **governing the execution-plane couplings** (the seams — §5). *Definition of platform-ready with confidence:* the R units land green **under the T gates**, proven on a fixture tenant. Nothing in Track S is required for it.
+- **R — Runtime Foundation conformance (behavior changes). 🟡 THE GATE / critical path.** The units that decide whether a metric can be trusted: **E6-B / FND-VI** ("metric emits its own evidence, not inferred"; DEC-48d222), converting the **six fail-open proof paths** to fail-closed, the **readiness-dispatcher cascade** (DEC-01bd6b §62), **RuntimeScheduler retirement**, **D575 provisioner parity**, and **governing the execution-plane couplings** (the seams — §5). *Track R delivers the **governed + proven-once-E2E** criteria (runtime trust):* the R units land green **under the T gates**, proven on a fixture tenant. R requires nothing from Track S — but **R alone is not platform readiness**: the **documented + legible (no-black-boxes)** criterion is Track L's (§4a), and it is co-requisite. R is the critical path, not the whole bar.
 - **L — Legibility & alignment (no behavior change; parallel with R).** Regenerate derived docs (code-index, data dictionary, lifecycle/enforcement maps), a dead-code/duplicate inventory with dispositions, taxonomy constants for the lifecycle capabilities, **extend the ten lane kits with code paths to become the capability catalog** (no parallel catalog document), doctrine↔code gap filing. Largely unblocked; the hardest dependency — the BCF authority/authoring SOP rewrite — is done. Residual onboarding-body cleanup (TSK-f13259) is non-blocking.
 - **S — Structure (decided file moves only). ⏸ DEFERRED until R lands.** Ports to kill boundary→registry path imports; decompose `BoundaryModule` into four boundary + two orchestrator modules behind a compatibility aggregate; shared pure kernel; then the ADR-gated cert-writer command extraction / McfReadService split / registry-root cleanup. Each move ADR-gated — a decision, not drift.
 
@@ -75,9 +75,9 @@ Ordering rule **T → (R ∥ L) → S** — S moves the very files R changes.
 | **L7** Reader | SD | Platform | `runtime.reader*/connector*/connection*`; `readers`, `reader-authoring`, `connectors`, `connections` (authors the reader; *running* it is runtime/not-a-lane) |
 | **L8** Registration / Directory | SA | Platform | `metric_directory.*`; `metric-directory` |
 | **L9** Chain Integrity | SA | Platform | `mcf.mcv_chain_status`, `mcf.chain_audit_evidence`; `registry/mcf/chain-status`, `mcf/chain-audit` |
-| **L10** Tenant Onboarding | tenant-handoff | **Platform→Tenant boundary (OLS-14→15)** | tenant DB provisioning (skeleton owned by DB-Foundation W2.3-e), `admin.connection*`; `tenants`, `connections` |
+| **L10** Tenant Onboarding | tenant-handoff | **Platform→Tenant boundary (MLS-14→15)** | tenant DB provisioning (skeleton owned by DB-Foundation W2.3-e), `admin.connection*`; `tenants`, `connections` |
 
-**Note on L10's classification (this SSOT's refinement):** the locked taxonomy classed L10 "tenant," but provisioning a tenant is a **platform-operator act** (`@PlatformOnly`) at the OLS-14→15 handoff — so L10 is best read as **the boundary-crossing lane** (the platform's last act before the tenant runtime), not a tenant-side lane. The truly tenant-side work (running the chain, KPIs, OLS 15–25) is the runtime — **not a lane**.
+**Note on L10's classification (this SSOT's refinement):** the locked taxonomy classed L10 "tenant," but provisioning a tenant is a **platform-operator act** (`@PlatformOnly`) at the MLS-14→15 handoff — so L10 is best read as **the boundary-crossing lane** (the platform's last act before the tenant runtime), not a tenant-side lane. The truly tenant-side work (running the chain, KPIs, MLS 15–25) is the runtime — **not a lane**.
 
 **Not-a-lane register** (out of scope, correctly): runtime/execution `/t/*` engines (owned by the runtime-ecosystem program); privacy/retention `operations.*`; platform masters/dims `master.*`; platform ops/admin (`admin/*`, `support`, `pricing`, `infrastructure`, `schema-provisioner`, `packages`, `auth`, `docs`, `health`, …).
 
@@ -109,7 +109,7 @@ Every lane and every workflow should have a visible **bc-admin operator door**; 
 4. **No guided walk for either onboarding workflow** — per-artifact doors only.
 5. Minor: certification (L6) has no standalone console (inline on MetricDetailPage); L4/L5 lack a list-level "new contract" door.
 
-These gaps are legibility debt, not runtime blockers — but "no black boxes" is a readiness criterion (*documented* + operator-legible), so closing them is Track-L / door-walk work.
+These gaps are not runtime blockers, but **"no black boxes" is a first-class readiness criterion** (*documented + operator-legible* — Track L), **co-requisite with Track R's runtime-trust, not optional**: platform readiness is not complete while a governed lane has no operator door. Closing them is Track-L / door-walk work.
 
 ## 5. Design plane vs execution plane (DEC-c48b0f)
 
@@ -126,13 +126,15 @@ Two programs, one proof. **Platform DB Foundation** (`overview/platform-db-found
 
 ## 7. The Kaveri pilot — reclassified
 
-The Kaveri pilot (compute one real, evidence-backed metric from the live Kaveri Odoo world) is **Tenant readiness (OLS 15–25)** — the first tenant-readiness milestone — **not** the platform-readiness proof. Its value is confirmation of the *tenant* path on a ready platform. It depends on platform readiness (Track R closed) + DB-Foundation W2 (tenant substrate) + operator credentials. It is currently parked; its diagnostic walk is what exposed the three execution-plane seams (§5), which are themselves platform-readiness work.
+The Kaveri pilot (compute one real, evidence-backed metric from the live Kaveri Odoo world) is **Tenant readiness (MLS 15–25)** — the first tenant-readiness milestone — **not** the platform-readiness proof. Its value is confirmation of the *tenant* path on a ready platform. It depends on platform readiness (Track R closed) + DB-Foundation W2 (tenant substrate) + operator credentials. It is currently parked; its diagnostic walk is what exposed the three execution-plane seams (§5), which are themselves platform-readiness work.
 
 ## 8. Current gate & sequencing
 
-1. **Close Track R = platform readiness:** land the R units (E6-B/FND-VI, fail-open→fail-closed ×6, dispatcher, scheduler, D575 parity) + govern the execution-plane couplings (fix seams #2/#3), **proven green under the T gates on a fixture tenant**. This is the platform-readiness gate. It is largely decoupled from the live DB-Foundation work.
-2. **Then tenant readiness (Kaveri):** onboard the real Kaveri tenant (L10, riding on DB-Foundation W2 + creds) and walk OLS 15–25 to a first KPI.
-3. **L** runs parallel to R; **S** follows R.
+1. **Close Track R (the runtime-trust criteria — governed + proven-once-E2E):** land the R units (E6-B/FND-VI, fail-open→fail-closed ×6, dispatcher, scheduler, D575 parity) + govern the execution-plane couplings (fix seams #2/#3), **proven green under the T gates on a fixture tenant**. This is the **critical-path gate**, largely decoupled from the live DB-Foundation work — but **not sufficient alone**.
+2. **Close Track L's documented / no-black-boxes criterion** (co-requisite): the door-walk backlog (§4a — L8 Directory, L9 chain-audit, L10 tenant stubs). Platform readiness = R **and** L (and T, already closed).
+3. **Then tenant readiness (Kaveri):** onboard the real Kaveri tenant (L10, riding on DB-Foundation W2 + creds) and walk MLS 15–25 to a first KPI.
+
+Ordering: **T → (R ∥ L) → S**. Steps 1–2 together are the platform-readiness gate; step 3 rides on it.
 
 ## 9. Authority & supersession
 
