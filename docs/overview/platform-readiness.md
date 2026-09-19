@@ -9,19 +9,44 @@ related: overview/platform-db-foundation.md
 
 # Platform Readiness & Legibility
 
-**Goal:** make the platform's metric-producing **mechanics** ready — `streamlined · governed · documented · proven-once-end-to-end` — and keep the program **legible**. Formerly "functional refactor"; renamed after an August stall-analysis found code structure caused ~9% of stalls, so structural refactor is *not* the remedy.
+**Destination:** the platform can take a *real* source system, run it through the whole
+governed runway, and produce a first **trusted** metric — and we've **proven it once,
+end-to-end**. Streamlined · governed · documented · proven. Everything else is a means to this.
 
-**Readiness is two-layered** (Metric Lifecycle States, DEC-c9e623):
-- **Platform readiness** = MLS 01–14 / lanes **L1–L9** + runtime-engine conformance — provable on a **fixture/sandbox tenant** (no customer onboarding). *This is the arc this program owns.*
-- **Tenant readiness** = MLS 15–25 / lane **L10** + the runtime — the **Kaveri pilot**; a downstream milestone that rides on platform readiness **and** the Platform DB Foundation program. *Not the platform gate.*
+**What "proven" means (decided 2026-09-19):** *platform readiness* = a **fixture/engine-conformance
+proof** (fixture data crosses every boundary to a snapshot with emitted evidence, all fail-closed,
+on a sandbox tenant — no customer needed). *Demo readiness* = platform readiness **+ a thin
+real-source (Kaveri) slice**, a named downstream milestone that rides on it — **not** the platform
+gate. (Corrects the earlier framing that used the Kaveri tenant walk as the platform proof.)
 
-**Three cuts of the space** (kept distinct for legibility):
-- **4 tracks** (work axis): **T** ✅ closed · **R** 🟡 the gate (runtime Foundation conformance) · **L** legibility (parallel) · **S** structure (deferred until R).
-- **10 lanes** (ownership axis, LOCKED DEC-a67bae/D590): L1 Source Catalog … L10 Tenant Onboarding — artifact families, strict one-lane-per-surface. Source-onboarding and tenant-onboarding are **workflows** over the lanes, not lanes.
-- **Design vs execution plane** (DEC-c48b0f): the authoring panels (design) are governed; the runtime **couplings** (execution) are not — the lane-as-workflow is the missing governance.
+**The platform functions (the stable spine):**
+- **Shared:** S1 Auth · S2 User/access · S3 Tenant lifecycle · S4 Pricing · S5 Operator console
+- **Runway (10 lanes):** L1 Source Catalog … L10 Tenant Onboarding (LOCKED, DEC-a67bae/D590)
+- **Runtime & cross-cutting:** Runtime engine · Evidence/audit · Tenant self-service · **A1 Action/Intervention** *(design pending)*
+- **Parked as cosmetic:** design-system/visual-language → a future dedicated UI refactoring program (not a function).
 
-**Current gate:** close **Track R** (the runtime-trust criteria — governed + proven-once-E2E) — land the R units (E6-B/FND-VI evidence emission, fail-open→fail-closed, dispatcher, scheduler retirement, D575 parity) and govern the execution-plane couplings (fix the open seams), proven green under the T gates on a fixture tenant. R is the **critical path but not sufficient alone**: platform readiness also requires **Track L**'s *documented / no-black-boxes* criterion (co-requisite). Then tenant readiness (Kaveri) rides on it.
+Each function is scored **backend / DB / UI** and carries its governing ADRs with real status —
+a function with thin/no ADRs is itself a finding. Full matrix in the detail doc.
 
-**Converges with** the [Platform DB Foundation](platform-db-foundation.md) program (bc-db, TSK-cc348a), which productionizes tenant onboarding (L10) at scale; the two meet at the Kaveri pilot.
+**Where we stand (grounded 2026-09-19):** the metric authoring/certification path is green
+(L1–L3, L6, L7). The destination-critical gap is the **runtime execution plane** — two live,
+silent coupling seams (an admission source-fact drop and a provisioner wire-shape mismatch),
+both fixable *without design change*. Legibility gaps (missing operator doors: L8 directory-tree,
+L9 chain-audit, L10 tenant tabs, S2 users) are co-requisite, *not* cosmetic. S4 pricing and S2
+RBAC are unbuilt but don't block a compute demo.
 
-→ Full program detail, track scope, the 10-lane table, seams, and sequencing: **[implementation/platform-readiness-program.md](../implementation/platform-readiness-program.md)**.
+**Three cuts of the space** (kept distinct for legibility): **4 tracks** (work axis — T ✅ / R 🟡
+the gate / L parallel / S deferred); **the functions** (what the platform does); **design vs
+execution plane** (DEC-c48b0f). A **unit ledger** with a mandatory design/execution intake gate
+ties each unit of work to a function and a piece of the distance-to-destination.
+
+**Current gate:** close **Track R** (govern the runtime seams; complete the by-design fail-open
+follow-ups; proven green on a fixture tenant) **and** Track L's no-black-boxes doors. Then demo
+readiness (the thin Kaveri slice) rides on it.
+
+**Converges with** the [Platform DB Foundation](platform-db-foundation.md) program (bc-db,
+TSK-cc348a), which productionizes tenant onboarding at scale; the two meet at the Kaveri demo
+milestone.
+
+→ Full detail — functions, per-function ADRs, the readiness matrix, the seams, the unit ledger,
+and the punch-list: **[implementation/platform-readiness-program.md](../implementation/platform-readiness-program.md)**.
