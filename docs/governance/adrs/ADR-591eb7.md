@@ -2,13 +2,16 @@
 uid: DEC-591eb7
 title: "Single modular SoT → generated platform monolith + CI parity gate vs live/golden"
 description: "Target model for TSK-3f52d7: unify the platform-DB schema on the modular set, generate the monolith from it, gate fresh-build ≡ live parity in CI, repoint docker-compose, correct stale CLAUDE.md."
-status: proposed
+status: superseded
+superseded_by: DEC-489492
 date: 2026-09-08T07:11:01.942Z
 project: bc-core
 domain: infrastructure
 subdomain: platform-db/schema-custody
 focus: build-tooling
 ---
+
+> **Superseded by DEC-489492 (D609, decided 2026-09-19).** The W5 assembly rule was resolved by *retirement*, not a generator: the bc-db spine is the platform schema authority and its from-zero equivalence gate already provides the parity guarantee proposed here. This proposed generator is not built. See `docs/governance/adrs/ADR-489492.md`.
 
 # Single modular SoT → generated platform monolith + CI parity gate vs live/golden
 
