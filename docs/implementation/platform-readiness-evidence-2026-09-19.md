@@ -83,3 +83,26 @@ These are different relations in different schemas; both counts are registry-sid
 against `bc_platform_dev`. 3. For backend/UI, open the cited `file:line`. 4. For ADR status, read
 `docs/governance/adrs/ADR-<uid>.md` frontmatter and cross-check the DevHub registry. Counts may
 have advanced since the snapshot date; treat divergence as drift to reconcile, not as error.
+
+## Update 2026-09-19 (sync — seam closures + S4/L10 dispositions)
+
+Post-grounding deltas verified the same day. The bc-core pin above (`b80f10a7`) predates the
+seam-#2/#3 merges below; `main` has advanced past it.
+
+**RT seam class — CLOSED (all merged to bc-core `main`, each RED→GREEN on real Postgres + disposable-DB CI regression):**
+- seam #1 `source_key` — PR #726.
+- seam #2 provisioner `findSourceContractsForCanonical` → `COALESCE(sc_contract_id, sc_version_id)` — PR #770, merge `15cdbc37`; regression spec `schema-provisioner.source-contract-key.integration.spec.ts` in the `e6b-db-integration` job.
+- seam #3 admission `fact.so_` SC-keying — batch PR #769 merge `eeb3d161`; HTTP single-record + repository fail-closed guard PR #772 merge `9fb10d98`; regression spec `admission.repository.dual-write.integration.spec.ts` added to `e6b-db-integration` (verified executed, not skipped: CI log `✓ 3 tests`).
+- Auditor dispositions byte-verified (SHA-256) per merge; TSK-338f06 completed.
+
+**S4 Pricing — grounded, confirms deferred-by-decision / out of readiness scope:**
+- `pricing.package`=7 rows: a `Free` row (`tier_order`=0, `status_code`=active, `reader_manifest_json`=**NULL**) + `custom` (active) + 5 tiers (finance-essentials/complete, full-erp, crm, hr) all `deprecated`+`archived_at`=2026-08-13.
+- **The `Free` package's seed/genesis provenance is a Platform DB Foundation matter, not adjudicated here.** It is present in the live catalog and in `docker/redesign/golden-snapshot-source.sql`; it is **not** in the two application-seed files inspected (`seed-v2/data/pricing/packages.csv`, `src/registry/seed/seed-packages.ts DEFAULT_PACKAGES`, both emit the six tiers). Whether the from-zero **canonical seed layer** deterministically reproduces it is a DB-Foundation genesis-reconciliation question ([[TSK-ca2f7d]]). (Correction: an earlier draft of this addendum called it "seed drift" from the seed-file check alone — that check did not cover the golden-snapshot/genesis path and the conclusion is retracted; schema/seed provenance and any change route through DB Foundation under the Database Change Protocol.)
+- **No tenant→plan binding anywhere:** no `package_id`/plan column or FK on `tenant.tenants`, `tenant.onboarding_record`, or `tenant.tenant_binding` (that binds source contracts); 0 informal refs in `tenants.config_json` / `onboarding_record.detail_json`. Operator package-catalog CRUD (`/packages` + bc-admin `registry/packages`) is wired; the tenant "Subscription" page (bc-portal) is a hardcoded mock. Consistent with `tenant-onboarding.md` v1 = single flat band, no subscription instantiated.
+
+**L10 Tenant Onboarding — onboarding lane READY; operational tabs → S5 (deferred):**
+- E2E proof `src/tenant-management/tenant-provisioning-api.integration.spec.ts` **runs in the `e6b-db-integration` CI job** (BCCORE_INTEGRATION_DB=1) — provisions a throwaway tenant, asserts `status:'active'` + evidence + D575 immutability triggers. (Corrects the "gated/skipped" reading — it is in the explicit vitest list.)
+- BE `tenant-management.controller.ts` + `tenant-provisioning-api.service.ts` fail-closed; DB tenant-skeleton (6 schemas, 26 tables) hash-verified. `onboarding_record`=0 is an empty-state (no tenant onboarded yet), not a schema gap.
+- The four operational tabs (`configuration/health/scoping/infrastructure`, `PlaceholderPage`) are post-onboarding tenant operations → reclassified to **S5** operator-console, deferred.
+
+**E6-B / FND-VI — closure DEFERRED (not closeable from the dev host):** emit is unconditional on `main` (`governed-metric-persistence.adapter.ts:216`), DBCP applied to `tbc_pilot1_dev`. But `tbc_pilot1_dev` is **not on the local host** (only a throwaway `tbc_probe_unit4_dev` is local) — pilot1 is remote. Closure requires an *observed* real metric finalize + auditor-store health (operator-only); a synthetic local metric is the documented rabbit-hole.
