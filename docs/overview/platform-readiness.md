@@ -28,21 +28,25 @@ gate. (Corrects the earlier framing that used the Kaveri tenant walk as the plat
 Each function is scored **backend / DB / UI** and carries its governing ADRs with real status —
 a function with thin/no ADRs is itself a finding. Full matrix in the detail doc.
 
-**Where we stand (grounded 2026-09-19):** the metric authoring/certification path is green
-(L1–L3, L6, L7). The destination-critical gap is the **runtime execution plane** — two live,
-silent coupling seams (an admission source-fact drop and a provisioner wire-shape mismatch),
-both fixable *without design change*. Legibility gaps (missing operator doors: L8 directory-tree,
-L9 chain-audit, L10 tenant tabs, S2 users) are co-requisite, *not* cosmetic. S4 pricing and S2
-RBAC are unbuilt but don't block a compute demo.
+**Where we stand (grounded 2026-09-19, synced same day):** the metric authoring/certification
+path is green (L1–L3, L6, L7). The **runtime execution-plane seam class is CLOSED** — all three
+silent coupling seams merged to bc-core `main` (fail-closed, disposable-DB CI regression). What
+remains on Track R: E6-B's first-*observed* evidence emit (FND-VI, **deferred** — rides on a real
+metric run + operator-only auditor-store health) and the by-design fail-open follow-ups.
+Legibility gaps (missing operator doors: L8 directory-tree, L9 chain-audit, S2 users) are
+co-requisite, *not* cosmetic. L10's onboarding lane is green; its four operational tabs are
+reclassified to S5 (deferred). S4 pricing is deferred-by-decision (v1 flat band, no plan binding)
+and S2 RBAC unbuilt — neither blocks a compute demo.
 
 **Three cuts of the space** (kept distinct for legibility): **4 tracks** (work axis — T ✅ / R 🟡
 the gate / L parallel / S deferred); **the functions** (what the platform does); **design vs
 execution plane** (DEC-c48b0f). A **unit ledger** with a mandatory design/execution intake gate
 ties each unit of work to a function and a piece of the distance-to-destination.
 
-**Current gate:** close **Track R** (govern the runtime seams; complete the by-design fail-open
-follow-ups; proven green on a fixture tenant) **and** Track L's no-black-boxes doors. Then demo
-readiness (the thin Kaveri slice) rides on it.
+**Current gate:** close **Track R** (seams **done ✅**; remaining = E6-B first-observed emit —
+deferred — and the by-design fail-open follow-ups; proven green on a fixture tenant) **and**
+Track L's no-black-boxes doors (L8/L9 doors, S2 users). Then demo readiness (the thin Kaveri
+slice) rides on it.
 
 **Converges with** the [Platform DB Foundation](platform-db-foundation.md) program (bc-db,
 TSK-cc348a), which productionizes tenant onboarding at scale; the two meet at the Kaveri demo

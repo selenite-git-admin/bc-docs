@@ -120,8 +120,8 @@ Every cell resolves to a row in the **evidence manifest** ([`platform-readiness-
 | S1 Auth | 🟢 | 🟢 | 🟢 | 4 global guards + Cognito TOTP; mature |
 | S2 User/access | 🟡 | 🔴 | 🔴 | admin-provision only; no RBAC tables; UI placeholder |
 | S3 Tenant lifecycle | 🟢 | 🟢 | 🟡 | provisioning + 5-state model live; config/health/scoping/infra = stubs |
-| S4 Pricing | 🔴 | 🔴 | 🔴 | no Stripe/billing tables; `pricing.package` = reader-tiers only |
-| S5 Operator console | 🟢 | — | 🟡 | mature (255 commits); placeholder doors (users, tenant-ops, pricing, infra) |
+| S4 Pricing | 🔴 | 🔴 | 🔴 | **deferred-by-decision / out of readiness scope** (v1 = single flat band, no subscription instantiated — `tenant-onboarding.md`; not-a-lane register). Operator package-catalog IS wired (`/packages` + bc-admin `registry/packages`); **no** tenant→plan binding; live `Free` row is seed-drift ([[TSK-ca2f7d]]). Not a gate blocker |
+| S5 Operator console | 🟢 | — | 🟡 | mature (255 commits); placeholder doors (users, pricing) + **tenant operational tabs (config/health/scoping/infra) reclassified here from L10, deferred** |
 | L1 Source Catalog | 🟢 | 🟢 | 🟢 | full |
 | L2 SC+AC | 🟢 | 🟢 | 🟢 | SC 305 / AC 305 (1:1); create doors |
 | L3 BCF | 🟢 | 🟢 | 🟢 | concept_registry 18 tables; full console |
@@ -131,17 +131,17 @@ Every cell resolves to a row in the **evidence manifest** ([`platform-readiness-
 | L7 Reader | 🟢 | 🟢 | 🟢 | reader_observation_binding populated; full |
 | L8 Directory | 🟢 | 🟢 | 🟡 | rich BE/DB (member 415); **only directory-tree door missing** (not a full black box) |
 | L9 Chain Integrity | 🟢 | 🟢 | 🟡 | status door yes; `chain_audit_evidence` (127) no door |
-| L10 Tenant Onboarding | 🟡 | 🟡 | 🟡 | provision only; `onboarding_record`=0; 4 tenant tabs = stubs |
-| RT Runtime engine | 🟡 | 🟢 reg / ❓ rt | ❓ | all boundaries wired; **2 live silent seams** (§6); E6-B evidence LIVE. **DB split:** registry substrate verified (`runtime.admission_run`…); tenant `fact.*`/`progression.*` **unverified** (not in DB allowlist) |
+| L10 Tenant Onboarding | 🟢 | 🟢 | 🟢 | onboarding lane READY — provision→verify→activate wired, E2E proof in CI (`tenant-provisioning-api.integration.spec`); door UI (create/list/detail) merged. `onboarding_record`=0 = no tenant onboarded yet (empty-state, not a gap). **4 operational tabs (config/health/scoping/infra) reclassified → S5, deferred** (2026-09-19 disposition) |
+| RT Runtime engine | 🟢 | 🟢 reg / ❓ rt | ❓ | all boundaries wired; **seam class CLOSED** (§6 — all 3 merged, fail-closed); E6-B evidence LIVE/armed (FND-VI closure deferred — externally gated). **DB split:** registry substrate verified (`runtime.admission_run`…); tenant `fact.*`/`progression.*` **unverified** (not in DB allowlist) |
 | EV Evidence/audit | 🟢 | 🟢 | 🟡 | hash-chained + atomic proof live; `contract.certification_record` 3530; no inspector UI verified |
 | TS Tenant self-service | 🟢 | — | 🟡 | metric/dashboard views real; onboarding = static shell |
 | A1 Action/Intervention | 🔴 | 🔴 | 🔴 | design pending — the deferred layer |
 
 **Reading the matrix as distance-to-destination:**
 - **The metric authoring/certification path is green** (L1–L3, L6, L7). The runway can author and certify a metric.
-- **Blocks a *correct* metric (destination-critical):** RT seams #2 and #3 (§6) — both execution-plane, both silent, both fixable *without design change*.
-- **"No-black-boxes" legibility gaps (Track L):** L8 directory-tree door, L9 chain-audit door, L10 tenant tabs, S2 users. Functional doors missing — **not cosmetic**.
-- **Incomplete platform, not blocking a compute demo:** S4 pricing (unbuilt), S2 RBAC (absent), C5/TS onboarding-completion (static), A1 (design pending).
+- **Destination-critical seams: CLOSED.** RT seams #1/#2/#3 (§6) are all merged to `main`, fail-closed. The runway's couplings no longer silently no-op.
+- **"No-black-boxes" legibility gaps (Track L):** L8 directory-tree door, L9 chain-audit door, S2 users. (L10's operational tabs moved to S5, deferred; L10's onboarding lane is green.)
+- **Incomplete platform, not blocking a compute demo (decided-deferred / out of scope):** S4 pricing (deferred by decision), S2 RBAC (absent), TS onboarding-completion (static), A1 (design pending).
 
 ## 4. Scope boundary — what this program owns
 
@@ -161,34 +161,47 @@ Ordering **T → (R ∥ L) → S**.
   consolidation (D589) · import/controller-DB gates · architecture-spec typecheck ·
   route/provider/persisted-code snapshots. Lesson: pin the declared enforcement surface, don't
   out-parse an adversary.
-- **R — Runtime Foundation conformance. 🟡 THE GATE / critical path.** Close the RT function's
-  execution-plane gaps: govern the coupling seams (§6), and complete the by-design fail-open
-  follow-ups. **Corrected facts (2026-09-19):** E6-B/FND-VI evidence emission is **LIVE, not
-  dormant** (PR #704, no flag) — atomic for governed MCF metric evaluation; the remaining
-  fail-open boundaries are **four** by ADR design (observation, canonical-single-item, action,
-  evaluation — DEC-48d222), **not "six / §35"** (that was a phantom). RuntimeScheduler is
-  disabled-by-default and reconcile-stripped (D575 owner worker), not class-retired.
+- **R — Runtime Foundation conformance. 🟡 THE GATE / critical path.** **Seam class CLOSED
+  (2026-09-19)** — all three execution-plane coupling seams (§6) merged, fail-closed, with
+  disposable-DB CI regression coverage. What remains on R: (a) E6-B's first-*observed* evidence
+  emit → **FND-VI closure, DEFERRED** this session (externally gated: pilot1's tenant DB is
+  remote and the auditor-store health precondition is operator-only; a synthetic local metric is
+  the documented rabbit-hole — closure rides on a real metric run); (b) the by-design fail-open
+  follow-ups. **Facts:** E6-B evidence emission is **LIVE/armed, not dormant** (PR #704, no flag,
+  DBCP applied to pilot1) — atomic for governed MCF metric evaluation; the remaining fail-open
+  boundaries are **four** by ADR design (observation, canonical-single-item, action, evaluation —
+  DEC-48d222), **not "six / §35"** (a phantom). RuntimeScheduler is disabled-by-default and
+  reconcile-stripped (D575 owner worker), not class-retired.
 - **L — Legibility & no-black-boxes (parallel with R).** Close the operator-door gaps in the
-  matrix (L8 directory-tree, L9 chain-audit, L10 tenant tabs, S2 users). Co-requisite with R —
-  a governed step with no operator door is not "ready." Also: derived-doc regen, dead-code
+  matrix (L8 directory-tree, L9 chain-audit, S2 users). L10's onboarding lane is green; its four
+  operational tabs are reclassified to S5 (deferred, 2026-09-19). Co-requisite with R — a
+  governed step with no operator door is not "ready." Also: derived-doc regen, dead-code
   inventory, doctrine↔code gap filing.
 - **S — Structure (decided file moves only). ⏸ DEFERRED until R lands.** Each move ADR-gated.
 
-## 6. The runtime seams (execution plane) — the destination-critical gap
+## 6. The runtime seams (execution plane) — CLOSED 2026-09-19
 
 Three coupling seams found on the Kaveri E2E walk, same class (two sides disagree on an
-identifier → silent no-op). Grounded 2026-09-19:
+identifier → silent no-op). **All three are now fixed and merged to bc-core `main`**, each proven
+RED→GREEN on real Postgres with disposable-DB CI regression coverage (guard-the-class: every
+silent `continue`/`return` at the coupling sites became a fail-closed throw):
 
 - **seam #1** `source_key` object-vs-string — **FIXED** (PR #726; 10,744 rows admitted).
-- **seam #2** — provisioner `findSourceContractsForCanonical` reads only `sc_version_id`; a
-  live **pair-grammar** OC (`account.move`) has none → NULL join → CC resolves 0 upstream SCs →
-  activation fanout **silently strands**. Fix: read the pair-grammar keys (or both shapes) like
-  the resolver does. **Real live bug** (a prior "not-a-bug" read was half-wrong). → [[TSK-35c386]] (fix reportedly ready on a branch; anchor [[TSK-b5ab8a]])
-- **seam #3** — admission resolves the source-fact table name via an **AC id**
-  (`getName('source', effectiveAc.contractId)` → null → `fact.so_` row silently skipped).
-  **PROVEN an execution fix, not a design change:** `fact.so_{sc}` is provisioned/keyed by
-  Source-Contract identity, so SC-keying is a declaration the runtime *violates*. Fix: use the
-  already-resolved `parentSc.contractId` (three sites — guard the class). → [[TSK-a5f7c5]] (anchor [[TSK-b5ab8a]])
+- **seam #2** — provisioner `findSourceContractsForCanonical` read only `sc_version_id`; a live
+  **pair-grammar** OC (`account.move`) has none → NULL join → CC resolved 0 upstream SCs →
+  activation fanout silently stranded. **FIXED** — join now reads
+  `COALESCE(sc_contract_id, sc_version_id)` (PR #770, merge `15cdbc37`; regression spec in the
+  `e6b-db-integration` CI job). → [[TSK-35c386]]
+- **seam #3** — admission resolved the source-fact table name via an **AC id**
+  (`getName('source', <AC>)` → null → `fact.so_` row silently skipped). `fact.so_{sc}` is
+  Source-Contract-keyed by the provisioner, so SC-keying is a declaration the runtime *violated*.
+  **FIXED on both entry points** — batch path (PR #769, merge `eeb3d161`) + HTTP single-record
+  path + repository fail-closed guard (PR #772, merge `9fb10d98`), keyed by `parentSc.contractId`
+  (guard the class — all sites). → [[TSK-a5f7c5]] (completed [[TSK-338f06]])
+
+The RT execution-plane **seam class is closed** (anchor [[TSK-b5ab8a]]). What remains on the RT
+function: the by-design fail-open follow-ups (four boundaries, DEC-48d222) and E6-B's
+first-*observed* evidence emit — see §5 (R) and §9.
 
 ## 7. Unit ledger — the DB-Foundation-style work breakdown
 
@@ -200,8 +213,8 @@ Live status stays in git/PR/DevHub; this table is the decomposition + intake rec
 
 | Unit | Function | Plane | D541 intake | Status | Task |
 |---|---|---|---|---|---|
-| R-1 seam #3 admission→fact | RT | **execution** | fact.so_ is SC-keyed by the provisioner; runtime uses AC id → verified execution bug; fix = parentSc.contractId, no contract change | ready to build (parked design-first hold liftable) | [[TSK-a5f7c5]] |
-| R-2 seam #2 provisioner wire-shape | RT | **execution** | pair-grammar keys are declared on the OC; provisioner ignores them → execution bug | ready to build | [[TSK-35c386]] |
+| R-1 seam #3 admission→fact | RT | **execution** | fact.so_ is SC-keyed by the provisioner; runtime used AC id → verified execution bug; fix = parentSc.contractId, no contract change | ✅ **MERGED** — batch PR #769 `eeb3d161` + HTTP/repo PR #772 `9fb10d98` | [[TSK-a5f7c5]] / [[TSK-338f06]] |
+| R-2 seam #2 provisioner wire-shape | RT | **execution** | pair-grammar keys are declared on the OC; provisioner ignored them → execution bug | ✅ **MERGED** — PR #770 `15cdbc37` | [[TSK-35c386]] |
 | L-1 L8 directory-tree door | L8 | UI (legibility) | door absent for a built+governed subsystem → no-black-boxes gap | backlog | — |
 | L-2 L9 chain-audit door | L9 | UI (legibility) | `chain_audit_evidence` unsurfaced → gap | backlog | — |
 | A-1 Action/Intervention design | A1 | **design** | declaration missing → design act, not a patch | design pending | [[TSK-4609a6]] (UI door [[TSK-c33757]]) |
@@ -229,9 +242,10 @@ does not exist; bc-portal arch is 6cdceb.
 
 ## 9. Current gate & sequencing
 
-1. **Close Track R** (runtime-trust): govern seams #2/#3, land the by-design fail-open
-   follow-ups, **proven green under the T gates on a fixture tenant**. Critical path.
-2. **Close Track L's no-black-boxes doors** (co-requisite): L8/L9 doors, L10 tabs, S2 users.
+1. **Close Track R** (runtime-trust): **seams #1/#2/#3 done ✅**; remaining = E6-B first-observed
+   emit (FND-VI, **deferred** — rides on a real metric run + auditor-store health) and the
+   by-design fail-open follow-ups, **proven green under the T gates on a fixture tenant**. Critical path.
+2. **Close Track L's no-black-boxes doors** (co-requisite): L8/L9 doors, S2 users. (L10 tabs → S5, deferred.)
 3. **Then demo readiness:** platform readiness + a thin real-source (Kaveri) slice — the named
    downstream milestone, riding on DB-Foundation W2 + operator creds.
 
@@ -256,3 +270,14 @@ platform/tenant split per **DEC-c9e623/D389**; the design/execution plane gate p
 recorded as **Amendment 1** in ADR-33d436 (2026-09-19)). The readiness matrix and per-function ADR statuses were
 grounded 2026-09-19 (3 code-readiness agents + all 588 ADRs reconciled to functions); statuses
 are a snapshot and live status stays in git/PR/DevHub. Reproducible provenance (source scope, exact queries/counts, commit pins, and preserved unknowns — the tenant-runtime DB plane) is in [`platform-readiness-evidence-2026-09-19.md`](platform-readiness-evidence-2026-09-19.md).
+
+**Sync 2026-09-19 (later same day).** (1) **RT seam class CLOSED** — seams #1/#2/#3 all merged to
+bc-core `main` (PRs #726 / #770 `15cdbc37` / #769 `eeb3d161` + #772 `9fb10d98`), fail-closed, with
+disposable-DB CI regression coverage. (2) **E6-B FND-VI closure DEFERRED** — armed/live, but the
+first-observed emit is externally gated (pilot1 tenant DB remote; auditor-store health
+operator-only) and rides on a real metric run, not a synthetic local one. (3) **S4 Pricing
+confirmed deferred-by-decision / out of readiness scope** — operator package-catalog is wired,
+but no tenant→plan binding (v1 flat band); the live `Free` package row is seed-drift ([[TSK-ca2f7d]]).
+(4) **L10 onboarding lane declared READY** (provision→activate + E2E proof in CI + door UI);
+its four operational tabs (config/health/scoping/infra) **reclassified → S5, deferred** — the
+onboarding *act* is the lane, ongoing tenant *operations* are operator-console.
