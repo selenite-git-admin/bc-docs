@@ -33,7 +33,7 @@ path is green (L1–L3, L6, L7). The **runtime execution-plane seam class is CLO
 silent coupling seams merged to bc-core `main` (fail-closed, disposable-DB CI regression). What
 remains on Track R: E6-B's first-*observed* evidence emit (FND-VI, **deferred** — rides on a real
 metric run + operator-only auditor-store health) and the by-design fail-open follow-ups.
-Legibility gaps (missing operator doors: L8 directory-tree, L9 chain-audit, S2 users) are
+Legibility gaps (missing operator doors: L9 chain-audit, S2 users; the L8 Metric Registry UI shipped, PR #45) are
 co-requisite, *not* cosmetic. L10's onboarding lane is green; its four operational tabs are
 reclassified to S5 (deferred). S4 pricing is deferred-by-decision (v1 flat band, no plan binding)
 and S2 RBAC unbuilt — neither blocks a compute demo.
