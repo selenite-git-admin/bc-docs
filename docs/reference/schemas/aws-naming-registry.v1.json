@@ -81,7 +81,18 @@
       "pg",
       "master",
       "subnet-group",
-      "param-group"
+      "param-group",
+      "rotation-sg",
+      "endpoint-sg",
+      "rotation",
+      "sm-endpoint",
+      "rotation-alerts",
+      "rotation-failure",
+      "rotation-errors",
+      "age-checker",
+      "age-role",
+      "age-schedule",
+      "secret-age"
     ],
     "dbap": [
       "project",
@@ -165,7 +176,10 @@
       "AWS::ElasticLoadBalancingV2::LoadBalancer": "Name",
       "AWS::ElasticLoadBalancingV2::TargetGroup": "Name",
       "AWS::ECR::Repository": "RepositoryName",
-      "AWS::Cognito::UserPoolDomain": "Domain"
+      "AWS::Cognito::UserPoolDomain": "Domain",
+      "AWS::SNS::Topic": "TopicName",
+      "AWS::Events::Rule": "Name",
+      "AWS::CloudWatch::Alarm": "AlarmName"
     }
   },
   "classB_nonNameableTaggable": {
@@ -179,7 +193,8 @@
       "AWS::EC2::NatGateway",
       "AWS::EC2::EIP",
       "AWS::EC2::FlowLog",
-      "AWS::RDS::DBParameterGroup"
+      "AWS::RDS::DBParameterGroup",
+      "AWS::EC2::VPCEndpoint"
     ],
     "identityMapping": {
       "AWS::KMS::Key": "identified by its companion AWS::KMS::Alias (alias/{base}-key, classA) plus a Name tag {base}-key"
@@ -193,8 +208,13 @@
       "AWS::EC2::SubnetRouteTableAssociation",
       "AWS::IAM::Policy",
       "AWS::EC2::SecurityGroupIngress",
+      "AWS::EC2::SecurityGroupEgress",
       "AWS::SecretsManager::SecretTargetAttachment",
-      "AWS::CDK::Metadata"
+      "AWS::CDK::Metadata",
+      "AWS::SecretsManager::RotationSchedule",
+      "AWS::SecretsManager::ResourcePolicy",
+      "AWS::SNS::TopicPolicy",
+      "AWS::Lambda::Permission"
     ],
     "identityRule": "identified by CDK construct path / CFN logical id within the stack; the Aspect asserts neither a physical name nor tags for these"
   },
@@ -215,7 +235,10 @@
     "AWS::ElasticLoadBalancingV2::LoadBalancer": 32,
     "AWS::ElasticLoadBalancingV2::TargetGroup": 32,
     "AWS::ECR::Repository": 256,
-    "AWS::Cognito::UserPoolDomain": 63
+    "AWS::Cognito::UserPoolDomain": 63,
+    "AWS::SNS::Topic": 256,
+    "AWS::Events::Rule": 64,
+    "AWS::CloudWatch::Alarm": 255
   },
   "standingRules": {
     "devSecretsForceDelete": true,
