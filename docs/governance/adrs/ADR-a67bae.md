@@ -42,3 +42,7 @@ In `barecount-devhub`:
 - DEC-ce4314 / D581 — the organizing decision this amends (10 source-classified lanes).
 - DEC-c48b0f / D541 — retired external metric-audit → certification.
 - D564 (SAP retirement, Odoo-only) · D525 (SAP audit lane) · D369 (envelope→progression).
+
+## Amendment 1 — L8 lane label (2026-09-19)
+
+**L8 is renamed "Metric Registration / Directory" → "Metric Directory"** (operator-directed). This is a **label-only** refinement: L8's scope (`metric_directory.*`; seed → directory member → realized MCF authority), its strict one-lane-per-surface boundary, and the locked **L1–L10 count are unchanged** — so the taxonomy this ADR locks is not altered. The rename reconciles the lane label with the readiness SSOT (`implementation/platform-readiness-program.md`) and the shipped bc-admin **Metric Directory** UI (bc-admin PR #45: tabbed Family/Group/Member directory + member provenance + governed create doors, incl. the M12 authoring panel). **Rationale for "Directory" over "Registry":** this lane is a *reference* catalog — like Business Concepts, its members are *referenced*, not *registered*; "Registry" wrongly implies registration. The authority artifacts above (`LOCKED-LANE-TAXONOMY-2026-08-24.md`, `COVERAGE-MAP-lane-scope-2026-08-24.md`, the lane READMEs) and DEC-ce4314/D581's lane list are updated to read "Metric Directory". (Supersedes the intermediate "Metric Registry" label used briefly on 2026-09-19.)

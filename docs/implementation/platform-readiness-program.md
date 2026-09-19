@@ -88,7 +88,7 @@ over these lanes**, not lanes.
 | **L5** | Canonical Contract | `contract.canonical_contract*`, `canonical_mapping*` | acce2b·a7c0f9·f5018a·7d2f8c·35b34b·9d1f4b |
 | **L6** | MCF Metric (+ certification) | `mcf.metric_contract*` + bindings + `certification_record` | c3e57f·542722·09f86b·327d4e·31c212·c48b0f (cert = an L6 *capability*, not a lane) |
 | **L7** | Reader | `runtime.reader*/connector*/connection*` | 17112b·0d5b39·f656a6·ecd55c·f0866a |
-| **L8** | Registration / Directory | `metric_directory.*` | **b5c7ff/D506** · 5842d4·375e6b·37967b |
+| **L8** | Metric Directory *(renamed from "Registration / Directory" per DEC-a67bae/D590 Amendment 1, 2026-09-19)* | `metric_directory.*` | **b5c7ff/D506** · 5842d4·375e6b·37967b |
 | **L9** | Chain Integrity | `mcf.mcv_chain_status`, `chain_audit_evidence` | 29b518·354552·762336·b049f6 |
 | **L10** | Tenant Onboarding | tenant DB provisioning, `admin.connection*` (Platform→Tenant boundary, MLS-14→15) | a67518·ad76e9 (+ S3) |
 
@@ -129,7 +129,7 @@ Every cell resolves to a row in the **evidence manifest** ([`platform-readiness-
 | L5 CC | 🟢 | 🟡 | 🟡 | `canonical_mapping`=0; **CC-authoring UI removed** (D418) |
 | L6 MCF | 🟢 | 🟢 | 🟢 | metric_contract 432; `mcf.certification_record` 1316; full |
 | L7 Reader | 🟢 | 🟢 | 🟢 | reader_observation_binding populated; full |
-| L8 Directory | 🟢 | 🟢 | 🟡 | rich BE/DB (member 415); **only directory-tree door missing** (not a full black box) |
+| L8 Metric Directory | 🟢 | 🟢 | 🟢 | full **Metric Directory** UI — tabbed Family/Group/Member (counts + coverage + realizability) + member provenance detail + governed create doors (New Family/Group direct; Author metric via the M12 panel with maker/checker/judge provenance). Auditor CHANGES-REQUIRED addressed across two rounds (@ bc-admin `04b796f`): grain-required group create (135→136 live), derived realization state (`members/realized`), governed-route contract links (no 410), rejection text — plus the r2 remainder: **Realized facet keyed on realization association** (`realization_source`), so the 193 `audit_pending` realized members are now under Realized (**246 live**, was 53), lifecycle labels preserved; and **GroupsPane read-failure handling** (a failed groups/family read renders an error, not "No groups"). **Green is pinned to PR #45 (open, held for review) pending the auditor's re-review of `04b796f`.** |
 | L9 Chain Integrity | 🟢 | 🟢 | 🟡 | status door yes; `chain_audit_evidence` (127) no door |
 | L10 Tenant Onboarding | 🟢 | 🟢 | 🟢 | onboarding lane READY — provision→verify→activate wired, E2E proof in CI (`tenant-provisioning-api.integration.spec`); door UI (create/list/detail) merged. `onboarding_record`=0 = no tenant onboarded yet (empty-state, not a gap). **4 operational tabs (config/health/scoping/infra) reclassified → S5, deferred** (2026-09-19 disposition) |
 | RT Runtime engine | 🟢 | 🟢 reg / ❓ rt | ❓ | all boundaries wired; **seam class CLOSED** (§6 — all 3 merged, fail-closed); E6-B evidence LIVE/armed (FND-VI closure deferred — externally gated). **DB split:** registry substrate verified (`runtime.admission_run`…); tenant `fact.*`/`progression.*` **unverified** (not in DB allowlist) |
@@ -140,7 +140,7 @@ Every cell resolves to a row in the **evidence manifest** ([`platform-readiness-
 **Reading the matrix as distance-to-destination:**
 - **The metric authoring/certification path is green** (L1–L3, L6, L7). The runway can author and certify a metric.
 - **Destination-critical seams: CLOSED.** RT seams #1/#2/#3 (§6) are all merged to `main`, fail-closed. The runway's couplings no longer silently no-op.
-- **"No-black-boxes" legibility gaps (Track L):** L8 directory-tree door, L9 chain-audit door, S2 users. (L10's operational tabs moved to S5, deferred; L10's onboarding lane is green.)
+- **"No-black-boxes" legibility gaps (Track L):** L9 chain-audit door, S2 users. (L8 Metric Directory UI shipped — bc-admin PR #45; L10's operational tabs moved to S5, deferred; L10's onboarding lane is green.)
 - **Incomplete platform, not blocking a compute demo (decided-deferred / out of scope):** S4 pricing (deferred by decision), S2 RBAC (absent), TS onboarding-completion (static), A1 (design pending).
 
 ## 4. Scope boundary — what this program owns
@@ -173,7 +173,7 @@ Ordering **T → (R ∥ L) → S**.
   DEC-48d222), **not "six / §35"** (a phantom). RuntimeScheduler is disabled-by-default and
   reconcile-stripped (D575 owner worker), not class-retired.
 - **L — Legibility & no-black-boxes (parallel with R).** Close the operator-door gaps in the
-  matrix (L8 directory-tree, L9 chain-audit, S2 users). L10's onboarding lane is green; its four
+  matrix (L9 chain-audit, S2 users; L8 Metric Directory UI shipped, PR #45). L10's onboarding lane is green; its four
   operational tabs are reclassified to S5 (deferred, 2026-09-19). Co-requisite with R — a
   governed step with no operator door is not "ready." Also: derived-doc regen, dead-code
   inventory, doctrine↔code gap filing.
@@ -215,7 +215,7 @@ Live status stays in git/PR/DevHub; this table is the decomposition + intake rec
 |---|---|---|---|---|---|
 | R-1 seam #3 admission→fact | RT | **execution** | fact.so_ is SC-keyed by the provisioner; runtime used AC id → verified execution bug; fix = parentSc.contractId, no contract change | ✅ **MERGED** — batch PR #769 `eeb3d161` + HTTP/repo PR #772 `9fb10d98` | [[TSK-a5f7c5]] / [[TSK-338f06]] |
 | R-2 seam #2 provisioner wire-shape | RT | **execution** | pair-grammar keys are declared on the OC; provisioner ignored them → execution bug | ✅ **MERGED** — PR #770 `15cdbc37` | [[TSK-35c386]] |
-| L-1 L8 directory-tree door | L8 | UI (legibility) | door absent for a built+governed subsystem → no-black-boxes gap | backlog | — |
+| L-1 L8 Metric Directory UI | L8 | UI (legibility) | door absent for a built+governed subsystem → no-black-boxes gap | ✅ shipped (bc-admin PR #45) — tabbed registry + member provenance + create doors (New Family/Group + Author-metric M12 panel) | — |
 | L-2 L9 chain-audit door | L9 | UI (legibility) | `chain_audit_evidence` unsurfaced → gap | backlog | — |
 | A-1 Action/Intervention design | A1 | **design** | declaration missing → design act, not a patch | design pending | [[TSK-4609a6]] (UI door [[TSK-c33757]]) |
 

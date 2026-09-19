@@ -28,7 +28,7 @@ L4 BCF<->Source-Catalog Map = OC authoring (bind source field -> BCF Business Co
 L5 CC authoring (select BCF concepts, grain = Entity, CO shape) — SD
 L6 MCF Metric Contract authoring (bind formula variables -> BCF concepts by id; grain = Entity) — SA
 L7 Reader creation (UniBAT runtime executing the OC against the source) — SD
-L8 Metric Registration / Directory (seed -> directory member -> realized MCF authority) — SA
+L8 Metric Directory (seed -> directory member -> realized MCF authority) — SA  [renamed from "Metric Registration / Directory" per DEC-a67bae/D590 Amendment 1, 2026-09-19]
 L9 MC Chain Integrity (end-to-end chain checks) — SA
 L10 Tenant Onboarding (one tenant onto the operational chain) — tenant-scope
 
