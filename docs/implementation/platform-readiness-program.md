@@ -88,7 +88,7 @@ over these lanes**, not lanes.
 | **L5** | Canonical Contract | `contract.canonical_contract*`, `canonical_mapping*` | acce2b·a7c0f9·f5018a·7d2f8c·35b34b·9d1f4b |
 | **L6** | MCF Metric (+ certification) | `mcf.metric_contract*` + bindings + `certification_record` | c3e57f·542722·09f86b·327d4e·31c212·c48b0f (cert = an L6 *capability*, not a lane) |
 | **L7** | Reader | `runtime.reader*/connector*/connection*` | 17112b·0d5b39·f656a6·ecd55c·f0866a |
-| **L8** | Metric Registry *(renamed from "Registration / Directory", 2026-09-19; D590 taxonomy reconciliation follow-up)* | `metric_directory.*` | **b5c7ff/D506** · 5842d4·375e6b·37967b |
+| **L8** | Metric Registry *(renamed from "Registration / Directory" per DEC-a67bae/D590 Amendment 1, 2026-09-19)* | `metric_directory.*` | **b5c7ff/D506** · 5842d4·375e6b·37967b |
 | **L9** | Chain Integrity | `mcf.mcv_chain_status`, `chain_audit_evidence` | 29b518·354552·762336·b049f6 |
 | **L10** | Tenant Onboarding | tenant DB provisioning, `admin.connection*` (Platform→Tenant boundary, MLS-14→15) | a67518·ad76e9 (+ S3) |
 
