@@ -61,7 +61,7 @@ Platform readiness is fixture-provable; the Kaveri run is tenant-readiness confi
 The tracks and lanes churn; the **functions the platform must render do not**. This is the
 north-star list. Each function carries its scope and its governing ADRs *with real status*
 (open / decided / implemented) — a function with thin or no governing ADRs is itself a
-finding. Statuses below are grounded against the ADR registry + files, 2026-09-19.
+finding. Statuses below are grounded against the ADR registry + files, 2026-09-19 (provenance + commit pins: the [evidence manifest](platform-readiness-evidence-2026-09-19.md)).
 
 ### Shared platform services (the multi-tenant chassis)
 
@@ -113,7 +113,7 @@ covers *cosmetic* only — missing operator *doors* (below) are readiness gaps, 
 ## 3. Function readiness matrix (grounded 2026-09-19)
 
 RAG: 🟢 built/sound/door present · 🟡 partial/stub · 🔴 absent/gap · ❓ unverifiable this pass.
-Every cell is evidence-backed (see the grounding study; DB counts are live).
+Every cell resolves to a row in the **evidence manifest** ([`platform-readiness-evidence-2026-09-19.md`](platform-readiness-evidence-2026-09-19.md)) — source scope, exact queries/live counts, commit pins (bc-core `b80f10a`, bc-admin `0c94e24`, bc-portal `3db7f0e`), and preserved unknowns. DB counts are a 2026-09-19 snapshot of `bc_platform_dev`; the **tenant-runtime DB plane (`fact.*`/`progression.*`) was not inspectable and is marked ❓, never green.**
 
 | Function | Backend | DB | UI | Headline |
 |---|:--:|:--:|:--:|---|
@@ -127,13 +127,13 @@ Every cell is evidence-backed (see the grounding study; DB counts are live).
 | L3 BCF | 🟢 | 🟢 | 🟢 | concept_registry 18 tables; full console |
 | L4 OC | 🟢 | 🟡 | 🟡 | `observation_field_map`=0; authored via metric author-chain |
 | L5 CC | 🟢 | 🟡 | 🟡 | `canonical_mapping`=0; **CC-authoring UI removed** (D418) |
-| L6 MCF | 🟢 | 🟢 | 🟢 | metric_contract 432; cert 1316; full |
+| L6 MCF | 🟢 | 🟢 | 🟢 | metric_contract 432; `mcf.certification_record` 1316; full |
 | L7 Reader | 🟢 | 🟢 | 🟢 | reader_observation_binding populated; full |
 | L8 Directory | 🟢 | 🟢 | 🟡 | rich BE/DB (member 415); **only directory-tree door missing** (not a full black box) |
 | L9 Chain Integrity | 🟢 | 🟢 | 🟡 | status door yes; `chain_audit_evidence` (127) no door |
 | L10 Tenant Onboarding | 🟡 | 🟡 | 🟡 | provision only; `onboarding_record`=0; 4 tenant tabs = stubs |
-| RT Runtime engine | 🟡 | 🟢\* | ❓ | all boundaries wired; **2 live silent seams** (§6); E6-B evidence LIVE. \*tenant fact/progression unverifiable via allowlist |
-| EV Evidence/audit | 🟢 | 🟢 | 🟡 | hash-chained + atomic proof live; cert 3530; no inspector UI verified |
+| RT Runtime engine | 🟡 | 🟢 reg / ❓ rt | ❓ | all boundaries wired; **2 live silent seams** (§6); E6-B evidence LIVE. **DB split:** registry substrate verified (`runtime.admission_run`…); tenant `fact.*`/`progression.*` **unverified** (not in DB allowlist) |
+| EV Evidence/audit | 🟢 | 🟢 | 🟡 | hash-chained + atomic proof live; `contract.certification_record` 3530; no inspector UI verified |
 | TS Tenant self-service | 🟢 | — | 🟡 | metric/dashboard views real; onboarding = static shell |
 | A1 Action/Intervention | 🔴 | 🔴 | 🔴 | design pending — the deferred layer |
 
@@ -253,6 +253,6 @@ platform/tenant split per **DEC-c9e623/D389**; the design/execution plane gate p
 **DEC-c48b0f/D541**; the program mandate + platform/tenant readiness definition per
 **DEC-33d436/D606** (this destination-first refactor + the platform-functions framing +
 `A1` and the parked cosmetic concern are an evolution under that mandate — a light amendment
-note to ADR-33d436 records the framing). The readiness matrix and per-function ADR statuses were
+recorded as **Amendment 1** in ADR-33d436 (2026-09-19)). The readiness matrix and per-function ADR statuses were
 grounded 2026-09-19 (3 code-readiness agents + all 588 ADRs reconciled to functions); statuses
-are a snapshot and live status stays in git/PR/DevHub.
+are a snapshot and live status stays in git/PR/DevHub. Reproducible provenance (source scope, exact queries/counts, commit pins, and preserved unknowns — the tenant-runtime DB plane) is in [`platform-readiness-evidence-2026-09-19.md`](platform-readiness-evidence-2026-09-19.md).
