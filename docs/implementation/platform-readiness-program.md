@@ -120,7 +120,7 @@ Every cell resolves to a row in the **evidence manifest** ([`platform-readiness-
 | S1 Auth | 🟢 | 🟢 | 🟢 | 4 global guards + Cognito TOTP; mature |
 | S2 User/access | 🟡 | 🔴 | 🔴 | admin-provision only; no RBAC tables; UI placeholder |
 | S3 Tenant lifecycle | 🟢 | 🟢 | 🟡 | provisioning + 5-state model live; config/health/scoping/infra = stubs |
-| S4 Pricing | 🔴 | 🔴 | 🔴 | **deferred-by-decision / out of readiness scope** (v1 = single flat band, no subscription instantiated — `tenant-onboarding.md`; not-a-lane register). Operator package-catalog IS wired (`/packages` + bc-admin `registry/packages`); **no** tenant→plan binding; live `Free` row is seed-drift ([[TSK-ca2f7d]]). Not a gate blocker |
+| S4 Pricing | 🔴 | 🔴 | 🔴 | **deferred-by-decision / out of readiness scope** (v1 = single flat band, no subscription instantiated — `tenant-onboarding.md`; not-a-lane register). Operator package-catalog IS wired (`/packages` + bc-admin `registry/packages`); **no** tenant→plan binding; `Free` package present — seed/genesis provenance tracked under Platform DB Foundation ([[TSK-ca2f7d]]), not adjudicated here. Not a gate blocker |
 | S5 Operator console | 🟢 | — | 🟡 | mature (255 commits); placeholder doors (users, pricing) + **tenant operational tabs (config/health/scoping/infra) reclassified here from L10, deferred** |
 | L1 Source Catalog | 🟢 | 🟢 | 🟢 | full |
 | L2 SC+AC | 🟢 | 🟢 | 🟢 | SC 305 / AC 305 (1:1); create doors |
@@ -277,7 +277,7 @@ disposable-DB CI regression coverage. (2) **E6-B FND-VI closure DEFERRED** — a
 first-observed emit is externally gated (pilot1 tenant DB remote; auditor-store health
 operator-only) and rides on a real metric run, not a synthetic local one. (3) **S4 Pricing
 confirmed deferred-by-decision / out of readiness scope** — operator package-catalog is wired,
-but no tenant→plan binding (v1 flat band); the live `Free` package row is seed-drift ([[TSK-ca2f7d]]).
+but no tenant→plan binding (v1 flat band); the `Free` package's seed/genesis provenance is tracked under Platform DB Foundation ([[TSK-ca2f7d]]), not adjudicated in this readiness doc.
 (4) **L10 onboarding lane declared READY** (provision→activate + E2E proof in CI + door UI);
 its four operational tabs (config/health/scoping/infra) **reclassified → S5, deferred** — the
 onboarding *act* is the lane, ongoing tenant *operations* are operator-console.
