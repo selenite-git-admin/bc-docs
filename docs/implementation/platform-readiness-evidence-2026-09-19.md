@@ -17,6 +17,11 @@ cell **unknown (❓)**, not green — see §Verifiability limits.
 
 - **Backend / UI:** read-only static inspection of the repositories at the pinned commits
   (below), by three read-only agents (no writes, no execution). Evidence is `file:line`.
+- **Live UI (added 2026-09-19):** for capability/"is-it-done" claims, static inspection is
+  necessary but **not sufficient** — it establishes component-presence, not working capability,
+  and can mislabel a by-design pattern as a gap. L4/L5 authoring was re-verified by **running
+  bc-core (:3100) + bc-admin (:3010) and driving the actual UI** (see the L4/L5 rows + the addendum).
+  Any future "complete/tested-in-UI" claim is verified by running the app, not by reading routes.
 - **DB:** live counts against `bc_platform_dev` via the `bc-postgres` MCP, **read-only**
   (`information_schema` + read-only `SELECT count(*)`; the `pg_list_tables` helper was broken
   and `pg_count`/`pg_describe_table` were allowlist-limited, so enumeration used
@@ -55,8 +60,8 @@ These are different relations in different schemas; both counts are registry-sid
 | L1 Source Catalog | `source-catalog.controller.ts:36-411`; `register-source-stack.controller.ts:17` | `source.*`=12 tables; `source_system`=1; `source_object`=305; `source_field`=9850 | `sources/onboard`,`sources/catalog/systems` | verified |
 | L2 SC+AC | `contract.controller.ts:26`; `register-source-stack.controller.ts:17` | `contract.source_contract`=305; `admission_contract`=305 | `registry/contracts/{source,admission}`(+`/new`) | verified |
 | L3 BCF | `bcf/registry-authoring.controller.ts:128`; `registry-read.controller.ts:47` | `concept_registry.*`=18 tables; `business_concept`=815; `entity`=154; `characteristic`=234 | `business-concepts/*` console | verified |
-| L4 OC | `author-observation-chain.controller.ts:21` | `contract.observation_contract`=7; `observation_field_map`=**0** | `registry/contracts/observation`; author via metric `author-chain` | verified |
-| L5 CC | `ccv2-canonical-resolver.controller.ts:23`; `publish-chain.controller.ts:18` | `contract.canonical_contract`=5; `canonical_mapping`=**0** | `registry/contracts/canonical` (list only; CC wizards removed, AppRouter:152-153) | verified |
+| L4 OC | `author-observation-chain.controller.ts:21` | `contract.observation_contract`=7; `observation_field_map`=0 (retired legacy resolver table — mappings in OC body) | **live-verified:** authored on-demand via the metric-pulled author-chain console (metric detail → "Author observation chain (OC + reader + CC)"); standalone `registry/contracts/observation` list-only by design | verified + live UI |
+| L5 CC | `author-observation-chain.controller.ts:21`; `publish-chain.controller.ts:18` (CC leg) | `contract.canonical_contract`=5 (fields+mappings populated); `canonical_mapping`=0 (retired legacy resolver table) | **live-verified:** CC-v2 body authored on-demand in the same author-chain console; standalone `registry/contracts/canonical` list-only + dedicated wizards removed (D418) — both by design | verified + live UI |
 | L6 MCF | ~40 `mcf/*` controllers (`mcf-intake`, `mcf-publication-activation`, …) | `mcf.metric_contract`=432; `metric_contract_version`=432; `metric_variable_binding`=738; `mcf.certification_record`=1316 | `catalog/metrics`,`/register`,`/governed/:uid` | verified |
 | L7 Reader | `reader.controller.ts:35`; `connector.controller.ts:22`; `connection.controller.ts:23` | `runtime.reader`=5; `connector`=3; `connection`=1; `reader_observation_binding`=5 | `registry/readers`(+`/new`),`connectors`,`connections` | verified |
 | L8 Directory | `metric-directory.controller.ts:107` (@PlatformOnly, DEC-b5c7ff/D506) | `metric_directory` family=47/group=135/member=415/member_version=247/realization_event=263; `mcf.seed_metric`=12507 | `catalog/metrics/register` (registration) present; **directory tree = no door** (0 bc-admin refs) | verified |
@@ -106,3 +111,5 @@ seam-#2/#3 merges below; `main` has advanced past it.
 - The four operational tabs (`configuration/health/scoping/infrastructure`, `PlaceholderPage`) are post-onboarding tenant operations → reclassified to **S5** operator-console, deferred.
 
 **E6-B / FND-VI — closure DEFERRED (not closeable from the dev host):** emit is unconditional on `main` (`governed-metric-persistence.adapter.ts:216`), DBCP applied to `tbc_pilot1_dev`. But `tbc_pilot1_dev` is **not on the local host** (only a throwaway `tbc_probe_unit4_dev` is local) — pilot1 is remote. Closure requires an *observed* real metric finalize + auditor-store health (operator-only); a synthetic local metric is the documented rabbit-hole.
+
+**L4/L5 OC/CC — live-UI verification (2026-09-19), correcting a static-only 🟡.** Ran bc-core (:3100) + bc-admin (:3010) and drove the UI: (1) standalone **Observation Contracts** and **Canonical Contracts** pages are **list-only by design** (filters/search/pagination, no create button; 3 active OCs, 3 active CCs with fields+mappings). (2) OC+CC are authored **on-demand from a metric** — the metric detail page carries "**Author observation chain (OC + reader + CC) for this metric's entity →**", and the console header reads *"Chain for Customer Invoice — pulled by Accounts Receivable Turnover"* (demand-pull confirmed). The console is a real working form (entity/function/source fields + `observations` legs + `canonical` CC-v2 body + Dry-run). (3) Metric Catalog shows **335 contracted / 70 active** — the demand-pull path has been exercised, not merely wired. Conclusion: OC/CC authoring is **present + working by design**; the earlier 🟡 (from static route-reading) mislabeled a deliberate demand-pull flow as a gap. L4/L5 DB+UI raised to 🟢.

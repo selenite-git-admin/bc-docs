@@ -125,8 +125,8 @@ Every cell resolves to a row in the **evidence manifest** ([`platform-readiness-
 | L1 Source Catalog | 🟢 | 🟢 | 🟢 | full |
 | L2 SC+AC | 🟢 | 🟢 | 🟢 | SC 305 / AC 305 (1:1); create doors |
 | L3 BCF | 🟢 | 🟢 | 🟢 | concept_registry 18 tables; full console |
-| L4 OC | 🟢 | 🟡 | 🟡 | `observation_field_map`=0; authored via metric author-chain |
-| L5 CC | 🟢 | 🟡 | 🟡 | `canonical_mapping`=0; **CC-authoring UI removed** (D418) |
+| L4 OC | 🟢 | 🟢 | 🟢 | authored **on-demand** via the metric-pulled author-chain console (demand-pull by design, live-verified); OC contracts exist (7); standalone OC page list-only by design; `observation_field_map`=0 = retired legacy resolver table (mappings in OC body) |
+| L5 CC | 🟢 | 🟢 | 🟢 | CC-v2 body authored **on-demand** in the same author-chain console (demand-pull, live-verified); CC contracts exist (5, fields+mappings populated); standalone CC page list-only + dedicated wizards removed (D418) — both by design; `canonical_mapping`=0 = retired legacy resolver table |
 | L6 MCF | 🟢 | 🟢 | 🟢 | metric_contract 432; `mcf.certification_record` 1316; full |
 | L7 Reader | 🟢 | 🟢 | 🟢 | reader_observation_binding populated; full |
 | L8 Directory | 🟢 | 🟢 | 🟡 | rich BE/DB (member 415); **only directory-tree door missing** (not a full black box) |
