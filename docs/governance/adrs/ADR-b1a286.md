@@ -2,7 +2,7 @@
 uid: DEC-b1a286
 title: "Database bootstrap source-of-truth model"
 description: "Declares the single authoritative source for each layer of the platform database; retires stale \"authoritative\" claims."
-status: decided
+status: superseded
 date: 2026-08-24T08:08:48.104Z
 project: bc-core
 domain: data-platform
@@ -12,13 +12,14 @@ focus: governance
 
 # Database bootstrap source-of-truth model
 
-> **Partially superseded by [DEC-4c1396](ADR-4c1396.md) (2026-09-20).** Clause (2) — docker/redesign as
-> the schema-change mechanism — and clause (4)'s docker/redesign base-table blueprint role are ended:
-> the `bc-db` forward-migration spine is the sole platform schema authoring and apply path, and
+> **Superseded by [DEC-4c1396](ADR-4c1396.md) (2026-09-20).** Clause (2) — docker/redesign as the
+> schema-change mechanism — and clause (4)'s docker/redesign base-table blueprint role are ended: the
+> `bc-db` forward-migration spine is the sole platform schema authoring and apply path, and
 > `docker/redesign` is frozen pending slice-wise retirement. (Clause (4)'s monolith lockstep was already
 > retired by [DEC-489492](ADR-489492.md).) Clause (1) (live DB is current-state ground truth), clause (3)
 > (Drizzle is a type surface, not the authority), and the `infrastructure.schema_migration_event` ledger
-> as the authority on what was applied all **stand** — the spine runner writes to that same ledger.
+> as the authority on what was applied are **not abandoned** — they are carried forward verbatim as the
+> "Carried forward" section of DEC-4c1396, whose spine runner writes to that same ledger.
 
 ## Context
 
