@@ -3,6 +3,7 @@ uid: DEC-b1a286
 title: "Database bootstrap source-of-truth model"
 description: "Declares the single authoritative source for each layer of the platform database; retires stale \"authoritative\" claims."
 status: superseded
+superseded_by: DEC-4c1396
 date: 2026-08-24T08:08:48.104Z
 project: bc-core
 domain: data-platform
