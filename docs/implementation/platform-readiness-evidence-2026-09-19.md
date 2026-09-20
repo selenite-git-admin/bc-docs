@@ -118,16 +118,23 @@ seam-#2/#3 merges below; `main` has advanced past it.
 
 ## Execution records (OC/CC/directory) — 2026-09-20 (SES-9c706c)
 
-Lifts the L4/L5/L8 "execution unverified / door present only" boundary recorded above. Method:
-**run-the-app against the governed endpoints on the running server** (not source-read, not a form
-visit) + **read-only substrate reads** of the durable execution ledgers. Pins: bc-core `b80f10a7`
-(`main`), bc-admin `93c4c4d`, DB `bc_platform_dev`, endpoint `POST /api/contracts/observation-chains`
-(`@PlatformOnly` + `@Roles('platform_admin')`), token minted for `platform_admin`. **No new residue
-this pass** — the L4/L5 evidence is a dry-run (Inv V, zero write) plus reads of pre-existing rows.
+Records **backend / endpoint + historical** author-execution evidence for the L4/L5/L8 doors. Method:
+**run-the-app against the governed HTTP endpoint on the running server** (not source-read) + **read-only
+substrate reads** of the durable execution ledgers. Pins: bc-core `b80f10a7` (`main`), bc-admin `93c4c4d`,
+DB `bc_platform_dev`, endpoint `POST /api/contracts/observation-chains` (`@PlatformOnly` +
+`@Roles('platform_admin')`), token minted for `platform_admin`. **No new residue this pass** — the L4/L5
+evidence is a dry-run (Inv V, zero write) plus reads of pre-existing rows.
+
+**Scope boundary (auditor docs#43 P2, 2026-09-20):** this evidence establishes execution at the
+**backend/endpoint** layer and via **historical** committed runs — it does **not** establish a successful
+author through the **current metric-pulled UI**. The L4/L5 **UI** legend therefore stays *door present*;
+current-UI author execution is **retained as unverified** below (no UI receipt tying action → request/result
+→ run-id → resulting references was captured). Likewise L8 rows are verified to **exist** (persistence),
+which is not proof of the client path that wrote them.
 
 ### L4/L5 — observation-chain authoring (OC + reader + CC), `POST /api/contracts/observation-chains`
 
-**(a) This-pass observed dry-run (rung 2 — successful execution, zero write).** Replayed the
+**(a) This-pass observed dry-run — backend/endpoint, zero write.** Replayed the
 known-good `jeSpec` from `src/registry/substrate/author-observation-chain.dryrun.integration.spec.ts`
 (journal_entry exemplar, entity `6e47ef23`, `account.move` SC `019fe42b-7f2b`@1.0.0 / AC
 `019fe42b-7fe8`**@1.1.0**) through the running endpoint:
@@ -145,34 +152,45 @@ confirms why: that AC version is `superseded` (supersede_after 2026-09-09); the 
 `1.1.0` (created 2026-09-07); SC `019fe42b-7f2b`@1.0.0 remains active. The dry-run resolved only after
 repinning to the active AC — i.e. the authoring boundary enforces contract-version currency.
 
-**(c) Historical committed author runs (rung 3 — durable ledger).** `runtime.chain_authoring_run`
+**(c) Historical committed author runs — durable ledger (caller provenance unknown).** `runtime.chain_authoring_run`
 holds **3 `committed` runs (2026-08-14, env dev)**, each with `state_code='committed'`, a recorded
 `plan_digest`, and `chain_authoring_step` rows for `canonical_contract` + `observation_contract` +
-`reader_flavor` (all `written`):
+`reader_flavor` (all `written`). `created_by_name` is NULL, so the writing client (UI vs endpoint) is not
+recorded. The `reader_flavor` step target is the **flavorId**; the provisioned **readerId** is a distinct id:
 
-| run_id | plan_digest (16) | entity (refId) | OC (live) | CC (live) | reader |
-|---|---|---|---|---|---|
-| `2ba35ba6` | `492453a2ed7b34fc` | `6e47ef23` (je_primary) | `45f8b60c` ✓ | `7fa4b84f` ✓ | `13a0bc42` |
-| `85edf073` | `6ca8f36ba1a5c032` | `0e1a0035` (cost_center_primary) | `9bd23f1e` ✓ | `cbe39b9e` ✓ | `919b5dc3` |
-| `9fd9bd92` | `0afdfac4538a8f62` | `dae813b3` (product_primary) | `16839a7a` ✓ | `48aca58b` ✓ | `16a1abfc` |
+| run_id | plan_digest (16) | entity (refId) | OC (live) | CC (live) | reader_flavor (step target) | readerId |
+|---|---|---|---|---|---|---|
+| `2ba35ba6` | `492453a2ed7b34fc` | `6e47ef23` (je_primary) | `45f8b60c` ✓ | `7fa4b84f` ✓ | `13a0bc42` | `ae6a3b99` |
+| `85edf073` | `6ca8f36ba1a5c032` | `0e1a0035` (cost_center_primary) | `9bd23f1e` ✓ | `cbe39b9e` ✓ | `919b5dc3` | `24e217de` |
+| `9fd9bd92` | `0afdfac4538a8f62` | `dae813b3` (product_primary) | `16839a7a` ✓ | `48aca58b` ✓ | `16a1abfc` | `8ce6fe64` |
 
 All 3 OC targets are live in `contract.observation_contract` and all 3 CC targets in
 `contract.canonical_contract` (`archived_at IS NULL` verified). (Plus 2 `abandoned` OC-only runs
-2026-08-15 — the abandoned-run recovery path.) **Conclusion:** the L4/L5 door has authored 3 real
-chains end-to-end with recorded digests → live OC+CC+reader, and reproduces a deterministic dry-run
-digest this pass. "No author execution recorded" is retired; L4/L5 UI legend → **author execution recorded**.
+2026-08-15 — the abandoned-run recovery path.) **Conclusion:** the governed **endpoint** has recorded
+author executions — a deterministic dry-run reproduced this pass + 3 historical committed runs → live
+OC+CC — so "no author execution recorded" is false at the **backend** layer. **A successful author
+through the current metric-pulled UI is NOT established by this evidence and is retained as unverified**
+(see the verifiability note). The L4/L5 **UI** legend stays *door present*; the verified facts are
+**backend / historical** author-execution evidence.
 
-### L8 — Metric Directory create doors (executed 2026-09-19, SES-b20b26; rows verified live this pass)
+### L8 — Metric Directory create doors (rows created 2026-09-19, SES-b20b26; rows verified to EXIST this pass)
 
-Governed rows authored through the shipped Metric Directory UI (bc-admin PR #45 → `800cdca`), all by
-`anant@selenite.co`, confirmed live by read-only substrate query:
+Read-only substrate confirms these governed rows **exist** (persistence), all `created_by_name`
+`anant@selenite.co`. Read-only rows establish persistence, **not the client path that wrote them** — so
+provenance is attributed **per action** (auditor docs#43 P2). The bc-admin PR #45 acceptance/merge
+(`800cdca`) did **not** certify live UI execution or live counts.
 
-| door | table | uid | identity | created_at |
-|---|---|---|---|---|
-| New Family | `metric_directory.family` | `7fa70579-ba4e-4728-9e46-32a9a6e1d845` | finance/treasury · theme `fx_exposure_and_hedging` | 2026-09-19T15:52Z |
-| New Group | `metric_directory.group` | `d8014337-d2ca-4631-87da-26d8c6233206` | `je_line_grain_probe` (grain-entity required) | 2026-09-19T16:43Z |
-| Author metric (M12 panel) | `mcf.metric_authoring_panel_run` | `cf6f50ea-26a8-4275-bb79-4af0c7c4a4bd` | verdict `APPROVE_FOR_DRAFT` | 2026-09-19T15:35Z |
-| Materialize (M12.5) | `mcf.metric_contract` | `177b865b-253b-4132-8c1c-b06bedec3403` | `supplier_invoice_cycle_time` (draft) | 2026-09-19T16:24Z |
+| door | table | uid | identity | created_at | client-path provenance |
+|---|---|---|---|---|---|
+| New Family | `metric_directory.family` | `7fa70579-ba4e-4728-9e46-32a9a6e1d845` | finance/treasury · theme `fx_exposure_and_hedging` | 2026-09-19T15:52Z | operator-reported UI (SES-b20b26) |
+| New Group | `metric_directory.group` | `d8014337-d2ca-4631-87da-26d8c6233206` | `je_line_grain_probe` (grain-entity required) | 2026-09-19T16:43Z | operator-reported UI (SES-b20b26) |
+| Author metric (M12 panel) | `mcf.metric_authoring_panel_run` | `cf6f50ea-26a8-4275-bb79-4af0c7c4a4bd` | verdict `APPROVE_FOR_DRAFT` | 2026-09-19T15:35Z | operator-reported UI (SES-b20b26) |
+| Materialize (M12.5) | `mcf.metric_contract` | `177b865b-253b-4132-8c1c-b06bedec3403` | `supplier_invoice_cycle_time` (draft) | 2026-09-19T16:24Z | **endpoint-observed** (bc-admin#45 comment 5743463970) — **not** UI-authored |
+
+The materialization row's prior author record explicitly says "Verified live against the endpoint"; it is
+therefore labeled endpoint-observed. The three operator-reported UI rows are distinguished from
+independently-verified persistence: their existence is verified; their UI click-path is operator-reported,
+not independently certified this pass.
 
 ### Reproduction
 
@@ -185,7 +203,11 @@ Governed rows authored through the shipped Metric Directory UI (bc-admin PR #45 
 - Directory rows: `SELECT … FROM metric_directory.family|group`, `mcf.metric_authoring_panel_run`,
   `mcf.metric_contract` filtered to `created_at::date >= '2026-09-19'`.
 
-**Verifiability note:** rung-3 for L4/L5 is *historical* (committed runs are 2026-08-14, `created_by_name`
-NULL); this pass adds a *live-observed* dry-run + the fail-closed proof, not a fresh committed author
-(which would write new OC/CC/reader residue). That remains available as a further step if an auditor
-requires a this-pass committed author; it is intentionally not run here to avoid avoidable residue.
+**Verifiability note / retained boundary:** the committed L4/L5 runs are *historical* (2026-08-14,
+`created_by_name` NULL); this pass adds a *live-observed* endpoint dry-run + the fail-closed proof, not a
+fresh committed author and not a UI-driven author. **Current metric-pulled UI author execution stays
+UNVERIFIED** — closing it needs a UI execution receipt tying the action → request/result → run-id →
+resulting OC/CC references (a live-driven dry-run through the console would suffice for the dry-run rung
+with zero residue; a UI-driven commit would write new OC/CC/reader residue). Both are intentionally
+deferred here to keep this a documentation-only, zero-residue correction; the UI-driven capture is a
+candidate for the UI quality pass.
