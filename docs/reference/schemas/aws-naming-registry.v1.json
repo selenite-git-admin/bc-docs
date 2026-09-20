@@ -1,5 +1,5 @@
 {
-  "$comment": "BareCount AWS naming & tagging registry — implementation contract for the CDK guardrail Aspect. Governed by ADR DEC-e39ed3. Versioned by filename; amendments bump the version (v2, ...). Every governed resource type is in exactly ONE of the three classes below; a type in none fails synth closed (must be classified).",
+  "$comment": "BareCount AWS naming & tagging registry \u2014 implementation contract for the CDK guardrail Aspect. Governed by ADR DEC-e39ed3. Versioned by filename; amendments bump the version (v2, ...). Every governed resource type is in exactly ONE of the three classes below; a type in none fails synth closed (must be classified).",
   "version": "1",
   "governingAdr": "DEC-e39ed3",
   "format": "{scope}-{stage}-{region}-{dom}[-{tenant}]-{role}",
@@ -89,6 +89,7 @@
       "rotation-alerts",
       "rotation-failure",
       "rotation-errors",
+      "cpu-surplus",
       "age-checker",
       "age-role",
       "age-schedule",
@@ -183,7 +184,7 @@
     }
   },
   "classB_nonNameableTaggable": {
-    "$comment": "CloudFormation names it; no useful name property, but IS taggable — identified by its Name tag (= convention name) + carries requiredTags",
+    "$comment": "CloudFormation names it; no useful name property, but IS taggable \u2014 identified by its Name tag (= convention name) + carries requiredTags",
     "types": [
       "AWS::KMS::Key",
       "AWS::EC2::VPC",
@@ -249,7 +250,7 @@
   "tagExempt": [
     "AWS::KMS::Alias"
   ],
-  "$tagExempt": "nameable (or taggable-class) types that do NOT support resource tags — the Aspect checks their name but skips the required-tags check. KMS aliases cannot carry tags.",
+  "$tagExempt": "nameable (or taggable-class) types that do NOT support resource tags \u2014 the Aspect checks their name but skips the required-tags check. KMS aliases cannot carry tags.",
   "classD_contractNamed": {
     "$comment": "taggable resources named by a SEPARATE path/domain contract, not the {scope}-{stage}-... convention. The required tags ARE enforced; the name property is validated against the contract pattern.",
     "properties": {
