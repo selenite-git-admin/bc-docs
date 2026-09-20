@@ -12,6 +12,14 @@ focus: governance
 
 # Database bootstrap source-of-truth model
 
+> **Partially superseded by [DEC-4c1396](ADR-4c1396.md) (2026-09-20).** Clause (2) — docker/redesign as
+> the schema-change mechanism — and clause (4)'s docker/redesign base-table blueprint role are ended:
+> the `bc-db` forward-migration spine is the sole platform schema authoring and apply path, and
+> `docker/redesign` is frozen pending slice-wise retirement. (Clause (4)'s monolith lockstep was already
+> retired by [DEC-489492](ADR-489492.md).) Clause (1) (live DB is current-state ground truth), clause (3)
+> (Drizzle is a type surface, not the authority), and the `infrastructure.schema_migration_event` ledger
+> as the authority on what was applied all **stand** — the spine runner writes to that same ledger.
+
 ## Context
 
 Discovery under TSK-8e49e0 (Codex-accepted; re-baselined 2026-08-24 at bc-core 9828eede) established that the platform database has no single, honestly-documented source of truth. Multiple documents each claim to be authoritative and disagree with each other and the running system: docs say "three SQL files under docker/redesign/ define the schema" but ~200 files exist; docs point developers at a setup command (db:snapshot:restore) that targets a decommissioned container and cannot run; the schema is evolved by hand-applied change files with (until TSK-cd1dba) no record of what was applied; and some data (metrics, metric directory, business concepts) exists only inside a backup and cannot be regenerated. The absence of one declared source of truth has repeatedly cost sessions time chasing phantom drift (notably the monolith-vs-modular base-table drift). This decision fixes the truth first; it changes no code or data and authorizes no database change.
