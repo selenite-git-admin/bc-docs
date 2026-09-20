@@ -115,3 +115,77 @@ seam-#2/#3 merges below; `main` has advanced past it.
 **E6-B / FND-VI — closure DEFERRED (not closeable from the dev host):** emit is unconditional on `main` (`governed-metric-persistence.adapter.ts:216`), DBCP applied to `tbc_pilot1_dev`. But `tbc_pilot1_dev` is **not on the local host** (only a throwaway `tbc_probe_unit4_dev` is local) — pilot1 is remote. Closure requires an *observed* real metric finalize + auditor-store health (operator-only); a synthetic local metric is the documented rabbit-hole.
 
 **L4/L5 OC/CC — live-UI verification (2026-09-19), correcting a static-only 🟡.** Ran bc-core (:3100) + bc-admin (:3010) and drove the UI: (1) standalone **Observation Contracts** and **Canonical Contracts** pages are **list-only by design** (filters/search/pagination, no create button; 3 active OCs, 3 active CCs with fields+mappings). (2) OC+CC are authored **on-demand from a metric** — the metric detail page carries "**Author observation chain (OC + reader + CC) for this metric's entity →**", and the console header reads *"Chain for Customer Invoice — pulled by Accounts Receivable Turnover"* (demand-pull confirmed). The console renders a real form (entity/function/source fields + `observations` legs + `canonical` CC-v2 body + a Dry-run action). (3) **Execution boundary (auditor PR#39):** this pass recorded **navigation + form presence only** — no successful dry-run response/plan digest, no authoring outcome/run-id, and no resulting OC/CC chain references were captured; the authoring *execution* is therefore **unverified** here. The Metric Catalog's **335 contracted / 70 active** are catalog counts (`metric_contract` count × `governance_state_code`) and do **not** establish which OC/CC authoring path ran — that inference is withdrawn. Conclusion: the **demand-pull / list-only design** is confirmed, and the authoring **door is present + wired** (L4/L5 UI 🟢 = *door present* per the matrix legend); a successful author *run* was not established here and remains a separate verification. The earlier 🟡 (from static route-reading) mislabeled a deliberate demand-pull flow as a gap.
+
+## Execution records (OC/CC/directory) — 2026-09-20 (SES-9c706c)
+
+Lifts the L4/L5/L8 "execution unverified / door present only" boundary recorded above. Method:
+**run-the-app against the governed endpoints on the running server** (not source-read, not a form
+visit) + **read-only substrate reads** of the durable execution ledgers. Pins: bc-core `b80f10a7`
+(`main`), bc-admin `93c4c4d`, DB `bc_platform_dev`, endpoint `POST /api/contracts/observation-chains`
+(`@PlatformOnly` + `@Roles('platform_admin')`), token minted for `platform_admin`. **No new residue
+this pass** — the L4/L5 evidence is a dry-run (Inv V, zero write) plus reads of pre-existing rows.
+
+### L4/L5 — observation-chain authoring (OC + reader + CC), `POST /api/contracts/observation-chains`
+
+**(a) This-pass observed dry-run (rung 2 — successful execution, zero write).** Replayed the
+known-good `jeSpec` from `src/registry/substrate/author-observation-chain.dryrun.integration.spec.ts`
+(journal_entry exemplar, entity `6e47ef23`, `account.move` SC `019fe42b-7f2b`@1.0.0 / AC
+`019fe42b-7fe8`**@1.1.0**) through the running endpoint:
+
+- HTTP **200**; response `data.outcome` = `dry_run`; `data.dryRunPlan.businessObjectCode` = `journal_entry`;
+  `data.planDigest` = `2a61aa5675b6e31e3c9e68ab667250dc97606efb763565fb862ef9097048e068` (64-hex).
+- **Deterministic:** two consecutive calls returned the identical digest.
+- **Inv V (no write):** `SELECT count(*) FROM runtime.chain_authoring_run WHERE admitted_entity_id='6e47ef23…'`
+  = **1 before AND after** both dry-runs (unchanged).
+
+**(b) Fail-closed active-pin proof (bonus — the door is an evaluation boundary, not a form).** The
+first attempt pinned the AC at its *historical* version `@1.0.0` and was **refused 400**: *"leg
+je_primary: admission contract 019fe42b-7fe8-776d-a9af-19517b6bb43d@1.0.0 is not active."* Substrate
+confirms why: that AC version is `superseded` (supersede_after 2026-09-09); the **active** version is
+`1.1.0` (created 2026-09-07); SC `019fe42b-7f2b`@1.0.0 remains active. The dry-run resolved only after
+repinning to the active AC — i.e. the authoring boundary enforces contract-version currency.
+
+**(c) Historical committed author runs (rung 3 — durable ledger).** `runtime.chain_authoring_run`
+holds **3 `committed` runs (2026-08-14, env dev)**, each with `state_code='committed'`, a recorded
+`plan_digest`, and `chain_authoring_step` rows for `canonical_contract` + `observation_contract` +
+`reader_flavor` (all `written`):
+
+| run_id | plan_digest (16) | entity (refId) | OC (live) | CC (live) | reader |
+|---|---|---|---|---|---|
+| `2ba35ba6` | `492453a2ed7b34fc` | `6e47ef23` (je_primary) | `45f8b60c` ✓ | `7fa4b84f` ✓ | `13a0bc42` |
+| `85edf073` | `6ca8f36ba1a5c032` | `0e1a0035` (cost_center_primary) | `9bd23f1e` ✓ | `cbe39b9e` ✓ | `919b5dc3` |
+| `9fd9bd92` | `0afdfac4538a8f62` | `dae813b3` (product_primary) | `16839a7a` ✓ | `48aca58b` ✓ | `16a1abfc` |
+
+All 3 OC targets are live in `contract.observation_contract` and all 3 CC targets in
+`contract.canonical_contract` (`archived_at IS NULL` verified). (Plus 2 `abandoned` OC-only runs
+2026-08-15 — the abandoned-run recovery path.) **Conclusion:** the L4/L5 door has authored 3 real
+chains end-to-end with recorded digests → live OC+CC+reader, and reproduces a deterministic dry-run
+digest this pass. "No author execution recorded" is retired; L4/L5 UI legend → **author execution recorded**.
+
+### L8 — Metric Directory create doors (executed 2026-09-19, SES-b20b26; rows verified live this pass)
+
+Governed rows authored through the shipped Metric Directory UI (bc-admin PR #45 → `800cdca`), all by
+`anant@selenite.co`, confirmed live by read-only substrate query:
+
+| door | table | uid | identity | created_at |
+|---|---|---|---|---|
+| New Family | `metric_directory.family` | `7fa70579-ba4e-4728-9e46-32a9a6e1d845` | finance/treasury · theme `fx_exposure_and_hedging` | 2026-09-19T15:52Z |
+| New Group | `metric_directory.group` | `d8014337-d2ca-4631-87da-26d8c6233206` | `je_line_grain_probe` (grain-entity required) | 2026-09-19T16:43Z |
+| Author metric (M12 panel) | `mcf.metric_authoring_panel_run` | `cf6f50ea-26a8-4275-bb79-4af0c7c4a4bd` | verdict `APPROVE_FOR_DRAFT` | 2026-09-19T15:35Z |
+| Materialize (M12.5) | `mcf.metric_contract` | `177b865b-253b-4132-8c1c-b06bedec3403` | `supplier_invoice_cycle_time` (draft) | 2026-09-19T16:24Z |
+
+### Reproduction
+
+- Dry-run: `POST /api/contracts/observation-chains` with `{dryRun:true, spec:<jeSpec, AC@1.1.0>}` and a
+  `platform_admin` bearer token → 200 `data.outcome=dry_run`, `data.planDigest` as above. (Probe:
+  session scratchpad `oc-cc-dryrun-probe.mjs`; response is wrapped under `data`.)
+- Ledger: `SELECT run_id,state_code,plan_digest FROM runtime.chain_authoring_run WHERE state_code='committed'`
+  and join `runtime.chain_authoring_step` on `run_id` for the per-target uids; verify targets live in
+  `contract.observation_contract` / `contract.canonical_contract` (`archived_at IS NULL`).
+- Directory rows: `SELECT … FROM metric_directory.family|group`, `mcf.metric_authoring_panel_run`,
+  `mcf.metric_contract` filtered to `created_at::date >= '2026-09-19'`.
+
+**Verifiability note:** rung-3 for L4/L5 is *historical* (committed runs are 2026-08-14, `created_by_name`
+NULL); this pass adds a *live-observed* dry-run + the fail-closed proof, not a fresh committed author
+(which would write new OC/CC/reader residue). That remains available as a further step if an auditor
+requires a this-pass committed author; it is intentionally not run here to avoid avoidable residue.
