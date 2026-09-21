@@ -71,8 +71,9 @@ named so the correction is legible — not carried as a live claim.
   SI-A-1): `ReaderRepository.deleteReader` (the hard-delete cascade) has **no production caller** —
   `ReaderController` → `ReaderService.deleteReader` throws `ForbiddenException` unconditionally
   (`reader.service.ts:170`, tested by `reader.service.governance.spec.ts`); it is latent residue.
-  Legacy `canonical_mapping` resolver routes; ~10 retired-but-mounted 410 controllers;
-  `observation_field_map` dead schema def (guard-tested, unwired).
+  ~10 retired-but-mounted 410 controllers; `observation_field_map` dead schema def (guard-tested, unwired).
+  (The legacy `canonical_mapping` resolver routes are **not** settled residue — they are the OPEN
+  **SI-L5-1** route-contract adjudication, §Plane c / §6.)
 
 ### Plane b — decision / doc hygiene
 - **Doctrine-without-ADR (the clearest real item).** Rules stated only in CLAUDE.md with no backing ADR:
@@ -88,7 +89,9 @@ named so the correction is legible — not carried as a live claim.
   contradiction. Those two are the real mechanism gap (SI-B-3).
 
 ### Plane c — decision ↔ code ↔ DB coherence
-**Both first-elevated items were reclassified on verification — the substrate is coherent here.**
+**On verification: the RT item was withdrawn (unreachable); the L5 item's failure-mode was corrected to
+fail-safe refusal, but its route-contract adjudication is OPEN (SI-L5-1). No coherence gap was confirmed in
+this plane where assessed — but L5 is not closed.**
 - **RT "destructive delete" — RECLASSIFIED to unreachable residue (not a live gap).** The hard-delete is
   behind the closed `ReaderService.deleteReader` (above). The intended teardown design **already exists**
   and is decided: hard delete is deferred to the **D564 governed expunge** (inventory + backup + evidence
@@ -136,7 +139,7 @@ or prove any deletion history.**
   not the schema count. `mcf.metric_contract` = 433; `to_regclass('contract.metric_contract')` = NULL
   (absent); `contract.canonical_mapping` = 0; `runtime.admission_run` = 5; `execution.run_summary` = 140 —
   these five are attributed to the **immutable prior proof** (Codex d619-001, observed
-  2026-09-21T09:10:48Z, its scope unchanged) and re-run executably in Appendix B. The 5-vs-140 difference is
+  2026-09-21T09:10:48Z collection time; SQL transcript ~09:10:54Z; scope unchanged) and re-run executably in Appendix B. The 5-vs-140 difference is
   a **current observation, not evidence of deletion.**
 - **Counts sourced from the read-only sweep (SES-2b96b2), not independently re-pinned in this package** —
   the lane/plane verdicts (§3), the doctrine-without-ADR list, and the ADR status distribution — are
@@ -158,7 +161,7 @@ sweep, not a per-cell audit. The honest global read is **"no coherence gap was f
 | S2 User/access | ⚪ | 🟡 | ⚪ | ⚪ | b: RBAC over-promise copy (bc-admin AppRouter:277) + ADR-42b9c0 closing note absent (this prog) |
 | S3 Tenant lifecycle | ⚪ | 🟢 | 🟢 | ⚪ | b/c: onboarding_record writes cite DEC-7df811 (tenant-management.repository.ts:98-101); `retired` status self-disclosed in the ADR |
 | S4 Pricing | ⚪ | 🟡 | ⚪ | ⚪ | b: ADR-324d9e omits its own Stripe-unbuilt disclosure (this prog/punch-list) |
-| L1 Source | ⚪ | ⚪ | 🟢 | ⚪ | c: `catalog_retirement_log` is governed append-only (CatalogRetirementService, DEC-e1312a) |
+| L1 Source | ⚪ | ⚪ | 🟢 | ⚪ | c: `catalog_retirement_log` is **service-governed** append-only (CatalogRetirementService, DEC-e1312a) — evidence-first delete authority; **not** verified as DB-trigger-enforced immutability |
 | L2 SC+AC | ⚪ | ⚪ | 🟡 | ⚪ | c: 305:305 is a workflow convention, not a DB unique (source-contract.ts index) |
 | L4 OC | 🟡 | ⚪ | ⚪ | ⚪ | a: `observation_field_map` dead schema def, guard-tested → SI-A-1 |
 | L5 CC | 🟡 | ⚪ | 🟡 | ⚪ | a: legacy resolver mounted; c: routes **fail-safe** (refuse, :357/360/368) BUT whether an empty-legacy dependency satisfies the advertised route contract is **unadjudicated — OPEN** → SI-L5-1 (Foundation-gated) |
