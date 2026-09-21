@@ -8,12 +8,10 @@ depends_on: [the-contract-grammar, tenancy-and-binding, metric-catalog, metric-e
 governing_sources:
   - Tenancy and Binding (operating-model)
   - Metric Catalog (operating-model)
-  - Metric Readiness Toolkit (development)
 governing_adrs:
-  - DEC-a8b33e (D397 — Metric Lifecycle Funnel; binding is the Stage 4 → Stage 5 transition)
-  - DEC-28b176 (D394 — Metric Readiness Model; AMENDED by DEC-a8b33e)
-  - DEC-bebaec (D305 — Chain Completeness SSOT)
-  - DEC-ebf0b4 (D268 — Session Discipline; bind operations require explicit approval per DB Change Protocol)
+  - DEC-b049f6 (retires the legacy readiness/binding/funnel HTTP surface as explicit 410 Gone; M17/D547 pattern — legacy-metric binding corpus empty since M17)
+  - DEC-95687d (D369 — Connector Onboarding: chain-walk → populate-bindings → enqueue-provisioning)
+  - DEC-ebf0b4 (D268 — Session Discipline; bind operations require explicit approval per DB Change Protocol; no raw DB-row hand-edits)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -21,154 +19,92 @@ diagrams: []
 
 # Tenant Metric Binding
 
-How an operator binds metric contracts to a tenant — i.e. activates which MCs evaluate against which tenant's canonical-object data. Every binding is a platform-DB write and so falls under the [DB Change Protocol](../foundation/the-contract-grammar.md): present the list to the user, get explicit approval, only then execute.
+How an operator binds metric contracts to a tenant — i.e. activates which MCs evaluate against which tenant's canonical-object data — and provisions the tenant fact tables that hold the results. Every binding is a platform-DB write and falls under the [DB Change Protocol](../foundation/the-contract-grammar.md): present the scope to the user, get explicit approval, only then execute. Raw SQL `UPDATE`/`INSERT` on `tenant.contract_binding` is **prohibited** (DEC-ebf0b4/D268) — go through the governed services below.
 
-**Canonical lifecycle context.** Per [DEC-a8b33e (D397)](../governance/adrs/ADR-a8b33e.md), binding is the **Stage 4 → Stage 5** transition in the metric lifecycle ladder: from Platform Ready (an MC that's chain-complete, formula-supported, audit-passing, and MLS-14-clean) to Tenant Ready (the same MC with an active `tenant.contract_binding` for the tenant). A binding to an MC that *isn't* Platform Ready does not move it into Stage 5 — it counts as a `staleBindings` side-bucket diagnostic instead. Verify Platform Readiness *before* binding (see [Metric Readiness Toolkit](../development/metric-readiness-toolkit.md) Dial 1) so newly-inserted bindings actually advance the ladder.
+> **As-built note (verified against bc-core `53bb1115`, 2026-09-21).** The current binding+provisioning path is the **MCF entitlement-driven onboarding flow** on the Schema Provisioner. The **legacy curated `/admin/readiness/...` binding workflow is RETIRED** — every one of its endpoints now returns **410 Gone** (see [Retired surface](#retired-surface-410-gone)). This chapter documents the live path and marks the retired one so operators don't follow a dead route.
 
-This chapter documents two paths: **curated binding** (you pick specific MCs) and **chain-walk binding** (you bind everything reachable from a connector). They are complementary; neither is a fallback for the other. The operational situation determines which path to take.
+## What binding does — and doesn't
 
-## When to bind metrics to a tenant
+Binding declares which MCs are scoped for evaluation in a tenant; it does not itself produce data. The sequence to actually see results is **bind → provision (owner-worker) → evaluate**. Binding also does **not** move a metric's platform lifecycle: an MC must already be Platform Ready (chain-complete, formula-supported, audit-passing, MLS-14-active) for a tenant binding to be meaningful. **Provisioning readiness is not tenant MLS completion** — a provisioned fact table means the table exists, not that the metric has evaluated or that any tenant MLS rung is satisfied.
 
-Three triggers:
+## The live path: MCF onboarding (Schema Provisioner)
 
-| Trigger | Path |
-|---|---|
-| New tenant onboarding — the tenant should receive the full chain reachable from their connector | Chain-walk (`/schema-provisioner/onboard-connector`) |
-| Demo / pilot — operator picks a curated subset of MCs to activate | Curated (`/admin/readiness/tenant/<slug>/bind`) |
-| Existing tenant — adding one or more new metrics post-onboarding | Curated (binding-candidates → bind) |
+All routes are platform-scoped (`@PlatformOnly`, `platform_admin`) under `/api/schema-provisioner`. Two entry points; both **enqueue** governed provisioning commands and return **202 Accepted** — the served process holds **no tenant DDL capability** (D575 Unit-3 F1); the owner-privileged worker creates the tables.
 
-Binding does not produce data on its own. It declares which MCs are scoped for evaluation in the tenant. The full sequence to actually see results is `bind` → `reconcile` → `evaluate`.
-
-## Path A: Curated binding (the daily-operator path)
-
-Use when you want to activate a specific list of MCs. Common case: demo build-up, pilot expansion, or one-at-a-time additions.
-
-### Step 1: Find the binding candidates
+### Bind one MCF metric — `POST /schema-provisioner/onboard-metric`
 
 ```
-GET /api/admin/readiness/tenant/<slug>/binding-candidates
+POST /api/schema-provisioner/onboard-metric
+Body: { "tenantSlug": "<slug>", "metricContractUid": "<mcf-mc-uid>", "environmentCode": "development" }
 ```
 
-Returns the strict candidate list — unbound MCs whose every formula token passes the audit (`cc_field_mapping` resolves; BF data type is compatible; BF column is populated in the tenant). These are MCs that *will* produce on first evaluation if bound.
+Reverse-walks the entitled MCF metric to the Canonical Contract (and upstream Source Contracts) it depends on and writes **`tenant.contract_binding` (family `canonical`) + `tenant.tenant_binding` (SC) only** — the reverse-walk returns no metric contracts (`metricContracts: []`); an **MC-family binding / MCF entitlement is a separate governance record** (D475), **not** written here. It then **enqueues** provisioning commands for the chain's `fact.co_*/fact.so_*` tables and, via `enqueueMcfMetric`, the metric's own `fact.ms_*` (MCF namespace). **`enqueueMcfMetric` returns `null` when the metric has no active MCV** — so a **202 alone does not prove the `fact.ms_*` command was created**; confirm from the returned command (namespace / metric / version) and the status read, not from a binding-row count. Idempotent. Returns **202**; poll provisioning status (below).
 
-DevHub MCP wrapper: not yet wired. Use the curl path with an admin Cognito token.
-
-The candidates are ranked by clarity: each entry has the MC's name, function/subfunction, version code, and the CC IDs it depends on. Pick the subset relevant to the operator's intent.
-
-### Step 2: Present the list to the user, get explicit approval
-
-Per DB Change Protocol, do **not** proceed without showing the operator the specific MC list and getting explicit approval. The DevHub MCP wrapper `devhub_tenant_bind_metrics` defaults to dry-run for this reason — calling without `confirm: true` returns the list that *would* be bound, plus the protocol instructions.
-
-### Step 3: Bind
-
-```
-POST /api/admin/readiness/tenant/<slug>/bind
-Body: { "metricContractIds": ["uuid-1", "uuid-2", ...] }
-```
-
-Idempotent. Returns `{ inserted, alreadyPresent, skipped }`. `inserted` lists newly-bound MCs; `alreadyPresent` means they were already bound (no change); `skipped` lists MCs that couldn't be bound (no active version, etc.) with a reason per skip.
-
-Or via DevHub MCP:
-
-```
-devhub_tenant_bind_metrics tenant=<slug> metric_contract_ids=[...] confirm=true
-```
-
-### Step 4: Reconcile (provision the fact tables)
-
-The bind endpoint does not auto-create `fact.ms_<mc-code>_v<version>` tables in the tenant DB. Provision them:
-
-```
-POST /api/schema-provisioner/nightly-reconcile
-```
-
-Idempotent. Affects all tenants that need provisioning. New fact tables are created where missing; existing ones stay.
-
-### Step 5: Verify
-
-```
-GET /api/admin/readiness/tenant?tenant=<slug>
-```
-
-Or via MCP: `devhub_readiness_dial tenant=<slug>`.
-
-The dial should show:
-- `bound` (Stage 5, Tenant Ready) increased by the number of newly-inserted bindings *that hit Platform Ready MCs*. Bindings to non-Platform-Ready MCs land in `staleBindings` instead — verify with `staleBindings` not jumping unexpectedly.
-- `producing` (Stage 7, Live) may or may not have moved (depends on whether the new MCs have already evaluated and whether snapshot rows linked through `metric_snapshot_index`).
-- `wouldProduceIfBound` should drop by the number of newly-bound audit-clean MCs.
-
-If the canonical funnel ladder is the source of truth you'd rather verify against directly: `GET /api/admin/registry/funnel-ladder?tenant=<slug>` returns `stages.tenantReady` (Stage 5), `stages.tenantEvaluated` (Stage 6), `stages.live` (Stage 7), and `sideBuckets.staleBindings` in one call.
-
-To force-evaluate the newly-bound MCs and produce snapshots:
-
-```
-POST /api/admin/test-bench/evaluate-mc-for-tenant
-Body: { "metricContractId": "<uuid>", "tenant": "<slug>" }
-```
-
-Per MC. After evaluation, the dial's `producing` count moves accordingly.
-
-## Path B: Chain-walk binding (tenant onboarding)
-
-Use when a new tenant is onboarding and should receive the full chain. The operator names the connector; the platform walks the chain forward, binds every reachable contract (source / canonical / metric), and reconciles the tenant DB in one call.
+### Bind a whole connector chain — `POST /schema-provisioner/onboard-connector`
 
 ```
 POST /api/schema-provisioner/onboard-connector
-Body: { "tenantSlug": "<slug>", "connectorId": "<uuid>", "environment": "development" }
+Body: { "tenantSlug": "<slug>", "connectorId": "<uuid>", "environmentCode": "development" }
 ```
 
-What happens:
+The D369 primary trigger for tenant onboarding: walks the connector chain forward and populates **`tenant.tenant_binding` (source) + `tenant.contract_binding` (family `canonical`) only**. Legacy metric reachability is retired (`SchemaProvisionerRepository.findMetricContractsForCanonicals` returns `[]`) and the populator has no intervention loop, so this path writes **no metric/intervention binding** and enqueues **no MCF `fact.ms_*` command** (it calls `enqueueDesired`, not `enqueueMcfMetric`). To provision a tenant's `fact.ms_*` for an MCF metric, use the explicit **`onboard-metric`** path above. It **enqueues** a provisioning command per desired `fact.*` table. Idempotent. Returns **202** — it does **not** create tables or "reconcile in one call"; completion requires the worker (below) and is confirmed only by the status read. Use this when the intent is "give this tenant the source/canonical substrate reachable from this connector"; the DB Change Protocol is satisfied at the connector level (the operator approves the connector onboard once; binding fans out from there).
 
-1. The connector chain walker resolves all contracts reachable from the connector
-2. `tenant.tenant_binding` rows are written for source contracts (per-environment)
-3. `tenant.contract_binding` rows are written for canonical / metric / intervention contracts (`is_active=true`)
-4. The Schema Provisioner reconciles the tenant DB — creates fact tables for the newly-bound contracts
+### Provision the fact tables — the owner-privileged worker (out-of-process)
 
-This is the right path when the operator's intent is "give this tenant everything this connector can produce." It is **not** the right path when the operator wants to activate a specific subset — that's curated binding.
+The served endpoints only enqueue. Tables are created by the **provisioning worker CLI** (`provisioning-worker-cli.ts`), which runs **outside** the served process with owner privileges (needs `TENANT_OWNER_DATABASE_URL`, absent from the API process). It is a **one-shot CLI**, not a periodic scheduler:
 
-The path does not skip the DB Change Protocol — but the protocol is satisfied at the connector level, not the per-MC level. The operator approves "onboard this connector to this tenant" once; the binding fans out from there.
+- **drain** (default): consumes **every claimable** provisioning command (CAS-claim → validate coordinate → create table), across whatever is outstanding — not scoped to a single MC. After draining it signals **readiness resolution** (`pending_provisioning → active`) unless `--no-readiness`.
+- **`--sweep`**: the relocated nightly graph (`ProvisioningSweepService`) — activation-fanout + repair/retry/reclaim + per-tenant reconcile across **every active tenant**, then drain + readiness.
+
+Because a drain/sweep affects work beyond the metric an operator just onboarded (all claimable commands; `--sweep` spans all tenants), running the worker requires its **own bounded authority** — approving a metric onboard does not authorize a fleet-wide sweep. Invocation and any external scheduling are a deployment/runbook concern and are not asserted here.
+
+### Check provisioning status — `GET /schema-provisioner/tenants/<slug>/provisioning`
+
+A read over the append-only command store (no side effect). Each command carries its state (`pending | provisioning | provisioned | failed`) and obligation (`current | obsolete` — an obsolete coordinate is superseded/no-longer-provisionable: visible and counted, but **not** outstanding). **`ready` is true iff at least one *current* command is `provisioned` AND zero *current* commands are non-provisioned** — an empty or obsolete-only set is **not** ready. An unreadable registry leaves commands current (fail-closed).
+
+### Recover a stuck command
+
+Two distinct mechanisms — do not conflate:
+
+- **Operator reissue** — `POST /schema-provisioner/provisioning/commands/<id>/reissue` (requires a trimmed rationale ≥ 8 chars). Governed operator recovery for a command whose **current attempt is `failed`** (beyond the worker's automatic retry cap). Append-only: it opens attempt N+1; the DB attempt fence refuses any other state (**409**), and an obsolete coordinate is refused. It marks nothing provisioned — the worker's next drain claims the new attempt.
+- **Worker reclaim** — an **abandoned/expired lease** (a command stuck in `provisioning` after its lease lapsed) is reclaimed **only by the worker sweep**, which holds the tenant execution lock while it does so. Operators do **not** reissue these; reissue from `provisioning` state is refused (409).
+
+### Verify readiness
+
+Use the current readiness surface — `GET /api/registry/mcf/readiness-projection` (the legacy `/admin/readiness/...` dial and `/admin/registry/funnel-ladder` are retired, below). **Scope:** readiness-projection is a **platform aggregate**, **not** a tenant binding or tenant-MLS-completion proof — cross-check that the tenant's fact table exists and evaluation has actually run before treating a metric as producing for that tenant.
+
+## Rollback / unbind
+
+The current **served route inventory has no deactivation/unbind route** for a tenant metric binding, so **no governed unbind can be verified as-built here**. Do **not** deactivate via a raw SQL `UPDATE` on `tenant.contract_binding` (prohibited DB-row hand-edit, DEC-ebf0b4/D268).
+
+**Consequence:** a governed, evaluation-affecting unbind for a tenant MC is a **documentation/verification gap** — the mechanism that genuinely halts evaluation is not established in the current tree and must be verified against the served evaluation-scheduler / binding source before it is documented or relied upon. For chain-walk bindings, unwinding is intended to run through the connector offboarding flow (out of scope here), not a per-MC toggle.
+
+## Retired surface (410 Gone)
+
+Per **DEC-b049f6** (M17/D547 retirement pattern; the legacy-metric binding corpus has been empty since M17), the following are retained only as explicit **410 Gone** refusals — **do not use them**:
+
+| Retired route | Replacement |
+|---|---|
+| `GET /admin/readiness/catalog` | — (legacy metric catalog retired) |
+| `GET /admin/readiness/tenant` (dial) | `GET /registry/mcf/readiness-projection` |
+| `GET /admin/readiness/tenant/:slug/binding-candidates` | MCF entitlement drives onboarding; no candidate-audit endpoint |
+| `POST /admin/readiness/tenant/:slug/bind` | `POST /schema-provisioner/onboard-metric` (or `onboard-connector`) |
+| `GET /admin/readiness/tenant/:slug/formula-token-audit` | — (predicate tables dropped at R3) |
+| `GET /admin/registry/funnel-ladder` | `GET /registry/mcf/readiness-projection` (platform aggregate — not a tenant-completion proof) |
 
 ## Common gotchas
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| Bound MC doesn't produce | Reconcile didn't run; `fact.ms_<code>_v<version>` table doesn't exist | Run `nightly-reconcile`; re-evaluate |
-| Reconcile ran but MC still doesn't produce | The MC has unresolved formula-token issues (`null_in_tenant`, `type_mismatch`, or `no_mapping`) | `formula-token-audit` to identify; fix at the cc_field_mapping or source-data layer |
-| `binding-candidates` returns empty list, but the operator expected MCs to be available | The audit filter may be too tight — every MC has at least one broken token | Run `formula-token-audit`; fix the highest-frequency broken CFs first |
-| Bound but the user can't see it on Tenant Metrics page | Cognito user's `custom:tenant_id` doesn't match the bound tenant slug | Verify the user's profile claims |
-| Binding "skipped" with `no_active_version` reason | The MC has no active `metric_contract_version` row | Activate the contract version first via the metric onboarding flow |
-
-## Rollback
-
-A binding can be deactivated:
-
-```sql
-UPDATE tenant.contract_binding
-SET is_active = false
-WHERE tenant_id = '<tenant-uuid>'
-  AND contract_family = 'metric'
-  AND contract_id = '<metric-contract-uuid>';
-```
-
-Deactivation does not delete the binding row, drop the fact table, or remove existing snapshots. It only stops the chain from evaluating that MC for the tenant going forward. To fully unwind, also drop the fact table after archiving any rows you want to keep.
-
-For curated bindings only — chain-walk binding's rollback path runs through the connector offboarding flow, not direct binding deactivation.
-
-## When to use which path
-
-| You want to … | Use |
-|---|---|
-| Activate one or two specific MCs for a tenant | Curated bind |
-| Give a new tenant everything reachable from their connector | Chain-walk via onboard-connector |
-| Build up a demo's metric set incrementally | Curated bind |
-| Disable a single MC for a tenant without affecting others | Direct `is_active = false` UPDATE on the binding row |
-| Disable an entire connector's reach for a tenant | Connector offboarding flow (out of scope here) |
+| Bound MC doesn't produce | Provisioning didn't complete; `fact.ms_<code>_v<version>` table doesn't exist | Enqueue via `onboard-metric`; run the owner-worker; poll `tenants/<slug>/provisioning`; `reissue` any `failed`-current command; then re-evaluate |
+| Status never reaches `ready` | Outstanding current command in `pending`/`provisioning`/`failed` | Ensure the worker ran; `reissue` `failed` commands; abandoned (`provisioning`, lease expired) commands need the worker **sweep**, not reissue |
+| Followed a `/admin/readiness/...` or `funnel-ladder` step and got 410 | That surface is retired (DEC-b049f6) | Use the MCF onboarding flow + `readiness-projection` per this chapter |
+| Bound but the user can't see it on the Tenant Metrics page | Cognito user's `custom:tenant_id` doesn't match the bound tenant slug | Verify the user's profile claims |
 
 ## Cross-references
 
-- [Metric Readiness Toolkit](../development/metric-readiness-toolkit.md) — the endpoint catalog this chapter operationalises
-- [Tenancy and Binding](../operating-model/tenancy-and-binding.md) — the binding model in detail
-- [MC Chain Integrity](../archive/onboarding/mc-chain-integrity.md) — verifying the MC chain is shippable before binding
 - [Tenant Onboarding](tenant-onboarding.md) — the end-to-end flow that includes binding
-- [ADR-a8b33e (D397 — Metric Lifecycle Funnel)](../governance/adrs/ADR-a8b33e.md) — the canonical 7-stage ladder; binding is the Stage 4 → 5 transition
-- [ADR-28b176 (D394 — Metric Readiness Model)](../governance/adrs/ADR-28b176.md) — the readiness predicate behind `binding-candidates`; AMENDED by DEC-a8b33e
+- [Tenancy and Binding](../operating-model/tenancy-and-binding.md) — the binding model in detail
+- DEC-b049f6 — retirement of the legacy readiness/binding/funnel HTTP surface (410 pattern)
+- DEC-95687d (D369) — Connector Onboarding orchestrator (chain-walk → populate-bindings → enqueue-provisioning)
+- D575 Unit-3 F1 — served process holds no tenant DDL; owner-privileged provisioning worker creates fact tables out-of-process
