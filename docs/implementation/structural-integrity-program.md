@@ -6,311 +6,263 @@ anchor_task: TSK-f38fb6
 lineage: >
   Track S (Structure) of Platform Readiness & Legibility — spun off 2026-09-21 and, on grounded
   study, reframed from "code movement" to "structural integrity across four planes" and renamed
-  Structural Integrity (operator-approved, SES-2b96b2).
+  Structural Integrity (operator-approved, SES-2b96b2). Successor after Codex d619-001 CHANGES
+  REQUIRED — the two plane-c "coherence gaps" were reclassified on reachability/behaviour evidence
+  (see §2).
 governing_adrs: >
   DEC-33d436/D606 (parent program mandate + four-track model — Track S is the deferred track this
   program executes); DEC-c48b0f/D541 (the design/execution intake gate — the engine of the coherence
   method); DEC-0d5b39 + DEC-01bd6b (the decided target for the BoundaryModule split, plane a);
   DEC-3aa336 (registry/mcf single home + registry-root cleanup, plane a scope boundary);
   DEC-623f8f/D370 (ADR hygiene policy — plane b's existing owner); DEC-1918d0/D162 (platform DB
-  schema model — a plane-d specimen: it declares 11 schemas, the live DB holds 20); DEC-b1a286
-  (schema authority chain — live DB is ground truth, docker/redesign is the mechanism, Drizzle is a
-  type surface). This program's own EXECUTION ADR is DEC-027ef6/D619 (it names the Codex exchange
-  family `d619-`; locks the four-plane framework, the coherence method, the package discipline, the
-  ownership rule, and the sequencing), and re-decides nothing.
+  schema model — declares 82 tables across 12 schemas and DELEGATES the authoritative inventory to
+  architecture/database/schema-map.md; a plane-d specimen: the inline count is stale vs the live 20
+  application schemas); DEC-b1a286 (schema authority chain — live DB is ground truth, docker/redesign
+  is the mechanism, Drizzle is a type surface). This program's own EXECUTION ADR is DEC-027ef6/D619
+  (it names the Codex exchange family `d619-`; locks the four-plane framework, the coherence method,
+  the package discipline, the ownership rule, and the sequencing), and re-decides nothing.
 related: >
-  Platform Readiness & Legibility (implementation/platform-readiness-program.md, TSK-4b2404) — parent;
-  its ~9%/24%/24% stall analysis is why this program weights integrity over file-moving.
+  Platform Readiness & Legibility (implementation/platform-readiness-program.md, TSK-4b2404) — parent.
   Legacy Metric Corpus Retirement (D608, TSK-d21b97) — REFERENCED owner of the legacy metric-* DROP
-  (whose target contract.metric_contract this study found ABSENT from the live DB — reconcile first).
+  (whose named target contract.metric_contract is absent from the live DB — reconcile first).
   Platform DB Foundation (overview/platform-db-foundation.md, TSK-cc348a) — REFERENCED owner of the
   schema SSOT / tenant substrate. ADR hygiene punch-list (TSK-f720ba/d3e83a/1557c5/0c4e67/c4c8a3/
-  2d166b) — REFERENCED owner of plane-b content items. Design-plane vs execution-plane couplings
-  (finding, TSK-b5ab8a) — the coherence theme, plane c. Platform/tenant boundary drift (DEC-96cc78/
+  2d166b) — REFERENCED owner of plane-b content items. Platform/tenant boundary drift (DEC-96cc78/
   D612) — REFERENCED, not absorbed.
 ---
 
 # Structural Integrity — Program (SSOT)
 
-**One line.** Bring `bc-core` and its records back into **structural integrity** — the state where what is
-**decided** (ADRs), **documented** (bc-docs), **coded** (bc-core), and **in the database**
-(`bc_platform_dev`) all agree — and keep the code's own structure honest. Spun off as Track S of
-Platform Readiness; reframed on grounded study from "move some files" to "reconcile the four planes."
+**One line.** Bring `bc-core` and its records into **structural integrity** — the state where what is
+**decided** (ADRs), **documented** (bc-docs), **coded** (bc-core), and **in the database** all agree —
+and keep the code's structure honest. Track S of Platform Readiness.
 
-**Why the reframe.** The parent program's stall analysis is load-bearing: code structure caused **~9%**
-of stalls, while **docs≠code (24%)** and **missing-decision / wrong-plane (24%)** dominated. Moving
-files is the *cheap, low-value* work. The value is in the **coherence** the operator named: decision ↔
-doc ↔ code ↔ DB. A grounded study (SES-2b96b2, 2026-09-21) confirmed the drift is real and
-**concentrated in exactly that coherence plane** — so this program's center of gravity is there, not on
-the file moves.
+**What the grounded study concluded (honest, post-review).** The substrate is **highly coherent.** The
+two plane-c items this program first elevated as "genuine coherence gaps" **did not survive verification**
+(§2): the RT "destructive delete" path is **unreachable** and its intended design **already exists**, and
+the L5 resolver routes **fail safe** (refuse), they do not silently return bad data. What remains is
+**governance-trail and legibility hygiene — no urgent Foundation or coherence gaps** — so ceremony scales
+down accordingly. The value is docs↔code↔ADR consistency (the parent program's ~24% docs≠code cause), not
+file-moving (~9%).
 
 ## 1. The four planes
 
-Structural integrity is measured across four planes. The letters are a working shorthand, not a new
-artifact family.
+| Plane | Name | Question |
+|---|---|---|
+| **a** | Physical code structure | Are the largest artifacts cohesive; is dead code removed? |
+| **b** | Decision / doc hygiene | Is the ADR estate self-consistent and its status truthful? |
+| **c** | Decision ↔ code ↔ DB coherence | Does reality match what was decided and documented? |
+| **d** | SSOT / authority structure | Are the authority documents numerically true to substrate? |
 
-| Plane | Name | Question | Grounded weight |
-|---|---|---|---|
-| **a** | Physical code structure | Are the largest artifacts cohesive; is the dependency direction honest? | **low** (~9%) — one small sub-track |
-| **b** | Decision / doc hygiene | Is the ADR estate self-consistent and its status truthful? | moderate; mostly owned; one **mechanism** gap |
-| **c** | Decision ↔ code ↔ DB coherence | Does reality match what was decided and documented? | **the core** — where the drift lives |
-| **d** | SSOT / authority structure | Are the authority documents themselves numerically true to substrate? | real, narrow, unowned |
+## 2. Grounded state (SES-2b96b2; verdicts authoritative, earlier hypotheses marked historical)
 
-## 2. Grounded state (SES-2b96b2, read-only against `origin/main` + live `bc_platform_dev`)
+**Note on method:** an early inventory pass produced hypotheses; several were **overturned by
+verification.** Only the verified verdicts below are authoritative. Where a hypothesis was wrong, it is
+named so the correction is legible — not carried as a live claim.
 
-### Plane a — physical code structure (the five decided moves)
-Confirmed against `origin/main 53bb1115`: registry↔boundary decoupling (**31** boundary files import
-registry, 68 lines); cert-writer extraction (`mcf-cert-writer.service.ts` **3,768 LOC**); McfReadService
-split (`mcf-read.service.ts` **1,992 LOC**); registry-root cleanup (**36** loose depth-1 `.ts`, minus the
-D608-owned legacy files and the by-name-retained `intake-queue.*`); BoundaryModule split (**24**
-controllers, ~27 providers, 9 imported modules — highest blast, last). Context: 1,253 non-spec `.ts`, 84
-modules, 240 `any`, 558 `eslint-disable` across 230 files. Move details + the DEC-3aa336
-within-home-decomposition reconciliation are in §Appendix A.
+### Plane a — physical code structure
+- **The five decided moves** (confirmed by count, `bc-core` `53bb1115…`): registry↔boundary decoupling
+  (31 boundary files import registry); cert-writer `mcf-cert-writer.service.ts` 3,768 LOC; McfReadService
+  `mcf-read.service.ts` 1,992 LOC; registry-root cleanup (36 loose depth-1 `.ts`, minus D608-owned legacy
+  and the by-name-retained `intake-queue.*`); BoundaryModule split (24 controllers). Legibility only.
+- **Dead / unreachable residue** (removal is plane a, and **410-contract-careful** — see §6, package
+  SI-A-1): `ReaderRepository.deleteReader` (the hard-delete cascade) has **no production caller** —
+  `ReaderController` → `ReaderService.deleteReader` throws `ForbiddenException` unconditionally
+  (`reader.service.ts:170`, tested by `reader.service.governance.spec.ts`); it is latent residue.
+  Legacy `canonical_mapping` resolver routes; ~10 retired-but-mounted 410 controllers;
+  `observation_field_map` dead schema def (guard-tested, unwired).
 
 ### Plane b — decision / doc hygiene
-**597 ADRs** (269 implemented / **183 decided** / 125 superseded / 11 proposed / 8 reversed). The estate
-is **healthier than feared**: frontmatter supersession is **clean (0/73 mismatches, independently
-verified)**; stale-doctrine leakage into live doctrine folders is **small** (1 confirmed: `bc-ai` read as
-current in `operating-model/metric-management-system.md`; 1 naming drift: doc says `ChainStatusService`,
-code is `McvChainStatusService`). Docs corpus is **1,178 `.md`**, but only **~9%** is living doctrine
-(~74% is governance/evidence record-keeping) — any doctrine↔code reconciliation searches a small target
-inside a large archival mass.
+- **Doctrine-without-ADR (the clearest real item).** Rules stated only in CLAUDE.md with no backing ADR:
+  the **Core Dashboard retirement has no decision record at all**; IntegrityService's deprecation
+  *lifecycle* (only the gate-off is ADR'd, DEC-29b518/DEC-d9fa49); the auth-bypass ban (no bc-core-scoped
+  ADR); code comments citing "CLAUDE.md" as authority instead of the governing ADR.
+- **ADR-not-updated-post-implementation.** ADR-42b9c0's "closing commit" note was never added; ADR-324d9e
+  never flags its Stripe half is unbuilt; the S2 UI placeholder over-promises RBAC a 1-table schema can't
+  back; the seed `connectors.csv` has no `odoo` entry though the executor exists.
+- **Hygiene mechanism (narrowed).** `audit_adrs.py` **already** checks stuck-`proposed` age **and runs in
+  CI on each PR/push** (so stuck-proposed is *covered*, not blind — earlier stale saved reports are a
+  different thing). What it does **not** check: `decided`-but-not-implemented, and status-vs-body
+  contradiction. Those two are the real mechanism gap (SI-B-3).
 
-**The one systemic finding is a *mechanism* gap, not a content gap:** the ADR-hygiene audit
-(`audit_adrs.py`, last run 2026-08-24, 31 ADRs stale) tracks supersession but **does not track
-"decided-but-not-implemented" or "status-vs-body contradiction" at all.** So **183 `decided` ADRs sit as
-an unmonitored implementation backlog**, and **4 `proposed` ADRs have now crossed the D370 30-day stuck
-threshold** (09fb2f, 116641, 7a18af, 9e68e0) without the stale report showing it. Traceability side-note:
-**52 of 125 superseded ADRs have no frontmatter successor pointer** (~42% untraceable — older/narrative
-supersession).
+### Plane c — decision ↔ code ↔ DB coherence
+**Both first-elevated items were reclassified on verification — the substrate is coherent here.**
+- **RT "destructive delete" — RECLASSIFIED to unreachable residue (not a live gap).** The hard-delete is
+  behind the closed `ReaderService.deleteReader` (above). The intended teardown design **already exists**
+  and is decided: hard delete is deferred to the **D564 governed expunge** (inventory + backup + evidence
+  + operator gate) and legitimate retire is the soft `archiveReader` (per `reader.service.ts:163-169`
+  docstring). No Invariant III violation is asserted; the 5-vs-140 `admission_run`/`run_summary` count
+  difference is **not** attributed to reachable deletion (unproven; see §2.1).
+- **L5 resolver routes — RECLASSIFIED to safe-refusal residue (not silent failure).** `resolveRun` →
+  `loadBindingAndEnvelope` **throws `NotFoundException`** on absent binding/version/mapping
+  (`canonical-resolution.service.ts:357,360,368`), and `findBindingsReferencingOc` no-ops with "nothing to
+  resolve" (`:271`). The legacy `canonical_mapping` table is empty, but the routes **refuse**, they do not
+  silently return wrong data. Concern is legibility (legacy resolver still mounted) → residue (SI-A-1).
+- **Confirmed coherent (verified, not drift):** cert/eval **idempotency is active + DEC-5ea578-backed**;
+  `mcf-realization-projection` v1/v2 is **coherent versioned coexistence** (v2 closes v1's gaps for a
+  different consumer; migration 42 Codex-accepted) — not an unfinished supersession; the dual
+  `certification_record` is an intentional BCF/MCF split; tenant `evidence.*` is correctly tenant-scoped.
+- **Hand-off (not this program):** tenant `evidence.*` immutability triggers are written but not deployed
+  (ADR-09fb2f) → DB-Foundation / tenant; `contract.metric_contract` (D608 DROP target) is **absent** from
+  the live DB → D608 must re-point before any DROP.
 
-### Plane c — decision ↔ code ↔ DB coherence (THE CORE)
-One pattern, everywhere: **a governed decision or doc asserts X; the code or DB holds not-X.**
+### Plane d — SSOT / authority
+- **DEC-1918d0/D162** declares **82 tables across 12 schemas** and **delegates** the authoritative
+  inventory to `architecture/database/schema-map.md`; the live DB has **20 application schemas** (§2.1) —
+  so the inline count is stale and the real check is schema-map.md currency (DB-Foundation-coordinated).
+- CLAUDE.md's MCF snapshot (5 contracts) is stale vs the live 433.
 
-- **Legacy `metric-catalog` + `metric-definition` (~1,650 LOC) still fully mounted** in `app.module.ts`
-  (`:314` `MetricCatalogModule`, `:120` `MetricModule`) *alongside* the live MCF stack — a complete
-  parallel architecture. *Open question the trace resolves:* is the mount **authorized** by the
-  mcf-legacy-bridge read-fallback sunset (coherent-by-design) or is it **execution-gap** drift?
-- **`contract.metric_contract` — the DROP target named by D608/TSK-d21b97 — does not exist** in the live
-  DB. A retirement pointed at nothing; **reconcile before any DROP.**
-- **Two retired 410-only readiness stubs still wired** (`ReadinessModule` `app.module:359`,
-  `MetricReadinessController` `contract.module:83`).
-- **`IntegrityService` (1,132 LOC): injected, zero call sites** — inert but for admin/test-bench doors.
-- **Idempotency guard + interceptor + two DB tables: zero wiring** — a *declared* safety net with no
-  runtime existence (any route claiming idempotency has none). → [[TSK-a6814f]].
-- **`mcf-realization-projection` v1 + v2 both mounted and called** — a supersession left running in
-  parallel.
-- **`metric.*` is only partially dead** (2 of 7 tables actively written; `mls_state_event` = 3,319) —
-  "legacy" is coarser than reality; no blanket drop.
-- Parent-session verified cases (cited, not re-derived): ADR-f44a71 route (a) misframed vs the real
-  MLS-23 blocker; `metric.mls_state` keyed to legacy ids absent from `mcf.metric_contract_version`;
-  DEC-568d0b/D615 cited as authority but absent from the docs tree.
+### 2.1 Reproducibility record (exact, read-only)
 
-### Plane d — SSOT / authority structure
-The authority documents have **numerically drifted** from substrate: **DEC-1918d0/D162 declares 11
-schemas; the live DB has 20 (258 tables).** CLAUDE.md's MCF snapshot says 5 contracts; the DB holds
-**433**. These are true-at-authoring records that reality outgrew — and the plane-b mechanism gap is why
-nothing flags them.
+Static counts are pinned to full commits and reproduced by the commands in Appendix B. DB counts are a
+single read-only observation and are labelled as such — **they do not reconstruct the prior study's state
+or prove any deletion history.**
 
-**Reproducibility.** Every count above is reproducible from `bc-core`/`bc-docs` at `origin/main`
-`53bb1115` / `be4f6ce` via `git`-ref commands, and from `bc_platform_dev` via read-only `SELECT`
-(`information_schema` / `COUNT(*)`; note the `bc-postgres` `pg_list_tables`/`pg_count` tools are broken
-server-side and were bypassed). Full command list: §Appendix B.
+- **Pins:** `bc-core` `53bb1115d9b1c4d841750cce31eb2f60f3174d76`; `bc-docs` base
+  `3a9b3e986420ba79b21a5e0f0f838ba9e703de36`. Measured against `origin/main` refs at author time; the
+  commands in Appendix B use the full SHAs so they are reproducible after the refs move.
+- **DB observation (`bc_platform_dev`, read-only, `BEGIN READ ONLY`):** `information_schema.schemata` = 22
+  rows total; **20** application schemas excluding `public` + `information_schema`; **258** application
+  base tables; `mcf.metric_contract` = 433; `to_regclass('contract.metric_contract')` = NULL (absent);
+  `canonical_mapping` = 0; `runtime.admission_run` = 5; `execution.run_summary` = 140. These match Codex's
+  independent reproduction (d619-001, 2026-09-21T09:10:48Z). The 5-vs-140 difference is a **current
+  observation, not evidence of deletion.**
+- **Counts sourced from the read-only sweep (SES-2b96b2), not independently re-pinned in this package** —
+  the lane/plane verdicts (§3), the doctrine-without-ADR list, and the ADR status distribution — are
+  labelled *study-derived* in §3 and the backlog, and each carries its file:line or ADR-uid evidence
+  rather than a bare count.
 
-## 3. The method — how a coherence gap is adjudicated
+## 3. Lane × plane integrity matrix
 
-Generalized from the T6 gate lesson (*stop out-parsing an adversary; pin the declared enforcement
-surface and check reality against it*) and the design/execution gate (DEC-c48b0f/D541). For each
-load-bearing decision:
+Function/lane × plane {a code · b doc · c coherence · d authority}. RAG is a **verdict with evidence**, not
+a coverage colour: 🟢 coherent/verified · 🟡 residue or minor drift · 🔴 real gap · ⚪ not assessed this
+pass. (Package priority in §6 is a separate axis — do not read it as coverage RAG.)
 
-1. **Pin the assertion.** State the one load-bearing claim the DEC/doc makes.
-2. **Name the expected surface.** The table/column, service/method, or contract row it should manifest in.
-3. **Read substrate (read-only).** Does the surface hold the claim?
-4. **Verdict + plane.** `coherent` | `design-gap` (declaration wrong/missing → a contract change) |
-   `execution-gap` (code violates a correct declaration → a boundary fix). **Naming the plane IS the
-   D541 intake** — it routes the fix and forbids compensating at the wrong layer.
+| Lane | a | b | c | d | Evidence / note (owner) |
+|---|:--:|:--:|:--:|:--:|---|
+| S1 Auth | 🟢 | 🟢 | 🟢 | ⚪ | Cognito + guards; not deeply assessed |
+| S2 User/access | 🟢 | 🟡 | 🟢 | 🟢 | RBAC over-promise copy (bc-admin AppRouter:277) + ADR-42b9c0 closing note absent (this prog) |
+| S3 Tenant lifecycle | 🟢 | 🟢 | 🟢 | 🟢 | onboarding_record in sync (DEC-7df811); `retired` status self-disclosed |
+| S4 Pricing | 🟢 | 🟡 | 🟢 | 🟢 | `pricing.package` real (D086); ADR-324d9e omits Stripe-unbuilt disclosure (this prog/punch-list) |
+| L1 Source | 🟢 | 🟢 | 🟢 | 🟢 | `catalog_retirement_log` governed append-only |
+| L2 SC+AC | 🟢 | 🟢 | 🟡 | 🟢 | 305:305 is workflow convention, not a DB unique (source-contract.ts index) |
+| L4 OC | 🟡 | 🟢 | 🟢 | 🟢 | `observation_field_map` dead schema def (guard-tested) → SI-A-1 |
+| L5 CC | 🟡 | 🟢 | 🟢 | 🟢 | legacy `canonical_mapping` resolver routes mounted but **fail-safe/refuse** (:357/360/368) → residue SI-A-1 |
+| L6 MCF | 🟡 | 🟢 | 🟢 | 🟢 | cert-writer 3,768 + McfRead 1,992 god-services → SI-A-2…6 |
+| L7 Reader | 🟡 | 🟡 | 🟢 | 🟢 | unreachable `deleteReader` residue (reader.service.ts:170) + stale memory note + connectors.csv drift |
+| L9 Chain/Readiness | 🟡 | 🟢 | 🟢 | 🟢 | 410 readiness stubs + metric-funnel mounted (410-contract-careful removal) → SI-A-1 |
+| L10 Tenant onboarding | 🟢 | 🟢 | 🟢 | 🟢 | onboarding_record inert pending bc-db 0006 gate (known/tracked) |
+| RT Runtime | 🟡 | 🟢 | 🟢 | 🟢 | dead idempotency guard + unreachable deleteReader; **no live delete gap** (reclassified) |
+| EV Evidence | 🟢 | 🟢 | 🟡 | 🟢 | tenant `evidence.*` immutability not deployed (ADR-09fb2f) → **DB-Foundation** |
+| GOV Governance | ⚪ | 🔴 | ⚪ | 🟡 | doctrine-without-ADR (Core Dashboard no ADR) + hygiene mechanism gap (this prog); D162 count stale |
+| L3 · L8 · S5 · TS · A1 | ⚪ | ⚪ | ⚪ | ⚪ | peer-owned / design-pending — not assessed this pass |
 
-Every reconciliation item is recorded as a citable change record (the `CHG-…` pattern). The program does
-**not** re-run evaluation or hand-edit rows to "fix" a number — a diagnostic that mutates substrate is a
-violation, not a repair.
+## 4. The method — how a gap is adjudicated
 
-## 4. Ownership — the program finds the *unowned* drift
+Generalized from the T6 gate lesson and DEC-c48b0f/D541: (i) pin the load-bearing assertion; (ii) name the
+expected code/DB surface; (iii) read substrate read-only; (iv) verdict + plane — coherent / design-gap /
+execution-gap. **Verification includes reachability** (trace the call path from the controller/service, not
+only the leaf method) — the lesson from d619-001, where two "gaps" were unreachable/fail-safe. Reads never
+trigger evaluation; no substrate hand-edits.
 
-The program's discipline is **reference, don't absorb.** Most integrity work already has an owner; the
-program owns the **gaps between owners** and the **cross-plane map**.
+## 5. Ownership & discipline
 
-| Cell | Owner | This program |
-|---|---|---|
-| Plane a — 5 code moves | **this program** | owns + executes (sub-track, last) |
-| Plane b — ADR content items | punch-list (f720ba/d3e83a/1557c5/0c4e67/c4c8a3/2d166b) + D370 | references |
-| Plane b — **hygiene mechanism gap** | *unowned* | **owns** (propose the missing checks) |
-| Plane c — legacy metric corpus | D608 / TSK-d21b97 | references (+ feeds the target-absent finding) |
-| Plane c — schema / tenant substrate | DB Foundation / TSK-cc348a | references |
-| Plane c — design/execution couplings | TSK-b5ab8a | references |
-| Plane c — **systematic decided-retired-still-mounted class** | *unowned* | **owns** (reconcile, hand off) |
-| Plane d — **doc↔substrate number staleness** | *unowned* | **owns** (the small unowned fixes) |
-| Platform/tenant boundary drift | DEC-96cc78/D612 | references |
-
-## 5. Scope discipline — bounded, not a standing audit
-
-An integrity umbrella can rot into a program that audits forever and ships little. Hard bound:
-
-- The program produces **(i)** the cross-plane integrity **map**, **(ii)** the reusable **method** (§3),
-  and **(iii)** a **finite reconciliation backlog** (§6). It hands each item to its rightful owner, does
-  the small unowned ones itself under normal governance, and **closes** when the backlog is drained.
-- **No standing re-audit.** The recurring check belongs in tooling (the plane-b mechanism fix), not in a
-  perpetual program.
-- **Ceremony scales to consequence.** A doc-number fix is a one-line PR; a code un-mount is an ADR-gated,
-  worktree-isolated, Codex-reviewed move. The five physical moves keep the full parent-program discipline
-  (worktree off `origin/main`, D541 intake per move, one small surgical move, lowest-blast-first,
-  BoundaryModule last) precisely because they are the highest-collision, not the highest-value, work.
+**Reference, don't absorb.** The program owns the unowned drift + the map + the method. D608 (TSK-d21b97),
+DB Foundation (TSK-cc348a), the ADR-hygiene punch-list (D370), and DEC-96cc78/D612 remain their owners.
 
 ### 5.1 Design-cum-implementation packages — no refactor in isolation
-
-Structure is interconnected; a change judged in isolation breaks a connection elsewhere. Therefore the
-program's pre-refactor work product is a set of **design-cum-implementation packages**, not ad-hoc PRs:
-
-- **Every package carries both planes of vision at once.** *Macro:* the connection map — what the item
-  touches, what depends on it, which decisions/docs/DB surfaces it links, and which other packages it is
-  coupled to. *Micro:* the exact target state, the file-level implementation steps, the D541
-  design/execution verdict, and the acceptance evidence.
-- **Packages are linked, not siloed.** A master (macro) package holds the whole-system map + method +
-  sequencing + the package index; each micro package cross-references the master and any sibling it is
-  coupled to. Reviewing one means seeing its connections.
-- **Auditor approval precedes any code.** No refactor — not even a snapshot-clean relocation — begins
-  until its package is Codex-approved through the program's exchange family. The package *is* the review
-  unit; the PR implements an already-approved package.
+Every package carries macro (connection map: what it touches / depends on / couples to) and micro (target
+state, file-level steps, D541 verdict, acceptance) vision, plus a plain-English note. **Codex approves each
+package before any code**; the PR implements an approved package. Any unit that touches a Foundation
+boundary or invariant additionally passes the Foundation gate (`bc-docs/docs/foundation/the-invariants.md`)
+— currently **no** open unit is such a case (the RT item was reclassified), but the gate applies to any
+future coherence unit.
 
 ### 5.2 Safe-window discipline with active peers (standing rule)
+Re-confirm the safe window with active peers (foremost Tenant Readiness / TSK-d73f01) **immediately before
+each code move** — not once. Treat every targeted element as potentially-active; the shared surfaces
+(`src/__architecture__/*.snapshot.json`, `app.module.ts`, `src/attestation/`) are coordinate-first. A move
+that can't get a fresh window waits.
 
-`bc-core` is a hot tree with **actively-working peers**, foremost **Tenant Readiness (TSK-d73f01)**, which
-may be using targeted elements at any time. A one-time "clear" is not a standing clearance:
+## 6. Package set — reprioritized (real + cheap first; plain-English)
 
-- **Re-confirm the safe window immediately before *each* code move** — not once at program start. The
-  earlier coordination (registry/mcf and boundary reported free of the parked PR #764) informs the plan;
-  it does **not** authorize a move weeks later without a fresh check.
-- **Treat every targeted element as potentially-active** until the peer confirms otherwise for that
-  window. The shared surfaces (`src/__architecture__/*.snapshot.json`, `app.module.ts`,
-  `src/attestation/`) and any file the peer names are coordinate-first, whoever-merges-first-wins.
-- **A refactor that cannot get a fresh safe window waits.** Legibility is never worth stepping on a WIP
-  peer's active work.
+Priority reflects the honest post-review picture: the governance-trail and doc-number items are the real,
+cheap value; residue removal is careful (410 contracts); the physical moves are last. **SI-RT-1 is
+withdrawn** (unreachable; the design already exists). **SI-L5-1 is folded into SI-A-1** as fail-safe legacy
+residue.
 
-## 6. Reconciliation backlog (grounded; grows as traces land)
+- **SI-B-1 · plane b · first.** *Plain: write the missing ADRs for rules that live only in CLAUDE.md — the
+  Core Dashboard was retired with no record at all; IntegrityService's lifecycle; the auth-bypass ban — and
+  fix code comments that cite CLAUDE.md instead of the real ADR.* The clearest genuine gap.
+- **SI-D-1 · plane d · first.** *Plain: fix the docs whose numbers drifted from the live DB — D162's inline
+  "12 schemas" vs the live 20 (and confirm schema-map.md currency with DB-Foundation); CLAUDE.md MCF
+  5→433.* One-liners.
+- **SI-B-3 · plane b · leverage.** *Plain: add two checks to the ADR health-check — "decided but never
+  built" and "status says X but the body says not-X".* Stuck-proposed is already checked; these two aren't.
+  Makes the program self-closing. Hand to D370 tooling.
+- **SI-A-1 · plane a · careful.** *Plain: remove dead/unreachable code and retired route-mounts — the
+  unreachable `deleteReader`, the legacy resolver routes, the 410 controllers, the dead schema def.*
+  **Not "no behaviour change":** removing a 410 route changes its observable contract (410→404), and
+  DEC-b049f6 deliberately chose 410. Requires a **route-by-route inventory** and, per route, either
+  **preserve the 410 compatibility surface** or an **approved retirement-contract amendment** with caller
+  impact + response tests. Unreachable non-HTTP residue (the `deleteReader` method) is a plain deletion.
+- **SI-A-2…6 · plane a · last.** *Plain: structural cleanup of the largest files/modules — decouple
+  boundary↔registry, split the two god-services, file the registry root, split BoundaryModule.* Legibility
+  only; lowest-blast-first; the type/util relocation is the **first physical-relocation touch** (it changes
+  no provider/route so it's snapshot-clean — but it is not "the first code touch," since SI-B-3/SI-A-1 can
+  change code earlier).
 
-Each item carries a plane, an intake verdict once traced, and an owner/hand-off. Live status stays in
-git/PR/DevHub; this is the decomposition.
-
-| # | Plane | Item | Intake (design/execution — pending trace) | Owner / hand-off |
-|---|---|---|---|---|
-| C-1 | c→a | legacy metric-catalog + metric-definition **module-mount** residue | **T1 (CHG-8d0836): write-contract COHERENT** — routes 410'd per D481, corpus 0 rows, bridge DEC-c3e57f/D422 retired; the MOUNT is removable dead-module residue, not live drift | this prog (physical dead-module removal, LOW blast) |
-| C-2 | c | `contract.metric_contract` DROP target is a **phantom** | **T3 (CHG-8d0836): CONFIRMED reference-integrity gap** — target never physically exists; real retired corpus = `metric.metric_definition` (0 rows) | **D608 / TSK-d21b97** (re-point target before any DROP) |
-| C-3 | c→a | 2 retired 410 readiness stub **mounts** | **T5 (CHG-277925): COHERENT contract** (routes 410-Gone, DEC-b049f6/D548-backed) + removable dead-module residue | this prog (physical dead-module removal) |
-| C-4 | c+b | IntegrityService: gate-off coherent, lifecycle doctrine-only | **T6 (CHG-277925): gate-off DECIDED** (DEC-29b518/D429 + DEC-d9fa49/D547 — coherent); but the deprecation LIFECYCLE lives in CLAUDE.md ONLY (not an ADR) + a dead injection in contract.service.ts | this prog: promote lifecycle→ADR + R5 task (plane b) + remove dead injection (plane a) |
-| C-5 | c | idempotency: **generic HTTP guard aspirational** | **T4 (CHG-8d0836): SPLIT** — cert/eval path ACTIVE + DEC-5ea578-backed (coherent); only the generic `IdempotencyGuard`/interceptor/`infrastructure.idempotency_keys` is built-unwired-undecided | this prog / [[TSK-a6814f]] — retire (DBCP) or decide+wire |
-| C-6 | c | `mcf-realization-projection` v1+v2 parallel | in-progress supersession — finish or fork | this prog (coord auditor contract) |
-| B-1 | b | hygiene mechanism blind to decided-not-implemented + status-vs-body | design-gap (missing check) | this prog → propose to D370 tooling |
-| B-2 | b | 4 proposed ADRs > 30d (D370) | content | **punch-list / TSK-1557c5** |
-| D-1 | d/b | D162 inline count (82 tbl / 12 schema) stale vs live 20/258 | **T2 (CHG-8d0836): DESIGN-GAP** — but D162 **delegates** authority to `architecture/database/schema-map.md`; real check = is schema-map.md current; Platform/Tenant split intact | **DB-Foundation owns schema evolution** — coordinate; this prog checks schema-map.md currency |
-| D-2 | d | CLAUDE.md MCF numbers stale (5 vs 433) | doc fix | this prog (one-line) |
-| **C-7** | c | **L5: retired `canonical_mapping` (0 rows) backs 2 live production-labeled routes** — OrchestratorController `POST /t/admission-runs/:runId/resolve` + TestBenchExecutionController `POST /t/test-bench/resolve-canonical` via fully-DI-wired `CanonicalResolutionService` (boundary.module:18,93,163) | **execution-gap** — `executeFullCycle` stopped calling it (R5/D481 "tail dead") but the controllers still expose routes hitting the empty table | this prog (retire/repoint to CC-v2 resolver) |
-| **C-8** | c | **RT: `runtime.admission_run` HARD-DELETED on reader deletion** (reader.repository:308-317) while `execution.run_summary` (no reader FK) is not → 140 vs 5 | **Foundation — Invariant III tension** (destructive prune of execution history; no ADR describes the cascade asymmetry) | this prog → **Foundation gate + design ADR** (highest stakes) |
-| **B-3** | b | **doctrine-without-ADR class** (T6-generalized): Core Dashboard retirement (**NO ADR at all**), IntegrityService lifecycle specifics, auth-bypass rule (no bc-core-scoped ADR), citation-drift (code cites CLAUDE.md not ADR-ea9bdc/1e55d3/a6cdae) | design-gap — promote to ADRs + add code→ADR breadcrumbs | this prog |
-| **B-4** | b | **ADR-not-updated-post-implementation**: ADR-42b9c0 closing-commit note never added; ADR-324d9e never flags Stripe-unbuilt; S2 UI placeholder over-promises RBAC vs 1-table schema; connectors.csv seed vs code registry drift (no odoo) | doc-hygiene | this prog / punch-list |
-| **A-6** | a | **dead-mount 410 residue class (~10 controllers)**: mcf-publication-activation, metric-funnel, tenant-metrics (whole 410); mls-backfill, admin-test-bench, mcf-intake, metric-definition (partial); integrity.controller @deprecated-but-live; observation_field_map dead schema | execution/cleanup — mostly coherent-by-design "explicit-410-response"; decide per-controller keep-vs-remove | this prog (low blast) |
-| **D-3** | c | evidence.* immutability triggers written-but-never-deployed (ADR-09fb2f, proposed) | declared-not-deployed | **DB-Foundation / tenant** (coordinate) |
-| A-1…A-5 | a | the 5 code moves | design act + behavior-preserved invariant | this prog (last, lowest-blast-first) |
-
-**Trace batch 1 verdicts (CHG-8d0836, read-only, via Platform Readiness).** Net shapes: T2/T3 = *decision-names-stale-reality* (design-gap: stale count / phantom target); T4 = *aspirational-code-never-decided* (generic HTTP guard only); T1 = *coherent-contract + removable-residue*. Calibration: the substrate is **more coherent than the raw inventory implied** — the write contracts (legacy 410'd; cert/eval idempotency DEC-backed) hold; the real gaps are dead-mount residue, a phantom DROP target, a stale delegated count, and one aspirational guard.
-
-**Trace batch 2 verdicts (CHG-277925) + lane sweep (SES-2b96b2).** T5 = another coherent-410 residue; T6 =
-gate-off coherent but the lifecycle is doctrine-only (→ B-3); T7 = **not drift** (coherent v1/v2
-coexistence). The lane sweep added C-7 (L5 live-routes-on-retired-table), C-8 (RT hard-delete — the one
-Foundation concern), the B-3/B-4 doctrine + hygiene items, and the A-6 residue class. Confirmed
-**coherent (not drift)**: dual certification_record (intentional BCF/MCF split), tenant `evidence.*`
-(correctly tenant-scoped), the tenant/onboarding-record "orphan" (bc-db adoption gate, tracked).
-
-## 6.1 The package set — design-cum-implementation, plain-English
-
-The backlog groups into these packages. Each carries the plain-English note the operator approves on;
-each is Codex-approved before any code. Priority is highest-consequence first, physical moves last.
-
-- **SI-RT-1 · plane c · 🔴 Foundation.** *Plain: execution-history rows are permanently deleted when a
-  reader is removed — that conflicts with the "history is never rewritten" rule.* Decide the correct
-  behaviour (archive / soft-delete) and record it in an ADR. Backlog: C-8. Needs the Foundation gate.
-- **SI-L5-1 · plane c · 🔴.** *Plain: two live "resolve" API routes still call an old, now-empty mapping
-  table and can silently return nothing.* Retire or repoint them to the current CC-v2 resolver.
-  Backlog: C-7.
-- **SI-B-1 · plane b · 🟡.** *Plain: several "X is retired/deprecated" rules live only in CLAUDE.md, not a
-  decision record — including a whole retired project with no ADR at all.* Write the missing ADRs; fix
-  code comments that cite CLAUDE.md instead of the real ADR. Backlog: B-3 (+ the C-4 lifecycle clause).
-- **SI-B-3 · plane b · 🟡 (leverage).** *Plain: the automated ADR health-check doesn't catch "decided but
-  never built" or "memory says X but no ADR does".* Add those checks so this class is caught
-  automatically — this makes the program self-closing. Backlog: B-1 → hand to D370 tooling.
-- **SI-A-1 · plane a · 🟡 (low blast).** *Plain: delete code and route-mounts for features already retired
-  — they still load but every call returns "gone".* No behaviour change; some 410 mounts are kept on
-  purpose, so decide per-controller. Backlog: A-6 (+ C-1/C-3 legacy/readiness mounts).
-- **SI-D-1 · plane d · 🟢 (quick).** *Plain: update the docs whose numbers drifted from the live database
-  (schema count 11→20, metric count 5→433).* Coordinate schema-map.md currency with DB-Foundation.
-  Backlog: D-1/D-2.
-- **SI-A-2…6 · plane a · 🟢 (last).** *Plain: structural cleanup of the largest files/modules — decouple
-  boundary↔registry, split the two god-services, file the registry root, split BoundaryModule.*
-  Legibility only; last, lowest-blast-first (sub-unit 1a snapshot-clean is the first code touch).
-  Backlog: A-1…A-5 (detail in Appendix A).
-
-**Hand-offs (reference-not-absorb):** C-2 phantom DROP target → D608; D-3 evidence immutability → DB
-Foundation/tenant; B-2 stuck-proposed ADRs → punch-list; C-6 realization v1/v2 → pending one auditor
-consumption check; BCF cert Phase-A3 cutover → BCF.
+**Hand-offs (reference-not-absorb):** `contract.metric_contract` phantom DROP target → D608; tenant
+`evidence.*` immutability → DB Foundation; 4 stuck-`proposed` ADRs → punch-list (TSK-1557c5); realization
+v1/v2 = coherent, no action; BCF cert Phase-A3 cutover → BCF.
 
 ## 7. Sequencing
 
-1. **Map + method first** — this SSOT + the execution ADR (the authority surface) → stand up the Codex
-   exchange (own d-family, own watcher port).
-2. **Foundation + coherence first** — SI-RT-1 (through the Foundation gate) and SI-L5-1: the two genuine
-   coherence gaps, highest consequence.
-3. **Doctrine + leverage** — SI-B-1 (promote doctrine to ADRs) and SI-B-3 (self-closing hygiene check).
-4. **Quick wins + residue** — SI-D-1 (doc numbers), then SI-A-1 (dead-mount removal, low blast).
-5. **Hand-offs** throughout — to D608, DB-Foundation, the punch-list, BCF.
-6. **The five code moves last** — one small surgical move at a time, lowest-blast-first (registry↔boundary
-   sub-unit 1a — snapshot-clean — is the first *code* touch), BoundaryModule last.
+1. **Map + method** (this SSOT + ADR DEC-027ef6/D619) → Codex exchange (`d619-`).
+2. **Real + cheap first** — SI-B-1 (doctrine→ADR) and SI-D-1 (doc numbers).
+3. **Leverage** — SI-B-3 (self-closing hygiene checks).
+4. **Careful residue** — SI-A-1 (route-by-route, 410-contract-preserving).
+5. **Hand-offs** throughout.
+6. **Physical moves last** — SI-A-2…6; the type/util relocation is the first *physical-relocation* touch;
+   BoundaryModule last.
 
-Every code step re-confirms a fresh safe window with active peers (§5.2) and is Codex-approved as a
-package (§5.1) before it begins.
+Every code step re-confirms a fresh safe window (§5.2) and is Codex-approved as a package (§5.1) first.
 
 ## 8. Authority & provenance
 
-Executes Platform Readiness & Legibility §5 (Track S) + §7 (unit ledger), DEC-33d436/D606. **Execution &
-sequencing ADR: DEC-027ef6/D619** (this program's own; names the Codex exchange family `d619-`). Method engine:
-DEC-c48b0f/D541. Plane-a move decisions: DEC-0d5b39 + DEC-01bd6b + DEC-3aa336. Plane-b policy:
-DEC-623f8f/D370. Plane-d specimens: DEC-1918d0/D162, DEC-b1a286. Referenced owners: D608 (TSK-d21b97),
-DB Foundation (TSK-cc348a), TSK-b5ab8a, the punch-list, DEC-96cc78/D612. Anchor: **TSK-f38fb6**. Ground
-study: SES-2b96b2 (2026-09-21), measured against `bc-core origin/main 53bb1115`, `bc-docs origin/main
-be4f6ce`, and live `bc_platform_dev`.
-
----
+Executes Platform Readiness & Legibility §5 (Track S) + §7, DEC-33d436/D606. **Execution & sequencing ADR:
+DEC-027ef6/D619** (names the Codex family `d619-`). Method engine: DEC-c48b0f/D541. Plane-a move decisions:
+DEC-0d5b39 + DEC-01bd6b + DEC-3aa336. Plane-b policy: DEC-623f8f/D370. Plane-d specimen: DEC-1918d0/D162
+(82 tables / 12 schemas, delegates to schema-map.md), DEC-b1a286. Referenced owners: D608 (TSK-d21b97), DB
+Foundation (TSK-cc348a), the punch-list, DEC-96cc78/D612. Anchor: **TSK-f38fb6**. Ground study: SES-2b96b2
+(2026-09-21). Successor to Codex d619-001 CHANGES REQUIRED.
 
 ### Appendix A — the five physical moves (plane a detail)
-
-Ranked lowest-blast-first. registry↔boundary decoupling splits into type/util relocations (sub-unit 1a,
-snapshot-clean, first) and service inversions (1b+, coordinated per shared-surface). cert-writer and
-McfReadService are **within-home file decompositions** behind a preserved facade — a different act from
-the DEC-3aa336-forbidden *folder* reshuffle (M12 panel paths + prompt assets stay untouched); **the Codex
-exchange adjudicates this reconciliation before any mcf code moves.** registry-root cleanup's true scope
-excludes the D608-owned legacy `metric-*` files (delete-not-file) and the by-name-retained
-`intake-queue.*`. BoundaryModule → 4 boundaries + 2 axis-orchestrators (DEC-0d5b39/01bd6b) is highest
-blast, last.
+Lowest-blast-first. registry↔boundary decoupling splits into type/util relocations (the snapshot-clean
+first physical-relocation touch) and service inversions (coordinated per shared surface). cert-writer and
+McfReadService are **within-home file decompositions** behind a preserved facade — a different act from the
+DEC-3aa336-forbidden *folder* reshuffle (M12 paths + prompt assets untouched); the Codex exchange
+adjudicates that reconciliation before any mcf code moves. registry-root cleanup excludes the D608-owned
+legacy `metric-*` files and the retained `intake-queue.*`. BoundaryModule → 4 boundaries + 2
+axis-orchestrators (DEC-0d5b39/01bd6b) is highest blast, last.
 
 ### Appendix B — reproducibility commands
-
 ```
-# plane a / d (git-ref against origin/main; local main diverged 391 commits via squash-merge)
-git grep -l -E "from ['\"].*/registry/" origin/main -- 'src/boundary/*.ts' | grep -v '\.spec\.' | wc -l   # 31
-git show origin/main:src/registry/mcf/mcf-cert-writer.service.ts | wc -l                                   # 3768
-git show origin/main:src/registry/mcf/mcf-read.service.ts | wc -l                                          # 1992
-git ls-tree origin/main --name-only src/registry/ | grep '\.ts$' | grep -v '\.spec\.' | wc -l              # 36
-# plane b (bc-docs origin/main)
-git ls-tree origin/main --name-only docs/governance/adrs/ | grep -c 'ADR-'                                 # 597
-# plane c / d (live bc_platform_dev, read-only)
-SELECT count(*) FROM information_schema.schemata WHERE schema_name NOT LIKE 'pg_%';                        # 20
-SELECT to_regclass('contract.metric_contract');                                                           # NULL (absent)
-SELECT count(*) FROM mcf.metric_contract;                                                                  # 433
+# plane a (git-ref against full SHA; local main diverged via squash-merge)
+C=53bb1115d9b1c4d841750cce31eb2f60f3174d76
+git grep -l -E "from ['\"].*/registry/" $C -- 'src/boundary/*.ts' | grep -v '\.spec\.' | wc -l   # 31
+git show $C:src/registry/mcf/mcf-cert-writer.service.ts | wc -l                                   # 3768
+git show $C:src/registry/mcf/mcf-read.service.ts | wc -l                                          # 1992
+git ls-tree $C --name-only src/registry/ | grep '\.ts$' | grep -v '\.spec\.' | wc -l              # 36
+# reachability (Finding 1): the delete is closed at the service
+git show $C:src/registry/readers/reader.service.ts | sed -n '170,175p'   # throws ForbiddenException
+git grep -n "deleteReader" $C -- 'src/**/*.ts' | grep -v '\.spec\.'      # no repository caller
+# L5 fail-safe (Finding 2)
+git show $C:src/boundary/canonical-resolution.service.ts | sed -n '355,368p'  # NotFoundException
+# DB observation (read-only), 2026-09-21T09:10:48Z
+BEGIN READ ONLY;
+SELECT count(*) FROM information_schema.schemata;                                                  # 22
+SELECT count(*) FROM information_schema.schemata WHERE schema_name NOT IN ('public','information_schema');  # 20
+SELECT to_regclass('contract.metric_contract');  # NULL   /   SELECT count(*) FROM mcf.metric_contract;  # 433
+COMMIT;
 ```

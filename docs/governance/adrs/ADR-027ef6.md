@@ -14,11 +14,7 @@ focus: governance
 
 ## Context
 
-See decision text below.
-
-## Context
-
-Track S ("Structure") of Platform Readiness & Legibility (DEC-33d436/D606) was spun off 2026-09-21 as its own program and, on a grounded read-only study (SES-2b96b2, measured against bc-core origin/main 53bb1115, bc-docs origin/main be4f6ce, and live bc_platform_dev), reframed from "code movement" to **structural integrity across four planes** — decisions (ADRs) ↔ docs (bc-docs) ↔ code (bc-core) ↔ DB (bc_platform_dev). The parent program's stall analysis is load-bearing: code structure was ~9% of stalls, docs≠code and wrong-plane ~24% each. The study found the substrate **mostly coherent**, with a real long tail: dead-mount 410 residue, doctrine that lives only in CLAUDE.md without an ADR, numeric doc staleness, and two genuine coherence gaps — retired canonical_mapping backing two live routes (L5), and runtime.admission_run hard-deleted on reader removal in tension with Invariant III (RT). SSOT: docs/implementation/structural-integrity-program.md.
+Track S ("Structure") of Platform Readiness & Legibility (DEC-33d436/D606) was spun off 2026-09-21 as its own program and, on a grounded read-only study (SES-2b96b2, measured against bc-core origin/main 53bb1115, bc-docs origin/main be4f6ce, and live bc_platform_dev), reframed from "code movement" to **structural integrity across four planes** — decisions (ADRs) ↔ docs (bc-docs) ↔ code (bc-core) ↔ DB (bc_platform_dev). The parent program's stall analysis is load-bearing: code structure was ~9% of stalls, docs≠code and wrong-plane ~24% each. The study found the substrate **highly coherent.** Two plane-c items first elevated as coherence gaps were **reclassified on verification** (Codex d619-001): the RT hard-delete path is **unreachable** (the service throws before the repository runs) and its intended design already exists (D564 governed expunge + soft `archiveReader`), and the L5 resolver routes **fail safe** (they refuse, they do not silently return bad data). What remains is a **governance-trail and legibility long tail** — doctrine that lives only in CLAUDE.md without an ADR, numeric doc staleness, and dead/unreachable residue — with **no urgent Foundation or coherence gap.** SSOT: docs/implementation/structural-integrity-program.md.
 
 ## Decision
 
@@ -30,7 +26,7 @@ Track S ("Structure") of Platform Readiness & Legibility (DEC-33d436/D606) was s
 
 4. **Ownership — reference, not absorb.** The program owns only the unowned drift + the cross-plane map + the reusable method. D608 (legacy metric corpus, TSK-d21b97), Platform DB Foundation (schema/tenant, TSK-cc348a), the ADR-hygiene punch-list (DEC-623f8f/D370), the design/execution coupling anchor (TSK-b5ab8a), and the platform/tenant boundary drift (DEC-96cc78/D612) remain their owners.
 
-5. **Sequencing.** Foundation + coherence first (SI-RT-1 through the Foundation gate; SI-L5-1); then doctrine + leverage (SI-B-1 promote doctrine to ADRs; SI-B-3 self-closing hygiene check); then quick wins + residue (SI-D-1 doc numbers; SI-A-1 dead-mount removal); hand-offs throughout; the five physical code moves last (SI-A-2…6), BoundaryModule last.
+5. **Sequencing (post-review).** Real + cheap first — SI-B-1 (promote doctrine-without-ADR to ADRs) and SI-D-1 (fix stale doc numbers); then SI-B-3 (self-closing hygiene checks: decided-not-implemented + status-vs-body); then SI-A-1 (dead/unreachable residue removal — route-by-route, preserving the 410 contract or via an approved retirement amendment); hand-offs throughout; the five physical code moves last (SI-A-2…6), BoundaryModule last. **SI-RT-1 is withdrawn** (unreachable; design already exists) and **SI-L5-1 is folded into SI-A-1** (fail-safe legacy residue). No open unit is a Foundation-boundary matter; the Foundation gate applies to any future coherence unit.
 
 6. **Discipline.** Safe window re-confirmed with active peers (foremost Tenant Readiness / TSK-d73f01) immediately before every code move, not once; worktree off origin/main, parent==tip verified at commit; D541 intake per unit; auditor gate via this program's own Codex exchange family; DBCP-with-explicit-consent if any schema is touched.
 
