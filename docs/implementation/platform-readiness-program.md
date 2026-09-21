@@ -1,6 +1,6 @@
 ---
 title: Platform Readiness & Legibility — Program (SSOT)
-status: drafting
+status: closed
 date: 2026-09-19
 supersedes: >
   bc-core/docs/design/platform-functional-refactor-plan.md and
@@ -15,6 +15,7 @@ anchor_task: TSK-4b2404
 governing_adrs: >
   DEC-33d436/D606 (program mandate + platform/tenant readiness split + SSOT
   consolidation; this destination-first refactor is an evolution under that mandate);
+  DEC-958d3a/D613 (compositional engine-conformance proof; continuous run belongs to tenant readiness);
   DEC-a67bae/D590 (locked lanes); DEC-c9e623/D389 (Metric Lifecycle States);
   DEC-c48b0f/D541 (design-act vs execution-act plane gate); DEC-48d222 (metric-evidence
   atomic proof / E6-B).
@@ -30,31 +31,48 @@ related: >
 > **work** to close the gap. Read top-down. If a unit of work can't be tied to a function
 > and a piece of the distance-to-destination below, it is drift.
 
+> ## ✅ CLOSED — 2026-09-21 (DEC-958d3a/D613 + §1 Amendment 2)
+> Platform readiness is **CLOSED on engine-conformance**. The evidence: bc-core CI green on
+> `main` (`e6b-db-integration` + the 3 evaluation E2E proofs + gates + vitest; run 35552644122 /
+> `e72391fd`), every boundary green + all execution-plane seams closed fail-closed. In-gate
+> residuals resolved: **L9 chain-audit door SHIPPED** (bc-core PR #808 + bc-admin PR #53,
+> rendered live over the 127 CAS rows); **S2 users door DEFERRED** (solo-founder — no multi-user
+> need; TSK-905844); **ADR-hygiene** machine-clean (audit 2026-09-21: 592 ADRs, `supersessionIssues=0`)
+> with the punch-list triaged. The single continuous *real* run is **tenant-readiness milestone #1**
+> (the Kaveri/lc5 onboarding, TSK-d73f01 — downstream, not a platform gate). Tracked, non-gating
+> follow-ups: the deeper ADR manual sweep (reversals / status-vs-body, TSK-f720ba/d3e83a), the
+> advisory subdomain/focus backfill (62), and the 4 extended-proposed ADRs awaiting adjudication
+> (TSK-1557c5). Anchor TSK-4b2404 closed.
+
 ## 1. The destination
 
-**BareCount's platform can take a real source system, run it through the whole governed
-runway, and produce a first *trusted* metric — and we have proven it once, end-to-end.**
-Everything else — the functions, the tracks, the lanes, the seams — is a means to this.
+**Platform readiness establishes the engine conformance needed to produce trusted metrics
+through the governed runway. Its proof is compositional: individual platform boundaries,
+their fail-closed couplings, and the evaluation/evidence E2E boundary are covered by CI.**
+The single continuous source-to-evidence run remains tenant-readiness milestone #1;
+this closure does not claim that a continuous real-source run has occurred.
 
-Readiness has four criteria, all required: the mechanics are **streamlined · governed ·
-documented · proven-once-end-to-end**. The first three are confirmable by inspection; the
-fourth is the guard against declaring readiness from a checklist while the front door never
-opened.
+Readiness retains the four criteria **streamlined · governed · documented ·
+proven-once-end-to-end**. Under DEC-958d3a/D613, the fourth criterion is satisfied for
+platform readiness by compositional engine-conformance evidence. Tenant readiness requires
+the continuous run through the full governed onboarding stack.
 
-**What "proven" means here — the platform-readiness proof (decided 2026-09-19):**
+**Current proof definition (Amendment 2, 2026-09-21):**
 
-- **Platform readiness = a fixture/engine-conformance proof.** Fixture data crosses *every*
-  platform boundary (Source → Reader → SO → Canonical → CO → Metric Snapshot) to a snapshot
-  with complete, emitted evidence, all couplings fail-closed — on a **sandbox/fixture tenant**
-  (e.g. `probe_unit4`). **No customer onboarding required.** This is the arc this program owns,
-  and it is what closing the runtime seams (§6) unblocks.
-- **Demo readiness = platform readiness + a thin real-source slice.** A *named downstream
-  milestone*, not the platform gate: the Kaveri/Odoo world walked far enough to show a
-  believable metric came from a real system. It **rides on** platform readiness (and the
-  Platform DB Foundation tenant substrate); it is **not** the platform proof itself.
+- **Platform readiness = compositional engine-conformance proof.** Per-boundary proofs cover
+  Source → Reader → SO → Canonical → CO → Metric Snapshot, the execution-plane seams fail
+  closed, and evaluation/persistence/emitted evidence have E2E integration coverage. These
+  fixture-backed proofs do not establish one continuous run across the entire chain.
+- **Tenant readiness milestone #1 = the continuous Kaveri/lc5 run.** Full governed onboarding
+  produces a metric and its evidence from a real source. It depends on platform readiness
+  and the Platform DB Foundation tenant substrate (TSK-d73f01).
 
-This corrects the earlier framing that used the Kaveri tenant walk *as* the platform proof.
-Platform readiness is fixture-provable; the Kaveri run is tenant-readiness confirmation on top.
+**Historical definition (2026-09-19, superseded by Amendment 2):** platform readiness was
+framed as one fixture/sandbox traversal of every boundary, with a thin real-source demo
+slice downstream. The current definition replaces that continuous fixture proof with
+compositional evidence and assigns the continuous run to full tenant onboarding.
+
+**Amendment 2 (2026-09-21, [DEC-958d3a](../governance/adrs/ADR-958d3a.md)/D613) — engine-conformance is satisfied *compositionally*; the single continuous run is tenant-readiness.** Grounded investigation (SES-4ecd20) established that a *single continuous* run — fixture **or** real — is inseparable from the full governed onboarding stack: metric activation is certification-gated in the substrate (`mcf.fn_mcv_state_transition_check` forces `draft→review→approved→audit_pending→active`, each edge requiring real `certification_record` rows + a package snapshot + intrinsic-decision-ready), and reaching an evaluable metric routes through CC activation → the provisioning fanout → the owner-privileged fact-table worker. There is no "thin" continuous run. **Platform-readiness engine-conformance is therefore evidenced compositionally** — every platform boundary individually green, all couplings fail-closed, and the evaluation/evidence boundary proven E2E — authoritatively by bc-core CI on `main`: jobs `e6b-db-integration` (the 3 evaluation integration proofs + the 3 execution-plane seam regression specs), `quality-gate`, `static-analysis`, and `vitest-shard 1/2/3` all green (run `35552644122`, headSha `e72391fd`, 2026-09-21). The **single continuous end-to-end run** (the fourth "proven-once-E2E" criterion) is **reclassified to tenant-readiness milestone #1** — the Kaveri/lc5 onboarding — because it requires that full interlocked stack. It is no longer the platform-readiness closing act. See [DEC-958d3a](../governance/adrs/ADR-958d3a.md).
 
 ## 2. The platform functions — the stable spine
 
@@ -112,6 +130,10 @@ covers *cosmetic* only — missing operator *doors* (below) are readiness gaps, 
 
 ## 3. Function readiness matrix (grounded 2026-09-19)
 
+This is the historical study snapshot, including the explicitly dated 2026-09-20 updates.
+Its gap labels are retained as evidence of the study; the closure banner and §9 record the
+2026-09-21 gate disposition, including L9 and S2.
+
 RAG: 🟢 built/sound/door present · 🟡 partial/stub · 🔴 absent/gap · ❓ unverifiable this pass.
 Every cell resolves to a row in the **evidence manifest** ([`platform-readiness-evidence-2026-09-19.md`](platform-readiness-evidence-2026-09-19.md)) — source scope, exact queries/live counts, commit pins (bc-core `b80f10a`, bc-admin `0c94e24`, bc-portal `3db7f0e`), and preserved unknowns. DB counts are a 2026-09-19 snapshot of `bc_platform_dev`; the **tenant-runtime DB plane (`fact.*`/`progression.*`) was not inspectable and is marked ❓, never green.**
 
@@ -146,7 +168,8 @@ Every cell resolves to a row in the **evidence manifest** ([`platform-readiness-
 ## 4. Scope boundary — what this program owns
 
 - **Platform readiness = MLS 01–14** (DEC-c9e623): authoring → certification → activation +
-  runtime-engine conformance, fixture-provable. **This program.** Handoff at **MLS-14 → 15**.
+  runtime-engine conformance, proven compositionally under Amendment 2. **This program.**
+  Handoff at **MLS-14 → 15**.
 - **Tenant readiness = MLS 15–25**: a real tenant's chain runs to a KPI (the Kaveri pilot).
   Downstream; rides on platform readiness **and** Platform DB Foundation W2.
 - **Design plane vs execution plane (DEC-c48b0f):** the AI authoring panels (design) are
@@ -154,6 +177,11 @@ Every cell resolves to a row in the **evidence manifest** ([`platform-readiness-
   were ungoverned and can silently no-op — that is the seam work in §6.
 
 ## 5. The work — four tracks (the work axis)
+
+**Historical work plan (2026-09-19).** The track descriptions below preserve the
+pre-Amendment-2 work plan. They are not the
+current gate: R's engine-conformance proof is met compositionally, its continuous run moves
+to tenant readiness, and the L9/S2/ADR-hygiene dispositions are recorded in §9.
 
 Ordering **T → (R ∥ L) → S**.
 
@@ -205,6 +233,9 @@ first-*observed* evidence emit — see §5 (R) and §9.
 
 ## 7. Unit ledger — the DB-Foundation-style work breakdown
 
+**Historical ledger (2026-09-19).** The statuses below preserve the original decomposition;
+§9 records the later L9 disposition.
+
 Every unit of Track work is a row here, with a mandatory **design/execution intake gate**
 (DEC-c48b0f/D541) filled *before* any code: a unit cannot be built until its intake states
 either *"declaration correct, engine violates it (execution) — verified against ground truth"*
@@ -242,21 +273,29 @@ does not exist; bc-portal arch is 6cdceb.
 
 ## 9. Current gate & sequencing
 
-1. **Close Track R** (runtime-trust): **seams #1/#2/#3 done ✅**; remaining = E6-B first-observed
-   emit (FND-VI, **deferred** — rides on a real metric run + auditor-store health) and the
-   by-design fail-open follow-ups, **proven green under the T gates on a fixture tenant**. Critical path.
-2. **Close Track L's no-black-boxes doors** (co-requisite): L8/L9 doors, S2 users. (L10 tabs → S5, deferred.)
-3. **Then demo readiness:** platform readiness + a thin real-source (Kaveri) slice — the named
-   downstream milestone, riding on DB-Foundation W2 + operator creds.
+**Current disposition (2026-09-21, DEC-958d3a/D613):**
 
-Steps 1–2 together are the **platform-readiness gate**; step 3 rides on it.
+1. **Platform engine-conformance proof met compositionally.** Track T is closed; the runtime
+   seams are closed and the per-boundary/evaluation-evidence proofs are green in the cited CI.
+2. **Platform closure recorded in the banner.** The closure records L9 shipped, S2 users
+   deferred, and ADR-hygiene machine-clean with the punch-list triaged. These replace the
+   open R/L gate labels in the historical work plan (§5) and ledger (§7).
+3. **Next milestone: tenant readiness.** Full Kaveri/lc5 onboarding (TSK-d73f01) must produce
+   the continuous real-source run and first-observed E6-B evidence emit, subject to the
+   governed onboarding stack, tenant substrate, credentials, and auditor-store health gates.
+
+The deeper ADR sweep and by-design fail-open follow-ups remain tracked work; this closure
+does not assert completion of those items or of tenant readiness.
+
+**Amendment 2 (DEC-958d3a/D613, 2026-09-21):** Step 1's engine-conformance criterion is **met — compositionally** (bc-core CI on `main`: `e6b-db-integration` + `quality-gate` + `static-analysis` + `vitest` shards green; run 35552644122 / `e72391fd`). E6-B's first-*observed* emit and the single continuous run are **reclassified into step 3 (tenant readiness)** — inseparable from the interlocked governed onboarding stack (cert-gated activation + provisioning fanout + owner worker). The platform-readiness gate is therefore step 2's no-black-box doors + ADR-hygiene. **Residual status (2026-09-21):** the **L9 chain-audit door is SHIPPED** (bc-core PR #808 — paginated `GET /api/mcf/chain-audit/evidence`; bc-admin PR #53 — CAS-evidence panel on the Metric Readiness page, rendered live over the 127 evidence rows). The **S2 users door is DEFERRED** — BareCount is solo-founder-operated, so multi-user access-management / RBAC is not needed for the platform-readiness close; revisit when a second operator or a customer-facing role lands (S2 RBAC was already `6a9777`-deferred). **ADR-hygiene is recorded complete for this closure** (592 ADRs, `supersessionIssues=0`, punch-list triaged); the SSOT is `status: closed` and anchor TSK-4b2404 is recorded closed. The deeper manual sweep, advisory backfill, and proposed-ADR adjudication remain the non-gating follow-ups listed in the closure banner. The continuous real run rides step 3 (Kaveri onboarding). See §1 Amendment 2.
 
 ## 10. Convergence with Platform DB Foundation
 
-Two programs, one proof. **Platform DB Foundation** (`overview/platform-db-foundation.md`,
+Two programs, distinct proof scopes. **Platform DB Foundation** (`overview/platform-db-foundation.md`,
 TSK-cc348a) productionizes L10 / tenant onboarding **at scale**. Platform readiness (L1–L9 +
-engine conformance) is **separable** and fixture-provable; the pilot itself needs **no schema
-change**, so the platform-readiness proof does not wait on DB-Foundation W2+. They converge at
+engine conformance) is **separable** and proven compositionally under Amendment 2; the pilot
+itself needs **no schema change**, so the platform-readiness proof does not wait on
+DB-Foundation W2+. They converge at
 L10 / the Kaveri demo milestone.
 
 ## 11. Authority & provenance
