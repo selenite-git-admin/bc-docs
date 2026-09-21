@@ -90,7 +90,7 @@ RAG = Kaveri state at grounding time. Machinery = buildability.
 
 | MLS | Bnd | Kaveri | Machinery (grounded) | Owner |
 |-----|-----|--------|----------------------|-------|
-| 15 Tenant exists | P | 🔴→🟢¹ | 🟢 governed `POST /tenants` + provisioning; at grounding **only `probe_unit4` existed; `onboarding_record`=0** | Platform |
+| 15 Tenant exists | P | 🔴¹ | 🟢 governed `POST /tenants` + provisioning; at grounding **only `probe_unit4` existed; `onboarding_record`=0**. Kaveri **infrastructure** since provisioned (¹) — this is *not* accepted per-metric MLS-15 | Platform |
 | 16 Fiscal calendar | T | 🔴 | 🟢 **machinery present** — `organization.fiscal_calendar_config` in the **tenant DB** (ADR-f02230/D368): Drizzle schema + `FiscalCalendarService` tenant lookup + tenant-skeleton DDL at bc-core `53bb1115`; the relation **exists (0 rows) in `tbc_probe_unit4_dev`**. Remaining = author Kaveri's **config rows**, not build the table | Platform |
 | 17 Connector instance | P | 🔴 | 🟢 `runtime.connector` **`odoo-ent-v19` (Odoo 19 Enterprise, source=`odoo`) available** | Platform |
 | 18 Reader configured | P | 🔴 | 🟢 3 `odoo` reader flavors active — **1 fully wired (connector+connection FK IDs both set), 2 unwired**. A pair of non-null IDs is a wiring *pointer*, not an end-to-end wiring *test* | Platform |
@@ -102,11 +102,18 @@ RAG = Kaveri state at grounding time. Machinery = buildability.
 | 24 Proof complete | T | 🔴 | 🟡 evidence path exists (E6-B armed); **gated by non-superuser runtime identity + evidence immutability** (TSK-d43263 / D575) | Engineering |
 | 25 KPI rendered | T | 🔴 | ❓ bc-portal render path — verify at the end (permission/typed-value) | Platform |
 
-¹ **MLS-15 update (this session, 2026-09-21T05:00Z):** Kaveri was provisioned via the governed
-`POST /tenants` (HTTP 201): `tenantId f0a5e695-b475-472c-87f8-71609be1a8c3`, `tbc_kaveri_dev`,
-status `active`, 26 tables, D575 `immutabilityVerified=true`, onboarding journey `activated`. The
-matrix cell is kept at the grounding-time baseline (🔴) with this update noted; the next SSOT
-revision will re-ground the cell to 🟢.
+¹ **MLS-15 — infrastructure provisioned; per-metric acceptance PENDING (this session, 2026-09-21T05:00Z).**
+Kaveri tenant **infrastructure** was provisioned via the governed `POST /tenants` (HTTP 201):
+`tenantId f0a5e695-b475-472c-87f8-71609be1a8c3`, `tbc_kaveri_dev`, `active`, 26 tables, D575
+`immutabilityVerified=true`, onboarding journey `activated`. **This is execution acceptance of
+infrastructure, NOT the accepted per-metric MLS-15 rung.** Per §2 (the MLS-14→15 handoff gate) and
+ADR-f44a71 Decision 3, entering the metric-lifecycle MLS-15 for a metric requires that metric's (DSO)
+**verified MLS-14** first — calling a governed service does not itself establish it. The cell
+therefore stays 🔴 (per-metric MLS-15 pending); it will re-ground to 🟢 **only** once the chosen-metric
+MLS-14 proof, the applicable accepted preflight/DBCP + consent, and the hash-bound execution
+pre/post-state closure are supplied — items **not yet supplied** (explicitly pending, not fabricated).
+Governed execution/custody reconciliation for this write: **CHG-a538a5** (authorization = the operator
+session instruction; missing gates enumerated). No green readiness is asserted here.
 
 **Findings surfaced by grounding (observations, inferences and unverified paths kept separate):**
 - **F-TR-1 (MLS-16) — CORRECTED:** the D389 signal name `tenant.fiscal_calendar_config` (a platform
@@ -172,11 +179,15 @@ COMMIT;
 
 Captured results: `organization.fiscal_calendar_config` → **exists**; row count → **0**.
 
-**C. MLS-15 provisioning (this session, via governed API — a write, recorded for completeness):**
+**C. MLS-15 infrastructure provisioning (this session, via governed API — a write; infrastructure
+only, per-metric MLS-15 acceptance PENDING):**
 `POST /api/tenants {slug:kaveri, name:'Kaveri Precision Components', expectedDbName:tbc_kaveri_dev}`
 → HTTP **201** `{tenantId:f0a5e695-b475-472c-87f8-71609be1a8c3, dbName:tbc_kaveri_dev, status:active,
 tableCount:26, immutabilityVerified:true, idempotent:false}`; verified `GET /api/tenants/kaveri`
-active + onboarding journey `activated`.
+active + onboarding journey `activated`. **This establishes tenant infrastructure, not the accepted
+per-metric MLS-15 rung** — that needs the chosen-metric (DSO) MLS-14 proof + applicable accepted
+preflight/DBCP + consent + hash-bound execution pre/post-state closure, **not yet supplied**.
+Governed execution/custody reconciliation: **CHG-a538a5**.
 
 **Scope of what these reads prove — and do not:** they establish the registry/relation baseline and
 machinery presence. They do **not** prove source credentials, endpoint liveness, tenant binding, gate
