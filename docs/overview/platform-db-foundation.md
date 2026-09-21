@@ -48,7 +48,7 @@ What is **not** in scope was designed to hold for a deliberate operator decision
 | W2 disposed closed-at-substance (governed) | DEC-9dd4eb / D616 (supersedes the 2026-09-20 session-message basis) |
 | W3 closed at the governed vocabulary | DEC-9b2e64 |
 | W5 done — legacy `contract.metric_contract*` world drained | DEC-80eade, DEC-4c1396; finale accepted d597 RESPONSE-469 / RESPONSE-471; ledger seq 19–27 |
-| Cloud mechanism proven (u1–u6), zero standing cost | DEC-c40e7a; RDS-portable parity `c309ea3d` proven in W1.2/W1.5 (d597 RESPONSE-147) |
+| Cloud mechanism proven (u1–u6), zero standing cost | DEC-c40e7a; RDS P1–P6 proof at d597 RESPONSE-362 (binds RDS-portable parity `c309ea3d`, proof SHA-256 `4a700768…`), cost/technical closure d597 RESPONSE-366. (The `c309ea3d` fingerprint originates as the local W1.2/W1.5 baseline parity — d597 RESPONSE-147 — and RESPONSE-362 proves it reproduces on RDS.) |
 | U7 staging cancelled, zero-orphan | DEC-615cbd / D618; d597 MSG-473 (Codex disposition pending) |
 
 **Live end-state (verified read-only 2026-09-21):** `bc_platform_dev` baseline `adopted`, 23 applied ledger events, ledger max seq 27, one unbound event = the documented genesis exemption, engine PostgreSQL 17.11, cluster `7619260324391063586`; the W5 drain removed all 14 ratified legacy `contract.metric_contract*` tables + `tenant.tenant_override` across governed slices whose ledger events (seq 19–27) and finale post-apply parity `8bb2b0b7` are the ones accepted at d597 RESPONSE-469 / RESPONSE-471 (post-drain program check = 0); zero standing `bcp-*` cloud stacks. These abbreviated fingerprints identify the live state; the independently accepted closure package is the set of decision and d597 response records tabulated above.
