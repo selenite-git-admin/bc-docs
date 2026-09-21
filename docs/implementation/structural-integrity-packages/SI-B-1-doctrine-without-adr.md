@@ -42,7 +42,8 @@ d541_intake: >
   places it under **mark-don't-delete**; `ADR-bebaec` (chain-completeness, now superseded by `DEC-b390ef`)
   records backward-compat retention; `DEC-d9fa49` retires the legacy metric-activation route.
 - The **genuinely-missing delta** is narrow: the **"do-not-extend + R5-removal follow-up"** (CLAUDE.md
-  states it; no ADR/task owns it). → a **dated, narrowly-scoped amendment to `DEC-29b518`** that records
+  states it; **removal is owned by the existing `TSK-3359d7`** — registry searched — but no *ADR* recorded
+  the do-not-extend/lifecycle follow-up). → a **dated, narrowly-scoped amendment to `DEC-29b518`** that records
   *only* that follow-up, reconciling the lineage above and **not** rewriting old gate authority or
   presenting inherited retention as newly-discovered doctrine.
 
