@@ -1,5 +1,5 @@
 ---
-title: "SI-D-1 — Doc↔substrate number reconciliation"
+title: "SI-D-1 — Point docs at the source; never freeze a stat"
 status: draft-for-review
 package: SI-D-1
 program: Structural Integrity (DEC-027ef6/D619)
@@ -7,20 +7,28 @@ plane: d (SSOT / authority structure)
 anchor_task: TSK-f38fb6
 date: 2026-09-21
 d541_intake: >
-  Design act — an authority document delegates to an absent doc, and dated snapshots are stale. FLAG the
-  dangling authority pointer (the target choice is DB-Foundation/bc-db's, per DEC-4c1396/DEC-826390) and
-  refresh/mark-stale dated snapshots as whole paragraphs; do NOT rewrite decided ADRs and do NOT assign
-  authority to a source-derived reference. Repair location F (docs) + D (authority pointer). No schema,
+  Design act embodying the doc-estate rule (below): a document never freezes a volatile statistic — it
+  points to the live source, or carries an explicit "snapshot as of DATE — not authority" stamp. Applied
+  to the schema authority (D-1a: the delegation must resolve to the live bc-db source, not an absent or
+  stale derived copy — target chosen by bc-db/DB-Foundation, per DEC-4c1396/DEC-826390) and the MCF count
+  (D-1b: point to the live source and mark June as history — do NOT swap in today's number, which is stale
+  tomorrow). Do NOT rewrite decided ADRs. Repair location F (docs) + D (authority pointer). No schema,
   code, or DBCP.
 ---
 
-# SI-D-1 — Doc↔substrate number reconciliation
+# SI-D-1 — Point docs at the source; never freeze a stat
 
-> **Plain English.** One decision points its "schema map" authority at a file that doesn't exist, and a
-> couple of docs quote numbers that drifted from the live database. This package **flags the broken
-> pointer for the schema owner (bc-db / DB-Foundation) to re-target** — it does **not** re-point it to a
-> generated reference itself — and **refreshes the stale dated snapshots as whole paragraphs**, without
-> rewriting any decided ADR. Documentation only — no schema, no code, no DBCP.
+> **The standing rule this package sets and applies (operator-affirmed 2026-09-21):**
+> **a document must never freeze a number that lives in the database.** It either *points to the live
+> source*, or it is stamped *"snapshot as of DATE — not authority."* Chasing a frozen number to match the
+> DB is a treadmill — it is stale again the next day; the fix is structural, not a value update.
+
+> **Plain English — the two cases.** (1) The database-rules decision points its "schema map" at a file
+> that doesn't exist; the fix is that the **schema owner re-targets it at the live/generated source** —
+> not a stale copy — and this package flags it (it does not choose the target). (2) The instructions file
+> **freezes a metric count from June**; the fix is to **point at the live source and mark June as
+> history** — not to swap in today's 433, which is stale tomorrow. Documentation only — no schema, no
+> code, no DBCP; no decided ADR rewritten.
 
 ## 1. Grounded findings (verified @ bc-docs origin/main + live `bc_platform_dev`, 2026-09-21)
 
@@ -70,13 +78,19 @@ annotates stale figures. Repair location F + D. No schema/code/DBCP.
   3. This program does **not** unilaterally edit the decided D162 or assign its delegated authority; it
      records the gap and hands the target choice to the owner.
 
-- **D-1b — refresh as a whole paragraph, population-defined.**
-  Retain the entire 2026-06-06 paragraph as **historical** and add a **separately dated, query-bound**
-  observation — e.g. *"2026-09-21 (read-only): `mcf.metric_contract` 433 identities; `metric_contract_version`
-  433, of which 80 `is_current`; governance-state breakdown is over current versions' `governance_state_code`,
-  not contracts."* — **or** independently re-ground every claim in the paragraph before applying a new date.
-  Do **not** redate the whole paragraph while refreshing only the count. This is a barecount-devhub
-  (project-memory) change.
+- **D-1b — point to source; do not freeze a new number.**
+  Apply the standing rule: the MCF count must **not** be re-frozen (swapping "5" → "433" just re-starts the
+  drift). Instead:
+  1. **Mark the entire 2026-06-06 paragraph as a dated historical snapshot** — "as of 2026-06-06, not
+     current authority" — preserving its other claims (18 tables, M2-M13, "next gate M14") as history, not
+     silently redated.
+  2. **Replace the frozen count with a pointer to the live source** — the metric directory / an on-demand
+     read-only query is where the current MCF count actually lives; the instructions file points there
+     rather than restating a number. If a figure is unavoidable inline, it carries an explicit
+     *"snapshot as of DATE — not authority"* stamp with the exact query, never a bare current-sounding count.
+  This is a barecount-devhub (project-memory) change. Verified population (for the pointer's context, not
+  to be frozen): 433 identities (97 archived) / 433 versions / 80 `is_current`; `governance_state_code`
+  lives on the *version*, so version-states do not sum to the contract count.
 
 ## 4. Connections
 - **Docs/ADRs:** `DEC-1918d0/D162` (bc-docs, decided — errata/annotation only), `DEC-4c1396` + `DEC-826390`
@@ -89,8 +103,9 @@ annotates stale figures. Repair location F + D. No schema/code/DBCP.
 ## 5. Implementation sketch (after approval)
 1. D-1a: raise the dangling delegation with DB-Foundation/bc-db; on their target decision, record the
    errata/annotation on D162 (owner-reviewed); do not repoint to the data-dictionary as authority.
-2. D-1b: add a separately-dated query-bound MCF observation to CLAUDE.md (barecount-devhub), keeping the
-   June-06 paragraph as historical.
+2. D-1b: in CLAUDE.md (barecount-devhub), mark the June-06 paragraph as a dated historical snapshot and
+   replace the frozen count with a pointer to the live source (metric directory / on-demand query) — not a
+   re-frozen 433.
 
 ## 6. Boundary
 Design only — no docs changed yet. For Codex review as `d619-004`. D-1a's authority target is **not chosen
