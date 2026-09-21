@@ -1,6 +1,6 @@
 ---
 title: Platform Readiness & Legibility — Overview
-status: drafting
+status: closed
 date: 2026-09-19
 anchor_task: TSK-4b2404
 detail: implementation/platform-readiness-program.md
@@ -19,7 +19,7 @@ on a sandbox tenant — no customer needed). *Demo readiness* = platform readine
 real-source (Kaveri) slice**, a named downstream milestone that rides on it — **not** the platform
 gate. (Corrects the earlier framing that used the Kaveri tenant walk as the platform proof.)
 
-**Amendment 2 (2026-09-21, DEC-958d3a/D613):** engine-conformance is satisfied **compositionally** (bc-core CI on `main` green — `e6b-db-integration` + gates + vitest), **not** by a single continuous run; that continuous run is **reclassified to tenant-readiness milestone #1** (the Kaveri onboarding) because it is inseparable from the interlocked governed stack (cert-gated activation + provisioning fanout + owner worker). The platform-readiness gate is now the **no-black-box doors (L9, S2) + ADR-hygiene**.
+**Amendment 2 (2026-09-21, DEC-958d3a/D613):** engine-conformance is satisfied **compositionally** (bc-core CI on `main` green — `e6b-db-integration` + gates + vitest), **not** by a single continuous run; that continuous run is **reclassified to tenant-readiness milestone #1** (the Kaveri onboarding) because it is inseparable from the interlocked governed stack (cert-gated activation + provisioning fanout + owner worker). The platform-readiness gate is now the no-black-box doors + ADR-hygiene. **✅ CLOSED 2026-09-21:** L9 chain-audit door shipped (bc-core #808 + bc-admin #53, live-verified), S2 users door deferred (solo-founder), ADR-hygiene machine-clean (`supersessionIssues=0`) + punch-list triaged — **platform readiness is closed on engine-conformance**. The single continuous real run is tenant-readiness milestone #1 (the Kaveri onboarding), downstream. See the detail doc's close banner + DEC-958d3a.
 
 **The platform functions (the stable spine):**
 - **Shared:** S1 Auth · S2 User/access · S3 Tenant lifecycle · S4 Pricing · S5 Operator console

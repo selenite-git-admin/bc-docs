@@ -1,6 +1,6 @@
 ---
 title: Platform Readiness & Legibility — Program (SSOT)
-status: drafting
+status: closed
 date: 2026-09-19
 supersedes: >
   bc-core/docs/design/platform-functional-refactor-plan.md and
@@ -29,6 +29,19 @@ related: >
 > render it, then **where each function stands** (backend / DB / UI), and only then the
 > **work** to close the gap. Read top-down. If a unit of work can't be tied to a function
 > and a piece of the distance-to-destination below, it is drift.
+
+> ## ✅ CLOSED — 2026-09-21 (DEC-958d3a/D613 + §1 Amendment 2)
+> Platform readiness is **CLOSED on engine-conformance**. The evidence: bc-core CI green on
+> `main` (`e6b-db-integration` + the 3 evaluation E2E proofs + gates + vitest; run 35552644122 /
+> `e72391fd`), every boundary green + all execution-plane seams closed fail-closed. In-gate
+> residuals resolved: **L9 chain-audit door SHIPPED** (bc-core PR #808 + bc-admin PR #53,
+> rendered live over the 127 CAS rows); **S2 users door DEFERRED** (solo-founder — no multi-user
+> need; TSK-905844); **ADR-hygiene** machine-clean (audit 2026-09-21: 592 ADRs, `supersessionIssues=0`)
+> with the punch-list triaged. The single continuous *real* run is **tenant-readiness milestone #1**
+> (the Kaveri/lc5 onboarding, TSK-d73f01 — downstream, not a platform gate). Tracked, non-gating
+> follow-ups: the deeper ADR manual sweep (reversals / status-vs-body, TSK-f720ba/d3e83a), the
+> advisory subdomain/focus backfill (62), and the 4 extended-proposed ADRs awaiting adjudication
+> (TSK-1557c5). Anchor TSK-4b2404 closed.
 
 ## 1. The destination
 
