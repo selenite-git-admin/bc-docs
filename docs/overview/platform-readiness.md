@@ -19,6 +19,8 @@ on a sandbox tenant — no customer needed). *Demo readiness* = platform readine
 real-source (Kaveri) slice**, a named downstream milestone that rides on it — **not** the platform
 gate. (Corrects the earlier framing that used the Kaveri tenant walk as the platform proof.)
 
+**Amendment 2 (2026-09-21, DEC-958d3a/D613):** engine-conformance is satisfied **compositionally** (bc-core CI on `main` green — `e6b-db-integration` + gates + vitest), **not** by a single continuous run; that continuous run is **reclassified to tenant-readiness milestone #1** (the Kaveri onboarding) because it is inseparable from the interlocked governed stack (cert-gated activation + provisioning fanout + owner worker). The platform-readiness gate is now the **no-black-box doors (L9, S2) + ADR-hygiene**.
+
 **The platform functions (the stable spine):**
 - **Shared:** S1 Auth · S2 User/access · S3 Tenant lifecycle · S4 Pricing · S5 Operator console
 - **Runway (10 lanes):** L1 Source Catalog … L10 Tenant Onboarding (LOCKED, DEC-a67bae/D590)

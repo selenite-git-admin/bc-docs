@@ -253,6 +253,8 @@ does not exist; bc-portal arch is 6cdceb.
 
 Steps 1–2 together are the **platform-readiness gate**; step 3 rides on it.
 
+**Amendment 2 (DEC-958d3a/D613, 2026-09-21):** Step 1's engine-conformance criterion is **met — compositionally** (bc-core CI on `main`: `e6b-db-integration` + `quality-gate` + `static-analysis` + `vitest` shards green; run 35552644122 / `e72391fd`). E6-B's first-*observed* emit and the single continuous run are **reclassified into step 3 (tenant readiness)** — inseparable from the interlocked governed onboarding stack (cert-gated activation + provisioning fanout + owner worker). The platform-readiness gate is therefore now **step 2's no-black-box doors (L9, S2) + ADR-hygiene**; the continuous real run rides step 3 (Kaveri onboarding). See §1 Amendment 2.
+
 ## 10. Convergence with Platform DB Foundation
 
 Two programs, one proof. **Platform DB Foundation** (`overview/platform-db-foundation.md`,
