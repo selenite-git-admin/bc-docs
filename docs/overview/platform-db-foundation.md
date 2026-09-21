@@ -2,7 +2,7 @@
 id: platform-db-foundation
 order: 60
 title: "Platform DB Foundation Program"
-status: drafting
+status: implemented
 authority: authoritative
 depends_on:
   - platform-overview
@@ -25,6 +25,14 @@ diagrams: []
 ---
 
 # Platform DB Foundation Program
+
+## Program closure (2026-09-21)
+
+**The Platform DB Foundation program is CLOSED — its foundation objectives are met.** The platform database is a governed product: a live, adopted, forward-only spine with a ratified engine-portable baseline, an append-only review-bound change ledger (currently at sequence 27), proven migration/backup/restore/adoption machinery, and the historical wrong turns retired. The provable engineering is complete and independently auditor-accepted.
+
+What is **not** in scope was designed to hold for a deliberate operator decision and is **not unfinished foundation work**: cloud **standing** go-live (W1.6 realization, W4 durability), the productization gates (D5 BYO-DB, D9 escrow, D10 recovery objectives, D11 residency — legal-gated), and the **Gate ④** production cutover. Closing the program strands none of it: pursuing go-live later reopens a *distinct*, separately-scoped phase, not a debt from this one. Dev stays local at zero standing cost; the staging pilot (u7) was deployed and fully torn down.
+
+**Live end-state (verified 2026-09-21):** `bc_platform_dev` baseline `adopted`, 23 applied ledger events, ledger max seq 27, one unbound event = the documented genesis exemption, engine PostgreSQL 17.11, cluster `7619260324391063586`; the W5 drain removed all 14 ratified legacy `contract.metric_contract*` tables + `tenant.tenant_override` (post-drain program check = 0; parity `8bb2b0b7`); zero standing `bcp-*` cloud stacks.
 
 ## Purpose
 
@@ -49,10 +57,12 @@ Platform DB (one hosting option) and Tenant DB (BareCount-hosted and BYO-DB; BC-
 |---|---|---|
 | **W0** | Program records, custody, version contract | Record work complete; independent closure pending retained coordination-acknowledgement evidence |
 | **W1** | Platform migration baseline + forward-only runner + witnessed adoption (units W1.1–W1.6) | **Complete — auditor-accepted (2026-09-15)**; W1.6 (cloud) budget-parked |
-| **W2** | Tenant DB source-of-truth, upgrade path, fleet and credentials | Pending product decisions |
-| **W3** | Curated-content promotion (versioned source) | Pending |
-| **W4** | Transactional durability, object stores, capacity | Pending (budget) |
-| **W5** | Cleanup; retirement of superseded acquisition paths (subsumes DEC-3628b4) | Pending |
+| **W2** | Tenant DB source-of-truth, upgrade path, fleet and credentials | **Disposed closed-at-substance** (operator, 2026-09-20); productization gates (D5/D9/D10/D11) deferred to a go-live decision |
+| **W3** | Curated-content promotion (versioned source) | **Closed at the governed vocabulary** (DEC-9b2e64); machinery parked, not removed |
+| **W4** | Transactional durability, object stores, capacity | Pending (budget) — a go-live decision |
+| **W5** | Cleanup; retirement of superseded acquisition paths + the legacy `contract.metric_contract*` world | **Done (2026-09-21)** — 15 tables dropped (14 ratified + `tenant.tenant_override`, ledger seq 19–27), the `docker/redesign` monolith retired, unified authoring path ratified (DEC-4c1396) |
+
+**Cloud realization (DEC-c40e7a).** Units u1–u6 done (RDS PostgreSQL 17 IaC stack + Aurora-construct retirement, schema-apply stage, `cdk deploy`, in-VPC apply + schema-copy drill with the baseline made RDS-portable — NFR-4 proven, parity `c309ea3d`, and credentials/rotation model). Cloud footprint held at zero standing cost; the standing go-live (W1.6/W4) and production cutover (Gate ④) remain a deliberate operator decision.
 
 ## What W1 established
 
@@ -79,7 +89,7 @@ W1 built and proved, on the pinned engine, in disposable containers and then on 
 
 ## Later waves and what gates them
 
-The later waves (W2–W5) are not started; each still requires its own design, implementation, evidence and independent acceptance. Under the operator's standing authorization the builder and independent auditor hold **full architectural responsibility**, so the material decisions those waves turn on are resolved as **reviewable proposals in the autonomous builder–auditor design process**, not held for per-unit operator sign-off:
+The foundation waves are resolved: W1 complete, W3 closed at the governed vocabulary, W5 (cleanup + legacy-metric retirement) done, and W2 disposed closed-at-substance. What remains is **not further foundation work** — it is the deliberately-deferred go-live track, resolved as reviewable proposals in the autonomous builder–auditor design process where it is engineering, and the operator's where it is budget, legal or production:
 
 - **Resolved in the design process:** tenant-DB source of truth and BYO-DB posture (D5), hosting-by-environment (D4), curated-content escrow (D9), recovery objectives (D10), data residency (D11), and tenant hosting preference. Escalation to the operator is limited to a genuine unresolved design dispute.
 - **Directly the operator's:** the **budget** behind any cloud realization (W1.6 capture/adoption, W4 durability), and **Gate ④** — any promotion beyond local development.
