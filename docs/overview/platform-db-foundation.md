@@ -19,6 +19,13 @@ governing_adrs:
   - DEC-c99f72 (Platform schema capture authority — reviewed read-only capture under hash-bound written operator authorization)
   - DEC-66d3ca (BC-Agent on-premises appliance tier deferred from the program)
   - DEC-3628b4 (Retire the TSK-3f52d7 schema-acquisition launcher; subsumed into W5)
+  - DEC-fbf6ab (Program CLOSED — foundation objectives met, D614)
+  - DEC-9dd4eb (Operator formal acceptance of closure; W0/W2 dispositioned, D616)
+  - DEC-568d0b (W0 coordination acknowledgement retained — closes the W0 gate)
+  - DEC-9b2e64 (W3 closed at the governed vocabulary)
+  - DEC-80eade (Legacy metric corpus retirement — W5 drops)
+  - DEC-4c1396 (bc-db spine is the sole platform schema authoring/apply path)
+  - DEC-615cbd (Operator-backed U7 staging-cloud unit cancellation, D618)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -28,11 +35,23 @@ diagrams: []
 
 ## Program closure (2026-09-21)
 
-**The Platform DB Foundation program is CLOSED — its foundation objectives are met.** The platform database is a governed product: a live, adopted, forward-only spine with a ratified engine-portable baseline, an append-only review-bound change ledger (currently at sequence 27), proven migration/backup/restore/adoption machinery, and the historical wrong turns retired. The provable engineering is complete and independently auditor-accepted.
+**The Platform DB Foundation program is CLOSED — its foundation objectives are met.** The platform database is a governed product: a live, adopted, forward-only spine with a ratified engine-portable baseline, an append-only review-bound change ledger (currently at sequence 27), proven migration/backup/restore/adoption machinery, and the historical wrong turns retired. The provable engineering is complete and independently auditor-accepted. Closure is recorded as **DEC-fbf6ab (D614)** and formally accepted by the operator as **DEC-9dd4eb (D616)**.
 
-What is **not** in scope was designed to hold for a deliberate operator decision and is **not unfinished foundation work**: cloud **standing** go-live (W1.6 realization, W4 durability), the productization gates (D5 BYO-DB, D9 escrow, D10 recovery objectives, D11 residency — legal-gated), and the **Gate ④** production cutover. Closing the program strands none of it: pursuing go-live later reopens a *distinct*, separately-scoped phase, not a debt from this one. Dev stays local at zero standing cost; the staging pilot (u7) was deployed and fully torn down.
+What is **not** in scope was designed to hold for a deliberate operator decision and is **not unfinished foundation work**: cloud **standing** go-live (W1.6 realization, W4 durability), the productization gates (D5 BYO-DB, D9 escrow, D10 recovery objectives, D11 residency — legal-gated), and the **Gate ④** production cutover. Closing the program strands none of it: pursuing go-live later reopens a *distinct*, separately-scoped phase, not a debt from this one. Dev stays local at zero standing cost; the staging pilot (u7) was deployed, fully torn down, and its unit formally cancelled by operator decision (**DEC-615cbd / D618**; d597 MSG-473) with verified zero live/billable orphan.
 
-**Live end-state (verified 2026-09-21):** `bc_platform_dev` baseline `adopted`, 23 applied ledger events, ledger max seq 27, one unbound event = the documented genesis exemption, engine PostgreSQL 17.11, cluster `7619260324391063586`; the W5 drain removed all 14 ratified legacy `contract.metric_contract*` tables + `tenant.tenant_override` (post-drain program check = 0; parity `8bb2b0b7`); zero standing `bcp-*` cloud stacks.
+**Each wave's disposition is bound to a retrievable immutable record** (decisions in the ADR Registry; d597 responses byte-immutable on both exchange mirrors):
+
+| Claim | Retrievable evidence |
+|---|---|
+| W0 closed (coordination acknowledgement retained) | DEC-568d0b (source SES-b5c14b); the gate it satisfies: d597 RESPONSE-148 |
+| W1 complete, auditor-accepted (local development) | d597 RESPONSE-147 (W1 exit accepted, 2026-09-15) |
+| W2 disposed closed-at-substance (governed) | DEC-9dd4eb / D616 (supersedes the 2026-09-20 session-message basis) |
+| W3 closed at the governed vocabulary | DEC-9b2e64 |
+| W5 done — legacy `contract.metric_contract*` world drained | DEC-80eade, DEC-4c1396; finale accepted d597 RESPONSE-469 / RESPONSE-471; ledger seq 19–27 |
+| Cloud mechanism proven (u1–u6), zero standing cost | DEC-c40e7a; RDS-portable parity `c309ea3d` proven in W1.2/W1.5 (d597 RESPONSE-147) |
+| U7 staging cancelled, zero-orphan | DEC-615cbd / D618; d597 MSG-473 (Codex disposition pending) |
+
+**Live end-state (verified read-only 2026-09-21):** `bc_platform_dev` baseline `adopted`, 23 applied ledger events, ledger max seq 27, one unbound event = the documented genesis exemption, engine PostgreSQL 17.11, cluster `7619260324391063586`; the W5 drain removed all 14 ratified legacy `contract.metric_contract*` tables + `tenant.tenant_override` across governed slices whose ledger events (seq 19–27) and finale post-apply parity `8bb2b0b7` are the ones accepted at d597 RESPONSE-469 / RESPONSE-471 (post-drain program check = 0); zero standing `bcp-*` cloud stacks. These abbreviated fingerprints identify the live state; the independently accepted closure package is the set of decision and d597 response records tabulated above.
 
 ## Purpose
 
@@ -55,7 +74,7 @@ Platform DB (one hosting option) and Tenant DB (BareCount-hosted and BYO-DB; BC-
 
 | Wave | Scope | Status |
 |---|---|---|
-| **W0** | Program records, custody, version contract | Record work complete; independent closure pending retained coordination-acknowledgement evidence |
+| **W0** | Program records, custody, version contract | **Closed (2026-09-21)** — the retained coordination-acknowledgement evidence that d597 RESPONSE-148 required now exists as an immutable governed record (DEC-568d0b, Platform/Tenant Readiness re-affirmation, source SES-b5c14b); operator accepted W0 closure on it (DEC-9dd4eb / D616) |
 | **W1** | Platform migration baseline + forward-only runner + witnessed adoption (units W1.1–W1.6) | **Complete — auditor-accepted (2026-09-15)**; W1.6 (cloud) budget-parked |
 | **W2** | Tenant DB source-of-truth, upgrade path, fleet and credentials | **Disposed closed-at-substance** (operator, 2026-09-20); productization gates (D5/D9/D10/D11) deferred to a go-live decision |
 | **W3** | Curated-content promotion (versioned source) | **Closed at the governed vocabulary** (DEC-9b2e64); machinery parked, not removed |
