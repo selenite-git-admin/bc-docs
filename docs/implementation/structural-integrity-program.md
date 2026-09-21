@@ -37,13 +37,15 @@ related: >
 **decided** (ADRs), **documented** (bc-docs), **coded** (bc-core), and **in the database** all agree —
 and keep the code's structure honest. Track S of Platform Readiness.
 
-**What the grounded study concluded (honest, post-review).** The substrate is **highly coherent.** The
-two plane-c items this program first elevated as "genuine coherence gaps" **did not survive verification**
-(§2): the RT "destructive delete" path is **unreachable** and its intended design **already exists**, and
-the L5 resolver routes **fail safe** (refuse), they do not silently return bad data. What remains is
-**governance-trail and legibility hygiene — no urgent Foundation or coherence gaps** — so ceremony scales
-down accordingly. The value is docs↔code↔ADR consistency (the parent program's ~24% docs≠code cause), not
-file-moving (~9%).
+**What the grounded study concluded (honest, post-review).** **No coherence gap was found in the cells
+assessed** — but the sweep was **breadth-first, not a per-cell audit** (§3 marks most cells not-assessed),
+so this is "no gap found where looked," not "everything verified coherent." The RT "destructive delete"
+this program first elevated is **unreachable** and its intended design **already exists** (§2). The L5
+resolver routes **fail safe** (refuse) — the failure-mode claim was corrected — but whether an
+empty-legacy dependency satisfies their **advertised route contract** is an **OPEN adjudication**
+(SI-L5-1, Foundation-gated before any removal/repointing). What remains is **governance-trail + legibility
+hygiene plus that one open L5 contract question** — so ceremony scales down, but L5 is not closed. The
+value is docs↔code↔ADR consistency (the parent program's ~24% docs≠code cause), not file-moving (~9%).
 
 ## 1. The four planes
 
@@ -93,11 +95,16 @@ named so the correction is legible — not carried as a live claim.
   + operator gate) and legitimate retire is the soft `archiveReader` (per `reader.service.ts:163-169`
   docstring). No Invariant III violation is asserted; the 5-vs-140 `admission_run`/`run_summary` count
   difference is **not** attributed to reachable deletion (unproven; see §2.1).
-- **L5 resolver routes — RECLASSIFIED to safe-refusal residue (not silent failure).** `resolveRun` →
+- **L5 resolver routes — failure-mode corrected, contract adjudication OPEN.** `resolveRun` →
   `loadBindingAndEnvelope` **throws `NotFoundException`** on absent binding/version/mapping
-  (`canonical-resolution.service.ts:357,360,368`), and `findBindingsReferencingOc` no-ops with "nothing to
-  resolve" (`:271`). The legacy `canonical_mapping` table is empty, but the routes **refuse**, they do not
-  silently return wrong data. Concern is legibility (legacy resolver still mounted) → residue (SI-A-1).
+  (`canonical-resolution.service.ts:357,360,368`), and `findBindingsReferencingOc` no-ops (`:271`) — so the
+  earlier "silently returns nothing" claim was wrong: the routes **fail safe** (refuse). **But safe refusal
+  is not coherence.** `OrchestratorController` and `TestBenchExecutionController` still **advertise
+  canonical-resolution** and call `resolveRun` over a **permanently-empty legacy `contract.canonical_mapping`
+  dependency**; whether that satisfies the advertised route contract, and whether the routes should be
+  removed / repointed to the CC-v2 resolver, is **unadjudicated and OPEN.** This is **SI-L5-1** — an open
+  contract/reachability adjudication that **passes the Foundation gate before any removal/repointing**, and
+  needs governing retirement-or-coexistence authority. It is **not** folded into SI-A-1 as cosmetic residue.
 - **Confirmed coherent (verified, not drift):** cert/eval **idempotency is active + DEC-5ea578-backed**;
   `mcf-realization-projection` v1/v2 is **coherent versioned coexistence** (v2 closes v1's gaps for a
   different consumer; migration 42 Codex-accepted) — not an unfinished supersession; the dual
@@ -121,12 +128,16 @@ or prove any deletion history.**
 - **Pins:** `bc-core` `53bb1115d9b1c4d841750cce31eb2f60f3174d76`; `bc-docs` base
   `3a9b3e986420ba79b21a5e0f0f838ba9e703de36`. Measured against `origin/main` refs at author time; the
   commands in Appendix B use the full SHAs so they are reproducible after the refs move.
-- **DB observation (`bc_platform_dev`, read-only, `BEGIN READ ONLY`):** `information_schema.schemata` = 22
-  rows total; **20** application schemas excluding `public` + `information_schema`; **258** application
-  base tables; `mcf.metric_contract` = 433; `to_regclass('contract.metric_contract')` = NULL (absent);
-  `canonical_mapping` = 0; `runtime.admission_run` = 5; `execution.run_summary` = 140. These match Codex's
-  independent reproduction (d619-001, 2026-09-21T09:10:48Z). The 5-vs-140 difference is a **current
-  observation, not evidence of deletion.**
+- **DB observation (`bc_platform_dev`, read-only, `BEGIN READ ONLY`, observed 2026-09-21):**
+  `information_schema.schemata` = **54** rows total — this **includes** `pg_catalog`/`pg_toast`/temp
+  schemas and **varies** (e.g. 54 at 2026-09-21T10:28:43Z); **22** non-pg schemas (`schema_name NOT LIKE
+  'pg_%'`); **20** application schemas (also `NOT IN ('public','information_schema')`); **258** application
+  base tables (`table_type='BASE TABLE'`, same filters). The **pg_ filter is essential** — the raw total is
+  not the schema count. `mcf.metric_contract` = 433; `to_regclass('contract.metric_contract')` = NULL
+  (absent); `contract.canonical_mapping` = 0; `runtime.admission_run` = 5; `execution.run_summary` = 140 —
+  these five are attributed to the **immutable prior proof** (Codex d619-001, observed
+  2026-09-21T09:10:48Z, its scope unchanged) and re-run executably in Appendix B. The 5-vs-140 difference is
+  a **current observation, not evidence of deletion.**
 - **Counts sourced from the read-only sweep (SES-2b96b2), not independently re-pinned in this package** —
   the lane/plane verdicts (§3), the doctrine-without-ADR list, and the ADR status distribution — are
   labelled *study-derived* in §3 and the backlog, and each carries its file:line or ADR-uid evidence
@@ -134,28 +145,31 @@ or prove any deletion history.**
 
 ## 3. Lane × plane integrity matrix
 
-Function/lane × plane {a code · b doc · c coherence · d authority}. RAG is a **verdict with evidence**, not
-a coverage colour: 🟢 coherent/verified · 🟡 residue or minor drift · 🔴 real gap · ⚪ not assessed this
-pass. (Package priority in §6 is a separate axis — do not read it as coverage RAG.)
+Function/lane × plane {a code · b doc · c coherence · d authority}. Each mark is a **verified verdict whose
+cell note pins the evidence**, not a coverage colour: 🟢 verified-coherent (coordinate cited) · 🟡
+residue/minor drift (coordinate cited) · 🔴 real gap (coordinate cited) · ⚪ **not assessed this pass** (the
+breadth sweep touched the lane but did not per-cell verify). **Most cells are ⚪** — this was a breadth-first
+sweep, not a per-cell audit. The honest global read is **"no coherence gap was found where assessed,"** not
+"everything is verified coherent." Package priority (§6) is a separate axis.
 
 | Lane | a | b | c | d | Evidence / note (owner) |
 |---|:--:|:--:|:--:|:--:|---|
-| S1 Auth | 🟢 | 🟢 | 🟢 | ⚪ | Cognito + guards; not deeply assessed |
-| S2 User/access | 🟢 | 🟡 | 🟢 | 🟢 | RBAC over-promise copy (bc-admin AppRouter:277) + ADR-42b9c0 closing note absent (this prog) |
-| S3 Tenant lifecycle | 🟢 | 🟢 | 🟢 | 🟢 | onboarding_record in sync (DEC-7df811); `retired` status self-disclosed |
-| S4 Pricing | 🟢 | 🟡 | 🟢 | 🟢 | `pricing.package` real (D086); ADR-324d9e omits Stripe-unbuilt disclosure (this prog/punch-list) |
-| L1 Source | 🟢 | 🟢 | 🟢 | 🟢 | `catalog_retirement_log` governed append-only |
-| L2 SC+AC | 🟢 | 🟢 | 🟡 | 🟢 | 305:305 is workflow convention, not a DB unique (source-contract.ts index) |
-| L4 OC | 🟡 | 🟢 | 🟢 | 🟢 | `observation_field_map` dead schema def (guard-tested) → SI-A-1 |
-| L5 CC | 🟡 | 🟢 | 🟢 | 🟢 | legacy `canonical_mapping` resolver routes mounted but **fail-safe/refuse** (:357/360/368) → residue SI-A-1 |
-| L6 MCF | 🟡 | 🟢 | 🟢 | 🟢 | cert-writer 3,768 + McfRead 1,992 god-services → SI-A-2…6 |
-| L7 Reader | 🟡 | 🟡 | 🟢 | 🟢 | unreachable `deleteReader` residue (reader.service.ts:170) + stale memory note + connectors.csv drift |
-| L9 Chain/Readiness | 🟡 | 🟢 | 🟢 | 🟢 | 410 readiness stubs + metric-funnel mounted (410-contract-careful removal) → SI-A-1 |
-| L10 Tenant onboarding | 🟢 | 🟢 | 🟢 | 🟢 | onboarding_record inert pending bc-db 0006 gate (known/tracked) |
-| RT Runtime | 🟡 | 🟢 | 🟢 | 🟢 | dead idempotency guard + unreachable deleteReader; **no live delete gap** (reclassified) |
-| EV Evidence | 🟢 | 🟢 | 🟡 | 🟢 | tenant `evidence.*` immutability not deployed (ADR-09fb2f) → **DB-Foundation** |
-| GOV Governance | ⚪ | 🔴 | ⚪ | 🟡 | doctrine-without-ADR (Core Dashboard no ADR) + hygiene mechanism gap (this prog); D162 count stale |
-| L3 · L8 · S5 · TS · A1 | ⚪ | ⚪ | ⚪ | ⚪ | peer-owned / design-pending — not assessed this pass |
+| S1 Auth | ⚪ | ⚪ | ⚪ | ⚪ | not assessed this pass |
+| S2 User/access | ⚪ | 🟡 | ⚪ | ⚪ | b: RBAC over-promise copy (bc-admin AppRouter:277) + ADR-42b9c0 closing note absent (this prog) |
+| S3 Tenant lifecycle | ⚪ | 🟢 | 🟢 | ⚪ | b/c: onboarding_record writes cite DEC-7df811 (tenant-management.repository.ts:98-101); `retired` status self-disclosed in the ADR |
+| S4 Pricing | ⚪ | 🟡 | ⚪ | ⚪ | b: ADR-324d9e omits its own Stripe-unbuilt disclosure (this prog/punch-list) |
+| L1 Source | ⚪ | ⚪ | 🟢 | ⚪ | c: `catalog_retirement_log` is governed append-only (CatalogRetirementService, DEC-e1312a) |
+| L2 SC+AC | ⚪ | ⚪ | 🟡 | ⚪ | c: 305:305 is a workflow convention, not a DB unique (source-contract.ts index) |
+| L4 OC | 🟡 | ⚪ | ⚪ | ⚪ | a: `observation_field_map` dead schema def, guard-tested → SI-A-1 |
+| L5 CC | 🟡 | ⚪ | 🟡 | ⚪ | a: legacy resolver mounted; c: routes **fail-safe** (refuse, :357/360/368) BUT whether an empty-legacy dependency satisfies the advertised route contract is **unadjudicated — OPEN** → SI-L5-1 (Foundation-gated) |
+| L6 MCF | 🟡 | ⚪ | ⚪ | ⚪ | a: cert-writer 3,768 + McfRead 1,992 LOC (size finding) → SI-A-2…6 |
+| L7 Reader | 🟡 | 🟡 | ⚪ | ⚪ | a: unreachable `deleteReader` residue (reader.service.ts:170); b: stale memory note + connectors.csv drift |
+| L9 Chain/Readiness | 🟡 | ⚪ | ⚪ | ⚪ | a: 410 readiness stubs + metric-funnel mounted (410-careful) → SI-A-1 |
+| L10 Tenant onboarding | ⚪ | ⚪ | 🟢 | ⚪ | c: onboarding_record inert pending bc-db 0006 gate — intentional/known (DEC-7df811) |
+| RT Runtime | 🟡 | ⚪ | ⚪ | ⚪ | a: dead idempotency guard + unreachable deleteReader; the delete-path reachability is verified closed (reader.service.ts:170) |
+| EV Evidence | ⚪ | ⚪ | 🟡 | ⚪ | c: tenant `evidence.*` immutability triggers not deployed (ADR-09fb2f) → **DB-Foundation** |
+| GOV Governance | ⚪ | 🔴 | ⚪ | 🟡 | b: doctrine-without-ADR (Core Dashboard no ADR) + hygiene mechanism gap (this prog); d: D162 inline count stale vs live 20 |
+| L3 · L8 · S5 · TS · A1 | ⚪ | ⚪ | ⚪ | ⚪ | peer-owned / design-pending — not assessed |
 
 ## 4. The method — how a gap is adjudicated
 
@@ -175,8 +189,8 @@ Every package carries macro (connection map: what it touches / depends on / coup
 state, file-level steps, D541 verdict, acceptance) vision, plus a plain-English note. **Codex approves each
 package before any code**; the PR implements an approved package. Any unit that touches a Foundation
 boundary or invariant additionally passes the Foundation gate (`bc-docs/docs/foundation/the-invariants.md`)
-— currently **no** open unit is such a case (the RT item was reclassified), but the gate applies to any
-future coherence unit.
+— **SI-L5-1** (the open L5 route-contract adjudication) is such a case and passes the gate before any
+removal/repointing; the gate applies to any future coherence unit.
 
 ### 5.2 Safe-window discipline with active peers (standing rule)
 Re-confirm the safe window with active peers (foremost Tenant Readiness / TSK-d73f01) **immediately before
@@ -188,8 +202,8 @@ that can't get a fresh window waits.
 
 Priority reflects the honest post-review picture: the governance-trail and doc-number items are the real,
 cheap value; residue removal is careful (410 contracts); the physical moves are last. **SI-RT-1 is
-withdrawn** (unreachable; the design already exists). **SI-L5-1 is folded into SI-A-1** as fail-safe legacy
-residue.
+withdrawn** (unreachable; the design already exists). **SI-L5-1 stays OPEN** — the L5 route-contract
+adjudication (Foundation-gated), **not** folded into SI-A-1 as cosmetic residue.
 
 - **SI-B-1 · plane b · first.** *Plain: write the missing ADRs for rules that live only in CLAUDE.md — the
   Core Dashboard was retired with no record at all; IntegrityService's lifecycle; the auth-bypass ban — and
@@ -200,8 +214,15 @@ residue.
 - **SI-B-3 · plane b · leverage.** *Plain: add two checks to the ADR health-check — "decided but never
   built" and "status says X but the body says not-X".* Stuck-proposed is already checked; these two aren't.
   Makes the program self-closing. Hand to D370 tooling.
+- **SI-L5-1 · plane c · open adjudication (Foundation-gated).** *Plain: the two "resolve" API routes still
+  advertise canonical-resolution over an old, permanently-empty mapping table. They refuse safely (no bad
+  data), but whether they should keep advertising that contract — or be removed / repointed to the current
+  resolver — is an open question.* Adjudicate the route contract + reachability; needs governing
+  retirement-or-coexistence authority; **passes the Foundation gate before any removal/repointing.** Not
+  cosmetic residue.
 - **SI-A-1 · plane a · careful.** *Plain: remove dead/unreachable code and retired route-mounts — the
-  unreachable `deleteReader`, the legacy resolver routes, the 410 controllers, the dead schema def.*
+  unreachable `deleteReader`, the 410 controllers, the dead schema def* (the L5 resolver routes are **not**
+  here — they are the open SI-L5-1 adjudication above).
   **Not "no behaviour change":** removing a 410 route changes its observable contract (410→404), and
   DEC-b049f6 deliberately chose 410. Requires a **route-by-route inventory** and, per route, either
   **preserve the 410 compatibility surface** or an **approved retirement-contract amendment** with caller
@@ -222,8 +243,10 @@ v1/v2 = coherent, no action; BCF cert Phase-A3 cutover → BCF.
 2. **Real + cheap first** — SI-B-1 (doctrine→ADR) and SI-D-1 (doc numbers).
 3. **Leverage** — SI-B-3 (self-closing hygiene checks).
 4. **Careful residue** — SI-A-1 (route-by-route, 410-contract-preserving).
-5. **Hand-offs** throughout.
-6. **Physical moves last** — SI-A-2…6; the type/util relocation is the first *physical-relocation* touch;
+5. **Open adjudication** — SI-L5-1 (the L5 route-contract question; Foundation-gated; not scheduled as a
+   removal until adjudicated).
+6. **Hand-offs** throughout.
+7. **Physical moves last** — SI-A-2…6; the type/util relocation is the first *physical-relocation* touch;
    BoundaryModule last.
 
 Every code step re-confirms a fresh safe window (§5.2) and is Codex-approved as a package (§5.1) first.
@@ -259,10 +282,21 @@ git show $C:src/registry/readers/reader.service.ts | sed -n '170,175p'   # throw
 git grep -n "deleteReader" $C -- 'src/**/*.ts' | grep -v '\.spec\.'      # no repository caller
 # L5 fail-safe (Finding 2)
 git show $C:src/boundary/canonical-resolution.service.ts | sed -n '355,368p'  # NotFoundException
-# DB observation (read-only), 2026-09-21T09:10:48Z
+# DB observation (read-only). In psql: \set ON_ERROR_STOP on
 BEGIN READ ONLY;
-SELECT count(*) FROM information_schema.schemata;                                                  # 22
-SELECT count(*) FROM information_schema.schemata WHERE schema_name NOT IN ('public','information_schema');  # 20
-SELECT to_regclass('contract.metric_contract');  # NULL   /   SELECT count(*) FROM mcf.metric_contract;  # 433
+-- schema scope (the raw total is NOT the schema count; the pg_ filter is essential)
+SELECT count(*) FROM information_schema.schemata;                                             -- 54 (incl pg_*/temp; varies)
+SELECT count(*) FROM information_schema.schemata WHERE schema_name NOT LIKE 'pg_%';           -- 22 (non-pg)
+SELECT count(*) FROM information_schema.schemata
+  WHERE schema_name NOT LIKE 'pg_%' AND schema_name NOT IN ('public','information_schema');   -- 20 (application)
+SELECT count(*) FROM information_schema.tables
+  WHERE table_type = 'BASE TABLE' AND table_schema NOT LIKE 'pg_%'
+    AND table_schema NOT IN ('public','information_schema');                                  -- 258 (application base tables)
+-- retained counts (attributed to prior proof d619-001, observed 2026-09-21T09:10:48Z)
+SELECT count(*) FROM mcf.metric_contract;                                                     -- 433
+SELECT to_regclass('contract.metric_contract');                                              -- NULL (absent)
+SELECT count(*) FROM contract.canonical_mapping;                                             -- 0
+SELECT count(*) FROM runtime.admission_run;                                                  -- 5
+SELECT count(*) FROM execution.run_summary;                                                  -- 140
 COMMIT;
 ```
