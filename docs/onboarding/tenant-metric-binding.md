@@ -38,7 +38,7 @@ POST /api/schema-provisioner/onboard-metric
 Body: { "tenantSlug": "<slug>", "metricContractUid": "<mcf-mc-uid>", "environmentCode": "development" }
 ```
 
-Reverse-walks the entitled MCF metric to the Canonical Contract (and upstream Source Contracts) it depends on, writes `tenant.contract_binding` (CC/MC) + `tenant.tenant_binding` (SC), and **enqueues** a provisioning command per desired `fact.co_*/fact.so_*/fact.ms_*` table (the metric's `fact.ms_*` is in the MCF namespace). Idempotent. Returns **202**; poll provisioning status (below).
+Reverse-walks the entitled MCF metric to the Canonical Contract (and upstream Source Contracts) it depends on and writes **`tenant.contract_binding` (family `canonical`) + `tenant.tenant_binding` (SC) only** — the reverse-walk returns no metric contracts (`metricContracts: []`); an **MC-family binding / MCF entitlement is a separate governance record** (D475), **not** written here. It then **enqueues** provisioning commands for the chain's `fact.co_*/fact.so_*` tables and, via `enqueueMcfMetric`, the metric's own `fact.ms_*` (MCF namespace). **`enqueueMcfMetric` returns `null` when the metric has no active MCV** — so a **202 alone does not prove the `fact.ms_*` command was created**; confirm from the returned command (namespace / metric / version) and the status read, not from a binding-row count. Idempotent. Returns **202**; poll provisioning status (below).
 
 ### Bind a whole connector chain — `POST /schema-provisioner/onboard-connector`
 
@@ -47,7 +47,7 @@ POST /api/schema-provisioner/onboard-connector
 Body: { "tenantSlug": "<slug>", "connectorId": "<uuid>", "environmentCode": "development" }
 ```
 
-The D369 primary trigger for tenant onboarding: walks the connector chain forward, populates `tenant_binding` (source) + `contract_binding` (canonical/metric/intervention), and **enqueues** a provisioning command per desired `fact.*` table. Idempotent. Returns **202** — it does **not** create tables or "reconcile in one call"; completion requires the worker (below) and is confirmed only by the status read. Use this when the intent is "give this tenant everything reachable from this connector"; the DB Change Protocol is satisfied at the connector level (the operator approves the connector onboard once; binding fans out from there).
+The D369 primary trigger for tenant onboarding: walks the connector chain forward and populates **`tenant.tenant_binding` (source) + `tenant.contract_binding` (family `canonical`) only**. Legacy metric reachability is retired (`SchemaProvisionerRepository.findMetricContractsForCanonicals` returns `[]`) and the populator has no intervention loop, so this path writes **no metric/intervention binding** and enqueues **no MCF `fact.ms_*` command** (it calls `enqueueDesired`, not `enqueueMcfMetric`). To provision a tenant's `fact.ms_*` for an MCF metric, use the explicit **`onboard-metric`** path above. It **enqueues** a provisioning command per desired `fact.*` table. Idempotent. Returns **202** — it does **not** create tables or "reconcile in one call"; completion requires the worker (below) and is confirmed only by the status read. Use this when the intent is "give this tenant the source/canonical substrate reachable from this connector"; the DB Change Protocol is satisfied at the connector level (the operator approves the connector onboard once; binding fans out from there).
 
 ### Provision the fact tables — the owner-privileged worker (out-of-process)
 
@@ -71,13 +71,13 @@ Two distinct mechanisms — do not conflate:
 
 ### Verify readiness
 
-Use the current readiness surface — `GET /api/registry/mcf/readiness-projection` (the legacy `/admin/readiness/...` dial and `/registry/funnel-ladder` are retired, below). Cross-check the fact table exists and evaluation has run before treating a metric as producing.
+Use the current readiness surface — `GET /api/registry/mcf/readiness-projection` (the legacy `/admin/readiness/...` dial and `/admin/registry/funnel-ladder` are retired, below). **Scope:** readiness-projection is a **platform aggregate**, **not** a tenant binding or tenant-MLS-completion proof — cross-check that the tenant's fact table exists and evaluation has actually run before treating a metric as producing for that tenant.
 
 ## Rollback / unbind
 
-There is **no verified served governed endpoint** in the current tree for deactivating a tenant metric binding. A `PATCH .../metrics/:mcUid/binding` handler exists in `FunctionAdminController` source, but it is **not present in the served route snapshot** and its "disable" is documented as **cosmetic — it does NOT stop engine evaluation** — so it must **not** be relied on to halt a metric. Do **not** deactivate via a raw SQL `UPDATE` on `tenant.contract_binding` either (prohibited DB-row hand-edit, DEC-ebf0b4/D268).
+The current **served route inventory has no deactivation/unbind route** for a tenant metric binding, so **no governed unbind can be verified as-built here**. Do **not** deactivate via a raw SQL `UPDATE` on `tenant.contract_binding` (prohibited DB-row hand-edit, DEC-ebf0b4/D268).
 
-**Consequence:** a governed, evaluation-affecting unbind for a tenant MC is a **documentation/verification gap** — the mechanism that genuinely halts evaluation is not established here and must be verified against the evaluation-scheduler/binding source before it is documented or relied upon. For chain-walk bindings, unwinding is intended to run through the connector offboarding flow (out of scope here), not a per-MC toggle.
+**Consequence:** a governed, evaluation-affecting unbind for a tenant MC is a **documentation/verification gap** — the mechanism that genuinely halts evaluation is not established in the current tree and must be verified against the served evaluation-scheduler / binding source before it is documented or relied upon. For chain-walk bindings, unwinding is intended to run through the connector offboarding flow (out of scope here), not a per-MC toggle.
 
 ## Retired surface (410 Gone)
 
@@ -90,7 +90,7 @@ Per **DEC-b049f6** (M17/D547 retirement pattern; the legacy-metric binding corpu
 | `GET /admin/readiness/tenant/:slug/binding-candidates` | MCF entitlement drives onboarding; no candidate-audit endpoint |
 | `POST /admin/readiness/tenant/:slug/bind` | `POST /schema-provisioner/onboard-metric` (or `onboard-connector`) |
 | `GET /admin/readiness/tenant/:slug/formula-token-audit` | — (predicate tables dropped at R3) |
-| `GET /registry/funnel-ladder` | `GET /registry/mcf/readiness-projection` |
+| `GET /admin/registry/funnel-ladder` | `GET /registry/mcf/readiness-projection` (platform aggregate — not a tenant-completion proof) |
 
 ## Common gotchas
 
