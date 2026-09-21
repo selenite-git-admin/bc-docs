@@ -301,3 +301,67 @@ against substrate, not asserted.
 - **Anchor task:** TSK-d73f01. **Stand-up session:** SES-b5c14b (2026-09-21).
 - **Grounding:** the read-only `bc_platform_dev` / `tbc_probe_unit4_dev` reads recorded in **§3.1**;
   the matrix RAG is reproducible from those queries.
+
+## 8. Execution log (the Kaveri walk, as run)
+
+Dated, grounded record of what was actually executed against live substrate, newest first. Every
+write went through a governed service; every claim is re-runnable read-only.
+
+### 2026-09-21 — MLS-17 wired, MLS-19 source binding attempted (fail-closed blocked)
+
+**MLS-15 (tenant) — done earlier this session:** Kaveri provisioned via governed `POST /tenants`
+(`tenantId f0a5e695-b475-472c-87f8-71609be1a8c3`, `tbc_kaveri_dev`, active). Tenant DB is empty of
+runtime data (admission / canonical_evaluation / metric_evaluation / evidence / fiscal_calendar_config
+/ org_profile / legal_entity all 0 rows; no `fact` schema).
+
+**Contract chain is authored + ACTIVE (not a gap):** for source object `account.move`
+(`019fdfdb-e56e-7003-ad43-3e3f0286c38a`) the full chain is live at the platform — SC `sc-929yc`
+(`019fe42b-7f2b…`, active 1.0.0), AC (`019fe42b-7fe8…`, active 1.1.0), OC `45f8b60c…` (active 1.2.0,
+pair-grammar), CC `cc-dh5d9` (`7fa4b84f…`, active 1.2.0). No SC/AC/OC/CC authoring is required.
+
+**MLS-17 (connection) — DONE.** `runtime.connection kaveri-odoo-v3lc5` (`01a07b9d…`) moved
+`draft → connected` via a governed connectivity check (`POST /api/connections/:id/checks`), after
+verifying Odoo `:8100` responds (HTTP 200). `connection.tenant_id` stays NULL **by design** — the
+reader runtime resolves the connection via its reader flavor and scopes by run/tenant context, not
+`connection.tenant_id` (`reader-runtime.service.ts:125,154`); no governed endpoint sets it and none
+is needed. **Credential verified:** `admin/admin` authenticates to `v3_lc5` (uid 2) via both
+`/web/session/authenticate` and XML-RPC; the authenticated session reads `account.move` — **2,699
+posted `out_invoice`** rows (of 10,744 moves) — recorded as an `authentication` success check.
+
+**MLS-19 (source binding) — ATTEMPTED, FAIL-CLOSED BLOCKED.** Kaveri has 0 `tenant.tenant_binding`
+and 0 `tenant.contract_binding`. The governed binding path is `POST /schema-provisioner/onboard-metric`
+(reverse-walk metric → grain CC → upstream SC → populate bindings → enqueue provisioning; no served
+DDL). Invoked for the invoice leaf `gross_invoiced_amount` (`cdd2a474…`, env `dev`). Result: **HTTP
+422, zero writes** — *"no active canonical contract declares grain entity `e3963e45` — the metric's
+chain is not resolvable."*
+
+> **Root cause — grain-entity mismatch (the current MLS-19 blocker).** The DSO metric family
+> (`gross_invoiced_amount`, `ar_balance`, `days_sales_outstanding`) all declare grain entity
+> `e3963e45` = **"Customer Invoice"** (finance / accounts_receivable). The only active CC on the
+> account.move chain, `cc-dh5d9`, derives grain `6e47ef23` = **"Journal Entry"** (its fields
+> `entry_rate` / `posting_date` / `status` all resolve to the Journal Entry entity). **Customer
+> Invoice ≠ Journal Entry**, so no active CC declares the metrics' grain and the chain is
+> unresolvable. This is a **contract-authoring decision** (author/re-grain an active CC on the
+> Customer Invoice grain, or re-grain the metric family), upstream of — and distinct from — the
+> MLS-23 leaf-audit gate below. `mcf.mcv_chain_status` for `gross_invoiced_amount` (verdict `amber`,
+> `grain_cc_active:pass`) is **stale** (computed 2026-08-02); the live reverse-walk is authoritative.
+
+**Two adjacent defects surfaced (do not block MLS-19 root cause but block later rungs):**
+- **reader_binding defect (MLS-18/21).** Reader "Journal Entry" (`ae6a3b99`, flavor `13a0bc42`) has
+  its `runtime.reader_binding.source_contract_id` set to the **AC id** (`019fe42b-7fe8…`), not the
+  SC id, and in environment `dev`. The D369 forward `onboard-connector` walk inner-joins
+  `source_contract` on that column, so it resolves 0 SCs → the forward path is a no-op until the
+  binding is corrected to the SC id.
+- **Environment inconsistency.** The connection is `development`; the reader_binding is `dev`;
+  `tenant.tenant_binding` across tenants uses both `dev` and `development`. Kaveri's wiring should be
+  reconciled to one environment code before admission.
+
+**MLS-23 (downstream, unchanged):** composite leaf `gross_invoiced_amount` (`8a38e79c`) is
+`audit_pending`/`is_current=false`; DSO chain verdict `red` (`bindings_resolve:fail:1_unresolved`).
+Gated behind MLS-19.
+
+**Incidental fix landed (governed):** the `flavorCount=0` anomaly on the connection traced to a
+wrong-column filter in `ConnectionRepository.{count,list}FlavorsByConnection` (filtered the
+`@deprecated` `observation_contract_id` instead of `connection_id`). Fixed with a RED-first
+DB-integration regression test + CI wiring; Codex-reviewed (RESPONSE-Codex-d617-020, accepted with
+boundary) and merged as **bc-core PR #810** (squash `7d95e953`).
