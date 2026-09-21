@@ -98,7 +98,7 @@ RAG = Kaveri state at grounding time. Machinery = buildability.
 | 20 Fact tables | T | 🔴 | 🟡 owner-privileged fact DDL via **provisioning-worker-cli** (needs `TENANT_OWNER_DATABASE_URL`; NOT in served process) | Engineering |
 | 21 SO produced | T | 🔴 | 🟡 `progression.admission` path exists; **tenant probe MLS-21 existence UNVERIFIED** (F-MLS-1) | Engineering |
 | 22 CO produced | T | 🔴 | 🟡 `progression.canonical_evaluation` exists; **probe MLS-22 UNVERIFIED** | Engineering |
-| 23 Snapshot produced | T | 🔴 | 🔴 **⛔ no active metric is evaluable over real COs** — attributed to TSK-afd7ff / DEC-958d3a (operand-projection gap / superseded OC-pin); **not independently re-reproduced this session**; probe MLS-23 UNVERIFIED — the critical-path gate | Engineering |
+| 23 Snapshot produced | T | 🔴 | 🔴 **⛔ VERIFIED (2026-09-21):** DSO can't snapshot because composite leaf **`gross_invoiced_amount` is `audit_pending`** (`8a38e79c`, only version, current pin) — not an OC-pin/operand-projection gap. Remedy = certify+activate that leaf (corpus cert, held). MLS-21/22/23 tenant **probes CONFIRMED ABSENT** (F-TR-2). See ADR-f44a71 Amendment 1 | Engineering |
 | 24 Proof complete | T | 🔴 | 🟡 evidence path exists (E6-B armed); **gated by non-superuser runtime identity + evidence immutability** (TSK-d43263 / D575) | Engineering |
 | 25 KPI rendered | T | 🔴 | ❓ bc-portal render path — verify at the end (permission/typed-value) | Platform |
 
@@ -128,10 +128,16 @@ session instruction; missing gates enumerated). No green readiness is asserted h
   §5). What remains **unverified** is per-rung **gate completeness** and the MLS-21/22/23 **tenant
   probes** that DEC-c9e623 (May-2026) flagged as possibly not-yet-existing — an early program task,
   not an assumption.
-- **F-TR-3 (MLS-23, the gate):** the assertion that *no active metric is currently evaluable over real
-  canonical objects* is **attributed** to TSK-afd7ff / DEC-958d3a and was **not independently
-  re-reproduced this session**; it is carried as prior evidence pending an independent recheck. Tenant
-  readiness cannot reach MLS-23 until DSO (or another metric) is made evaluable for the Kaveri source.
+- **F-TR-3 (MLS-23, the gate) — VERIFIED, root cause corrected (2026-09-21; see ADR-f44a71 Amendment 1):**
+  independently re-reproduced read-only (CHG-1f065f / SES-da0550, re-verified). **DSO is a composite**:
+  `days_sales_outstanding` (mcv `f660fb7b`) is **`active`** (so its **MLS-14 gate is SATISFIED**), and its
+  operands bind (current, acyclic d467 pins) to leaves `ar_balance` (`61a876e7`, **active**) and
+  **`gross_invoiced_amount` (`8a38e79c`, `audit_pending`** — only version, current pin). So DSO can't
+  snapshot because a **leaf metric is not activated** — **not** an operand-projection gap or superseded
+  OC-pin. The remedy is to **certify + activate the `gross_invoiced_amount` leaf** (a platform/MCF-corpus
+  certification, **not tenant-isolated**), gated on cert/impact review; **held** pending explicit operator
+  approval + cert/DB-Foundation consent. (Independently: no tenant has real COs yet, so admission+resolution
+  are also still required — but the non-active-leaf blocker is independent and blocks DSO regardless.)
 
 ### 3.1 Reproducibility record (read-only)
 
@@ -225,18 +231,17 @@ machinery exists). The path then narrows:
    rung. Then bind Kaveri's SC/AC/OC/CC/MC; per-rung gate completeness/probes remain to verify.
 3. **MLS-20** — run the owner-privileged provisioning worker (out-of-process) to create `fact.*`.
 4. **MLS-21→22** — admit lc5 `account.move`, resolve to `journal_entry` canonical.
-5. **MLS-23 ⛔** — **the gate.** Make DSO evaluable for the Kaveri source. **Decided (DEC-f44a71/D617):
-   route (a)** — a **Kaveri-led / source-bounded** DSO/journal chain repair (re-pin the OC / close the
-   operand-projection gap for the Kaveri source), **not** route (b) a corpus-wide fix (parked as
-   TSK-afd7ff). ⚠ **Route (a) is not inherently tenant-isolated:** CC/OC selection is
-   **platform-registry-wide** — `CoCandidateReader.pickGrainCc` and `MetricChainReverseWalkService`
-   pick the single active CC by grain from the platform registry; there is no tenant-scoped CC
-   selection. Therefore **any change to a shared OC/CC** (re-pin or operand projection) is **gated** on
-   downstream-consumer impact review + certification/activation + provisioning-fanout review — unless a
-   supported tenant-isolation mechanism is used. Route (a) does **not** get to claim tenant-only or
-   reversible effects merely because Kaveri is the first run. **Prerequisite:** actual **MLS-14
-   readiness for the chosen metric must be verified** (not merely a chain-status refresh "intended to
-   read true"). Until this clears, no snapshot.
+5. **MLS-23 ⛔** — **the gate.** Make DSO evaluable for the Kaveri source. **Route (a), corrected
+   (DEC-f44a71/D617 Amendment 1; verified 2026-09-21):** the blocker is **not** an OC re-pin /
+   operand-projection gap — DSO is a composite whose leaf **`gross_invoiced_amount` is `audit_pending`**
+   (`8a38e79c`, only version, current pin) while leaf `ar_balance` is active. The remedy is to
+   **certify + activate the `gross_invoiced_amount` leaf** (`audit_pending → active`) via the governed
+   MCF cert path — the leanest fix versus route (b) (corpus-wide family remediation, parked as
+   TSK-afd7ff). ⚠ **Not tenant-isolated:** activating the leaf is a **platform/MCF-corpus** cert (it
+   serves all consumers, not only Kaveri's DSO), so it is **gated** on MCF certification/activation +
+   downstream-consumer impact review. **Held** pending explicit operator approval + cert/DB-Foundation
+   consent. **MLS-14 for DSO is VERIFIED SATISFIED** (`days_sales_outstanding` governance `active`,
+   cert-gated). Until the leaf activates, no snapshot.
 6. **MLS-24→25** — evidence (gated by D575 non-superuser identity) + portal KPI.
 
 Upstream hygiene: **TSK-aaa6ae** (chain-status stale, masks the Aug-21 grain archival) should be

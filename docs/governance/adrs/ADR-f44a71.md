@@ -30,7 +30,22 @@ Platform Readiness & Legibility (DEC-33d436/D606) split readiness two-layered al
 
 ## Sequencing
 
-Thin-real-slice first: confirm lc5 up → provision Kaveri (MLS-15) → wire Odoo source (MLS-17/18) → author Kaveri's tenant-DB `organization.fiscal_calendar_config` (MLS-16; configuration, not a build — F-TR-1) → bind via the as-built `schema-provisioner` onboard route (MLS-19), **after** correcting the stale `tenant-metric-binding.md` SOP (it still mandates the removed `nightly-reconcile` + direct-UPDATE rollback) → provision fact tables via owner-worker (MLS-20) → admit + resolve (MLS-21/22) → route (a) makes DSO evaluable, subject to the Decision 2 shared-contract gating (MLS-23) → evidence (MLS-24, gated by D575) → portal KPI (MLS-25). **Verify** MLS-14 readiness for the chosen metric (refresh chain-status TSK-aaa6ae, then confirm against substrate — do not infer readiness from the refresh alone).
+Thin-real-slice first: confirm lc5 up → provision Kaveri (MLS-15) → wire Odoo source (MLS-17/18) → author Kaveri's tenant-DB `organization.fiscal_calendar_config` (MLS-16; configuration, not a build — F-TR-1) → bind via the as-built `schema-provisioner` onboard route (MLS-19), **after** correcting the stale `tenant-metric-binding.md` SOP (it still mandates the removed `nightly-reconcile` + direct-UPDATE rollback) → provision fact tables via owner-worker (MLS-20) → admit + resolve (MLS-21/22) → route (a) makes DSO evaluable, subject to the Decision 2 shared-contract gating and **Amendment 1** below (MLS-23) → evidence (MLS-24, gated by D575) → portal KPI (MLS-25). **Verify** MLS-14 readiness for the chosen metric (refresh chain-status TSK-aaa6ae, then confirm against substrate — do not infer readiness from the refresh alone).
+
+## Amendment 1 (2026-09-21) — route (a) blocker/remedy correction (verified)
+
+Decision 2 originally framed the MLS-23 blocker as an **OC re-pin / operand-projection gap** for the Kaveri source, and F-TR-3 recorded that blocker as *attributed* (to TSK-afd7ff / DEC-958d3a), not independently reproduced. It has now been **independently verified read-only**, and the mechanism is different — this amendment corrects route (a) accordingly. It does **not** reverse Decision 2's intent (make DSO evaluable via the leanest fix, gated on impact); it corrects the **blocker and the remedy**.
+
+**Verified facts** (read-only `mcf.*`; evidence CHG-1f065f / SES-da0550, re-verified this session, and CHG-a538a5):
+- **DSO is a composite metric.** `days_sales_outstanding` (mc `db373d5b` / mcv `f660fb7b`) is **`active`** — so its own **MLS-14 semantic-activation gate is SATISFIED** (MCF activation is DB-cert-gated); this supersedes F-TR-3's "not reproduced" note and closes the MLS-14-for-DSO prerequisite.
+- Its operands bind (current, acyclic d467 composite pins) to two **leaf** metrics: `ar_balance` (mcv `61a876e7`) = **`active`**, and **`gross_invoiced_amount` (mcv `8a38e79c`) = `audit_pending`** — its **only** version, and the pin already equals the current version (so **not** a drifted/superseded pin).
+- Therefore DSO cannot snapshot because a **leaf metric is not activated** — **not** because of an OC re-pin or an operand-projection gap.
+
+**Corrected route (a).** The remedy that makes DSO evaluable is to **certify + activate the `gross_invoiced_amount` leaf** (`audit_pending → active`) through the governed MCF certification path — **not** an OC re-pin. This stays "route (a)" in the sense of the *leanest* fix (activate the one leaf DSO needs) versus route (b) (a corpus-wide remediation of the metric family, still parked as TSK-afd7ff).
+
+**Scope correction (reinforces Decision 2's impact boundary).** Activating the leaf is a **platform / MCF-corpus certification**: the activated `gross_invoiced_amount` serves **all** its consumers, not only Kaveri's DSO. So route (a) is confirmed **not tenant-isolated** — it is gated on MCF certification/activation review + downstream-consumer impact review, exactly as Decision 2 requires for shared-contract changes.
+
+**Execution is HELD.** This amendment corrects the authority text only. The leaf certification/activation itself is **not performed** here and is **held pending explicit operator approval + cert / Platform-DB-Foundation consent** (the MCF corpus is outside this session's write scope without that approval).
 
 ## Consequences
 
