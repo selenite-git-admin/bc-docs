@@ -7,81 +7,93 @@ plane: d (SSOT / authority structure)
 anchor_task: TSK-f38fb6
 date: 2026-09-21
 d541_intake: >
-  Design act — the authority documents have drifted from substrate (stale inline counts) and one
-  delegates to an absent doc. Fix the dangling authority pointer and refresh dated snapshots; do NOT
-  rewrite the decided ADRs' decisions. Repair location F (docs) + D (authority pointer). No schema, no
-  code, no DBCP. D162 touches a bc-docs ADR whose subject (schema evolution) is DB-Foundation-owned →
-  coordinate, don't unilaterally re-decide.
+  Design act — an authority document delegates to an absent doc, and dated snapshots are stale. FLAG the
+  dangling authority pointer (the target choice is DB-Foundation/bc-db's, per DEC-4c1396/DEC-826390) and
+  refresh/mark-stale dated snapshots as whole paragraphs; do NOT rewrite decided ADRs and do NOT assign
+  authority to a source-derived reference. Repair location F (docs) + D (authority pointer). No schema,
+  code, or DBCP.
 ---
 
 # SI-D-1 — Doc↔substrate number reconciliation
 
-> **Plain English.** A couple of docs quote numbers that drifted from the live database, and one
-> decision points its "schema map" authority at a file that doesn't exist. This package fixes the
-> **broken pointer** (to the doc that *does* hold the current inventory) and **refreshes the stale dated
-> snapshots** — without rewriting any decided ADR. Documentation only — no schema, no code, no DBCP.
+> **Plain English.** One decision points its "schema map" authority at a file that doesn't exist, and a
+> couple of docs quote numbers that drifted from the live database. This package **flags the broken
+> pointer for the schema owner (bc-db / DB-Foundation) to re-target** — it does **not** re-point it to a
+> generated reference itself — and **refreshes the stale dated snapshots as whole paragraphs**, without
+> rewriting any decided ADR. Documentation only — no schema, no code, no DBCP.
 
-## 1. Grounded findings (verified @ bc-docs origin/main + live `bc_platform_dev`)
+## 1. Grounded findings (verified @ bc-docs origin/main + live `bc_platform_dev`, 2026-09-21)
 
-### D-1a — schema count + a dangling authority pointer (bc-docs)
-- **`DEC-1918d0/D162`** states inline: *"82 tables across 12 schemas"* (line 54). Live `bc_platform_dev`
-  (read-only, 2026-09-21): **20 application schemas** (`NOT LIKE 'pg_%'` and not public/information_schema),
-  **258 application base tables** — so the inline figure is a **stale historical fact** (D162 dated
-  2026-03-17).
-- **D162 delegates the authoritative inventory** — its `references` frontmatter names
-  `architecture/database/schema-map.md` ("Platform DB schema map"). **That file does not exist** in
-  bc-docs or bc-core (verified `git ls-tree`). The delegation is **dangling**.
-- **The current inventory that *does* exist** is **`docs/reference/data-dictionary/`** — 21 auto-generated
-  per-schema files (CLAUDE.md names it the authoritative per-schema column inventory). Its **currency vs
-  the live 20 platform schemas is to be confirmed with DB-Foundation** (it also carries tenant-side
-  schemas; not asserted current here).
+### D-1a — a dangling schema-authority delegation (bc-docs)
+- **`DEC-1918d0/D162`** states inline: *"82 tables across 12 schemas"* (line 54); live `bc_platform_dev` =
+  **20 application schemas / 258 base tables** — the inline figure is a **stale historical fact** (D162
+  dated 2026-03-17).
+- **D162 delegates the authoritative inventory** to `architecture/database/schema-map.md`, which **does
+  not exist** in bc-docs or bc-core (verified `git ls-tree`). The delegation is **dangling** — the real
+  plane-d gap.
+- **The `docs/reference/data-dictionary/` is NOT the fix target.** Its own README frontmatter declares
+  `authority: source-derived`, `status: generated`, `generated_at: 2026-07-06`, from `bc-core` `44767f0`
+  `/src/database/schema`. It has **20 schema pages + README** (not 21 per-schema files), **no `mcf` page**,
+  and `contract.md` still references the retired `contract.metric_contract` — so it is a **derived
+  reference with demonstrable stale/missing coverage**, not current authority.
+- **The authority chain is settled elsewhere:** `DEC-4c1396` — bc-db is the **sole platform schema
+  authoring/apply path**; live DB is current-state truth; `schema_migration_event` is applied-change
+  evidence; Drizzle/derived docs are a **type surface / reference, not authority**. `DEC-826390` — the DB
+  spine's home is **bc-db**. So the schema-map/inventory target is a **bc-db / DB-Foundation-owned**
+  decision, not this program's to assign.
 
 ### D-1b — CLAUDE.md MCF snapshot (barecount-devhub repo)
-- CLAUDE.md line 527: *"**Current state (2026-06-06):** … `mcf.metric_contract` = 5 (1 active = ARPI, 1
-  approved, 2 draft, 1 review)…"*. Live `mcf.metric_contract` = **433**. The line is an explicitly **dated**
-  snapshot (2026-06-06), now stale; the whole status breakdown — not just the count — is out of date.
+- CLAUDE.md line 527 is an explicitly **dated 2026-06-06** paragraph: *"…18 `mcf.*` tables live;
+  `mcf.metric_contract` = 5 (1 active = ARPI, 1 approved, 2 draft, 1 review); … Next governed gate: M14…"*.
+- Live (read-only, 2026-09-21): `mcf.metric_contract` = **433 contract identities**;
+  `mcf.metric_contract_version` = **433 versions**, of which **80 are `is_current`**. **`governance_state_code`
+  is on the *version*, not the contract** (verified: absent on `metric_contract`, present on
+  `metric_contract_version`) — so the old "1 active/1 approved/2 draft/1 review" was a **version-state**
+  breakdown, and version-states **do not sum to the contract count**. The paragraph's *other* claims (18
+  mcf tables, M2-M13 closeouts, "next gate M14") are unverified here and must not be silently redated.
 
 ## 2. D541 intake
-**Design act (authority hygiene).** The fixes **do not re-decide** anything: D162's *decision* (the 11-rule
-DB model + platform/tenant split) stands; only its **broken reference pointer** and **stale inline count
-annotation** are addressed, and only in coordination with the schema owner. The CLAUDE.md line is a dated
-project-memory snapshot to refresh. Repair location F (docs) + D (authority pointer). No schema/code/DBCP.
+**Design act (authority hygiene).** No decision is re-decided; the schema-map/inventory **target** is
+bc-db/DB-Foundation's to choose (DEC-4c1396/DEC-826390). This program flags the dangling reference and
+annotates stale figures. Repair location F + D. No schema/code/DBCP.
 
 ## 3. The design — per finding
 
-- **D-1a (D162 / schema authority) — coordinate with DB-Foundation; do not rewrite the decision.**
-  1. **Re-point the dangling reference**: D162's `references` entry `architecture/database/schema-map.md`
-     → `reference/data-dictionary/` (the doc that actually holds the current inventory), **or** create
-     `schema-map.md` if DB-Foundation wants that specific artifact. This is the real plane-d fix — a
-     decision pointing at an absent authority.
-  2. **Annotate the inline count** as a dated historical figure (2026-03-17) with a pointer to the live
-     authority (data-dictionary), rather than editing "82/12" to "258/20" inside a decided ADR — the ADR
-     *delegates* the live inventory, so the inline number is context, not the authority.
-  3. **DB-Foundation owns schema evolution + the data-dictionary generation** (TSK-cc348a) → this item is a
-     **coordinated hand-off**, not a unilateral edit; confirm the data-dictionary's currency there.
+- **D-1a — flag + coordinate; do not re-point to a derived reference.**
+  1. **Flag the dangling `schema-map.md` delegation** in D162 to **DB-Foundation / bc-db** (the schema
+     authority per DEC-4c1396/DEC-826390). The owner chooses the target — an **owner-reviewed
+     schema-map/inventory documenting a pinned live/spine state**. The source-derived `data-dictionary`
+     stays a **reference** unless regenerated **and validated** against the intended platform scope
+     (it currently misses `mcf` and carries retired `contract.metric_contract`).
+  2. **Annotate D162's inline count** as a dated historical figure (2026-03-17) pointing to the
+     owner-chosen live authority — via **errata/amendment, not a decision rewrite**.
+  3. This program does **not** unilaterally edit the decided D162 or assign its delegated authority; it
+     records the gap and hands the target choice to the owner.
 
-- **D-1b (CLAUDE.md MCF) — refresh the dated snapshot (barecount-devhub, this program's scope).**
-  Re-ground the MCF state to a current-dated snapshot: `mcf.metric_contract = 433` with a fresh status
-  breakdown (active/approved/draft/review counts, re-queried), and update the date; or, if a full
-  re-ground is deferred, mark the line explicitly as a **stale 2026-06-06 snapshot** pointing to the live
-  count. The count refresh is trivial; the status breakdown needs a small read-only re-query.
+- **D-1b — refresh as a whole paragraph, population-defined.**
+  Retain the entire 2026-06-06 paragraph as **historical** and add a **separately dated, query-bound**
+  observation — e.g. *"2026-09-21 (read-only): `mcf.metric_contract` 433 identities; `metric_contract_version`
+  433, of which 80 `is_current`; governance-state breakdown is over current versions' `governance_state_code`,
+  not contracts."* — **or** independently re-ground every claim in the paragraph before applying a new date.
+  Do **not** redate the whole paragraph while refreshing only the count. This is a barecount-devhub
+  (project-memory) change.
 
 ## 4. Connections
-- **Docs/ADRs:** `DEC-1918d0/D162` (bc-docs, decided — reference + annotation only), `reference/data-dictionary/`,
-  `CLAUDE.md` (barecount-devhub).
-- **Owners:** DB-Foundation (TSK-cc348a) owns schema evolution + the data-dictionary → coordinate D-1a.
-  D-1b is this program's (project-memory refresh).
-- **Sibling packages:** none coupled. Independent.
+- **Docs/ADRs:** `DEC-1918d0/D162` (bc-docs, decided — errata/annotation only), `DEC-4c1396` + `DEC-826390`
+  (schema authority = bc-db), `reference/data-dictionary/` (source-derived reference), `CLAUDE.md`
+  (barecount-devhub).
+- **Owners:** DB-Foundation / bc-db (TSK-cc348a) owns the schema-map/inventory target and the
+  data-dictionary generation → **coordinate D-1a**. D-1b is this program's project-memory refresh.
+- **Sibling packages:** none coupled.
 
 ## 5. Implementation sketch (after approval)
-1. D-1a: raise the dangling-reference + currency question with DB-Foundation; on their steer, either
-   repoint D162's reference to the data-dictionary (via errata/amendment, not a decision rewrite) or
-   create the schema-map artifact; annotate the inline count as dated.
-2. D-1b: read-only re-query the MCF status breakdown; update CLAUDE.md line 527 to a current-dated snapshot
-   (barecount-devhub) — a small, separate change in that repo.
+1. D-1a: raise the dangling delegation with DB-Foundation/bc-db; on their target decision, record the
+   errata/annotation on D162 (owner-reviewed); do not repoint to the data-dictionary as authority.
+2. D-1b: add a separately-dated query-bound MCF observation to CLAUDE.md (barecount-devhub), keeping the
+   June-06 paragraph as historical.
 
 ## 6. Boundary
-Design only — no docs changed yet. For Codex review as `d619-004`. D-1a is a **DB-Foundation-coordinated**
-hand-off (no unilateral edit to the decided D162 or its delegated authority); D-1b is a project-memory
-refresh in barecount-devhub. No schema, code, or DBCP. Does not assert the data-dictionary is current (that
-is confirmed with DB-Foundation).
+Design only — no docs changed yet. For Codex review as `d619-004`. D-1a's authority target is **not chosen
+here** (bc-db/DB-Foundation's, per DEC-4c1396/826390); the data-dictionary is **not** asserted as current
+inventory (it is a source-derived reference with stale/missing coverage). D-1b keeps historical claims
+intact. No schema, code, or DBCP. SI-L5-1 remains OPEN/Foundation-gated; RT withdrawn.
