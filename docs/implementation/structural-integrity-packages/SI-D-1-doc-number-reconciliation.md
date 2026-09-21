@@ -108,7 +108,7 @@ annotates stale figures. Repair location F + D. No schema/code/DBCP.
    re-frozen 433.
 
 ## 6. Boundary
-Design only — no docs changed yet. For Codex review as `d619-004`. D-1a's authority target is **not chosen
+Design accepted-with-boundary (d619-005, bc-docs PR #56). D-1b implemented (barecount-devhub PR #20); D-1a raised to the bc-db owner (`TSK-d3fbc0`). D-1a's authority target is **not chosen
 here** (bc-db/DB-Foundation's, per DEC-4c1396/826390); the data-dictionary is **not** asserted as current
 inventory (it is a source-derived reference with stale/missing coverage). D-1b keeps historical claims
 intact. No schema, code, or DBCP. SI-L5-1 remains OPEN/Foundation-gated; RT withdrawn.
