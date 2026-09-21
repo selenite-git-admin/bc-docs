@@ -9,15 +9,20 @@ related: overview/platform-db-foundation.md
 
 # Platform Readiness & Legibility
 
-**Destination:** the platform can take a *real* source system, run it through the whole
-governed runway, and produce a first **trusted** metric — and we've **proven it once,
-end-to-end**. Streamlined · governed · documented · proven. Everything else is a means to this.
+**Destination:** establish the platform engine conformance needed to produce **trusted**
+metrics through the governed runway. Platform readiness is proven **compositionally**:
+per-boundary CI proofs, fail-closed execution-plane seams, and evaluation/evidence E2E
+integration coverage. The single continuous real-source run remains **tenant-readiness
+milestone #1** (Kaveri/lc5); this closure does not claim that run has occurred.
 
-**What "proven" means (decided 2026-09-19):** *platform readiness* = a **fixture/engine-conformance
-proof** (fixture data crosses every boundary to a snapshot with emitted evidence, all fail-closed,
-on a sandbox tenant — no customer needed). *Demo readiness* = platform readiness **+ a thin
-real-source (Kaveri) slice**, a named downstream milestone that rides on it — **not** the platform
-gate. (Corrects the earlier framing that used the Kaveri tenant walk as the platform proof.)
+**What "proven" means (DEC-958d3a/D613, 2026-09-21):** the four criteria remain streamlined ·
+governed · documented · proven-once-E2E. Platform readiness satisfies the fourth criterion
+with compositional evidence. Tenant readiness requires the continuous run through full
+governed onboarding and depends on the Platform DB Foundation tenant substrate.
+
+**Historical definition (2026-09-19, superseded):** a continuous fixture/sandbox traversal
+was the platform proof, followed by a thin real-source demo slice. Amendment 2 replaces
+that proof with compositional evidence and assigns the continuous run to tenant onboarding.
 
 **Amendment 2 (2026-09-21, DEC-958d3a/D613):** engine-conformance is satisfied **compositionally** (bc-core CI on `main` green — `e6b-db-integration` + gates + vitest), **not** by a single continuous run; that continuous run is **reclassified to tenant-readiness milestone #1** (the Kaveri onboarding) because it is inseparable from the interlocked governed stack (cert-gated activation + provisioning fanout + owner worker). The platform-readiness gate is now the no-black-box doors + ADR-hygiene. **✅ CLOSED 2026-09-21:** L9 chain-audit door shipped (bc-core #808 + bc-admin #53, live-verified), S2 users door deferred (solo-founder), ADR-hygiene machine-clean (`supersessionIssues=0`) + punch-list triaged — **platform readiness is closed on engine-conformance**. The single continuous real run is tenant-readiness milestone #1 (the Kaveri onboarding), downstream. See the detail doc's close banner + DEC-958d3a.
 
@@ -30,7 +35,7 @@ gate. (Corrects the earlier framing that used the Kaveri tenant walk as the plat
 Each function is scored **backend / DB / UI** and carries its governing ADRs with real status —
 a function with thin/no ADRs is itself a finding. Full matrix in the detail doc.
 
-**Where we stand (grounded 2026-09-19, synced same day):** the metric authoring/certification
+**Historical study snapshot (2026-09-19, before Amendment 2):** the metric authoring/certification
 path is green (L1–L3, L6, L7). The **runtime execution-plane seam class is CLOSED** — all three
 silent coupling seams merged to bc-core `main` (fail-closed, disposable-DB CI regression). What
 remains on Track R: E6-B's first-*observed* evidence emit (FND-VI, **deferred** — rides on a real
@@ -40,15 +45,18 @@ co-requisite, *not* cosmetic. L10's onboarding lane is green; its four operation
 reclassified to S5 (deferred). S4 pricing is deferred-by-decision (v1 flat band, no plan binding)
 and S2 RBAC unbuilt — neither blocks a compute demo.
 
-**Three cuts of the space** (kept distinct for legibility): **4 tracks** (work axis — T ✅ / R 🟡
-the gate / L parallel / S deferred); **the functions** (what the platform does); **design vs
+**Three cuts of the space** (kept distinct for legibility): **4 tracks** (work axis — T closed /
+R engine-conformance met compositionally / L disposition recorded in the closure / S deferred);
+**the functions** (what the platform does); **design vs
 execution plane** (DEC-c48b0f). A **unit ledger** with a mandatory design/execution intake gate
 ties each unit of work to a function and a piece of the distance-to-destination.
 
-**Current gate:** close **Track R** (seams **done ✅**; remaining = E6-B first-observed emit —
-deferred — and the by-design fail-open follow-ups; proven green on a fixture tenant) **and**
-Track L's no-black-boxes doors (L8/L9 doors, S2 users). Then demo readiness (the thin Kaveri
-slice) rides on it.
+**Current disposition and next gate (2026-09-21):** platform readiness is recorded as closed
+on compositional engine-conformance, with L9 shipped, S2 users deferred, and ADR-hygiene
+machine-clean plus the punch-list triaged. **Tenant readiness is next:** full Kaveri/lc5
+onboarding (TSK-d73f01) must produce the continuous real-source run and first-observed E6-B
+evidence emit, subject to the governed onboarding and auditor-store health prerequisites.
+The deeper ADR sweep and by-design fail-open follow-ups remain tracked work.
 
 **Converges with** the [Platform DB Foundation](platform-db-foundation.md) program (bc-db,
 TSK-cc348a), which productionizes tenant onboarding at scale; the two meet at the Kaveri demo
