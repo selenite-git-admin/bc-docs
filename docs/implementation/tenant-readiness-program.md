@@ -301,3 +301,103 @@ against substrate, not asserted.
 - **Anchor task:** TSK-d73f01. **Stand-up session:** SES-b5c14b (2026-09-21).
 - **Grounding:** the read-only `bc_platform_dev` / `tbc_probe_unit4_dev` reads recorded in **§3.1**;
   the matrix RAG is reproducible from those queries.
+
+## 8. Execution log (the Kaveri walk, as run)
+
+Record of what was attempted on the Kaveri walk, newest first. **Evidence discipline (per
+RESPONSE-Codex-d617-022/023 F5):** claims are split into two kinds. *(reproducible read-only)* =
+substrate state as observed in the **2026-09-21 snapshot**, whose timestamped queries and results are
+in the immutable auditor proof **`docs/PROOF-Codex-d617-022-pr57-review-2026-09-21.json`** (bc-external-audit
+commit `6630b63cc8`, content SHA-256 `af182041907dc2ec16b20f305441e65084e509a57ea15c5069922786183a2324`);
+those reads are re-runnable against `bc_platform_dev` / `tbc_kaveri_dev` at platform code pin **bc-core
+`7d95e953`**, and were re-confirmed unchanged on 2026-09-23 (that re-confirmation is uncommitted, so
+treat it as source-reported). *(source-reported)* = an out-of-band HTTP/API result from this session
+that was **not** independently replayed by the auditor — treat as reported, not proven. No claim here
+discharges the D617-019 execution gates.
+
+### 2026-09-21 — MLS-17 wiring attempted, MLS-19 source binding fail-closed on a grain mismatch
+
+**MLS-15 (tenant) — infrastructure provisioned; per-metric MLS-15 NOT accepted (F1).** *(source-reported)*
+the tenant was provisioned earlier this session via governed `POST /tenants` — that request's execution
+is not independently replayed here. *(reproducible read-only)* the resulting row exists: `tenant.tenants`
+has `slug='kaveri'`, `tenantId f0a5e695-b475-472c-87f8-71609be1a8c3`, `schema_name='tbc_kaveri_dev'`,
+`status_code='active'`. This is infrastructure provisioning only — **per-metric MLS-15 acceptance
+remains pending** (the MLS-14→15 handoff gate, §2 + §3.1C), and **D617-019 F1–F3 remain open**.
+*(reproducible read-only)* `tbc_kaveri_dev` holds no runtime data:
+`progression.admission` / `canonical_evaluation` / `metric_evaluation`, `evidence.evidence_object` /
+`evidence_record` / `lineage_object`, `organization.fiscal_calendar_config` / `org_profile`,
+`tenant_dim.dim_legal_entity` all **0 rows** (observed 2026-09-21). The **`fact` schema EXISTS but
+holds no relations (F4)** — `pg_namespace` returns `fact` in `tbc_kaveri_dev`; `pg_class` shows no
+`fact.*` relations. (No dated evidence of an earlier *absent* `fact` schema is claimed; the earlier
+note of "no fact schema" was an `information_schema.tables` artifact — an empty schema returns no
+table rows — and is corrected here.)
+
+**Contract chain — existing account.move versions are ACTIVE (F6).** For source object `account.move`
+(`019fdfdb-e56e-7003-ad43-3e3f0286c38a`): SC `sc-929yc` (`019fe42b-7f2b…`, active 1.0.0), AC
+(`019fe42b-7fe8…`, active 1.1.0), OC `45f8b60c…` (active 1.2.0, pair-grammar), CC `cc-dh5d9`
+(`7fa4b84f…`, active 1.2.0) *(reproducible read-only)*. **This does not mean the chain is sufficient
+or that no authoring is required for the DSO walk** — the metric family's grain has no active CC (see
+MLS-19), so a shared-contract authoring decision is still open and subject to §5 gating.
+
+**MLS-17 (connection) — connectivity/credential source-reported; completion pending tenant-context +
+credential-wiring verification (F2).** *(reproducible read-only)* `runtime.connection
+kaveri-odoo-v3lc5` (`01a07b9d…`) is `connection_status='connected'` with `tenant_id` **NULL** and
+`environment_code='development'`. *(source-reported)* the `draft→connected` transition was recorded
+earlier this session by a governed `POST /api/connections/:id/checks` — that request's execution is
+not independently replayed here; note `ConnectionService.recordCheck` **accepts the submitted check
+status and updates the row — it does not itself authenticate to Odoo**, so a `connected` row is an
+attestation, not proof of live connectivity. *(source-reported, not auditor-replayed)* an
+out-of-band `admin/admin` login to `v3_lc5` returned uid 2 and a read of `account.move` reporting
+**2,699 posted `out_invoice`** of 10,744 moves. **On tenant ownership:** the NULL `tenant_id` is a
+lookup fact, not a design claim that ownership is unnecessary — `TenantConnectionController` `POST
+/api/t/connections` **does** pass the authenticated `tenant.tenantId` into
+`ConnectionService.createConnection` and the repository persists it, and tenant reads enforce
+ownership; the reader runtime's `getConnection(flavor.connectionId)` (no tenant arg) only proves the
+platform-side lookup path, not that `tenant_id` is unnecessary. MLS-17 completion is therefore
+**pending verification** of the tenant-context and credential wiring the runtime will actually use.
+
+**MLS-19 (source binding) — ATTEMPTED, fail-closed.** *(reproducible read-only)* Kaveri has 0
+`tenant.tenant_binding` and 0 `tenant.contract_binding`. *(source-reported)* `POST
+/schema-provisioner/onboard-metric` for the invoice leaf `gross_invoiced_amount` (`cdd2a474…`, env
+`dev`) returned **HTTP 422** — *"no active canonical contract declares grain entity `e3963e45` — the
+metric's chain is not resolvable."* The **zero-writes** characterisation is bounded to a code-path
+inference (F5), not a full request replay: in `MetricChainReverseWalkService.walkFromMetric` the
+missing-grain refusal is thrown **before** `populateBindings` / provisioning enqueue, and the 0/0
+binding counts above are consistent with no write having occurred.
+
+> **Root cause — grain-entity mismatch (the current MLS-19 blocker).** *(reproducible read-only)* The
+> DSO metric family (`gross_invoiced_amount`, `ar_balance`, `days_sales_outstanding`) all declare
+> grain entity `e3963e45` = **"Customer Invoice"** (finance / accounts_receivable). The only active
+> CC on the account.move chain, `cc-dh5d9`, derives grain `6e47ef23` = **"Journal Entry"** (its
+> fields `entry_rate` / `posting_date` / `status` resolve to the Journal Entry entity via
+> `business_concept.entity_id`), and **no active CC declaration derives `e3963e45`**. So the metrics'
+> grain has no active CC and the chain is unresolvable. Resolving this is a **shared-contract
+> authoring decision** (author an active CC on the Customer Invoice grain, or re-grain the metric
+> family), subject to §5 gating — upstream of and distinct from the MLS-23 leaf-audit gate.
+> `mcf.mcv_chain_status` for `gross_invoiced_amount` (verdict `amber`, `grain_cc_active:pass`) is
+> **stale** (computed 2026-08-02); the live reverse-walk is authoritative.
+
+**Reader binding — forward-walk CONSUMER mismatch, not malformed data (F3).** *(reproducible
+read-only)* Reader "Journal Entry" (`ae6a3b99`, flavor `13a0bc42`) has an active
+`runtime.reader_binding` in env `dev` whose `source_contract_id` holds `019fe42b-7fe8…@1.1.0`. That
+column **carries an admission-contract id by design** (v4 substrate fact,
+`resolved-admission-context.ts:152`): the admission path selects it as the AC, loads
+`admission_contract_version`, and derives the parent SC from the AC's `contract_json`. The value is
+therefore **correct** for the admission runtime — it must **not** be rewritten to an SC id (that would
+break `bindAdmissionContract` / admission resolution). The real issue is narrower: the D369 **forward**
+walker `findSourceContractsForReader` inner-joins this column to `contract.source_contract`, which
+returns 0 because the column holds an AC id — a forward-walk consumer/naming mismatch to reconcile in
+code as a **separate governed unit** (resolve AC→parent SC in the forward walker, as the admission path
+does), not a data re-bind. Environment note: the binding is env `dev` (the admission default) while the
+connection row is `development`; `tenant.tenant_binding` across tenants uses both codes — a wiring
+reconciliation to settle before admission, not a defect in this row.
+
+**MLS-23 (downstream):** *(reproducible read-only)* composite leaf `gross_invoiced_amount`
+(`8a38e79c`) is `audit_pending` / `is_current=false`; DSO chain verdict `red`
+(`bindings_resolve:fail:1_unresolved`). Gated behind the MLS-19 grain decision.
+
+**Incidental fix landed (governed):** the `flavorCount=0` anomaly on the connection traced to a
+wrong-column filter in `ConnectionRepository.{count,list}FlavorsByConnection` (filtered the
+`@deprecated` `observation_contract_id` instead of `connection_id`). Fixed with a RED-first
+DB-integration regression test + CI wiring; Codex-reviewed (RESPONSE-Codex-d617-020, accepted with
+boundary) and merged as **bc-core PR #810** (squash `7d95e953`, custody in RESPONSE-021).
