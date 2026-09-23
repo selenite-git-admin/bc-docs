@@ -305,19 +305,25 @@ against substrate, not asserted.
 ## 8. Execution log (the Kaveri walk, as run)
 
 Record of what was attempted on the Kaveri walk, newest first. **Evidence discipline (per
-RESPONSE-Codex-d617-022 F5):** claims are split into two kinds. *(reproducible read-only)* = current
-substrate state, re-runnable by the cited query at any time; observation window **2026-09-21 →
-2026-09-23**, platform code pin **bc-core `7d95e953`**. *(source-reported)* = an out-of-band HTTP/API
-result from this session that was **not** independently replayed by the auditor — treat as reported,
-not proven. No claim here discharges the D617-019 execution gates.
+RESPONSE-Codex-d617-022/023 F5):** claims are split into two kinds. *(reproducible read-only)* =
+substrate state as observed in the **2026-09-21 snapshot**, whose timestamped queries and results are
+in the immutable auditor proof **`docs/PROOF-Codex-d617-022-pr57-review-2026-09-21.json`** (bc-external-audit
+commit `6630b63cc8`, content SHA-256 `af182041907dc2ec16b20f305441e65084e509a57ea15c5069922786183a2324`);
+those reads are re-runnable against `bc_platform_dev` / `tbc_kaveri_dev` at platform code pin **bc-core
+`7d95e953`**, and were re-confirmed unchanged on 2026-09-23 (that re-confirmation is uncommitted, so
+treat it as source-reported). *(source-reported)* = an out-of-band HTTP/API result from this session
+that was **not** independently replayed by the auditor — treat as reported, not proven. No claim here
+discharges the D617-019 execution gates.
 
 ### 2026-09-21 — MLS-17 wiring attempted, MLS-19 source binding fail-closed on a grain mismatch
 
-**MLS-15 (tenant) — infrastructure provisioned; per-metric MLS-15 NOT accepted (F1).** Kaveri tenant
-infrastructure was provisioned via governed `POST /tenants` (`tenantId
-f0a5e695-b475-472c-87f8-71609be1a8c3`, `tbc_kaveri_dev`, active). This is infrastructure provisioning
-only — **per-metric MLS-15 acceptance remains pending** (the MLS-14→15 handoff gate, §2 + §3.1C), and
-**D617-019 F1–F3 remain open**. *(reproducible read-only)* `tbc_kaveri_dev` holds no runtime data:
+**MLS-15 (tenant) — infrastructure provisioned; per-metric MLS-15 NOT accepted (F1).** *(source-reported)*
+the tenant was provisioned earlier this session via governed `POST /tenants` — that request's execution
+is not independently replayed here. *(reproducible read-only)* the resulting row exists: `tenant.tenants`
+has `slug='kaveri'`, `tenantId f0a5e695-b475-472c-87f8-71609be1a8c3`, `schema_name='tbc_kaveri_dev'`,
+`status_code='active'`. This is infrastructure provisioning only — **per-metric MLS-15 acceptance
+remains pending** (the MLS-14→15 handoff gate, §2 + §3.1C), and **D617-019 F1–F3 remain open**.
+*(reproducible read-only)* `tbc_kaveri_dev` holds no runtime data:
 `progression.admission` / `canonical_evaluation` / `metric_evaluation`, `evidence.evidence_object` /
 `evidence_record` / `lineage_object`, `organization.fiscal_calendar_config` / `org_profile`,
 `tenant_dim.dim_legal_entity` all **0 rows** (observed 2026-09-21). The **`fact` schema EXISTS but
@@ -336,10 +342,11 @@ MLS-19), so a shared-contract authoring decision is still open and subject to §
 **MLS-17 (connection) — connectivity/credential source-reported; completion pending tenant-context +
 credential-wiring verification (F2).** *(reproducible read-only)* `runtime.connection
 kaveri-odoo-v3lc5` (`01a07b9d…`) is `connection_status='connected'` with `tenant_id` **NULL** and
-`environment_code='development'`. The `draft→connected` transition was recorded by a governed
-`POST /api/connections/:id/checks`; note `ConnectionService.recordCheck` **accepts the submitted
-check status and updates the row — it does not itself authenticate to Odoo**, so a `connected` row is
-an attestation, not proof of live connectivity. *(source-reported, not auditor-replayed)* an
+`environment_code='development'`. *(source-reported)* the `draft→connected` transition was recorded
+earlier this session by a governed `POST /api/connections/:id/checks` — that request's execution is
+not independently replayed here; note `ConnectionService.recordCheck` **accepts the submitted check
+status and updates the row — it does not itself authenticate to Odoo**, so a `connected` row is an
+attestation, not proof of live connectivity. *(source-reported, not auditor-replayed)* an
 out-of-band `admin/admin` login to `v3_lc5` returned uid 2 and a read of `account.move` reporting
 **2,699 posted `out_invoice`** of 10,744 moves. **On tenant ownership:** the NULL `tenant_id` is a
 lookup fact, not a design claim that ownership is unnecessary — `TenantConnectionController` `POST
