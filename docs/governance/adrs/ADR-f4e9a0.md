@@ -2,13 +2,16 @@
 uid: DEC-f4e9a0
 title: "Customer Invoice identity = composite {Legal Entity (ref), document number, document fiscal year}; introduce Legal Entity entity"
 description: "The CO business identity (grain) of a Customer Invoice is a system-agnostic composite: issuing Legal Entity (identity-bearing reference), document number, and source-attested document fiscal year. Introduces the missing Legal Entity entity. Prerequisite to DEC-acce2b."
-status: implemented
+status: superseded
 date: 2026-07-02T06:43:08.365Z
 project: bc-core
 domain: contracts
 subdomain: concept-registry/identity
 focus: identity
+superseded_by: DEC-a57eb8
 ---
+
+> **SUPERSEDED by DEC-a57eb8 / D622 (2026-09-23).** BareCount is not a system of record: an observed record's identity is the faithful carry of the source's own natural key, and the fiscal year is a **derived dimension, never an identity component**. The "document fiscal year as source-attested identity" this ADR introduced is withdrawn (it re-engineered identity as if the platform were the system of record). The **Legal Entity entity and reference are RETAINED** — re-cast as a descriptive dimension anchoring the per-legal-entity fiscal calendar. See ADR-a57eb8.
 
 # Customer Invoice identity = composite {Legal Entity (ref), document number, document fiscal year}; introduce Legal Entity entity
 
