@@ -12,6 +12,12 @@ focus: runtime
 
 # Rooth: backend homed in bc-core as a config-gated module; UI stays in bc-portal
 
+> **Status reconciliation (2026-09-24, bc-docs#59; TSK-0f1782): `proposed`, in both this file and the DevHub registry.**
+> - **What happened:** the registry recorded this decision at 2026-09-19 03:44 UTC and flipped it to `decided` at 03:46 UTC, two minutes later.
+> - **Why `decided` is not supported:** the flip is outside any DevHub session, and there is no review, ratification or approval record. The decision's own text still reads "Status: proposed direction … nothing is built". There is no `src/rooth/` in bc-core `main`.
+> - **Correction:** the registry is corrected to `proposed` to match this evidence. This is explicit, recorded here and in TSK-0f1782.
+> - **How it becomes `decided`:** by an explicit operator ratification of the topology (points 1–5), recorded with its evidence. Rooth's own design pass remains a prerequisite to any code.
+
 ## Context
 
 Applying BareCount's de-facto repo-creation test (reconstructed from precedent; a canonical written rule may exist in bc-docs, unverified this session): a new repo is justified only with an independent release lifecycle, more than one real consumer, a different runtime/deploy target or tech discipline, AND an operational cost that is outweighed by those. Rooth fails the test today: a single real consumer (bc-portal), the same Node/TS runtime, and no independent-deploy payoff.
