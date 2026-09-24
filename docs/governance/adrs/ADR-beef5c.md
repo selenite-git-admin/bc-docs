@@ -13,7 +13,13 @@ focus: identity
 
 # Record-identity doctrine: three-class rulebook for BC identity_role + additive-first-declaration (amends DEC-02f5a9)
 
-> **AMENDED by DEC-a57eb8 / D622 (2026-09-23).** Fiscal year is removed from Class-1 DOCUMENT identity. An observed record's identity is the faithful carry of the source's own natural key (declared via `identity_role`, keyed by the resolver); the fiscal year is a **derived dimension, never an identity component** (BareCount is not a system of record). The three-class structure, the additive-first posture, and the "never fabricate identity from mutable fields" guard are retained and reinforced; only the fiscal-year-as-identity element of Class-1 is withdrawn. See ADR-a57eb8.
+> **AMENDED by DEC-a57eb8 / D622 (2026-09-23; corrected 2026-09-24).** Class-1 DOCUMENT identity is the **source's complete natural key**, declared via `identity_role` and keyed by the resolver.
+> - **Every component of that key stays identity-bearing**, including a year component (SAP `gjahr`) and an issuer/company component (SAP `bukrs`, Odoo `company_id`).
+> - **Withdrawn:** only a fiscal year imposed as a *universal* identity component on sources whose key does not contain one.
+> - **The resolver-derived reporting fiscal year** is a derived dimension, never identity.
+> - **Retained and reinforced:** the three-class structure, the additive-first posture, and the "never fabricate identity from mutable fields" guard, extended to "never by omission of a source-key component".
+>
+> See ADR-a57eb8.
 
 > **Provenance.** Re-materialized on 2026-08-22 (SES-c2bd78) from the DevHub decision registry (`decision_text`, row created 2026-07-04); the ADR file had never been written to bc-docs (registry `file_path` pointed at the pre-D373 `docs/adrs/` location). Content below is the registry text verbatim. Frontmatter per D373/D334.
 
