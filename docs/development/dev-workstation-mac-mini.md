@@ -28,13 +28,18 @@ Set up on 2026-09-25 (DevHub session SES-f3d537). Read this before changing anyt
 | | Mac Mini (always on) | Windows laptop |
 |---|---|---|
 | Role | BareCount's development server | Your screen, and other projects |
-| Runs for BareCount | Postgres, Redis (Docker via Colima). **Step 2, not yet:** DevHub, bc-core, bc-admin and bc-portal (process-compose), and the Claude sessions | Codex (the auditor); a browser for the BareCount apps. **Until step 2:** Claude sessions, DevHub and the app servers still run here, pointed at the Mac's database |
+| Runs for BareCount | **Everything:** Postgres and Redis (Docker via Colima); DevHub, bc-core, bc-admin and bc-portal (process-compose); the BareCount Claude sessions (Claude app with Remote Control) | Codex (the auditor); a browser and Claude Remote Control to reach the Mac's sessions and apps |
 | Other projects | none | thecakit, accountant-tools, skf, and the Odoo demo world (for now) |
 | Reached at | cable `10.10.10.2`; Tailscale `100.64.129.39` (`macmini`) | cable `10.10.10.1`; Tailscale `100.71.89.101` (`anant-zbook`) |
 
 **Move status (2026-09-25):**
 - **Step 1, done:** Postgres and Redis live on the Mac. All laptop consumers point at it: bc-core, the Claude MCP helper, and Codex's auditor.
-- **Step 2, planned:** DevHub, the app servers and the Claude sessions move to the Mac.
+- **Step 2, done (2026-09-25, about 12:40Z):** DevHub, the app servers and the Claude sessions moved to the Mac.
+  - DevHub's `data/devhub.db` was copied with `VACUUM INTO` (sha256 `48e001d5…1909`). All 42 tables and 50,861 rows are identical, and the integrity check passes on both machines.
+  - The laptop copy is renamed `data/devhub.db*.MOVED-TO-MAC-2026-09-25`, and git-excluded locally in `.git/info/exclude`, so a second DevHub cannot start with stale data.
+  - The first Mac Claude session passed: `devhub_session_boot` works, and bc-postgres reads sysid `7689410286420172840`.
+  - The D623 recovery dumps (13 files, 217 MB, git-ignored) were copied to the same paths under `~/MyProjects/barecount-devhub/artifacts/d623/` and verified against `tools/DUMP-MANIFEST-sha256.txt`: all OK.
+  - **A laptop Claude session can still reach DevHub at `http://10.10.10.2:4000`** (set `DEVHUB_URL`), but BareCount work now happens in Mac sessions.
 
 ---
 
@@ -79,6 +84,9 @@ Everything lives in `~/bc-stack/` on the Mac. See `~/bc-stack/README.md` for the
 | Dashboard for the app servers (logs, restart; `q` leaves it running) | `~/bc-stack/servers.sh ui` |
 | Start or stop one server | `~/bc-stack/servers.sh start bc-admin` · `… stop bc-admin` |
 | List servers and their state | `~/bc-stack/servers.sh ps` |
+| One server's state as JSON (pid, ready, restarts, age) | `~/bc-stack/servers.sh info bc-core` |
+| Last 200 log lines of one server | `~/bc-stack/servers.sh logs bc-core` (full log: `~/bc-stack/logs/process-compose.log`) |
+| Restart one server (e.g. after a pull) | `~/bc-stack/servers.sh restart bc-core` |
 | Stop all app servers (containers keep running) | `~/bc-stack/servers.sh down` |
 
 bc-core on the Mac starts with **`npm run start:dev:aws`**. That loads its secrets from AWS (§5); the Mac's `.env` holds only non-secret settings.
@@ -102,8 +110,11 @@ Cognito sign-in works unchanged, because the app still sees `localhost`. Away fr
 - **Cost:** Remote Control of a Mac session counts against the normal Max plan limits. It does **not** use cloud-session credits. The Mac must be awake with the Claude app running.
 - **Memory:** Claude's BareCount memory is in `~/.claude/projects/-Users-anant-MyProjects-barecount-devhub/memory/`. It was copied from the laptop without `credentials_cognito.md`, and passwords were redacted.
 
-### Working away from the desk (until step 2)
-The laptop's `bc-core/.env` points at the **cable** address `10.10.10.2`, which only works at the desk. When away, change the host in `DATABASE_URL`, `TENANT_DATABASE_URL`, `BC_AUDIT_EXCHANGE_DATABASE_URL` and `REDIS_URL` to `100.64.129.39`, and change it back when you return. After step 2 this goes away, because bc-core and its database sit on the same machine.
+### Working away from the desk
+BareCount runs entirely on the Mac, so nothing on the laptop needs changing.
+- **Claude sessions:** use Remote Control from anywhere.
+- **SSH and the web apps:** use `macmini-ts` instead of `macmini`, over Tailscale (e.g. the SSH tunnel for bc-admin/bc-portal).
+- **Laptop tools that talk to the Mac directly by address:** use the Tailscale address `100.64.129.39` instead of `10.10.10.2`. That's Codex's auditor database settings, and any laptop-side script.
 
 ---
 
@@ -114,7 +125,7 @@ The laptop's `bc-core/.env` points at the **cable** address `10.10.10.2`, which 
 |---|---|---|
 | Postgres 17.11 (`bc-postgres`) | 127.0.0.1:5435 | `10.10.10.2:5435` / `100.64.129.39:5435`, via socat relays |
 | Redis 7.4.7 (`bc-redis`) | 127.0.0.1:6379 | `10.10.10.2:6379` / `100.64.129.39:6379`, via socat relays |
-| DevHub | 127.0.0.1:4000 (`HOST=127.0.0.1`, devhub#22) | relays to be added at step 2 |
+| DevHub | 127.0.0.1:4000 (`HOST=127.0.0.1`, devhub#22) | `10.10.10.2:4000` / `100.64.129.39:4000`, via socat relays |
 | bc-core | :3100 (all interfaces; **firewall-blocked**) | SSH tunnel |
 | bc-admin / bc-portal | localhost:3010 / localhost:3000 (Vite) | SSH tunnel |
 | process-compose control | unix socket `~/bc-stack/pc.sock` (no TCP port) | only from the Mac |
@@ -264,7 +275,7 @@ Before a **planned** reboot, tell any session using the database. The outage is 
 
 ## 11. Open items
 
-1. **Step 2:** move DevHub (copy `data/devhub.db`), the app servers and the Claude sessions to the Mac, and add the DevHub relays. Needs devhub#22 merged.
+1. ~~**Step 2:** move DevHub, the app servers and the Claude sessions to the Mac~~: done 2026-09-25 (§1).
 2. ~~Auto-login decision and a reboot test~~: done 2026-09-25 (§9.1).
 3. **Fix the AWS console sign-in**, then:
    - check that an `aws login` session can assume `bcp-dev-aps1-sct-role`
