@@ -82,6 +82,8 @@ Everything lives in `~/bc-stack/` on the Mac. See `~/bc-stack/README.md` for the
 | Stop all app servers (containers keep running) | `~/bc-stack/servers.sh down` |
 
 bc-core on the Mac starts with **`npm run start:dev:aws`**. That loads its secrets from AWS (§5); the Mac's `.env` holds only non-secret settings.
+- **The loader chooses its AWS profile from `BC_DEV_SECRETS_PROFILE`,** not `AWS_PROFILE`, and it must be set in the shell, because the loader runs before `.env` is read. On the Mac it's `default`, set in `~/.zprofile` and `process-compose.yaml`.
+- **Always run Mac commands in a login shell:** Terminal, or `ssh macmini 'zsh -l -c "…"'`. A plain non-login shell has no Homebrew, `aws`, `node`, `npm` or `BC_*` variables.
 
 ### Open bc-admin / bc-portal in the laptop browser
 The Mac's firewall blocks the app ports from the network (§6). Use one SSH tunnel, then browse to `localhost` on the laptop:
@@ -129,7 +131,15 @@ The laptop's `bc-core/.env` points at the **cable** address `10.10.10.2`, which 
 | `logs/` | relay and process-compose logs |
 
 ### Settings files
-- **Mac `~/.zprofile`:** Homebrew path; `BC_*_PATH` overrides (these replace DevHub's `C:/MyProjects` Windows fallbacks); `BC_DEV_SECRETS_PROFILE=default`; `AWS_REGION`; `DOCKER_HOST` pointing at Colima.
+- **Mac `~/.zprofile`** (read by every login shell):
+  - Homebrew path
+  - **nvm (Node 22)**
+  - `BC_*_PATH` overrides, which replace DevHub's `C:/MyProjects` Windows fallbacks
+  - `BC_DEV_SECRETS_PROFILE=default`
+  - `AWS_REGION`
+  - `DOCKER_HOST` pointing at Colima
+
+  nvm's installer only added itself to `~/.zshrc`, which non-interactive shells skip, so it was added here on 2026-09-25.
 - **Mac `~/MyProjects/bc-core/.env`:** 29 non-secret settings. `AWS_PROFILE=default`.
 - **Laptop `bc-core/.env`:** database and Redis URLs point at `10.10.10.2`. Pre-switch backups are in `%USERPROFILE%\.barecount-env-backups\`, **outside every repo**. Never keep `.env` backups inside a repo.
 - **Laptop `%USERPROFILE%\.wslconfig`:** `memory=4GB` (was 8 GB).
@@ -153,7 +163,7 @@ The laptop's `bc-core/.env` points at the **cable** address `10.10.10.2`, which 
   ```
   aws codeartifact login --tool npm --domain barecount --repository npm-mirror --region ap-south-1
   ```
-  On the laptop, run `npm run codeartifact:refresh` in barecount-devhub.
+  This uses the Mac's `default` profile. On the laptop, run `npm run codeartifact:refresh` in barecount-devhub. That script forces the `barecount` profile, which exists only on the laptop, so **don't use it on the Mac**.
 
 ---
 
