@@ -183,10 +183,16 @@ The laptop's `bc-core/.env` points at the **cable** address `10.10.10.2`, which 
 
 - **Location:** the platform Postgres (`bc_platform_dev`, tenant databases, `bc_sdg`, `bc_audit_dev`) lives on the Mac. Cluster `system_identifier` **7689410286420172840**; the laptop's old cluster was 7619260324391063586.
 - **Hand-off evidence:** 477/477 tables identical, ledger fingerprints identical. See `barecount-devhub/artifacts/infra/db-cluster-handoff-laptop-to-macmini-2026-09-25.md`.
-- **Rollback:** the laptop's old containers are stopped, with their volumes kept until **2026-10-09**. To roll back:
-  1. Restore the `.env` backups.
-  2. Run `docker compose start postgres redis` in `C:\MyProjects\bc-core`.
-  3. Carry across any writes made on the Mac since the move.
+- **Rollback is a reverse cutover. It is never "switch the settings back".**
+  - **The laptop's old volumes are stale.** They hold the pre-move state (retained until **2026-10-09** as a record) and missed every write made on the Mac since the move.
+  - **Never start them, or restore the pre-move `.env` / MCP backups, while any consumer could connect.** Clients would write to the stale copy and the two databases would diverge.
+  - **A rollback needs its own operator-approved window and runbook,** with the same ceremony as the cutover in the hand-off record, in this order:
+    1. **Freeze.** Stop or park every consumer: laptop and Mac bc-core, the DevHub and Postgres MCP helpers, Codex's auditor connection, and any driver or apply. Confirm 0 connections and unchanged write counters on the Mac.
+    2. **Back up the authoritative source,** which is the Mac: `pg_dumpall` plus sha256, row counts and ledger fingerprints.
+    3. **Recover into an isolated target:** a **fresh** laptop cluster or volume (not the stale one), with no consumer pointed at it.
+    4. **Verify:** row counts and fingerprints identical to step 2; record the new `system_identifier`.
+    5. **Switch every consumer** to the new target (app `.env` files, MCP configs, Codex's auditor settings, the other sessions), then resume.
+  - **If the Mac's data can't be read, halt.** Accepting any data loss needs the operator's explicit acceptance.
 - **Taking a copy** (read-only on the source):
   ```
   ssh macmini 'DOCKER_HOST=unix://$HOME/.colima/default/docker.sock /opt/homebrew/bin/docker exec bc-postgres pg_dumpall -U barecount' > dump.sql
