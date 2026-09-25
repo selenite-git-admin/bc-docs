@@ -273,6 +273,7 @@ Before a **planned** reboot, tell any session using the database. The outage is 
 - Codex stays on the laptop. The review exchange travels through GitHub (`bc-external-audit`), so it works from either machine. **Push everything you want reviewed.**
 - **Codex's auditor database settings** (`bc-external-audit/.env`) point at `10.10.10.2:5435`. Codex changed them itself.
 - **The instant review nudge** (`127.0.0.1:45980`) is laptop-only. From the Mac, reviews rely on Codex's 5-minute polling unless Codex opens its listener to the cable or Tailscale address.
+- **No more manual relays.** Items that don't belong to a program's own exchange family (PR landings, docs/ADR PRs, small design questions, one-off reviews) go through the permanent `gen-` family, per ADR DEC-081931. Each conversation is a thread (`gen-<id>`) minted by `barecount-devhub/scripts/exchange/gen-publish.sh new-thread`. The publisher refuses a message unless its sender holds an open DevHub session, and allows one open message per thread. Authority still comes only from the operator, told to Codex directly.
 
 ---
 
