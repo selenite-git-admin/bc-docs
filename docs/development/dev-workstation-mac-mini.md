@@ -48,7 +48,7 @@ Set up on 2026-09-25 (DevHub session SES-f3d537). Read this before changing anyt
 - **Power:**
   - Never sleeps (`pmset sleep 0`) and restarts after a power cut (`autorestart 1`).
   - FileVault is off, so it boots without anyone at the screen.
-- **After a reboot:** Tailscale starts at boot. **Colima, the relays and the app servers start only when `anant` signs in.** See §9.1.
+- **After a reboot:** Tailscale starts at boot. **Automatic login for `anant` is on**, so Colima, the containers and the relays come back by themselves about 1 minute after boot. Reboot test passed on 2026-09-25; see §9.1.
 
 ### Network
 There are two ways to reach the Mac. Use the cable whenever you're at the desk.
@@ -125,6 +125,7 @@ The laptop's `bc-core/.env` points at the **cable** address `10.10.10.2`, which 
 | `install-relays.sh` | creates the four launchd relays: `com.barecount.relay-{5435,6379}` on the cable, and `com.barecount.relay-ts-{5435,6379}` on Tailscale |
 | `process-compose.yaml`, `servers.sh` | the app servers |
 | `firewall.sh` | macOS firewall setup (§6) |
+| `health.sh` | one-command health check (§9.1): exit 0 = ALL OK |
 | `logs/` | relay and process-compose logs |
 
 ### Settings files
@@ -199,18 +200,21 @@ The laptop's `bc-core/.env` points at the **cable** address `10.10.10.2`, which 
 
 ## 9. Maintenance
 
-### 9.1 Known gap: after a reboot or power cut
-The Mac comes back by itself and Tailscale starts at boot. **Colima (Docker), the relays and the app servers start only when `anant` signs in.** Until someone signs in, the database is down. Two options:
-- Sign in once at the Mac (or over Screen Sharing) after any reboot, **or**
-- **Operator decision:** turn on automatic login for `anant` (System Settings → Users & Groups → Automatically log in as → `anant`). This is possible because FileVault is off. The trade-off: anyone with physical access to the Mac gets the `anant` session.
+### 9.1 After a reboot or power cut
+The Mac restarts by itself (`autorestart 1`), and Tailscale starts at boot. **Automatic login for `anant` is on** (operator decision, 2026-09-25; possible because FileVault is off). The trade-off: anyone with physical access to the Mac gets the `anant` session. Colima (the `sh.brew.colima` login agent), the containers (`restart: unless-stopped`) and the four relays (launchd agents) then start by themselves.
 
-After a planned reboot, check:
-- `colima status`
-- `docker ps` (both containers `unless-stopped`)
-- `launchctl list | grep barecount` (4 relays)
-- `tailscale status`
+**Reboot test, 2026-09-25: passed.** No one touched the Mac.
+- SSH answered about 30 s after the reboot.
+- The health check was ALL OK about 50 s after boot.
+- Cluster sysid unchanged.
 
-The auto-start of Colima at login has not yet been proven with a real reboot. Do one planned reboot test.
+In the first minute Colima's login agent restarted Docker once, so allow **about 1 minute** before relying on the database.
+
+The app servers (process-compose) are **not** started at login. Start them with `~/bc-stack/servers.sh up`.
+
+After any reboot, run **`ssh macmini '~/bc-stack/health.sh'`**. It checks the console user, the firewall, Tailscale, the cable address, Colima, both containers, the Postgres sysid, Redis, the four relays, the Wi-Fi ports and the app servers. Exit 0 means ALL OK.
+
+Before a **planned** reboot, tell any session using the database. The outage is about 1–2 minutes.
 
 ### 9.2 Routine checks
 | After… | Do this |
@@ -245,7 +249,7 @@ The auto-start of Colima at login has not yet been proven with a real reboot. Do
 ## 11. Open items
 
 1. **Step 2:** move DevHub (copy `data/devhub.db`), the app servers and the Claude sessions to the Mac, and add the DevHub relays. Needs devhub#22 merged.
-2. **Auto-login decision and a reboot test** (§9.1).
+2. ~~Auto-login decision and a reboot test~~: done 2026-09-25 (§9.1).
 3. **Fix the AWS console sign-in**, then:
    - check that an `aws login` session can assume `bcp-dev-aps1-sct-role`
    - move both machines off the long-lived `default` key
