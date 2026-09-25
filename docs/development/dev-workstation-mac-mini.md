@@ -36,7 +36,7 @@ Set up on 2026-09-25 (DevHub session SES-f3d537). Read this before changing anyt
 - **Step 1, done:** Postgres and Redis live on the Mac. All laptop consumers point at it: bc-core, the Claude MCP helper, and Codex's auditor.
 - **Step 2, done (2026-09-25, about 12:40Z):** DevHub, the app servers and the Claude sessions moved to the Mac.
   - DevHub's `data/devhub.db` was copied with `VACUUM INTO` (sha256 `48e001d5…1909`). All 42 tables and 50,861 rows are identical, and the integrity check passes on both machines.
-  - The laptop copy is renamed `data/devhub.db*.MOVED-TO-MAC-2026-09-25`, and git-excluded locally in `.git/info/exclude`, so a second DevHub cannot start with stale data.
+  - The laptop copy is renamed `data/devhub.db*.MOVED-TO-MAC-2026-09-25` and git-excluded locally in `.git/info/exclude`. That stops a DevHub starting on the **stale** data. It does **not** stop one starting at all: `npm run dev` on the laptop would create a new, **empty** DevHub. **Never start DevHub on the laptop.** The only DevHub is the Mac's (`http://10.10.10.2:4000`).
   - The first Mac Claude session passed: `devhub_session_boot` works, and bc-postgres reads sysid `7689410286420172840`.
   - The D623 recovery dumps (13 files, 217 MB, git-ignored) were copied to the same paths under `~/MyProjects/barecount-devhub/artifacts/d623/` and verified against `tools/DUMP-MANIFEST-sha256.txt`: all OK.
   - **A laptop Claude session can still reach DevHub at `http://10.10.10.2:4000`** (set `DEVHUB_URL`), but BareCount work now happens in Mac sessions.
@@ -114,7 +114,10 @@ Cognito sign-in works unchanged, because the app still sees `localhost`. Away fr
 BareCount runs entirely on the Mac, so nothing on the laptop needs changing.
 - **Claude sessions:** use Remote Control from anywhere.
 - **SSH and the web apps:** use `macmini-ts` instead of `macmini`, over Tailscale (e.g. the SSH tunnel for bc-admin/bc-portal).
-- **Laptop tools that talk to the Mac directly by address:** use the Tailscale address `100.64.129.39` instead of `10.10.10.2`. That's Codex's auditor database settings, and any laptop-side script.
+- **Laptop tools that talk to the Mac directly by address** point at the cable address `10.10.10.2`, which only works at the desk. When the laptop is away, switch them to the Tailscale address `100.64.129.39`, and switch back at the desk, where Tailscale is slower. They are:
+  - Codex's auditor settings in `bc-external-audit/.env` (`BC_AUDIT_DATABASE_URL`, `BC_AUDIT_MIGRATION_DATABASE_URL`). Codex owns these, so ask Codex to switch them.
+  - any laptop Claude MCP `DEVHUB_URL` or `bc-postgres` setting still in use
+  - any laptop-side script
 
 ---
 
