@@ -45,6 +45,13 @@ A source's company identifiers are only knowable at source onboarding, so tenant
 
 This revision answers each. RESPONSE-Codex-d617-035's rulings on shape serialization and actor provenance are adopted as requirements in D3 and D6.
 
+**Revision 2.** RESPONSE-Codex-d617-036 accepted the authority direction and found three remaining gaps:
+- a bounded-scan pass was not tied to the run's window;
+- first-run key evidence was undefined;
+- the calendar horizon was open.
+
+D4 now decides completeness per candidate run, against one finite window.
+
 ## Decision
 
 ### D1 — A tenant is not a legal entity
@@ -116,35 +123,52 @@ Lineage records the full B2 tuple, the declaration revision, the mapping revisio
 
 The state table and adversarial proofs are part of the D623 successor design (d617 exchange), not this ADR.
 
-### D4 — Source onboarding completeness: a DERIVED predicate, re-checked at every observation entry
+### D4 — Source onboarding completeness: a DERIVED predicate, decided per candidate run
 
-**ONBOARDED is not a stored status.** It is a derived current read, computed from the latest immutable evidence of every step below. A connection is ONBOARDED only when every step passes. Each step reports `pass` / `fail` / `unknown` with an enumerated reason (Invariant VI), and the read triggers no evaluation.
+**ONBOARDED is not a stored status.** It is a derived read, computed from the latest immutable evidence of every step below. Each step reports `pass` / `fail` / `unknown` with an enumerated reason (Invariant VI), and the read triggers no evaluation. `unknown` is never a pass.
+
+**Candidate run.** Every observation entry is a candidate run: scheduled, on-demand, retry, re-observation or replay. It carries exactly one **candidate window**: a finite business-date interval `[from, to]` plus its connection, runnable reader configuration hash and bound key-domain declarations.
+- **First run:** the window starts at the declared historic start (step 8).
+- **Incremental run:** the window runs from its watermark to the run's start date.
+
+Every window-dependent step below (4, 6, 7) is evaluated against that ONE window, and the gate records the window with its decision.
 
 1. **Owning tenant** — recorded (D2).
 2. **Connectivity** — the latest connection check is a pass. It is newer than any credential or endpoint change, and within the declared freshness bound. A failed or expired check fails the step.
-3. **Runnable reader** — the exact reader configuration an observation will execute: its flavor id plus a config content hash. Its connection must be this connection, its environment/scenario must match the connection's, and it must be paired with the tenant's active pinned contract versions.
-4. **Key capture** — for each bound observation-contract version:
-   - the fetch list covers every declared field;
-   - the declared key locator is captured: the field is requested, or the observed scope is recorded per record;
-   - the runtime obligation holds: an admitted record with a missing or null key is refused at canonical resolution (D623 fail-closed), and the report shows the per-record key presence over the latest observation.
+3. **Runnable reader** — the exact reader configuration the run will execute: its flavor id plus a config content hash. Its connection must be this connection, its environment/scenario must match the connection's, and it must be paired with the tenant's active pinned contract versions.
+4. **Key capture** — for each bound observation-contract version and its declared key locator:
+   - **(a) Configuration:** the fetch list covers every declared field, and the locator is requested (`record_field`) or captured from the source's response per record (`observed_scope`). A configured value is never an observed scope.
+   - **(b) Prospective capture probe:** before admission, the gate reads a bounded sample of records in the candidate window through the exact runnable configuration. The probe is non-admitting: it creates no source or canonical object.
+     - `pass` when the sample is non-empty and every sampled record carries a non-null key at the locator;
+     - `fail` when any sampled record lacks it;
+     - `pass_empty` when the source returns no records in the window, because nothing would be admitted.
 
-   Generic fetch-list derivation stays in the TSK-b5ab8a class; this step is the coverage and evidence obligation only.
+     This is how the FIRST run is gated: absence of prior admissions never passes by itself, and the probe does not demand evidence only the run could create.
+   - **(c) Post-run evidence:** every admitted record's key is checked at canonical resolution, and a missing or null key is refused (D623 fail-closed). The run's evidence records the keyed and refused counts. Any missing-key refusal sets step 4 to `fail` for later entries, until the configuration changes and a new probe passes.
+
+   Generic fetch-list derivation stays in the TSK-b5ab8a class.
 5. **Provisioning** — fact tables for the bound contracts are provisioned (DEC-95687d/D369 readiness).
-6. **Mapping coverage (witnessed)** — for each `value_keyed` domain, a COVERAGE WITNESS is required: an immutable record of the key values present, with its method, as-of time and evidence hash.
-   - **Methods:**
-     - `authoritative_enumeration`: the source's own company list, read through the connection;
-     - `bounded_scan`: the distinct key values over a declared observation window.
-   - **Results:**
-     - pass when every witnessed value has a mapping in effect;
-     - a `bounded_scan` passes as `pass_within_window` and carries its window and uncertainty;
-     - no witness means `unknown`, which is never a pass.
-   - **Refresh** on: a new observation window, a domain declaration change, or a refusal for an unmapped value.
-   - **New values.** A value first observed after the witness is refused at evaluation (`no_legal_entity`), and it turns the step to `fail` until it is mapped.
-   - **`connection_scoped` domains** need exactly one mapping in effect.
-7. **Calendar coverage** — every mapped legal entity belongs to the owning tenant and has per-entity fiscal-calendar rows covering, without gap, the whole declared observation range. The range starts at the declared historic start (the backfill watermark) and runs from there onward. Observations dated outside the coverage are refused.
-8. **Observation range** — the first-observation historic start (the watermark) is declared. It is an input to steps 6 and 7.
+6. **Mapping coverage (witnessed)** — each `value_keyed` domain needs a COVERAGE WITNESS: an immutable record of the key values present, with its method, domain, reader configuration hash, as-of time, evidence hash and (for a scan) its window. Every witnessed value must have a mapping in effect. The two methods differ in what they can cover:
+   - **`authoritative_enumeration`** (the source's own company list, read through the connection) covers the whole domain as of its as-of time, for any candidate window. It stays valid until one of: a declaration change, a reader configuration change, an unmapped-value refusal, or its declared maximum age.
+   - **`bounded_scan`** (the distinct key values over a scanned window, read by a non-admitting key probe) is a `pass` ONLY for a candidate run whose domain and reader configuration hash equal the witness's AND whose candidate window lies wholly inside the scanned window. Any wider or different run is `unknown`, and the gate refuses it until a new scan covers that window.
+     - A source without an authoritative enumeration therefore takes a fresh scan over each candidate window before admission. It never claims connection-wide completeness from a past scan.
+   - **Missing or revoked witness.** No witness is `unknown`. An unmapped-value refusal REVOKES the witness in force: every later entry is `unknown` until a new witness is taken and every witnessed value is mapped.
+   - **`connection_scoped`** domains need exactly one mapping in effect over the whole candidate window.
+7. **Calendar coverage** — every mapped legal entity belongs to the owning tenant and has per-entity fiscal-calendar revisions covering the WHOLE candidate window `[from, to]` without gap.
+   - **Open-ended rule:** a revision's coverage starts at its `effective_from`. The latest revision covers every later date, and an earlier revision ends where the next begins.
+   - **Checked window:** the check is always evaluated against the finite candidate window, never against "today".
+   - **Out-of-window records:** a record whose business date falls outside the candidate window, or outside calendar coverage, is refused at resolution.
+8. **Historic start** — the first-observation historic start (backfill watermark) is declared. It is the `from` of the first candidate window.
 
-**The gate (Phase 2)** evaluates this same predicate, under the shared connection-level lock, at EVERY observation entry: scheduled, on-demand, retry, re-observation and replay paths alike. It records the evaluated evidence tuple (its hash) in the observation run's evidence. A change to mappings, declarations, contract bindings, credentials or reader configuration is reflected at the next gate evaluation, because nothing is cached as a durable flag.
+**The gate (Phase 2)** evaluates this predicate for each candidate run, under the shared connection-level lock, BEFORE admission. It records the decision's evidence tuple:
+- the candidate window;
+- the reader configuration hash;
+- the declaration and witness revision ids;
+- the probe result;
+- the calendar revision ids;
+- the hash of the whole tuple.
+
+A change to mappings, declarations, witnesses, contract bindings, credentials or reader configuration is reflected at the next evaluation, because nothing is cached as a durable flag.
 
 ### D5 — Calendar authority (amends D504 D1)
 D504 D1's clause "at least one fiscal_calendar_config resolvable for each legal entity (tenant-default '*' or per-entity)" is amended to: **per-entity only**.
@@ -195,3 +219,4 @@ Scope and precedence:
 - **Source-side sibling of** DEC-103acb/D504.
 - **Requires the DEC-ea4523/D623 binding-substrate successor**, reviewed on the d617 exchange: domain and declaration tables, connection-level serialization, stale-lineage rejection, governance events.
 - **DEC-95687d/D369** onboard-connector becomes step 5.
+- **Landing:** the PR that lands this ADR as `decided` also adds amendment notes to `ADR-c05551.md` (B2) and `ADR-103acb.md` (D1 calendar clause) pointing here, so the amended records name their amendment.
