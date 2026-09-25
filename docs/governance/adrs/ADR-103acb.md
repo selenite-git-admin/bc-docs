@@ -44,3 +44,12 @@ FOUNDATION GATE. Repair-location C (tenant master/binding) + a governed onboardi
 WHAT THIS DOES NOT SOLVE. The onboarding UI (bc-admin/portal) — Phase D. Per-legal-entity reporting_standard override — deferred. Automated jurisdiction->tax-regime inference beyond a small seed map — deferred. Backfill/gating of ALREADY-active tenants (e.g. pilot1, currently empty) — a migration decision at Phase C (grandfather vs force-complete).
 
 RELATIONSHIP. Enables DEC-f6527b/D502 (currency) + DEC-9c430b/D503 (tax) by guaranteeing their config inputs at onboarding. Task: TSK-e95066 (this) + follow-ups for Phases B/C.
+
+## Amendment 1 — fiscal calendar per legal entity only (2026-09-25, DEC-bacbf5/D624)
+
+**Clause amended.** D1's third bullet, "At least one fiscal_calendar_config resolvable for each legal entity (tenant-default '*' or per-entity)", is amended by DEC-bacbf5/D624 D5 to **per-entity only**:
+- A tenant-default `'*'` row no longer satisfies the mandatory-field policy.
+- DEC-ea4523/D623 resolution refuses wildcard identity and reads only an exact legal-entity calendar.
+- Existing `'*'` rows are legacy history: never rewritten, never read by resolution.
+
+**Source side.** D624 is this ADR's source-side sibling. Its source-onboarding completeness predicate never confers tenant `active`; this ADR's Phase C gate remains the tenant activation path.

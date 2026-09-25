@@ -2,7 +2,7 @@
 uid: DEC-bacbf5
 title: "Source-system onboarding completeness: every tenant connection maps its company identity to the tenant's declared legal entities before it may feed evaluation"
 description: "Source-side sibling of DEC-103acb/D504: tenant != legal entity; a connection belongs to one tenant; onboarding ANY source requires a governed, source-agnostic legal-entity mapping (value-keyed or connection-scoped) keyed on a governed key domain, plus a witnessed, derived completeness predicate re-checked at every observation entry. Amends DEC-c05551/D574 B2 and DEC-103acb/D504 D1 (calendar clause)."
-status: proposed
+status: decided
 date: 2026-09-25T01:22:08.304Z
 project: bc-core
 domain: tenant
