@@ -207,6 +207,8 @@ Successor 2 held declared contexts in a transaction-local custom setting. Codex'
 
 **Gate:** a bc-core `src/__architecture__/` spec, run against the CI database built from the DDL set.
 
+> **Amended 2026-09-26 (implementation, TSK-addac0; Codex gen-e5c98f-01 F1/F2).** The checker lives at `src/registry/contracts/transition-evidence-gate.ts`, because `src/__architecture__/` may hold only specs and JSON baselines. `src/__architecture__/contract-transition-evidence.catalog.spec.ts` runs it against a real catalog (`BCCORE_D627_GATE_URL`). The DB-backed CI job runs it against a fixture database built from the verbatim baseline tables plus the hash-pinned bc-db 0023 bytes (`contract-version-transition-evidence.integration.spec.ts`). The baseline is `src/__architecture__/contract-transition-evidence.baseline.json`. Items 3 and 5 below are amended accordingly, and item 2 gains the producer-definition pin.
+
 1. **Surface enumeration.**
    - Automatic: base tables in schema `contract` with a column `governance_state_code`, or `status_code` on a `*_version` table.
    - Declared, by exact catalog coordinate: `runtime.connection.connection_status`; `runtime.reader_binding` and `runtime.reader_observation_binding` (bind/unbind rows); `runtime.admission_run.run_status`. Note the column is **`run_status`**; the service field `status` maps to it (`reader.repository.ts` → `runStatus`, `src/database/schema/runtime/reader.ts`).
@@ -221,8 +223,16 @@ Successor 2 held declared contexts in a transaction-local custom setting. Codex'
    - INSERT guard present;
    - append-only trigger including TRUNCATE;
    - FK to the version table;
-   - evidence tables and version tables owned by `bc_schema_owner`, and schema `contract` owned by a NOLOGIN role.
-3. **Effective privilege (not a flat grant list)**, for every **ordinary** principal: the served login(s) (`bc_platform_runtime`), `bc_tenant_runtime`, `bc_tenant_owner`, `chain_auditor_readonly` and the `bc_audit_*` logins, taken from an explicit principal registry in the spec.
+   - evidence tables and version tables owned by `bc_schema_owner`, and schema `contract` owned by a NOLOGIN role;
+   - **(amended, F2)** the emitter, the INSERT guard and `infrastructure.fn_reject_mutation()` each match their governed definition: the sha256 of `prosrc` (UTF-8), `plpgsql`, the SECURITY DEFINER flag and the exact config. A same-signature no-op body is red. A body change is a reviewed migration that updates the pins in the same change.
+3. **Effective privilege (not a flat grant list)**, for every **ordinary** principal.
+   - **(Amended, F1.)** "Ordinary" means **every role in `pg_roles`** except the stated exclusions:
+     - the predefined `pg_*` roles;
+     - `bc_schema_owner` and `bc_contract_evidence_emitter` (both checked separately);
+     - the named cluster operating principal(s), default `barecount`, which hold the separately authorized recovery authority of §4.2 item 5.
+
+     There is no name list and no pattern. Any other superuser is red. The served login `bc_platform_runtime` must exist.
+   - For each included role, `SET` on `session_replication_role` must also be false.
    - Must not be superuser, `BYPASSRLS` or `REPLICATION`.
    - Must not be a member, including inherited, of `bc_schema_owner`, the emitter or any object owner.
    - `has_table_privilege` for INSERT/UPDATE/DELETE/TRUNCATE/TRIGGER/REFERENCES on evidence tables must be false; TRIGGER/TRUNCATE on version tables must be false.
@@ -239,6 +249,9 @@ Successor 2 held declared contexts in a transaction-local custom setting. Codex'
    | `runtime.connection.connection_status` | TSK-c21423 |
    | `runtime.reader_binding`, `runtime.reader_observation_binding` | TSK-fa4d71 |
    | `runtime.admission_run.run_status` | TSK-af45a4 |
+   | `contract.canonical_mapping_version.governance_state_code` **(added 2026-09-26)** | TSK-68722f |
+
+   The last row was added during implementation. The automatic rule above matches `contract.canonical_mapping_version`, which is the dead `canonical_mapping` family (DEC-02f5a9), has 0 rows, and was absent from this table. A restored clone of `bc_platform_dev` showed it, and without the row the gate would be red on day one. Codex recorded it as disclosed debt, not coverage (gen-e5c98f-01).
 
    The gate goes red on: a missing task id; a stale or resolved entry; a nonexistent declared coordinate; a new uncovered surface; a disabled, replica-only or wrong-event emitter; a wrong family argument; a removed guard or removed TRUNCATE protection; or an ordinary principal gaining a privilege or membership.
 6. **#830.** The #830 dependency-baseline removal (§4.4 item 3) is separate and closes none of these debts.
@@ -316,7 +329,7 @@ Result: **ALL PASS** (exit 0).
 **Pre-live, all on an isolated restored clone. No live gate is requested until this is complete and accepted.**
 1. **Build and pin:**
    - the bc-core code PR;
-   - the DDL + rollback files (`docker/redesign/02-platform-tables/…`, `schema_migration_event` record);
+   - the DDL and rollback files. **Amended 2026-09-26:** `docker/redesign` is frozen (DEC-4c1396 / D610), so the DDL is the bc-db forward migration `migrations/0023_contract_version_transition_evidence.sql`, applied only by the spine runner, which writes the `infrastructure.schema_migration_event` record. The rollback is `rollback/0023_contract_version_transition_evidence.rollback.sql`, outside the runner's `migrations/` discovery; it refuses once any evidence row exists (§8 Rollback). 0023 is stacked on the W6-P migration 0022 (bc-db#79) and fails closed without its ownership posture. Its PR is bc-db#78, the code PR is bc-core#839, and the clone rehearsal kit is in barecount-devhub#39;
    - the role + ownership script (emitter role; ownership of the version tables, evidence tables and `contract` schema moved to NOLOGIN owners; the served login demoted per W6-P);
    - the rehearsal driver.
 
