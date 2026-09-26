@@ -1,0 +1,156 @@
+T1 undeclared UPDATE refused, state unchanged
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> contract-version transition canonical_contract_version.1.6.0 approved -> pending_provision
+ expect_error 
+--------------
+ 
+(1 row)
+
+T2 7c-c sequence: declared in-statement, one row per transition (both families)
+T3 context is statement-scoped: A declared then B undeclared in ONE transaction -> B refused (also inside a DO block)
+NOTICE:  PASS T2
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> contract-version transition canonical_contract_version.9.0.0 review -> approved refused: n
+NOTICE:  PASS refused: DO $d$ BEGIN
+  UPDATE contract.canonical_contract_version SE -> contract-version transition canonical_contract_version.9.0.0 review -> approved refused: n
+ expect_error 
+--------------
+ 
+(1 row)
+
+T4 a context declared in an EARLIER statement does not authorise a later one; savepoint rollback restores nothing usable
+ fn_declare_transition_context 
+-------------------------------
+ t
+(1 row)
+
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> contract-version transition canonical_contract_version.9.0.0 draft -> review refused: no t
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> contract-version transition canonical_contract_version.9.0.0 draft -> review refused: no t
+ expect_error 
+--------------
+ 
+(1 row)
+
+T5 rollback after a declared transition leaves zero rows; same-state UPDATE and draft INSERT emit zero
+T6 non-draft INSERT: undeclared refused; declared emits one birth row (from NULL)
+NOTICE:  PASS T5
+NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version VALUES ('000 -> contract-version transition canonical_contract_version.9.2.0 <NULL> -> approved refused: n
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS T6
+T7 invalid cause / missing request identity / short operator rationale refused (state unchanged)
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> new row for relation "canonical_contract_version_transition" violates check constraint "ca
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> new row for relation "canonical_contract_version_transition" violates check constraint "ca
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> new row for relation "canonical_contract_version_transition" violates check constraint "ca
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> null value in column "actor_subject" of relation "canonical_contract_version_transition" v
+ expect_error 
+--------------
+ 
+(1 row)
+
+T8 bulk: one declaration covers exactly one statement; mixed failure is atomic
+NOTICE:  PASS T8 bulk
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version
+  SET governance_ -> division by zero
+NOTICE:  PASS T8 atomic
+T9 F1 forgery: direct INSERT / metadata override / UPDATE / DELETE / TRUNCATE refused for the served role
+NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version_transition ( -> permission denied for table canonical_contract_version_transition
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version_transition SET ac -> permission denied for table canonical_contract_version_transition
+ expect_error 
+--------------
+ 
+(1 row)
+
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: DELETE FROM contract.canonical_contract_version_transition -> permission denied for table canonical_contract_version_transition
+NOTICE:  PASS refused: TRUNCATE contract.canonical_contract_version_transition -> permission denied for table canonical_contract_version_transition
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: SELECT contract.fn_contract_version_transition_emit() -> permission denied for function fn_contract_version_transition_emit
+ expect_error 
+--------------
+ 
+(1 row)
+
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: SET ROLE bc_contract_evidence_emitter -> permission denied to set role "bc_contract_evidence_emitter"
+T10 even WITH the INSERT privilege (emitter role, as superuser SET ROLE), a direct insert outside the trigger is refused by the guard
+ expect_error 
+--------------
+ 
+(1 row)
+
+T11 owner/superuser authority (the recovery boundary) is NOT constrained by this design: append-only trigger still refuses UPDATE/DELETE/TRUNCATE for the owner
+NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version_transition ( -> direct INSERT into contract.canonical_contract_version_transition refused: rows are emitte
+NOTICE:  PASS refused: DELETE FROM contract.canonical_contract_version_transition -> governed table contract.canonical_contract_version_transition is append-only (Invariant II
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: TRUNCATE contract.canonical_contract_version_transition -> governed table contract.canonical_contract_version_transition is append-only (Invariant II
+ expect_error 
+--------------
+ 
+(1 row)
+
+T12 metadata is derived, not supplied: principal = the writing login session (served_app)
+NOTICE:  PASS T12
+ transition_seq | version_code |   from_state_code    |    to_state_code     | transition_cause_code  |  actor_kind_code   |          actor_subject           | db_principal_name 
+----------------+--------------+----------------------+----------------------+------------------------+--------------------+----------------------------------+-------------------
+              1 | 1.6.0        | approved             | pending_provisioning | governed_request       | authenticated_http | sub-A                            | served_app
+              2 | 1.6.0        | pending_provisioning | active               | provisioning_readiness | service_system     | bc-core:provisioning-readiness   | served_app
+              3 | 1.5.0        | active               | superseded           | governed_request       | authenticated_http | sub-B                            | served_app
+              8 | 9.2.0        |                      | approved             | authoring_chain        | service_system     | bc-core:author-observation-chain | served_app
+             13 | 1.0.0        | draft                | review               | bulk_transition        | authenticated_http | sub-C                            | served_app
+             14 | 1.0.0        | draft                | review               | bulk_transition        | authenticated_http | sub-C                            | served_app
+(6 rows)
+
+ALL PASS

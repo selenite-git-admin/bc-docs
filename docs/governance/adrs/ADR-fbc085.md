@@ -33,28 +33,48 @@ Design act for TSK-56c689 (Invariant VI: evidence is emitted, not inferred). Ful
 
 1. **Evidence home (platform plane).** Each governance-state change of a canonical or observation contract version is recorded in an append-only table in the same `contract` schema and database as the version it describes: `contract.canonical_contract_version_transition` and `contract.observation_contract_version_transition`. There is one table per family so that each has a real composite foreign key `(…_contract_id, version_code)` to its version table (D162 rule 3).
 
-2. **Emitted, not inferred.** An `AFTER INSERT OR UPDATE OF governance_state_code` row trigger on the version table writes the transition row. On UPDATE it fires only when the state actually changes; on INSERT only when a version is born in a state other than `draft`. The row therefore commits or rolls back with the state change itself, with no reconstruction afterwards. It records:
-   - from/to state;
-   - a declared cause code;
-   - the authenticated subject and request correlation id, when the writer has them;
-   - the DB principal;
-   - the transaction id;
-   - the SHA-256 of `contract_json` as it was at the transition.
+2. **Emitted, not inferred, by one restricted producer.** An `AFTER INSERT OR UPDATE OF governance_state_code` row trigger on each version table calls `contract.fn_contract_version_transition_emit(family)`. This is a `SECURITY DEFINER` function (`search_path=pg_catalog`) owned by a new NOLOGIN role, `bc_contract_evidence_emitter`, which is the **only** holder of INSERT on the transition tables.
+   - It fires on UPDATE only when the state actually changes, and on INSERT only when a version is born in a state other than `draft`. The row commits or rolls back with the state change.
+   - Each row records: from/to state; the declared cause and actor kind; the subject and, for HTTP, the correlation id; the rationale for operator SQL; the SHA-256 of `contract_json` as PostgreSQL jsonb text (`pg-jsonb-text-utf8`); and an identity `transition_seq` (the emission order).
+   - A BEFORE INSERT guard on the transition tables refuses any insert that is not from the emitter, from inside the version-table trigger, for a version whose current state equals `to_state`. It **re-derives** `db_principal_name`, `transaction_id` and `recorded_at` rather than taking them from the inserter.
 
-3. **Fail-closed on an undeclared cause.** The writer declares the cause with transaction-local settings (`set_config('bc.transition_cause', …, true)`, plus the subject, the correlation id and, for operator SQL, a rationale of at least 40 characters) in the same transaction as the UPDATE. If the cause is missing or not in the CHECK list, the trigger raises, and the state change is refused. No path can change these states without evidence: the governed service path, bulk transition, scripts and hand SQL all have to declare a cause.
+3. **Context is operation-local and fail-closed.** The writer declares the context **inside the writing statement** (`… AND (SELECT contract.fn_declare_transition_context(cause, actor_kind, subject, correlation, rationale))`). That call sets every field explicitly and binds the context to this statement and transaction.
+   - A BEFORE-STATEMENT trigger resets the context and an AFTER-STATEMENT trigger consumes it. A context therefore never pre-dates and never outlives its one statement, including across savepoints, DO blocks and pooled or reused transactions.
+   - The emitter refuses a missing, unbound or invalid context, which refuses the state change.
+   - Actor kinds and required identity: `authenticated_http` needs the subject and correlation id; `service_system` needs the component subject; `operator_sql` needs the subject and a rationale of at least 40 characters. These are writer assertions, not authentication or authorization; operator grants remain separate gates.
 
-4. **Append-only.** UPDATE and DELETE on the transition tables are rejected by the existing `infrastructure.fn_reject_mutation()`, the same pattern as `runtime.connection_tenant_assignment_event`.
+4. **Append-only, TRUNCATE included.** `BEFORE UPDATE OR DELETE OR TRUNCATE … FOR EACH STATEMENT` uses `infrastructure.fn_reject_mutation()`, and no role holds UPDATE, DELETE or TRUNCATE.
+   - **Boundary:** ordinary (non-superuser) writers cannot fabricate, alter or remove evidence.
+   - Owner and superuser keep recovery authority (disabling or dropping triggers, SET ROLE). Any use of it is an explicit HALT/evidence-gap disposition, and the class gate detects it.
+   - **Disclosed residual:** the served login is a superuser today, so the privilege boundary binds the served process only after D575 W6-P (TSK-1a240c).
 
-5. **Writers.** `ContractVersionRepository.updateVersionState` and `ContractAnalyticsRepository.bulkTransition` run the context `set_config` and the UPDATE in one transaction, opening one when the caller passes no executor. `ContractService.transitionState` carries a required cause and an optional actor, and each caller names its cause (governed request, provisioning readiness, authoring chain, bulk transition).
+5. **Writers.**
+   - `ContractVersionRepository.updateVersionState` and `ContractAnalyticsRepository.bulkTransition` embed the declaration in the UPDATE.
+   - `ContractService.transitionState` requires a `TransitionContext`: controllers pass the verified Cognito sub and the request id; readiness and authoring services pass `service_system`.
+   - The uncalled `processExpiredTransitions` is deleted.
+   - A writer inventory (application, scripts, hand SQL) is recorded in the DBCP.
 
 6. **Dead calls deleted.** The three dead `EvidenceService` injections (ContractService #7, ConnectionService #3, ReaderService #4) and their fire-and-forget `recordEvidence`/`recordLineage` helpers are deleted, and the #830 baseline shrinks to empty. Restoring them is rejected: even while they were alive, they wrote to the TENANT data plane after the state write, outside its transaction, with errors swallowed. They never met Inv VI.
 
-7. **Class rule.** Any platform-plane column that carries a governed lifecycle state (`governance_state_code`, `status_code` on a governed version) must have its transitions emitted by an append-only, same-transaction record that fails closed on an undeclared cause. Evidence for platform acts never goes through the tenant-plane EvidenceService. It is enforced by a bc-core architecture gate that reads the catalog: every such table must carry the emit trigger. The gate starts with a SHRINK-ONLY baseline naming source/admission/ai/intervention contract versions, connection status, reader-binding re-point and admission-run completion, each bound to a follow-up task.
+7. **Class rule.** Every platform-plane governed lifecycle state surface must emit an append-only, same-transaction record through a restricted producer that fails closed on an undeclared context. Evidence for platform acts never goes through the tenant-plane EvidenceService.
+   - **Enforcement:** a bc-core catalog-plus-behaviour architecture gate (DBCP §4.7). It checks trigger presence, enablement, events and family argument; emitter ownership, definer status and search_path; the guard; the append-only trigger including TRUNCATE; the FK; and grants.
+   - **Baseline:** SHRINK-ONLY, each entry task-bound:
+     - source + admission versions: TSK-f5c69f;
+     - ai: TSK-0f4037;
+     - intervention: TSK-9f42ef;
+     - connection status: TSK-c21423;
+     - reader bindings: TSK-fa4d71;
+     - admission-run completion: TSK-af45a4.
+   - The baseline is disclosed debt, not evidence.
 
 8. **No backfill.** Transitions from at least 2026-04-07 until the trigger is applied have no evidence, and none before that met Inv VI either. The gap is disclosed, not reconstructed.
 
-9. **Sequencing.**
-   1. The code PR (declares causes; harmless without the trigger) lands in the combined serve move.
-   2. The DDL is applied after the operator's yes, through the committed-DBCP gate.
-   3. A clone rehearsal proves one row per transition, rollback leaves none, a missing cause refuses, UPDATE/DELETE is refused, and the arch gate goes red on removal.
-   4. Only then does the 7c-c lifecycle (activate cc-dh5d9 1.6.0, supersede CC 1.5.0 and OC 1.2.0) run.
+9. **Sequencing.** Nothing goes live before a complete clone rehearsal is accepted.
+   1. **Build and pin** the code, DDL, role and driver at the combined serve-move head.
+   2. **Rehearse on a clone:** apply to an isolated restored clone; run the real-role negative corpus and the 7c-c lifecycle; submit the exact package to Codex.
+   3. **Apply live, in this order, each under its own gate:**
+      1. DDL + role (operator yes). The window before the serve is fail-closed: old code declares nothing, so transitions are refused, not evidence-free.
+      2. The combined serve move.
+      3. The 7c-c execution request.
+   4. **Rollback:** after rows exist, disabling the emitter is a HALT disposition needing its own authority; there is no automatic evidence-free fallback.
+   5. **Mechanism evidence to date:** a prototype corpus (T1–T12) passes, with prove-red variants, in a throwaway PostgreSQL 17.11 container (DBCP §5).
