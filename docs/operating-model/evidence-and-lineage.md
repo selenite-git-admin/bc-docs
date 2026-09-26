@@ -68,6 +68,19 @@ Per the Lineage Object section of The Object Model, deeper traversal of the depe
 
 ## Proof durability: best-effort writes and `proof_status`
 
+> **Correction note (2026-09-26): this section is out of date for metric evaluation.**
+> - **What replaces it.** DEC-48d222/D578 (decided 2026-08-19) makes metric-evaluation proof
+>   **atomic**. The `metric_evaluated` Evidence and its `evaluated_by` Lineage are written in the
+>   snapshot's own tenant transaction; if they fail, the snapshot rolls back ("no proof, no record").
+>   Best-effort (D387 D-1) now applies only to publishing the S3 WORM archive, and `proof_status` is
+>   reduced to a marker for archive completeness only.
+> - **The column is gone.** A read-only check on 2026-09-26 found no `proof_status` column in
+>   `bc_platform_dev` or `tbc_kaveri_dev` (implementation/tenant-readiness-program.md §3.1 H), so the
+>   table below is historical.
+> - **Other boundaries.** Per D578's scope, the boundary services still on best-effort emission are
+>   brought to the atomic posture in their own governed units.
+> - **Still to come:** a full revision of this chapter.
+
 Per DEC-ebb3cd (D387 D-1), the platform's runtime contract for Evidence and Lineage writes is **best-effort, not transactional**. Boundary services attempt evidence and lineage emission synchronously with the act that produces the authoritative progression object, but the durability of those proof writes does not gate the authoritative write.
 
 | `proof_status` value | Meaning | When recorded |
