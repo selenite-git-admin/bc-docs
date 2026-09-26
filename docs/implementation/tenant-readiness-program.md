@@ -42,7 +42,9 @@ related: >
 > canonical rows and **one accepted snapshot**, but for the metric `total_journal_entries`, not yet
 > for DSO. The canonical contract that produced those rows can no longer be resolved since
 > 2026-09-26T00:54Z (open regression **TSK-387779**; the date comes from reading the code, not from
-> watching it fail). Evidence (MLS-24) and the portal KPI (MLS-25) have not started.
+> watching it fail). The snapshot's evidence was emitted (one E6-B `metric_evaluated` row), but under
+> the superuser and over `*`-calendar COs, so MLS-24 is **not** met. The portal KPI (MLS-25) has not
+> started.
 
 ## 1. The destination
 
@@ -110,7 +112,7 @@ the cell says otherwise.
 | 21 SO | 🟢 (for 1.5.0) | RO: `progression.admission` has **25,744** rows, all `account.move`, SC 1.0.0, `admitted`, in 4 runs on 2026-09-23 (5,000 + 5,000 + 5,000 + 10,744). `fact.so_sc_929yc_v1_0_0` has **10,744** rows, one per Odoo move. The 25,744 therefore counts admission attempts across runs, not distinct moves. | Observe again under OC 1.3.0 and the per-entity identity (7d) |
 | 22 CO | ⚠ **regressed** | RO: `progression.canonical_evaluation` has 10,744 `accepted` rows for 1.4.0 and 10,744 for 1.5.0 (all 2026-09-23). `fact.co_cc_dh5d9_v1_5_0` has 10,744 rows, none with an empty `fiscal_period`. They were stamped before the `KAVERI-IN` calendar row existed (09-23 vs 09-25), so they used the `*` row. SR: resolving **active cc-dh5d9 1.5.0 throws** since D623 7c-a minted concept `115b2945` (2026-09-26T00:54Z). Shown on a clone, not observed on live (7cc-design README F1; gen-e90cd0-01). **TSK-387779.** | ADR bc-docs#67 → 7c-c (activate 1.6.0) → 7d (resolve again with correct legal entities) |
 | 23 Snapshot | ⚠ wrong metric so far | RO: 1 `progression.metric_evaluation`, `accepted`, 2026-09-23T07:52Z, for metric contract `c5ebf6d5…`. That is **`total_journal_entries`**: the snapshot table is `fact.ms_total_journal_entries_v1_0_0`, and CHG-12f4fd (SR) names MC `c5ebf6d5` / MCV `b8d2a132`, which is RO active with chain `green`. The snapshot `fact.ms_total_journal_entries_v1_0_0` = **212** for FY2026-27/P05, and 212 COs in 1.5.0 carry that period. 3 `metric_run` rows: deferred, failed, completed. **DSO has not been evaluated.** RO: `days_sales_outstanding` chain verdict is `red` (`bindings_resolve: fail:1_unresolved`), and its leaf `gross_invoiced_amount` is still `audit_pending`. | Prove again over COs with correct legal entities (7d). Decide whether the destination metric is still DSO (§1) or `total_journal_entries`. |
-| 24 Proof | 🔴 not started | RO: `evidence.evidence_record` = 0, `evidence.evidence_object` = 5, `evidence.lineage_object` = 25,745, and the snapshot row's `evidence_hash` is empty | D575 non-superuser runtime identity + evidence immutability (TSK-d43263): **not started, not scheduled** (v18 W6) |
+| 24 Proof | 🟡 emitted once, does not count | RO: the snapshot's own transaction (2026-09-23 07:52:37.861569Z) wrote exactly one `evidence.evidence_object` of type **`metric_evaluated`** (subject `metric_evaluation_proof:9e57b668…`, `e6b.lineage.v1`) and one `evaluated_by` `lineage_object`. This is the **first observed E6-B emit**. The other 4 evidence objects are run records, and the other 25,744 lineage rows are `observed_as` rows from admission. `evidence_record` = 0. The snapshot row's own `evidence_hash` column is empty. The evidence tables are owned by `bc_tenant_owner` (not a superuser); the `fact.*` tables are owned by `barecount`, a superuser. SR: `TENANT_DATABASE_URL` in bc-core's `.env` on the Mac names `barecount`, and the W6 design (barecount-devhub PR #35, §0) reports that the emit was made as the superuser. The rows do not record the role. | Does not satisfy MLS-24: the writer was the superuser and the COs used the `*` calendar. MLS-24 needs D575: a non-superuser runtime identity, evidence immutability, and the superuser-owned `fact.*` reassigned (TSK-d43263, design in progress, v18 W6). A restatement of the MLS-24 signal per D578 (replacing D387's `proof_status`, §2) is proposed in barecount-devhub PR #35 and is pending Codex review (gen-bdb784). It is not adopted here. |
 | 25 KPI in portal | ❓ | Never verified | Verify at the end |
 
 **Served bc-core** (SR): `:3100` runs `9d0dc5aa` (manifest `b749315f`). The move script stopped at
@@ -367,10 +369,33 @@ Captured results:
 - Canonical evaluation: cc-dh5d9 1.4.0 `accepted` 10,744 (07:31–07:33Z) and 1.5.0 `accepted` 10,744 (07:38–07:41Z), all on 2026-09-23.
 - Facts: SO 10,744; CO 1.4.0 10,744; CO 1.5.0 10,744 with 0 unstamped; 212 in `FY2026-27/P05`; `fact.co_cc_dh5d9_v1_6_0` → NULL (does not exist).
 - Metric: 1 evaluation, `c5ebf6d5…` v1.0.0 `accepted` at 2026-09-23 07:52:37Z. Runs: `deferred_inputs_unavailable` (07:34Z), `failed` (07:41Z), `completed` (07:52Z). Snapshot: `FY2026-27/P05 | 212 | (empty evidence_hash)`.
-- Evidence: `evidence_record` 0, `evidence_object` 5, `lineage_object` 25,745. Completion hold / release: 0 / 0 (0003's new tables are empty).
+- Evidence: `evidence_record` 0, `evidence_object` 5, `lineage_object` 25,745 (see G for the breakdown). Completion hold / release: 0 / 0 (0003's new tables are empty).
 - `progression.canonical_evaluation` columns do not include `binding_mechanism_code`.
 
-**What E and F do not prove:** they show stored state only. They do not show that a resolution or
+**G. Evidence breakdown (`tbc_kaveri_dev`, added 2026-09-26 after a peer session, the W6 D575 design,
+pointed out the E6-B emit; same container and role).**
+
+```sql
+BEGIN READ ONLY;
+SELECT evidence_type, subject_ref, created_at FROM evidence.evidence_object ORDER BY created_at;
+SELECT relationship_type, left(to_object_ref, 20) AS to_prefix, count(*), min(created_at), max(created_at)
+  FROM evidence.lineage_object GROUP BY 1, 2 ORDER BY 4;
+SELECT r.rolname, r.rolsuper, n.nspname, c.relname
+  FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace JOIN pg_roles r ON r.oid = c.relowner
+ WHERE n.nspname IN ('evidence', 'fact') AND c.relkind = 'r' ORDER BY 4;
+COMMIT;
+```
+
+Captured results:
+- Evidence objects, all dated 2026-09-23:
+  - `canonical_resolution_run` for 1.4.0 at 07:33:04Z and for 1.5.0 at 07:41:39Z;
+  - `metric_evaluation_run` for the deferred run at 07:34:30Z;
+  - **`metric_evaluated`** with subject `metric_evaluation_proof:9e57b668…` at **07:52:37.861569Z**, the same timestamp as the metric evaluation and the snapshot row;
+  - `metric_evaluation_run` for the completed run at 07:52:38Z.
+- Lineage: 25,744 `observed_as` rows to admissions, written 06:45Z–07:16Z, plus exactly **1** `evaluated_by` row to `metric_evaluation:9e…` at 07:52:37.861569Z.
+- Owners: `evidence.evidence_object`, `evidence_record` and `lineage_object` belong to `bc_tenant_owner` (`rolsuper=f`). Every `fact.*` table belongs to `barecount` (`rolsuper=t`).
+
+**What E, F and G do not prove:** they show stored state only. They do not show that a resolution or
 evaluation would succeed today (see the MLS-22 regression). They do not show the lc5 source row
 count, the served build, or live Odoo connectivity, and they do not replay any of the governed
 writes in §8.
@@ -616,7 +641,7 @@ CHANGES REQUIRED (d617-030, -031) before the corrected successors of 09-25.
   snapshot. It is **not** yet readiness:
   - the periods came from the `*` calendar, not per legal entity (which D623 then set out to fix);
   - the metric is `total_journal_entries`, not DSO (§5.0);
-  - no evidence was emitted (MLS-24);
+  - its one E6-B evidence emit was written by the superuser, so it does not satisfy MLS-24 (§3.0);
   - nothing has been shown in the portal (MLS-25).
 
 ### 2026-09-21 — MLS-17 wiring attempted, MLS-19 source binding fail-closed on a grain mismatch

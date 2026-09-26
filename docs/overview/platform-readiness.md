@@ -66,7 +66,7 @@ entries were observed, resolved to canonical rows and evaluated to one accepted 
 - the metric is not yet DSO;
 - canonical resolution for the active contract has been refused since 2026-09-26 (open regression
   TSK-387779, fixed by D623 7c-c);
-- no evidence has been emitted;
+- its one evidence emit was written by the superuser, which does not count for proof (MLS-24);
 - nothing has been shown in the portal.
 
 The per-rung state, the queries and the log live in the tenant SSOT,
