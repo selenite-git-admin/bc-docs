@@ -1,102 +1,143 @@
+# DEC-fbc085 prototype run — successor 2 — 2026-09-26T08:25:44Z
+# prototype sha256: eb1f411582d931c0bf69726797ececfe1ed0e696f2d5342297eb49a08c16d599
+# image: postgres:17.11-alpine sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24 (--network none, container+volume removed)
+# main corpus rc=0
 T1 undeclared UPDATE refused, state unchanged
-NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> contract-version transition canonical_contract_version.1.6.0 approved -> pending_provision
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/1.6.0 approved -> 
  expect_error 
 --------------
  
 (1 row)
 
-T2 7c-c sequence: declared in-statement, one row per transition (both families)
-T3 context is statement-scoped: A declared then B undeclared in ONE transaction -> B refused (also inside a DO block)
+T2 7c-c sequence: each write declares its exact target; one row per transition (both families)
+T3 A declared then B undeclared in ONE transaction -> B refused; same inside ONE DO block
 NOTICE:  PASS T2
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/9.0.0 review -> ap
  expect_error 
 --------------
  
 (1 row)
 
-NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> contract-version transition canonical_contract_version.9.0.0 review -> approved refused: n
-NOTICE:  PASS refused: DO $d$ BEGIN
-  UPDATE contract.canonical_contract_version SE -> contract-version transition canonical_contract_version.9.0.0 review -> approved refused: n
+NOTICE:  PASS refused: DO $d$ BEGIN UPDATE contract.canonical_contract_version SET governance -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/9.0.0 review -> ap
  expect_error 
 --------------
  
 (1 row)
 
-T4 a context declared in an EARLIER statement does not authorise a later one; savepoint rollback restores nothing usable
- fn_declare_transition_context 
--------------------------------
+T4 a declaration made by an EARLIER statement authorises nothing later; savepoint rollback restores nothing usable
+ d 
+---
  t
 (1 row)
 
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/9.0.0 draft -> rev
  expect_error 
 --------------
  
 (1 row)
 
-NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> contract-version transition canonical_contract_version.9.0.0 draft -> review refused: no t
-NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> contract-version transition canonical_contract_version.9.0.0 draft -> review refused: no t
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/9.0.0 draft -> rev
  expect_error 
 --------------
  
 (1 row)
 
-T5 rollback after a declared transition leaves zero rows; same-state UPDATE and draft INSERT emit zero
-T6 non-draft INSERT: undeclared refused; declared emits one birth row (from NULL)
+T5 rollback leaves zero rows; same-state UPDATE and draft INSERT emit zero (and need no declaration)
 NOTICE:  PASS T5
-NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version VALUES ('000 -> contract-version transition canonical_contract_version.9.2.0 <NULL> -> approved refused: n
+T6 non-draft INSERT: undeclared refused; declared emits one birth row (from NULL)
+NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version VALUES ('00000000-0000 -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/9.2.0 <NULL> -> ap
  expect_error 
 --------------
  
 (1 row)
 
+T7 invalid cause / missing request identity / short operator rationale / missing subject refused (state unchanged)
 NOTICE:  PASS T6
-T7 invalid cause / missing request identity / short operator rationale refused (state unchanged)
-NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> new row for relation "canonical_contract_version_transition" violates check constraint "ca
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> new row for relation "canonical_contract_version_transition" violates check constraint "canonical_contract_ver
  expect_error 
 --------------
  
 (1 row)
 
-NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> new row for relation "canonical_contract_version_transition" violates check constraint "ca
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> new row for relation "canonical_contract_version_transition" violates check constraint "canonical_contract_ver
  expect_error 
 --------------
  
 (1 row)
 
-NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> new row for relation "canonical_contract_version_transition" violates check constraint "ca
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> new row for relation "canonical_contract_version_transition" violates check constraint "canonical_contract_ver
  expect_error 
 --------------
  
 (1 row)
 
-NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_st -> null value in column "actor_subject" of relation "canonical_contract_version_transition" v
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> null value in column "actor_subject" of relation "canonical_contract_version_transition" violates not-null con
  expect_error 
 --------------
  
 (1 row)
 
-T8 bulk: one declaration covers exactly one statement; mixed failure is atomic
+T8 bulk: ONE declaration names every exact target; N rows, each keyed
 NOTICE:  PASS T8 bulk
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-0000000b0002/1.0.0 review -> ap
  expect_error 
 --------------
  
 (1 row)
 
-NOTICE:  PASS refused: UPDATE contract.canonical_contract_version
-  SET governance_ -> division by zero
-NOTICE:  PASS T8 atomic
-T9 F1 forgery: direct INSERT / metadata override / UPDATE / DELETE / TRUNCATE refused for the served role
-NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version_transition ( -> permission denied for table canonical_contract_version_transition
+T13 compound statements (gen-1afb60-02 F2): never misattributed
+NOTICE:  PASS T13a two declared same-family CTEs (committed, every row correctly attributed; rolled back)
+ correct_or_refused 
+--------------------
+ correct
+(1 row)
+
+NOTICE:  PASS refused: WITH a AS (UPDATE contract.canonical_contract_version SET governance_s -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-0000000b0004/1.0.0 draft -> rev
  expect_error 
 --------------
  
 (1 row)
 
-NOTICE:  PASS refused: UPDATE contract.canonical_contract_version_transition SET ac -> permission denied for table canonical_contract_version_transition
+NOTICE:  PASS T13c declared cross-family CTEs (committed, every row correctly attributed; rolled back)
+ correct_or_refused 
+--------------------
+ correct
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> conflicting transition declaration: canonical|00000000-0000-0000-0000-0000000b0003|1.0.0|review is already dec
  expect_error 
 --------------
  
 (1 row)
 
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-0000000b0003/1.0.0 draft -> rev
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: DO $d$ BEGIN UPDATE contract.canonical_contract_version SET governance -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-0000000b0003/1.0.0 draft -> rev
+ expect_error 
+--------------
+ 
+(1 row)
+
+T15 (F5) atomicity after a REAL emission: row 1 emits, row 2 fails at emission; everything rolls back (both families)
+NOTICE:  PASS T15 canonical: 1 emission executed before the failure; 0 rows, 0 state changes after rollback
+NOTICE:  PASS T15 observation: 1 emission executed before the failure; 0 rows, 0 state changes after rollback
+T9 F1 forgery by the served login: direct INSERT / UPDATE / DELETE / TRUNCATE / call emitter / assume roles / disable trigger / replica bypass
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version_transition (canonical_ -> permission denied for table canonical_contract_version_transition
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version_transition SET actor_subjec -> permission denied for table canonical_contract_version_transition
  expect_error 
 --------------
  
@@ -115,42 +156,75 @@ NOTICE:  PASS refused: SELECT contract.fn_contract_version_transition_emit() -> 
  
 (1 row)
 
- expect_error 
---------------
- 
-(1 row)
-
 NOTICE:  PASS refused: SET ROLE bc_contract_evidence_emitter -> permission denied to set role "bc_contract_evidence_emitter"
-T10 even WITH the INSERT privilege (emitter role, as superuser SET ROLE), a direct insert outside the trigger is refused by the guard
  expect_error 
 --------------
  
 (1 row)
 
-T11 owner/superuser authority (the recovery boundary) is NOT constrained by this design: append-only trigger still refuses UPDATE/DELETE/TRUNCATE for the owner
-NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version_transition ( -> direct INSERT into contract.canonical_contract_version_transition refused: rows are emitte
-NOTICE:  PASS refused: DELETE FROM contract.canonical_contract_version_transition -> governed table contract.canonical_contract_version_transition is append-only (Invariant II
+NOTICE:  PASS refused: SET ROLE bc_schema_owner -> permission denied to set role "bc_schema_owner"
  expect_error 
 --------------
  
 (1 row)
 
-NOTICE:  PASS refused: TRUNCATE contract.canonical_contract_version_transition -> governed table contract.canonical_contract_version_transition is append-only (Invariant II
+NOTICE:  PASS refused: ALTER TABLE contract.canonical_contract_version DISABLE TRIGGER trg_ca -> must be owner of table canonical_contract_version
  expect_error 
 --------------
  
 (1 row)
 
-T12 metadata is derived, not supplied: principal = the writing login session (served_app)
+NOTICE:  PASS refused: ALTER TABLE contract.canonical_contract_version_transition DISABLE TRI -> must be owner of table canonical_contract_version_transition
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: SET session_replication_role = replica -> permission denied to set parameter "session_replication_role"
+ expect_error 
+--------------
+ 
+(1 row)
+
+T14 effective privileges of every ordinary principal (catalog, incl. inherited membership)
+T12 metadata is derived, not supplied: principal = the writing login session
+NOTICE:  PASS T14
 NOTICE:  PASS T12
- transition_seq | version_code |   from_state_code    |    to_state_code     | transition_cause_code  |  actor_kind_code   |          actor_subject           | db_principal_name 
-----------------+--------------+----------------------+----------------------+------------------------+--------------------+----------------------------------+-------------------
-              1 | 1.6.0        | approved             | pending_provisioning | governed_request       | authenticated_http | sub-A                            | served_app
-              2 | 1.6.0        | pending_provisioning | active               | provisioning_readiness | service_system     | bc-core:provisioning-readiness   | served_app
-              3 | 1.5.0        | active               | superseded           | governed_request       | authenticated_http | sub-B                            | served_app
-              8 | 9.2.0        |                      | approved             | authoring_chain        | service_system     | bc-core:author-observation-chain | served_app
-             13 | 1.0.0        | draft                | review               | bulk_transition        | authenticated_http | sub-C                            | served_app
-             14 | 1.0.0        | draft                | review               | bulk_transition        | authenticated_http | sub-C                            | served_app
+T10 even the INSERT-holding emitter role cannot insert outside the version-table trigger (guard)
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version_transition (canonical_ -> direct INSERT into contract.canonical_contract_version_transition refused: rows are emitted only by the versio
+T11 the OWNER keeps table privileges (recovery authority, DDL) but the append-only trigger still refuses UPDATE/DELETE/TRUNCATE
+NOTICE:  PASS refused: DELETE FROM contract.canonical_contract_version_transition -> governed table contract.canonical_contract_version_transition is append-only (Invariant III): DELETE rejected
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: TRUNCATE contract.canonical_contract_version_transition -> governed table contract.canonical_contract_version_transition is append-only (Invariant III): TRUNCATE rejecte
+ expect_error 
+--------------
+ 
+(1 row)
+
+ transition_seq | version_code |   from_state_code    |    to_state_code     | transition_cause_code  |  actor_kind_code   |          actor_subject           | request_correlation_id | db_principal_name 
+----------------+--------------+----------------------+----------------------+------------------------+--------------------+----------------------------------+------------------------+-------------------
+              1 | 1.6.0        | approved             | pending_provisioning | governed_request       | authenticated_http | sub-A                            | req-1                  | served_app
+              2 | 1.6.0        | pending_provisioning | active               | provisioning_readiness | service_system     | bc-core:provisioning-readiness   |                        | served_app
+              3 | 1.5.0        | active               | superseded           | governed_request       | authenticated_http | sub-B                            | req-2                  | served_app
+              8 | 9.2.0        |                      | approved             | authoring_chain        | service_system     | bc-core:author-observation-chain |                        | served_app
+             13 | 1.0.0        | draft                | review               | bulk_transition        | authenticated_http | sub-C                            | req-7                  | served_app
+             14 | 1.0.0        | draft                | review               | bulk_transition        | authenticated_http | sub-C                            | req-7                  | served_app
 (6 rows)
 
 ALL PASS
+
+# ── prove-red variants (generated from the file above; each must fail) ──
+variant A (75c7453e489580d1…): ERROR:  EXPECTED REFUSAL did not happen: DO $d$ BEGIN | ALL PASS lines=0
+variant B (d2db8f0992200aec…): ERROR:  EXPECTED REFUSAL did not happen: INSERT INTO contract.canonical_contract_version_transition (canonical_contract_id, version_code, from_state_code, to_state_code, transition_cause_code, actor_k | ALL PASS lines=0
+variant C (68e65a729fdde7be…): ERROR:  EXPECTED REFUSAL did not happen: TRUNCATE contract.canonical_contract_version_transition | ALL PASS lines=0
+variant D (e9dd31fc07a39b9b…): ERROR:  EXPECTED REFUSAL did not happen: UPDATE contract.canonical_contract_version SET governance_state_code='review' WHERE canonical_contract_id='00000000-0000-0000-0000-0000000b0003' | ALL PASS lines=0
+variant F (87ea7aca94d18948…): ERROR:  T15 canonical precondition NOT met: 1 emission INSERT(s) executed (need 2: one succeeded, then one failed) | ALL PASS lines=0

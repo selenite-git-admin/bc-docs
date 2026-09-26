@@ -38,19 +38,24 @@ Design act for TSK-56c689 (Invariant VI: evidence is emitted, not inferred). Ful
    - Each row records: from/to state; the declared cause and actor kind; the subject and, for HTTP, the correlation id; the rationale for operator SQL; the SHA-256 of `contract_json` as PostgreSQL jsonb text (`pg-jsonb-text-utf8`); and an identity `transition_seq` (the emission order).
    - A BEFORE INSERT guard on the transition tables refuses any insert that is not from the emitter, from inside the version-table trigger, for a version whose current state equals `to_state`. It **re-derives** `db_principal_name`, `transaction_id` and `recorded_at` rather than taking them from the inserter.
 
-3. **Context is operation-local and fail-closed.** The writer declares the context **inside the writing statement** (`… AND (SELECT contract.fn_declare_transition_context(cause, actor_kind, subject, correlation, rationale))`). That call sets every field explicitly and binds the context to this statement and transaction.
-   - A BEFORE-STATEMENT trigger resets the context and an AFTER-STATEMENT trigger consumes it. A context therefore never pre-dates and never outlives its one statement, including across savepoints, DO blocks and pooled or reused transactions.
-   - The emitter refuses a missing, unbound or invalid context, which refuses the state change.
-   - Actor kinds and required identity: `authenticated_http` needs the subject and correlation id; `service_system` needs the component subject; `operator_sql` needs the subject and a rationale of at least 40 characters. These are writer assertions, not authentication or authorization; operator grants remain separate gates.
+3. **Context is exact-target, one-shot and fail-closed.** Every writer declares, **inside the writing statement**, the exact transitions it performs: `… AND (SELECT contract.fn_declare_transition_context(family, [{id, version, to}…], cause, actor_kind, subject, correlation, rationale))`.
+   - Each target key (`family|contract_id|version|to_state`) carries its own immutable context. The set is bound to this statement and transaction.
+   - A duplicate or conflicting declaration is refused.
+   - The emitter emits only for a row whose exact key was declared, uses that key's context, and removes the key. An AFTER-STATEMENT trigger removes the family's unused keys.
+   - An undeclared row, even a sibling in a compound statement, is refused, so evidence is attributed per row or the statement is refused. **Never misattributed.**
+   - Bulk declares every exact target, with no wildcard.
+   - Actor kinds and required identity: `authenticated_http` needs the subject and correlation id; `service_system` needs the component subject; `operator_sql` needs the subject and a rationale of at least 40 characters. These are writer assertions, not authentication or authorization.
 
-4. **Append-only, TRUNCATE included.** `BEFORE UPDATE OR DELETE OR TRUNCATE … FOR EACH STATEMENT` uses `infrastructure.fn_reject_mutation()`, and no role holds UPDATE, DELETE or TRUNCATE.
-   - **Boundary:** ordinary (non-superuser) writers cannot fabricate, alter or remove evidence.
-   - Owner and superuser keep recovery authority (disabling or dropping triggers, SET ROLE). Any use of it is an explicit HALT/evidence-gap disposition, and the class gate detects it.
-   - **Disclosed residual:** the served login is a superuser today, so the privilege boundary binds the served process only after D575 W6-P (TSK-1a240c).
+4. **Append-only, TRUNCATE included; least-privilege served identity is a prerequisite.**
+   - `BEFORE UPDATE OR DELETE OR TRUNCATE … FOR EACH STATEMENT` uses `infrastructure.fn_reject_mutation()`.
+   - No ordinary principal holds, or inherits, any write privilege, owner membership or emitter membership.
+   - The NOLOGIN owner `bc_schema_owner` deliberately keeps its owner (recovery/migration) authority and has no members. Using it is an explicit HALT/evidence-gap disposition.
+   - **Prerequisite (Codex Q5 ruling):** the database-capability slice of D575 W6-P (TSK-1a240c), with its own DBCP and gate. The served bc-core login is non-superuser and owns neither the `contract` schema, the version tables, the evidence tables nor the emitter. Today it is a superuser and owns them.
 
 5. **Writers.**
    - `ContractVersionRepository.updateVersionState` and `ContractAnalyticsRepository.bulkTransition` embed the declaration in the UPDATE.
    - `ContractService.transitionState` requires a `TransitionContext`: controllers pass the verified Cognito sub and the request id; readiness and authoring services pass `service_system`.
+   - `bulkTransition` locks its exact targets, then declares all of them for one UPDATE.
    - The uncalled `processExpiredTransitions` is deleted.
    - A writer inventory (application, scripts, hand SQL) is recorded in the DBCP.
 
@@ -64,17 +69,23 @@ Design act for TSK-56c689 (Invariant VI: evidence is emitted, not inferred). Ful
      - intervention: TSK-9f42ef;
      - connection status: TSK-c21423;
      - reader bindings: TSK-fa4d71;
-     - admission-run completion: TSK-af45a4.
+     - admission-run completion (`runtime.admission_run.run_status`): TSK-af45a4.
+   - A nonexistent declared coordinate turns the gate red. The gate checks effective privilege and membership for every ordinary principal.
    - The baseline is disclosed debt, not evidence.
 
-8. **No backfill.** Transitions from at least 2026-04-07 until the trigger is applied have no evidence, and none before that met Inv VI either. The gap is disclosed, not reconstructed.
+8. **No backfill.**
+   - No same-transaction platform record of CC/OC version transitions exists in the current `bc_platform_dev` catalog.
+   - From at least 2026-04-07 (derived from the source) until apply, the dead calls were not even attempted. Before then, the only attempt was the fire-and-forget tenant-plane write.
+   - This is a claim about the code and the current dev catalog, not a forensic claim about every historical deployment.
+   - The gap is disclosed, not reconstructed.
 
 9. **Sequencing.** Nothing goes live before a complete clone rehearsal is accepted.
    1. **Build and pin** the code, DDL, role and driver at the combined serve-move head.
    2. **Rehearse on a clone:** apply to an isolated restored clone; run the real-role negative corpus and the 7c-c lifecycle; submit the exact package to Codex.
    3. **Apply live, in this order, each under its own gate:**
+      0. The W6-P database-capability slice.
       1. DDL + role (operator yes). The window before the serve is fail-closed: old code declares nothing, so transitions are refused, not evidence-free.
       2. The combined serve move.
       3. The 7c-c execution request.
    4. **Rollback:** after rows exist, disabling the emitter is a HALT disposition needing its own authority; there is no automatic evidence-free fallback.
-   5. **Mechanism evidence to date:** a prototype corpus (T1–T12) passes, with prove-red variants, in a throwaway PostgreSQL 17.11 container (DBCP §5).
+   5. **Mechanism evidence to date:** a prototype corpus (T1–T15, including compound-statement and real-rollback tests) passes, with five prove-red variants, in a throwaway PostgreSQL 17.11 container (DBCP §5).
