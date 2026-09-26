@@ -270,10 +270,29 @@ Before a **planned** reboot, tell any session using the database. The outage is 
 
 ## 10. Working with Codex (the auditor)
 
-- Codex stays on the laptop. The review exchange travels through GitHub (`bc-external-audit`), so it works from either machine. **Push everything you want reviewed.**
-- **Codex's auditor database settings** (`bc-external-audit/.env`) point at `10.10.10.2:5435`. Codex changed them itself.
-- **The instant review nudge** (`127.0.0.1:45980`) is laptop-only. From the Mac, reviews rely on Codex's 5-minute polling unless Codex opens its listener to the cable or Tailscale address.
-- **No more manual relays.** Items that don't belong to a program's own exchange family (PR landings, docs/ADR PRs, small design questions, one-off reviews) go through the permanent `gen-` family, per ADR DEC-081931. Each conversation is a thread (`gen-<id>`) minted by `barecount-devhub/scripts/exchange/gen-publish.sh new-thread`. The publisher refuses a message unless its sender holds an open DevHub session, and allows one open message per thread. Authority still comes only from the operator, told to Codex directly.
+- **Where Codex runs.** Codex stays on the laptop. Every exchange travels through GitHub (`bc-external-audit`), so it works from either machine. **Push everything you want reviewed.**
+- **Codex's database settings.** Its auditor database settings (`bc-external-audit/.env`) point at `10.10.10.2:5435`. Codex changed them itself.
+- **Delivery.** Codex's `gen` watcher polls `origin/main` with `git ls-remote` every 25 s, so a message reaches Codex in about a minute from either machine. The old laptop-only nudge (`127.0.0.1:45980`) isn't needed.
+- **No manual relays.** Anything that doesn't belong to a program's own exchange family (d597, d617, …) goes through the permanent `gen-` family, per ADR DEC-081931: PR landings, docs/ADR PRs, design questions, one-off reviews. Every session does this itself, with the **`codex-exchange` skill**. The operator's standing go (2026-09-25) covers publishing to `gen-`; marking PRs ready, merges, live applies and cloud changes still need a go each time.
+
+  All commands live in `~/.claude/skills/codex-exchange/bin/` and are allowlisted:
+
+  | Command | Does |
+  |---|---|
+  | `gen-new-thread` | mints a thread id `gen-<6 hex>` (one per conversation) |
+  | `gen-send [--dry-run] <file> "<subject>"` | publishes one message through every gate: an open DevHub session, headers, thread order, a hash-bound Codex reply to the previous message, clean custody |
+  | `gen-wait <gen-id> <NN>` | waits (run it in the background) until Codex's protocol-valid reply to message NN is committed |
+  | `gen-open-threads [SES]` | lists threads not yet closed |
+  | `gen-close <gen-id> <SES> <project> "<outcome>" "<left open>"` | sends the thread's end-of-life message (`Kind: close`, ADR point 11) |
+
+- **Ending threads.** When a thread's work is finished, and at the latest before `devhub_session_close`, the owner session sends one `Kind: close` (`gen-close`). Codex acknowledges it and closes its side. A closed thread takes no more messages. If the owner session has already ended, another session may close the thread as an orphan; the publisher checks that the owner's session really is closed.
+- **Where the tooling lives.** The skill and publisher are versioned in `barecount-devhub/scripts/exchange/`, and changes go through a reviewed PR. Install or update the skill only with `scripts/exchange/install-codex-exchange-skill.sh`, which copies committed `origin/main` bytes and records the commit in `.installed-from`. **Never edit the installed copy.**
+- **barecount-devhub `main` is protected:** 1 approving review, 4 required checks, and it applies to admins.
+- **Workflow-file PRs.** Codex's GitHub App cannot merge changes under `.github/workflows/` (HTTP 403). For those:
+  1. ask Codex for an exact-head **approve only**;
+  2. the operator's account merges with `gh pr merge <n> --merge --match-head-commit <sha>`;
+  3. send Codex the landing evidence.
+- **Authority** comes only from the operator, told to Codex directly. A `gen-` message never authorizes anything.
 
 ---
 
