@@ -272,8 +272,11 @@ Before a **planned** reboot, tell any session using the database. The outage is 
 
 - **Where Codex runs.** Codex stays on the laptop. Every exchange travels through GitHub (`bc-external-audit`), so it works from either machine. **Push everything you want reviewed.**
 - **Codex's database settings.** Its auditor database settings (`bc-external-audit/.env`) point at `10.10.10.2:5435`. Codex changed them itself.
-- **Delivery.** Codex's `gen` watcher polls `origin/main` with `git ls-remote` every 25 s, so a message reaches Codex in about a minute from either machine. The old laptop-only nudge (`127.0.0.1:45980`) isn't needed.
-- **No manual relays.** Anything that doesn't belong to a program's own exchange family (d597, d617, …) goes through the permanent `gen-` family, per ADR DEC-081931: PR landings, docs/ADR PRs, design questions, one-off reviews. Every session does this itself, with the **`codex-exchange` skill**. The operator's standing go (2026-09-25) covers publishing to `gen-`; marking PRs ready, merges, live applies and cloud changes still need a go each time.
+- **Delivery.** Codex's `gen` watcher polls `origin/main` with `git ls-remote` every 25 s, whichever machine published the message. In normal operation a message reaches Codex in about a minute. That is not a guarantee: it depends on both machines, the network and the Codex app being up, and a periodic heartbeat recovers anything missed. The old laptop-only nudge (`127.0.0.1:45980`) isn't needed.
+- **No manual relays.** Anything that doesn't belong to a program's own exchange family (d597, d617, …) goes through the permanent `gen-` family, per ADR DEC-081931: PR landings, docs/ADR PRs, design questions, one-off reviews. Every session does this itself, with the **`codex-exchange` skill**. Authority is split three ways:
+  - **Publishing to `gen-`:** covered by the operator's standing go to Claude (2026-09-25).
+  - **Merging `gen-` PRs that Codex has independently accepted:** Codex's call, under a merge grant the operator gave Codex directly. It applies only after Codex's exact-head App, independence, green-CI, review and branch-protection gates.
+  - **Still needs an operator go every time:** marking a PR ready, live database applies, cloud changes, and publishing to a program family.
 
   All commands live in `~/.claude/skills/codex-exchange/bin/` and are allowlisted:
 
@@ -285,7 +288,11 @@ Before a **planned** reboot, tell any session using the database. The outage is 
   | `gen-open-threads [SES]` | lists threads not yet closed |
   | `gen-close <gen-id> <SES> <project> "<outcome>" "<left open>"` | sends the thread's end-of-life message (`Kind: close`, ADR point 11) |
 
-- **Ending threads.** When a thread's work is finished, and at the latest before `devhub_session_close`, the owner session sends one `Kind: close` (`gen-close`). Codex acknowledges it and closes its side. A closed thread takes no more messages. If the owner session has already ended, another session may close the thread as an orphan; the publisher checks that the owner's session really is closed.
+- **Ending threads.** When a thread's work is finished, the owner session sends one `Kind: close` (`gen-close`), at the latest before `devhub_session_close`.
+  - **Continuing work:** if a named successor session carries the work on, the thread stays open, and the session's close lists it in `next`.
+  - **Codex's reply:** a protocol-valid reply acknowledges the close. That is transport housekeeping, not acceptance. Codex then closes its side, or it may answer with a finding and keep its side open (for example, when something recorded as left open can't be verified).
+  - **After a close:** the thread takes no more messages, and new work starts a new thread. The `gen-` family itself stays permanent.
+  - **Orphans:** if the owner session has already ended, another session may close the thread as an orphan. The publisher checks that the owner's session really is closed.
 - **Where the tooling lives.** The skill and publisher are versioned in `barecount-devhub/scripts/exchange/`, and changes go through a reviewed PR. Install or update the skill only with `scripts/exchange/install-codex-exchange-skill.sh`, which copies committed `origin/main` bytes and records the commit in `.installed-from`. **Never edit the installed copy.**
 - **barecount-devhub `main` is protected:** 1 approving review, 4 required checks, and it applies to admins.
 - **Workflow-file PRs.** Codex's GitHub App cannot merge changes under `.github/workflows/` (HTTP 403). For those:
