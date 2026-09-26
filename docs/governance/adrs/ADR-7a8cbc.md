@@ -72,7 +72,10 @@ Evidence: gen-e90cd0-01 and its RESPONSE (CHANGES REQUIRED R1), barecount-devhub
    - null or empty key: refused row with governed refusal evidence recorded for that admission;
    - missing runtime provenance on any row: the run halts with no writes;
    - binding change between two observations of one record: one CO whose code is the as-of outcome of its own admission;
-   - a binding revision landing between selection and CO commit: 40001, then a full re-derivation (or refusal), never a stale commit;
+   - stale selection: a binding revision landing between the binding derive and the selection-evidence insert → the selection guard raises 40001, the stale insert rolls back and the binding is re-derived (one CO with the new code and revision);
+   - a revision after selection: the governed binding writer **refuses** an outcome-changing revision effective at or before an already-selected observation, so the CO keeps its code and revision;
+   - the lineage guard's 40001 and the resolver's whole-payload retry are a **backstop** that governed writers cannot reach given the rule above; that path is pinned by the atomicity unit test, not claimed as exercised end-to-end;
+   - a keyless row whose binding outcome is an exhausted stale selection (no durable refusal) halts the run (evidence-or-halt);
    - a wrong reference snapshot: refused at preflight, activation and resolution;
    - same raw key under two connections: two groups;
    - direct-mapping CCs unchanged;
