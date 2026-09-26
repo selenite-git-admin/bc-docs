@@ -2,7 +2,7 @@
 uid: DEC-7a8cbc
 title: "Binding-realized issuer identity: a source-key component on the pinned primary leg may realize an identity-bearing issuer reference whose canonical value is the binding-resolved legal-entity code (amends DEC-a57eb8)"
 description: "Adds a third bounded realization to DEC-a57eb8 Decision 1: the complete source-key component (e.g. Odoo company_id) on the pinned primary leg is the identity carrier for an identity-bearing issuer reference, and the canonical field carries the governed binding's legal_entity_code (d617-068 code-not-key); parity across authoring preflight, activation F4a and the resolver."
-status: proposed
+status: decided
 date: 2026-09-26T06:40:10.607Z
 project: bc-core
 domain: contracts
@@ -11,6 +11,8 @@ focus: identity
 ---
 
 # Binding-realized issuer identity: a source-key component on the pinned primary leg may realize an identity-bearing issuer reference whose canonical value is the binding-resolved legal-entity code (amends DEC-a57eb8)
+
+> **Decided 2026-09-26.** Accepted with boundary by the independent auditor in `RESPONSE-Codex-gen-e90cd0-04-accepted-with-boundary-2026-09-26.md` (bc-external-audit commit `991a49b738b31e68dd0132d49d4202b22f84efb8`, raw SHA-256 `e3a8188e78cc2bc2d2a0ded1f92318bdd68ba9e8e7fdfa921714970a17ff7858`), gen-e90cd0. Boundary: primary-admission semantics only (no latest-by or whole-history guarantee); the canonical-v2 description correction stays a separately governed, sequenced change; no live change is granted by this decision.
 
 ## Rationale (summary)
 
