@@ -33,29 +33,31 @@ Design act for TSK-56c689 (Invariant VI: evidence is emitted, not inferred). Ful
 
 1. **Evidence home (platform plane).** Each governance-state change of a canonical or observation contract version is recorded in an append-only table in the same `contract` schema and database as the version it describes: `contract.canonical_contract_version_transition` and `contract.observation_contract_version_transition`. There is one table per family so that each has a real composite foreign key `(…_contract_id, version_code)` to its version table (D162 rule 3).
 
-2. **Emitted, not inferred, by one restricted producer.** An `AFTER INSERT OR UPDATE OF governance_state_code` row trigger on each version table calls `contract.fn_contract_version_transition_emit(family)`. This is a `SECURITY DEFINER` function (`search_path=pg_catalog`) owned by a new NOLOGIN role, `bc_contract_evidence_emitter`, which is the **only** holder of INSERT on the transition tables.
+2. **Emitted, not inferred, by one restricted producer.** The last `BEFORE INSERT OR UPDATE` row trigger on each version table (`trg_zz_<family>_contract_version_transition_emit`) calls `contract.fn_contract_version_transition_emit(family)`. This is a `SECURITY DEFINER` function (`search_path=pg_catalog`) owned by a new NOLOGIN role, `bc_contract_evidence_emitter`, which is the **only** holder of INSERT on the transition tables.
    - It fires on UPDATE only when the state actually changes, and on INSERT only when a version is born in a state other than `draft`. The row commits or rolls back with the state change.
    - Each row records: from/to state; the declared cause and actor kind; the subject and, for HTTP, the correlation id; the rationale for operator SQL; the SHA-256 of `contract_json` as PostgreSQL jsonb text (`pg-jsonb-text-utf8`); and an identity `transition_seq` (the emission order).
-   - A BEFORE INSERT guard on the transition tables refuses any insert that is not from the emitter, from inside the version-table trigger, for a version whose current state equals `to_state`. It **re-derives** `db_principal_name`, `transaction_id` and `recorded_at` rather than taking them from the inserter.
+   - A BEFORE INSERT guard on the transition tables refuses any insert that is not from the emitter, from inside the version-table trigger. It cross-checks the version row as it stands before the write (`from_state`, or absent for a birth). It **re-derives** `db_principal_name`, `transaction_id` and `recorded_at` rather than taking them from the inserter.
 
-3. **Context is exact-target, one-shot and fail-closed.** Every writer declares, **inside the writing statement**, the exact transitions it performs: `… AND (SELECT contract.fn_declare_transition_context(family, [{id, version, to}…], cause, actor_kind, subject, correlation, rationale))`.
-   - Each target key (`family|contract_id|version|to_state`) carries its own immutable context. The set is bound to this statement and transaction.
-   - A duplicate or conflicting declaration is refused.
-   - The emitter emits only for a row whose exact key was declared, uses that key's context, and removes the key. An AFTER-STATEMENT trigger removes the family's unused keys.
-   - An undeclared row, even a sibling in a compound statement, is refused, so evidence is attributed per row or the statement is refused. **Never misattributed.**
-   - Bulk declares every exact target, with no wildcard.
+3. **The declaration is carried by the row write itself.** There is no session state. Each governed version table has a transient column `transition_declaration_json` (`CHECK … IS NULL`). The writer sets it in the same UPDATE/INSERT that changes the state.
+   - The emitter is the last BEFORE ROW trigger (`trg_zz_<family>_contract_version_transition_emit`, SECURITY DEFINER). It reads the value, NULLs it, and for a real transition requires a well-formed declaration (cause, actor_kind, subject, correlation, rationale only) before emitting.
+   - A write without a value is refused, whatever came before it in the transaction, DO block, function or savepoint. A rolled-back write takes its value with it. The value never persists.
+   - A bulk UPDATE's value covers exactly the rows that one statement writes. Compound statements attribute each row from its own write, or refuse an undeclared sibling.
+   - The evidence FK is DEFERRABLE INITIALLY DEFERRED, so a birth is evidenced before its row is written and still checked at commit.
    - Actor kinds and required identity: `authenticated_http` needs the subject and correlation id; `service_system` needs the component subject; `operator_sql` needs the subject and a rationale of at least 40 characters. These are writer assertions, not authentication or authorization.
 
 4. **Append-only, TRUNCATE included; least-privilege served identity is a prerequisite.**
    - `BEFORE UPDATE OR DELETE OR TRUNCATE … FOR EACH STATEMENT` uses `infrastructure.fn_reject_mutation()`.
    - No ordinary principal holds, or inherits, any write privilege, owner membership or emitter membership.
    - The NOLOGIN owner `bc_schema_owner` deliberately keeps its owner (recovery/migration) authority and has no members. Using it is an explicit HALT/evidence-gap disposition.
-   - **Prerequisite (Codex Q5 ruling):** the database-capability slice of D575 W6-P (TSK-1a240c), with its own DBCP and gate. The served bc-core login is non-superuser and owns neither the `contract` schema, the version tables, the evidence tables nor the emitter. Today it is a superuser and owns them.
+   - **Prerequisite (Codex Q5 ruling):** the database-capability slice of D575 W6-P (TSK-1a240c, executed as TSK-fa31e7), with its own DBCP and gate:
+     - the served bc-core platform login (`bc_platform_runtime`) is non-superuser and owns neither the `contract` schema, the version tables, the evidence tables nor the emitter;
+     - the served process holds **no superuser credential for the cluster**, including its tenant URL (W6).
+
+     Today the served login is a superuser and owns all of these.
 
 5. **Writers.**
-   - `ContractVersionRepository.updateVersionState` and `ContractAnalyticsRepository.bulkTransition` embed the declaration in the UPDATE.
+   - `ContractVersionRepository.updateVersionState` and `ContractAnalyticsRepository.bulkTransition` set `transition_declaration_json` in the same UPDATE as the state.
    - `ContractService.transitionState` requires a `TransitionContext`: controllers pass the verified Cognito sub and the request id; readiness and authoring services pass `service_system`.
-   - `bulkTransition` locks its exact targets, then declares all of them for one UPDATE.
    - The uncalled `processExpiredTransitions` is deleted.
    - A writer inventory (application, scripts, hand SQL) is recorded in the DBCP.
 
@@ -88,4 +90,4 @@ Design act for TSK-56c689 (Invariant VI: evidence is emitted, not inferred). Ful
       2. The combined serve move.
       3. The 7c-c execution request.
    4. **Rollback:** after rows exist, disabling the emitter is a HALT disposition needing its own authority; there is no automatic evidence-free fallback.
-   5. **Mechanism evidence to date:** a prototype corpus (T1–T15, including compound-statement and real-rollback tests) passes, with five prove-red variants, in a throwaway PostgreSQL 17.11 container (DBCP §5).
+   5. **Mechanism evidence to date:** a prototype corpus (T1–T17, including compound-statement, nested-lifetime and real-rollback tests) passes, with six prove-red variants, in a throwaway PostgreSQL 17.11 container (DBCP §5).

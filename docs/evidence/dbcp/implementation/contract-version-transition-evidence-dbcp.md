@@ -1,7 +1,7 @@
 ---
 uid: contract-version-transition-evidence-dbcp
 title: Contract-Version Transition Evidence (Inv VI) — Design and DBCP
-description: Design act for TSK-56c689 under proposed ADR DEC-fbc085 (D627), successor 2 (answers Codex gen-1afb60-01 F1–F4 and gen-1afb60-02 F2/F4/F5 plus the Q5/Q6 rulings). No platform record captures contract-version governance transitions, so this declares a platform-plane evidence home. Two append-only tables, contract.canonical_contract_version_transition and contract.observation_contract_version_transition, are written only by a SECURITY DEFINER emitter trigger, owned by a NOLOGIN role, in the same transaction as the state change. Each write declares its EXACT target transitions (family, contract id, version, to-state) as one-shot keys inside the writing statement; a row whose exact key is absent is refused, so compound statements are attributed per row or refused, never misattributed. Direct INSERT, metadata override, UPDATE, DELETE and TRUNCATE are refused. The prototype corpus T1–T15 passes, and five prove-red variants fail as expected, in a throwaway PostgreSQL 17.11 container. The database part of D575 W6-P (a least-privilege served login that owns neither the contract schema nor its tables) is a prerequisite of the dependent lifecycle. The dead tenant-plane EvidenceService calls are deleted. A class rule and a specified catalog gate come with task-bound baseline entries. PROPOSED — NOT APPLIED. No DDL, no DML, no serve move.
+description: Design act for TSK-56c689 under proposed ADR DEC-fbc085 (D627), successor 3 (answers Codex gen-1afb60-01 F1–F4, gen-1afb60-02 F2/F4/F5 plus the Q5/Q6 rulings, and gen-1afb60-03 F2 lifetime). No platform record captures contract-version governance transitions, so this declares a platform-plane evidence home. Two append-only tables, contract.canonical_contract_version_transition and contract.observation_contract_version_transition, are written only by a SECURITY DEFINER emitter trigger, owned by a NOLOGIN role, in the same transaction as the state change. There is no session state: the transition declaration is a transient column value carried by the very row write that changes the state. The last BEFORE-ROW trigger emits the evidence and NULLs it, and a CHECK keeps it NULL at rest. A declaration therefore cannot pre-date, outlive, leak to, or be restored for any other write, and each row is attributed from its own write or refused. Direct INSERT, metadata override, UPDATE, DELETE and TRUNCATE are refused. The prototype corpus (T1–T17) passes, and six prove-red variants fail as expected, in a throwaway PostgreSQL 17.11 container. The database part of D575 W6-P (a least-privilege served login that owns neither the contract schema nor its tables, and no superuser credential for the cluster in the served process) is a prerequisite of the dependent lifecycle. The dead tenant-plane EvidenceService calls are deleted. A class rule and a specified catalog gate come with task-bound baseline entries. PROPOSED — NOT APPLIED. No DDL, no DML, no serve move.
 status: draft
 date: 2026-09-26
 project: bc-docs
@@ -12,14 +12,14 @@ focus: evidence
 
 # Contract-Version Transition Evidence (Inv VI) — Design and DBCP
 
-**Status:** proposed, successor 2. **Not applied.** Nothing is created, altered or written on any live or served database until the operator gives an explicit yes and the committed-DBCP apply gate runs.
+**Status:** proposed, successor 3. **Not applied.** Nothing is created, altered or written on any live or served database until the operator gives an explicit yes and the committed-DBCP apply gate runs.
 
 | | |
 |---|---|
 | ADR | DEC-fbc085 (D627), proposed |
 | Task | TSK-56c689 |
 | Plan | PLN-31c4a1 (Platform Readiness), critical path before 7c-c (TSK-e75f1d) |
-| Review | Codex `gen-1afb60`. 01 → RESPONSE 01, CHANGES REQUIRED F1–F4. 02 → RESPONSE 02, CHANGES REQUIRED F2/F4/F5, with F1 (ordinary roles) and F3 supported; Q5 and Q6 ruled. This successor answers every open item (§10). |
+| Review | Codex `gen-1afb60`. 01 → RESPONSE 01, CHANGES REQUIRED F1–F4. 02 → RESPONSE 02, CHANGES REQUIRED F2/F4/F5, with F1 (ordinary roles) and F3 supported; Q5 and Q6 ruled. 03 → RESPONSE 03, CHANGES REQUIRED on the F2 lifetime only; F4 and F5 resolved. This successor answers it (§10). |
 | Origin | Codex RESPONSE gen-e90cd0-02, finding R2. Codex will not clear an evidence-free 7c-c lifecycle (activate cc-dh5d9 1.6.0; supersede CC 1.5.0 and OC 1.2.0 for tenant Kaveri). |
 
 ## 1. Problem
@@ -95,7 +95,7 @@ Invariants: III (rows immutable, TRUNCATE included), IV (explicit composite FK p
 | `contract.{canonical,observation}_contract_version_transition` | `bc_schema_owner` (NOLOGIN, exists, no members) | INSERT: **only** `bc_contract_evidence_emitter`. No ordinary principal holds any write privilege | `REVOKE ALL … FROM PUBLIC`; SELECT for the served login and `chain_auditor_readonly` |
 | `bc_contract_evidence_emitter` | — | NOLOGIN, **new role** (D6); no members | holds only: USAGE on `contract`, INSERT on the two tables, SELECT on the two version tables (for the guard's cross-check) |
 | `contract.fn_contract_version_transition_emit()` | `bc_contract_evidence_emitter` | trigger only; no PUBLIC EXECUTE | `SECURITY DEFINER`, `SET search_path = pg_catalog` |
-| `contract.fn_contract_version_transition_guard()` (BEFORE INSERT on the evidence tables) | — | — | refuses unless `current_user = bc_contract_evidence_emitter`, `pg_trigger_depth() >= 2`, and the version's current state equals `to_state_code`. Re-derives principal, transaction id and time |
+| `contract.fn_contract_version_transition_guard()` (BEFORE INSERT on the evidence tables) | — | — | refuses unless `current_user = bc_contract_evidence_emitter` and `pg_trigger_depth() >= 2`, and cross-checks the version row as it stands before the write: it must be in `from_state_code`, or absent for a birth. Re-derives principal, transaction id and time |
 | append-only trigger | — | — | `BEFORE UPDATE OR DELETE OR TRUNCATE … FOR EACH STATEMENT` → `infrastructure.fn_reject_mutation()` |
 
 **Owner and recovery boundary (F4 correction).**
@@ -108,59 +108,81 @@ Invariants: III (rows immutable, TRUNCATE included), IV (explicit composite FK p
 
 Today the served login `barecount` is a superuser (`rolsuper = t`). It **owns** `contract.{canonical,observation,source,admission}_contract_version` and the `contract` schema itself (READ ONLY catalog, 2026-09-26; no role memberships exist). The restricted-producer boundary therefore does not bind the served process until the following hold. Each is proved on the clone (§8) and then live, before 7c-c:
 
-1. **Login.** The served bc-core process connects as a **non-superuser** login, without `BYPASSRLS` or `REPLICATION`.
+1. **Login.** The served bc-core process connects to `bc_platform_dev` as a **non-superuser** login, without `BYPASSRLS` or `REPLICATION`. The W6-P DB-slice session (TSK-fa31e7) names it `bc_platform_runtime`.
+   - **No superuser credential anywhere in the served process.** The served `TENANT_DATABASE_URL` is also `barecount`, a superuser on the **same PostgreSQL cluster**. A process holding that credential can open a superuser session on `bc_platform_dev` and defeat every boundary here. Moving the tenant login is therefore part of the prerequisite; it belongs to W6 (U4/U5), and its exact task is being confirmed with the W6-P session.
 2. **Membership.** That login is not a member, directly or inherited, of `bc_schema_owner`, `bc_contract_evidence_emitter`, any superuser role, or the owner of any object below.
 3. **Ownership.**
    - The version tables and the evidence tables are owned by `bc_schema_owner`, not by the served login: a table owner can `DISABLE TRIGGER`.
    - The `contract` schema is owned by a NOLOGIN owner, not by the served login: a schema owner can `DROP SCHEMA … CASCADE`.
-   - The emitter function is owned by `bc_contract_evidence_emitter`.
+   - The emitter function is owned by `bc_contract_evidence_emitter`. This is the single ownership exception in the W6-P slice's "everything owned by bc_schema_owner" gate; agreed with that session.
 4. **Refusals the served login must hit.** `SET ROLE` to the owner or emitter, `ALTER TABLE … DISABLE TRIGGER`, `SET session_replication_role = replica`, direct INSERT/UPDATE/DELETE/TRUNCATE on evidence, and calling the emitter are all refused (T9, T14).
 5. **Separate authority.** Privileged migration/recovery authority stays separate: superuser, or `bc_schema_owner` via `SET ROLE`, each only within a separately authorized act.
 
-This is the database-capability slice of TSK-1a240c (W6-P). The AWS and OS parts of that task are not pulled in. The live apply of the slice is its own DBCP and operator gate, owned with W6-P. No exception is claimed and no grant is inferred.
+This is the database-capability slice of TSK-1a240c (W6-P), executed as TSK-fa31e7, plus the tenant-login move from W6. The AWS and OS parts of that task are not pulled in. The live apply of the slice is its own DBCP and operator gate, owned with W6-P. No exception is claimed and no grant is inferred.
 
-### 4.3 Context declaration: exact-target, one-shot keys (F2)
+### 4.3 Declaration: a transient value carried by the row write itself (F2)
 
-Every writer names the **exact** transitions it performs, inside the writing statement, as an uncorrelated sub-select (one init-plan):
+Successor 2 held declared contexts in a transaction-local custom setting. Codex's gen-1afb60-03 probes proved that such state can **pre-date** a write (a standalone earlier declaration), **outlive** a write (an unused key of the other family), and be **restored** by a subtransaction rollback. The flaw is the storage, not the key design. Successor 3 **removes all session state**: there is no declaration function and no custom setting.
 
-```sql
-UPDATE contract.canonical_contract_version SET governance_state_code = $to
- WHERE canonical_contract_id = $id AND version_code = $v
-   AND (SELECT contract.fn_declare_transition_context('canonical',
-          jsonb_build_array(jsonb_build_object('id', $id, 'version', $v, 'to', $to)),
-          $cause, $actor_kind, $subject, $correlation, $rationale));
-```
+**Mechanism:**
+- Each governed version table gains one transient column, `transition_declaration_json jsonb NULL`, with `CHECK (transition_declaration_json IS NULL)`. The CHECK is evaluated after all BEFORE triggers, so a value can never be stored.
+- The writer puts the declaration **in the same row write** that changes the state:
 
-**Semantics:**
-- **Key.** Each declared target is a key `family|contract_id|version|to_state`, carrying its **own immutable context**: cause, actor kind, subject, correlation id, rationale. The whole set is bound to `statement_timestamp()|pg_current_xact_id()`, and a set from any other top-level statement is treated as absent.
-- **Conflicts refused.** Declaring the same key twice in one statement is refused, even with the same or a different context.
-- **Exact key required.** The emitter emits only for a row whose **exact** key (including its to-state) is present. It uses **that key's** context, then removes the key (one-shot). An undeclared row, even a sibling in the same statement, is refused.
-- **Consume.** An AFTER-STATEMENT trigger removes the family's unused keys. A declared-but-unused key therefore cannot authorize a later statement that shares the statement timestamp (inside a DO block or function).
-- **Bulk.** There is no wildcard. The writer declares every exact target in one declaration, which is the bounded shared context Codex allows. `bulkTransition` becomes: `SELECT … FOR UPDATE` the target keys, then one UPDATE restricted to exactly those keys with one declaration.
-- **Compound statements** (data-modifying CTEs, nested writes): every emitted row is attributed from its own exact key, or the statement is refused. **Never misattributed.** Proved:
-  - T13a: two declared same-family CTEs, each attributed correctly;
-  - T13b: an undeclared sibling CTE, refused;
-  - T13c: declared cross-family CTEs, each attributed correctly;
-  - T13d: a conflicting declaration, refused;
-  - T13e: a key for another to-state, refused;
-  - T13f: a leftover key in a DO block, refused.
+  ```sql
+  UPDATE contract.canonical_contract_version
+     SET governance_state_code = $to,
+         transition_declaration_json = jsonb_build_object('cause',$cause,'actor_kind',$kind,'subject',$subject,'correlation',$corr)
+   WHERE canonical_contract_id = $id AND version_code = $v;
+  ```
 
-  bc-core itself issues no compound transition statements; this is the database guarantee for any writer.
-- **Limit.** Declared contexts live in one custom setting, so a very large bulk (thousands of targets) is bounded by setting size. The code PR caps bulk at a stated maximum per statement.
+  For a birth, the value goes in the INSERT's column list.
+- `trg_zz_<family>_contract_version_transition_emit` is a **BEFORE INSERT OR UPDATE, FOR EACH ROW** trigger and must be the **last** BEFORE ROW trigger on the table (the name sorts last, and the gate asserts it). It:
+  1. reads `NEW.transition_declaration_json`, then sets it to NULL, unconditionally and first;
+  2. returns if the state is unchanged, or if the row is a draft birth;
+  3. otherwise requires a well-formed declaration object (only the keys cause, actor_kind, subject, correlation, rationale; extra keys such as a forged `db_principal_name` are refused) and emits the evidence row. The evidence CHECKs enforce the actor-kind rules.
+- The emitter is the last BEFORE ROW trigger, so no later trigger can skip a row it has already evidenced. A failure in any later constraint aborts the statement, and the evidence row rolls back with it.
+- The evidence FK to the version row is **`DEFERRABLE INITIALLY DEFERRED`**. A birth row is emitted before its version row exists, and the FK is still enforced at commit.
+- The guard's cross-check now runs **before** the write. For an UPDATE, the version row must currently be in `from_state`; for a birth, no row may exist yet.
+
+**Lifetime.** The declaration **is** the operation: its lifetime is one row write.
+- A write with no value is refused, whatever happened earlier in the transaction, the DO block, the function or the savepoint.
+- A same-state write carrying a value emits nothing, and the value is discarded.
+- A rolled-back write takes its value with it.
+- A bulk UPDATE's single value applies to exactly the rows that one statement writes. That is the bounded shared operation Codex allows.
+- A compound statement attributes each row from its own CTE's SET, or refuses an undeclared sibling.
+
+**Proved:**
+
+| Test | Case | Outcome |
+|---|---|---|
+| T16-1 | earlier declared write in a DO block, then an undeclared inner UPDATE | refused |
+| T16-2 | declared write on one family, then an undeclared write on the other | refused |
+| T16-3 | declared write inside an exception block that rolls back, then an undeclared write | refused |
+| T16 residue | after all three | 0 state, 0 evidence, 0 declaration at rest |
+| T13a | two declared same-family CTEs | each correctly attributed |
+| T13b | an undeclared sibling CTE | refused |
+| T13c | declared cross-family CTEs | each correctly attributed |
+| T8 | a bulk value applied to only some rows | refused for the undeclared row |
+
+**Prove-red:**
+- **D:** an emitter that caches the last declaration in a session setting (the successor-2 class) goes red at T3.
+- **A:** an emitter that doesn't NULL the value is refused by the CHECK on every declared write, so the CHECK is load-bearing.
 
 **Actor kinds** (CHECK on the evidence row; all are writer assertions, not authentication):
 
 | actor_kind | cause(s) | required fields |
 |---|---|---|
-| `authenticated_http` | `governed_request`, `bulk_transition` | subject (the Cognito sub bc-core verified) and `request_correlation_id` |
+| `authenticated_http` | `governed_request`, `bulk_transition` | subject (the Cognito sub bc-core verified) and correlation id |
 | `service_system` | `provisioning_readiness`, `authoring_chain` | subject = the declared component |
 | `operator_sql` | `operator_sql` | subject and rationale ≥ 40 characters |
 
 ### 4.4 Writers (bc-core code PR)
 
 1. **Repository.**
-   - `ContractVersionRepository.updateVersionState(…, exec, context: TransitionContext)` embeds its one exact-target declaration in the UPDATE (§4.3).
-   - `ContractAnalyticsRepository.bulkTransition(…, context)` first runs `SELECT … FOR UPDATE` on the exact targets, in the same transaction, then runs one UPDATE restricted to those keys with one declaration listing all of them, capped per statement.
+   - `ContractVersionRepository.updateVersionState(…, exec, context: TransitionContext)` sets `transition_declaration_json` in the same UPDATE as `governance_state_code` (§4.3).
+   - `ContractAnalyticsRepository.bulkTransition(…, context)` does the same in its one bulk UPDATE. The value covers exactly the rows that statement writes.
+   - `createVersion` passes no value for draft births; any future non-draft birth must pass one.
+   - Drizzle's type surface gains the column. Every `SELECT`/`RETURNING` stays explicit, so the transient column is never read.
 2. **Service.** `ContractService.transitionState` requires a `TransitionContext`: `{ cause, actorKind, subject, correlationId?, rationale? }`.
    - Controllers pass `authenticated_http` with `req.user.sub` and the request id. A missing sub or request id is refused before the write.
    - `provisioning-readiness.service` passes `service_system`/`provisioning_readiness`.
@@ -191,14 +213,16 @@ UPDATE contract.canonical_contract_version SET governance_state_code = $to
    - A declared coordinate that **does not exist** in the catalog turns the gate **red**; it is never silently skipped.
    - A new matching surface that is neither covered nor baselined turns the gate red.
 2. **Coverage (catalog)** for each covered surface:
-   - emit trigger enabled (`tgenabled IN ('O','A')`; red on `D`/`R`), with events exactly AFTER ROW INSERT + UPDATE OF the state column, and the correct family argument;
+   - emit trigger enabled (`tgenabled IN ('O','A')`; red on `D`/`R`), with events exactly BEFORE ROW INSERT + UPDATE, and the correct family argument;
    - emitter owned by `bc_contract_evidence_emitter`, `prosecdef`, `search_path=pg_catalog`, with no EXECUTE for PUBLIC or any ordinary principal;
-   - consume trigger present;
+   - the emitter is the **last** BEFORE ROW trigger on its table (no trigger name sorts after it);
+   - the transient column exists, with `CHECK (transition_declaration_json IS NULL)` validated;
+   - evidence FK present and `DEFERRABLE INITIALLY DEFERRED`;
    - INSERT guard present;
    - append-only trigger including TRUNCATE;
    - FK to the version table;
    - evidence tables and version tables owned by `bc_schema_owner`, and schema `contract` owned by a NOLOGIN role.
-3. **Effective privilege (not a flat grant list)**, for every **ordinary** principal: the served login(s), `bc_tenant_runtime`, `bc_tenant_owner`, `chain_auditor_readonly` and the `bc_audit_*` logins, taken from an explicit principal registry in the spec.
+3. **Effective privilege (not a flat grant list)**, for every **ordinary** principal: the served login(s) (`bc_platform_runtime`), `bc_tenant_runtime`, `bc_tenant_owner`, `chain_auditor_readonly` and the `bc_audit_*` logins, taken from an explicit principal registry in the spec.
    - Must not be superuser, `BYPASSRLS` or `REPLICATION`.
    - Must not be a member, including inherited, of `bc_schema_owner`, the emitter or any object owner.
    - `has_table_privilege` for INSERT/UPDATE/DELETE/TRUNCATE/TRIGGER/REFERENCES on evidence tables must be false; TRIGGER/TRUNCATE on version tables must be false.
@@ -223,45 +247,45 @@ UPDATE contract.canonical_contract_version SET governance_state_code = $to
 
 | | |
 |---|---|
-| Artifact | `contract-version-transition-evidence-prototype.sql` (this directory). Hash in the gen-1afb60 successor message |
-| Transcript | `contract-version-transition-evidence-prototype-run-2026-09-26.txt` |
-| Engine | throwaway `postgres:17.11-alpine` (`sha256:b0f9560a…52b24`), `--network none`. The runner waits for final TCP readiness (`pg_isready -h 127.0.0.1`, avoiding the init-server race Codex hit). The container **and its anonymous volume** are removed after each run. bc-postgres is never touched |
-| Roles | the corpus runs as a **non-superuser LOGIN** `served_app`, modelling the W6-P posture. The scaffold version tables are owned by `bc_schema_owner`. T10/T11 use superuser `SET ROLE` to exercise the emitter and the owner |
+| Artifact | `contract-version-transition-evidence-prototype.sql` (this directory). Hash in the gen-1afb60 successor message; the transcript header binds it |
+| Transcript | `contract-version-transition-evidence-prototype-run-2026-09-26.txt`: the main run plus every prove-red variant |
+| Engine | throwaway `postgres:17.11-alpine` (`sha256:b0f9560a…52b24`), `--network none`. Waits for final TCP readiness; container **and** anonymous volume removed after each run. bc-postgres is never touched |
+| Roles | the corpus runs as a **non-superuser LOGIN** `served_app`. The scaffold version tables are owned by `bc_schema_owner` (the W6-P posture), with a stand-in `trg_cv_immutable` that sorts before the emitter |
 
 Result: **ALL PASS** (exit 0).
 
 | Test | Proves |
 |---|---|
 | T1 | undeclared UPDATE refused |
-| T2 | the 7c-c sequence across both families: exact attribution, order by `transition_seq`, digest representation |
-| T3 | A declared then B undeclared in one transaction → refused; the same in one DO block → refused |
-| T4 | a declaration from an earlier statement authorizes nothing later; savepoint rollback restores nothing usable |
-| T5 | rollback leaves 0 rows; same-state UPDATE and draft INSERT emit 0 and need no declaration |
-| T6 | non-draft INSERT: undeclared refused; declared emits one birth row |
-| T7 | refused: invalid cause; `authenticated_http` without correlation id; short operator rationale; missing subject |
-| T8 | bulk: one declaration naming both exact targets → 2 rows; a key covering only one of two rows → refused |
-| T13a–f | compound/F2: two same-family CTEs each correctly attributed (committed-then-checked, rolled back); an undeclared sibling CTE refused; cross-family CTEs each correctly attributed; a conflicting double declaration refused; a key for another to-state refused; a leftover declared-but-unused key in a DO block refused |
-| T15 | F5, both families: row 1 **actually emits** (precondition proved: the evidence identity sequence advances by exactly 2, one committed-then-rolled-back emission plus one failing), then row 2 fails at emission. Afterwards: 0 evidence rows and 0 state changes |
-| T9 | the served login cannot: insert/alter/delete/truncate evidence; call the emitter; `SET ROLE` emitter or owner; `DISABLE TRIGGER` on version or evidence tables (not owner); set `session_replication_role` |
-| T14 | effective privileges and inherited membership for every ordinary principal (catalog) |
+| T2 | the 7c-c sequence across both families, exact attribution, order, digest; no declaration at rest |
+| T3 | a declared write followed by an undeclared one, in one transaction or one DO block → refused |
+| T4 | after a declared write is rolled back to a savepoint, an undeclared write → refused |
+| T5 | rollback leaves 0; same-state with or without a value, and draft births, emit 0 and persist nothing |
+| T6 | non-draft birth: undeclared refused; declared emits one birth row (the deferred FK holds at commit) |
+| T17 | a declared birth of an existing version → refused by the guard's birth cross-check; no residue |
+| T7 | refused: invalid cause; missing correlation id; short rationale; missing subject; non-object declaration; declaration with an extra key (forged `db_principal_name`) |
+| T8 | bulk: one value over exactly the statement's rows → N rows; a value on only one of two rows → the other refused |
+| T13a–c | compound CTEs: own-SET attribution for same and cross family; undeclared sibling refused |
+| T16 | Codex's three lifetime probes → all refused; 0 state, 0 evidence, 0 declaration residue |
+| T15 | a real emission, then a failing emission, rolls back fully (sequence-proved precondition), both families |
+| T9 | the served login cannot: write, truncate or alter evidence; call the emitter; SET ROLE emitter or owner; disable triggers on version or evidence tables; enter replica mode |
+| T14 | effective privilege and inherited membership of every ordinary principal; the emitter is the last BEFORE ROW trigger on both version tables |
 | T12 | principal derived from the writing login |
-| T10 | even the emitter role cannot insert outside the trigger |
+| T10 | the emitter role cannot insert outside the trigger |
 | T11 | the owner is refused DELETE/TRUNCATE by the append-only trigger |
 
-**Prove-red** (variants generated from the committed file; each must fail):
+**Prove-red** (each generated from the committed file; each must fail):
 
 | Variant | Change | Result |
 |---|---|---|
-| A | consume trigger removed | T13f leftover key authorizes a later statement → red |
-| B | guard removed | T10 forged insert succeeds → red |
-| C | TRUNCATE not rejected | T11 → red |
-| D | statement-wide context (any declared key authorizes any row, first context used): the successor-1 class of defect | red at T13e (a key declared for another to-state authorizes the row). Under D, the T8 and T13b outcomes depend on row order, which is exactly why exact keys are required |
-| F | failing row ordered first | T15's precondition check detects that no successful emission preceded the failure → red |
+| A | emitter does not NULL the value | CHECK refuses the first declared write → red (the CHECK is load-bearing) |
+| B | guard removed | red at T17: no birth cross-check (and T10) |
+| C | TRUNCATE not rejected | red at T11 |
+| D | emitter falls back to a session-cached declaration (the successor-2 class) | red at T3: an undeclared write is accepted |
+| E | emitter renamed so it is not the last BEFORE ROW trigger | red at T14 |
+| F | failing row ordered first | red at the T15 precondition |
 
-**Limits:**
-- the version tables are stand-ins, not a restored `bc_platform_dev`;
-- no bc-core code, no pooling, no real served login;
-- mechanism evidence only; **not** the pre-live rehearsal of §8.
+**Limits:** stand-in version tables; no bc-core code, pooling or real served login. It is mechanism evidence, **not** the pre-live rehearsal of §8.
 
 ## 6. Disclosed gap (no backfill; bounded claims)
 
@@ -279,6 +303,7 @@ Result: **ALL PASS** (exit 0).
 | Restore `@Inject(EvidenceService)` | Wrong plane; request scope → 500s; never same-transaction |
 | Application INSERT + deferred assertion trigger | Not required (Codex Q1). It needs the same producer restriction anyway, plus a second write path |
 | One polymorphic table, no FK | D162 rule 3 |
+| Exact-target one-shot keys in a transaction-local setting (successor 2) | 03-F2: session state pre-dates, outlives, or is rollback-restored across nested operations; reproduced by Codex and by prove-red D |
 | One context per statement (successor 1: declaration sets session fields, the last declaration wins) | 02-F2: compound statements misattribute or inherit; reproduced by Codex and by prove-red D |
 | A GUC set by a separate statement, transaction-local | F2: it leaks to later statements; reproduced by Codex, and by T3/T4 without the reset |
 | Invoker emitter + served INSERT grant | F1: fabrication possible |
@@ -328,7 +353,7 @@ Result: **ALL PASS** (exit 0).
 
 | Unit | Content | Size |
 |---|---|---|
-| DDL + role + rollback + DBCP apply kit | 2 tables, 1 role, 4 new functions, 10 triggers (emit, reset, consume, guard, append-only × 2 families), 2 indexes, grants; the prototype's Part 1 is the shape | ~200 lines SQL |
+| DDL + role + rollback + DBCP apply kit | 2 evidence tables, 1 transient column + CHECK on each of 2 version tables, 1 role, 2 new functions, 6 triggers (emit, guard, append-only × 2 families), 2 indexes, grants; the prototype's Part 1 is the shape | ~170 lines SQL |
 | bc-core code PR | context type + threading (repositories ×2, `transitionState`, 6 service callers, 3 controller routes), W3 + dead-call deletion, baseline shrink | ~300 LOC |
 | Tests + gate | real-DB integration (throwaway tenant/clone), catalog + behaviour gate, prove-red | ~450 LOC |
 | Clone rehearsal + package | §8 steps 1–5 | part of TSK-4636d8 |
@@ -340,10 +365,12 @@ About 2 working days of build, plus review rounds. No new npm dependency.
 | Finding | Resolution |
 |---|---|
 | 01-F1 / 02-F1 + Q5 | ordinary-role mechanism (§4.2) reproduced by Codex. Q5: the W6-P database-capability slice is a stated prerequisite, with the exact ownership, membership and refusal list, including schema ownership |
-| 01-F2 / 02-F2 | exact-target one-shot keys with their own contexts; conflicts refused; undeclared siblings refused; consume per family; no wildcard bulk. T13a–f + prove-red D (§4.3) |
+| 01-F2 / 02-F2 | successor 2's exact-target keys fixed compound attribution (Codex: resolved for those cases) but kept session state; superseded by the 03-F2 row below. The compound-CTE tests are retained as T13a–c |
 | 01-F3 / 02 Q6 | clone rehearsal and acceptance before any live gate; window treated as an operational interruption with writer control and refusal demonstration (§8) |
 | 01-F4 / 02-F4 | `run_status` corrected; a nonexistent coordinate goes red; owner recovery privileges reconciled; an effective-privilege and membership predicate for ordinary principals (§4.2, §4.7) |
-| 02-F5 | T15 replaces T8's planning-time failure: a real emission precedes the failure (sequence-proved), both families, prove-red F |
+| 02-F5 | T15 replaces T8's planning-time failure: a real emission precedes the failure (sequence-proved), both families, prove-red F. Codex marked it resolved in 03 |
+| 03-F2 (lifetime) | session state removed; the declaration is a transient value in the same row write, consumed by the last BEFORE-ROW trigger, NULL at rest by CHECK. The three probes are T16 (all refused, no residue); prove-red D (session-cached) and A (CHECK load-bearing) (§4.3) |
+| Q5 addendum | no superuser credential in the served process for the cluster, platform or tenant URL (§4.2 item 1) |
 | ADR point 8 | aligned with §6's bounded current-catalog and source-derived claim |
 
 ## 11. Operator decisions requested
@@ -353,5 +380,6 @@ About 2 working days of build, plus review rounds. No new npm dependency.
 - **D3.** Fail-closed for all writers, including operator SQL with a declared rationale.
 - **D4.** A narrow first unit with the task-bound baseline.
 - **D6.** A new NOLOGIN role `bc_contract_evidence_emitter`.
+- **D8.** One transient, never-stored column `transition_declaration_json` (CHECK IS NULL) on `contract.canonical_contract_version` and `contract.observation_contract_version`. It is JSONB but never queryable data, because it is always NULL at rest.
 - **D7.** Per the Codex Q5 ruling: the W6-P **database-capability slice** (non-superuser served login; version tables, evidence tables and the `contract` schema owned by NOLOGIN owners) is a prerequisite of 7c-c. It gets its own DBCP, owned with TSK-1a240c.
 - **D5.** A later "yes" to apply the DDL + role live (§8 step 6), after the accepted clone rehearsal. **Not requested now.**
