@@ -2,7 +2,7 @@
 uid: DEC-fbc085
 title: "Platform-plane evidence home for contract-version governance transitions (Inv VI): an append-only transition record written by a trigger in the same transaction"
 description: "Canonical/observation contract-version state changes emit an append-only contract.{family}_contract_version_transition row from a DB trigger in the same transaction, fail-closed on a missing declared cause; the dead tenant-plane EvidenceService calls in Contract/Connection/Reader services are deleted; a class rule and an architecture gate cover every governed state column"
-status: proposed
+status: decided
 date: 2026-09-26T07:49:02.301Z
 project: bc-core
 domain: contracts
@@ -91,3 +91,25 @@ Design act for TSK-56c689 (Invariant VI: evidence is emitted, not inferred). Ful
       3. The 7c-c execution request.
    4. **Rollback:** after rows exist, disabling the emitter is a HALT disposition needing its own authority; there is no automatic evidence-free fallback.
    5. **Mechanism evidence to date:** a prototype corpus (T1–T17, including compound-statement, nested-lifetime and real-rollback tests) passes, with six prove-red variants, in a throwaway PostgreSQL 17.11 container (DBCP §5).
+
+## Status decision (2026-09-26): decided, not implemented
+
+The operator gave the decision directly to Codex. Codex preserved it as bc-external-audit
+`docs/OPERATOR-DISPOSITION-Codex-gen-1afb60-D627-2026-09-26.md` (commit `e1119c0c`, raw SHA-256
+`4508e7a3e2eae39dfa9c7dbfb060d84065e50ec91460401c28d99a8796c199be`):
+
+> D627 decision: on the accepted gen-1afb60 design, ADR D627 (DEC-fbc085) moves from proposed to decided; implementation, the DDL and role apply (DBCP decisions D1 to D8), the serve move and every live unit keep their own review, clearance and grant.
+
+**Basis.** DEC-623f8f: `proposed` → `decided` when consensus is reached. Here that is the successor-3
+design Codex accepted with boundary in RESPONSE-Codex-gen-1afb60-04 (commit `a985c121`, SHA-256
+`835bfb7e…`; this ADR and its DBCP at bc-docs#70 head `19552cf3`) together with the operator's decision
+above.
+
+**What this decides, and what it does not:**
+- **The decided content** is this file's successor-3 text, the "declaration carried by the row write"
+  mechanism. The rejected transaction-local-setting mechanism of earlier drafts is not part of the
+  decision, and the DevHub registry's older decision text, which still describes it, is not authority.
+- **Decided is not implemented.** No code, DDL or role exists live because of this decision.
+- **Still separately gated:** the DDL and role apply (DBCP decisions D1–D8), the W6-P database-capability
+  slice (TSK-fa31e7), the serve move and every live unit, each with its own review, clearance and grant.
+- **Moving to `implemented`** follows DEC-623f8f: a landed commit carrying `closes: DEC-fbc085`.
