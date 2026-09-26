@@ -86,7 +86,7 @@ row is `'active'`. This is the gate that makes "platform activation" mean someth
 | **21** | SO produced | reader execution → `progression.admission` + `fact.so_*` |
 | **22** | CO produced | canonical evaluation → `progression.canonical_evaluation` + `fact.co_*` |
 | **23** | Metric snapshot produced | metric evaluation → `progression.metric_evaluation` + `metric_snapshot_index` + `fact.ms_*` |
-| **24** | Snapshot proof complete | Two conditions. (a) The snapshot's `metric_evaluated` Evidence and its one `evaluated_by` Lineage are written **in the same tenant transaction** as the snapshot; if they fail, no snapshot exists (DEC-48d222/D578, decided: "no proof, no record"). (b) The writer is the non-superuser, non-owner runtime identity, on a tenant whose `evidence.*` tables refuse UPDATE and DELETE and which that identity cannot bypass (DEC-09fb2f/D575, **proposed**). *Restated 2026-09-26:* the D389 signal "D387 `proof_status='complete'`" is retired for metrics. D578 reduced `proof_status` to a marker for WORM-archive completeness only, and the column exists in neither database (§3.1 H). |
+| **24** | Snapshot proof complete | Two conditions. (a) **Exactly one** `metric_evaluated` Evidence (subject `metric_evaluation_proof:<metric_evaluation_id>`) and **exactly one** `evaluated_by` Lineage are written **in the same tenant transaction** as the snapshot; if they fail, no snapshot exists (DEC-48d222/D578, decided: "no proof, no record"). (b) The writer is the non-superuser, non-owner runtime identity, on a tenant where `evidence.*` refuses UPDATE, DELETE and TRUNCATE for that identity, and where that identity cannot disable or bypass the guard (trigger disable, `session_replication_role`, the `immutability_bypass` setting) (DEC-09fb2f/D575, **proposed**). *Restated 2026-09-26:* the D389 signal "D387 `proof_status='complete'`" is retired for metrics. D578 reduced `proof_status` to a marker for WORM-archive completeness only, and the column exists in neither database (§3.1 H). |
 | **25** | KPI rendered in bc-portal | snapshot index + typed value row + tenant binding/permission pass |
 
 ## 3. Readiness matrix — grounded against live substrate
@@ -107,12 +107,12 @@ the cell says otherwise.
 | 16 Fiscal calendar | 🟢 | RO: `organization.fiscal_calendar_config` has 2 active rows: `*` → `IN-APR-MAR-MONTHLY` (created 2026-09-23) and `KAVERI-IN` → `IN-APR-MAR-MONTHLY` from 2023-04-01 (created 2026-09-25T09:47Z). `tenant_dim.dim_legal_entity` has 1 row, `KAVERI-IN` (IN, INR). SR: created by D623 step 3, successor-4 (RESPONSE-Codex-d617-055, closure accepted after Codex's own read-only check) | — |
 | 17 Connection | 🟢 | RO: `runtime.connection kaveri-odoo-v3lc5` is `connected` and now carries `tenant_id` = Kaveri (it was NULL on 2026-09-21), `environment_code='development'`. SR: owner assigned by step 3 A2 (d617-055). Odoo is reached through the loopback relay to the laptop (PLN-31c4a1 v18). | Odoo's move to the Mac (W5) comes later. |
 | 18 Reader | 🟢 | RO: observation contract `45f8b60c…` has **1.2.0 and 1.3.0 both `active`**. SR: step 5 created 1.3.0 (adds `company_id` and 6 fields) and moved Kaveri's `account.move` reader binding to 1.3.0 (d617-059, accepted) | Supersede OC 1.2.0 (planned in D623 7c-c) |
-| 19 Bindings | 🟡 | RO: `tenant.tenant_binding` has SC `019fe42b-7f2b…` 1.0.0, env `dev`, from 2026-09-23. `tenant.contract_binding` has 5 active `canonical` rows: cc-dh5d9 **1.2.0, 1.4.0, 1.5.0**, plus cc-das36 1.0.0 and cc-7174p 1.0.0. The rows for 1.2.0 and 1.4.0 are still `is_active=true` although both versions are `superseded`; this document does not establish whether that is intended. | Bind cc-dh5d9 **1.6.0** (RO: `approved`, created 2026-09-26T05:41Z, not active). The activation fan-out that writes these rows does nothing in the served build (TSK-231594, fix bc-core#830 open). |
+| 19 Bindings | 🟡 | RO: `tenant.tenant_binding` has SC `019fe42b-7f2b…` 1.0.0, env `dev`, from 2026-09-23. `tenant.contract_binding` has 5 active `canonical` rows: cc-dh5d9 **1.2.0, 1.4.0, 1.5.0**, plus cc-das36 1.0.0 and cc-7174p 1.0.0. The rows for 1.2.0 and 1.4.0 are still `is_active=true` although both versions are `superseded`; this document does not establish whether that is intended. Intent is to be established before 7c-c re-binds, and only through the governed path (**TSK-5f24ee**). | Bind cc-dh5d9 **1.6.0** (RO: `approved`, created 2026-09-26T05:41Z, not active). The activation fan-out that writes these rows does nothing in the served build (TSK-231594, fix bc-core#830 open). |
 | 20 Fact tables | 🟡 | RO: `fact.so_sc_929yc_v1_0_0`, `fact.co_cc_dh5d9_v1_4_0`, `fact.co_cc_dh5d9_v1_5_0`, `fact.co_cc_das36_v1_0_0`, `fact.co_cc_7174p_v1_0_0` and `fact.ms_total_journal_entries_v1_0_0` exist. `fact.co_cc_dh5d9_v1_6_0` does **not** exist. The tenant ledger `admin.schema_migration_event` shows 0001, 0002 (2026-09-25T06:38Z) and **0003 (2026-09-26T07:02:15Z)** applied. | Provision the 1.6.0 tables (7c-c) |
 | 21 SO | 🟢 (for 1.5.0) | RO: `progression.admission` has **25,744** rows, all `account.move`, SC 1.0.0, `admitted`, in 4 runs on 2026-09-23 (5,000 + 5,000 + 5,000 + 10,744). `fact.so_sc_929yc_v1_0_0` has **10,744** rows, one per Odoo move. The 25,744 therefore counts admission attempts across runs, not distinct moves. | Observe again under OC 1.3.0 and the per-entity identity (7d) |
 | 22 CO | ⚠ **regressed** | RO: `progression.canonical_evaluation` has 10,744 `accepted` rows for 1.4.0 and 10,744 for 1.5.0 (all 2026-09-23). `fact.co_cc_dh5d9_v1_5_0` has 10,744 rows, none with an empty `fiscal_period`. They were stamped before the `KAVERI-IN` calendar row existed (09-23 vs 09-25), so they used the `*` row. SR: resolving **active cc-dh5d9 1.5.0 throws** since D623 7c-a minted concept `115b2945` (2026-09-26T00:54Z). Shown on a clone, not observed on live (7cc-design README F1; gen-e90cd0-01). **TSK-387779.** | ADR bc-docs#67 → 7c-c (activate 1.6.0) → 7d (resolve again with correct legal entities) |
 | 23 Snapshot | ⚠ wrong metric so far | RO: 1 `progression.metric_evaluation`, `accepted`, 2026-09-23T07:52Z, for metric contract `c5ebf6d5…`. That is **`total_journal_entries`**: the snapshot table is `fact.ms_total_journal_entries_v1_0_0`, and CHG-12f4fd (SR) names MC `c5ebf6d5` / MCV `b8d2a132`, which is RO active with chain `green`. The snapshot `fact.ms_total_journal_entries_v1_0_0` = **212** for FY2026-27/P05, and 212 COs in 1.5.0 carry that period. 3 `metric_run` rows: deferred, failed, completed. **DSO has not been evaluated.** RO: `days_sales_outstanding` chain verdict is `red` (`bindings_resolve: fail:1_unresolved`), and its leaf `gross_invoiced_amount` is still `audit_pending`. | Prove again over COs with correct legal entities (7d). Decide whether the destination metric is still DSO (§1) or `total_journal_entries`. |
-| 24 Proof | 🟡 emitted once, does not count | Condition (a) of §2 **held**. RO: the snapshot's own transaction (2026-09-23 07:52:37.861569Z) wrote exactly one `evidence.evidence_object` of type **`metric_evaluated`** (subject `metric_evaluation_proof:9e57b668…`, `e6b.lineage.v1`) and one `evaluated_by` `lineage_object`. This is the first observed E6-B emit. The other 4 evidence objects are run records, and the other 25,744 lineage rows are `observed_as` rows from admission. The snapshot row's own `evidence_hash` column is empty. Condition (b) **did not**. SR: `TENANT_DATABASE_URL` in bc-core's `.env` on the Mac names `barecount`, and the W6 design (barecount-devhub PR #35, §0) reports that the emit, and the served `:3100` in general, log in as the superuser. The rows do not record the role, and no live session was connected to observe. RO for what is already built for D575 (§3.1 G/H): `evidence_object`, `evidence_record` and `lineage_object` in `tbc_kaveri_dev` each carry `no_update` and `no_delete` triggers and belong to `bc_tenant_owner` (not a superuser); role `bc_tenant_runtime` exists (not a superuser); the six `fact.*` tables belong to `barecount` (a superuser). | **D575 rollout**, the step never taken (SR, W6): serve `:3100` as `bc_tenant_runtime`, reassign the superuser-owned `fact.*`, then observe again in 7d under that identity over COs with correct legal entities (TSK-d43263; W6 sequence U4 → U3 → U5 → 7d). D575 itself is still `proposed`, and is not moved to decided here; see §5.0. |
+| 24 Proof | 🟡 emitted once, does not count | Condition (a) of §2 **held**. RO: the snapshot's own transaction (2026-09-23 07:52:37.861569Z) wrote exactly one `evidence.evidence_object` of type **`metric_evaluated`** (subject `metric_evaluation_proof:9e57b668…`, `e6b.lineage.v1`) and one `evaluated_by` `lineage_object`. This is the first observed E6-B emit. The other 4 evidence objects are run records, and the other 25,744 lineage rows are `observed_as` rows from admission. The snapshot row's own `evidence_hash` column is empty. Condition (b) **did not**. SR: `TENANT_DATABASE_URL` in bc-core's `.env` on the Mac names `barecount`, and the W6 design (barecount-devhub PR #35, §0 and §1.1: the `.env` URL user, the dev secret carries no DB keys, and the live serve script does not override it) reports that the emit, and the served `:3100` in general, log in as the superuser. The rows do not record the role, and no live session was connected to observe. RO for what is already built for D575 (§3.1 G/H): `evidence_object`, `evidence_record` and `lineage_object` in `tbc_kaveri_dev` each carry `no_update` and `no_delete` triggers and belong to `bc_tenant_owner` (not a superuser); role `bc_tenant_runtime` exists (not a superuser) and holds only SELECT and INSERT on them, with no UPDATE, DELETE, TRUNCATE or TRIGGER (§3.1 I). TRUNCATE is refused by privilege, not by the triggers; the six `fact.*` tables belong to `barecount` (a superuser). | **D575 rollout**, the step never taken (SR, W6): serve `:3100` as `bc_tenant_runtime`, reassign the superuser-owned `fact.*`, then observe again in 7d under that identity over COs with correct legal entities (TSK-d43263; W6 sequence U4 → U3 → U5 → 7d). D575 itself is still `proposed`, and is not moved to decided here; see §5.0. |
 | 25 KPI in portal | ❓ | Never verified | Verify at the end |
 
 **Served bc-core** (SR): `:3100` runs `9d0dc5aa` (manifest `b749315f`). The move script stopped at
@@ -149,7 +149,7 @@ RAG = Kaveri state at grounding time. Machinery = buildability.
 | 21 SO produced | T | 🔴 | 🟡 `progression.admission` path exists; **tenant probe MLS-21 existence UNVERIFIED** (F-MLS-1) | Engineering |
 | 22 CO produced | T | 🔴 | 🟡 `progression.canonical_evaluation` exists; **probe MLS-22 UNVERIFIED** | Engineering |
 | 23 Snapshot produced | T | 🔴 | 🔴 **⛔ metric-layer blocker VERIFIED (2026-09-21):** composite leaf **`gross_invoiced_amount` `audit_pending`/`is_current=false`** (`8a38e79c`) → loader (selects `is_current=true`+`active`) finds no active/current upstream. Necessary candidate repair = certify+activate the leaf (corpus cert, held); sufficiency + downstream chain **unverified**. MLS-21/22/23 tenant probes **reported absent** (F-TR-2 code-inventory, pending independent confirm). See ADR-f44a71 Amendment 1 | Engineering |
-| 24 Proof complete | T | 🔴 | 🟡 evidence path exists (E6-B armed); **gated by non-superuser runtime identity + evidence immutability** (TSK-d43263 / D575) | Engineering |
+| 24 Proof complete | T | 🔴 | 🟡 evidence path exists (E6-B armed); **gated by non-superuser runtime identity + evidence immutability** (TSK-d43263 / D575) | Engineering *(2026-09-26: since emitted once, as the superuser over `*`-calendar COs, so it does not count; see §3.0.)* |
 | 25 KPI rendered | T | 🔴 | ❓ bc-portal render path — verify at the end (permission/typed-value) | Platform |
 
 ¹ **MLS-15 — infrastructure provisioned; per-metric acceptance PENDING (this session, 2026-09-21T05:00Z).**
@@ -416,7 +416,21 @@ Captured results:
 - Roles: `barecount` is a superuser; `bc_tenant_owner` and `bc_tenant_runtime` are not.
 - `tbc_kaveri_dev` evidence triggers: `trg_{evidence_object,evidence_record,lineage_object}_no_{update,delete}` (6 triggers). There are none in `bc_platform_dev`, as expected.
 
-**What E, F, G and H do not prove:** they show stored state only. They do not show that a resolution or
+**I. Privileges of the runtime identity on the evidence tables (`tbc_kaveri_dev`, 2026-09-26).**
+
+```sql
+BEGIN READ ONLY;
+SELECT c.relname, p.priv, has_table_privilege('bc_tenant_runtime', 'evidence.' || c.relname, p.priv) AS granted
+  FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+  CROSS JOIN (VALUES ('SELECT'), ('INSERT'), ('UPDATE'), ('DELETE'), ('TRUNCATE'), ('TRIGGER')) p(priv)
+ WHERE n.nspname = 'evidence' AND c.relkind = 'r' ORDER BY 1, 2;
+COMMIT;
+```
+
+Captured result: for each of `evidence_object`, `evidence_record` and `lineage_object`, SELECT and INSERT
+are granted; UPDATE, DELETE, TRUNCATE and TRIGGER are **not**.
+
+**What E–I do not prove:** they show stored state only. They do not show that a resolution or
 evaluation would succeed today (see the MLS-22 regression). They do not show the lc5 source row
 count, the served build, or live Odoo connectivity, and they do not replay any of the governed
 writes in §8.
@@ -463,11 +477,13 @@ writes in §8.
      with the gen-bdb784 disposition as its basis.
 8. **MLS-25:** the portal KPI.
 
-**An open question the evidence raises:** §1 names **DSO** as the walk's metric, but the only snapshot
-so far is `total_journal_entries`. DSO's chain is still `red` (§3.1 E), and the 2026-09-21 grain
-mismatch (MLS-19 root cause in §8) has no recorded resolution in the sources used here. Either the
-destination metric is re-stated through a governed decision, or DSO's chain comes back onto the path.
-This document does not decide that.
+**The destination stays DSO** (umbrella coordinator ruling, 2026-09-26). No record changes §1.
+`total_journal_entries` is the **pilot slice**: it proves the machinery (per-legal-entity fiscal
+periods, the D575 identity, evidence) end-to-end on Kaveri. **DSO is the destination proof.** DSO's
+chain is still `red` (§3.1 E), and the 2026-09-21 grain mismatch (the MLS-19 root cause in §8) has no
+recorded resolution yet. Grounding it on Kaveri is a new workstream, **W9 = TSK-ad23c1**, a read-only
+design unit. Tenant readiness is therefore proven only when steps 1–8 above hold for DSO, not only for
+the pilot slice.
 
 ### 5.1 Critical path as written on 2026-09-21 (historical)
 
@@ -659,9 +675,16 @@ CHANGES REQUIRED (d617-030, -031) before the corrected successors of 09-25.
   6. there was no `posting_date_field`, so 1.5.0 was authored;
   7. the `count` path refused string values.
 
-  The checkpoint records three of the data changes as **operator-approved direct changes**, not
-  governed-service writes: `tenant.tenants.schema_name`, `organization.fiscal_calendar_config`, and
-  `runtime.reader_flavor.config_json`. It also records the code fixes as uncommitted at the time. How
+  The checkpoint records three data changes as **operator-approved direct database edits**, not
+  governed-service writes:
+  - `tenant.tenants.schema_name` (one row, `tbc_kaveri_dev` → `tbc_kaveri`);
+  - the `*` row in `organization.fiscal_calendar_config`;
+  - `runtime.reader_flavor.config_json`.
+
+  **These are exceptions to the Foundation rule "no DB row hand-edits".** The authority recorded is
+  the operator's approval, as stated in that checkpoint ("DB changes (operator-approved)"). No
+  governed-service write or change request covers them. The rows they produced are still live: the
+  `*` calendar row (§3.1 F) stamped every CO so far, and `schema_name` reads `tbc_kaveri` (§3.1 E). It also records the code fixes as uncommitted at the time. How
   gap 7 was closed before the completed run is not stated in the sources used here.
 - **Meaning:** this is the first continuous real-source run for the platform, from source rows to
   snapshot. It is **not** yet readiness:
