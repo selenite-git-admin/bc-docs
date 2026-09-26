@@ -1,0 +1,243 @@
+# DEC-fbc085 prototype run — successor 3 — 2026-09-26T08:41:43Z
+# prototype sha256: 49be306c6ec64d16efce8c9ee8c40f732ae9aa7f50a42058c2e0940f067d56ba
+# image: postgres:17.11-alpine sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24 (--network none, container+volume removed)
+# main corpus rc=0
+T1 undeclared UPDATE refused, state unchanged
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/1.6.0 approved -> 
+ expect_error 
+--------------
+ 
+(1 row)
+
+T2 7c-c sequence: each write carries its declaration in the same row write (both families)
+T3 A declared then B undeclared in ONE transaction -> B refused; same inside ONE DO block
+NOTICE:  PASS T2
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/9.0.0 review -> ap
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: DO $d$ BEGIN UPDATE contract.canonical_contract_version SET governance -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/9.0.0 review -> ap
+ expect_error 
+--------------
+ 
+(1 row)
+
+T4 a declared write rolled back to a savepoint authorises nothing afterwards
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/9.0.0 draft -> rev
+T5 rollback leaves zero rows; same-state UPDATE (with or without a declaration) and draft INSERT emit zero and persist nothing
+NOTICE:  PASS T5
+T6 non-draft INSERT: undeclared refused; declared emits one birth row (from NULL)
+NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version VALUES ('00000000-0000 -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/9.2.0 <NULL> -> ap
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS T6
+unterminated quoted string
+T17 a declared birth for an EXISTING version (it would fail on the primary key) is refused by the
+ expect_error 
+--------------
+ 
+(1 row)
+
+T7 invalid cause / missing request identity / short operator rationale / missing subject / malformed declaration refused
+NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version (canonical_contract_id -> transition row refused: version state approved does not match from_state <NULL>
+NOTICE:  PASS T17
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> new row for relation "canonical_contract_version_transition" violates check constraint "canonical_contract_ver
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> new row for relation "canonical_contract_version_transition" violates check constraint "canonical_contract_ver
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> new row for relation "canonical_contract_version_transition" violates check constraint "canonical_contract_ver
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> null value in column "actor_subject" of relation "canonical_contract_version_transition" violates not-null con
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/9.0.0 draft -> rev
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-00000000c150/9.0.0 draft -> rev
+ expect_error 
+--------------
+ 
+(1 row)
+
+T8 bulk: the declaration is carried by exactly the rows this ONE statement writes; N rows
+NOTICE:  PASS T8 bulk
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version SET governance_state_code=' -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-0000000b0002/1.0.0 review -> ap
+ expect_error 
+--------------
+ 
+(1 row)
+
+T13 compound statements: each row carries its own declaration; never misattributed
+NOTICE:  PASS T13a two declared same-family CTEs (committed, every row correctly attributed; rolled back)
+ correct_or_refused 
+--------------------
+ correct
+(1 row)
+
+NOTICE:  PASS refused: WITH a AS (UPDATE contract.canonical_contract_version SET governance_s -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-0000000b0004/1.0.0 draft -> rev
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS T13c declared cross-family CTEs (committed, every row correctly attributed; rolled back)
+ correct_or_refused 
+--------------------
+ correct
+(1 row)
+
+T16 (gen-1afb60-03 lifetime probes) a declaration made by any earlier/other/rolled-back write authorises NO later undeclared write
+NOTICE:  PASS refused: DO $d$ BEGIN UPDATE contract.canonical_contract_version SET transition -> contract-version transition canonical_contract_version.00000000-0000-0000-0000-0000000b0003/1.0.0 draft -> rev
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: DO $d$ BEGIN UPDATE contract.canonical_contract_version SET transition -> contract-version transition observation_contract_version.00000000-0000-0000-0000-0000000a0001/1.0.0 draft -> r
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: DO $d$ BEGIN BEGIN UPDATE contract.observation_contract_version SET go -> contract-version transition observation_contract_version.00000000-0000-0000-0000-0000000a0001/1.0.0 draft -> r
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS T16 residue check: no state, no evidence, no declaration at rest
+T15 atomicity after a REAL emission: row 1 emits, row 2 fails at emission; everything rolls back (both families)
+NOTICE:  PASS T15 canonical: 1 emission executed before the failure; 0 rows, 0 state changes after rollback
+NOTICE:  PASS T15 observation: 1 emission executed before the failure; 0 rows, 0 state changes after rollback
+T9 F1 forgery by the served login
+NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version_transition (canonical_ -> permission denied for table canonical_contract_version_transition
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: UPDATE contract.canonical_contract_version_transition SET actor_subjec -> permission denied for table canonical_contract_version_transition
+ expect_error 
+--------------
+ 
+(1 row)
+
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: DELETE FROM contract.canonical_contract_version_transition -> permission denied for table canonical_contract_version_transition
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: TRUNCATE contract.canonical_contract_version_transition -> permission denied for table canonical_contract_version_transition
+NOTICE:  PASS refused: SELECT contract.fn_contract_version_transition_emit() -> permission denied for function fn_contract_version_transition_emit
+ expect_error 
+--------------
+ 
+(1 row)
+
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: SET ROLE bc_contract_evidence_emitter -> permission denied to set role "bc_contract_evidence_emitter"
+NOTICE:  PASS refused: SET ROLE bc_schema_owner -> permission denied to set role "bc_schema_owner"
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: ALTER TABLE contract.canonical_contract_version DISABLE TRIGGER trg_zz -> must be owner of table canonical_contract_version
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: ALTER TABLE contract.canonical_contract_version_transition DISABLE TRI -> must be owner of table canonical_contract_version_transition
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: SET session_replication_role = replica -> permission denied to set parameter "session_replication_role"
+ expect_error 
+--------------
+ 
+(1 row)
+
+T14 effective privileges of every ordinary principal + emitter is the LAST BEFORE ROW trigger
+T12 metadata is derived, not supplied: principal = the writing login session
+NOTICE:  PASS T14
+NOTICE:  PASS T12
+T10 even the INSERT-holding emitter role cannot insert outside the version-table trigger (guard)
+NOTICE:  PASS refused: INSERT INTO contract.canonical_contract_version_transition (canonical_ -> direct INSERT into contract.canonical_contract_version_transition refused: rows are emitted only by the versio
+ expect_error 
+--------------
+ 
+(1 row)
+
+T11 the OWNER keeps table privileges (recovery authority, DDL) but the append-only trigger still refuses DELETE/TRUNCATE
+ expect_error 
+--------------
+ 
+(1 row)
+
+NOTICE:  PASS refused: DELETE FROM contract.canonical_contract_version_transition -> governed table contract.canonical_contract_version_transition is append-only (Invariant III): DELETE rejected
+NOTICE:  PASS refused: TRUNCATE contract.canonical_contract_version_transition -> governed table contract.canonical_contract_version_transition is append-only (Invariant III): TRUNCATE rejecte
+ expect_error 
+--------------
+ 
+(1 row)
+
+ transition_seq | version_code |   from_state_code    |    to_state_code     | transition_cause_code  |  actor_kind_code   |          actor_subject           | request_correlation_id | db_principal_name 
+----------------+--------------+----------------------+----------------------+------------------------+--------------------+----------------------------------+------------------------+-------------------
+              1 | 1.6.0        | approved             | pending_provisioning | governed_request       | authenticated_http | sub-A                            | req-1                  | served_app
+              2 | 1.6.0        | pending_provisioning | active               | provisioning_readiness | service_system     | bc-core:provisioning-readiness   |                        | served_app
+              3 | 1.5.0        | active               | superseded           | governed_request       | authenticated_http | sub-B                            | req-2                  | served_app
+              8 | 9.2.0        |                      | approved             | authoring_chain        | service_system     | bc-core:author-observation-chain |                        | served_app
+             14 | 1.0.0        | draft                | review               | bulk_transition        | authenticated_http | sub-C                            | req-7                  | served_app
+             15 | 1.0.0        | draft                | review               | bulk_transition        | authenticated_http | sub-C                            | req-7                  | served_app
+(6 rows)
+
+ALL PASS
+
+# ── prove-red variants (generated from the file above; each must fail) ──
+variant A (43eef87c87c414bb…): ERROR:  new row for relation "canonical_contract_version" violates check constraint "canonical_contract_version_transition_declaration_transient" | ALL PASS lines=0
+variant B (4ff24aa08d093126…): ERROR:  wrong error for [INSERT INTO contract.canonical_contract_version (canonical_contract_id, version_]: duplicate key value violates unique constraint "canonical_contract_version_pkey" | ALL PASS lines=0
+variant C (53d1f84ff404109f…): ERROR:  EXPECTED REFUSAL did not happen: TRUNCATE contract.canonical_contract_version_transition | ALL PASS lines=0
+variant D (4aa7969d5f187d24…): ERROR:  EXPECTED REFUSAL did not happen: UPDATE contract.canonical_contract_version SET governance_state_code='approved' WHERE version_code='9.0.0' | ALL PASS lines=0
+variant E (fd97ec34c2a96882…): ERROR:  T14 emitter is not the last BEFORE ROW trigger on contract.canonical_contract_version | ALL PASS lines=0
+variant F (2a5450a916283709…): ERROR:  T15 canonical precondition NOT met: 1 emission INSERT(s) executed (need 2: one succeeded, then one failed) | ALL PASS lines=0
