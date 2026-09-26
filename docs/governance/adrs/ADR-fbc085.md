@@ -108,7 +108,10 @@ above.
 **What this decides, and what it does not:**
 - **The decided content** is this file's successor-3 text, the "declaration carried by the row write"
   mechanism. The rejected transaction-local-setting mechanism of earlier drafts is not part of the
-  decision, and the DevHub registry's older decision text, which still describes it, is not authority.
+  decision. The DevHub registry row once held that rejected text (SHA-256 `13b89c46…`). On
+  2026-09-26 at 09:47:17Z it was replaced with this file's `## Decision` body (SHA-256 `63a5b8f1…`)
+  through the governed decision-text route (barecount-devhub#38), with receipt activity 20963. This
+  file remains the authority.
 - **Decided is not implemented.** No code, DDL or role exists live because of this decision.
 - **Still separately gated:** the DDL and role apply (DBCP decisions D1–D8), the W6-P database-capability
   slice (TSK-fa31e7), the serve move and every live unit, each with its own review, clearance and grant.
