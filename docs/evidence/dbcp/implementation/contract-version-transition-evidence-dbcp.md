@@ -12,7 +12,7 @@ focus: evidence
 
 # Contract-Version Transition Evidence (Inv VI) — Design and DBCP
 
-**Status:** proposed, successor 3. **Not applied.** Nothing is created, altered or written on any live or served database until the operator gives an explicit yes and the committed-DBCP apply gate runs.
+**Status:** successor 3; operator decisions D1–D4 and D6–D8 **given** (§11). **Not applied: D5 (the live apply) is not granted.** Nothing is created, altered or written on any live or served database until the accepted combined fresh-dump rehearsal, its own execution clearance, and the operator's separate exact grant.
 
 | | |
 |---|---|
@@ -386,7 +386,24 @@ About 2 working days of build, plus review rounds. No new npm dependency.
 | Q5 addendum | no superuser credential in the served process for the cluster, platform or tenant URL (§4.2 item 1) |
 | ADR point 8 | aligned with §6's bounded current-catalog and source-derived claim |
 
-## 11. Operator decisions requested
+## 11. Operator decisions
+
+**Recorded 2026-09-26.** The operator gave these decisions directly to Codex on thread gen-e5c98f. Codex's preserved copy is the authority: bc-external-audit `docs/RESPONSE-Codex-gen-e5c98f-04-d627-f6-accepted-with-boundary-2026-09-26.md`, commit `6527203bdd0f345d96c4902d884ef9974aaf6038`, raw SHA-256 `ceac3deeeef74590c28e3a298c4c83959003872b0e8da4988d840ede316d7a00`.
+
+| Decision | Operator | Notes |
+|---|---|---|
+| D1 | **yes** | |
+| D2 | **yes** | |
+| D3 | **yes** | |
+| D4 | **yes** | the baseline has 9 surfaces under 7 tasks (§4.7 item 5) |
+| D6 | **yes** | |
+| D7 | **yes** | the W6-P slice landed as bc-db 0022 (bc-db#79, merge `b8631700`) |
+| D8 | **yes** | |
+| D5 | **not granted now** | the live apply of bc-db 0023 waits for the accepted combined fresh-dump rehearsal, its own execution clearance, and the operator's separate exact grant |
+
+The live order is **0022 → U3 → 0023 → combined serve move → 7c-c**. None of these decisions is a live grant.
+
+The decisions as originally requested:
 
 - **D1.** Option (b): a new platform-plane home.
 - **D2.** Per-family tables.
