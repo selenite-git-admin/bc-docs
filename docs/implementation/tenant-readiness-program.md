@@ -1,7 +1,7 @@
 ---
 title: Tenant Readiness — Program (SSOT)
 status: drafting
-date: 2026-09-21
+date: 2026-09-26
 anchor_task: TSK-d73f01
 governing_adrs: >
   DEC-33d436/D606 (program mandate + platform/tenant readiness split — tenant readiness
@@ -11,8 +11,12 @@ governing_adrs: >
   (the single continuous real run was reclassified out of platform readiness INTO this program);
   DEC-f02230/D368 (tenant DB schema organization — locates the tenant fiscal-calendar config);
   DEC-f44a71/D617 (program EXECUTION & sequencing — the Kaveri walk + route (a) for the MLS-23
-  gate; the readiness DEFINITION stays in DEC-33d436, not re-decided here).
+  gate; the readiness DEFINITION stays in DEC-33d436, not re-decided here);
+  DEC-ea4523/D623 (source-agnostic fiscal periods per legal entity — the Kaveri fiscal and
+  identity work logged in §8 from 2026-09-24).
 related: >
+  Umbrella roadmap: DevHub plan PLN-31c4a1 (v18, 2026-09-26) — its MLS 15-25 table is the
+  coordinator's view; this document is the evidenced record.
   Platform Readiness & Legibility (implementation/platform-readiness-program.md, TSK-4b2404) —
   the parent program; its platform half (MLS 01-14 / L1-L9) CLOSED 2026-09-21.
   Platform DB Foundation (overview/platform-db-foundation.md, TSK-cc348a) — the converging
@@ -31,6 +35,14 @@ related: >
 > This is the **tenant half** of Platform Readiness & Legibility (DEC-33d436/D606). The platform
 > half (MLS 01-14 / lanes L1-L9 + engine conformance) is **CLOSED** (2026-09-21). Tenant readiness
 > picks up at the **MLS-14→15 handoff gate** and runs the ladder for one real tenant.
+>
+> **Update 2026-09-26 (SES-d55c25):** §3 now opens with the current state of each rung, re-checked
+> read-only against the live databases (queries in §3.1 E–F). §5 opens with the current critical
+> path, and §8 logs the walk from 2026-09-23 to 2026-09-26. In short: Kaveri has real source rows,
+> canonical rows and **one accepted snapshot**, but for the metric `total_journal_entries`, not yet
+> for DSO. The canonical contract that produced those rows can no longer be resolved since
+> 2026-09-26T00:54Z (open regression **TSK-387779**; the date comes from reading the code, not from
+> watching it fail). Evidence (MLS-24) and the portal KPI (MLS-25) have not started.
 
 ## 1. The destination
 
@@ -75,7 +87,43 @@ row is `'active'`. This is the gate that makes "platform activation" mean someth
 | **24** | Snapshot proof complete | evidence + lineage writes; D387 `proof_status='complete'` |
 | **25** | KPI rendered in bc-portal | snapshot index + typed value row + tenant binding/permission pass |
 
-## 3. Readiness matrix — grounded against live substrate (2026-09-21)
+## 3. Readiness matrix — grounded against live substrate
+
+### 3.0 Current state for Kaveri (re-grounded 2026-09-26T07:17Z)
+
+Each cell is tagged with its evidence type. **RO** (reproducible read-only) means one of the
+`BEGIN READ ONLY` queries in **§3.1 E** (platform, `bc_platform_dev`) or **§3.1 F** (tenant,
+`tbc_kaveri_dev`) shows it; they were run at 2026-09-26T07:17Z. **SR** (source-reported) means it
+rests on a named closure file, Codex response or change record and was not re-run here. Where
+Codex accepted a closure after its own read-only check, the cell says so; that corroborates the
+claim but does not make it RO. The PLN-31c4a1 v18 MLS table agrees with every row except where
+the cell says otherwise.
+
+| MLS | Kaveri state | What the evidence shows | What remains |
+|-----|--------------|-------------------------|--------------|
+| 15 Tenant | 🟢 infrastructure | RO: `tenant.tenants` `kaveri` active, `schema_name='tbc_kaveri'` (base name; the connection layer adds `_dev`, CHG-bfed75); `tbc_kaveri_dev` exists; 1 `onboarding_record` | The per-metric acceptance described in footnote ¹ has not been recorded for any metric. v18 marks this rung ✓. |
+| 16 Fiscal calendar | 🟢 | RO: `organization.fiscal_calendar_config` has 2 active rows: `*` → `IN-APR-MAR-MONTHLY` (created 2026-09-23) and `KAVERI-IN` → `IN-APR-MAR-MONTHLY` from 2023-04-01 (created 2026-09-25T09:47Z). `tenant_dim.dim_legal_entity` has 1 row, `KAVERI-IN` (IN, INR). SR: created by D623 step 3, successor-4 (RESPONSE-Codex-d617-055, closure accepted after Codex's own read-only check) | — |
+| 17 Connection | 🟢 | RO: `runtime.connection kaveri-odoo-v3lc5` is `connected` and now carries `tenant_id` = Kaveri (it was NULL on 2026-09-21), `environment_code='development'`. SR: owner assigned by step 3 A2 (d617-055). Odoo is reached through the loopback relay to the laptop (PLN-31c4a1 v18). | Odoo's move to the Mac (W5) comes later. |
+| 18 Reader | 🟢 | RO: observation contract `45f8b60c…` has **1.2.0 and 1.3.0 both `active`**. SR: step 5 created 1.3.0 (adds `company_id` and 6 fields) and moved Kaveri's `account.move` reader binding to 1.3.0 (d617-059, accepted) | Supersede OC 1.2.0 (planned in D623 7c-c) |
+| 19 Bindings | 🟡 | RO: `tenant.tenant_binding` has SC `019fe42b-7f2b…` 1.0.0, env `dev`, from 2026-09-23. `tenant.contract_binding` has 5 active `canonical` rows: cc-dh5d9 **1.2.0, 1.4.0, 1.5.0**, plus cc-das36 1.0.0 and cc-7174p 1.0.0. The rows for 1.2.0 and 1.4.0 are still `is_active=true` although both versions are `superseded`; this document does not establish whether that is intended. | Bind cc-dh5d9 **1.6.0** (RO: `approved`, created 2026-09-26T05:41Z, not active). The activation fan-out that writes these rows does nothing in the served build (TSK-231594, fix bc-core#830 open). |
+| 20 Fact tables | 🟡 | RO: `fact.so_sc_929yc_v1_0_0`, `fact.co_cc_dh5d9_v1_4_0`, `fact.co_cc_dh5d9_v1_5_0`, `fact.co_cc_das36_v1_0_0`, `fact.co_cc_7174p_v1_0_0` and `fact.ms_total_journal_entries_v1_0_0` exist. `fact.co_cc_dh5d9_v1_6_0` does **not** exist. The tenant ledger `admin.schema_migration_event` shows 0001, 0002 (2026-09-25T06:38Z) and **0003 (2026-09-26T07:02:15Z)** applied. | Provision the 1.6.0 tables (7c-c) |
+| 21 SO | 🟢 (for 1.5.0) | RO: `progression.admission` has **25,744** rows, all `account.move`, SC 1.0.0, `admitted`, in 4 runs on 2026-09-23 (5,000 + 5,000 + 5,000 + 10,744). `fact.so_sc_929yc_v1_0_0` has **10,744** rows, one per Odoo move. The 25,744 therefore counts admission attempts across runs, not distinct moves. | Observe again under OC 1.3.0 and the per-entity identity (7d) |
+| 22 CO | ⚠ **regressed** | RO: `progression.canonical_evaluation` has 10,744 `accepted` rows for 1.4.0 and 10,744 for 1.5.0 (all 2026-09-23). `fact.co_cc_dh5d9_v1_5_0` has 10,744 rows, none with an empty `fiscal_period`. They were stamped before the `KAVERI-IN` calendar row existed (09-23 vs 09-25), so they used the `*` row. SR: resolving **active cc-dh5d9 1.5.0 throws** since D623 7c-a minted concept `115b2945` (2026-09-26T00:54Z). Shown on a clone, not observed on live (7cc-design README F1; gen-e90cd0-01). **TSK-387779.** | ADR bc-docs#67 → 7c-c (activate 1.6.0) → 7d (resolve again with correct legal entities) |
+| 23 Snapshot | ⚠ wrong metric so far | RO: 1 `progression.metric_evaluation`, `accepted`, 2026-09-23T07:52Z, for metric contract `c5ebf6d5…`. That is **`total_journal_entries`**: the snapshot table is `fact.ms_total_journal_entries_v1_0_0`, and CHG-12f4fd (SR) names MC `c5ebf6d5` / MCV `b8d2a132`, which is RO active with chain `green`. The snapshot `fact.ms_total_journal_entries_v1_0_0` = **212** for FY2026-27/P05, and 212 COs in 1.5.0 carry that period. 3 `metric_run` rows: deferred, failed, completed. **DSO has not been evaluated.** RO: `days_sales_outstanding` chain verdict is `red` (`bindings_resolve: fail:1_unresolved`), and its leaf `gross_invoiced_amount` is still `audit_pending`. | Prove again over COs with correct legal entities (7d). Decide whether the destination metric is still DSO (§1) or `total_journal_entries`. |
+| 24 Proof | 🔴 not started | RO: `evidence.evidence_record` = 0, `evidence.evidence_object` = 5, `evidence.lineage_object` = 25,745, and the snapshot row's `evidence_hash` is empty | D575 non-superuser runtime identity + evidence immutability (TSK-d43263): **not started, not scheduled** (v18 W6) |
+| 25 KPI in portal | ❓ | Never verified | Verify at the end |
+
+**Served bc-core** (SR): `:3100` runs `9d0dc5aa` (manifest `b749315f`). The move script stopped at
+its "move" step (exit 1), but Codex accepted the served state it intended after its own read-only
+check (RESPONSE-Codex-gen-6f1e89-04). The fixes waiting to be served together (TSK-4636d8):
+bc-core#829 (merged `37dfe3c1`), #830 (open), #831 (draft), and the 7c-c identity change
+(PR-B, pending ADR bc-docs#67, draft).
+
+**A further blocker ahead of 7d** (RO for the schema, SR for the code): `progression.canonical_evaluation`
+in `tbc_kaveri_dev` has **no** `binding_mechanism_code` column. TSK-da545b reports that the bc-core
+resolver writes that column for binding-realized COs, so every such write would fail.
+
+### 3.0.1 Baseline for Kaveri (2026-09-21, historical)
 
 Grounded read-only against `bc_platform_dev` (and, for tenant-DB relations, `tbc_probe_unit4_dev`)
 this session; the exact queries, outputs, observation time and source-commit pins are recorded in
@@ -229,6 +277,104 @@ evaluability (leaf activation is a *necessary candidate*, not a proven-sufficien
 count is not reproduced; the MLS-21/22/23 tenant-probe absence is peer-reported (code-inventory), pending
 independent confirmation.
 
+**E. Platform re-grounding for §3.0 (`bc_platform_dev`, 2026-09-26T07:17:30Z).** PostgreSQL 17.11,
+container `bc-postgres` on the Mac, run as `docker exec -i bc-postgres psql -U barecount -d bc_platform_dev`
+with the file below on stdin, inside `BEGIN READ ONLY … COMMIT`. The E and F texts exactly as printed
+here were then re-run from this document (`-v ON_ERROR_STOP=1`, exit 0) and gave the same results.
+
+```sql
+BEGIN READ ONLY;
+SELECT id, slug, schema_name, status_code FROM tenant.tenants ORDER BY slug;
+SELECT datname FROM pg_database WHERE datname LIKE 'tbc_%' ORDER BY 1;
+SELECT contract_family, contract_id, version_code, is_active
+  FROM tenant.contract_binding b JOIN tenant.tenants t ON t.id = b.tenant_id
+ WHERE t.slug = 'kaveri' ORDER BY contract_family, version_code;
+SELECT source_contract_id, version_code, environment_code, effective_from, effective_to
+  FROM tenant.tenant_binding b JOIN tenant.tenants t ON t.id = b.tenant_id WHERE t.slug = 'kaveri';
+SELECT count(*) FROM tenant.onboarding_record r JOIN tenant.tenants t ON t.id = r.tenant_id
+ WHERE t.slug = 'kaveri';
+SELECT c.canonical_contract_name,
+       (SELECT string_agg(version_code || ':' || governance_state_code, ', ' ORDER BY created_at)
+          FROM contract.canonical_contract_version v
+         WHERE v.canonical_contract_id = c.canonical_contract_id) AS versions
+  FROM contract.canonical_contract c
+ WHERE c.canonical_contract_id IN ('7fa4b84f-8ac5-4383-9d0e-2b6427c0ba1c',
+       '0947b25a-f7a6-4175-89a0-11220ce07336', '8a1a1f1a-d6c6-47c3-979a-35a0660a2f91');
+SELECT version_code, governance_state_code, created_at
+  FROM contract.observation_contract_version
+ WHERE observation_contract_id = '45f8b60c-6814-4fa9-b4e6-82ecde6da200' ORDER BY created_at;
+SELECT connection_name, connection_status, tenant_id, environment_code
+  FROM runtime.connection WHERE connection_name = 'kaveri-odoo-v3lc5';
+SELECT mc.mc_name, mcv.version_code, mcv.is_current, mcv.governance_state_code
+  FROM mcf.metric_contract_version mcv
+  JOIN mcf.metric_contract mc ON mc.metric_contract_uid = mcv.metric_contract_uid
+ WHERE mc.mc_name IN ('days_sales_outstanding','ar_balance','gross_invoiced_amount','total_journal_entries');
+SELECT mc.mc_name, cs.verdict_code, cs.checks_json, cs.computed_at
+  FROM mcf.mcv_chain_status cs
+  JOIN mcf.metric_contract_version mcv ON mcv.metric_contract_version_uid = cs.metric_contract_version_uid
+  JOIN mcf.metric_contract mc ON mc.metric_contract_uid = mcv.metric_contract_uid
+ WHERE mc.mc_name IN ('days_sales_outstanding','total_journal_entries') AND mcv.is_current;
+COMMIT;
+```
+
+Captured results:
+- `tenant.tenants`: `kaveri | tbc_kaveri | active` (id `f0a5e695…`) and `probe_unit4 | tbc_probe_unit4_dev | active`. Databases: `tbc_kaveri_dev`, `tbc_probe_unit4_dev`.
+- `tenant.contract_binding` (Kaveri): 5 rows, all `canonical`, all `is_active=true`: `7fa4b84f…` (cc-dh5d9) 1.2.0, 1.4.0, 1.5.0; `0947b25a…` (cc-das36) 1.0.0; `8a1a1f1a…` (cc-7174p) 1.0.0.
+- `tenant.tenant_binding` (Kaveri): 1 row, SC `019fe42b-7f2b-77f1-b145-226bdbd8e031` 1.0.0, `dev`, from `2026-09-23 05:21:50Z`, open-ended. `onboarding_record`: 1.
+- cc-dh5d9 versions: `1.0.0:superseded, 1.1.0:superseded, 1.2.0:superseded, 1.3.0:approved, 1.4.0:superseded, 1.5.0:active, 1.6.0:approved` (1.6.0 created `2026-09-26 05:41:23Z`). cc-das36 and cc-7174p: `1.0.0:active`.
+- OC `45f8b60c…`: `1.0.0 superseded`, `1.1.0 superseded`, `1.2.0 active`, `1.3.0 active` (created `2026-09-25 11:14:31Z`).
+- `kaveri-odoo-v3lc5`: `connected`, `tenant_id = f0a5e695…`, `development`.
+- MCF: `days_sales_outstanding` v1 current `active` (`f660fb7b`); `ar_balance` v1 current `active`; `gross_invoiced_amount` v1 **not current, `audit_pending`**; `total_journal_entries` v1 current **`active`** (`b8d2a132`), plus a non-current `draft`.
+- Chain status (computed `2026-09-24 06:11Z`): `days_sales_outstanding` **`red`** (`bindings_resolve: fail:1_unresolved`, `grain_cc_active: vacuous:derived_composition`); `total_journal_entries` **`green`**.
+
+**F. Tenant re-grounding for §3.0 (`tbc_kaveri_dev`, 2026-09-26T07:17:47Z).** Same container and role.
+
+```sql
+BEGIN READ ONLY;
+SELECT event_seq, migration_name, applied_at, review_disposition_sha256, git_ref
+  FROM admin.schema_migration_event ORDER BY event_seq;
+SELECT legal_entity_code, fiscal_calendar_code, is_active, effective_from, created_at
+  FROM organization.fiscal_calendar_config;
+SELECT legal_entity_code, display_name, country_code, currency_code FROM tenant_dim.dim_legal_entity;
+SELECT source_entity_name, source_contract_version_code, status, count(*)
+  FROM progression.admission GROUP BY 1, 2, 3;
+SELECT run_id, count(*), min(admitted_at) FROM progression.admission GROUP BY 1 ORDER BY 3;
+SELECT canonical_contract_id, contract_version_code, status, count(*), min(evaluated_at), max(evaluated_at)
+  FROM progression.canonical_evaluation GROUP BY 1, 2, 3;
+SELECT count(*) FROM fact.so_sc_929yc_v1_0_0;
+SELECT count(*) FROM fact.co_cc_dh5d9_v1_4_0;
+SELECT count(*) AS total, count(*) FILTER (WHERE fiscal_period IS NULL) AS unstamped
+  FROM fact.co_cc_dh5d9_v1_5_0;
+SELECT count(*) FROM fact.co_cc_dh5d9_v1_5_0 WHERE fiscal_period = 'FY2026-27/P05';
+SELECT to_regclass('fact.co_cc_dh5d9_v1_6_0');
+SELECT metric_contract_id, metric_version, status, evaluated_at FROM progression.metric_evaluation;
+SELECT metric_contract_id, status_code, started_at FROM progression.metric_run ORDER BY started_at;
+SELECT fiscal_period, metric_value, evidence_hash FROM fact.ms_total_journal_entries_v1_0_0;
+SELECT count(*) FROM evidence.evidence_record;
+SELECT count(*) FROM evidence.evidence_object;
+SELECT count(*) FROM evidence.lineage_object;
+SELECT count(*) FROM progression.admission_run_completion_hold;
+SELECT count(*) FROM progression.admission_run_completion_release;
+SELECT column_name FROM information_schema.columns
+ WHERE table_schema = 'progression' AND table_name = 'canonical_evaluation';
+COMMIT;
+```
+
+Captured results:
+- Tenant ledger: seq 1 `0001_tenant_ledger` and seq 2 `0002_source_legal_entity_binding`, both applied `2026-09-25 06:38Z` from bc-db `f3735d61`; seq 3 **`0003_admission_run_completion_hold`** applied **`2026-09-26 07:02:15Z`** from bc-db `886161c4`, disposition `sha256:6f77a29d…`.
+- Fiscal calendar: `* → IN-APR-MAR-MONTHLY` from 2000-01-01 (created 2026-09-23 06:41Z); `KAVERI-IN → IN-APR-MAR-MONTHLY` from 2023-04-01 (created 2026-09-25 09:47Z). Legal entity: `KAVERI-IN`, "Kaveri Precision Components Ltd", IN, INR.
+- Admission: `account.move | 1.0.0 | admitted | 25,744`, in 4 runs starting 2026-09-23 06:45Z / 06:54Z / 07:03Z / 07:16Z with 5,000 / 5,000 / 5,000 / 10,744 rows.
+- Canonical evaluation: cc-dh5d9 1.4.0 `accepted` 10,744 (07:31–07:33Z) and 1.5.0 `accepted` 10,744 (07:38–07:41Z), all on 2026-09-23.
+- Facts: SO 10,744; CO 1.4.0 10,744; CO 1.5.0 10,744 with 0 unstamped; 212 in `FY2026-27/P05`; `fact.co_cc_dh5d9_v1_6_0` → NULL (does not exist).
+- Metric: 1 evaluation, `c5ebf6d5…` v1.0.0 `accepted` at 2026-09-23 07:52:37Z. Runs: `deferred_inputs_unavailable` (07:34Z), `failed` (07:41Z), `completed` (07:52Z). Snapshot: `FY2026-27/P05 | 212 | (empty evidence_hash)`.
+- Evidence: `evidence_record` 0, `evidence_object` 5, `lineage_object` 25,745. Completion hold / release: 0 / 0 (0003's new tables are empty).
+- `progression.canonical_evaluation` columns do not include `binding_mechanism_code`.
+
+**What E and F do not prove:** they show stored state only. They do not show that a resolution or
+evaluation would succeed today (see the MLS-22 regression). They do not show the lc5 source row
+count, the served build, or live Odoo connectivity, and they do not replay any of the governed
+writes in §8.
+
 ## 4. Scope boundary — what tenant readiness owns
 
 - **Owns:** the MLS 15-25 walk for one real tenant (Kaveri) through lane L10 — provisioning →
@@ -246,6 +392,33 @@ independent confirmation.
 - **Deferred flows (held, not built):** BYO-DB, BC-Agent, AWS-Separate; AWS-Shared tier only in v1.
 
 ## 5. Critical path & blockers
+
+### 5.0 Current critical path (2026-09-26, from PLN-31c4a1 v18, checked against §3.0)
+
+1. **Accept the identity ADR** DEC-7a8cbc/D626, "binding-realized issuer identity" (amends DEC-a57eb8;
+   bc-docs#67, draft, proposed). Codex's gen-e90cd0-01 asked for this amendment before the 7c-c code
+   change (PR-B) can be accepted. Then **PR-B**, **bc-core#830** (DI fix, TSK-231594) and **#831**
+   (worker exit) merge.
+2. **One combined move of the served build** (TSK-4636d8), rehearsed on a clone, including proof that
+   activation queues its provisioning work.
+3. **D623 7c-c:** activate cc-dh5d9 1.6.0, provision it, and supersede CC 1.5.0 and OC 1.2.0
+   (TSK-e75f1d). This is what clears the MLS-22 regression (TSK-387779).
+4. **Held-tail release proof** on Kaveri (TSK-080294). The 0003 substrate is live, but the release
+   path has not been exercised end-to-end.
+5. **D623 7d:** observe again and resolve to COs with the correct legal entity. First fix TSK-da545b
+   (the resolver writes a column the tenant schema lacks).
+6. **Prove MLS-22 and MLS-23 again** over those COs.
+7. **MLS-24:** D575 non-superuser runtime identity + evidence immutability (TSK-d43263). Not started.
+   PLN-31c4a1 v18 calls it "the biggest unknown on the path".
+8. **MLS-25:** the portal KPI.
+
+**An open question the evidence raises:** §1 names **DSO** as the walk's metric, but the only snapshot
+so far is `total_journal_entries`. DSO's chain is still `red` (§3.1 E), and the 2026-09-21 grain
+mismatch (MLS-19 root cause in §8) has no recorded resolution in the sources used here. Either the
+destination metric is re-stated through a governed decision, or DSO's chain comes back onto the path.
+This document does not decide that.
+
+### 5.1 Critical path as written on 2026-09-21 (historical)
 
 The buildable-now rungs are **MLS-15/17/18** (tenant provisioning + Odoo connector/reader — the
 machinery exists). The path then narrows:
@@ -314,6 +487,137 @@ those reads are re-runnable against `bc_platform_dev` / `tbc_kaveri_dev` at plat
 treat it as source-reported). *(source-reported)* = an out-of-band HTTP/API result from this session
 that was **not** independently replayed by the auditor — treat as reported, not proven. No claim here
 discharges the D617-019 execution gates.
+
+**From 2026-09-23 on,** entries use the same two tags. *(reproducible read-only)* now means
+"shown by the §3.1 E/F queries of 2026-09-26T07:17Z". *(source-reported)* cites the closure file,
+Codex response or change record the claim rests on. Codex responses are cited by file name in
+`bc-external-audit/docs` at `origin/main` `56c08019`. The D623 evidence is on barecount-devhub branches
+`claude/d623-stage2-driver` (`eba67b85`) and `claude/d623-w3-apply` (`9f492acb`) under
+`artifacts/d623/`. Where Codex accepted a live closure **after its own read-only check**, the entry
+says so. Every live write below was a single attempt made under a committed operator grant plus a
+Codex `EXECUTION CLEARED` response naming the exact driver hash, and each clearance was used up by
+that one attempt.
+
+### 2026-09-26 — identity concept minted; CC 1.6.0 approved; tenant 0003 live; MLS-22 regression found
+
+- **D623 7c-a: Journal Entry `recording_legal_entity` reference concept (00:56Z).** *(source-reported)*
+  BCF `createReferenceConcept` minted concept `115b2945-1fd2-4386-9a60-81b6781926d2` (Journal Entry →
+  Legal Entity) with `identityRole=identity_bearing`, published `active` in the same call
+  (`stage7c/live-7c-a-20260926T005423Z/closure.json`). Cleared by RESPONSE-Codex-d617-070 (driver
+  `410a3e66…`); closure accepted by d617-071.
+- **B1: canonical meta-schema v2 gains the derivation function `resolve_source_entity_binding` (04:39Z).**
+  *(source-reported)* Change request `2175096c…` was made by the operator and approved by a second
+  identity, `bc-dbadmin@selenite.co` (`stage7c/b1-live-20260926T043857Z/closure.json`). The closure
+  cites clearance RESPONSE-Codex-gen-e9bcab-05.
+- **7c-b act 1: move of the served build to `9d0dc5aa` (05:25Z).** *(source-reported)* The script
+  **stopped at its "move" step, exit 1**. Codex checked read-only and accepted that the intended
+  served state was reached, without relabelling the attempt as completed (RESPONSE-Codex-gen-6f1e89-04).
+- **7c-b act 2: cc-dh5d9 1.6.0 created, submitted, approved (05:41Z).** *(reproducible read-only)*
+  1.6.0 is `approved` and 1.5.0 is still the only `active` version. *(source-reported)* Cleared by
+  gen-6f1e89-05 (driver `e71f5249…`); closure accepted by gen-6f1e89-06 ("1.5.0 remains the sole
+  active version"). Activation is deliberately left to 7c-c (`stage7c/HANDOFF-7c-c.md`).
+- **MLS-22 regression: active CC 1.5.0 can no longer be resolved (TSK-387779).** *(source-reported)*
+  A 7c-c design check on a clone of live (`stage7c/7cc-design/README.md`, F1) found two effects of
+  concept `115b2945`, which is identity-bearing but **derived** (from `company_id` via
+  `resolve_source_entity_binding`) and is mapped by no observation-contract field:
+  - activating 1.6.0 is refused with **403** ("Unit 0 F4a: … not mapped by any pinned
+    observation_references leg");
+  - the served build's resolver **throws** on the active 1.5.0 before it reads any tenant data.
+
+  A control run on the clone, with the concept's identity role changed, got past that point.
+  **Bounds on the claim:**
+  - "Refused on live since 2026-09-26T00:54Z" comes from reading the same code against identical
+    registry rows. No live resolution was attempted, and Codex calls the date "an inference, not an
+    independently observed runtime history" (RESPONSE-Codex-gen-e90cd0-01, CHANGES REQUIRED, which
+    confirms the diagnosis).
+  - The stored 1.5.0 COs from 2026-09-23 are unaffected *(reproducible read-only: still 10,744)*.
+    What is lost is the ability to resolve new ones.
+  - The same design check also found (F2) that the D575 activation fan-out does nothing in the
+    served build, because DI resolves the injected dependency to null (TSK-231594, bc-core#830). It
+    found (F3) that the provisioning worker does not exit (bc-core#831).
+  - The fix path is the D626 ADR (bc-docs#67), then PR-B, then 7c-c (§5.0).
+- **W3: tenant migration 0003 applied to `tbc_kaveri_dev` (07:02Z).** *(reproducible read-only)*
+  Ledger seq 3 = `0003_admission_run_completion_hold`, applied `07:02:15Z` from bc-db `886161c4`
+  (bc-db#76) with disposition `6f77a29d…`. Its new hold/release tables are empty. *(source-reported)*
+  Driver `16e332a1…`, cleared by RESPONSE-Codex-gen-00a388-02. The apply log has 65 `ok` checks and
+  none failed, fence lease `26338959…`, and 13 refused probes that were rolled back and left nothing
+  behind (`w3-apply/live-20260926T070207Z/{closure.json,apply.log}` on `claude/d623-w3-apply`).
+  Codex accepted the live closure after its own read-only check (gen-00a388-03) and closed the thread
+  (gen-00a388-04). The bc-db release substrate was reviewed on gen-54dcb4 (accepted with boundary,
+  -04/-05; thread closed -06). The **release path itself has not yet been exercised on Kaveri**
+  (TSK-080294).
+- **The d617 exchange was retired (RESPONSE-Codex-d617-072).** New intake is closed, and the
+  remaining D623 items continue on gen- threads. Codex's words: this "retires the exchange route, not
+  the D623 Platform Readiness program or any unfinished work".
+
+### 2026-09-25 — fiscal legal entity, connection owner, OC 1.3.0, source identity (D623 steps 2–7b)
+
+- **Step 2: platform and tenant migrations (06:38Z).** *(reproducible read-only)* Kaveri ledger seq 1–2
+  (`0001_tenant_ledger`, `0002_source_legal_entity_binding`) were applied at 06:38Z from bc-db
+  `f3735d61`. *(source-reported)* Platform ledger events 28–30 (`0018`, `0019`, `0021`). This attempt was
+  run by Codex under RESPONSE-Codex-d617-048 (driver `603b4de9…`), with an independent closure in
+  `CLOSURE-Codex-d617-048-stage2-live-2026-09-25.md` ("ACCEPTED WITH BOUNDARY — COMPLETED").
+- **Step 3: legal entity + fiscal calendar + connection owner (09:47Z).** *(reproducible read-only)*
+  `KAVERI-IN` (IN, INR) and its `IN-APR-MAR-MONTHLY` calendar from 2023-04-01. The connection's
+  `tenant_id` is now Kaveri. *(source-reported)* The first attempt (09:12Z, cleared by d617-052)
+  **halted with HTTP 500 on A1 and wrote nothing** (d617-053; `live-stage3-claude-20260925/closure.json`).
+  A successor driver, `c38061f0…`, cleared by d617-054, completed A1 and A2 with one assignment
+  event (`live-stage3-s4-claude-20260925/`). Codex accepted this after its own read-only check
+  (d617-055).
+- **Step 5: OC 1.3.0 and reader rebind (11:15Z).** *(reproducible read-only)* OC `45f8b60c…` 1.3.0 is
+  active **alongside** 1.2.0. *(source-reported)* The driver `557e9f81…` (cleared by d617-058) created,
+  approved and activated 1.3.0, which adds `company_id` and 6 fields, and moved Kaveri's
+  `account.move` reader binding to it (`live-stage5-claude-20260925/`). Accepted by d617-059.
+  `HANDOFF-7c-c.md` records both OC versions as active and plans to supersede 1.2.0 in 7c-c. The same
+  handoff (§4) warns about the CC case. When 1.6.0 activates beside 1.5.0, metric evaluation fails
+  with "ambiguous grain CC", while `mcv_chain_status.grain_cc_active` still passes, which is a false
+  green. So the window with two active CC versions must stay short and must never span a scheduled
+  evaluation.
+- **Step 7b: serve pinned build `238f8c09`, then Kaveri source identity (15:39Z).** *(source-reported)*
+  The served build moved to a clean checkout at `238f8c09` (bc-core#822). The step then created key
+  domain `odoo_res_company_id`, a declaration on leg `je_primary` (locator `company_id`) and a binding
+  from Odoo company `1` to `KAVERI-IN` (`stage7b/live-20260925/7b-run/closure.json`). Cleared by
+  d617-066 (driver `2c734b0e…`); closure accepted by d617-067.
+- **Code landed that day** *(source-reported, Codex landing responses):* bc-db#74/#75 (`f3735d6`,
+  d617-046), bc-core#818 (`acf7b22`, 049), #820 (`4746867`, 050), #821 (`e2f3a93`, 056), #817 (`81e02b6`,
+  060) and #822 (`238f8c0`, 064). The D624 source-onboarding ADR DEC-bacbf5 was accepted with boundary
+  at revision 2 and stays `proposed` (d617-037).
+
+### 2026-09-24 — D623 decided; the first apply package was sent back
+
+*(source-reported)* The D622/D623 ADRs were ratified, but only at a corrected head (RESPONSE-Codex-d617-032,
+accepted with boundary). Codex returned the first D623 fiscal-and-binding apply packages with
+CHANGES REQUIRED (d617-030, -031) before the corrected successors of 09-25.
+
+### 2026-09-23 — first real run on Kaveri: 10,744 moves admitted, resolved and evaluated to one snapshot
+
+- *(reproducible read-only)* Four admission runs (06:45Z–07:16Z) wrote 25,744 `account.move`
+  admissions and 10,744 SO rows. Two resolutions produced 10,744 COs each: cc-dh5d9 1.4.0 at 07:31Z
+  and 1.5.0 at 07:38Z (1.5.0 was created at 07:38:03Z). 1.4.0 is now `superseded`. Its
+  `supersede_after` of 2026-09-25 07:38Z is the 48-hour mark that activation sets
+  (`HANDOFF-7c-c.md` §4), not the moment of supersession. Kaveri's SC binding dates from 05:21Z and the `*` fiscal-calendar row from 06:41Z. Three metric runs
+  for `total_journal_entries` followed: `deferred_inputs_unavailable` (07:34Z), `failed` (07:41Z) and
+  `completed` (07:52Z). The last is an accepted evaluation with snapshot **212** for FY2026-27/P05.
+- *(source-reported, SES-1da00d checkpoint #5 and CHG-12f4fd)* That session found and fixed seven gaps
+  in sequence to get there:
+  1. CC `resolved_schema` was empty;
+  2. Kaveri's `schema_name` was malformed;
+  3. there was no fiscal-calendar config, so the `*` row was added;
+  4. Odoo relational and false-valued fields were typed wrongly for fact writes;
+  5. the SO table name was derived from the Odoo model rather than the SC;
+  6. there was no `posting_date_field`, so 1.5.0 was authored;
+  7. the `count` path refused string values.
+
+  The checkpoint records three of the data changes as **operator-approved direct changes**, not
+  governed-service writes: `tenant.tenants.schema_name`, `organization.fiscal_calendar_config`, and
+  `runtime.reader_flavor.config_json`. It also records the code fixes as uncommitted at the time. How
+  gap 7 was closed before the completed run is not stated in the sources used here.
+- **Meaning:** this is the first continuous real-source run for the platform, from source rows to
+  snapshot. It is **not** yet readiness:
+  - the periods came from the `*` calendar, not per legal entity (which D623 then set out to fix);
+  - the metric is `total_journal_entries`, not DSO (§5.0);
+  - no evidence was emitted (MLS-24);
+  - nothing has been shown in the portal (MLS-25).
 
 ### 2026-09-21 — MLS-17 wiring attempted, MLS-19 source binding fail-closed on a grain mismatch
 
