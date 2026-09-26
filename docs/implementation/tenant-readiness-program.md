@@ -86,7 +86,7 @@ row is `'active'`. This is the gate that makes "platform activation" mean someth
 | **21** | SO produced | reader execution → `progression.admission` + `fact.so_*` |
 | **22** | CO produced | canonical evaluation → `progression.canonical_evaluation` + `fact.co_*` |
 | **23** | Metric snapshot produced | metric evaluation → `progression.metric_evaluation` + `metric_snapshot_index` + `fact.ms_*` |
-| **24** | Snapshot proof complete | evidence + lineage writes; D387 `proof_status='complete'` |
+| **24** | Snapshot proof complete | Two conditions. (a) The snapshot's `metric_evaluated` Evidence and its one `evaluated_by` Lineage are written **in the same tenant transaction** as the snapshot; if they fail, no snapshot exists (DEC-48d222/D578, decided: "no proof, no record"). (b) The writer is the non-superuser, non-owner runtime identity, on a tenant whose `evidence.*` tables refuse UPDATE and DELETE and which that identity cannot bypass (DEC-09fb2f/D575, **proposed**). *Restated 2026-09-26:* the D389 signal "D387 `proof_status='complete'`" is retired for metrics. D578 reduced `proof_status` to a marker for WORM-archive completeness only, and the column exists in neither database (§3.1 H). |
 | **25** | KPI rendered in bc-portal | snapshot index + typed value row + tenant binding/permission pass |
 
 ## 3. Readiness matrix — grounded against live substrate
@@ -112,7 +112,7 @@ the cell says otherwise.
 | 21 SO | 🟢 (for 1.5.0) | RO: `progression.admission` has **25,744** rows, all `account.move`, SC 1.0.0, `admitted`, in 4 runs on 2026-09-23 (5,000 + 5,000 + 5,000 + 10,744). `fact.so_sc_929yc_v1_0_0` has **10,744** rows, one per Odoo move. The 25,744 therefore counts admission attempts across runs, not distinct moves. | Observe again under OC 1.3.0 and the per-entity identity (7d) |
 | 22 CO | ⚠ **regressed** | RO: `progression.canonical_evaluation` has 10,744 `accepted` rows for 1.4.0 and 10,744 for 1.5.0 (all 2026-09-23). `fact.co_cc_dh5d9_v1_5_0` has 10,744 rows, none with an empty `fiscal_period`. They were stamped before the `KAVERI-IN` calendar row existed (09-23 vs 09-25), so they used the `*` row. SR: resolving **active cc-dh5d9 1.5.0 throws** since D623 7c-a minted concept `115b2945` (2026-09-26T00:54Z). Shown on a clone, not observed on live (7cc-design README F1; gen-e90cd0-01). **TSK-387779.** | ADR bc-docs#67 → 7c-c (activate 1.6.0) → 7d (resolve again with correct legal entities) |
 | 23 Snapshot | ⚠ wrong metric so far | RO: 1 `progression.metric_evaluation`, `accepted`, 2026-09-23T07:52Z, for metric contract `c5ebf6d5…`. That is **`total_journal_entries`**: the snapshot table is `fact.ms_total_journal_entries_v1_0_0`, and CHG-12f4fd (SR) names MC `c5ebf6d5` / MCV `b8d2a132`, which is RO active with chain `green`. The snapshot `fact.ms_total_journal_entries_v1_0_0` = **212** for FY2026-27/P05, and 212 COs in 1.5.0 carry that period. 3 `metric_run` rows: deferred, failed, completed. **DSO has not been evaluated.** RO: `days_sales_outstanding` chain verdict is `red` (`bindings_resolve: fail:1_unresolved`), and its leaf `gross_invoiced_amount` is still `audit_pending`. | Prove again over COs with correct legal entities (7d). Decide whether the destination metric is still DSO (§1) or `total_journal_entries`. |
-| 24 Proof | 🟡 emitted once, does not count | RO: the snapshot's own transaction (2026-09-23 07:52:37.861569Z) wrote exactly one `evidence.evidence_object` of type **`metric_evaluated`** (subject `metric_evaluation_proof:9e57b668…`, `e6b.lineage.v1`) and one `evaluated_by` `lineage_object`. This is the **first observed E6-B emit**. The other 4 evidence objects are run records, and the other 25,744 lineage rows are `observed_as` rows from admission. `evidence_record` = 0. The snapshot row's own `evidence_hash` column is empty. The evidence tables are owned by `bc_tenant_owner` (not a superuser); the `fact.*` tables are owned by `barecount`, a superuser. SR: `TENANT_DATABASE_URL` in bc-core's `.env` on the Mac names `barecount`, and the W6 design (barecount-devhub PR #35, §0) reports that the emit was made as the superuser. The rows do not record the role. | Does not satisfy MLS-24: the writer was the superuser and the COs used the `*` calendar. MLS-24 needs D575: a non-superuser runtime identity, evidence immutability, and the superuser-owned `fact.*` reassigned (TSK-d43263, design in progress, v18 W6). A restatement of the MLS-24 signal per D578 (replacing D387's `proof_status`, §2) is proposed in barecount-devhub PR #35 and is pending Codex review (gen-bdb784). It is not adopted here. |
+| 24 Proof | 🟡 emitted once, does not count | Condition (a) of §2 **held**. RO: the snapshot's own transaction (2026-09-23 07:52:37.861569Z) wrote exactly one `evidence.evidence_object` of type **`metric_evaluated`** (subject `metric_evaluation_proof:9e57b668…`, `e6b.lineage.v1`) and one `evaluated_by` `lineage_object`. This is the first observed E6-B emit. The other 4 evidence objects are run records, and the other 25,744 lineage rows are `observed_as` rows from admission. The snapshot row's own `evidence_hash` column is empty. Condition (b) **did not**. SR: `TENANT_DATABASE_URL` in bc-core's `.env` on the Mac names `barecount`, and the W6 design (barecount-devhub PR #35, §0) reports that the emit, and the served `:3100` in general, log in as the superuser. The rows do not record the role, and no live session was connected to observe. RO for what is already built for D575 (§3.1 G/H): `evidence_object`, `evidence_record` and `lineage_object` in `tbc_kaveri_dev` each carry `no_update` and `no_delete` triggers and belong to `bc_tenant_owner` (not a superuser); role `bc_tenant_runtime` exists (not a superuser); the six `fact.*` tables belong to `barecount` (a superuser). | **D575 rollout**, the step never taken (SR, W6): serve `:3100` as `bc_tenant_runtime`, reassign the superuser-owned `fact.*`, then observe again in 7d under that identity over COs with correct legal entities (TSK-d43263; W6 sequence U4 → U3 → U5 → 7d). D575 itself is still `proposed`, and is not moved to decided here; see §5.0. |
 | 25 KPI in portal | ❓ | Never verified | Verify at the end |
 
 **Served bc-core** (SR): `:3100` runs `9d0dc5aa` (manifest `b749315f`). The move script stopped at
@@ -395,7 +395,28 @@ Captured results:
 - Lineage: 25,744 `observed_as` rows to admissions, written 06:45Z–07:16Z, plus exactly **1** `evaluated_by` row to `metric_evaluation:9e…` at 07:52:37.861569Z.
 - Owners: `evidence.evidence_object`, `evidence_record` and `lineage_object` belong to `bc_tenant_owner` (`rolsuper=f`). Every `fact.*` table belongs to `barecount` (`rolsuper=t`).
 
-**What E, F and G do not prove:** they show stored state only. They do not show that a resolution or
+**H. MLS-24 signal and D575 substrate (both databases, 2026-09-26; same container and role).** Run once
+against `bc_platform_dev` and once against `tbc_kaveri_dev`.
+
+```sql
+BEGIN READ ONLY;
+SELECT current_database(), count(*) AS proof_status_columns
+  FROM information_schema.columns WHERE column_name = 'proof_status';
+SELECT usename, application_name, count(*)
+  FROM pg_stat_activity WHERE datname = 'tbc_kaveri_dev' AND pid <> pg_backend_pid() GROUP BY 1, 2;
+SELECT rolname, rolsuper FROM pg_roles WHERE rolname IN ('barecount','bc_tenant_runtime','bc_tenant_owner');
+SELECT n.nspname, c.relname, t.tgname FROM pg_trigger t JOIN pg_class c ON c.oid = t.tgrelid
+  JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'evidence' AND NOT t.tgisinternal;
+COMMIT;
+```
+
+Captured results:
+- `proof_status` columns: **0** in `bc_platform_dev` and **0** in `tbc_kaveri_dev`.
+- No other session was connected to `tbc_kaveri_dev`, so the served build's login role could not be observed.
+- Roles: `barecount` is a superuser; `bc_tenant_owner` and `bc_tenant_runtime` are not.
+- `tbc_kaveri_dev` evidence triggers: `trg_{evidence_object,evidence_record,lineage_object}_no_{update,delete}` (6 triggers). There are none in `bc_platform_dev`, as expected.
+
+**What E, F, G and H do not prove:** they show stored state only. They do not show that a resolution or
 evaluation would succeed today (see the MLS-22 regression). They do not show the lc5 source row
 count, the served build, or live Odoo connectivity, and they do not replay any of the governed
 writes in §8.
@@ -433,8 +454,13 @@ writes in §8.
 5. **D623 7d:** observe again and resolve to COs with the correct legal entity. First fix TSK-da545b
    (the resolver writes a column the tenant schema lacks).
 6. **Prove MLS-22 and MLS-23 again** over those COs.
-7. **MLS-24:** D575 non-superuser runtime identity + evidence immutability (TSK-d43263). Not started.
-   PLN-31c4a1 v18 calls it "the biggest unknown on the path".
+7. **MLS-24:** the D575 rollout (TSK-d43263).
+   - The evidence triggers and the non-superuser role already exist on Kaveri (§3.1 H).
+   - Never done yet: serving as `bc_tenant_runtime` and reassigning the superuser-owned `fact.*`.
+   - The W6 design is barecount-devhub PR #35, under Codex review on gen-bdb784.
+   - DEC-09fb2f/D575 has been `proposed` since 2026-08-17, beyond the 30-day limit in DEC-623f8f
+     rule 4. Moving it to `decided` is a decision act, not part of this catch-up. It is to be done
+     with the gen-bdb784 disposition as its basis.
 8. **MLS-25:** the portal KPI.
 
 **An open question the evidence raises:** §1 names **DSO** as the walk's metric, but the only snapshot
