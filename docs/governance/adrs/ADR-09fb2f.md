@@ -2,7 +2,7 @@
 uid: DEC-09fb2f
 title: "Tenant evidence-chain immutability + runtime identity separation (platform prerequisite)"
 description: "Make the tenant evidence chain genuinely append-only at the DB boundary for every tenant + provisioning path, under a non-superuser runtime identity that cannot bypass the guard; gates any feature relying on Evidence/Lineage as authoritative immutable proof."
-status: proposed
+status: decided
 date: 2026-08-17T03:13:51.009Z
 project: bc-core
 domain: tenants
@@ -19,3 +19,26 @@ Surfaced by the A0/D574 legal-entity-binding work: the lean-lineage design (acce
 ## Decision
 
 The Foundation mandates that Evidence Objects and Lineage Objects are immutable, append-only, authoritative proof emitted synchronously at each boundary (Invariant VI; the-object-model.md). The tenant substrate does not enforce this: evidence.evidence_object/evidence_record/lineage_object have no UPDATE/DELETE guard in any tenant (0 triggers in pilot1; evidence.prevent_mutation() absent), the immutability triggers were written (drizzle/0022_immutability_triggers.sql) but never deployed (baseline docker/redesign/03-tenant-db.sql:320-365 and provisioner tenant-provisioning.service.ts createEvidenceTables create tables+indexes only), and the runtime app connects as barecount (superuser+owner) which can DISABLE TRIGGER / set session_replication_role / bypass. Consequence platform-wide: a post-commit UPDATE/DELETE can silently rewrite or erase the authoritative proof of any boundary act. Decision-in-principle (per Codex ruling e6bae9cd, Option B): make the tenant evidence chain genuinely append-only at the DB boundary. Part A — deploy evidence append-only enforcement (BEFORE UPDATE OR DELETE refuse; INSERT permitted; the drizzle/0022 prevent_mutation shape) into the LIVE baseline, the provisioner, AND a reconciled migration for already-provisioned tenants (a lone Drizzle file is insufficient). Part B — runtime identity separation: the tenant evidence writer must operate under a non-superuser, non-owner role that cannot disable/replace/bypass the guard; barecount.immutability_bypass is not an acceptable production escape hatch; any privileged-operator exception is explicitly infrastructure authority, never a feature-level guarantee. This is the same non-superuser identity separation the A0 descope deferred, now correctly sited as a platform decision made once for all evidence. Proof: on an isolated tenant clone under the actual runtime role, prove UPDATE/DELETE against each protected table fail, a bypass attempt fails, the governed INSERT still succeeds, plus existing-row migration posture and baseline/provisioner parity. This is platform-wide (admission/canonical/metric/intervention evidence, not A0) and gates A0 + any feature relying on Evidence/Lineage as authoritative immutable proof; the subsequent A0 review pins this accepted prerequisite and does not inherit prior approval. Companion platform-evidence gaps (the archive_key-null WORM handoff; the D387 fail-open canonical-evaluation emission) are related but distinct and may be folded in or kept separate. Design-only; anchors the thread artifacts/platform-evidence-immutability/DESIGN-tenant-evidence-immutability-prerequisite-2026-08-17.md (barecount-devhub@8fd2cde). No code, DDL, DBCP, or activation authorized.
+
+## Status decision (2026-09-26): decided, scoped to G1 for development
+
+The operator gave the decision directly to Codex. Codex preserved it as bc-external-audit
+`docs/OPERATOR-DISPOSITION-Codex-gen-bdb784-D575-ADR-decided-2026-09-26.md` (commit `3b3a2666`,
+raw SHA-256 `0c2fbe8464333dda468fd9977df879f3e15d73a6471c5331eab6a70226898673`):
+
+> D575 decision: on the accepted gen-bdb784 design, ADR D575 (DEC-09fb2f) moves from proposed to decided, scoped to G1 for development with G2 as a tracked production-readiness item; implementation and each live unit keep their own review, clearance and grant.
+
+**Basis.** DEC-623f8f: `proposed` → `decided` when consensus is reached. Here that is the design Codex
+accepted with boundary (RESPONSE-Codex-gen-bdb784-07, SHA-256 `9d846375…`; barecount-devhub#35 @
+`f80a47ac`) together with the operator's decision above. The G1 criterion, the R-1/R-2 disclosures and
+the separately gated probe-tenant retirement are recorded in
+`OPERATOR-DISPOSITION-Codex-gen-bdb784-D575-2026-09-26.md` (SHA-256 `843b6453…`).
+
+**Scope and limits:**
+- **G1 (development connection plane)** is decided. It is defined in the tenant-readiness SSOT §2 as
+  "MLS-24/G1".
+- **G2** (capability absence) is a tracked production-readiness item and is not part of this decision.
+- **Decided is not implemented.** This does not prove that the served build meets G1, and it grants
+  no implementation, database, credential, deployment or other live act. Each such unit keeps its own
+  review, clearance and grant.
+- **Moving to `implemented`** follows DEC-623f8f: a landed commit carrying `closes: DEC-09fb2f`.
