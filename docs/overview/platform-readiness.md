@@ -61,12 +61,16 @@ The deeper ADR sweep and by-design fail-open follow-ups remain tracked work.
 **Tenant readiness progress (2026-09-26):** checked read-only against the live databases, the
 first continuous real-source run has happened on Kaveri. On 2026-09-23, 10,744 Odoo journal
 entries were observed, resolved to canonical rows and evaluated to one accepted snapshot
-(`total_journal_entries` = 212 for FY2026-27/P05). This is **not yet tenant readiness**:
+(`total_journal_entries` = 212 for FY2026-27/P05, the pilot slice; the destination stays DSO). This is **not yet tenant readiness**:
 - the periods came from a catch-all fiscal calendar, not per legal entity (D623 is fixing that);
 - the metric is not yet DSO;
-- canonical resolution for the active contract has been refused since 2026-09-26 (open regression
-  TSK-387779, fixed by D623 7c-c);
-- its one evidence emit was written by the superuser, which does not count for proof (MLS-24);
+- on a clone, resolving the active canonical contract throws. The live start time (2026-09-26) is
+  inferred from the code, and no live resolution was attempted (open regression TSK-387779). The
+  proposed repair, D623 7c-c (activate CC 1.6.0 once the identity ADR and its code land), is still
+  pending;
+- one evidence and one lineage row exist for the snapshot, but source reports say they were written
+  by the superuser, and whether they were written atomically is not proven, so they do not count as
+  proof (MLS-24);
 - nothing has been shown in the portal.
 
 The per-rung state, the queries and the log live in the tenant SSOT,
