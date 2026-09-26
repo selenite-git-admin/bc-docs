@@ -478,12 +478,14 @@ writes in §8.
      with the gen-bdb784 disposition as its basis.
 8. **MLS-25:** the portal KPI.
 
-**The destination stays DSO** (umbrella coordinator ruling, 2026-09-26). No record changes §1.
+**The destination stays DSO.** This is already governed text: §1 of this document, and
+DEC-f44a71/D617 (decided), which names "a trusted, evidenced DSO KPI in bc-portal via account.move →
+journal_entry → DSO". No record changes it; changing it would need a new ADR.
 `total_journal_entries` is the **pilot slice**. It is **intended** to prove the machinery end-to-end
 on Kaveri (per-legal-entity fiscal periods, the D575 identity, atomic evidence), and it has **not yet**
 done so: its one snapshot used the `*` calendar, and its writer is reported to be the superuser
-(§3.0). **DSO is the destination proof.** This paragraph records the coordinator's ruling that no
-record changes §1; it is not a new governed decision. DSO's
+(§3.0). **DSO is the destination proof.** Classing `total_journal_entries` as a pilot slice is the
+umbrella coordinator's ruling (2026-09-26). It is not a governed decision, and it does not alter D617. DSO's
 chain is still `red` (§3.1 E), and the 2026-09-21 grain mismatch (the MLS-19 root cause in §8) has no
 recorded resolution yet. Grounding it on Kaveri is a new workstream, **W9 = TSK-ad23c1**, a read-only
 design unit. Tenant readiness is therefore proven only when steps 1–8 above hold for DSO, not only for
