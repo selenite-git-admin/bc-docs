@@ -116,3 +116,13 @@ above.
 - **Still separately gated:** the DDL and role apply (DBCP decisions D1–D8), the W6-P database-capability
   slice (TSK-fa31e7), the serve move and every live unit, each with its own review, clearance and grant.
 - **Moving to `implemented`** follows DEC-623f8f: a landed commit carrying `closes: DEC-fbc085`.
+
+## Amendment (2026-09-26, implementation unit TSK-addac0)
+
+This amendment records facts that point 7 and the DBCP needed once implementation began; it changes nothing in the decision above. Authority is the DBCP's amended §4.7 and §8 (bc-docs, contract-version-transition-evidence-dbcp.md).
+
+- **Where the DDL lives.** It is the bc-db forward migration `0023_contract_version_transition_evidence`, not `docker/redesign`, which is frozen by DEC-4c1396 / D610. The rollback sits outside the runner's discovery.
+- **One more baseline surface.** Point 7 gains `contract.canonical_mapping_version.governance_state_code` (TSK-68722f). It is disclosed debt, not evidence, and it is still shrink-only.
+- **The gate is stricter than first specified.**
+  - It inspects every role in `pg_roles`, with only stated exclusions, not a named list.
+  - It pins the emitter, guard and reject-function bodies (Codex gen-e5c98f-01 F1/F2).
