@@ -37,7 +37,7 @@ related: >
 > picks up at the **MLS-14→15 handoff gate** and runs the ladder for one real tenant.
 >
 > **Update 2026-09-27 (SES-ffc69f): the journal-entry pilot is proven, and the Platform Readiness umbrella is closed.**
-> - **Proven:** MLS 15–23 are GREEN for `total_journal_entries` on Kaveri, per legal entity `KAVERI-IN`, under the restricted logins. `:3100` serves bc-core `41e28550` as `bc_platform_runtime` / `bc_tenant_runtime`. §3.0 has the current matrix; §8 logs the nine live acts of the day.
+> - **Proven:** MLS 15–23 are GREEN for `total_journal_entries` on Kaveri, per legal entity `KAVERI-IN`, under the restricted logins. `:3100` serves bc-core `41e28550` as `bc_platform_runtime` / `bc_tenant_runtime`. §3.0 has the current matrix; §8 logs the eight live acts of the day (bc-core #854 was a code merge, not a live act).
 > - **Closed:** the umbrella (PLN-31c4a1) closed at this pilot by operator decision.
 > - **Carried to the next arcs** (§5.0): MLS-24/25, the DSO destination (W9) and D575 U5b.
 >
@@ -650,7 +650,7 @@ Step 2 was run by Codex itself under d617-048. That assurance covers **only** th
 2026-09-23 run and its direct database edits had **no** such clearance; their only recorded authority
 is the operator approval reported in a session checkpoint, and it is logged as such.
 
-### 2026-09-27 — nine live acts, one executor; MLS 15–23 GREEN for the journal-entry pilot; umbrella closed
+### 2026-09-27 — eight live acts, one executor; MLS 15–23 GREEN for the journal-entry pilot; umbrella closed
 
 **Authority and evidence:**
 - **One serial executor:** SES-ffc69f.
