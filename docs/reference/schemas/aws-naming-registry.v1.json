@@ -141,8 +141,10 @@
       "dist"
     ],
     "sct": [
-      "secret"
-    , "billing-secret"],
+      "secret",
+      "billing-secret",
+      "billing-role"
+    ],
     "reg": [
       "repo"
     ],
