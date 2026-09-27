@@ -142,7 +142,7 @@
     ],
     "sct": [
       "secret"
-    ],
+    , "billing-secret"],
     "reg": [
       "repo"
     ],
