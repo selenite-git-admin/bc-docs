@@ -88,7 +88,7 @@ A rule moves up one stage on operator approval, backed by evidence: its precisio
 
 ### What the security rule promises (operator ruling 2026-09-27, option A)
 
-- DevHub never shows values from secret stores (.env files, AWS credentials, Secrets Manager), and reads none, with one exception (amended 2026-09-27, operator): the once-a-day vendor-billing job, running as its own process, reads named usage-read keys into memory for vendor billing calls and saves only numbers. The keys are ANTHROPIC_BILLING_KEY (a billing-role service-account key) and OPENAI_USAGE_READ_KEY (a read-only admin key), from the billing secret through its billing-reader role, plus DEEPSEEK_API_KEY. It never uses an org-admin key; those stay in the vendor consoles (credential program TSK-088714). Failures are saved as fixed categories only. The web server never holds a key.
+- DevHub never shows values from secret stores (.env files, AWS credentials, Secrets Manager), and reads none, with one exception (amended 2026-09-27, operator): the once-a-day vendor-billing job, running as its own process, reads named usage-read keys into memory for vendor billing calls and saves only numbers. The keys are OPENAI_USAGE_READ_KEY (a read-only admin key) and, optionally, ANTHROPIC_BILLING_KEY (a non-workspace key whose account has the Billing role; Claude Console service accounts can only be Developer or Admin, so this is a member's key, and until one exists Anthropic spend is read in the console), both from the billing secret through its billing-reader role, plus DEEPSEEK_API_KEY. It never uses an org-admin key; those stay in the vendor consoles (credential program TSK-088714). Failures are saved as fixed categories only. The web server never holds a key.
 - It never shows a value it has flagged as a secret. Findings are kind and line only.
 - Code names and file paths are shown as they appear in git. Whoever can open DevHub, which is localhost only, can already read these repos.
 - Redacting key-shaped names is a best-effort safety net, not a guarantee. Pattern matching cannot recognise every credential format; hex-only strings are kept so commit SHAs stay readable.
@@ -119,3 +119,12 @@ A heuristic signal, look-alike services, produces candidates only.
 ## 3. One implementation per rule
 
 Each rule is implemented once: in the DevHub code scanner. Per DEC-5b760c, enforcement lives in each repo's CI. The scanner is therefore published as a CodeArtifact package that each repo's CI runs against its own baseline, the way @barecount/eslint-config is shared. No rule is implemented twice.
+
+Where a rule overlaps @barecount/eslint-config (length, smell), the written threshold in the source ADR (DEC-ee6018) is the authority. When such a rule reaches ratchet, one of the two stops checking it: either the ESLint rule is aligned to the threshold and the scanner reports ESLint's result, or the ESLint rule is dropped. Until then the scanner's check is a mirror and ESLint keeps its current settings.
+
+## Consequences
+
+- DevHub Codebase > Hotspots is the mirror for section 1, and Codebase > Ownership is the mirror for section 2.
+- The 17 tables with more than one writer in bc-core are adjudicated one at a time with the D619 method before the "no new second owner" ratchet starts. The ratchet's first baseline is whatever remains after that.
+- Which rules move to ratchet first is an operator decision, backed by each rule's sampled precision. The evaluation path (pipeline code) goes first.
+- Scan history, the shared scanner package and the per-repo baselines are separate follow-up units; this ADR does not change any repo's CI.
