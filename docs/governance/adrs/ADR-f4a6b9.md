@@ -2,7 +2,7 @@
 uid: DEC-f4a6b9
 title: "Engineering rule catalogue and responsibility registry (one job, one owner)"
 description: "Code rules as a governed catalogue climbing mirror → advisory → ratchet → gate; a responsibility registry so each job, table and external system has exactly one owner."
-status: proposed
+status: decided
 date: 2026-09-27T10:06:11.273Z
 project: barecount-devhub
 domain: governance
@@ -124,7 +124,7 @@ Where a rule overlaps @barecount/eslint-config (length, smell), the written thre
 
 ## Consequences
 
-- DevHub Codebase > Hotspots is the mirror for section 1, and Codebase > Ownership is the mirror for section 2.
+- DevHub Codebase > Hotspots is the mirror for section 1, and Codebase > Responsibilities (renamed from Ownership, operator 2026-09-27) is the mirror for section 2.
 - The 17 tables with more than one writer in bc-core are adjudicated one at a time with the D619 method before the "no new second owner" ratchet starts. The ratchet's first baseline is whatever remains after that.
 - Which rules move to ratchet first is an operator decision, backed by each rule's sampled precision. The evaluation path (pipeline code) goes first.
 - Scan history, the shared scanner package and the per-repo baselines are separate follow-up units; this ADR does not change any repo's CI.
