@@ -88,7 +88,7 @@ A rule moves up one stage on operator approval, backed by evidence: its precisio
 
 ### What the security rule promises (operator ruling 2026-09-27, option A)
 
-- DevHub never shows values from secret stores (.env files, AWS credentials, Secrets Manager), and reads none, with one exception (amended 2026-09-27, operator): the once-a-day vendor-billing job, running as its own process, reads the named billing keys (ANTHROPIC_ADMIN_KEY, OPENAI_ADMIN_KEY, DEEPSEEK_API_KEY, MOONSHOT_API_KEY) into memory for vendor billing calls and saves only numbers. The web server never holds a key.
+- DevHub never shows values from secret stores (.env files, AWS credentials, Secrets Manager), and reads none, with one exception (amended 2026-09-27, operator): the once-a-day vendor-billing job, running as its own process, reads named usage-read keys into memory for vendor billing calls and saves only numbers. The keys are ANTHROPIC_BILLING_KEY (a billing-role service-account key) and OPENAI_USAGE_READ_KEY (a read-only admin key), from the billing secret through its billing-reader role, plus DEEPSEEK_API_KEY. It never uses an org-admin key; those stay in the vendor consoles (credential program TSK-088714). Failures are saved as fixed categories only. The web server never holds a key.
 - It never shows a value it has flagged as a secret. Findings are kind and line only.
 - Code names and file paths are shown as they appear in git. Whoever can open DevHub, which is localhost only, can already read these repos.
 - Redacting key-shaped names is a best-effort safety net, not a guarantee. Pattern matching cannot recognise every credential format; hex-only strings are kept so commit SHAs stay readable.
