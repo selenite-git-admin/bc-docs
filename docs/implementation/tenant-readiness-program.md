@@ -1,7 +1,7 @@
 ---
 title: Tenant Readiness — Program (SSOT)
 status: drafting
-date: 2026-09-26
+date: 2026-09-27
 anchor_task: TSK-d73f01
 governing_adrs: >
   DEC-33d436/D606 (program mandate + platform/tenant readiness split — tenant readiness
@@ -35,6 +35,11 @@ related: >
 > This is the **tenant half** of Platform Readiness & Legibility (DEC-33d436/D606). The platform
 > half (MLS 01-14 / lanes L1-L9 + engine conformance) is **CLOSED** (2026-09-21). Tenant readiness
 > picks up at the **MLS-14→15 handoff gate** and runs the ladder for one real tenant.
+>
+> **Update 2026-09-27 (SES-ffc69f): the journal-entry pilot is proven, and the Platform Readiness umbrella is closed.**
+> - **Proven:** MLS 15–23 are GREEN for `total_journal_entries` on Kaveri, per legal entity `KAVERI-IN`, under the restricted logins. `:3100` serves bc-core `41e28550` as `bc_platform_runtime` / `bc_tenant_runtime`. §3.0 has the current matrix; §8 logs the nine live acts of the day.
+> - **Closed:** the umbrella (PLN-31c4a1) closed at this pilot by operator decision.
+> - **Carried to the next arcs** (§5.0): MLS-24/25, the DSO destination (W9) and D575 U5b.
 >
 > **Update 2026-09-26 (SES-d55c25):** §3 now opens with the current state of each rung, re-checked
 > read-only against the live databases (queries in §3.1 E–F). §5 opens with the current critical
@@ -92,7 +97,36 @@ row is `'active'`. This is the gate that makes "platform activation" mean someth
 
 ## 3. Readiness matrix — grounded against live substrate
 
-### 3.0 Current state for Kaveri (re-grounded 2026-09-26T07:17Z)
+### 3.0 Current state for Kaveri (2026-09-27, journal-entry pilot proven)
+
+**MLS 15 to 23 are GREEN for the journal-entry pilot** (`total_journal_entries`, legal entity `KAVERI-IN`), under the restricted logins.
+- The 7d window ran once, live, at 2026-09-27T09:39:55Z.
+- `:3100` served bc-core `41e28550` as `bc_platform_runtime` / `bc_tenant_runtime`.
+- The Platform Readiness umbrella (PLN-31c4a1) closed at this pilot by operator decision (§5.0).
+
+**Evidence tags:**
+- **RO** = shown by `BEGIN READ ONLY` queries on the live Mac cluster (sysid `7689410286420172840`) at 2026-09-27T09:40–09:52Z. The queries are committed in barecount-devhub `artifacts/serve-move/live/record/2026-09-27T093745Z-7d/post-state-readonly.zsh`. Codex re-ran the MLS 21–23 SQL independently in `RESPONSE-Codex-gen-04abf3-03`.
+- **SR** = rests on a named closure or record.
+
+Codex responses are named by thread in `bc-external-audit/docs`. barecount-devhub PRs are cited as `#n`, with their merge commits.
+
+| MLS | Kaveri state | What the evidence shows | What remains |
+|-----|--------------|-------------------------|--------------|
+| 15 Tenant | 🟢 | Unchanged from 2026-09-26 (below). | — |
+| 16 Fiscal calendar | 🟢 | RO: active `organization.fiscal_calendar_config` rows `*` → `IN-APR-MAR-MONTHLY` and `KAVERI-IN` → `IN-APR-MAR-MONTHLY`. The 7d COs are stamped from the `KAVERI-IN` row (MLS-22 below). | — |
+| 17 Connection | 🟢 | Unchanged. Odoo is still reached through the loopback relay to the laptop. | The Odoo move to the Mac is parked for the DSO arc (TSK-416502). |
+| 18 Reader | 🟢 | RO: observation contract `45f8b60c…` versions: 1.3.0 `active`; 1.0.0–1.2.0 `superseded`. SR: OC 1.2.0 was superseded in the OA + 7c-c window (#72 `cc98f0b6`; `gen-e90cd0-08`). | — |
+| 19 Bindings | 🟢 for the pilot, with a hygiene item | RO: `tenant.contract_binding` for Kaveri has cc-dh5d9 **1.6.0 (active)** plus cc-das36 1.0.0 and cc-7174p 1.0.0. Rows for the superseded cc-dh5d9 1.2.0, 1.4.0 and 1.5.0 are still `is_active=true`. SR: 1.6.0 was bound by A1 in the OA + 7c-c window (command `26dd22ab…`). | Settle the stale rows through the governed path (TSK-5f24ee, carry-over). |
+| 20 Fact tables | 🟢 | RO: all 7 `fact.*` tables in `tbc_kaveri_dev`, including `co_cc_dh5d9_v1_6_0`, are owned by **`bc_tenant_owner`** (non-superuser). `co_cc_dh5d9_v1_6_0` has ACL `{bc_tenant_owner=arwdDxtm/bc_tenant_owner,bc_tenant_runtime=ar/bc_tenant_owner}`. Tenant ledger: 0001–0004 `applied`. Platform ledger: 0022 and 0023 `applied`. SR: the 1.6.0 table was born owner-owned by the owner-worker drain (#72). | — |
+| 21 SO | 🟢 | RO: exactly one admission run under OC 1.3.0 (`67512fe1…`); its admissions are **10,744/10,744 `admitted`**; its SO rows are 10,744, 0 without `company_id`. SR: observed once in the 7d window (#78 `7db3644a`). | — |
+| 22 CO | 🟢 (regression cleared) | RO: `fact.co_cc_dh5d9_v1_6_0` holds **10,744** COs, all `recording_legal_entity = KAVERI-IN` and all fiscal-stamped. August 2026 = **FY2026-27/P05 = 212** COs, equal to the independent SO count for company 1. `progression.canonical_evaluation` 21,488 → 32,232. SR: resolved in 7d R1 (10,744 written, 0 skipped, 0 failed). This clears TSK-387779. | — |
+| 23 Snapshot | 🟢 | RO: `progression.metric_evaluation` `e960533f-0716-88c1-ba40-fd66006e7a1b` is `accepted`, version 1.0.0, 212 resolved references, and the latest accepted for MC `c5ebf6d5…`. Its one row in `fact.ms_total_journal_entries_v1_0_0` has `metric_value = 212`. The E1 API response, the persisted snapshot and the independent source count all equal 212; the 7d driver refuses GREEN unless all three agree (`window-7d.sh` `10a19035`, #77 `3d511fd4`, `gen-04abf3-02`). | The destination metric, DSO, is not yet evaluated (§5.0). |
+| 24 Proof (G1) | 🟡 emitted under the runtime login; not yet claimed | RO: one `metric_evaluated` evidence row (`adbbcf4c…`, subject `metric_evaluation_proof:e960533f…`, outcome `success`, `e6b.lineage.v2`) and one `evaluated_by` lineage row (`metric_contract:c5ebf6d5…:v1.0.0` → `metric_evaluation:e960533f…`, `e6b.lineage.v2`). Both carry the evaluation's own timestamp (09:39:55.650175Z).<br>**Writer:** the writer is `bc_tenant_runtime` by inference only. The evidence tables have no writer column, and statement and connection logging are off. The inference rests on four facts:<ul><li>the only session on `tbc_kaveri_dev` is `bc_tenant_runtime`;</li><li>the served logins are runtime-only;</li><li>the served build's boot line is `D575 served identity probe GREEN`;</li><li>the served secret's DB URL users are `bc_platform_runtime` and `bc_tenant_runtime`.</li></ul>MLS-24/G1 is **not claimed** here: MetricProofProjection `qualified` was not run, and the §2 conditions were not re-verified as a unit. | Carry-over to the next arc: MLS-24 claim, writer attribution (TSK-8a9186), D575 W6-U5b (TSK-ab7809). |
+| 25 KPI in portal | ❓ | Not started. | Carry-over to the next arc. |
+
+**Served bc-core** (RO): `:3100` = `_wt/freeze-c` @ `41e28550` (bc-core #854, the v3 count fix), health and ready 200, served on `bc_platform_runtime,bc_tenant_runtime`. Served-secret AWSCURRENT is `00707553…`.
+
+### 3.0.0 State on 2026-09-26T07:17Z (historical)
 
 Each cell is tagged with its evidence type. **RO** (reproducible read-only) means one of the
 `BEGIN READ ONLY` queries in **§3.1 E** (platform, `bc_platform_dev`) or **§3.1 F** (tenant,
@@ -113,7 +147,7 @@ the cell says otherwise.
 | 21 SO | 🟢 (for 1.5.0) | RO: `progression.admission` has **25,744** rows, all `account.move`, SC 1.0.0, `admitted`, in 4 runs on 2026-09-23 (5,000 + 5,000 + 5,000 + 10,744). `fact.so_sc_929yc_v1_0_0` has **10,744** rows, one per Odoo move. The 25,744 therefore counts admission attempts across runs, not distinct moves. | Observe again under OC 1.3.0 and the per-entity identity (7d) |
 | 22 CO | ⚠ **regressed** | RO: `progression.canonical_evaluation` has 10,744 `accepted` rows for 1.4.0 and 10,744 for 1.5.0 (all 2026-09-23). `fact.co_cc_dh5d9_v1_5_0` has 10,744 rows, none with an empty `fiscal_period`. They were stamped before the `KAVERI-IN` calendar row existed (09-23 vs 09-25), so they used the `*` row. SR: resolving **active cc-dh5d9 1.5.0 throws** since D623 7c-a minted concept `115b2945` (2026-09-26T00:54Z). Shown on a clone, not observed on live (7cc-design README F1; gen-e90cd0-01). **TSK-387779.** | ADR bc-docs#67 → 7c-c (activate 1.6.0) → 7d (resolve again with correct legal entities) |
 | 23 Snapshot | ⚠ wrong metric so far | RO: 1 `progression.metric_evaluation`, `accepted`, 2026-09-23T07:52Z, for metric contract `c5ebf6d5…`. That is **`total_journal_entries`**: the snapshot table is `fact.ms_total_journal_entries_v1_0_0`, and CHG-12f4fd (SR) names MC `c5ebf6d5` / MCV `b8d2a132`, which is RO active with chain `green`. The snapshot `fact.ms_total_journal_entries_v1_0_0` = **212** for FY2026-27/P05, and 212 COs in 1.5.0 carry that period. 3 `metric_run` rows: deferred, failed, completed. **DSO has not been evaluated.** RO: `days_sales_outstanding` chain verdict is `red` (`bindings_resolve: fail:1_unresolved`), and its leaf `gross_invoiced_amount` is still `audit_pending`. | Prove again over COs with correct legal entities (7d). The destination stays DSO (§1, §5.0); this snapshot is the pilot slice only. |
-| 24 Proof (G1) | 🟡 emitted once, does not count | **Condition (a) is not proven; only its row shape is.** RO: exactly one `evidence.evidence_object` of type **`metric_evaluated`** (subject `metric_evaluation_proof:9e57b668…`, `e6b.lineage.v1`) and exactly one `evaluated_by` `lineage_object` exist, carrying the same `created_at` (07:52:37.861569Z) as the metric evaluation and the snapshot row. This is the first observed E6-B emit. Surviving rows and equal timestamps show neither membership in one transaction nor that a failed proof write would have rolled the snapshot back; that atomicity is D578's **requirement**, not something these reads prove. The other 4 evidence objects are run records, and the other 25,744 lineage rows are `observed_as` rows from admission. The snapshot row's own `evidence_hash` column is empty. Condition (b) **not met** (SR, not established by the reads): `TENANT_DATABASE_URL` in bc-core's `.env` on the Mac names `barecount`, and the W6 design (barecount-devhub PR #35, §0 and §1.1: the `.env` URL user, the dev secret carries no DB keys, and the live serve script does not override it) reports that the emit, and the served `:3100` in general, log in as the superuser. The rows do not record the role, and no live session was connected to observe. RO for what is already built for D575 (§3.1 G/H): `evidence_object`, `evidence_record` and `lineage_object` in `tbc_kaveri_dev` each carry `no_update` and `no_delete` triggers and belong to `bc_tenant_owner` (not a superuser); role `bc_tenant_runtime` exists (not a superuser) and holds only SELECT and INSERT on them, with no UPDATE, DELETE, TRUNCATE or TRIGGER (§3.1 I). TRUNCATE is refused by privilege, not by the triggers; the six `fact.*` tables belong to `barecount` (a superuser). | **D575 rollout**, the step never taken (SR, W6): serve `:3100` as `bc_tenant_runtime`, reassign the superuser-owned `fact.*`, then observe again in 7d under that identity over COs with correct legal entities (TSK-d43263; W6 sequence U4 → U3 → U5 → 7d). D575 (DEC-09fb2f) is **decided** for G1 in development (2026-09-26; see §5.0), not implemented; G1 is not yet shown on the served system, and G2 is incomplete. *Criterion status (2026-09-26): G1 connection-plane criterion selected by the operator; D575 decided for G1 (not implemented); not yet shown on the served system; G2 incomplete.* |
+| 24 Proof (G1) | 🟡 emitted once, does not count | **Condition (a) is not proven; only its row shape is.** RO: exactly one `evidence.evidence_object` of type **`metric_evaluated`** (subject `metric_evaluation_proof:9e57b668…`, `e6b.lineage.v1`) and exactly one `evaluated_by` `lineage_object` exist, carrying the same `created_at` (07:52:37.861569Z) as the metric evaluation and the snapshot row. This is the first observed E6-B emit. Surviving rows and equal timestamps show neither membership in one transaction nor that a failed proof write would have rolled the snapshot back; that atomicity is D578's **requirement**, not something these reads prove. The other 4 evidence objects are run records, and the other 25,744 lineage rows are `observed_as` rows from admission. The snapshot row's own `evidence_hash` column is empty. Condition (b) **not met** (SR, not established by the reads): `TENANT_DATABASE_URL` in bc-core's `.env` on the Mac names `barecount`, and the W6 design (barecount-devhub PR #35, §0 and §1.1: the `.env` URL user, the dev secret carries no DB keys, and the live serve script does not override it) reports that the emit, and the served `:3100` in general, log in as the superuser. The rows do not record the role, and no live session was connected to observe. RO for what is already built for D575 (§3.1 G/H): `evidence_object`, `evidence_record` and `lineage_object` in `tbc_kaveri_dev` each carry `no_update` and `no_delete` triggers and belong to `bc_tenant_owner` (not a superuser); role `bc_tenant_runtime` exists (not a superuser) and holds only SELECT and INSERT on them, with no UPDATE, DELETE, TRUNCATE or TRIGGER (§3.1 I). TRUNCATE is refused by privilege, not by the triggers; the six `fact.*` tables belong to `barecount` (a superuser). | **D575 rollout**, the step never taken (SR, W6): serve `:3100` as `bc_tenant_runtime`, reassign the superuser-owned `fact.*`, then observe again in 7d under that identity over COs with correct legal entities (TSK-d43263; W6 sequence U4 → U3 → U5 → 7d). D575 (DEC-09fb2f) is **decided** for G1 in development (2026-09-26; see §5.0.1), not implemented; G1 is not yet shown on the served system, and G2 is incomplete. *Criterion status (2026-09-26): G1 connection-plane criterion selected by the operator; D575 decided for G1 (not implemented); not yet shown on the served system; G2 incomplete.* |
 | 25 KPI in portal | ❓ | Never verified | Verify at the end |
 
 **Served bc-core** (SR): `:3100` runs `9d0dc5aa` (manifest `b749315f`). The move script stopped at
@@ -454,7 +488,44 @@ writes in §8.
 
 ## 5. Critical path & blockers
 
-### 5.0 Current critical path (2026-09-26, from PLN-31c4a1 v18, checked against §3.0)
+### 5.0 Umbrella CLOSED at the journal-entry pilot (2026-09-27)
+
+**Operator decision, 2026-09-27:** the Platform Readiness umbrella (DevHub plan PLN-31c4a1) closes at the proven journal-entry pilot.
+- **Proven:** MLS 15–23 for `total_journal_entries` on Kaveri, per legal entity `KAVERI-IN`, under the restricted logins (§3.0).
+- **Not changed:** the destination (§1: a trusted, evidenced DSO KPI in bc-portal) and D617. The pilot proves the machinery; DSO still has to walk it.
+
+**What landed on 2026-09-27**, each under its own Codex EXECUTION CLEARED response and a direct operator grant preserved by Codex (§8):
+
+| Step | Merged | Codex thread |
+|---|---|---|
+| W6-U3 | #51 `fa3296eb` | `gen-0a1c21` |
+| 0022 | #54 `a2d8fb3b` | `gen-bc9737` |
+| D627 0023 | #53 / #58 `40e1993e` | `gen-e8a74e` |
+| tenant/0004 | #55 / #60 `cb28c77a` | `gen-b49dc6` |
+| W6-U5a activation + combined serve move | #61 / #66 `2269c68c` | `gen-f6b118` |
+| W6-OA + D623 7c-c | #69 / #72 `cc98f0b6` | `gen-e90cd0` |
+| bc-core #854 (the v3 count fix, `41e28550`) | — | `gen-dd264c` |
+| Serve move #2 | #73 / #74 `657f54bc` | `gen-27618c` |
+| D623 7d | #77 / #78 `7db3644a` | `gen-04abf3` |
+
+**Carry-overs to the operator's next arcs**, as DevHub tasks under PLN-31c4a1, tagged `carry-over`:
+- **MLS-24/G1 claim** and **MLS-25 portal KPI**.
+- **W9 DSO on Kaveri** (TSK-ad23c1): the destination.
+- **D575 W6-U5b**, the per-transaction tenant seam (TSK-ab7809), with its design blockers D1 (TSK-26fad4) and D2 (TSK-ed6fd1).
+- **Odoo move to the Mac**, U2 (TSK-416502, the DSO arc).
+- **Hygiene:**
+  - stale `is_active` canonical bindings (TSK-5f24ee);
+  - D431 O↔C check to recognise binding-realized concepts (TSK-b8f542);
+  - evidence writer attribution (TSK-8a9186);
+  - worker-only secret projection (TSK-f3617a);
+  - count_distinct spec coverage (TSK-ab0f4f);
+  - kit raw gate output on RED (TSK-304663);
+  - make-candidate-2 gate (TSK-1abeb8);
+  - S3 backup remote digest (TSK-c8e68d).
+
+**Residuals that still stand:** R-1 and R-2 (§2 row 24) remain disclosed. G2 is deferred.
+
+### 5.0.1 Critical path as of 2026-09-26 (historical, PLN-31c4a1 v18)
 
 1. **Accept the identity ADR** DEC-7a8cbc/D626, "binding-realized issuer identity" (amends DEC-a57eb8;
    bc-docs#67, draft, proposed). Codex's gen-e90cd0-01 asked for this amendment before the 7c-c code
@@ -578,6 +649,41 @@ where the evidence records one, its committed operator-grant file (`artifacts/d6
 Step 2 was run by Codex itself under d617-048. That assurance covers **only** those entries. The
 2026-09-23 run and its direct database edits had **no** such clearance; their only recorded authority
 is the operator approval reported in a session checkpoint, and it is logged as such.
+
+### 2026-09-27 — nine live acts, one executor; MLS 15–23 GREEN for the journal-entry pilot; umbrella closed
+
+**Authority and evidence:**
+- **One serial executor:** SES-ffc69f.
+- **Per act:** a sysid-bound read-only pre-state, a Codex `EXECUTION CLEARED` response binding the exact driver hash and merge commit, and a direct operator grant preserved by Codex as `OPERATOR-GRANT-Codex-gen-<thread>-*` (the executor compared it byte-for-byte before running).
+- **After:** one invocation, then a closure that Codex accepted after its own read-only checks.
+- **Where the evidence lives:** under barecount-devhub `artifacts/serve-move/live/record/` and the per-unit record PRs below.
+- **Rehearsals:** every act was first rehearsed on throwaway clones restored from read-only dumps (docker on non-live `127.0.0.1` ports, never the live `bc-postgres`).
+- **Tags:** *(reproducible read-only)* = the 2026-09-27 queries of §3.0. *(source-reported)* = the named closure.
+
+- **05:00Z W6-U3 (tenant-object convergence).** *(source-reported)* Classified window with a verified post digest; GREEN. #51 `fa3296eb`; `gen-0a1c21`.
+- **05:38Z W6-P 0022 (platform served login).** *(source-reported)* GREEN; record #54 `a2d8fb3b`; `gen-bc9737`. *(reproducible read-only)* The ledger shows 0022 `applied`.
+- **06:23Z D627 0023 (contract-version transition evidence).** *(source-reported)* GREEN; window #53 `d6f5b578`, record #58 `40e1993e`; `gen-e8a74e`. *(reproducible read-only)* The ledger shows 0023 `applied`.
+- **06:44Z tenant/0004 (admission run context).** *(source-reported)* GREEN; window #55 `c676e912`, record #60 `cb28c77a`; `gen-b49dc6`. *(reproducible read-only)* The Kaveri tenant ledger shows 0001–0004 `applied`.
+- **07:39Z W6-U5a activation + combined serve move.** *(source-reported)*
+  - Activation A1–A6: runtime-role passwords set, and one cloud act (the served secret's new version carries the runtime URLs).
+  - `:3100` moved from `9d0dc5aa` to the frozen combined build bc-core `d29ea975` under `bc_platform_runtime` / `bc_tenant_runtime`.
+  - GREEN; #61 `cfc70bf7`, record #66 `2269c68c`; `gen-f6b118`.
+- **08:40Z W6-OA + D623 7c-c.** *(source-reported)* GREEN; successor #69 `a1ee1c28`, record #72 `cc98f0b6`; `gen-e90cd0` (closure accepted in `-08`).
+  - OA created the tenant-owner secret and set the non-superuser `bc_tenant_owner` password.
+  - cc-dh5d9 1.6.0 was activated.
+  - One owner-worker drain provisioned `fact.co_cc_dh5d9_v1_6_0`, owner-owned, with runtime `ar` only.
+  - CC 1.5.0 and OC 1.2.0 were superseded, with exactly 4 D627 transition rows written by `bc_platform_runtime`.
+  - The OC chain node stayed amber on one disclosed D431 message about the binding-realized `recording_legal_entity` (carry-over TSK-b8f542).
+- **A late defect found by rehearsal, not live.** The whole-path clone rehearsal (serve → OA + 7c-c → 7d) found that the v3 numeric profile (DEC-c4619b E2) refused `count` over date strings. MLS-23 would have failed live after every other act had landed.
+  - Fixed in bc-core #854 (`count` / `count_distinct` are type-agnostic; value aggregates still refuse strings), merged as `41e28550`; `gen-dd264c`.
+- **09:03Z serve move #2.** *(source-reported)* `:3100` moved from `d29ea975` to `41e28550` with the same launcher, logins, secret version and password verifiers, and no activation. GREEN; #73 `9de8af5c`, record #74 `657f54bc`; `gen-27618c`.
+- **09:39Z D623 7d.** *(reproducible read-only; Codex re-ran it)* GREEN; the 7d driver was hardened in round 1 to bind the evaluated value to its evaluation (#77 `3d511fd4`), record #78 `7db3644a`; `gen-04abf3`.
+  - Observed once under OC 1.3.0: 10,744/10,744 admitted, all with `company_id`.
+  - Resolved 10,744 COs, all `KAVERI-IN` and fiscal-stamped (P05 = 212).
+  - Evaluated `total_journal_entries` P05 as of 2026-08-31 for `KAVERI-IN` = **212**. The response, the persisted snapshot and the independent source count agree.
+  - The E6-B v2 proof and lineage were written with the evaluation.
+- **Rehearsal custody, disclosed.** Five kit "stage R" failures that day were traced to scratch tooling, not to the product. The clone tool reused a named docker volume, so the new clone kept an old superuser password and the D627 gate's TCP login failed. The failure was fail-closed. The tool now refuses an existing volume, and teardown removes it.
+- **Umbrella closed** at this pilot by operator decision (§5.0).
 
 ### 2026-09-26 — identity concept minted; CC 1.6.0 approved; tenant 0003 live; MLS-22 regression found
 
