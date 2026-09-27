@@ -13,7 +13,11 @@ governing_adrs:
   - DEC-771baf (Tenant database architecture and run scope)
   - DEC-f02230 (Tenant DB schema organization)
   - DEC-2c79c8 (Per-tenant SQL isolation; evidence tables in tenant schemas)
-  - DEC-ebb3cd (Evidence and lineage write semantics — D387: best-effort + proof_status; per-evaluation lineage cardinality)
+  - DEC-ebb3cd (Evidence and lineage write semantics — D387: best-effort + proof_status; per-evaluation lineage cardinality). For metric evaluation its best-effort rule and `proof_status` marker are replaced by DEC-48d222; it still governs the boundaries not yet brought to the atomic posture
+  - DEC-48d222 (D578: atomic proof for metric evaluation — Evidence and Lineage join the Snapshot transaction; WORM archive best-effort)
+  - DEC-09fb2f (D575: tenant evidence-chain immutability and runtime identity separation)
+  - DEC-fbc085 (platform-plane evidence home for contract-version governance transitions)
+  - DEC-3016e4 (the fiscal-calendar window a metric proof's scope is checked against is half-open)
 v2_sources:
   - system/platform/P07-evidence-lineage/index.md
   - system/platform/P07-evidence-lineage/evidence-service/index.md
@@ -27,7 +31,14 @@ v2_sources:
 
 This chapter defines the runtime treatment of the platform's two proof object types under the Foundation execution model. It consolidates the proof-emission behavior described per boundary in Admission and Observation through Action Evaluation into one treatment of Evidence and Lineage. It defines per-act emission discipline, the per-record specialization at the admission boundary, the relationship of proof emission to once-per-act evaluation, the proof chain that supports audit, the audit consumption discipline, and the retention rule that operationalizes Invariant VI. It distinguishes the two proof object types from progression objects so that proof emission and authoritative state are not conflated. It does not redefine the Object Model (The Object Model), the per-boundary contract grammar (The Contract Grammar), the evaluation boundaries themselves (The Evaluation Boundaries), the runtime components that emit proof (Admission and Observation through Action Evaluation), the relational schema for proof storage (Data Model and Schema), or the API surface for proof consumption (API Surface).
 
-This chapter follows the authoritative Foundation reading in which Evidence and Lineage are immutable, append-only proof object types emitted synchronously with the proof-emitting act they describe. Per DEC-ebb3cd (D387), the platform's runtime contract for proof writes is **best-effort, not transactional**: boundary services attempt evidence and lineage emission at the same act that produces the authoritative object, and the outcome is recorded durably as a `proof_status` marker on the authoritative progression row (`complete`, `partial`, `degraded`, or `NULL` for rows predating the D387 Stage 1 marker). Failed proof writes do not roll back authoritative object persistence; they are surfaced through `proof_status` and, in a future stage, through `chain_status.break_summary_json.reason_code = 'proof_degraded'` once the chain-status integration lands (deferred per TSK-296271 to honor the platform/tenant DB one-way-dependency invariant). Cryptographic chaining and privacy-erasure mechanisms named in the broader ADR corpus are not operationally expanded here beyond what the Orthogonal proof objects section of The Object Model and the Proof emission at every boundary section of The Evaluation Boundaries authorize. Their full runtime treatment requires corresponding updates to the Foundation spine before they become authoritative here.
+This chapter follows the authoritative Foundation reading in which Evidence and Lineage are immutable, append-only proof object types emitted synchronously with the proof-emitting act they describe.
+
+The durability contract now differs by boundary (section Proof durability):
+- **Metric evaluation is atomic** (DEC-48d222, D578). The act's Evidence and Lineage are written in the Metric Snapshot's own tenant transaction. If they cannot be written, the snapshot is not recorded: no proof, no record.
+- **The other boundaries remain best-effort** per DEC-ebb3cd (D387) until their own governed units bring them to the atomic posture.
+- **The `proof_status` marker is retired.** DEC-ebb3cd's durable `proof_status` marker exists in no schema, platform or tenant; the proof is read from the preserved records themselves.
+
+Cryptographic chaining and privacy-erasure mechanisms named in the broader ADR corpus are not operationally expanded here beyond what the Orthogonal proof objects section of The Object Model and the Proof emission at every boundary section of The Evaluation Boundaries authorize. Their full runtime treatment requires corresponding updates to the Foundation spine before they become authoritative here.
 
 ## Proof artifact inventory
 
@@ -46,10 +57,10 @@ The Evidence Object records that a proof-emitting act occurred and what its outc
 
 | Evidence concern | Runtime effect |
 |---|---|
-| Emission act | Evidence is **attempted** synchronously with the act it describes: a progression-object emission, a record-level outcome at admission, or a governed action outcome-resolution act against a preserved Action Object. Per DEC-ebb3cd, the attempt is best-effort; a failed write is captured durably as `proof_status='degraded'` on the authoritative progression row rather than rolling back the act. |
+| Emission act | Evidence is emitted synchronously with the act it describes: a progression-object emission, a record-level outcome at admission, or a governed action outcome-resolution act against a preserved Action Object. For metric evaluation the write is part of the act's transaction (DEC-48d222); at the boundaries still on DEC-ebb3cd it is best-effort, and a failed write does not roll back the act. |
 | Recorded content | The Evidence record captures evaluation type, inputs, outputs, evaluation context, outcome, and timestamp per the Evidence Object section of The Object Model. The exact record schema lives in the Contract Schemas reference and the relevant tenant-schema ADRs. |
 | Immutability | Evidence is not modified after emission. A correction is a new act that produces a new Evidence record. Retention policy may apply to historical Evidence; modification does not. |
-| Coverage | Every proof-emitting act attempts at least one Evidence record. Acts that do not produce a new progression object, such as rejected admissions and action outcome resolution, still attempt Evidence describing the act. The progression row's `proof_status` records whether the attempt succeeded. |
+| Coverage | Every proof-emitting act emits at least one Evidence record. Acts that do not produce a new progression object, such as rejected admissions and action outcome resolution, still emit Evidence describing the act. Whether a given act's proof is present is read from the preserved Evidence and Lineage records, never from a marker. |
 
 Evidence describes the act. It does not influence later evaluation. It is read by audit and by operational consumers; it is not consumed as evaluation input by subsequent boundary acts.
 
@@ -66,33 +77,54 @@ The Lineage Object records explicit reference relationships established at a pro
 
 Per the Lineage Object section of The Object Model, deeper traversal of the dependency graph is constructed from preserved direct edges by the reader. The platform does not maintain a transitive index.
 
-## Proof durability: best-effort writes and `proof_status`
+## Proof durability
 
-> **Correction note (2026-09-26): this section is out of date for metric evaluation.**
-> - **What replaces it.** DEC-48d222/D578 (decided 2026-08-19) makes metric-evaluation proof
->   **atomic**. The `metric_evaluated` Evidence and its `evaluated_by` Lineage are written in the
->   snapshot's own tenant transaction; if they fail, the snapshot rolls back ("no proof, no record").
->   Best-effort (D387 D-1) now applies only to publishing the S3 WORM archive, and `proof_status` is
->   reduced to a marker for archive completeness only.
-> - **The column is gone.** A read-only check on 2026-09-26 found no `proof_status` column in
->   `bc_platform_dev` or `tbc_kaveri_dev` (implementation/tenant-readiness-program.md §3.1 H), so the
->   table below is historical.
-> - **Other boundaries.** Per D578's scope, the boundary services still on best-effort emission are
->   brought to the atomic posture in their own governed units.
-> - **Still to come:** a full revision of this chapter.
+### Metric evaluation: atomic proof (DEC-48d222, D578)
 
-Per DEC-ebb3cd (D387 D-1), the platform's runtime contract for Evidence and Lineage writes is **best-effort, not transactional**. Boundary services attempt evidence and lineage emission synchronously with the act that produces the authoritative progression object, but the durability of those proof writes does not gate the authoritative write.
+- **Transaction.** A metric evaluation writes its Metric Snapshot rows, one `metric_evaluated` Evidence record and one `evaluated_by` Lineage record in the **same tenant transaction**. If the proof cannot be written, the whole act rolls back and no snapshot is recorded.
+- **Exactly one proof pair per evaluation.** Two partial unique indexes in every tenant's evidence schema enforce it:
+  - `uq_evidence_object__metric_eval_proof_subject`: one Evidence per `metric_evaluation_proof:<evaluation>` subject;
+  - `uq_lineage_object__evaluated_by_target`: one `evaluated_by` Lineage per evaluation.
+- **WORM archive.** Only the publication of the S3 WORM archive copy remains best-effort.
 
-| `proof_status` value | Meaning | When recorded |
+### Boundaries still on DEC-ebb3cd (D387)
+
+Admission, canonical evaluation and action evaluation still emit proof best-effort, per DEC-ebb3cd, until their own governed units bring them to the atomic posture:
+- a failed proof write does not roll back the act;
+- a missing proof write is **not** inferred or reconstructed: the preserved records are the only proof, and an act without them is not authoritatively proved.
+
+### The retired `proof_status` marker
+
+DEC-ebb3cd recorded proof durability as a `proof_status` column (`complete` / `partial` / `degraded` / `NULL`) on the progression row. No such column exists in any platform or tenant schema: D578 retired it for metric evaluation, and it was never realized elsewhere. The chain-status integration it anticipated (`proof_degraded`) is therefore moot. Readers do not look for the marker.
+
+### Immutability and runtime identity (DEC-09fb2f, D575)
+
+- **Ownership and privileges.** In every tenant database, the evidence schema, its three tables and the `prevent_mutation` trigger function are owned by `bc_tenant_owner`. The served runtime login `bc_tenant_runtime` holds INSERT and SELECT only, and no EXECUTE on the trigger function.
+- **Triggers.** BEFORE UPDATE/DELETE triggers refuse any change, **including by the owner**. The trigger has no bypass branch.
+- **Served identity.** Since the 2026-09-27 serve move, the served process connects to tenant databases only as `bc_tenant_runtime` and to the platform only as `bc_platform_runtime`. Neither login is a superuser or holds a membership, so the process that emits proof cannot rewrite it.
+- **Identity receipt.** A metric proof written in the `e6b.lineage.v2` format carries the session identity that wrote it. A proof is qualified only when that writer was `bc_tenant_runtime`, not a superuser and not a row-level-security bypasser.
+
+### Reading a metric proof: the proof projection
+
+The strength of a metric evaluation's proof is **derived at read time** from the preserved records by a read-only projection keyed on the Metric Snapshot. It never writes, never triggers evaluation, and never infers proof into existence. It evaluates in stages, and the first failing stage decides the outcome:
+
+| Stage | What it checks | Failure outcome |
 |---|---|---|
-| `complete` | The act's evidence and lineage writes both succeeded. | Set on the progression row when the boundary service observes both helpers returning success. |
-| `partial` | Reserved for future use (e.g., evidence succeeded but only some of N expected lineage edges landed). | Not produced by Stage-1 boundary writers in the readiness baseline. |
-| `degraded` | At least one of the act's evidence or lineage writes failed. The authoritative progression object is preserved; the proof-write failure is captured here. | Set on the progression row when the boundary service observes a helper returning false. The failure is also logged as a structured warning. |
-| `NULL` | The progression row pre-dates the proof_status marker (D387 Stage 1 forward-only) or was written by a path that has not yet adopted persistence. | Existing rows on `tbc_*_dev` databases at Stage 1 apply time carry NULL. A future stage backfills these rows with verifiable values; backfill is not part of D387 Stage 1 and is not assumed in chain readiness. |
+| Availability, existence | The snapshot, its evaluation, and the Evidence and Lineage recomputed from the evaluation's identity | `unavailable`, `missing` |
+| Version and internal consistency | The lineage format version; tenant, identities, singletons and the recorded checks | `unsupported_version`, `mismatch` |
+| Scope (v2) | The scope is identical in Evidence and Lineage and names the snapshot's period. The governed fiscal-calendar row was in effect at the as-of: the window is **half-open** `[effective_from, effective_to)` (DEC-3016e4), so the boundary day is outside | `mismatch` |
+| Caller scope | The metric contract, period, legal entity and calendar the caller expects | `out_of_scope` |
+| Version branch | A v1 proof has no scope and no identity receipt | `unqualified_legacy` |
+| Identity receipt (v2) | The writer was `bc_tenant_runtime` and not privileged | `unqualified_identity` |
+| Establishable | Every check could be established (for example, canonical-object period membership) | `unqualified_unverifiable` |
+| Qualified | A positive conjunction: v2 and every check `passed` | `qualified` |
 
-The marker is persisted on the relevant tenant progression row (`progression.admission`, `progression.canonical_evaluation`, `progression.metric_evaluation`, `progression.intervention_evaluation`). It is **not** copied onto fact tables in the current stage; per-grain proof transparency is a future Inspector concern. Existing chain-status governance does not yet read this marker — `ChainStatusService` is a platform-DB service and reading tenant progression rows from it would breach the platform/tenant DB one-way-dependency invariant (DEC-771baf, DEC-f02230). The integration that surfaces `proof_status='degraded'` into `chain_status.break_summary_json.reason_code = 'proof_degraded'` is **deferred to a separate scoping decision** (tracked under TSK-296271 with three alternative designs: cross-DB read with ADR amendment, tenant-side projection into a platform surface, or indefinite defer). Until that decision lands, `proof_status` is observable on the tenant progression row but does not influence chain verdict computation.
+### Platform-plane governance evidence (DEC-fbc085)
 
-The discipline rule remains: a missing or degraded proof write is **not** inferred from logs into authoritative status. It is recorded explicitly as `proof_status='degraded'` on the authoritative progression row, and the row remains the read-of-record. Readers that care about proof durability inspect `proof_status` directly; they do not synthesize the value from surrounding state.
+Proof also exists on the platform plane:
+- A contract version's governance-state transition (for example `active → superseded`) writes an append-only transition record through a trigger **in the same transaction** as the transition, attributed to the database principal and the request.
+- The records are owned by `bc_schema_owner` and written only through the emitter trigger. The served platform login `bc_platform_runtime` holds neither UPDATE nor DELETE on them.
+- This is the platform counterpart of the tenant evidence chain. It is governance evidence about contracts, not tenant proof objects.
 
 ## Per-act emission across the four boundaries
 
@@ -102,7 +134,7 @@ Proof emission cardinality varies by boundary because the boundaries differ in a
 |---|---|---|
 | Admission (Admission and Observation) | One Evidence record per per-record outcome (`admitted`, `quarantine`, `warn`, `log`, `block`); plus one act-level Evidence describing batch outcome where applicable | One Lineage record per emitted Source Object; rejected records emit no Lineage because no Source Object is emitted |
 | Canonical evaluation (Canonical Evaluation) | One per-act Evidence recording gate, resolution, schema-conformance, and semantic-rule outcomes | One Lineage per emitted Canonical Object recording references to consumed Source Objects, applied Canonical Contract version, and applied Canonical Mapping version |
-| Metric evaluation (Metric Evaluation) | One per-act Evidence recording gate, formula, and classification outcomes | One Lineage **per evaluation act**, recording references to the consumed Canonical Object versions and the applied Metric Contract version. Per DEC-ebb3cd D-2, the cardinality is per-act, not per-snapshot — the snapshot identities emitted by the act are referenced through the lineage record's `toObjects` set so that per-snapshot provenance is preserved without lineage row inflation. |
+| Metric evaluation (Metric Evaluation) | Exactly one per-act `metric_evaluated` Evidence recording gate, formula, classification and scope outcomes, written in the snapshot transaction (DEC-48d222) | Exactly one `evaluated_by` Lineage **per evaluation act**, in the same transaction, recording references to the consumed Canonical Objects (or, for a composite, the consumed upstream Metric Snapshots) and the applied Metric Contract version. Per DEC-ebb3cd D-2 the cardinality is per-act, not per-snapshot: the snapshot identities emitted by the act are referenced through the lineage record's `toObjects` set. |
 | Action-creation (the Action-creation act section of Action Evaluation) | One per-act Evidence recording the action-creation outcome, applied Intervention Contract version, declared intent, recorded assignee pool, and trigger evaluation result | One Lineage per emitted Action Object recording references to the consumed Metric Snapshot versions and the applied Intervention Contract version |
 | Outcome-resolution (the Outcome-resolution act section of Action Evaluation) | One supplementary Evidence recording the comparison outcome, applied evaluation model, the preserved Metric Snapshot references the model was applied to, and the resolution disposition (`resolved` or `force_closed`) | One supplementary Lineage recording the explicit reference relationship between the outcome-resolution act and the applied Intervention Contract version. No new Metric Snapshot reference is recorded. |
 
@@ -146,9 +178,9 @@ Retention of Evidence and Lineage is governed at the storage layer. Retention po
 
 | Retention rule | Effect on authoritative status |
 |---|---|
-| Evidence and Lineage are attempted synchronously with the act | Per the Proof emission at every boundary section of The Evaluation Boundaries, the Orthogonal proof objects section of The Object Model, and DEC-ebb3cd, the act's authoritative progression row is preserved at emission and the durability of its proof writes is recorded on the row's `proof_status`. The act is authoritatively proved when `proof_status='complete'`; `degraded` indicates the act occurred but its proof writes did not all land; `NULL` indicates a pre-D387-Stage-1 row whose proof state was not captured. |
-| Retention policy preserves Evidence and Lineage over a declared period | The act remains authoritatively proved while preserved proof exists at `proof_status='complete'`. |
-| Retention policy ages Evidence or Lineage out of the authoritative evidence chain | Per the Orthogonal proof objects section of The Object Model and Invariant VI, the platform does not treat the act as authoritatively proved for audit. The progression row's `proof_status` is not retroactively rewritten by retention policy; consumers infer aged-out proof from the absence of preserved Evidence/Lineage records, not from the marker. |
+| Evidence and Lineage are emitted with the act | Per the Proof emission at every boundary section of The Evaluation Boundaries, the Orthogonal proof objects section of The Object Model, DEC-48d222 (metric evaluation: in the act's transaction) and DEC-ebb3cd (other boundaries: best-effort), the act is authoritatively proved when its preserved Evidence and Lineage records exist. For a metric evaluation, the proof projection reports how strong that proof is. |
+| Retention policy preserves Evidence and Lineage over a declared period | The act remains authoritatively proved while its preserved proof records exist. |
+| Retention policy ages Evidence or Lineage out of the authoritative evidence chain | Per the Orthogonal proof objects section of The Object Model and Invariant VI, the platform does not treat the act as authoritatively proved for audit. Consumers observe aged-out proof as the absence of preserved Evidence and Lineage records; nothing is rewritten on the progression row. |
 | Storage failure removes Evidence or Lineage outside retention policy | The same rule applies. Recovery that restores the preserved proof records restores authoritative auditability; reconstruction that synthesizes new records does not. |
 
 Invariant VI therefore governs audit authority through preserved proof. The platform emits proof at the act. Audit reads what the authoritative evidence chain preserves. Missing proof is not inferred, replayed, or reconstructed into authoritative status.
@@ -185,6 +217,11 @@ Subsequent chapters describe how the proof chain is consumed by tenant-scoped su
 - DEC-771baf: Tenant database architecture and run scope (Decisions)
 - DEC-f02230: Tenant DB schema organization (Decisions)
 - DEC-2c79c8: Per-tenant SQL isolation; evidence tables in tenant schemas (Decisions)
+- DEC-ebb3cd: Evidence and Lineage write semantics (D387) (Decisions)
+- DEC-48d222: Atomic proof for metric evaluation (D578) (Decisions)
+- DEC-09fb2f: Tenant evidence-chain immutability and runtime identity separation (D575) (Decisions)
+- DEC-fbc085: Platform-plane evidence home for contract-version governance transitions (Decisions)
+- DEC-3016e4: Fiscal-calendar window is half-open (Decisions)
 - Foundation: Evidence and lineage specification
 - Contract Schemas reference
 - Decisions: ADR Registry
