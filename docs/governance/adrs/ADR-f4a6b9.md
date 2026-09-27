@@ -86,6 +86,16 @@ A rule moves up one stage on operator approval, backed by evidence: its precisio
 - branching complexity ≤ about 10;
 - no mocks in tests (D082).
 
+### What the security rule promises (operator ruling 2026-09-27, option A)
+
+- DevHub never reads or shows values from secret stores: .env files, AWS credentials, Secrets Manager.
+- It never shows a value it has flagged as a secret. Findings are kind and line only.
+- Code names and file paths are shown as they appear in git. Whoever can open DevHub, which is localhost only, can already read these repos.
+- Redacting key-shaped names is a best-effort safety net, not a guarantee. Pattern matching cannot recognise every credential format; hex-only strings are kept so commit SHAs stay readable.
+- A secret written into code is the security rule's job to flag.
+
+This scope follows Codex gen-a0deba-02, which showed that pattern redaction cannot be complete.
+
 ## 2. Responsibility registry: one job, one owner
 
 This extends D619 (DEC-027ef6) with the question "does exactly one place own each job?".
