@@ -16,6 +16,8 @@ governing_adrs:
   - DEC-ebf0b4 (Session Discipline and Data Integrity Rules; D268 self-audit at session close)
   - DEC-804874 (L-Node Verification with Semantic Family Classification; session-close gate per D366)
   - DEC-3395bc (bc-docs SSOT cutover; ADR files written into bc-docs by devhub_decision_record)
+  - DEC-6be41d (credential map and rotation helper; credentials never in DevHub)
+  - DEC-f4a6b9 (engineering rule catalogue; the secret-store rule and its bounded exceptions)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -110,6 +112,28 @@ Per `DEC-804874`: legitimate override cases are emergency fix, known-broken tena
 The L-node verdicts themselves are persisted in the bc-core `contract.l_node_semantic_verdict` *(RETIRED — dropped D481 R3, never populated)* table and read through the `devhub_l_node_verify`, `devhub_l_node_audit`, and `devhub_l_node_refresh` MCP tools, which proxy to the bc-core registry endpoint. DevHub does not author L-node verdicts; it consumes them at session close as a governance gate.
 
 **Governing source.** `barecount-devhub/src/mcp-server.js` (session close gate at the close-handling block); DEC-804874 (the L-Node Verification ADR titled "L-Node Verification with Semantic Family Classification").
+
+## Sign-in Identities and Credentials
+
+DevHub signs in to bc-core with one of two Cognito identities. Every call names which one it uses; there is no default.
+
+| Identity | Used for | Why |
+|---|---|---|
+| Service account (`BC_SERVICE_EMAIL`, role `platform_admin`) | Reads: the session-close gate, chain status and its diagnostic refresh, the readiness dial, vendor costs, BCF reads, substrate resolve | An operator password reset cannot break these reads or the close gate |
+| Operator (`TEST_EMAIL`) | Governed writes (metric drive, register source stack, publish chain), metric preflight (validate-envelope refuses the service account), and `devhub_get_cognito_token` | The author identity a governed write records is evidence; a raw bearer token is not limited to reads, so the exported tool never hands out a service token |
+
+A test fails if a call names no identity, or if a governed write or the exported token tool uses the service account.
+
+**Credentials are never in DevHub** (`DEC-6be41d`). The values the code and the development setup read live only in AWS Secrets Manager. No part of DevHub stores, shows, logs or returns a credential value: not the web server, the MCP server, the database, the logs, the pages or the backups. It keeps names, locations, timestamps and fixed outcome categories. The only exceptions are the named usage-read billing keys inside the daily billing job (`DEC-f4a6b9`), and the separate probe and rotation helper described below, which hold a value only for the moment of one check or one rotation.
+
+| Page | What it shows |
+|---|---|
+| Systems > Credentials | Every credential and access-setting name the code reads, where each is read, where it is supplied on the Mac, and flags: supplied in several places, a fallback value in code, supplied nowhere. The scanner reads only masked code (comments, strings, templates and regex literals blanked), so no value can surface as a name. **Run checks** starts a separate probe process. It reports which of those names are in the dev secret, with other keys only as a count, and whether Cognito sign-in works for each account. Results are held in memory. Runs are operator-triggered, at most one a minute |
+| Systems > Tools | Development-only Terminal tools, run by the operator, with hidden input: reset a dev user's password and the matching dev-secret key in one run; update one dev-secret key; check DevHub's sign-ins. Also the read-only user list of the dev pool. The page itself never takes or shows a value |
+
+Still to come (`TSK-84783a`): probe checks for GitHub tokens and database connections, and the MFA-bound rotation helper under the boundaries recorded in `DEC-6be41d`.
+
+**Governing source.** `barecount-devhub/src/mcp-server.js` (`getCognitoToken` and its call sites), `src/lib/credential-map.js`, `src/lib/code-mask.js`, `src/lib/credential-probe.js`, `scripts/credential-probe.js`, `src/lib/dev-tools.js`; `DEC-6be41d` (credentials never in DevHub); `DEC-f4a6b9` (secret-store rule).
 
 ## The D-Code Allocator
 
