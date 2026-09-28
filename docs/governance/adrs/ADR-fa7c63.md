@@ -74,13 +74,13 @@ This is a second observation leg with its own entity. BCF has no application/all
 
 ## Consequences
 
-- **Successor metrics (U9.5):** NEW line-grained MCs for the balance (D-1), billing (D-5) and DSO, not new versions of the invoice-grain `ar_balance` / `gross_invoiced_amount` / DSO (Amendment 1 (d), (e)); the historical versions stay as they are. The DSO successor is the first DSO version to go through audit admission.
+- **Successor metrics (U9.5):** NEW line-grained MCs for the balance (D-1), billing (D-5) and DSO, not new versions of the invoice-grain `ar_balance` / `gross_invoiced_amount` / DSO (Amendment 1 (d), (e)); the invoice-grain family is retired through the governed MCF path once they are live (Amendment 1 (g)). The DSO successor is the first DSO version to go through audit admission.
 - **Concepts and chain (U9.4a–e):** the receivable population is the receivable-control *lines* (D-1), not only customer-invoice headers. The chain successors therefore observe (i) the receivable lines of every posted entry on E's receivable-control accounts, with category and functional amount, and (ii) the allocation events (D-2). ~~The Customer Invoice chain successor still supplies the document header facts for billing.~~ Superseded by Amendment 1 (c): billing comes from the receivable-control lines by document category. BCF concepts for the receivable item and the allocation event are expected (U9.4a).
 - **Population completeness is proven, not assumed.** U9.0 counted reconciliations on customer-document lines only; it did not enumerate unapplied cash, on-account credits or non-document receivable entries. D-9 (a) proves completeness at each acceptance cutoff. A read-only probe of the unmatched receivable-control lines may run earlier under the operator's standing read-only grant.
 - **Gates (U9.3/U9.3b):** U9.3 takes "nullable means open" off the openness characteristic and moves to dated application events. U9.3b enforces D-7 and D-8.
 - **Not in scope:** multi-entity consolidation, group currency, and aging buckets (a separate metric family).
 
-## Amendment 1 (2026-09-28): lineage, grain, billing source, new MCs, naming, dependants
+## Amendment 1 (2026-09-28): lineage, grain, billing source, new MCs, naming, dependants, evidence and retirement
 
 It records what the W9 design work (U9.3 to U9.4) did, so that nothing is re-derived without its prior decisions. It changes no D-rule; it corrects one Consequences sentence (c) and settles five points the ADR left implicit.
 
@@ -108,7 +108,7 @@ It records what the W9 design work (U9.3 to U9.4) did, so that nothing is re-der
 - It is tax-inclusive by construction, because the receivable leg carries the gross.
 - The Customer Invoice chain (`oc-3kgrr` / `cc-das36`, bound on Kaveri as binding bc2cfdab, never observed) stays as it is. It is not an operand of DSO.
 
-**(d) The line-grained metrics are NEW Metric Contracts.** The grain is fixed on an MC, so the successors of D-1, D-5 and D-6 are new MCs on the Journal Entry Line grain. They are not new versions of f660fb7b / 61a876e7 / 8a38e79c. What happens to those invoice-grain MCs (left as they are, withdrawn, or marked superseded-in-meaning) is decided in the U9.5 lifecycle act. The U9.5 bullet under Consequences reads accordingly.
+**(d) The line-grained metrics are NEW Metric Contracts.** The grain is fixed on an MC, so the successors of D-1, D-5 and D-6 are new MCs on the Journal Entry Line grain. They are not new versions of f660fb7b / 61a876e7 / 8a38e79c. The invoice-grain family is RETIRED when the new MCs are live (see (g), Retirement). The U9.5 bullet under Consequences reads accordingly.
 
 **(e) Naming: no collision with `net_invoiced_amount`.**
 - In D-5, "net billing" means net of credit notes. It does NOT mean net of tax.
@@ -116,8 +116,23 @@ It records what the W9 design work (U9.3 to U9.4) did, so that nothing is re-der
 - The working names, fixed at U9.5 authoring: `receivable_control_balance` (D-1) and `receivable_billed_amount` (D-5: tax-inclusive, net of credit notes, over the document categories). The DSO successor keeps the business name "days sales outstanding" and is linked to directory member MDM-d1510b.
 
 **(f) Dependants.**
-- `dso_to_credit_term_ratio` (11fb263d, active, Customer Invoice grain) reads the HISTORICAL DSO. It is not silently rebound. In U9.5 it is either re-authored over the new DSO (as a new MC or version, per its own grain rules) or withdrawn together with the old DSO. Until then it keeps reading the historical DSO, and it must not be presented as consistent with the new one.
+- `dso_to_credit_term_ratio` (11fb263d, active, Customer Invoice grain) reads the HISTORICAL DSO. It is not silently rebound. In U9.5 it is either re-authored over the new DSO (as a new MC or version, per its own grain rules) or withdrawn, in the same act that retires the old DSO ((g)). Until then it keeps reading the historical DSO, and it must not be presented as consistent with the new one.
 - `total_outstanding_receivables` (13e8a077, audit_pending, Customer Invoice grain, open-item face value) is the rejected "open-item face value" alternative below, under another name. It is not an operand of DSO, and its disposition is recorded as a U9.5/coverage-arc task. No contract changes now.
+
+**(g) Why the existing invoice-grain MCs are not reused: the evidence (operator ruling 2026-09-28, "journal lines + retire old").**
+Foundation's default is to keep an MC and onboard a new source by binding (layer C). That default was checked against the existing family, and it fails on MEANING, not on source shape. The evidence below is read-only: a pinned SQL probe on v3_lc5, company 1, 2026-09-28 (`docs/evidence/closeouts/implementation/w9-dso-grain-feasibility-2026-09-28/`: the SQL, sha256 `355430d1…`, its runner and transcript, MANIFEST.sha256), compared with the lc5 coverage study's second-model-confirmed values.
+- **`ar_balance` (61a876e7) as declared is semantically wrong for D-1 and D-7.**
+  - It sums each open invoice's header gross amount in DOCUMENT currency, so Kaveri's USD invoices are added as INR numbers. It takes the face value of invoices not yet fully cleared, not their residual.
+  - Its `as_of` gate reads the literal payload keys `document_date`/`clearing_date`, and Odoo has no header clearing date.
+  - On Kaveri it gives 974.8M / 1,155.8M / 1,397.2M / 1,229.1M at 2024-03-31 / 2025-03-31 / 2025-09-30 / 2026-03-31. That is 17–24% below the confirmed receivable balances (1,173.9M / 1,354.8M / 1,646.0M / 1,406.3M).
+- **`days_sales_outstanding` (f660fb7b)** multiplies by a literal 90, which D-6 rejects, and aggregates in document currency. **`gross_invoiced_amount` (8a38e79c)** sums unsigned document-currency totals over invoices and credit notes alike, the CB-013 mixing that D-5 forbids.
+- **Even corrected at invoice grain, the balance cannot meet D-1.**
+  - "Corrected" means company currency, with the residual at P from dated payment applications. It would also need a new clearing chain (`account.partial.reconcile` has a source contract but no OC/CC/reader) and a Customer Invoice chain successor.
+  - It still misses the receivable-line balance by exactly the non-invoice receivable residual: 0.45M / 0.90M / 1.35M / 1.35M / 1.35M at the four dates and at 2026-08-31. Those are unapplied cash and misc entries on the control accounts (BNK1, EXCH, MISC), which belong to no invoice.
+  - D-1 includes them, and the Alternatives below reject a document-scoped balance with a bridge.
+- **The journal-line balance (D-1) reproduces all four confirmed values to the cent.**
+
+**Retirement: two DSOs never coexist.** When the new line-grained MCs are live (U9.5), the invoice-grain family, `days_sales_outstanding` f660fb7b, `ar_balance` 61a876e7 and `gross_invoiced_amount` 8a38e79c, is withdrawn or superseded through the governed MCF lifecycle path (M15 supersession). It is executed in U9.5, not deferred. It is never done by hand, and never before its successors are live. `dso_to_credit_term_ratio` is re-authored on the new DSO, or withdrawn, in the same act; it is never silently rebound.
 
 ## Alternatives considered
 

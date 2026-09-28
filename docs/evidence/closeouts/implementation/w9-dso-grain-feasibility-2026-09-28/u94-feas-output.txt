@@ -1,0 +1,38 @@
+== W9 path A/B feasibility 2026-09-28T09:47:40Z instance i-0944d13adbafaa542 sql sha256 355430d121fdffd0992737b862c3047051be776f7ba013ca070c86bebcd78f51
+BEGIN
+== F1 per as-of date P (company currency)
+   as_of    | b_line_balance_lc5 | a_face_open_signed | a_as_declared_unsigned | a_residual_invoice_lines | non_invoice_residual | non_invoice_lines 
+------------+--------------------+--------------------+------------------------+--------------------------+----------------------+-------------------
+ 2024-03-31 |      1173945368.13 |      1173495368.13 |           974792869.57 |            1173495368.13 |            450000.00 |               821
+ 2025-03-31 |      1354771423.69 |      1353871423.69 |          1155823207.95 |            1353871423.69 |            900000.00 |              1696
+ 2025-09-30 |      1645980292.08 |      1644630292.08 |          1397247472.49 |            1644630292.08 |           1350000.00 |              2103
+ 2026-03-31 |      1406330725.96 |      1404980725.96 |          1229128828.44 |            1404980725.96 |           1350000.00 |              2568
+ 2026-08-31 |      1997244184.68 |      2023548678.12 |          1528031175.32 |            1995894184.68 |           1350000.00 |              2898
+(5 rows)
+
+== F2 billing in FY2026-27 P03..P05 (2026-06-01..2026-08-31): as declared (unsigned amount_total, refunds added) vs net of credit notes (signed)
+ gross_invoiced_as_declared_unsigned | net_of_credit_notes_signed | refunds 
+-------------------------------------+----------------------------+---------
+                       2891532801.81 |              3767871961.76 |       0
+(1 row)
+
+== F3 non-invoice receivable lines by journal and sign (what invoice grain cannot see), all posted
+ journal | move_type | lines |     balance     
+---------+-----------+-------+-----------------
+ BNK1    | entry     |  2637 | -42322503009.92
+ EXCH    | entry     |   235 |     15939220.75
+ MISC    | entry     |    26 |    -22864265.60
+(3 rows)
+
+== F4 invoice header facts ar_balance as declared needs: invoice_date present, a header clearing date (none in Odoo), partial payments
+ posted_docs | with_invoice_date | partially_paid | paid 
+-------------+-------------------+----------------+------
+        2714 |              2714 |              3 | 2604
+(1 row)
+
+COMMIT
+
+stderr: 
+ssm command 01787e48-936e-4378-8d27-870d7b389e73 status Success
+box: stopped (observed)
+exit 0
