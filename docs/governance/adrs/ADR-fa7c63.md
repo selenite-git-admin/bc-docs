@@ -46,7 +46,8 @@ Because each event's legs sum to zero, ar_balance(E, T) = Σ { amt(i) : pd(i) �
 **D-9. Independent expected value (acceptance, U9.8).** For the same E and T:
 - (a) ar_balance(E, T) must equal the receivable-control balance computed independently, as the sum of journal-entry lines on E's receivable-control accounts with posting date ≤ T (a different path from the item and event realization);
 - (b) Σ_i out(i, T) must equal the source's own aged-receivables total as of T, over the same population (all receivable-control lines, including unapplied cash and adjustments) and the same as-of rule.
-Both equalities hold by construction when D-1's population is complete, so any difference is a realization defect: an unclassified or missed line. It is reported as a refusal, never bridged. The acceptance corpus must include:
+Both equalities hold by construction when D-1's population is complete, so any difference is a realization defect: an unclassified or missed line. It is reported as a refusal, never bridged.
+- (c) **Per-item assertion.** Because zero-sum legs keep the total right even with inverted signs, (a) and (b) alone cannot catch a sign error. Acceptance therefore also asserts both affected items' open amounts, before and after the cutoff, for a partial payment, a credit-note allocation, and an FX / write-off allocation, together with the unchanged control total. The acceptance corpus must include:
 - a payment posted before T and applied after T;
 - an unapplied payment and an on-account credit;
 - a non-document receivable journal entry;
@@ -60,7 +61,7 @@ Both equalities hold by construction when D-1's population is complete, so any d
 **D-10. Source realization (non-normative; each choice certified only through its own act).** For Odoo:
 - items: posted account.move.line rows of company E on accounts with account_type = asset_receivable, amt(i) = balance (company currency). Category: document when the move is out_invoice / out_refund; unapplied cash when the line comes from a customer payment (or an on-account entry); adjustment when the move is in the exchange-difference journal, a write-off, or any other entry;
 - documents for billing: account.move with move_type ∈ {out_invoice, out_refund} and state = posted. The company-currency signed total amount_total_signed agrees in sign with the document's receivable line (U9.0 verified the signs); billing uses the document's receivable-line amount, so billing and balance share one realization;
-- application events: account.partial.reconcile rows between receivable lines. Each row is one event with two legs (debit line −amount, credit line +amount, company currency), max_date as ed(x);
+- application events: account.partial.reconcile rows between receivable lines. Each row is one event with two legs under D-3's subtraction convention: the debit receivable line gets applied = +amount and the credit receivable line gets applied = −amount (company currency), so a +100 invoice and a −20 payment reconciled for 20 have open amounts +80 and 0; max_date as ed(x);
 - exchange-difference and write-off entries realize adjustment items (their receivable lines), counted once; their reconciliations are zero-sum legs;
 - credit-note allocation is realized through those reconciliation rows, never through reversed_entry_id, which is empty on Kaveri.
 This is a second observation leg with its own entity. BCF has no application/allocation entity today, so a BCF concept act is expected (U9.4a).
