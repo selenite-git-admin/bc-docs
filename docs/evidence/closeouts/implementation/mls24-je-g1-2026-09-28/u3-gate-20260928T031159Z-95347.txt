@@ -1,0 +1,10 @@
+==== W6-U3 tenant gate mode=live container=bc-postgres port=5435 system_identifier=7689410286420172840 at 2026-09-28T03:11:59Z
+SQL-PINS.sha256 1235d4c3aba48c910fa19fa4da9b40197dad765c8c0e8e720a008f2e010a7e41; in-scope tenants: kaveri:tbc_kaveri_dev:f0a5e695-b475-472c-87f8-71609be1a8c3
+-- G-a..G-e (barecount@tbc_kaveri_dev): psql_exit=0 lines=0
+-- identity bc_tenant_runtime@tbc_kaveri_dev: bc_tenant_runtime:bc_tenant_runtime:false (psql_exit=0)
+-- G-g RT (bc_tenant_runtime@tbc_kaveri_dev): psql_exit=0 lines=0
+-- identity bc_tenant_owner@tbc_kaveri_dev: bc_tenant_owner:bc_tenant_owner:false (psql_exit=0)
+-- G-g OW (bc_tenant_owner@tbc_kaveri_dev): psql_exit=0 lines=0
+-- G-f (barecount@bc_platform_dev): psql_exit=0 lines=0
+violation_rows=0 psql_or_identity_failure=0
+U3 GATE GREEN (1 tenant DB(s): kaveri; G-a..G-g zero rows; every psql exit 0)
