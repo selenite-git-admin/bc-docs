@@ -2,7 +2,7 @@
 uid: DEC-6fd09d
 title: "Evaluation-context inputs: metric variables that take governed fiscal-calendar facts (calendar_context), and fiscal-period rolling windows"
 description: "A general calendar_context variable kind (first code window_days = calendar days of the metric's declared window) and a rolling_window in fiscal-period units, both resolved by the evaluation boundary from the governed calendar and recorded in evidence; realizes DEC-fa7c63 D-6 without literals."
-status: proposed
+status: decided
 governing_task: TSK-b1e89a
 related_adrs: [DEC-fa7c63, DEC-83fda0, DEC-ada203, DEC-c48b0f]
 date: 2026-09-28T05:52:35.848Z
@@ -29,3 +29,9 @@ DEC-fa7c63 (D631, decided, N = 3) requires DSO = ar_balance / billed(W) × days(
 **D-4. One window, both operands.** For a composite (for example, DSO = ar_balance / billing_W × window_days), the composite's declared window and the upstream flow metric's declared window must be the same N over the same calendar. This is checked at authoring where both are known, and at evaluation from the upstream snapshot's recorded window; a mismatch is refused, not computed (the scope-equality rule of W9 U9.3b).
 
 **D-5. Substrate.** mcf.metric_variable_binding gains one nullable column, calendar_context_code (its 20th column, the DB-rule ceiling), and the role-kind and role-target CHECKs are widened for the new kind: bc-db migration 0024_mcf_variable_calendar_context, with a guarded rollback. N needs no new column: it lives in the existing temporal_gate_params_json of the metric's gate.
+
+## Operator decision (2026-09-28)
+
+- **Status:** decided.
+- **Authority:** the operator's direct grant to Codex for serve move 4 (thread gen-4379a8), which ends "I accept ADR DEC-6fd09d as decided." Codex preserved it as `OPERATOR-GRANT-Codex-gen-4379a8-serve-move-4-2026-09-28.txt` (raw SHA-256 `6e95ff97096072ddd7d36ae87ab32293b133c21f3d7995ef8aa56b2bf78f039e`) with its `OPERATOR-AUTH` record in bc-external-audit.
+- **Realized:** bc-core#863 (merge `09d087f5`; D-1 to D-4) and bc-db 0024 (merge `84e61336`, migration SHA-256 `9882fab4…`; D-5). Both were applied and served live on 2026-09-28 by serve move 4 (0024 applied; :3100 on `09d087f5`).
