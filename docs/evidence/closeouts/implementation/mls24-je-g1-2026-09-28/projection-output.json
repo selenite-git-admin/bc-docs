@@ -1,0 +1,67 @@
+{
+  "snapshotId": "1d570b5f-e330-8a20-8a13-d7296f43993d",
+  "outcome": "qualified",
+  "version": "e6b.lineage.v2",
+  "metricEvaluationId": "e960533f-0716-88c1-ba40-fd66006e7a1b",
+  "checks": {
+    "tenant": "passed",
+    "D_status": "passed",
+    "ID_1": "passed",
+    "ID_2": "passed",
+    "ID_3": "passed",
+    "ID_4": "passed",
+    "evidence_singleton": "passed",
+    "lineage_singleton": "passed",
+    "K3": "passed",
+    "K4": "passed",
+    "K5": "passed",
+    "K6": "passed",
+    "K7": "passed",
+    "K8": "passed",
+    "K9": "passed",
+    "K10_a": "passed",
+    "K10_c": "passed",
+    "K10_d": "passed",
+    "K10_e": "passed",
+    "scope_mc": "passed",
+    "scope_period": "passed",
+    "scope_legal_entity": "passed",
+    "scope_calendar": "passed",
+    "receipt": "passed"
+  },
+  "reasons": [],
+  "integrity": {
+    "contentHash": "not_established"
+  }
+}
+{
+  "snapshotId": "11e78abf-2178-816c-89de-fb1194f446d6",
+  "outcome": "unqualified_legacy",
+  "version": "e6b.lineage.v1",
+  "metricEvaluationId": "9e57b668-f911-861e-a83a-3780f43f0595",
+  "checks": {
+    "tenant": "passed",
+    "D_status": "passed",
+    "ID_1": "passed",
+    "ID_2": "passed",
+    "ID_3": "passed",
+    "ID_4": "passed",
+    "evidence_singleton": "passed",
+    "lineage_singleton": "passed",
+    "K3": "passed",
+    "K4": "passed",
+    "K5": "passed",
+    "K6": "passed",
+    "K7": "passed",
+    "K8": "passed",
+    "K9": "passed",
+    "scope_mc": "passed",
+    "scope_period": "passed"
+  },
+  "reasons": [
+    "e6b.lineage.v1 carries no scope and no identity receipt: LE, calendar and writer identity are unverifiable"
+  ],
+  "integrity": {
+    "contentHash": "not_established"
+  }
+}
