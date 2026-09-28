@@ -54,7 +54,7 @@ Therefore **MLS 21–25 for Kaveri are called from evidence** (this note, the 7d
 |---|---|
 | `project-proof.cjs` | read-only runner for the served projection (both 7d-period snapshots) |
 | `project-proof-neg.cjs` | the same, expecting the wrong period (negative control) |
-| `projection-output.json` | projections of snapshots `1d570b5f…` (qualified) and `11e78abf…` (unqualified_legacy) |
+| `projection-output.json` | two concatenated JSON objects, one per snapshot (JSON Lines style; kept byte-exact because the manifest pins these bytes): projections of snapshots `1d570b5f…` (qualified) and `11e78abf…` (unqualified_legacy) |
 | `projection-negative-period.json` | negative control → `out_of_scope` |
 | `u3-gate-20260928T031159Z-95347.txt` | proof-time gate transcript |
 | `MANIFEST.sha256` | sha256 of the five files above |
