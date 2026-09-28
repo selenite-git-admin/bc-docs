@@ -2,7 +2,7 @@
 uid: DEC-fa7c63
 title: "DSO family meaning: receivable balance from dated application events, net billing, calendar days (W9 U9.1)"
 description: "Source-independent meaning for ar_balance, net billing and DSO on Kaveri: dated application events, net billing, days(W) from the governed calendar, LE/functional-currency/tax-inclusive basis, governed non-results."
-status: proposed
+status: decided
 governing_task: TSK-4cabcb
 related_adrs: [DEC-952faa, DEC-f4b2b0, DEC-ada203, DEC-c48b0f]
 date: 2026-09-28T04:15:12.616Z
@@ -65,6 +65,12 @@ Both equalities hold by construction when D-1's population is complete, so any d
 - exchange-difference and write-off entries realize adjustment items (their receivable lines), counted once; their reconciliations are zero-sum legs;
 - credit-note allocation is realized through those reconciliation rows, never through reversed_entry_id, which is empty on Kaveri.
 This is a second observation leg with its own entity. BCF has no application/allocation entity today, so a BCF concept act is expected (U9.4a).
+
+## Operator decision (2026-09-28)
+
+- **Status:** decided.
+- **N = 3 fiscal periods** (D-6): the DSO window is the three trailing fiscal periods ending with the period that contains T; days(W) is counted from the governed calendar.
+- **Authority:** the operator's direct line to Codex on thread gen-8f1eb6 (2026-09-28): once bc-docs PR 83 lands, the ADR is accepted as decided with N = 3 fiscal periods. PR 83 landed as merge f7b23af9 (reviewed head 6b8a2da0).
 
 ## Consequences
 
