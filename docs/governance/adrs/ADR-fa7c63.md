@@ -4,7 +4,7 @@ title: "DSO family meaning: receivable balance from dated application events, ne
 description: "Source-independent meaning for ar_balance, net billing and DSO on Kaveri: dated application events, net billing, days(W) from the governed calendar, LE/functional-currency/tax-inclusive basis, governed non-results."
 status: decided
 governing_task: TSK-4cabcb
-related_adrs: [DEC-952faa, DEC-f4b2b0, DEC-ada203, DEC-c48b0f]
+related_adrs: [DEC-952faa, DEC-f4b2b0, DEC-ada203, DEC-c48b0f, DEC-83fda0, DEC-0f3e57, DEC-f44a71, DEC-6fd09d]
 date: 2026-09-28T04:15:12.616Z
 project: bc-core
 domain: metrics
@@ -74,11 +74,50 @@ This is a second observation leg with its own entity. BCF has no application/all
 
 ## Consequences
 
-- **Successor MCVs (U9.5):** `ar_balance` and `gross_invoiced` (or a renamed net-billing metric) and DSO get successors under this meaning; the historical versions stay as they are. The DSO successor is the first DSO version to go through audit admission.
-- **Concepts and chain (U9.4a–e):** the receivable population is the receivable-control *lines* (D-1), not only customer-invoice headers. The chain successors therefore observe (i) the receivable lines of every posted entry on E's receivable-control accounts, with category and functional amount, and (ii) the allocation events (D-2). The Customer Invoice chain successor still supplies the document header facts for billing. BCF concepts for the receivable item and the allocation event are expected (U9.4a).
+- **Successor metrics (U9.5):** NEW line-grained MCs for the balance (D-1), billing (D-5) and DSO, not new versions of the invoice-grain `ar_balance` / `gross_invoiced_amount` / DSO (Amendment 1 (d), (e)); the historical versions stay as they are. The DSO successor is the first DSO version to go through audit admission.
+- **Concepts and chain (U9.4a–e):** the receivable population is the receivable-control *lines* (D-1), not only customer-invoice headers. The chain successors therefore observe (i) the receivable lines of every posted entry on E's receivable-control accounts, with category and functional amount, and (ii) the allocation events (D-2). ~~The Customer Invoice chain successor still supplies the document header facts for billing.~~ Superseded by Amendment 1 (c): billing comes from the receivable-control lines by document category. BCF concepts for the receivable item and the allocation event are expected (U9.4a).
 - **Population completeness is proven, not assumed.** U9.0 counted reconciliations on customer-document lines only; it did not enumerate unapplied cash, on-account credits or non-document receivable entries. D-9 (a) proves completeness at each acceptance cutoff. A read-only probe of the unmatched receivable-control lines may run earlier under the operator's standing read-only grant.
 - **Gates (U9.3/U9.3b):** U9.3 takes "nullable means open" off the openness characteristic and moves to dated application events. U9.3b enforces D-7 and D-8.
 - **Not in scope:** multi-entity consolidation, group currency, and aging buckets (a separate metric family).
+
+## Amendment 1 (2026-09-28): lineage, grain, billing source, new MCs, naming, dependants
+
+It records what the W9 design work (U9.3 to U9.4) did, so that nothing is re-derived without its prior decisions. It changes no D-rule; it corrects one Consequences sentence (c) and settles five points the ADR left implicit.
+
+**(a) Prior decisions this ADR builds on (lineage).**
+- **DEC-83fda0 "Route B" (implemented): the balance mechanism.** A balance is postings − clearings, netted as of P, with the `cumulative_to_date` gate (U9.3 made its predicate ordinal, bc-core#862). DSO = balance ÷ trailing billing × days.
+  - D-1 and D-2 are the Odoo realization of that netting on the receivable-control LINES: debit legs are postings; credit legs (payments, credit notes, write-offs, FX) are clearings; zero-sum allocation legs.
+  - This replaces Route B's separate posting/clearing canonical surfaces. They were drafted SAP-side as `cc__receivable_posting` / `cc__receivable_clearing`, have no Odoo realization and are not a live home for this population.
+- **DEC-0f3e57 (secondary metrics) and DEC-ada203 (composites):** DSO stays a composite over upstream Metric Snapshots. The trailing window those ADRs deferred is now declared by DEC-6fd09d (a fiscal-period rolling window; `window_days` from the calendar).
+- **DEC-f44a71 "route (a)":** a source-bounded DSO repair on Kaveri. This ADR, with W9, is that repair.
+- **TSK-a2ab87 (the `days_ratio` derivation op, with a literal `scale`):** the source of the literal 90 (and the directory member's 365). It is superseded for DSO by D-6: days(W) is counted from the governed calendar, and no literal scale is used.
+- **The reference map:** the lc5 metric-coverage study, bc-demo `sources/odoo19ee/demos/auto-components-in/design/metric-coverage/finance/days_sales_outstanding.md` (commit 37b0f73f).
+  - Its numerator is exactly D-1's population: posted `account.move.line` on the `asset_receivable` accounts, dated on or before the reference date.
+  - Its AR balances at 2024-03-31, 2025-03-31, 2025-09-30 and 2026-03-31, independently confirmed to the cent, are the **independent expected values** for D-9 (a). Any difference is explained before the rung is claimed.
+  - The study's §2 finding (the realized DSO MC says 90 days and gross, while directory member MDM-d1510b says 365 days and net) is answered by this ADR: N = 3 fiscal periods, tax-inclusive billing net of credit notes (D-5, D-7). The directory member's `derivation_json` is reconciled to this in the U9.5 act.
+
+**(b) Grain change: Customer Invoice → Journal Entry Line.**
+- The historical DSO family (`days_sales_outstanding` f660fb7b, `ar_balance` 61a876e7, `gross_invoiced_amount` 8a38e79c) is grained on Customer Invoice (e3963e45). The successor family is grained on **Journal Entry Line** (07cef8c4).
+- **Why:** D-1's population includes unapplied cash, on-account credits and adjustments. These are receivable-control lines that belong to no customer invoice, so no invoice-grain metric can hold them.
+- Invoice-grain openness also needs a header clearing date, which Odoo does not have (U9.0).
+- The line chain is the existing `oc-h827j` / `cc-x13pb`, extended to 1.1.0 (U9.4) on its existing reader `d24f928a`. That is a deliberate reuse from the 2026-08-16 Odoo re-base reconcile closure.
+
+**(c) Billing comes from the lines; the Customer Invoice chain is NOT used for DSO.**
+- The Consequences bullet saying "the Customer Invoice chain successor still supplies the document header facts for billing" is **superseded**.
+- Billing (D-5) is the sum of the functional amount over the receivable-control lines, of E, in window W, whose document category is `customer_invoice` or `customer_credit_note`. It is carried on the same line chain (U9.4 adds the line's document category).
+- It is tax-inclusive by construction, because the receivable leg carries the gross.
+- The Customer Invoice chain (`oc-3kgrr` / `cc-das36`, bound on Kaveri as binding bc2cfdab, never observed) stays as it is. It is not an operand of DSO.
+
+**(d) The line-grained metrics are NEW Metric Contracts.** The grain is fixed on an MC, so the successors of D-1, D-5 and D-6 are new MCs on the Journal Entry Line grain. They are not new versions of f660fb7b / 61a876e7 / 8a38e79c. What happens to those invoice-grain MCs (left as they are, withdrawn, or marked superseded-in-meaning) is decided in the U9.5 lifecycle act. The U9.5 bullet under Consequences reads accordingly.
+
+**(e) Naming: no collision with `net_invoiced_amount`.**
+- In D-5, "net billing" means net of credit notes. It does NOT mean net of tax.
+- The existing `net_invoiced_amount` (0d61b620, audit_pending) is the pre-tax subtotal, a different meaning. So the new billing MC must not be called "net invoiced", nor anything that reads as untaxed.
+- The working names, fixed at U9.5 authoring: `receivable_control_balance` (D-1) and `receivable_billed_amount` (D-5: tax-inclusive, net of credit notes, over the document categories). The DSO successor keeps the business name "days sales outstanding" and is linked to directory member MDM-d1510b.
+
+**(f) Dependants.**
+- `dso_to_credit_term_ratio` (11fb263d, active, Customer Invoice grain) reads the HISTORICAL DSO. It is not silently rebound. In U9.5 it is either re-authored over the new DSO (as a new MC or version, per its own grain rules) or withdrawn together with the old DSO. Until then it keeps reading the historical DSO, and it must not be presented as consistent with the new one.
+- `total_outstanding_receivables` (13e8a077, audit_pending, Customer Invoice grain, open-item face value) is the rejected "open-item face value" alternative below, under another name. It is not an operand of DSO, and its disposition is recorded as a U9.5/coverage-arc task. No contract changes now.
 
 ## Alternatives considered
 
