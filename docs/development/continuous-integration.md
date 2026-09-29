@@ -58,7 +58,7 @@ bc-core and bc-db start every workflow with a small `pick-runner` job on a GitHu
 
 The fallback applies to each **new** `pick-runner` decision. Switching the MacBook off, or a worker refusing to register, moves new workflow runs back to GitHub (and back to paid minutes). It does not move jobs that were already routed:
 
-- **A job already routed to the MacBook but not started** stays queued until a MacBook runner is online again. To send it to GitHub instead, cancel the run and re-run it (all jobs, not "failed jobs only"), so that `pick-runner` decides again.
+- **A job already routed to the MacBook but not started** stays queued until a MacBook runner is online again. To send it to GitHub instead, cancel the run and re-run it (all jobs, not "failed jobs only"), so that `pick-runner` decides again. **Cancelling any run needs its own recorded operator grant naming that run**; an earlier grant for another run does not cover it.
 - **A job already running on the MacBook when it stops** is stranded (§3.3).
 
 **Routed to the MacBook:**
