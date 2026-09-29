@@ -22,7 +22,7 @@ diagrams: []
 
 ## Scope
 
-This chapter records the build-and-release substrate for the BareCount platform: how each repo installs dependencies, how each service starts in development, what each repo builds when a release-candidate artifact is required, and what the readiness-baseline release path is. It records the CodeArtifact npm registry as the dependency-resolution surface, the per-repo development-server commands, the per-repo build outputs, the renewal procedure for the CodeArtifact authentication token, the docker compose substrate that bc-core consumes locally, the canonical DDL and the migrations directory, the seed scripts that initialize the registry, and the as-built gaps in continuous integration and formal release tooling.
+This chapter records the build-and-release substrate for the BareCount platform: how each repo installs dependencies, how each service starts in development, what each repo builds when a release-candidate artifact is required, and what the readiness-baseline release path is. It records the CodeArtifact npm registry as the dependency-resolution surface, the per-repo development-server commands, the per-repo build outputs, the renewal procedure for the CodeArtifact authentication token, the docker compose substrate that bc-core consumes locally, the canonical DDL and the migrations directory, the seed scripts that initialize the registry, where continuous integration is documented, and the as-built gap in formal release tooling.
 
 This chapter does not name specific port numbers, AWS account identifiers, AWS region codes, AWS profile names, or IAM role ARNs. Those deploy coordinates are owned by Infrastructure (the as-deployed surface) and Deployment Topology (the operational topology). Per pattern 85, this chapter records the procedure shape and routes the deploy-coordinate detail to those owning chapters.
 
@@ -131,23 +131,11 @@ The token TTL is a known operational constraint; per the drift inventory below, 
 
 ## Continuous Integration and Release Tooling
 
-The platform does not run continuous-integration automation in the readiness baseline. The verified repos sampled for this chapter do not carry `.github/workflows/` content.
-
-| Repo | `.github/workflows/` | Status |
-|---|---|---|
-| `barecount-devhub` | Not present | No CI |
-| `bc-core` | Not present | No CI |
-| `bc-portal` | Not present | No CI |
-| `bc-admin` | Not present | No CI |
-| `bc-ai` | Not present | No CI |
-| `bc-qa` | Not present | No CI; the audit harness is intended for CI integration but is not yet wired |
-| `bc-docs` | Not present | No CI; the ADR audit script is operator-run |
-
-The QA hooks (Quality Assurance) run pre-commit at the developer machine; the bc-qa audit harness runs on demand via the `devhub_qa_audit` MCP tool or the `bash bc-qa/audits/audit-repo.sh` CLI. The transition from local-only enforcement to CI-integrated enforcement is queued as drift; the gate-bash wrapper `bc-qa/gates/compliance-gate.sh` exists as the integration point but is not invoked from a CI workflow in the readiness baseline.
+Every repository now runs GitHub Actions with required checks on `main`, and bc-core and bc-db route their heavy jobs to a self-hosted MacBook runner when it is online. **Continuous Integration and CI Runners** owns this: the required checks per repository, the `pick-runner` routing, the runner's isolation model, its operation, and the change route. (The table this section used to carry said "no CI anywhere"; that was the readiness-baseline state and no longer holds.)
 
 The platform also does not use a formal release tool in the readiness baseline. No semantic-release configuration, no changesets manifest, no release manifest live in any repo. Per-repo `package.json` carries a static `version` field that is set by hand. The readiness-baseline release path is "the artifact runs locally; a deploy is recorded in Infrastructure when it happens."
 
-**Governing source.** `bc-qa/gates/compliance-gate.sh` (the gate wrapper that exists for CI integration); CLAUDE.md (QA Tooling section).
+**Governing source.** Continuous Integration and CI Runners; each repository's `.github/workflows/`.
 
 ## Constraints
 
@@ -158,7 +146,7 @@ The platform also does not use a formal release tool in the readiness baseline. 
 | Canonical DDL is authority | The bc-core canonical DDL under `docker/redesign/` is the schema authority; Drizzle schemas track the canonical DDL; migrations drift back into the canonical DDL on the fold-back schedule |
 | Database changes are gated | Per CLAUDE.md, every database change requires explicit user approval; this constraint binds Build and Release because schema-evolution releases run through the same governance |
 | Token renewal is operator-driven | The CodeArtifact token window is renewed manually; no automated renewal cron is wired |
-| No CI in the readiness baseline | Quality enforcement runs at developer pre-commit and at on-demand audit; no GitHub Actions workflows |
+| CI is required | Every repository runs GitHub Actions with required checks on `main` (see Continuous Integration and CI Runners) |
 | Static `version` fields | Per-repo `package.json` carries a hand-set `version` field; no formal release tool |
 
 **Governing source.** CLAUDE.md (NPM Registry, Database Change Protocol, Don't sections); per-repo `package.json` and `.npmrc`.
@@ -182,14 +170,12 @@ The platform also does not use a formal release tool in the readiness baseline. 
 
 | Drift item | Status |
 |---|---|
-| No CI test workflows in any repo | Recorded; the gate-bash wrapper at `bc-qa/gates/compliance-gate.sh` is the integration point when CI lands |
 | No formal release tool | Recorded; per-repo `version` fields are hand-set; semantic-release, changesets, or a release manifest are queued |
 | `bc-core` has no `npm run seed` script | Recorded; the docker init payload is the canonical seeding path; business catalog seeding is owned by the governed onboarding sequences |
 | `bc-core` migrations directory carries thirty-six tables not folded back into canonical DDL | Recorded as `TSK-cc631d` in DevHub |
 | Deprecated pm2 `ecosystem.config.cjs` files still committed | Recorded; the files are marked deprecated in their own headers and are not consumed; they remain as historical reference per pattern 71 |
 | CodeArtifact token renewal is manual | Recorded; an automated renewal cron is queued |
 | `npm run lint` and `npm run typecheck` are not standardized across repos | Recorded; bc-core and bc-admin carry lint commands; bc-portal and barecount-devhub rely on the pre-commit hook |
-| The `bc-qa/gates/compliance-gate.sh` wrapper exists but is not invoked from any CI | Recorded; ready for adoption when CI lands |
 
 **Governing source.** CLAUDE.md (QA Tooling, Don't sections); per-repo `package.json`.
 
@@ -199,6 +185,7 @@ The platform also does not use a formal release tool in the readiness baseline. 
 |---|---|---|
 | Infrastructure | The as-deployed AWS substrate, including CodeArtifact deploy coordinates (account, region, profile, domain, repository), reserved ports, and IAM | The build-side procedure that consumes those coordinates |
 | Operations: Deployment Topology | The operational topology of the deployed platform; the per-environment substrate; the deploy procedure as run by Operations | The build-side artifact that Operations deploys |
+| Continuous Integration and CI Runners | Where CI runs, the required checks, the self-hosted runner and its change route | That CI exists and where to find it |
 | Quality Assurance | The bc-qa repository, the audit harness, the gate-config, and the eslint-config package | The build-side commands that consume the QA tooling |
 | Documentation System | The bc-docs SSOT and the bc-admin reader build path through `bc-admin/scripts/sync-docs.js` | The sync-docs script as a build-time procedure that produces the manifest the bc-core docs endpoints serve |
 | Decision and Change Procedure | The session protocol and the change-record substrate that govern release-bearing changes | The build-side commands that release-bearing changes invoke |
@@ -210,6 +197,7 @@ The platform also does not use a formal release tool in the readiness baseline. 
 - The Authority Model
 - Infrastructure
 - Operations: Deployment Topology
+- Continuous Integration and CI Runners
 - Quality Assurance
 - Documentation System
 - Decision and Change Procedure

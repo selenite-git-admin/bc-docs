@@ -190,6 +190,7 @@ BareCount runs entirely on the Mac, so nothing on the laptop needs changing.
 - **Nothing listens on Wi-Fi.** Containers publish on 127.0.0.1 only. The relays bind only to the cable and Tailscale addresses. DevHub binds to 127.0.0.1.
 - **Colima publishes container ports on every network by default.** Add containers only through `up.sh` / `mac-ports.yml`, never with a plain `docker run -p`.
 - **When macOS asks "allow incoming connections?"** for anything other than socat or Tailscale, click **Deny**.
+- **No CI runner on this Mac.** A self-hosted GitHub runner here was rejected (Codex gen-f1d734): this Mac holds tokens and a reachable Postgres superuser, and any PR could target the runner. CI runs on GitHub or on the separate MacBook runner; see Continuous Integration and CI Runners. The test runner that once ran here was removed with `~/bc-stack/gh-runner-uninstall.sh`.
 
 ---
 
