@@ -177,7 +177,7 @@ Amendment 1's two sentences read accordingly: (a) "MDM-d1510b is superseded in m
 
 This amendment corrects the grain declared for D-6's successor, and writes down the rule behind the correction. It changes no D-rule and no meaning: D-6 already defines `dso(E, T, W)` for one legal entity E at a date T, and D-7 scopes it to "one legal entity E". It is required before the U9.6 authoring of the DSO successor (TSK-3ceb0e).
 
-**Authority:** pending. The operator's grant is to be recorded here: `grant_id`, `text_sha256` and the TOTP time. This PR stays draft until it is.
+**Authority:** operator approval in chat, 2026-09-29 ("amendment approved"), in answer to the umbrella's plain-language summary (DSO declared at the Legal Entity grain; the reporting-grain rule for pure compositions written down); relayed by the umbrella session SES-bc9863. No bc-exchange grant: this is a metric-onboarding design decision in which Codex has no role (operator grant ead781aa), so the operator's direct word is the authority. The approval covers this amendment as drafted at bc-docs commit 78b041d3; recording this authority line is the only later change. The umbrella confirmed (e).
 
 **Why.**
 - Amendment 1 (d) put the successors of D-1, D-5 **and D-6** on the Journal Entry Line grain, and Amendment 3 put the DSO's derived directory group on the same grain. That is right for the two base metrics, which add up journal-entry lines. It is wrong for DSO, which adds up nothing.
