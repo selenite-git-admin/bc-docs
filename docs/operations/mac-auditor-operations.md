@@ -120,11 +120,15 @@ Homebrew marks downloaded casks with `com.apple.quarantine`. Your account cleare
    V=$(ls /opt/homebrew/Caskroom/codex | sort -V | tail -1)
    xattr -p com.apple.quarantine /opt/homebrew/Caskroom/codex/$V/bin/codex /opt/homebrew/Caskroom/codex/$V/bin/codex-code-mode-host
    ```
-3. **If it was upgraded the normal way,** remove the flag from both. Only do this for a genuine OpenAI-signed binary:
+3. **If it was upgraded the normal way,** clear the flag **per binary, only after that binary's own signature verifies and its team is exactly OpenAI's** (`2DC432GLL2`). Anything else keeps its flag, and you stop there:
    ```bash
-   codesign --verify --strict /opt/homebrew/Caskroom/codex/$V/bin/codex && codesign -dv /opt/homebrew/Caskroom/codex/$V/bin/codex 2>&1 | grep TeamIdentifier   # expect 2DC432GLL2
-   xattr -d com.apple.quarantine /opt/homebrew/Caskroom/codex/$V/bin/codex /opt/homebrew/Caskroom/codex/$V/bin/codex-code-mode-host
+   for b in codex codex-code-mode-host; do f=/opt/homebrew/Caskroom/codex/$V/bin/$b
+     if codesign --verify --strict "$f" && [[ $(codesign -dv "$f" 2>&1 | sed -n 's/^TeamIdentifier=//p') == 2DC432GLL2 ]]; then
+       xattr -d com.apple.quarantine "$f" 2>/dev/null; echo "cleared: $b"
+     else echo "NOT verified: $f (flag kept; stop and investigate)"; fi
+   done
    ```
+   Tested 2026-09-29: both current binaries verify, and a non-OpenAI binary is refused.
 4. **Prove the auditor account can run it:**
    ```bash
    sudo -u bcauditor -H zsh -lc 'cd /tmp && codex exec --skip-git-repo-check -c sandbox_mode="read-only" "Reply with the single word OK."'
