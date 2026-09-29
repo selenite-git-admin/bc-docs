@@ -1,6 +1,6 @@
 ---
 title: "Mac Auditor Operations"
-description: "Operator runbook for the Codex auditor on the Mac: what runs, who authorizes what, daily checks, installing a reviewed service change, deploying the desk, re-arming a held message, upgrading Codex, changing the auditor App's repositories, diagnosing kills, and rollback."
+description: "Operator runbook for the Codex auditor on the Mac: what runs, who authorizes what, daily checks, installing a reviewed service change, deploying the desk, re-arming a held message, upgrading Codex, changing the auditor App's repositories, diagnosing kills, rollback, and setting the auditor up from scratch."
 authority: authoritative
 domain: operations
 status: active
@@ -165,7 +165,79 @@ The App refuses **every** action when its installed repositories differ from the
 | Desk | Record the deploy grant for the earlier bc-exchange commit (§4.2). |
 | App repositories | Remove the repository from the installation **and** from `ALLOW` together. |
 
-## 5. Where things live
+## 5. Set up the auditor from scratch
+
+How the auditor was built, for a rebuild on a new Mac or after a loss. Where a step was done by hand and not recorded in a script, it says so. Credentials are always placed by the operator; a Claude session never handles their values.
+
+**1. The account.**
+- Create a standard macOS user `bcauditor`. It must not be an administrator.
+- Close its home to other users: `sudo chmod 700 /Users/bcauditor`.
+
+**2. Tools inside the account.**
+- **Node:** nvm with Node 22.18.0. The services use `/Users/bcauditor/.nvm/versions/node/v22.18.0/bin/node`.
+- **Codex:** the Homebrew cask, shared with the Mac. Install it with `brew install --cask --no-quarantine codex` (see §4.4).
+- **Sign-in:** sign Codex in as `bcauditor@selenite.co` (paid plan) with `codex login`, run as bcauditor (`sudo -u bcauditor -H zsh -l`).
+
+**3. Codex's standing instructions.**
+- These are `~/.codex/AGENTS.md` and the auditor session skill in bcauditor's Codex folder.
+- **Gap:** they are not yet versioned. ADR DEC-44456d point (c) calls for them in `bc-external-audit`. Until they are, a rebuild has no reviewed copy; copy them from the current account before retiring it.
+
+**4. Credentials, placed by the operator.**
+
+The desk's Configuration page shows whether each one is present.
+
+| Credential | Path in the account | What it is |
+|---|---|---|
+| Auditor App key | `~/.config/bc-audit/bc-auditor-app.pem` | Private key of the GitHub App `bc-auditor-app` (installation on selected repositories, §4.5) |
+| Read-only GitHub token | `~/.config/bc-audit/gh-readonly-token` | Fine-grained token `bcauditor-ro-bc-exchange-external-audit`: bc-exchange and bc-external-audit only; Actions, Contents, Metadata and Pull requests read-only; grant `bcceba17` |
+| Mailbox deploy key | `~/.ssh/bcea_deploy` | Deploy key on bc-external-audit. It has **write** access, used to publish replies, although it is titled "read-only" on GitHub. |
+| Desk deploy key | `~/.ssh/bcx_deploy` | Read-only deploy key on bc-exchange |
+| Phone-code secret | `~/.local/share/bc-exchange/totp.secret` | Created in step 6 |
+| AWS read-only profile | `bc-auditor-readonly` | ReadOnlyAccess in account 546549546538 |
+
+**5. The mailbox.**
+- Clone `bc-external-audit` to `/Users/bcauditor/MyProjects/bc-external-audit` over `bcea_deploy`.
+- The service clones the other repositories in its `ALLOW` list by itself, read-only, on its first run.
+
+**6. The desk (bc-exchange).**
+
+Follow `bc-exchange/README.md`, Setup:
+- Clone to `/Users/bcauditor/bc-exchange` over `bcx_deploy`.
+- Load `co.selenite.bcauditor.exchange.plist`.
+- Enrol your phone with `bin/totp-setup.mjs`. Run it in the macOS Terminal app, never in a Claude window.
+- Run `bin/install-self-update.zsh`.
+
+Later versions arrive through the gated updater (§4.2). A first install of a specific commit uses `bin/install-reviewed.zsh <sha>` after its deploy grant.
+
+**7. The review service.**
+- Build the App-helper folder and run `install-writer.zsh` as in §4.1.
+- The first time, also load the daemon:
+  ```bash
+  sudo install -m 644 -o root -g wheel /Users/bcauditor/auditor-service/shadow/co.selenite.bcauditor.shadow.plist /Library/LaunchDaemons/
+  sudo launchctl bootstrap system /Library/LaunchDaemons/co.selenite.bcauditor.shadow.plist
+  ```
+- The service starts in **shadow** mode: it reviews but publishes nothing.
+
+**8. The App's repositories.**
+- Install `bc-auditor-app` on exactly the repositories in the service's `ALLOW` list.
+- The install check must show `repository_scope_matches: true` (§4.5).
+
+**9. Make it the writer.**
+- Record on the desk a grant containing exactly `the Mac auditor is the writer for the gen- exchange`.
+- To switch back, record `the Mac auditor is not the writer for the gen- exchange`. The newest one wins, and a writer run in progress is stopped within 10 seconds.
+- Only one auditor may ever write.
+
+**10. Alerts.**
+- In the Claude app, create the scheduled task "Codex Auditor alert watch" (every 10 minutes). Its prompt is kept in `~/.claude/scheduled-tasks/auditor-alert-watch/SKILL.md`.
+- Click **Run now** once to approve its tools.
+
+**Check the finished setup:**
+- The desk dot is green.
+- Configuration lists every credential as present.
+- Logs → Review service shows `mode: writer` and `up to 3 writer runs at once`.
+- A test message on a new `gen-` thread gets a published reply.
+
+## 6. Where things live
 
 | Thing | Path |
 |---|---|
