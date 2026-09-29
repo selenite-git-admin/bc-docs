@@ -153,6 +153,26 @@ This amendment narrows **when** Amendment 1 (g)'s retirement happens. It changes
 - **`gross_invoiced_amount` 8a38e79c** is `audit_pending` and not current, so M15 cannot apply to it. Its disposition is record-only in TSK-af9630. The `retire-demoted-duplicate` path is not used, because it would assert a duplicate meaning that does not exist.
 - **Amendment 1 (g)'s sentence** "the invoice-grain family ... is withdrawn or superseded ... executed in U9.5" reads, for `ar_balance` and `gross_invoiced_amount`, as "executed in the coverage arc (PLN-1a0ee1)".
 
+## Amendment 3 (2026-09-29): the DSO successor's directory identity (U9.5)
+
+This amendment replaces two sentences of Amendment 1 about directory member MDM-d1510b. It changes no D-rule and no meaning. It is required before the U9.5 live admission (Codex gen-658c4e-03).
+
+**What Amendment 1 said, and why it cannot be done.** Amendment 1 (a) says MDM-d1510b's `derivation_json` "is reconciled to this in the U9.5 act". Amendment 1 (e) says the DSO successor "is linked to directory member MDM-d1510b". Neither is reachable through a governed surface:
+- MDM-d1510b is a member of the Customer Invoice grain group `ar_collections_and_dso_derived`. Its identity is Customer Invoice grained, and a member's grain comes from its group.
+- The directory HTTP surface cannot give an existing member a new-grain version. `POST /metric-directory/members/:uid/version` only authors a missing v1, and the member-versioning service is reachable only from the a2 backfill tool.
+- The directory derivation vocabulary (ratio, percentage, subtract, add, passthrough) has no calendar-window ratio. A governed `derivation_json` patch therefore cannot express D-6 (TSK-540c6a item 7; gap G4).
+- MDM-d1510b cannot be archived either. `PATCH members/:uid/archive` refuses a member that still carries its legacy `realized_metric_contract_uid` (the invoice-grain DSO `db373d5b`).
+
+**Decision (umbrella ruling, 2026-09-29).**
+- **New groups and members.** The journal-line family gets two new groups on the Journal Entry Line grain, both in the AR family `ar_collections_and_dso`:
+  - `receivable_control_base`, holding the members `receivable_control_balance` (D-1) and `receivable_billed_amount` (D-5);
+  - `receivable_control_derived`, holding the member `receivable_days_sales_outstanding`.
+- **THE Days Sales Outstanding.** That new DSO member is the family's Days Sales Outstanding. Its versioned intent carries the D-6 definition, and it depends on the two base members. The DSO successor MC is keyed `receivable_days_sales_outstanding`, with display name "Days Sales Outstanding" (Codex gen-658c4e-01, Q-N2). The key `days_sales_outstanding` stays reserved by the superseded invoice-grain MC `db373d5b`, whose parent M15 does not archive.
+- **MDM-d1510b.** It is superseded in meaning by the new DSO member and is not moved. Its `derivation_json` is not reconciled (gap G4). It is recorded in TSK-af9630 (PLN-1a0ee1) for retirement in coverage batch 1, together with its legacy pointer.
+- **One operative DSO, a stop condition.** The directory must never present two operative DSO realizations. The U9.5 package proves exactly one operative DSO realization after the M15 supersession, and a second one at the live precheck is a stop.
+
+Amendment 1's two sentences read accordingly: (a) "MDM-d1510b is superseded in meaning; its `derivation_json` is not reconciled (G4); see Amendment 3", and (e) "is realized on the new member `receivable_days_sales_outstanding`; see Amendment 3".
+
 ## Alternatives considered
 
 - **Keep the open-item face value as the numerator.** Rejected: it ignores partial payments and credit notes, and it cannot reconcile to the receivable control account.
