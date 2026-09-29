@@ -124,8 +124,9 @@ Homebrew marks downloaded casks with `com.apple.quarantine`. Your account cleare
    ```bash
    for b in codex codex-code-mode-host; do f=/opt/homebrew/Caskroom/codex/$V/bin/$b
      if codesign --verify --strict "$f" && [[ $(codesign -dv "$f" 2>&1 | sed -n 's/^TeamIdentifier=//p') == 2DC432GLL2 ]]; then
-       xattr -d com.apple.quarantine "$f" 2>/dev/null; echo "cleared: $b"
-     else echo "NOT verified: $f (flag kept; stop and investigate)"; fi
+       if xattr -d com.apple.quarantine "$f" 2>/dev/null || ! xattr -p com.apple.quarantine "$f" >/dev/null 2>&1; then echo "clear: $b"
+       else echo "FAILED to clear: $f"; break; fi
+     else echo "NOT verified: $f (flag kept; stopped)"; break; fi
    done
    ```
    Tested 2026-09-29: both current binaries verify, and a non-OpenAI binary is refused.
