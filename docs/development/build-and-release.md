@@ -131,7 +131,7 @@ The token TTL is a known operational constraint; per the drift inventory below, 
 
 ## Continuous Integration and Release Tooling
 
-Every repository now runs GitHub Actions with required checks on `main`, and bc-core and bc-db route their heavy jobs to a self-hosted MacBook runner when it is online. **Continuous Integration and CI Runners** owns this: the required checks per repository, the `pick-runner` routing, the runner's isolation model, its operation, and the change route. (The table this section used to carry said "no CI anywhere"; that was the readiness-baseline state and no longer holds.)
+Most repositories now run GitHub Actions, and eight have required checks on `main`. bc-core and bc-db route their heavy jobs to a self-hosted MacBook runner when it is online. **Continuous Integration and CI Runners** owns this: the required checks per repository, the `pick-runner` routing, the runner's isolation model, its operation, and the change route. (The table this section used to carry said "no CI anywhere"; that was the readiness-baseline state and no longer holds.)
 
 The platform also does not use a formal release tool in the readiness baseline. No semantic-release configuration, no changesets manifest, no release manifest live in any repo. Per-repo `package.json` carries a static `version` field that is set by hand. The readiness-baseline release path is "the artifact runs locally; a deploy is recorded in Infrastructure when it happens."
 
@@ -146,7 +146,7 @@ The platform also does not use a formal release tool in the readiness baseline. 
 | Canonical DDL is authority | The bc-core canonical DDL under `docker/redesign/` is the schema authority; Drizzle schemas track the canonical DDL; migrations drift back into the canonical DDL on the fold-back schedule |
 | Database changes are gated | Per CLAUDE.md, every database change requires explicit user approval; this constraint binds Build and Release because schema-evolution releases run through the same governance |
 | Token renewal is operator-driven | The CodeArtifact token window is renewed manually; no automated renewal cron is wired |
-| CI is required | Every repository runs GitHub Actions with required checks on `main` (see Continuous Integration and CI Runners) |
+| CI is required where protected | Eight repositories require checks on `main`; the per-repository table is in Continuous Integration and CI Runners |
 | Static `version` fields | Per-repo `package.json` carries a hand-set `version` field; no formal release tool |
 
 **Governing source.** CLAUDE.md (NPM Registry, Database Change Protocol, Don't sections); per-repo `package.json` and `.npmrc`.

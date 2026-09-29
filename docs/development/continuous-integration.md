@@ -25,19 +25,21 @@ Covers where BareCount's CI runs, what each repository requires before a merge, 
 
 ## 1. What each repository requires
 
-Every repository runs GitHub Actions. Branch protection on `main` requires these checks:
+Eight of the active repositories have branch protection on `main` with required checks. Three have none. The table was read on 2026-09-29 from each repository's `main` tree (`.github/workflows/`) and its branch-protection settings. It is a snapshot, not a policy: re-read both before relying on it. Archived repositories are out of scope.
 
-| Repository | Workflows | Required checks |
+| Repository | Workflows on `main` | Required checks on `main` |
 |---|---|---|
 | barecount-devhub | `ci.yml` | `quality-gate`, `unit-tests (ubuntu-latest)`, `unit-tests (macos-latest)` |
-| bc-core | `ci.yml`, `docker-redesign-lockstep.yml`, `stale-branches.yml` | `quality-gate` |
+| bc-core | `ci.yml`, `stale-branches.yml` | `quality-gate` |
 | bc-db | `ci.yml` | `quality-gate` |
 | bc-docs | `adr-hygiene.yml` | `adr-hygiene` |
 | bc-admin | `ci.yml` | `build` |
 | bc-portal | `ci.yml` | `quality-gate` |
 | bc-demo | `ci.yml` | `test`, `build-gates` |
 | bc-infra | `ci-validate.yml`, `cd-prepare.yml`, `cd-execute.yml` | `validate` |
-| bc-external-audit | `auditor-checks.yml`, `service-ci.yml` | not protected |
+| bc-external-audit | `service-ci.yml` | none (not protected) |
+| bc-audit-app | none | none (not protected) |
+| bc-website-v2 | none | none (not protected) |
 
 A `quality-gate` job is the single aggregate check: it fails when any job it depends on did not succeed. Judge a run by `gh run view <id> --json conclusion`, never by the tail of `gh run watch`.
 
@@ -54,7 +56,10 @@ bc-core and bc-db start every workflow with a small `pick-runner` job on a GitHu
 - **online** → the heavy jobs run on `["self-hosted","Linux","ARM64","bc-ci"]`, the MacBook;
 - **offline, or any error** → they run on `ubuntu-latest`, as before.
 
-So switching the MacBook off never blocks CI; it only moves the cost back to GitHub.
+The fallback applies to each **new** `pick-runner` decision. Switching the MacBook off, or a worker refusing to register, moves new workflow runs back to GitHub (and back to paid minutes). It does not move jobs that were already routed:
+
+- **A job already routed to the MacBook but not started** stays queued until a MacBook runner is online again. To send it to GitHub instead, cancel the run and re-run it (all jobs, not "failed jobs only"), so that `pick-runner` decides again.
+- **A job already running on the MacBook when it stops** is stranded (§3.3).
 
 **Routed to the MacBook:**
 - bc-core: `static-analysis`, `vitest-shard (1..3)`, `e6b-db-integration`;
@@ -80,7 +85,7 @@ So switching the MacBook off never blocks CI; it only moves the cost back to Git
    - from inside a freshly cloned VM, the Mac's own loopback is unreachable, with a positive control so that a broken probe cannot read as "blocked".
 
    Only then does it ask GitHub for a **single-job (JIT) registration**. The registration exists only in memory and reaches the VM on stdin.
-4. The VM runs exactly one job, then it is deleted and the registration is **proved gone** by an API read-back. If that cannot be proved, the worker registers nothing (fail closed), and CI falls back to GitHub-hosted.
+4. The VM runs exactly one job, then it is deleted and the registration is **proved gone** by an API read-back. If that cannot be proved, the worker registers nothing (fail closed). New runs then go to GitHub-hosted once the runner shows offline (§2).
 5. Each slot has its own VM, ledger and runner name `mbp-<machine id>-<slot>-<UTC>`, so no slot can delete another's registration.
 
 ### 3.2 Why only one slot per repository
@@ -114,6 +119,8 @@ On 8 GB, parallel jobs only trade queue time for swapping. Running more jobs at 
 **Recovery:**
 - wait for GitHub's timeout; or
 - with a recorded operator grant naming the run, force-cancel it (`POST /repos/<owner>/<repo>/actions/runs/<id>/force-cancel`), re-run `activate.sh stop`, and re-run the cancelled build afterwards.
+
+Removing a busy runner by hand in GitHub's settings is refused for the same reason, and it is not a way round the grant. Removing a listed runner by hand is only for one that is **not busy** (for example, a registration left behind while the MacBook was off).
 
 The fix, a stop that lets a running job finish first, is TSK-72a75a.
 
