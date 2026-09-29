@@ -163,7 +163,7 @@ This amendment replaces two sentences of Amendment 1 about directory member MDM-
 - The directory derivation vocabulary (ratio, percentage, subtract, add, passthrough) has no calendar-window ratio. A governed `derivation_json` patch therefore cannot express D-6 (TSK-540c6a item 7; gap G4).
 - MDM-d1510b cannot be archived either. `PATCH members/:uid/archive` refuses a member that still carries its legacy `realized_metric_contract_uid` (the invoice-grain DSO `db373d5b`).
 
-**Decision (umbrella ruling, 2026-09-29).**
+**Decision (operator ruling, 2026-09-29).** Authority: the operator's direct grant through bc-exchange, grant_id `2026-09-29T03-37-39-480Z-db03688d`, text_sha256 `db03688d1f3ed7d3fcc4fd83cbdb7b8098ab9ac02577bea3490b2dbbc0ed9449` (TOTP, recorded 2026-09-29T03:37:39Z; relayed by the umbrella).
 - **New groups and members.** The journal-line family gets two new groups on the Journal Entry Line grain, both in the AR family `ar_collections_and_dso`:
   - `receivable_control_base`, holding the members `receivable_control_balance` (D-1) and `receivable_billed_amount` (D-5);
   - `receivable_control_derived`, holding the member `receivable_days_sales_outstanding`.
