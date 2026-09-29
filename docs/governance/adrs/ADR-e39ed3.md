@@ -49,7 +49,7 @@ The **stack base** is `{scope}-{stage}-{region}-{dom}`; every resource in the st
 
 ### 2. Domain registry (closed)
 
-`ntw` network · `aut` auth (Cognito) · `dbs` database (RDS) · `dbap` db-apply (schema-apply runner) · `sto` storage (S3) · `cmp` compute (ECS/Lambda) · `cch` cache (Redis/ElastiCache) · `api` API · `msg` queues (SQS/SNS) · `evt` events (EventBridge) · `dns` Route 53 · `cdn` CloudFront · `sct` application secrets · `reg` container registry (ECR) · `waf` WAF · `cer` ACM certificates · `obs` observability.
+`ntw` network · `aut` auth (Cognito) · `dbs` database (RDS) · `dbap` db-apply (schema-apply runner) · `sto` storage (S3) · `cmp` compute (ECS/Lambda) · `cch` cache (Redis/ElastiCache) · `api` API · `msg` queues (SQS/SNS) · `evt` events (EventBridge) · `dns` Route 53 · `cdn` CloudFront · `sct` application secrets · `reg` container registry (ECR) · `waf` WAF · `cer` ACM certificates · `obs` observability · `cir` CI runners (per-job EC2 spot machines for GitHub Actions; TSK-ab4419, design Codex gen-b2cc21).
 
 Adding a domain is a registry amendment; there is no catch-all. Security groups and KMS keys are roles within their owning stack (`-sg`, `-key`), not a separate domain.
 
