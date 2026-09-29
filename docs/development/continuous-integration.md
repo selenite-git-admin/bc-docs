@@ -51,10 +51,31 @@ A `quality-gate` job is the single aggregate check: it fails when any job it dep
 
 ## 2. Where jobs run: the `pick-runner` job
 
-bc-core and bc-db start every workflow with a small `pick-runner` job on a GitHub-hosted Ubuntu runner. It uses the read-only repository secret `RUNNER_STATUS_TOKEN` to ask GitHub whether a self-hosted runner labelled `bc-ci` is online (3 tries, 10 s apart):
+bc-core and bc-db start every workflow with a small `pick-runner` job on a GitHub-hosted Ubuntu runner. The heavy jobs run on the MacBook (`["self-hosted","Linux","ARM64","bc-ci"]`) only when all three of these hold; otherwise they run on `ubuntu-latest`:
 
-- **online** → the heavy jobs run on `["self-hosted","Linux","ARM64","bc-ci"]`, the MacBook;
-- **offline, or any error** → they run on `ubuntu-latest`, as before.
+1. **A MacBook runner is online.** It checks the runner list with the read-only secret `RUNNER_STATUS_TOKEN` (3 tries, 10 s apart).
+2. **Fewer than 4 MacBook jobs are already waiting** across the repository's other active runs.
+3. **None of those has waited more than 10 minutes.**
+
+Any error means GitHub-hosted. The queue is read with the workflow's own token (`actions: read` on pick-runner only). The job log states the reason, for example `jobs run on: "ubuntu-latest" (MacBook queue has 6 jobs waiting (limit 4))`. The limits are `MAX_QUEUED` and `MAX_WAIT` in the step (bc-core#881, bc-db#91).
+
+**Why the queue check exists:** on 2026-09-29, parallel metric-onboarding sessions queued 18 bc-core jobs behind the single MacBook slot, and the oldest waited about 2 hours. Now a busy MacBook overflows to GitHub, which costs some paid minutes but blocks nobody.
+
+**Known limits:**
+- The queue is read from one page of runs and jobs, so a very large backlog can be undercounted.
+- Two runs choosing at the same moment can both see a short queue.
+- A job already routed to the MacBook stays there (below).
+
+**Run times, even with no queue** (DevHub's Systems > CI runner page, 2026-09-29, medians):
+
+| Repository | MacBook compared with GitHub-hosted |
+|---|---|
+| bc-core | slower: static-analysis 4.0 min against 2.0 |
+| bc-db | level or faster |
+
+Moving bc-core to GitHub-hosted by default is an open operator decision: faster, but most of the saving goes.
+
+The routing checks live in `pick-runner` (`.github/ci-tests/pick-runner/run-tests.sh` in each repository, 13 cases).
 
 The fallback applies to each **new** `pick-runner` decision. Switching the MacBook off, or a worker refusing to register, moves new workflow runs back to GitHub (and back to paid minutes). It does not move jobs that were already routed:
 
@@ -176,6 +197,6 @@ GitHub bills per job-minute, rounded up: Linux ×1, Windows ×2, macOS ×10. Dai
 ## 8. Where to look
 
 - The kit and its runbook: barecount-devhub `scripts/ci/macbook-runner/README.md`.
-- The routing: `pick-runner` in bc-core and bc-db `.github/workflows/ci.yml` (bc-core#864, bc-core#868, bc-db#85).
+- The routing: `pick-runner` in bc-core and bc-db `.github/workflows/ci.yml` (bc-core#864, bc-core#868, bc-db#85; queue overflow bc-core#881, bc-db#91).
 - The devhub CI shape: barecount-devhub#100. The slot kit: barecount-devhub#121.
 - Open follow-ups: TSK-72a75a (drain on stop).
