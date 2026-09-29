@@ -134,6 +134,25 @@ Foundation's default is to keep an MC and onboard a new source by binding (layer
 
 **Retirement: two DSOs never coexist.** When the new line-grained MCs are live (U9.5), the invoice-grain family, `days_sales_outstanding` f660fb7b, `ar_balance` 61a876e7 and `gross_invoiced_amount` 8a38e79c, is withdrawn or superseded through the governed MCF lifecycle path (M15 supersession). It is executed in U9.5, not deferred. It is never done by hand, and never before its successors are live. `dso_to_credit_term_ratio` is re-authored on the new DSO, or withdrawn, in the same act; it is never silently rebound.
 
+## Amendment 2 (2026-09-29): U9.5 retirement scope narrowed (operator ruling)
+
+This amendment narrows **when** Amendment 1 (g)'s retirement happens. It changes no D-rule and no meaning.
+
+- **Authority:** the operator's direct grant through bc-exchange:
+  - grant_id `2026-09-29T01-54-40-015Z-20b8ff52`;
+  - text_sha256 `20b8ff52522e0f11b5bb6800de1587af12d21121f3b9654183d15d230277d4eb`;
+  - request `2026-09-29T01-54-11-394Z-20b8ff52`, TOTP-recorded 2026-09-29T01:54:40Z.
+- **In U9.5 (TSK-16eb78):**
+  - `days_sales_outstanding` f660fb7b is superseded (M15) by the new Journal Entry Line DSO, so two DSOs never coexist;
+  - `dso_to_credit_term_ratio` 11fb263d is retired in the same act, never rebound. Its re-author is TSK-d9fdca.
+- **Not in U9.5:**
+  - `ar_balance` 61a876e7 and `gross_invoiced_amount` 8a38e79c are **superseded in meaning** by `receivable_control_balance` and `receivable_billed_amount`, but their MCVs are not retired in U9.5;
+  - they move, with their dependent receivables metrics, to the first batch of the Kaveri full metric coverage arc (PLN-1a0ee1, TSK-af9630), where each is rebuilt on journal lines or retired;
+  - until then they stay in their current lifecycle states, and must not be presented as consistent with the journal-line family.
+  - **Why:** the live consumer trace (2026-09-29) found `ar_balance` bound as an operand by 12 metric versions, one of them active (`bad_debt_to_ar_ratio`). `gross_invoiced_amount` is bound by 10. Retiring them in U9.5 would make the active consumer a governed non-result and multiply the act.
+- **`gross_invoiced_amount` 8a38e79c** is `audit_pending` and not current, so M15 cannot apply to it. Its disposition is record-only in TSK-af9630. The `retire-demoted-duplicate` path is not used, because it would assert a duplicate meaning that does not exist.
+- **Amendment 1 (g)'s sentence** "the invoice-grain family ... is withdrawn or superseded ... executed in U9.5" reads, for `ar_balance` and `gross_invoiced_amount`, as "executed in the coverage arc (PLN-1a0ee1)".
+
 ## Alternatives considered
 
 - **Keep the open-item face value as the numerator.** Rejected: it ignores partial payments and credit notes, and it cannot reconcile to the receivable control account.
