@@ -15,13 +15,9 @@ amends: DEC-3a6f74
 
 ## Context
 
-Scope granted by the choice of app client is a property of the client, which any pool user can pick; a security boundary must rest on something the user cannot choose. A Cognito group is issued only by an operator, travels in the verified token, and needs no Lambda trigger. The missing-metadata-is-allow behaviour of the guards made every forgotten declaration an open route, so the fix pairs the admission change with a zero-exception build gate. Operator-only confirmation at the write point, not just the route, closes every path to an operator-confirmed certificate, including the ones reached without the confirm controller.
-
-## Context
-
 DEC-3a6f74 (keep one bc-core service, separate platform and tenant with guard decorators) records under Current State that platform scope is detected from the JWT `aud` claim: a token issued to the admin app client (bc-admin-portal) is platform scope, and a token issued to the portal client (bc-core-api) is tenant scope. The code comment in `cognito-jwt.strategy.ts` cited this as "D065"; no recorded decision carries that code, and the rule traces to DEC-3a6f74 (the earlier DEC-58bf7f, a role-claim mechanism, was superseded and never adopted).
 
-On 2026-09-28 (TSK-29ce9c) this was found to be a pre-production security flaw: the admin client allows public password and SRP sign-in, so any user in the pool could sign in through bc-admin and receive a platform-scope token. Of 619 routes, 475 were platform scoped and 300 of those needed no role (117 of them writes), and 21 routes declared no scope at all. The pool also allowed self sign-up, and neither app client restricted which attributes a user could write, so custom:roles and custom:tenant_id were user-mutable.
+On 2026-09-28 (TSK-29ce9c) this was found to be a pre-production security flaw: the admin client allows public password and SRP sign-in, so any user in the pool could sign in through bc-admin and receive a platform-scope token. The first estimate (619 routes, 475 platform scoped, 21 without a scope) was replaced by the metadata inventory in the design review: 620 routes, 476 platform scoped, 18 without a scope (two of them public). The fix added explicit roles to 117 platform writes that had none. The pool also allowed self sign-up, and neither app client restricted which attributes a user could write, so custom:roles and custom:tenant_id were user-mutable.
 
 ## Decision
 
@@ -32,6 +28,10 @@ On 2026-09-28 (TSK-29ce9c) this was found to be a pre-production security flaw: 
 5. **Only the operator role may confirm a high-risk registry-shape certification** (operator ruling, grant 2026-09-29T02-42-13-699Z-98769398). The route is @Roles('operator'), and `FrameworkApprovalService.confirmRegistryShapeCertification` itself refuses (403) any caller without operator before it reads or writes, on every path that reaches it. The single exception is the BCF panel's in-process fast lane, actor `bcf-registry-authoring-panel`, which never arrives from a login (operator ruling, grant 2026-09-29T05-14-40-388Z-6cf80979). The RolesGuard's existing super_admin/admin bypass does not reach past this check.
 
 This amends DEC-3a6f74's Current State ("platform scope: detected via JWT aud claim"). DEC-3a6f74's decision to keep a single service with guard decorators is unchanged and stays authoritative.
+
+## Rationale
+
+Scope granted by the choice of app client is a property of the client, which any pool user can pick; a security boundary must rest on something the user cannot choose. A Cognito group is issued only by an operator, travels in the verified token, and needs no Lambda trigger. The missing-metadata-is-allow behaviour of the guards made every forgotten declaration an open route, so the fix pairs the admission change with a zero-exception build gate. Operator-only confirmation at the write point, not just the route, closes every path to an operator-confirmed certificate, including the ones reached without the confirm controller.
 
 ## Implementation and evidence
 
