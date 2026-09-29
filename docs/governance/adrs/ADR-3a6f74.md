@@ -30,7 +30,7 @@ N/A
 
 ## Current State
 
-- Platform scope: detected via JWT `aud` claim (adminClientId)
+- Platform scope: detected via JWT `aud` claim (adminClientId). **Amended by DEC-eea376 (2026-09-29):** an admin-client token also needs the Cognito group named by `COGNITO_PLATFORM_GROUP` (bc-platform) in `cognito:groups`; without it the request is refused. The single-service decision above is unchanged.
 - Tenant scope: detected via `x-tenant-id` header + JWT `aud` claim (portalClientId)
 - DB isolation: separate PostgreSQL schemas (`public`/`platform` vs `registry`/`tenant`/`boundary`/`evidence`)
 - Connection pools: global pool for platform, per-tenant pools for tenant schemas
