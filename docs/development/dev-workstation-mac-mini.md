@@ -271,9 +271,8 @@ Before a **planned** reboot, tell any session using the database. The outage is 
 
 ## 10. Working with Codex (the auditor)
 
-- **Where Codex runs.** Codex stays on the laptop. Every exchange travels through GitHub (`bc-external-audit`), so it works from either machine. **Push everything you want reviewed.**
-- **Codex's database settings.** Its auditor database settings (`bc-external-audit/.env`) point at `10.10.10.2:5435`. Codex changed them itself.
-- **Delivery.** Codex's `gen` watcher polls `origin/main` with `git ls-remote` every 25 s, whichever machine published the message. In normal operation a message reaches Codex in about a minute. That is not a guarantee: it depends on both machines, the network and the Codex app being up, and a periodic heartbeat recovers anything missed. The old laptop-only nudge (`127.0.0.1:45980`) isn't needed.
+- **Where Codex runs.** Since 2026-09-28 13:46 UTC the auditor runs on this Mac, under the macOS account `bcauditor`, as a background service (ADR DEC-44456d, switch grant `f5a0490b`). The laptop Codex no longer audits BareCount. Every exchange still travels through GitHub (`bc-external-audit`), so **push everything you want reviewed**. Running, installing, upgrading and diagnosing the auditor: **Mac Auditor Operations** (`docs/operations/mac-auditor-operations.md`).
+- **Delivery.** The service fetches the mailbox every 60 s and reviews up to 3 messages at once, oldest first. A message marked `Lane: platform` (an engine change that the live platform arcs are waiting on) goes first, with one slot kept for it. The desk at http://127.0.0.1:3040 shows every conversation, what it waits on, and the service's health.
 - **No manual relays.** Anything that doesn't belong to a program's own exchange family (d597, d617, …) goes through the permanent `gen-` family, per ADR DEC-081931: PR landings, docs/ADR PRs, design questions, one-off reviews. Every session does this itself, with the **`codex-exchange` skill**. Authority is split three ways:
   - **Publishing to `gen-`:** covered by the operator's standing go to Claude (2026-09-25).
   - **Merging `gen-` PRs that Codex has independently accepted:** Codex's call, under a merge grant the operator gave Codex directly. It applies only after Codex's exact-head App, independence, green-CI, review and branch-protection gates.
