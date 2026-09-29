@@ -184,8 +184,9 @@ How the auditor was built, for a rebuild on a new Mac or after a loss. Where a s
 - **Sign-in:** sign Codex in as `bcauditor@selenite.co` (paid plan) with `codex login`, run as bcauditor (`sudo -u bcauditor -H zsh -l`).
 
 **3. Codex's standing instructions.**
-- These are `~/.codex/AGENTS.md` and the auditor session skill in bcauditor's Codex folder.
-- **Gap:** they are not yet versioned. ADR DEC-44456d point (c) calls for them in `bc-external-audit`. Until they are, a rebuild has no reviewed copy; copy them from the current account before retiring it.
+- These are `AGENTS.md` and the `barecount-auditor-session` skill, versioned in `bc-external-audit` under `service/codex/`.
+- `install-writer.zsh` (§4.1) installs them into `~bcauditor/.codex` from the pinned checkout. It leaves Codex's own built-in skills (`.codex/skills/.system`) alone.
+- Any change to them needs Codex's review and your recorded approval of the exact committed text (ADR DEC-44456d point 4), then the usual merge and install.
 
 **4. Credentials, placed by the operator.**
 
