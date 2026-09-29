@@ -75,7 +75,7 @@ Any error means GitHub-hosted. The queue is read with the workflow's own token (
 
 Moving bc-core to GitHub-hosted by default is an open operator decision: faster, but most of the saving goes.
 
-The routing checks live in `pick-runner` (`.github/ci-tests/pick-runner/run-tests.sh` in each repository, 13 cases).
+Tests for the routing: `.github/ci-tests/pick-runner/run-tests.sh` in each repository (13 cases, run against the step script extracted from `ci.yml`).
 
 The fallback applies to each **new** `pick-runner` decision. Switching the MacBook off, or a worker refusing to register, moves new workflow runs back to GitHub (and back to paid minutes). It does not move jobs that were already routed:
 
