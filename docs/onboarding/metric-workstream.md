@@ -11,7 +11,7 @@ governing_sources:
   - bc-docs/docs/foundation/the-contract-grammar.md
 governing_adrs:
   - DEC-ebf0b4 (D268 — Session Discipline Rules)
-  - DEC-804874 (D366 — L-Node Semantic Gate)
+  - DEC-79b62f (the Foundation gate: repair locations, the four questions, the hard rules, the override path)
 governing_sops:
   - bc-docs/docs/onboarding/metric-contract-creation.md
   - bc-docs/docs/onboarding/metric-registration.md
@@ -69,6 +69,7 @@ This section restates **ADR DEC-79b62f (the Foundation gate)**, which defines th
 | **Why this location?** | What is wrong or missing at this layer. |
 | **Why not upper layers?** | If chosen layer is C–F, confirm A and B are not underspecified. If A or B is underspecified, the fix at C–F is compensation — stop. |
 | **Why not lower layers?** | If chosen layer is A–B, confirm no working implementation is being bypassed. |
+| **Design act or execution act?** | A missing or wrong declaration in a contract is a design act and is named first; an execution-plane detector is a net, not a fix (DEC-c48b0f item 5; DEC-79b62f item 3). |
 
 ### Six invariants pre-check (text from `the-invariants.md`)
 
@@ -337,7 +338,7 @@ If you observe yourself doing one of these, stop and surface the violation. Each
 | Treating `progression.metric_snapshot_index` as if it were value storage | The index is a lookup helper; the fact row is the projection; the evidence row is the authority. Confusing them masks gaps. | Use the service-first diagnostic order (§6): evidence first, ledger next, index/fact for verification. |
 | Using cumulative-through-anchor as a stand-in for open-balance-at-anchor | A flow approximation of a balance metric. Mathematically distinct. Honest only if labelled and constrained. | If the metric needs balance semantics, do not ship until open-item / as-of semantics exist upstream. |
 | Adding grammar the engine cannot honestly evaluate | A declared semantic with no implementation is a false advertisement; the engine will silently approximate or quietly fall back. | Grammar and engine extensions land together (B+D pair). Phase-gate by `$contract` version. |
-| Closing a session with "tests pass" but Foundation Gate violations un-recorded | D268 Rule 7 + D366 override mechanic exist precisely so violations are visible. | Record the override (≥40-char rationale) and auto-spawn the follow-up task; do not bury. |
+| Closing a session with "tests pass" but Foundation Gate violations un-recorded | D268 Rule 7 + the DEC-79b62f override mechanic exist precisely so violations are visible. | Record the override (≥40-char rationale) and auto-spawn the follow-up task; do not bury. |
 
 ## 11. Metric Work Records
 
@@ -493,7 +494,7 @@ A reusable template lives at `bc-docs/docs/onboarding/metric-work-records/_templ
 - `bc-docs/docs/foundation/the-evaluation-boundaries.md` — four boundaries + boundary-independent rules
 - `bc-docs/docs/foundation/the-contract-grammar.md` — twelve grammar artifacts
 - `bc-docs/docs/adrs/ADR-ebf0b4.md` (D268) — Session Discipline Rules
-- `bc-docs/docs/adrs/ADR-804874.md` (D366) — L-Node Semantic Gate; override mechanic
+- `bc-docs/docs/governance/adrs/ADR-79b62f.md` — the Foundation gate; override mechanic (its origin DEC-804874 / D366 is superseded by DEC-b390ef)
 - `bc-docs/docs/adrs/ADR-chain-invariants.md` — machine-checkable chain invariants
 - `bc-docs/docs/onboarding/metric-contract-creation.md`
 - `bc-docs/docs/onboarding/metric-registration.md`
