@@ -16,6 +16,8 @@ governing_adrs:
   - DEC-0d5b39 (Evaluator umbrella — Canonical/Metric/Action Evaluators as distinct boundary acts; Runner/Evaluator machine split)
   - DEC-0f3e57 (Secondary metrics — metric-over-metric-snapshot descriptive DAG; composite runtime)
   - DEC-483f1e (The General Metric Runtime — substrate-driven, shape-dispatch; later expansion)
+  - DEC-c4619b (Deterministic numeric execution profile — exact scaled-decimal arithmetic)
+  - DEC-b1e9eb (Metric output declaration — unit, decimals, rounding once on the final value; proposed)
 errata_referenced:
   - FND-ERR-003
 v2_sources:
@@ -108,6 +110,17 @@ The Metric Contract's formula declares deterministic computation over bound Cano
 | Result production | The Evaluator produces one numeric result for the evaluation act. The result type and unit conform to the Contract's declared result shape and units. |
 
 Formula evaluation is the only operation that produces a Metric Snapshot's numeric value. Surface-layer or read-time computations against Canonical Objects do not produce authoritative metric values.
+
+## Numeric precision and rounding
+
+This section states how a metric's number is computed and rounded. Its authorities are DEC-c4619b (the exact numeric profile, `scaled-decimal-int-v1`, which is live) and DEC-b1e9eb (the metric output declaration, proposed and delivered in slices).
+
+1. **Inputs keep full precision.** Amounts enter as the exact decimals the source recorded. Sums, differences and every other intermediate step are exact, and no line is ever rounded along the way. Summing a million lines gives the exact total. *(Holds today under DEC-c4619b.)*
+2. **Rounding happens once, on the final metric value.** The value is rounded to the metric's declared decimals, half-up by default: a half is rounded away from zero, as Excel's ROUND does. Money takes the currency's standard minor unit, for example 2 places for INR. The largest effect of rounding is therefore half of the last shown digit, however many lines were summed. *(Applies to metrics that carry an output declaration under DEC-b1e9eb. Until then, stored values are exact and unrounded.)*
+3. **Divided results are exact fractions, rounded once at the end.** Averages, ratios and day counts such as DSO are computed as an exact fraction and rounded once to the declared decimals. They never pass through floating-point arithmetic. *(DEC-b1e9eb. Until it lands, divided results use floating point and are labelled as not exact.)*
+4. **Foreign-currency amounts are taken as recorded.** A foreign-currency line arrives already converted and rounded by the source system when it was posted; for example, Odoo stores each line's company-currency amount to the paisa. BareCount takes the recorded amount as it is and never rounds it again.
+
+The metric's evidence records how the value was produced: the exact value, the decimals and where they came from, the rounding mode, and the rounded value.
 
 ## Temporal gate and readiness
 
@@ -230,6 +243,8 @@ Subsequent chapters describe how Metric Snapshots participate in action evaluati
 - DEC-29c324: N:1 Metric Contract to Canonical Contract cardinality (Decisions)
 - DEC-771baf: Tenant database architecture and run scope (Decisions)
 - DEC-f02230: Tenant DB schema organization (Decisions)
+- DEC-c4619b: Deterministic numeric execution profile (Decisions)
+- DEC-b1e9eb: Metric output declaration — unit of measure, decimals and rounding (Decisions)
 - FND-ERR-003: N:1 Metric cardinality (Errata)
 - Contract Schemas reference
 - Decisions: ADR Registry

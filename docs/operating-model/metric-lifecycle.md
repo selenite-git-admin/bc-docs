@@ -123,6 +123,8 @@ audit-eligible population collapses to NONE. **The eligibility of everything cer
 contingent on the profile staying `scaled-decimal-int-v1`** — a standing governance fact, not a
 transient.
 
+How a certified metric's number is rounded (exact inputs and sums, and one rounding on the final value to its declared decimals) is stated in Metric Evaluation, "Numeric precision and rounding" (DEC-c4619b, DEC-b1e9eb).
+
 ## 8. Cross-family doctrine
 
 Intent, meaning, and contract live in three decoupled families; the lifecycle crosses them by
