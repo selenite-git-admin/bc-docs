@@ -42,10 +42,14 @@ As a result, aggregation_currency_code was standing in for the output unit. That
    - (iv) Amounts arrive as the source system recorded them. A foreign-currency line's company-currency amount is converted and rounded by the source at posting, and BareCount takes it as recorded, never re-rounding it.
    - Formulas the rational evaluator cannot express (median, percentile, moving_avg, mod) keep the labelled or refused paths of gen-398517-02.
 4. **Evidence records the output and its rounding.** It holds the declaration plus the exact value, the decimals and their source (declared, or the derivation path and value), the mode, and the rounded decimal string, identical in all three evidence copies.
-5. **Package identity:** output_digest covers the declaration for new packages. Existing packages and digests are untouched.
+5. **Package identity:** output_digest covers the declaration for new packages, through a versioned v4 package identity. Existing v3 packages and digests are untouched. The v4 landing updates the platform package builders and the independent auditor validator together, and proves the two agree before any declared package is admitted.
 6. **The authoring check:** PE-MC enforces ADR-da4c51 check 5 ("output unit matches") with a unit algebra annexed to this ADR. For example: currency divided by currency gives ratio; count divided by count gives ratio; ratio times days(window) gives days; ratio times literal 100 gives percentage; currency times currency is refused.
 7. **No backfill.** Existing versions behave exactly as today, with no declaration, and gain one only as a new version (Invariants III and V).
-8. **Storage:** a new 1:1 immutable table, mcf.metric_output_declaration. Its DBCP needs the operator's explicit DB yes.
+8. **Storage and version boundary:** a new 1:1 immutable table, mcf.metric_output_declaration. Its DBCP needs the operator's explicit DB yes.
+   - A one-row policy table records the cutover time, when the migration applies. A version created at or after the cutover is post-cutover.
+   - A declaration is refused on any pre-cutover version, and on any frozen version: the platform's existing freeze predicate, meaning an approval, active or audit state, or an approval snapshot.
+   - A post-cutover version cannot enter a frozen state, or receive a package snapshot, without its one declaration.
+   - Once a declaration exists, the version's aggregation_currency_code can no longer change, so the coherence of rule 2 cannot be broken by a later parent update.
 
 ## Order
 
@@ -60,6 +64,10 @@ This comes before S2 of gen-398517. S2's binary64 dispatch then covers only unde
 ## Operator decisions
 
 Given in chat on 2026-09-30 and relayed by SES-bc9863: half_up is the default; percentage is stored 0-100; this comes before S2; money decimals are derived from the currency's minor unit with no override; and rounding happens once, on the final value.
+
+**These are not yet authority for review or execution.** The operator's direct grant is requested in bc-exchange as request 2026-09-30T04-13-10-016Z-dac91602 on thread gen-fe8f9d. This ADR cites the recorded grant id and its text hash once the grant is recorded.
+
+**The DSO successor (W9 U9.6)** is proposed to declare days, two places and half_even, explicitly. That matches the acceptance rule in DEC-fa7c63 Amendment 4 (f), "both rounded half-even at 2 decimal places", which stays unchanged. This is pending the operator's direct grant, request 2026-09-30T04-13-10-037Z-bed807b6.
 
 ## Rationale
 
@@ -86,4 +94,4 @@ The Kaveri legal entity's recorded journal-line amounts arrive at no more than t
 
 ## Review
 
-Proposed. The design goes to Codex review on gen-fe8f9d-01, and the DBCP for `mcf.metric_output_declaration` then goes to the operator for the DB yes. Implementation follows in separately reviewed slices: the DBCP apply, the authoring and PE-MC check, the evaluator's DECLARED_DECIMAL path with its evidence, and the package-format step.
+Proposed. Codex design review round 1 on gen-fe8f9d-01 returned CHANGES REQUIRED: version boundary, parent-update coherence, v4 agreement across both engines, and the DSO rounding reconciliation. This revision answers it, and round 2 follows once the operator's grants are recorded. The design and the DBCP for `mcf.metric_output_declaration` then goes to the operator for the DB yes. Implementation follows in separately reviewed slices: the DBCP apply, the authoring and PE-MC check, the evaluator's DECLARED_DECIMAL path with its evidence, and the package-format step.
