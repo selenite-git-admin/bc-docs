@@ -2,7 +2,8 @@
 uid: DEC-7e76b9
 title: "Retire v2 dashboards entirely — single Beyond surface, no toggle"
 description: "v2 dashboard pages (kpi-store, functions, function-admin console) removed in full; no dashboard toggle; Beyond canvas is the single bc-portal surface"
-status: implemented
+status: superseded
+superseded_by: DEC-c562d5
 subdomain: bc-portal
 focus: dashboard-retirement
 date: 2026-04-19T14:23:55.876Z
