@@ -69,7 +69,7 @@ Given in chat on 2026-09-30 and relayed by SES-bc9863: half_up is the default; p
 
 **The DSO successor (W9 U9.6)** declares days, two places and half_up, the platform default and the same as every other metric.
 - A grant proposing half_even for the DSO (`2026-09-30T04-16-40-014Z-bed807b6`) was approved by mistake and is withdrawn by the operator (withdrawal request `2026-09-30T04-17-56-533Z-1df55ae8`, cited here once it is recorded).
-- DEC-fa7c63 Amendment 4 (f)'s acceptance comparison is corrected in place to half up at two places (bc-docs PR #98).
+- DEC-fa7c63 Amendment 4 (f)'s acceptance comparison is corrected in place to half up at two places (bc-docs PR #105, verified by the auditor at head 79888e8).
 
 ## Rationale
 
@@ -96,4 +96,9 @@ The Kaveri legal entity's recorded journal-line amounts arrive at no more than t
 
 ## Review
 
-Proposed. Codex design review round 1 on gen-fe8f9d-01 returned CHANGES REQUIRED: version boundary, parent-update coherence, v4 agreement across both engines, and the DSO rounding reconciliation. This revision answers it, and round 2 follows once the operator's grants are recorded. The DBCP for `mcf.metric_output_declaration` then goes to the operator for the DB yes. Implementation follows in separately reviewed slices: the DBCP apply, the authoring and PE-MC check, the evaluator's DECLARED_DECIMAL path with its evidence, and the package-format step.
+Proposed. The design review ran three rounds on gen-fe8f9d:
+- **Round 1** returned CHANGES REQUIRED: the version boundary, parent-update coherence, v4 agreement across both engines, and the DSO rounding reconciliation.
+- **Round 2** closed those and found that a cutover read from the editable `created_at` could be bypassed.
+- **Round 3** (operator grant 2026-09-30T04-25-18-494Z-b5099184) accepted the membership-at-creation rule, reply ACCEPTED WITH BOUNDARY, and this ADR landed in bc-docs PR #107 (merge 758e5787).
+
+The committed DBCP for `mcf.metric_output_declaration`, with its clone proof, goes to the operator for the DB yes. Implementation follows in separately reviewed slices: the DBCP apply, the authoring and PE-MC check, the evaluator's DECLARED_DECIMAL path with its evidence, and the package-format step (v4 agreement with the independent auditor validator). The ADR moves to decided or implemented only after the DB yes and the build.
