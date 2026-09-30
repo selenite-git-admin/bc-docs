@@ -60,4 +60,8 @@ TWIN="(SELECT v.metric_contract_uid FROM mcf.metric_contract_version v JOIN mcf.
 v S2-demoted-twin-no-decision OK "" "UPDATE mcf.metric_contract SET archived_at = now() WHERE metric_contract_uid = $TWIN" "$TWIN IS NULL OR true"
 DRAFT="(SELECT v.metric_contract_uid FROM mcf.metric_contract_version v JOIN mcf.metric_contract c USING (metric_contract_uid) WHERE v.governance_state_code IN ('draft','review') AND c.archived_at IS NULL AND NOT EXISTS (SELECT 1 FROM mcf.metric_contract_version w WHERE w.metric_contract_uid = v.metric_contract_uid AND w.governance_state_code NOT IN ('draft','review')) ORDER BY 1 LIMIT 1)"
 v S3-abandon-draft-parent OK "" "UPDATE mcf.metric_contract SET archived_at = now() WHERE metric_contract_uid = $DRAFT"
+# --- the served login (bc_platform_runtime): the act works under its real grants; the guards bind it too ---
+v L1-served-login-act OK "SET LOCAL ROLE bc_platform_runtime;" "SELECT proof.retire($(M payable_control_balance))" "(SELECT archived_at IS NOT NULL FROM mcf.metric_contract WHERE metric_contract_uid = $(PAR payable_control_balance)) AND EXISTS (SELECT 1 FROM mcf.rejected_version_retirement WHERE metric_contract_version_uid = $(M payable_control_balance))"
+v L2-served-login-direct-archive "REFUSED:without a recorded retirement" "SET LOCAL ROLE bc_platform_runtime;" "UPDATE mcf.metric_contract SET archived_at = now() WHERE metric_contract_uid = $(PAR $S)"
+v L3-served-login-edit-record "REFUSED:" "SELECT proof.retire($(M $S)); SET LOCAL ROLE bc_platform_runtime;" "UPDATE mcf.rejected_version_retirement SET retired_by_name = 'x' WHERE metric_contract_version_uid = $(M $S)"
 print -r -- "TOTAL pass=$pass fail=$fail" >> $OUT

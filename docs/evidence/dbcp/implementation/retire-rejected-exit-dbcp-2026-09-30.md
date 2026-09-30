@@ -1,6 +1,6 @@
 ---
 uid: retire-rejected-exit-dbcp-2026-09-30
-title: "DBCP — governed retire-rejected exit (migration 64; TSK-f36519)"
+title: "DBCP — governed retire-rejected exit (bc-db migration 0029; TSK-f36519)"
 description: "Adds the recorded, governed exit for a metric contract version whose certification decision-stream head is REJECT: a same-state audit_reject_retire certificate, an append-only mcf.rejected_version_retirement record citing the REJECT decision, and an archive class guard, so the parent soft-archive frees the name and identity for a corrected version. Clone-proved; not applied."
 status: proposed
 date: 2026-09-30
@@ -12,7 +12,7 @@ supersedes:
 superseded_by:
 ---
 
-# DBCP — governed retire-rejected exit (migration 64)
+# DBCP — governed retire-rejected exit (bc-db migration 0029)
 
 **Design:** memo barecount-devhub `artifacts/coverage-arc/LIFECYCLE-REJECT-EXIT-MEMO.md`, revision 3 (commit 86b1236c). The auditor accepted it with boundary on gen-c49698-03, a third round under operator grant `2026-09-30T05-16-06-877Z-39c87136` (text sha256 `39c87136…8a25`).
 
@@ -36,7 +36,15 @@ superseded_by:
 
 ## 2. What changes
 
-The migration is bc-core `docker/redesign/64-mcf-retire-rejected-exit.sql` (sha256 `6f78fedb6b1e36ed7257b8fcd3cff6d1b1bd368da21338735efb5161e2c63793`). Its rollback is `64-mcf-retire-rejected-exit-rollback.sql` (sha256 `574a99fa2b0689c84dc3c565d200417233996318013a7133770150d3084bcdd2`). Both are on branch `claude/dbcp-retire-rejected-exit`, commit 8b7fcacb.
+**The migration:** bc-db `migrations/0029_mcf_retire_rejected_exit.sql` (`transactional: true`, `plane: bootstrap`; sha256 `8132c7ae8beb0466a822fe318f46e8a0d65e2b834a84cd8e94a2a6af8e6d2d7e`), on branch `claude/0029-retire-rejected-exit`, commit b205639a, draft PR selenite-git-admin/bc-db#97.
+
+- **Why bc-db.** It was first drafted as bc-core `docker/redesign/64-…`. The bc-core CI freeze guard showed that `docker/redesign` is frozen (DEC-4c1396): the bc-db forward-migration spine is the only platform schema path. bc-core PR #901 is closed and superseded.
+- **Why the bootstrap plane.** It changes baseline-owned objects: the certificate CHECKs, and a trigger on `mcf.metric_contract`.
+- **Ownership and grants.**
+  - The new table and functions are owned by `bc_schema_owner`, and the guard functions are `SECURITY DEFINER` with `search_path pg_catalog` (the `mcf.fn_mc_grain_freeze_guard` pattern).
+  - `bc_platform_runtime` holds SELECT and INSERT only on the record, and PUBLIC is revoked.
+  - The migration's verification block asserts all of this.
+- **The reverse.** bc-db is forward-only, so the reverse is a later forward migration. Its draft is clone-proved and kept with the evidence (`0029-reverse-forward-migration-draft.sql`). It refuses once any record or `audit_reject_retire` certificate exists.
 
 - **`mcf.certification_record` CHECKs.** `certification_record_action_code_check` and `certification_record_action_state_check` are replaced to add one tuple: `audit_reject_retire`, `audit_pending → audit_pending`. It is a same-state record, like the existing `audit_rerequest`.
   - Every existing pair is byte-identical; the clone proof compares the text.
@@ -87,12 +95,16 @@ The migration is bc-core `docker/redesign/64-mcf-retire-rejected-exit.sql` (sha2
 - **The service slice** also updates `src/__architecture__/persisted-codes.snapshot.json` (the persisted certificate codes) and is reviewed separately (engine lane).
 - **After the service is served,** each retirement is an operator-granted act per metric (the metric onboarding lane, operator grant ead781aa).
 
-## 5. Clone proof (2026-09-30)
+## 5. Clone proof (2026-09-30, bc-db 0029)
 
-- **Source.** Live `bc_platform_dev`, `pg_dump -Fc` read-only, restored with 0 errors into a throwaway `postgres:17.11-alpine` container on 127.0.0.1 (`evidence/.../retire-rejected-exit/m64-clone-source.txt`: dump sha256 and cluster sysid; the container and dump are deleted).
-  - Counts match live: 450 versions, 1,381 certificates, 109 decisions.
-- **Apply, rollback, re-apply.** The apply is clean and the verification block passes. The rollback restores both CHECKs **byte-identical** to the pre-apply text. A second apply on an applied database refuses (fail-closed). See `m64-rollback-proof-transcript.txt`.
-- **Vectors: 29 of 29 PASS** (`m64-vectors-transcript.txt`, harness `m64-vector-harness.sql`, runner `m64-run-vectors.zsh`).
+- **Source.** Live `bc_platform_dev`, `pg_dump -Fc` read-only. It was restored **with owners and grants**, the roles recreated with their live LOGIN/NOLOGIN attributes, into a throwaway `postgres:17.11-alpine` container on 127.0.0.1 (`retire-rejected-exit/0029-clone-source.txt`: dump sha256 and sysid; the container and dump are deleted).
+  - 0 restore errors; 450 versions and 1,381 certificates. `mcf.metric_contract` is owned by `bc_schema_owner`, and the served login's real privileges are present.
+  - (A first proof of the bc-core draft ran on an ownerless restore. It is superseded by this one.)
+- **Apply, reverse, re-apply** (`0029-apply-reverse-transcript.txt`).
+  - Apply 1 is clean: 3 triggers, the record owned by `bc_schema_owner`, and the served login granted exactly INSERT and SELECT.
+  - The reverse draft restores both CHECKs **byte-identical**, with no triggers left.
+  - Apply 2 is clean, and a third apply is refused (fail-closed).
+- **Vectors: 32 of 32 PASS** (`0029-vectors-transcript.txt`, harness `0029-vector-harness.sql`, runner `0029-run-vectors.zsh`).
   - Each vector is its own transaction, rolled back.
   - Fixture shapes not present in live data were built with `session_replication_role = replica`. Every guard under test ran with triggers on.
 
@@ -102,33 +114,37 @@ The migration is bc-core `docker/redesign/64-mcf-retire-rejected-exit.sql` (sha2
 | V03 | A direct archive without a record is refused |
 | V04 | A certificate with the wrong code is refused |
 | V05 | A cited decision that is not the head is refused |
-| V06 | A record of a now-stale head does not authorize the archive (the auditor's boundary) |
+| V06 | A record of a now-stale head does not authorize the archive |
 | V07 | Recording the new head succeeds |
 | V08, V09 | A PASS or REVOKE head is refused at the record |
 | V10 | A REVOKE head is refused at the archive |
-| V11a, V11b | A decision-stream fork cannot be constructed: `uq_decision_genesis` and `decision_supersedes_decision_uid_key` refuse it, so the guard's fork branch is defence in depth |
+| V11a, V11b | A fork cannot be constructed: `uq_decision_genesis` and `decision_supersedes_decision_uid_key` refuse it, so the guard's fork branch is defence in depth |
 | V12 | A current version is refused |
 | V13 | A non-archived admit is refused |
 | V14 | A realized member is refused |
 | V15, V16 | UPDATE and DELETE on the record are refused |
-| **G1** | retire-active archives a MIXED parent (its live target plus the REJECTed sibling), and the sibling's version row and decisions are unchanged |
+| **G1** | retire-active archives a MIXED parent (its live target plus the REJECTed sibling), with the sibling's version row and decisions unchanged |
 | **G2** | A REJECT record on that mixed parent is refused |
 | **G3** | A no-live-child archive without a current-head record is refused |
 | S1 | retire-active on a sole live version is unaffected |
 | S2 | A demoted twin with no decision is unaffected |
 | S3 | abandon of a draft parent is unaffected |
+| **L1** | The served login `bc_platform_runtime` performs the whole act (certificate, record, archive) under its real grants |
+| **L2** | A direct archive by the served login is refused by the guard |
+| **L3** | An edit of the record by the served login is refused ("permission denied") |
 
-- **G4, lock validity through the archive** (`m64-lock-proof-transcript.txt`):
-  - Session A inserted the certificate and the record, held the transaction for 8 s, then archived and committed.
-  - Concurrent session B (lock_timeout 3 s) tried to make the version live and to update the parent. **Both were refused with a lock timeout** on the tuples A held.
+- **G4, lock validity through the archive, as the served login** (`0029-lock-proof-transcript.txt`):
+  - Session A, as `bc_platform_runtime`, inserted the certificate and the record, held the transaction for 8 s, then archived and committed.
+  - Concurrent session B (lock_timeout 3 s) tried to make the version live and to update the parent. **Both were refused with a lock timeout.**
   - A's archive then committed.
-- **The rollback after a committed record refuses** ("retirement records exist (immutable)"), with the 3 triggers and 1 record intact.
+- **The reverse after a committed record refuses** ("retirement records exist (immutable)"), with the 3 triggers and 1 record intact.
+- **bc-db local checks:** the byte-discipline rule (no CR) passes, and `tools/tests/runner.test.sh` passes. CI runs the full suite on the PR.
 
 ## 6. Apply plan (for the operator's DB yes)
 
 1. Check that nothing is live: no `run-live-*` running, and the kit claim is absent or held by this act.
 2. Back up to governed custody: a fresh read-only dump, sha256 recorded.
-3. `psql -v ON_ERROR_STOP=1 -f 64-mcf-retire-rejected-exit.sql`, with the verbatim transcript captured (pre-checks, apply, verification block, exit code).
+3. Apply through the bc-db runner (the bootstrap plane, as the operating principal). It writes the migration and its ledger event in one transaction. Capture the verbatim transcript (pre-checks, apply, verification blocks, exit code).
 4. Post-checks: the 3 `trg_rre_*` triggers present, 0 records, both CHECKs carrying the new tuple, all 1,381 existing certificates still valid (the CHECK validates on add).
 5. Commit the applied-byte SQL hash, the transcript and the backup reference to the exchange.
-6. **Rollback** (only while no record or `audit_reject_retire` certificate exists): the rollback file. It refuses afterwards; rollback is then by governance.
+6. **Reverse** (only while no record or `audit_reject_retire` certificate exists): a later forward migration from the proven draft. It refuses afterwards; the reverse is then by governance.
