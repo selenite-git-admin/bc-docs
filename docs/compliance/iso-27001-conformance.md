@@ -4,7 +4,7 @@ order: 47
 title: "ISO 27001 Conformance"
 status: drafting
 authority: authoritative
-depends_on: [the-authority-model, devhub, decision-and-change-procedure, audit-and-activity-logging, infosec-and-access-control, risk-and-vendor-management, quality-assurance]
+depends_on: [the-authority-model, devhub, decision-and-change-procedure, audit-and-activity-logging, infosec-and-access-control, risk-and-vendor-management, quality-assurance, mac-auditor-operations]
 governing_sources:
   - The Authority Model
   - DevHub
@@ -13,6 +13,7 @@ governing_sources:
   - InfoSec and Access Control
   - Risk and Vendor Management
   - Quality Assurance
+  - Mac Auditor Operations (the independent auditor: what runs, who authorizes what)
 governing_adrs:
   - DEC-ae331f (Staged pursuit of ISO 27001 readiness and SOC 2 Type I on reduced criteria; readiness posture before certification, certification after pilot evidence)
   - DEC-ebf0b4 (Session Discipline and Data Integrity Rules; the D268 ten-rule policy that operates as the de facto information security discipline)
@@ -27,6 +28,9 @@ governing_adrs:
   - DEC-804874 (L-Node Verification with Semantic Family Classification; the session-close gate that consumes the chain-status verdict)
   - DEC-3395bc (bc-docs SSOT cutover; the data-leakage-prevention surface for documentation)
   - DEC-8391fd (Process audit harness driven by Gemini; the internal-audit substrate beyond ADR hygiene and code quality)
+  - DEC-081931 (Standing Claude-Codex exchange family gen-; the transport and protocol of independent review)
+  - DEC-44456d (bc-external-audit as the auditor's home; the Mac auditor service under the bcauditor account; operator grants recorded on the desk)
+  - DEC-fa7c63 (DSO family meaning; records that metric onboarding acts have no Codex role, grant ead781aa)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -36,7 +40,7 @@ diagrams: []
 
 ## Scope
 
-This chapter records the platform's ISO 27001 conformance posture for the readiness baseline. It states the staged-pursuit decision per `DEC-ae331f` (readiness phase first, certification after pilot evidence), the platform's choice of the ISO/IEC 27001:2022 revision (ninety-three Annex A controls in four themes A.5 Organizational, A.6 People, A.7 Physical, A.8 Technological), the per-control-family as-built mapping against the platform's current substrate, the explicit out-of-scope domains (A.6 People while the platform has no employees beyond the founder; portions of A.8 deferred per the readiness roadmap), the risk register and the non-conformity register that ISO 27001 mandates, the internal-audit substrate that the platform operates in the readiness baseline, and the gap inventory between as-built and certification-ready posture.
+This chapter records the platform's ISO 27001 conformance posture for the readiness baseline. It states the staged-pursuit decision per `DEC-ae331f` (readiness phase first, certification after pilot evidence), the platform's choice of the ISO/IEC 27001:2022 revision (ninety-three Annex A controls in four themes A.5 Organizational, A.6 People, A.7 Physical, A.8 Technological), the per-control-family as-built mapping against the platform's current substrate, the explicit out-of-scope domains (A.6 People while the platform has no employees beyond the founder; portions of A.8 deferred per the readiness roadmap), the risk register and the non-conformity register that ISO 27001 mandates, the internal-audit substrate that the platform operates in the readiness baseline, the independent review of every code change by the auditor (the one change-management control the platform practises daily), and the gap inventory between as-built and certification-ready posture.
 
 This chapter does not redefine the InfoSec controls (InfoSec and Access Control), the change-record substrate (Decision and Change Procedure), the audit substrate (Audit and Activity Logging), or the risk register (Risk and Vendor Management).
 
@@ -86,6 +90,33 @@ The pair shares a `ref_uid` (the session UID `SES-xxxxxx` or task UID `TSK-xxxxx
 
 **Governing source.** Decision and Change Procedure; DEC-ebf0b4; `barecount-devhub/src/db.js` (change_records schema).
 
+## A.8.32 Change Management: Independent Review by the Auditor
+
+Every code change that lands in a BareCount repository is reviewed before it merges: branch protection on `main` in each builder repository (bc-core, bc-db, bc-docs, bc-admin, bc-portal, barecount-devhub, bc-demo, bc-infra, bc-exchange) requires one approving review and the repository's CI check, and applies to administrators (read from the GitHub API on 2026-09-30; bc-exchange does not yet apply it to administrators). In practice the approving reviewer is an independent auditor. The auditor is Codex, run by OpenAI, operating under its own macOS account (`bcauditor`) on the development Mac since 2026-09-28. It is independent of the builder (the Claude sessions) in three ways: it runs under a separate account whose home the builder cannot read; its standing instructions are versioned in its own repository, `bc-external-audit`, outside the builder's control (`DEC-44456d`); and it holds no authority of its own, so nothing the builder writes can enlarge what the auditor may do (`DEC-081931`, point 8).
+
+This is the change-management control the platform practises in the readiness baseline. It complements the change-record pair (A.5.36): the pair records intent and outcome; the review is the independent check between them.
+
+| Element | As-built |
+|---|---|
+| Transport | The permanent `gen-` exchange per `DEC-081931`: every review is a thread of numbered messages committed as files to `bc-external-audit` on `origin/main`. A message names the pull request and the exact commit under review. The auditor's reply binds the message it answers by its SHA-256, so the reviewed bytes are the merged bytes |
+| Sender gate | The builder's publisher refuses a message unless the sending session is open in DevHub, and records the thread, number, commit and hash as a checkpoint on that session, which joins the review to the change record |
+| Depth | `light` for documents, records and runbooks; `full` for schema, security, auth, cloud, secrets and anything that changes platform behaviour or evidence. The auditor may raise the depth, never lower it (`DEC-081931`, point 6) |
+| Merge | Only through the auditor's GitHub App, under that App's own head, CI, actor and branch-protection gates (Mac Auditor Operations, §2). The auditor's standing instructions stop it before approval or merge when the available GitHub actor is the pull request's author, when the App's capability check fails, or when CI or review evidence is unknown (`bc-external-audit` `service/codex/AGENTS.md`). Its own repository, `bc-external-audit`, is merged by the operator, deliberately outside the App |
+| Authority | Only the operator's grants, recorded on the exchange desk (bc-exchange) with a phone code. A request, a message, a reply or a desk note is never authority. Each grant carries its text and the SHA-256 of that text; the desk's rules page restates the grants in rule language and says of itself that it is never authority |
+| Evidence | The committed message and reply files with their hashes; the App's merge records; the grants list on the desk (`GET /api/grants-list`); the session checkpoint and change record in DevHub |
+
+Two standing operator decisions bound the control. They are stated here once, with their sources, and not restated with authority elsewhere in this section.
+
+| Decision | Rule | Source |
+|---|---|---|
+| The two-round cap | At most two review rounds per unit. If blocking findings remain after round two, the auditor stops and escalates to the operator instead of opening a third round. A finding blocks only if it can cause wrong or corrupted data, irreversible loss, or a security exposure beyond the accepted development residuals; everything else is a non-blocking follow-up, and a review never widens beyond the act under review | Grant `2026-09-28T15-48-14-601Z-6d37cbfc`, text SHA-256 `6d37cbfc59496f07112d01e026c90e65ce7fd8a359d1999b8b08aabd6bd1b9c1` (the operator's standing instruction of 2026-09-27, re-issued on the Mac). Desk rule R3 restates it |
+| The narrow-fix exception | In the Kaveri KPI arc (plan PLN-c96901) only, when the final round finds a narrow issue and the builder fixes it at a new pinned commit, the auditor may do one more review limited to that fix and land it if accepted; anything wider goes to the operator | Grant `2026-09-28T14-37-08-243Z-d8b54d8c`, text SHA-256 `d8b54d8c2e3a842aae38d878040f0894089dfcdd5252dc77130b09e7b41514a5`. Desk rule R3 restates it |
+| The metric-onboarding exclusion | The auditor has no role in metric onboarding. Authoring, certifying, admitting, binding and evaluating metric contracts, and the source reads they need, run under the operator's grants and the platform's own gates, including the independent source-value check before a batch goes live. The auditor does not review, clear or audit those acts. It keeps reviewing engine changes: code, schema, database grants, auth, cloud and serve moves | Grant `2026-09-29T08-34-38-377Z-ead781aa`, text SHA-256 `ead781aa17fb97e64ec6d856cf59e87943af1cfbdda7f5a1fd5d96b9bbc32a53`. Recorded in `DEC-fa7c63` (authority line) and in Operations: Serve Moves and Live Windows; desk rule R15 restates it |
+
+What this control is not. It is not an ISO 27001 internal audit and not a certification body: the auditor reviews changes, it does not audit the management system. Its dispositions grant no authority (`DEC-081931`, point 5); acceptance of a change and permission to merge are separate acts, and the second comes only from the operator's grant. The desk's rules page is a restatement for operators and is never the source; the grants are.
+
+**Governing source.** Mac Auditor Operations; DEC-081931; DEC-44456d; DEC-fa7c63; the grants named above, as recorded on the exchange desk.
+
 ## A.6 People Controls: Out of Scope In The Readiness Baseline
 
 The readiness baseline has no employees; the founder is the sole human operator and AI agents are non-employees. Per `DEC-ae331f` and the platform's Statement of Applicability under `barecount-devhub/ISO27001/`, A.6 controls (screening, terms and conditions, awareness, discipline, termination, NDA) are marked Not Applicable. The scope expands when hiring begins; the readiness roadmap names this as a queued surface.
@@ -126,7 +157,7 @@ A.8 is the largest control family. The platform's substrate maps to A.8 controls
 | A.8.28 Secure coding | The bc-qa rule set; per-repo severity matrix; pre-commit hook |
 | A.8.29 Security testing in development | Test surfaces per Synthetic Data and Testing; bc-core unit and integration tests |
 | A.8.30 Outsourced development | Out of scope in the readiness baseline; no outsourced development |
-| A.8.32 Change management | Decision and Change Procedure; the change-record plan-and-report pair |
+| A.8.32 Change management | Decision and Change Procedure; the change-record plan-and-report pair; independent review of every code change by the auditor before merge (A.8.32 Change Management: Independent Review by the Auditor) |
 | A.8.33 Test information | Synthetic Data and Testing; the qa-bench tenant discipline |
 | A.8.34 Information access during audit | Audit and Activity Logging; the JSONL trail and the DevHub activity log |
 
@@ -192,6 +223,7 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 | A.8 Technological is the substrate weight | The platform's load-bearing conformance surface |
 | Risk register is canonical | DevHub `risks` table; ADR cross-references point at the table row |
 | Internal audit is operator-driven | The audit substrates run on demand; a scheduled cadence is queued |
+| Independent review is a change control, not an audit | The auditor reviews every code change before merge under the operator's grants; it does not audit the management system and holds no authority of its own |
 
 **Governing source.** DEC-ae331f; CLAUDE.md.
 
@@ -222,6 +254,7 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 | `RSK-cb8929` is documented but not registered in `risks` | Recorded per Risk and Vendor Management; reconciliation queued |
 | ISMS documents at `barecount-devhub/ISO27001/` are operator-internal | Recorded; they support the readiness posture; the public conformance position is this chapter |
 | Statement of Applicability baseline is at the early-readiness percentage; the readiness roadmap drives the percentage upward | Recorded; the readiness roadmap is internal |
+| The Non-Conformity Register and Internal Audit Substrate sections, and the A.8.8, A.8.25 and A.8.28 rows, still describe the bc-qa harness, its pre-commit hook and the file register, which `DEC-5b760c` retired on 2026-08-24 (per-repository CI is the only enforcement home; the DevHub `qa_nc_records` table is the single register) | Recorded 2026-09-30; those sections are rewritten with Quality Assurance in a following unit and must not be read as current |
 
 **Governing source.** DEC-ae331f; `barecount-devhub/ISO27001/`.
 
@@ -238,6 +271,7 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 | Operations: Upgrade and Migration | The migration discipline and backup posture | The conformance mapping for A.8.13 Information backup |
 | Operations: Incident and Change Management | The incident triage path | The conformance mapping for the incident-response control |
 | SOC 2 Conformance | The Trust Services Criteria mapping | The companion conformance posture per `DEC-ae331f` |
+| Mac Auditor Operations | The auditor service, the exchange desk, the grants and their procedures | The conformance role of independent review as the A.8.32 change-management control |
 
 **Governing source.** outline.md §4.8; The Authority Model.
 
@@ -255,6 +289,8 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 - Operations: Deployment Topology
 - Operations: Upgrade and Migration
 - Operations: Incident and Change Management
+- Operations: Mac Auditor Operations
+- Operations: Serve Moves and Live Windows
 - DEC-ae331f (Staged pursuit of ISO 27001 readiness and SOC 2 Type I on reduced criteria)
 - DEC-ebf0b4 (Session Discipline and Data Integrity Rules)
 - DEC-a4e550 (ADR-First Decision Workflow)
@@ -266,4 +302,7 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 - DEC-ee6018 (bc-qa standalone repo)
 - DEC-bebaec (Chain Completeness SSOT)
 - DEC-804874 (L-Node Verification with Semantic Family Classification)
+- DEC-081931 (Standing Claude-Codex exchange family gen-)
+- DEC-44456d (bc-external-audit as the auditor's home; the Mac auditor service)
+- DEC-fa7c63 (DSO family meaning; the metric-onboarding exclusion, grant ead781aa)
 - ISO/IEC 27001:2022 (the international standard; external authority)
