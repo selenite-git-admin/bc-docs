@@ -1,7 +1,7 @@
 ---
 uid: DEC-96cc78
-title: "Platform Runtime/Operations surfaces are tenant-attributed via bounded attestation; reconcile runtime.admission_run to the ratified tenant-DB execution home"
-description: "Platform Runtime/Operations surfaces are tenant-attributed via bounded attestation; reconcile runtime.admission_run to the ratified tenant-DB execution home"
+title: "Platform Runtime/Operations surfaces are tenant-attributed; admission-run records stay platform metadata"
+description: "Platform Runtime/Operations surfaces are tenant-attributed; admission-run records stay platform metadata"
 status: decided
 date: 2026-09-20T11:18:10.115Z
 project: bc-core
@@ -10,9 +10,11 @@ subdomain: platform-tenant-boundary
 focus: governance
 ---
 
-# Platform Runtime/Operations surfaces are tenant-attributed via bounded attestation; reconcile runtime.admission_run to the ratified tenant-DB execution home
+# Platform Runtime/Operations surfaces are tenant-attributed; admission-run records stay platform metadata
 
 ## Context
+
+> **Read with the decision record (2026-09-30).** The Context and the numbered proposal below are the proposal as written on 2026-09-20. It treated platform `runtime.admission_run` as drift to be moved to the tenant database; the operator decided the opposite. Admission-run records are platform metadata written by the executor and stay in the platform database. The "Decision record (2026-09-30)" section at the end governs.
 
 During the bc-admin UI quality pass (SES-9c706c, 2026-09-20), the platform Operations "Boundary Health" surface was found to display a tenant's admission throughput (Kaveri — 42,976 admitted) as an **unattributed headline**, read directly from platform-resident `runtime.admission_run`. A grounded study (bc-docs PR #44) reconciled this against the ratified platform/tenant boundary and found: the platform must never read/write a tenant DB (DEC-771baf/D232), with one bounded, audited, tenant-explicit inspection carve-out (DEC-f0e78e); admission run records belong in the **tenant DB**, with only aggregates platform-side in `execution.boundary_progression` (DEC-81cd26/D168, DEC-3196eb); the operator surface must **pivot on explicit tenant selection** (ADR-952faa D-4); and `runtime.admission_run`'s platform residence is **drift** whose physical home was formally **deferred** (DEC-01bd6b §H). This ADR is **Phase 0** of the remediation — it fixes the design direction so the UI-plane and data-placement execution acts have a ratified authority to follow, and it is a **design act** (not an execution net) per the D541 plane check.
 
