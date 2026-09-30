@@ -46,7 +46,7 @@ As a result, aggregation_currency_code was standing in for the output unit. That
 6. **The authoring check:** PE-MC enforces ADR-da4c51 check 5 ("output unit matches") with a unit algebra annexed to this ADR. For example: currency divided by currency gives ratio; count divided by count gives ratio; ratio times days(window) gives days; ratio times literal 100 gives percentage; currency times currency is refused.
 7. **No backfill.** Existing versions behave exactly as today, with no declaration, and gain one only as a new version (Invariants III and V).
 8. **Storage and version boundary:** a new 1:1 immutable table, mcf.metric_output_declaration. Its DBCP needs the operator's explicit DB yes.
-   - A one-row policy table records the cutover time, when the migration applies. A version created at or after the cutover is post-cutover.
+   - Cutover membership is recorded at creation, never read from a timestamp. From the migration on, an insert trigger on the version table writes one immutable membership row per new version, and direct inserts into the membership table are refused. A version is post-cutover if and only if it has that row. Editable columns such as created_at play no part.
    - A declaration is refused on any pre-cutover version, and on any frozen version: the platform's existing freeze predicate, meaning an approval, active or audit state, or an approval snapshot.
    - A post-cutover version cannot enter a frozen state, or receive a package snapshot, without its one declaration.
    - Once a declaration exists, the version's aggregation_currency_code can no longer change, so the coherence of rule 2 cannot be broken by a later parent update.
