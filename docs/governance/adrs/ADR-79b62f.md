@@ -2,7 +2,7 @@
 uid: DEC-79b62f
 title: "The Foundation gate: the repair-location vocabulary, the four pre-action questions, the hard rules and the override path"
 description: "Defines, at the ADR layer, the Foundation gate every architectural, data, contract, boundary or behaviour-changing change passes before code: repair location A to F as a naming convenience mapped to Foundation surfaces, the four pre-action questions, the five hard rules with their Foundation derivations, and the override path with its required DevHub enforcer; makes CLAUDE.md, the metric SOP and the controller chapter descriptive restatements of this record. Supersedes nothing."
-status: proposed
+status: decided
 date: 2026-09-30T11:18:43.507Z
 project: bc-docs
 domain: governance
@@ -11,6 +11,8 @@ focus: foundation-gate
 ---
 
 # The Foundation gate: the repair-location vocabulary, the four pre-action questions, the hard rules and the override path
+
+> **Decided 2026-09-30.** The operator decided this record as written: desk grant `2026-09-30T12-40-45-252Z-594d93aa` (text SHA-256 `594d93aa12aa04e819ca474a43631993abccd659d2545228b245630da9c9e525`, recorded 2026-09-30T12:40:45Z), decision 5 of the fleet resume plan: "ADR DEC-79b62f, the Foundation gate, is decided as written; the Architect flips its status and restates CLAUDE.md and the metric workstream chapter to cite it." Status flipped by the Architect (TSK-3be7c4). The DevHub enforcer of item 6 is not yet built (TSK-083286).
 
 ## Context
 

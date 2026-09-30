@@ -58,7 +58,7 @@ If a task feels like it spans two work types, split it. Each split has its own g
 
 ## 2. Foundation Gate for metric work
 
-This section is **derivative of `CLAUDE.md` §Foundation Invariant Check** (which is itself derivative of `the-invariants.md`). It is reproduced here for usability so an operator working through this playbook gets a self-contained gate. If this text drifts from CLAUDE.md or Foundation, the upstream sources win.
+This section restates **ADR DEC-79b62f (the Foundation gate)**, which defines the gate at the ADR layer and derives it from `the-invariants.md` and the other Foundation chapters. It is reproduced here for usability so an operator working through this playbook gets a self-contained gate. If this text drifts from DEC-79b62f or Foundation, those sources win.
 
 ### Apply this gate before any metric work in the seven types above
 
@@ -86,7 +86,7 @@ This section is **derivative of `CLAUDE.md` §Foundation Invariant Check** (whic
 - **No SDG / source compensation.** Do not tune the SDG generator, alter source observation, or shape admission to make a metric land at a target number. SDG emits source reality; tuning it produces meaning at the wrong boundary (Invariant I). If the metric is "wrong" by storyboard, the gap is in B (contract semantics) or upstream availability of inputs, not in source reality.
 - **No fact / read-model compensation.** Do not add a filter to `FactReaderService`, an inspector projection, or an admin endpoint to alter the value the metric appears to have. Reads do not produce meaning (`the-evaluation-boundaries.md` §boundary-independent rules). If the value is wrong at the surface, fix the producing boundary.
 - **No raw DB edits.** No `UPDATE`, `INSERT`, `DELETE`, or `TRUNCATE` against `metric.*`, `progression.metric_*`, `fact.ms_*`, or `contract.metric_*` outside a governed service call. If a service does not exist, propose the smallest DBCP for explicit approval — never apply unilaterally.
-- **If the fix would violate Foundation, stop and present the violation** rather than the fix. The override path (D366-style: ≥40-char rationale in `self_audit_json.foundation_gate_override` plus an auto-spawned follow-up task) records a violation or accepted exception; it does not make the behavior foundationally correct.
+- **If the fix would violate Foundation, stop and present the violation** rather than the fix. The override path (DEC-79b62f item 5: a rationale of at least 40 characters in `self_audit_json.foundation_gate_override` plus one auto-spawned `foundation-gate-override` task) records a violation or accepted exception; it does not make the behavior foundationally correct. The DevHub enforcer for that field is not yet built (TSK-083286); until it lands, record the override text in the session's checkpoint and change record.
 
 ### Gate output
 
