@@ -16,6 +16,7 @@ governing_adrs:
   - DEC-c06f41 (Spine expansion to eight sections plus a home; Implementation reshape; section-overview discipline)
   - DEC-a4e550 (ADR-First Decision Workflow; the ADR file is SSOT)
   - DEC-623f8f (ADR Hygiene Policy; the eight rules that govern the ADR file content lifecycle)
+  - DEC-e0a8ca (One frontmatter vocabulary; four authority values for every document kind, status values per kind, the CI check and the scanner reading both axes)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -39,15 +40,15 @@ Per `DEC-3395bc`, bc-docs is the documentation source of truth. Filesystem layou
 |---|---|
 | Repository path | `C:\MyProjects\bc-docs` (the platform's developer-machine path; the deployed path is owned by Infrastructure) |
 | Layout | Flat under `docs/`: section folders (`foundation`, `operating-model`, `implementation`, `ai`, `development`, `onboarding`, `operations`, `compliance`), top-level governance peers (`adrs`, `errata`), and assets (`data-dictionary`, plus future generated reference materials) |
-| Authority axis | Each chapter's frontmatter `authority` field declares whether the chapter is `authoritative`, `reference`, or `evidentiary` |
-| Status axis | Each chapter's frontmatter `status` field declares `drafting`, `reviewing`, `locked`, `superseded`, or `retired`; binding force requires `authority: authoritative` plus `status: locked` |
+| Authority axis | Every file's frontmatter `authority` field declares one of four values, the same four for every document kind: `authoritative` (the file is where a rule, structure or procedure is declared), `reference` (the file describes, indexes or projects something whose authority lives elsewhere), `evidentiary` (the file records what happened and is not edited after it is finalised) or `generated` (a generator emitted the file from a named source at a named commit; it is regenerated, never edited by hand). ADR files carry no `authority` key; an ADR's force is its status (DEC-e0a8ca) |
+| Status axis | The `status` field's values are per document kind, each kind keeping the lifecycle its own governing source defines: chapters and reference notes `drafting`, `reviewing`, `locked`, `superseded`, `retired`; ADRs `proposed`, `decided`, `implemented`, `superseded`, `reversed` (DEC-623f8f); errata `open`, `adopted`, `rejected`, `deferred`, `closed` (the errata ledger README); source-system dockets `draft`, `published`, `retired` (DEC-8570d4); generated references `generated`, with `generator`, `source_repo`, `source_commit` and `generated_at` required; evidence records `drafting`, `locked`, `superseded`, `retired`, always with `authority: evidentiary`; archived files `retired`. Binding force requires `authority: authoritative` plus `status: locked`. `scripts/docs-control/audit_frontmatter.py` enforces both axes in CI on every push and pull request, behind a shrink-only baseline until the sweep empties it (DEC-e0a8ca) |
 | Naming | Chapter filenames are slugs (no `ch-NN-` prefix); section directories are slugs; ADR filenames are `ADR-{uid}.md`; errata filenames are `FND-ERR-XXX.md` |
 
 The legacy `legacy v2 archive` archive at `legacy-v2-docs-root` is read-only reference. New ADRs land in v3, not v2; new chapters land in v3, not v2. v2 remains as a historical record until the SOPs and reference materials are migrated.
 
 The repository carries an `outline.md` that records the section structure, the chapter list, the voice discipline, and the editorial gates. The outline is authoritative for the framework; the chapter is authoritative for its content.
 
-**Governing source.** DEC-3395bc; bc-docs `outline.md`; bc-docs `HANDOFF.md`.
+**Governing source.** DEC-3395bc; DEC-e0a8ca; bc-docs `outline.md`; bc-docs `HANDOFF.md`.
 
 ## The bc-admin Embedded Reader
 
