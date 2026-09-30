@@ -17,12 +17,12 @@ NOTICE:  PASS V2b days on a local_currency version refused: metric output declar
  
 (1 row)
 
+NOTICE:  PASS V3 days with NULL places refused: new row for relation "metric_output_declaration" violates check constraint "chk_metric_output_declaration_places_by_unit"
  expect_refusal 
 ----------------
  
 (1 row)
 
-NOTICE:  PASS V3 days with NULL places refused: new row for relation "metric_output_declaration" violates check constraint "chk_metric_output_declaration_places_by_unit"
 NOTICE:  PASS V4 declaration on pre-cutover P1 refused: metric output declaration refused: version 37de34d0-7e93-427a-a113-ac69e7acc570 predates the DEC-b1e9eb cutover (no membership)
  expect_refusal 
 ----------------
@@ -35,13 +35,13 @@ NOTICE:  PASS V5 setup: A (declared) enters approved — the new gate lets a dec
  
 (1 row)
 
-NOTICE:  PASS V5 declaration on frozen member A refused: metric output declaration refused: version 55444a0c-c3bc-48df-a730-a4291be5203c is frozen (state or approval snapshot)
+NOTICE:  PASS V5 declaration on frozen member A refused: metric output declaration refused: version 6956490c-b15c-4ac3-a74b-0e7061222eab is frozen (state or approval snapshot)
  expect_refusal 
 ----------------
  
 (1 row)
 
-NOTICE:  PASS V6 member C -> approved without declaration refused: version 1e5e23ba-605b-455e-9666-49e6557802d6 cannot enter state approved without its output declaration (DEC-b1e9eb)
+NOTICE:  PASS V6 member C -> approved without declaration refused: version e6004d51-e260-4efc-ac4a-c2c8cee60fd7 cannot enter state approved without its output declaration (DEC-b1e9eb)
  expect_refusal 
 ----------------
  
@@ -59,7 +59,7 @@ NOTICE:  PASS V6r member C draft -> approved (platform rules on) refused: invali
  
 (1 row)
 
-NOTICE:  PASS V7 snapshot for undeclared member C refused: package snapshot for version 1e5e23ba-605b-455e-9666-49e6557802d6 refused: no output declaration (DEC-b1e9eb)
+NOTICE:  PASS V7 snapshot for undeclared member C refused: package snapshot for version e6004d51-e260-4efc-ac4a-c2c8cee60fd7 refused: no output declaration (DEC-b1e9eb)
  expect_refusal 
 ----------------
  
@@ -71,7 +71,7 @@ NOTICE:  PASS V8 setup: declare D days/0/half_up accepted
  
 (1 row)
 
-NOTICE:  PASS V8 change aggregation_currency_code on declared draft D refused: aggregation_currency_code of version 7c4aced2-5475-46c3-86c7-4da86103c907 is frozen by its output declaration (DEC-b1e9eb)
+NOTICE:  PASS V8 change aggregation_currency_code on declared draft D refused: aggregation_currency_code of version 68a2eb86-74ed-4f0a-9c88-8b2b29f510e2 is frozen by its output declaration (DEC-b1e9eb)
  expect_refusal 
 ----------------
  
@@ -102,13 +102,13 @@ NOTICE:  PASS V9 DELETE the policy row refused: mcf.metric_output_declaration_po
 (1 row)
 
 NOTICE:  PASS V11 setup: member C created_at backdated to 2020-01-01
-NOTICE:  PASS V11 backdated member C -> approved without declaration refused: version 1e5e23ba-605b-455e-9666-49e6557802d6 cannot enter state approved without its output declaration (DEC-b1e9eb)
+NOTICE:  PASS V11 backdated member C -> approved without declaration refused: version e6004d51-e260-4efc-ac4a-c2c8cee60fd7 cannot enter state approved without its output declaration (DEC-b1e9eb)
  expect_refusal 
 ----------------
  
 (1 row)
 
-NOTICE:  PASS V11 snapshot for backdated member C refused: package snapshot for version 1e5e23ba-605b-455e-9666-49e6557802d6 refused: no output declaration (DEC-b1e9eb)
+NOTICE:  PASS V11 snapshot for backdated member C refused: package snapshot for version e6004d51-e260-4efc-ac4a-c2c8cee60fd7 refused: no output declaration (DEC-b1e9eb)
  expect_refusal 
 ----------------
  
@@ -126,12 +126,12 @@ NOTICE:  PASS V12 DELETE a membership row refused: mcf.metric_output_declaration
  
 (1 row)
 
-NOTICE:  PASS V12 direct INSERT of membership for pre-cutover P1 refused: mcf.metric_output_declaration_required is written only when a version is created (DEC-b1e9eb): direct insert for 37de34d0-7e93-427a-a113-ac69e7acc570 refused
  expect_refusal 
 ----------------
  
 (1 row)
 
+NOTICE:  PASS V12 direct INSERT of membership for pre-cutover P1 refused: mcf.metric_output_declaration_required is written only when a version is created (DEC-b1e9eb): direct insert for 37de34d0-7e93-427a-a113-ac69e7acc570 refused
 NOTICE:  PASS V13 declaration on forward-dated pre-cutover P1 refused: metric output declaration refused: version 37de34d0-7e93-427a-a113-ac69e7acc570 predates the DEC-b1e9eb cutover (no membership)
  expect_refusal 
 ----------------
@@ -145,12 +145,12 @@ NOTICE:  PASS L2 served login declares E days/2/half_up accepted
  
 (1 row)
 
-NOTICE:  PASS L3 served login UPDATE of a declaration refused: permission denied for table metric_output_declaration
  expect_refusal 
 ----------------
  
 (1 row)
 
+NOTICE:  PASS L3 served login UPDATE of a declaration refused: permission denied for table metric_output_declaration
 NOTICE:  PASS L4 served login direct INSERT of membership refused: permission denied for table metric_output_declaration_required
  expect_refusal 
 ----------------
@@ -163,7 +163,7 @@ NOTICE:  PASS L5 served login declares a pre-cutover version refused: metric out
  
 (1 row)
 
-NOTICE:  PASS L6 served login changes the currency of declared E refused: aggregation_currency_code of version 0e0c83b4-d368-4a1e-8717-0a14f26abda2 is frozen by its output declaration (DEC-b1e9eb)
+NOTICE:  PASS L6 served login changes the currency of declared E refused: aggregation_currency_code of version 3a85e9a2-b8c0-46f0-ac48-3b277a523108 is frozen by its output declaration (DEC-b1e9eb)
  expect_refusal 
 ----------------
  

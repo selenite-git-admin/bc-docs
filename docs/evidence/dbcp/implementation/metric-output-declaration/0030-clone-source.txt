@@ -1,4 +1,4 @@
-source: live bc_platform_dev, pg_dump -Fc read-only, taken 2026-09-30T05:54:05Z, cluster sysid 7689410286420172840
-21c035530e2c92d081ce7c6d76208dad9fd5014996d0a85b29cd62d2c7383831  platform.dump
-restored WITH owners and grants (15 roles recreated with their live LOGIN/INHERIT attributes) into a throwaway postgres:17.11-alpine container (127.0.0.1:55975, m0030-proof); restore error lines: 0; 450 versions; mcf.metric_contract_version owned by bc_schema_owner
+source: live bc_platform_dev, pg_dump -Fc read-only, taken 2026-09-30T06:36:48Z, cluster sysid 7689410286420172840
+364386ca2963c7937ccf7e6cda1bb15bcf7284a861a79f55b8201dcce0235203  platform.dump
+restored WITH owners and grants (15 roles recreated with their live LOGIN/INHERIT attributes) into a throwaway postgres:17.11-alpine container (127.0.0.1:55975, m0030-proof), three databases (bc_platform_dev: the proof; prev_bytes: the previous 0030 bytes c7da1454 for the race red check; rb_fresh: the rollback test); restore error lines across all three: 0; 450 versions; mcf.metric_contract_version owned by bc_schema_owner
 container and dump deleted after the proof

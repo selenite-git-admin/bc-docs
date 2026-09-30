@@ -30,8 +30,8 @@ superseded_by:
 
 | File | sha256 |
 |---|---|
-| migration `migrations/0030_mcf_metric_output_declaration.sql` | `c7da14541197ad9b26de6b113ead95c4d0314a9201bcd405de00f9bc46b2e73f` |
-| rollback `rollback/0030_mcf_metric_output_declaration.rollback.sql` | `a569409d4b735e08d832c16b4aa79d930bf921d01ddd3242188e461f81804c6f` |
+| migration `migrations/0030_mcf_metric_output_declaration.sql` | `6a5018cb7a6f19cc564a54068767d97971851f6a5c278fa51dfdc18c9123534f` |
+| rollback `rollback/0030_mcf_metric_output_declaration.rollback.sql` | `c68199a4f37fff84c2267986522b6364792791029f09fcc8c9ae6ec5dcabbf2f` |
 
 The rollback is pinned to the migration bytes and bound to the ledger.
 
@@ -53,6 +53,8 @@ The rollback is pinned to the migration bytes and bound to the ledger.
 - **Immutability:** on the policy, membership and declaration tables.
 - **Membership:** written at version INSERT.
 - **Declaration insert guard:** a declaration needs membership and an unfrozen parent. "Frozen" uses the platform predicate: a frozen governance state, or `mcf.fn_mcv_has_approval_snapshot`.
+  - It also checks currency coherence **under a `FOR NO KEY UPDATE` lock on the parent row**: the same lock an UPDATE takes (added for Codex gen-fe8f9d-05).
+  - A concurrent currency change on the same version therefore serializes with the insert. Either it waits, and then the update guard sees the declaration and refuses; or it commits first, and the insert sees it and refuses.
 - **Currency coherence:** a deferred constraint trigger. Unit `currency` needs a currency `aggregation_currency_code`; every other unit needs `not_applicable`.
 - **Version update guard:** the parent's currency is frozen once a declaration exists, and a member version cannot enter a frozen state without its declaration.
 - **Snapshot guard:** a member version gets no package snapshot without its declaration.
@@ -81,27 +83,35 @@ From the apply on, **every new metric contract version is a member**, and needs 
 ## 4. Clone proof (2026-09-30, owner- and grant-faithful)
 
 **Source:**
-- A fresh read-only `pg_dump -Fc` of live `bc_platform_dev`, taken 2026-09-30T05:54:05Z (cluster sysid 7689410286420172840; dump sha256 `21c03553…3831`).
+- A fresh read-only `pg_dump -Fc` of live `bc_platform_dev`, taken 2026-09-30T06:36:48Z (cluster sysid 7689410286420172840; dump sha256 `364386ca…5203`).
 - Restored **with owners and grants** into a throwaway `postgres:17.11-alpine` container (127.0.0.1:55975).
 - The 15 roles were recreated with their live LOGIN / INHERIT attributes (`0030-clone-roles.sql`; passwords are clone-only).
-- 0 restore errors; 450 versions; `mcf.metric_contract_version` owned by `bc_schema_owner`.
+- The dump was restored into three databases:
+  - `bc_platform_dev`: the proof;
+  - `prev_bytes`: the previous 0030 bytes `c7da1454…`, for the race red check;
+  - `rb_fresh`: the rollback test.
+- 0 restore errors across all three; 450 versions; `mcf.metric_contract_version` owned by `bc_schema_owner`.
 - **The container and the dump were deleted after the proof.** Nothing ran against live.
 
 **Evidence files** (in `metric-output-declaration/`):
 
 | File | sha256 |
 |---|---|
-| `0030-clone-source.txt` | `579d3adf2d8a0e4d3f28d8a3b5009178c4d10a09b837d9a0b8d5b64b3fa9770f` |
+| `0030-clone-source.txt` | `8de26cabd3298801f386d2b8be348f30886365029b64e0222f65bd861f2f1b6c` |
 | `0030-clone-roles.sql` | `04d4c621e4ff058c41d3f07ca7cdcc20935e50798ea4bdf2e4ccacaa2562a4cd` |
-| `0030-apply-transcript.txt` | `4b1135fcff1076c58ace9b557cb3aca271ec781cd27c68a84da225967b87f9c0` |
+| `0030-apply-transcript.txt` | `2595449f686337589bd7e271ef698a7368d827f74b4a027ea7cab0a05c58c8bb` |
 | `0030-vectors.sql` | `74805c76ddbb9ce5ebe101e87b5ef5b6358cabd4af867509f85f287ee52e3e8e` |
-| `0030-vectors-transcript.txt` | `1d907803dd98aba63b220566448a7148b4fa85b8db271361db518e685028cf35` |
-| `0030-rollback-transcript.txt` | `5fd705f222863b8fca6c2de56751a113062e052065345074638b6a8caf3661d8` |
+| `0030-vectors-transcript.txt` | `bc15060b1a8932f1e32be20dec41378b6df46f557931a1a476393f00bca43126` |
+| `0030-race-setup.sql` | `aafe9b2e289aab26442e309a279c2ccf5d94f981f6a6f0d161448b939d53b6d7` |
+| `0030-race.zsh` | `36efeed1959bd13ba662b6e14324510fbd3520f40ca07b4c1d8cb6dc472f5a83` |
+| `0030-race-transcript.txt` | `8b1309f5f1705d0a0b808832ff7d0919b76df765d1bfe8a243f7f1416341d5e9` |
+| `0030-rollback-transcript.txt` | `763126eaaa725be7b53ef7e146db8a66c8cf28d902ff5c036943f091762f2631` |
 
 **Apply:**
-- 0030 was applied as one transaction by the bootstrap principal, and its verification blocks passed.
-- The ledger `applied` event was recorded as the runner records it, through `infrastructure.fn_record_migration_event`, with sha256 `c7da1454…`. Git ref `clone-proof`, and a clone-only review disposition.
+- 0030 (sha256 `6a5018cb…`) was applied as one transaction by the bootstrap principal, and its verification blocks passed.
+- The ledger `applied` event was recorded as the runner records it, through `infrastructure.fn_record_migration_event`. Its argument order is `(name, sha, kind, recorded_by, git_ref, review_sha, applied_by, rationale)`. Git ref `clone-proof`, and a clone-only review disposition.
 - The ledger state is `applied`.
+- **About the earlier proof's transcript:** the previous proof (for bytes `c7da1454`) showed a failed first ledger insert followed by an `applied` state. That failure was my own call error: I passed `applied_by_name` in the wrong position, and `chk_sme_shape` refused the row, as it should. The corrected call then succeeded. This proof's transcript has no such failure.
 
 **Vectors: all passed** (the transcript ends "ALL VECTORS PASSED: 3 declarations, 5 members").
 - Where a pre-existing platform trigger would refuse first, an **isolated** variant disables that one trigger on the clone, to show the new gate itself refuses. Those triggers are `trg_mcf_mcv_state_transition`, `trg_mcv_package_snapshot_guard`, and for V10 `trg_mcv_grain_entity_version_guard`.
@@ -135,6 +145,14 @@ From the apply on, **every new metric contract version is a member**, and needs 
 | L6 | the served login changes the currency of its declared version | refused |
 | L7 | the served login declares `currency` with places | refused |
 
+**Two-session race vectors** (`0030-race.zsh`, `0030-race-transcript.txt`; Codex gen-fe8f9d-05 finding). Two draft members, X and Y, start at `not_applicable`.
+
+| Case | What happens | Fixed bytes `6a5018cb` | Previous bytes `c7da1454` (red check) |
+|---|---|---|---|
+| **R1, update first** | T2 sets X to `local_currency` and holds it 4 s uncommitted; T1 declares X `days` at +1 s | T1 **waits** until T2 commits, then is refused ("incoherent with aggregation_currency_code local_currency"). Final: no declaration / local_currency. | T1 commits at once; T2 then commits. Final: **days / local_currency, incoherent**. |
+| **R2, declaration first** | T1 declares Y `days` and holds it 4 s uncommitted; T2 sets Y to `local_currency` at +1 s | T2 **waits**, then is refused ("frozen by its output declaration"). Final: days / not_applicable. | T2 commits; T1's deferred recheck refuses it at commit. |
+| **Incoherent pairs afterwards** | | **0** | **1** |
+
 **Rollback** (the real rollback file, `0030-rollback-transcript.txt`):
 - **A:** on the proof clone, where declarations exist, it is refused: "output declarations exist (immutable evidence)".
 - **B:** on a fresh restore: apply, ledger `applied`, rollback OK, then **0** objects remaining and the ledger showing `rolled_back`. Re-applying works. A double apply is refused at the absence precondition.
@@ -145,7 +163,7 @@ From the apply on, **every new metric contract version is a member**, and needs 
 1. Confirm the window:
    - no live window open on gen-d2e52d;
    - the declaration-writer build is Codex-accepted and ready to serve in the same window;
-   - read the grants-list for the DB yes grant and verify its bytes. It must pin the migration sha256 `c7da1454…` and the build.
+   - read the grants-list for the DB yes grant and verify its bytes. It must pin the migration sha256 `6a5018cb…` and the build.
 2. Apply `0030_mcf_metric_output_declaration` with the bc-db runner, on the bootstrap plane. The runner records the ledger event; keep the transcript.
 3. Verify: 1 policy row, 0 members, 0 declarations, 9 `trg_mod_*` triggers, the served login's exact grants, and unchanged counts of existing versions.
 4. Serve the declaration-writer build in the same window, and prove that one new version is created with its declaration under the served login.
