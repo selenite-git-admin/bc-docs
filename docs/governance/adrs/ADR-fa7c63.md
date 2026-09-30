@@ -177,7 +177,7 @@ Amendment 1's two sentences read accordingly: (a) "MDM-d1510b is superseded in m
 
 This amendment corrects the grain declared for D-6's successor, and writes down the rule behind the correction. It changes no D-rule and no meaning: D-6 already defines `dso(E, T, W)` for one legal entity E at a date T, and D-7 scopes it to "one legal entity E". It is required before the U9.6 authoring of the DSO successor (TSK-3ceb0e).
 
-**Authority:** operator approval in chat, 2026-09-29 ("amendment approved"), in answer to the umbrella's plain-language summary (DSO declared at the Legal Entity grain; the reporting-grain rule for pure compositions written down); relayed by the umbrella session SES-bc9863. No bc-exchange grant: this is a metric-onboarding design decision in which Codex has no role (operator grant ead781aa), so the operator's direct word is the authority. The approval covers this amendment as drafted at bc-docs commit 78b041d3; recording this authority line is the only later change. The umbrella confirmed (e).
+**Authority:** operator approval in chat, 2026-09-29 ("amendment approved"), in answer to the umbrella's plain-language summary (DSO declared at the Legal Entity grain; the reporting-grain rule for pure compositions written down); relayed by the umbrella session SES-bc9863. No bc-exchange grant: this is a metric-onboarding design decision in which Codex has no role (operator grant ead781aa), so the operator's direct word is the authority. The approval covers this amendment as drafted at bc-docs commit 78b041d3; recording this authority line and the (f) rounding correction are the only later changes. The umbrella confirmed (e). (f) rounding corrected to half-up on operator decision in chat, 2026-09-30, relayed by SES-bc9863.
 
 **Why.**
 - Amendment 1 (d) put the successors of D-1, D-5 **and D-6** on the Journal Entry Line grain, and Amendment 3 put the DSO's derived directory group on the same grain. That is right for the two base metrics, which add up journal-entry lines. It is wrong for DSO, which adds up nothing.
@@ -224,8 +224,38 @@ Its operands keep the Journal Entry Line grain: `receivable_control_balance` (D-
 
 **(f) Acceptance scale, not a declared output scale.**
 - This ADR declares no output scale or rounding for DSO, and MCF has no output-scale declaration today (TSK-642d25).
-- For acceptance only (D-9, and the U9.5/U9.6 gate a3), the DSO snapshot is compared with the exact recomputation `ar_balance × days(W) / billed`, both rounded half-even at **2 decimal places** (umbrella ruling, 2026-09-29).
+- For acceptance only (D-9, and the U9.5/U9.6 gate a3), the DSO snapshot is compared with the exact recomputation `ar_balance × days(W) / billed`, both rounded half-up (half away from zero, the platform default) at **2 decimal places** (umbrella ruling, 2026-09-29; rounding corrected from half-even to half-up on 2026-09-30, see the Authority line).
 - The comparison fails closed: a value whose rounding differs is a stop, never a pass. It asserts nothing about the stored value's scale.
+
+## Amendment 5 (2026-09-30): the DSO's own aggregation currency is not_applicable; D-7's currency basis is the operands' (U9.6)
+
+This amendment corrects one declaration and clarifies D-7's currency wording. It changes no measured value: DSO is still `balance / billed × days(W)` over local-currency operands.
+
+**Authority:** operator approval in chat, 2026-09-30, relayed by SES-bc9863. The approval covers this amendment as drafted at bc-docs commit e6d84c23, with the unit-of-measure sentence in (b) added at the operator's direction; recording this authority line is the only other change. The companion engine change is bc-core#895.
+
+**Why.**
+- In the U9.6 continuation rehearsal (2026-09-30, a clone of live on the serve move 7 build, devhub `728a6605` `artifacts/w9-u96-dso-grain/CURRENCY-FINDING-2026-09-30.md`), the certification panel rejected the DSO successor.
+- The moderator upheld one point: the DSO declared `aggregation_currency_code = local_currency` while its output is a number of days, and "a days duration cannot carry local currency semantics".
+- The panel is right. D520 (DEC-31dc55) says a dimensionless quantity (a ratio, margin, turnover or day count) declares `not_applicable`: its value carries no currency.
+- The DSO declaration copied D-7's "aggregation_currency = local_currency", which describes the **operands**, onto the composite itself.
+- The same panel ruled the grain (Amendment 4) and the formula correct.
+
+**(a) D-7, clarified.**
+- "Currency: E's functional currency, aggregation_currency = local_currency" describes the **operands**: the receivable balance (D-1) and the billing (D-5) each aggregate functional amounts and declare `local_currency`.
+- A composite whose value is dimensionless, as DSO (days) is, declares its **own** aggregation currency `not_applicable`, per D520.
+- "A composite evaluation whose operands differ in … currency basis … is refused" means the operands must share **one** basis **with each other**.
+  - For a composite that declares a currency (a sum or difference of amounts), that one basis is its own, so every operand must equal it.
+  - For a `not_applicable` composite, every operand must share one basis with the others.
+- bc-core#895 aligns the evaluation guard (`composite-guards.ts` `operandScopeRefusal`) with this wording. Before it, the guard compared each operand with the composite, which refused every `not_applicable` composite over currency operands.
+
+**(b) The DSO successor.** `receivable_days_sales_outstanding` declares `aggregation_currency_code = not_applicable`. The DSO's unit (days) is not yet a declared field of the metric contract; aggregation currency `not_applicable` (D520) is the correct value under the current grammar until the metric output declaration (TSK-af9706) adds unit of measure, decimals and rounding. Its operands `receivable_control_balance` and `receivable_billed_amount` keep `local_currency`. Amendment 4 (b)'s line "currency `local_currency`" reads: "currency: its own `not_applicable` (D520), over `local_currency` operands (Amendment 5)".
+
+**(c) What does not change.**
+- The formula, bindings, window (N = 3, `window_days`), grain (Legal Entity, Amendment 4) and D-8.
+- The legal-entity, calendar, period and window guards.
+- The acceptance comparison (Amendment 4 (f)).
+
+**(d) The same contradiction elsewhere.** On 2026-09-30, 18 current composites declared `document_currency` to match their operands, including the superseded-to-be DSO f660fb7b, days_payable_outstanding, and the margin and ratio family. Where their value is dimensionless, they carry the same D520 contradiction. They are corrected by new versions over time, after bc-core#895 is served. That is a separate task, not this ADR's act.
 
 ## Alternatives considered
 
