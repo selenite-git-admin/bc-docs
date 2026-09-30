@@ -18,6 +18,9 @@ governing_sources:
 governing_adrs:
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules)
   - DEC-771baf (Tenant database topology; platform-tenant one-way dependency)
+  - DEC-f0e78e (Platform and tenant authority classes; x-tenant-id from a platform identity is rejected)
+  - DEC-8dc51d (bc-portal tenant header derived from the JWT tenant claim)
+  - DEC-f0c0f7 (No hardcoded enum arrays; consume master-data hooks)
   - DEC-e50b83 (Master port reservation)
   - DEC-b97390 (bc-admin embedded documentation reader)
   - DEC-3395bc (v3 documentation structure; bc-core JWT-guarded /api/docs/*)
@@ -36,7 +39,7 @@ This chapter records the design rationale for the BareCount frontend experience:
 
 The chapter is deliberately a stub. Both frontends are in flux: bc-portal carries three incomplete UI iterations under active redesign; bc-admin is the more matured of the two but continues to evolve. Per pattern 69, this chapter records the in-flight state honestly rather than pretending a stable surface that does not yet exist.
 
-Per-screen, per-component, per-route inventory is the role of the future **Screen Registry** reference, sourced from the DevHub screen-registry surface (`devhub_screen_*` MCP tools and the `screen_registry` table in DevHub's better-sqlite3 store). When both frontends reach a stable surface, the Screen Registry reference is generated from DevHub the same way the Data Dictionary is generated from the live PostgreSQL state. Until then, this chapter records the design intent; the inventory is queued.
+Per-screen, per-component, per-route inventory is the role of the future **Screen Registry** reference, sourced from the DevHub screen-registry surface (`devhub_screen_*` MCP tools and the `screen_registry` table in DevHub's better-sqlite3 store). No generator for that reference exists. The registry is seeded by hand (DevHub `scripts/register-admin-screens.js` and `scripts/seed-screen-registry.js`); on 2026-09-30 it held 83 bc-admin screens and 0 bc-portal screens, and the DevHub tools only read or update rows. A generated reference, analogous to the Data Dictionary, remains intent. Until it exists, this chapter records the design intent; the inventory is queued.
 
 This chapter sits between API Surface and Notifications and Webhooks. API Surface records the endpoints the frontends consume; this chapter records the design rationale of the consumers. It does not redefine boundary semantics (deferred to Operating Model), the dual-layer trust contract (deferred to The Dual-Layer Interaction Model), the per-endpoint shapes (deferred to API Surface), the embedded documentation reader's documentation discipline (deferred to Documentation System in the Development section), or the bc-portal subscription tier surface (deferred to Tenant Lifecycle and Subscription).
 
@@ -51,7 +54,7 @@ The platform serves browser experience through two frontends. The split realizes
 | bc-portal | Tenant scope | `/api/t/...` routes on bc-core | `@TenantScoped()` per API Surface; the JWT audience resolves to the tenant scope |
 | bc-admin | Platform scope | `/api/...` routes on bc-core | `@PlatformOnly()` per API Surface; the JWT audience resolves to the platform scope; ScopeGuard enforces |
 
-Neither frontend is a privileged surface above the API. Both go through the same global guard chain in bc-core (JwtAuthGuard, ScopeGuard, RolesGuard); both consume the same response envelope and Problem Detail formats; both share the same Cognito user pool with the audience claim distinguishing scope. The dual-layer trust contract per The Dual-Layer Interaction Model holds: each frontend can read and surface what its scope admits; neither can author beyond what its bound role permits at bc-core.
+Neither frontend is a privileged surface above the API. Both go through the same global guard chain in bc-core, registered in this order: JwtAuthGuard, ScopeGuard, TenantClaimGuard, RolesGuard (`src/auth/auth.module.ts`); both consume the same response envelope and Problem Detail formats; both share the same Cognito user pool with the audience claim distinguishing scope. The dual-layer trust contract per The Dual-Layer Interaction Model holds: each frontend can read and surface what its scope admits; neither can author beyond what its bound role permits at bc-core.
 
 **Governing source.** Architecture; Backend Services; API Surface; The Dual-Layer Interaction Model.
 
@@ -108,7 +111,7 @@ Both frontends call bc-core through a fetch-wrapping client that follows the sam
 | Error handling | Non-2xx responses throw a typed `ApiError`. The current bc-admin `ApiError` carries `status`, the parsed response body, and a message string; structured Problem Detail field surfacing (`title`, `detail`, `errors[]` per RFC 7807) is per-call by reading the error body. `401 Unauthorized` is surfaced as a thrown `ApiError`; redirect to login is enforced at route-load time by `ProtectedRoute` consulting the Cognito session, not by an automatic redirect inside the fetch wrapper |
 | Pagination | Cursor-based per API Surface; the client passes `cursor` and `limit` as query parameters and surfaces `hasMore` and the next cursor in the result |
 
-The `x-tenant-id` header in bc-portal carries the operational tenant identifier. The header is the mechanism per Internal Modules TenancyModule's TenantMiddleware reads to resolve the addressed Tenant DB; the JWT `custom:tenant_id` claim is platform-side identity and is not used by bc-core to resolve the operational tenant (per the security-hardening gap recorded in API Surface).
+The `x-tenant-id` header in bc-portal carries the operational tenant identifier. TenantMiddleware (Internal Modules, TenancyModule) reads the header to resolve the addressed Tenant DB before authentication runs. TenantClaimGuard then binds that resolution to the caller's identity: for a tenant route, the resolved tenant must equal the JWT `custom:tenant_id` claim, or the request is refused with 403 before any Tenant DB access. A `super_admin` may address another tenant, and each such access is logged (`src/auth/guards/tenant-claim.guard.ts`). The header selects the tenant; the claim authorizes it.
 
 **Governing source.** API Surface; Internal Modules; Backend Services.
 
@@ -124,7 +127,7 @@ bc-portal is adopting the same discipline incrementally. The readiness baseline 
 
 ## Tenant Context in bc-portal
 
-bc-portal is a single-tenant SPA per browser session. The operational tenant identifier is configured at session start (via the `VITE_TENANT_ID` env variable in the readiness baseline) and attached to every API call as the `x-tenant-id` header. The frontend does not switch tenants mid-session; cross-tenant behavior is not in the bc-portal surface.
+bc-portal is a single-tenant SPA per browser session. The operational tenant identifier is derived from the signed-in user's JWT `custom:tenant_id` claim (`getTenantSlugSync()`, per DEC-8dc51d) and attached to every API call as the `x-tenant-id` header (bc-portal `apps/web/src/api/client.ts`). The `VITE_TENANT_ID` env variable survives only as a deprecated fallback for mock mode and branded per-tenant deployments; its retirement is tracked as DevHub TSK-7fc51d. The frontend does not switch tenants mid-session; cross-tenant behavior is not in the bc-portal surface.
 
 bc-admin is platform-scope and does not attach `x-tenant-id` on most requests. Pages that operate on per-tenant state (the tenants page, tenant detail, tenant binding views) pass the target tenant identifier as a query parameter or path parameter; ScopeGuard in bc-core admits the request because the platform-scope JWT carries the privilege.
 
@@ -142,11 +145,11 @@ Per the stub-then-sync principle in this chapter, per-page detail and per-compon
 
 ## bc-portal: Three Incomplete Iterations
 
-bc-portal carries three incomplete UI iterations at the time of writing. Each iteration represents a different design exploration of the tenant-facing surface; none of the three is the canonical surface yet. The shared substrate across all three iterations is the runtime stack (Vite + React + TypeScript + TanStack Query + Cognito auth + the API client convention above) and the dual-layer interaction commitment (tenant scope, `/api/t/` consumption); the page-level surface differs.
+bc-portal carries three incomplete UI iterations (still true on 2026-09-30; the choice of the canonical one is an open operator decision, prepared by the Customer Portal controller). Each iteration represents a different design exploration of the tenant-facing surface; none of the three is the canonical surface yet. The shared substrate across all three iterations is the runtime stack (Vite + React + TypeScript + TanStack Query + Cognito auth + the API client convention above) and the dual-layer interaction commitment (tenant scope, `/api/t/` consumption); the page-level surface differs.
 
 This chapter does not describe the iterations individually. The full design treatment of bc-portal lands in a future revision of this chapter when one iteration is selected as canonical and the others are retired or merged. Until then, the dual-layer commitment plus the runtime stack plus the API client convention plus the auth sequence constitute everything the chapter can say honestly.
 
-**Grounding caveat.** The bc-portal claims in this chapter rest on a grounding-agent survey of the repository at the time of drafting. A subsequent reviewer reported that `C:\MyProjects\bc-portal` and a related `BareCount-Customer-Portal` path returned access denied during their independent verification. The bc-portal-specific implementation claims (port 3000, the API client convention applied across iterations, the `useMaster*` partial adoption) are subject to verification when the canonical iteration lands and the bc-portal repository is fully readable to the chapter's reviewers.
+**Grounding.** The bc-portal claims in this chapter were re-checked against bc-portal `main` (b018178) on 2026-09-30: port 3000, the API client convention and the tenant header are confirmed; `useMaster*` adoption is partial (two hooks, `useMasterFunctions` and `useMasterSubfunctions` in `apps/web/src/api/masters.ts`, used only under `surfaces/dashboard/`).
 
 **Governing source.** Architecture; The Dual-Layer Interaction Model.
 
@@ -180,7 +183,7 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 |---|---|---|
 | bc-portal carries three incomplete UI iterations | Open | None of the three is the canonical surface; this chapter cannot describe a stable bc-portal page catalogue until one iteration is selected |
 | bc-portal `useMaster*` hook adoption is partial | Low | bc-admin enforces the master-data hook discipline; bc-portal has it queued. Some legacy pages still hardcode enum arrays |
-| Screen Registry auto-generation is not yet built | Low | The DevHub screen registry has the data structure; an auto-generator analogous to `scripts/generate-data-dictionary.mjs` is queued for when both frontends stabilize |
+| Screen Registry auto-generation is not yet built | Low | The DevHub screen registry has the data structure but is seeded by hand, bc-admin only (83 rows, 0 bc-portal on 2026-09-30); no generator analogous to `scripts/generate-data-dictionary.mjs` exists |
 | The chapter is a stub | Open | A non-stub treatment requires the bc-portal canonical iteration to land and the Screen Registry to generate per-screen detail |
 | Login redirect does not preserve the prior route | Low | A user who is mid-session and times out is bounced to login then back to the home page, not back to the page they were on. Implementation gap; no dedicated tracking yet |
 
