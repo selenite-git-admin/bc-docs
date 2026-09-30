@@ -18,12 +18,13 @@ governing_adrs:
   - DEC-ae331f (Staged pursuit of ISO 27001 readiness and SOC 2 Type I on reduced criteria; readiness posture before certification, certification after pilot evidence)
   - DEC-ebf0b4 (Session Discipline and Data Integrity Rules; the D268 ten-rule policy that operates as the de facto information security discipline)
   - DEC-a4e550 (ADR-First Decision Workflow; ADR file as governance authority)
-  - DEC-623f8f (ADR Hygiene Policy; the eight rules for ADR lifecycle and the ADR audit script that operates as internal-audit substrate)
+  - DEC-623f8f (ADR Hygiene Policy; the eight rules for ADR lifecycle and the `audit_adrs.py` check that runs in bc-docs CI)
   - DEC-441665 (NPM supply chain mitigation via AWS CodeArtifact; the supplier-management control)
   - DEC-1918d0 (Two-database split; the access-restriction control)
   - DEC-771baf (Tenant database topology; the access-isolation refinement)
   - DEC-bd5492 (GDPR/DPDP/CCPA Nullification Object; the information-deletion control)
-  - DEC-ee6018 (bc-qa standalone repo; the technical-vulnerability and code-quality control)
+  - DEC-ee6018 (Power of Ten adapted coding rules; the code-quality control)
+  - DEC-5b760c (QA enforcement consolidates into per-repo CI; DevHub is the sole NC authority; bc-qa retired)
   - DEC-bebaec (Chain Completeness SSOT; the platform's processing-integrity authority)
   - DEC-804874 (L-Node Verification with Semantic Family Classification; the session-close gate that consumes the chain-status verdict)
   - DEC-3395bc (bc-docs SSOT cutover; the data-leakage-prevention surface for documentation)
@@ -92,7 +93,7 @@ The pair shares a `ref_uid` (the session UID `SES-xxxxxx` or task UID `TSK-xxxxx
 
 ## A.8.32 Change Management: Independent Review by the Auditor
 
-In the nine protected repositories (bc-core, bc-db, bc-docs, bc-admin, bc-portal, barecount-devhub, bc-demo, bc-infra, bc-exchange), no change merges to `main` without one approving review and the repository's CI check, and the rule applies to administrators (branch protection read from the GitHub API on 2026-09-30; bc-exchange does not yet apply it to administrators). In practice the approving reviewer is an independent auditor. The auditor's own repository, `bc-external-audit`, has no branch protection: its changes are reviewed on the same exchange by practice and merged by the operator, and the drift inventory records the gap. The auditor is Codex, OpenAI's model, run by the Mac auditor service under its own macOS account (`bcauditor`) on the development Mac since 2026-09-28. It is independent of the builder (the Claude sessions) in three ways: it runs under a separate account whose home the builder cannot read; its standing instructions are versioned in its own repository, `bc-external-audit`, outside the builder's control (`DEC-44456d`); and it holds no authority of its own, so nothing the builder writes can enlarge what the auditor may do (`DEC-081931`, point 8).
+In eight protected repositories (bc-core, bc-db, bc-docs, bc-admin, bc-portal, barecount-devhub, bc-demo, bc-infra), no change merges to `main` without one approving review and the repository's CI check, and the rule binds administrators too; in bc-exchange the same protection exists but an administrator can bypass it (branch protection read from the GitHub API on 2026-09-30). In practice the approving reviewer is an independent auditor. The auditor's own repository, `bc-external-audit`, has no branch protection: its changes are reviewed on the same exchange by practice and merged by the operator, and the drift inventory records the gap. The auditor is Codex, OpenAI's model, run by the Mac auditor service under its own macOS account (`bcauditor`) on the development Mac since 2026-09-28. It is independent of the builder (the Claude sessions) in three ways: it runs under a separate account whose home the builder cannot read; its standing instructions are versioned in its own repository, `bc-external-audit`, outside the builder's control (`DEC-44456d`); and it holds no authority of its own, so nothing the builder writes can enlarge what the auditor may do (`DEC-081931`, point 8).
 
 This is the change-management control the platform practises in the readiness baseline. It complements the change-record pair (A.5.36): the pair records intent and outcome; the review is the independent check between them.
 
@@ -139,7 +140,7 @@ A.8 is the largest control family. The platform's substrate maps to A.8 controls
 | A.8.3 Information access restriction | Two-database split per `DEC-1918d0` and per-tenant topology per `DEC-771baf` |
 | A.8.4 Access to source code | GitHub repositories in the founder's organization; access gated by GitHub identity |
 | A.8.6 Capacity management | Per-tenant isolation; Operations: Performance and Scale records the per-tenant resource discipline |
-| A.8.8 Management of technical vulnerabilities | bc-qa audit harness per `DEC-ee6018`; pre-commit hook as the developer-machine preventive boundary |
+| A.8.8 Management of technical vulnerabilities | Each repository's CI per `DEC-5b760c` (lint, typecheck, tests, the bc-core architecture gates); no developer-machine hook; Quality Assurance records the enforcement per repository |
 | A.8.9 Configuration management | Per-repo `CLAUDE.md` and `outline.md`; configuration declared in source-controlled files |
 | A.8.10 Information deletion | Sentinel-based nullification per `DEC-bd5492`; Privacy and the Immutable Fact records the mechanism |
 | A.8.11 Data masking | Out of scope in the readiness baseline; nullification mechanism handles the erasure case |
@@ -151,10 +152,10 @@ A.8 is the largest control family. The platform's substrate maps to A.8 controls
 | A.8.22 Segregation of networks | AWS VPC topology owned by Infrastructure; the platform-vs-tenant DB separation is the access-isolation surface |
 | A.8.23 Web filtering | Out of scope; the platform does not browse external content from runtime services |
 | A.8.24 Use of cryptography | TLS in transit; AWS-managed at-rest encryption for RDS and Cognito; Cognito JWT signed by AWS using RS256 |
-| A.8.25 Secure development lifecycle | bc-qa audit harness and pre-commit hooks; the Decision and Change Procedure substrate |
+| A.8.25 Secure development lifecycle | Per-repository CI gates and branch protection; independent review before merge (A.8.32); the Decision and Change Procedure substrate |
 | A.8.26 Application security requirements | The Power-of-Ten rule set encoded in `@barecount/eslint-config` |
 | A.8.27 Secure system architecture | The Foundation Invariants and the contract grammar; structural correctness rather than ad-hoc security |
-| A.8.28 Secure coding | The bc-qa rule set; per-repo severity matrix; pre-commit hook |
+| A.8.28 Secure coding | The Power of Ten rules per `DEC-ee6018` as `@barecount/eslint-config` defines them, binding at the level each repository's CI applies (Quality Assurance, enforcement table) |
 | A.8.29 Security testing in development | Test surfaces per Synthetic Data and Testing; bc-core unit and integration tests |
 | A.8.30 Outsourced development | Out of scope in the readiness baseline; no outsourced development |
 | A.8.32 Change management | Decision and Change Procedure; the change-record plan-and-report pair; independent review of every code change by the auditor before merge (A.8.32 Change Management: Independent Review by the Auditor) |
@@ -175,36 +176,38 @@ The 2013 revision's A.14.2.1 control (referenced in CLAUDE.md as the historical 
 
 ISO 27001 mandates a documented risk-treatment procedure. The platform's risk register is the DevHub `risks` table per Risk and Vendor Management. The schema records category, likelihood, impact, an auto-calculated score, mitigation, owner, status (`identified` through `closed`), and a review date. The MCP tool family `devhub_risk_*` is the operator surface.
 
-The risk register is wired and operational. The drift: `RSK-cb8929` is referenced in `DEC-441665` and in committed `.npmrc` files but is not yet present as a row; reconciliation lands per Risk and Vendor Management. A scheduled risk-review cadence is queued; the readiness-baseline review is operator-driven.
+The risk register is wired and operational. `RSK-cb8929` (npm supply chain) is a row in it, status `mitigated`, with the CodeArtifact mirror per `DEC-441665` as its treatment; earlier versions of this chapter said the row was missing, which was true before the reconciliation and is not now (verified against the register on 2026-09-30). The daily risk-review housekeeping digest (barecount-devhub TSK-a8ba06) reports scores, owners and overdue review dates; it found the register unchanged since 2026-04-29, eleven of twelve open risks without a review date, and the two critical risks without an owner. A review cadence that acts on the digest is queued.
 
 **Governing source.** Risk and Vendor Management; `barecount-devhub/src/db.js` (risks schema).
 
 ## Non-Conformity Register
 
-ISO 27001 mandates non-conformity tracking. The platform's NC register has two parallel substrates per Quality Assurance.
+ISO 27001 mandates non-conformity tracking. The platform's register is the DevHub `qa_nc_records` table, the single non-conformance authority since `DEC-5b760c` (2026-08-24); the earlier bc-qa file register is retired and is not a register.
 
-| Substrate | Form |
+| Aspect | Form |
 |---|---|
-| `bc-qa/audits/nc-register.json` | The file-of-record; per-NC entry with lifecycle states (open, investigating, resolved, accepted, waived) |
-| DevHub `qa_nc_records` table | The queryable substrate; auto-populated from ESLint findings via `devhub_qa_audit` |
+| The register | DevHub `qa_nc_records`; read through `GET /api/qa/nc` and the `devhub_qa_nc_*` tools; written through `POST /api/qa/nc` and `PATCH /api/qa/nc/:uid` |
+| Lifecycle | `open`, `investigating`, `resolved`, `accepted`, `waived`; a waiver carries its reason; `resolved_at` is set on closure |
+| Writer | None today. The rows were raised by the retired bc-qa audit; CI fails builds but writes no row; nothing has been raised or resolved since 2026-08-24 (as read on 2026-09-30: 1,581 rows, 1,566 open). Decided 2026-09-30: DevHub's own rule scan becomes the writer, proven first on one small repository (build TSK-aae076); the bc-qa-era rows are waived in bulk once the operator's grant is recorded |
+| Review | The daily NC-aging housekeeping digest (barecount-devhub TSK-b0685b) reports counts, aging and rows from retired tooling; it is read by the Compliance & Quality controller |
 
-Reconciliation between the two substrates is operator-driven. The DevHub-side register is the substrate that ISO 27001 audit would query; the bc-qa-side register is the source-of-truth file. An automated reconciliation pass is queued.
+The gap is stated plainly: the register exists and is queryable, but it has no intake yet, so it is not evidence of a current non-conformity process. The writer is decided and not built; Quality Assurance records the decision, the build task and the proof the chapter waits for before claiming a writer.
 
-**Governing source.** Quality Assurance; `bc-qa/audits/nc-register.json`.
+**Governing source.** Quality Assurance; DEC-5b760c; `barecount-devhub/src/db.js` (qa_nc_records schema).
 
 ## Internal Audit Substrate
 
-ISO 27001 expects scheduled internal audits. The platform operates three internal-audit surfaces in the readiness baseline.
+ISO 27001 expects scheduled internal audits. The platform has no internal audit of the management system. What it operates instead, in the readiness baseline, are three continuous or scheduled checks of narrower scope.
 
 | Surface | Form |
 |---|---|
-| `bc-docs/scripts/adr-audit.js` | ADR hygiene audit per `DEC-623f8f`; checks supersession pairs, stuck-proposed status, orphan ADRs; operator-run |
-| bc-qa audit harness | Code-quality audit per `DEC-ee6018`; runs the thirteen modular checks; operator-run via `devhub_qa_audit` or the CLI |
-| Audit harness per `DEC-8391fd` | Gemini-driven audit of governed sequences; persists to the `process_audit` table; operator-run via `devhub_process_audit_run` |
+| ADR hygiene | `scripts/docs-control/audit_adrs.py` in bc-docs, run in that repository's CI on every push and pull request (`adr-hygiene.yml`); merge-blocking on supersession issues, advisory on stuck-proposed and missing fields (`DEC-623f8f`) |
+| Independent review of code changes | The auditor's review of every change before merge in the protected repositories (A.8.32); a change control, not an audit |
+| Housekeeping digests | Three daily read-only scheduled tasks (session hygiene, NC aging, risk review) that write a dated digest to a DevHub task each; they change nothing and are read by the Compliance & Quality controller |
 
-The audits are operator-run in the readiness baseline, not scheduled. ISO 27001 expects a documented audit calendar; the platform's substrate produces the audit findings on demand. The cadence is the queued surface.
+The bc-qa audit harness and the `devhub_qa_audit` tool that earlier versions of this chapter named were retired by `DEC-5b760c`; the Gemini-driven process audit per `DEC-8391fd` has one persisted run and is not scheduled. A documented internal-audit programme with a calendar remains a queued surface.
 
-**Governing source.** DEC-623f8f; DEC-ee6018; DEC-8391fd.
+**Governing source.** DEC-623f8f; DEC-5b760c; `bc-docs/.github/workflows/adr-hygiene.yml`; the housekeeping tasks TSK-87a578, TSK-b0685b, TSK-a8ba06.
 
 ## Management Review
 
@@ -222,7 +225,7 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 | A.7 Physical inherits from AWS | Shared-responsibility model; no dedicated facilities |
 | A.8 Technological is the substrate weight | The platform's load-bearing conformance surface |
 | Risk register is canonical | DevHub `risks` table; ADR cross-references point at the table row |
-| Internal audit is operator-driven | The audit substrates run on demand; a scheduled cadence is queued |
+| Internal audit does not exist as such | ADR hygiene runs in CI, code review runs before merge, digests run daily; an audit programme with a calendar is queued |
 | Independent review is a change control, not an audit | The auditor reviews every code change before merge under the operator's grants; it does not audit the management system and holds no authority of its own |
 
 **Governing source.** DEC-ae331f; CLAUDE.md.
@@ -232,8 +235,8 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 | Failure | Behavior |
 |---|---|
 | Audit finds an unrecorded risk | Operator runs `devhub_risk_add` to create the row; the session change record records the discovery |
-| Audit finds an unflipped supersession pair | The ADR audit script `bc-docs/scripts/adr-audit.js` flags the gap; operator amends the target ADR's frontmatter and recommits |
-| Audit finds a non-conforming code path | The bc-qa audit raises the NC; the NC register tracks the lifecycle |
+| Audit finds an unflipped supersession pair | `audit_adrs.py` fails the bc-docs CI check; the ADR's frontmatter is amended and recommitted |
+| Audit finds a non-conforming code path | A person raises the NC with `devhub_qa_nc_raise`; the register tracks the lifecycle; no tooling raises it today |
 | Audit finds an unaudited governed sequence | Operator runs `devhub_process_audit_run` against the session's UID |
 | Audit finds a missing change record | Operator writes the missing change record retroactively or accepts the discipline gap in the audit trail |
 | Pilot evidence falls short of certification thresholds | Operator extends the readiness window; certification engagement is deferred until thresholds are met |
@@ -245,16 +248,17 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 | Drift item | Status |
 |---|---|
 | Formal information-security policy documents are queued | Recorded; operational substrates carry the discipline in the readiness baseline |
-| Scheduled internal-audit calendar is queued | Recorded; the audit substrates run on demand |
-| Scheduled risk-review cadence is queued | Recorded; review is operator-driven |
+| Scheduled internal-audit calendar is queued | Recorded; ADR hygiene and code review run continuously, digests daily; no audit of the management system exists |
+| Scheduled risk-review cadence is queued | Recorded; a daily read-only digest exists (TSK-a8ba06); acting on it is not yet scheduled |
 | Management-review meeting cadence is queued | Recorded; the discipline is the founder cold-read substrate in the readiness baseline |
 | Network and segregation controls (A.8.20-A.8.22) are AWS-shared-responsibility in the readiness baseline | Recorded; in-platform application-layer controls carry the load |
 | Backup posture (A.8.13) is queued | Recorded; the staged deployment relies on AWS RDS managed-service substrate |
 | Redundancy (A.8.14) is out of scope in the readiness baseline | Recorded; the readiness roadmap names this as a queued surface |
-| `RSK-cb8929` is documented but not registered in `risks` | Recorded per Risk and Vendor Management; reconciliation queued |
+| The risk register had no movement from 2026-04-29 to 2026-09-30; most open risks carry no review date and the two critical ones no owner | Recorded 2026-09-30 from the risk-review digest; assigning owners and dates is a Compliance & Quality unit |
 | ISMS documents at `barecount-devhub/ISO27001/` are operator-internal | Recorded; they support the readiness posture; the public conformance position is this chapter |
 | Statement of Applicability baseline is at the early-readiness percentage; the readiness roadmap drives the percentage upward | Recorded; the readiness roadmap is internal |
-| The Non-Conformity Register and Internal Audit Substrate sections, and the A.8.8, A.8.25 and A.8.28 rows, still describe the bc-qa harness, its pre-commit hook and the file register, which `DEC-5b760c` retired on 2026-08-24 (per-repository CI is the only enforcement home; the DevHub `qa_nc_records` table is the single register) | Recorded 2026-09-30; those sections are rewritten with Quality Assurance in a following unit and must not be read as current |
+| The non-conformance register has no writer and has been frozen since 2026-08-24 | Recorded 2026-09-30; the writer is decided (DevHub's rule scan, TSK-aae076) and not yet built or proven |
+| Coding-standard enforcement is uneven across repositories (warn-level rules bind only in bc-core and bc-portal; bc-admin does not lint) | Recorded 2026-09-30 per Quality Assurance; evening it out is queued with the Admin Portal and DevHub controllers |
 | `bc-external-audit`, the auditor's own repository (the App tool server, the Mac service, the standing instructions), has no branch protection; its review on the exchange is practice, not enforced, and the operator merges it by hand | Recorded 2026-09-30; enforcement there is queued with the Audit Controller |
 
 **Governing source.** DEC-ae331f; `barecount-devhub/ISO27001/`.
@@ -267,7 +271,7 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 | Decision and Change Procedure | The change-record plan-and-report pair, the ADR hygiene rules, the D268 session discipline | The conformance role of those substrates |
 | Audit and Activity Logging | The audit substrate and the JSONL trail | The conformance mapping for A.8.15 Logging |
 | Risk and Vendor Management | The risk register and vendor inventory | The conformance mapping for A.5.20 Supplier relationships |
-| Quality Assurance | The bc-qa preventive control surface | The conformance mapping for A.8.8 Technical vulnerabilities |
+| Quality Assurance | The per-repository enforcement, the coding rules as configured, the architecture gates, the non-conformance register's state | The conformance mapping for A.8.8, A.8.25 and A.8.28 |
 | Privacy and the Immutable Fact | The nullification mechanism per `DEC-bd5492` | The conformance mapping for A.8.10 Information deletion |
 | Operations: Upgrade and Migration | The migration discipline and backup posture | The conformance mapping for A.8.13 Information backup |
 | Operations: Incident and Change Management | The incident triage path | The conformance mapping for the incident-response control |
@@ -300,7 +304,8 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 - DEC-1918d0 (Two-database split)
 - DEC-771baf (Tenant database topology)
 - DEC-bd5492 (GDPR/DPDP/CCPA Nullification Object)
-- DEC-ee6018 (bc-qa standalone repo)
+- DEC-ee6018 (Power of Ten adapted coding rules)
+- DEC-5b760c (QA enforcement in per-repo CI; DevHub the sole NC authority)
 - DEC-bebaec (Chain Completeness SSOT)
 - DEC-804874 (L-Node Verification with Semantic Family Classification)
 - DEC-081931 (Standing Claude-Codex exchange family gen-)
