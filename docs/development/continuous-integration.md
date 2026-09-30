@@ -234,12 +234,15 @@ The runner executes untrusted PR code on a machine BareCount owns, so every chan
 
 Since the EC2 cutover (2026-09-30), bc-core's and bc-db's heavy jobs run on EC2 spot (about $15–18/month projected, capped by an alerting $40 budget), so paid GitHub minutes are mostly pick-runner, quality-gate and the other repositories. Before that:
 
-GitHub bills per job-minute, rounded up: Linux ×1, Windows ×2, macOS ×10. Daily spend peaked at about $25 on 2026-09-26/27 and was $0.02 early on 2026-09-29, with the MacBook live and the Windows and most macOS legs gone. What remains paid:
-- bc-db's two amd64 jobs;
+GitHub bills per job-minute, rounded up: Linux ×1, Windows ×2, macOS ×10. Daily spend peaked at about $25 on 2026-09-26/27 and was $0.02 early on 2026-09-29, with the MacBook live and the Windows and most macOS legs gone.
+
+**Still paid on GitHub since the EC2 cutover:**
 - the `pick-runner` and `quality-gate` seconds;
 - the other repositories' CI;
 - macOS legs on macOS-sensitive devhub PRs;
-- any time the MacBook is off.
+- any bc-core/bc-db run that falls back to GitHub-hosted (EC2 refused or timed out, and the MacBook off or busy).
+
+bc-db's two amd64 jobs now run on EC2 c6a.large (§2a); before the cutover they were paid GitHub work.
 
 ## 7. Options considered
 
