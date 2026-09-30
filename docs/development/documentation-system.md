@@ -144,7 +144,7 @@ Per pattern 81: the DevHub document registry is a derived index, not the authori
 
 ## ADR Authoring through DevHub
 
-Per `DEC-a4e550` and as recorded in Decision and Change Procedure, the `devhub_decision_record` MCP tool both inserts the registry row and writes the ADR file to `bc-docs/docs/adrs/`. The Documentation System chapter records the file-write side: the ADR file is canonical content, the registry row is metadata, and the ADR audit script `bc-docs/scripts/adr-audit.js` is a pure-diagnostic over the file content.
+Per `DEC-a4e550` and as recorded in Decision and Change Procedure, the `devhub_decision_record` MCP tool both inserts the registry row and writes the ADR file to `bc-docs/docs/governance/adrs/`. The Documentation System chapter records the file-write side: the ADR file is canonical content, the registry row is metadata, and the ADR auditor `bc-docs/scripts/docs-control/audit_adrs.py` is a diagnostic over the file content that fails CI on a supersession issue.
 
 The ADR file's frontmatter carries `uid`, `title`, `description`, `status`, `date`, `project`, `domain`, plus optional `subdomain`, `focus`, `supersedes`, and `superseded_by`. The body's conventional sections are Context, Decision, and Consequences. Per `DEC-623f8f`, the eight ADR hygiene rules govern the file-content lifecycle (Decision and Change Procedure records the rules; Documentation System records the file shape).
 
@@ -216,7 +216,7 @@ The pattern set evolves with each founder cold-read. New patterns are extracted 
 | sync-docs `SECTION_LABELS` does not include a new section | The new section's chapters do not surface in the reader; operator amends the table and re-runs |
 | Diagram referenced in body but not declared in frontmatter | The bidirectional check at commit time flags the gap |
 | Data-dictionary generator cannot reach the postgres container | Generator exits with an error; operator confirms compose is running and reruns |
-| Chapter cites a `DEC-xxxxxx` UID that does not exist in `docs/adrs/` | Pre-commit ADR-existence sweep flags the missing file; operator either writes the ADR or removes the citation |
+| Chapter cites a `DEC-xxxxxx` UID that does not exist in `docs/governance/adrs/` | Pre-commit ADR-existence sweep flags the missing file; operator either writes the ADR or removes the citation |
 
 **Governing source.** `bc-admin/scripts/sync-docs.js`; `bc-core/src/docs/docs.controller.ts`; `barecount-devhub/src/lib/doc-scanner.js`.
 
@@ -231,7 +231,7 @@ The pattern set evolves with each founder cold-read. New patterns are extracted 
 | API Reference generator is queued | Recorded; the DevHub API scanner will produce the inventory; the chapter (API Surface) is the rationale authority |
 | Glossary, Diagram Index, Contract Schemas references are queued | Recorded as future top-level peers under `docs/` |
 | sync-docs `SECTION_LABELS` table requires manual amendment when a new section folder is added | Recorded; the amendment lands in the same change as the section's first chapter |
-| ADR audit script `bc-docs/scripts/adr-audit.js` is operator-run | Recorded; the monthly cron is queued per `DEC-623f8f` rule four |
+| ADR audit script `bc-docs/scripts/docs-control/audit_adrs.py` runs in CI on every push and pull request | Recorded; the monthly run of `DEC-623f8f` rule four is not built (ADR-ERR-005) |
 
 **Governing source.** outline.md §4.9; bc-docs `HANDOFF.md`.
 

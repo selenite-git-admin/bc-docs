@@ -26,7 +26,7 @@ diagrams: []
 
 ## Scope
 
-This chapter records the procedure for recording architectural decisions and governing change in the BareCount platform. It states the ADR-first discipline (the ADR file in `bc-docs/docs/adrs/` is the source of truth; DevHub holds metadata pointing at it), the canonical UID and the nickname D-code distinction (per `DEC-633b2a`), the eight ADR hygiene rules (per `DEC-623f8f`), the change-record plan-and-report pair that ISO 27001 conformance reads against, the session-discipline rules that govern engineering session behavior (per `DEC-ebf0b4` rules one through ten), and the L-node semantic gate that runs at session close (per `DEC-804874`).
+This chapter records the procedure for recording architectural decisions and governing change in the BareCount platform. It states the ADR-first discipline (the ADR file in `bc-docs/docs/governance/adrs/` is the source of truth; DevHub holds metadata pointing at it), the canonical UID and the nickname D-code distinction (per `DEC-633b2a`), the eight ADR hygiene rules (per `DEC-623f8f`), the change-record plan-and-report pair that ISO 27001 conformance reads against, the session-discipline rules that govern engineering session behavior (per `DEC-ebf0b4` rules one through ten), and the L-node semantic gate that runs at session close (per `DEC-804874`).
 
 This chapter does not redefine the DevHub registry tables (DevHub), the audit substrate that holds the records (Audit and Activity Logging), or the operational triage path for incidents (Incident and Change Management).
 
@@ -34,7 +34,7 @@ This chapter does not redefine the DevHub registry tables (DevHub), the audit su
 
 ## Architectural Decisions Are ADR Files
 
-The platform records every architectural decision as an ADR file under `bc-docs/docs/adrs/`. Per `DEC-a4e550`, the ADR file is the source of truth; the DevHub `decisions` table row is metadata that points at the file.
+The platform records every architectural decision as an ADR file under `bc-docs/docs/governance/adrs/`. Per `DEC-a4e550`, the ADR file is the source of truth; the DevHub `decisions` table row is metadata that points at the file.
 
 | Property | Form |
 |---|---|
@@ -83,17 +83,17 @@ The historical registry contains twenty-four D-code duplicates from before the a
 | Rule | Form |
 |---|---|
 | Supersession pair | When a new ADR has `supersedes: DEC-xxx` in frontmatter, the target ADR's status flips to `superseded` in the same commit; `superseded_by: DEC-yyy` is added to the target. The audit script flags any unflipped pair as a `supersessionIssues` row |
-| Stuck-proposed | An ADR in `proposed` status for more than thirty days auto-spawns a DevHub task tagged `adr-stuck-proposed`; informational, not merge-blocking |
+| Stuck-proposed | An ADR in `proposed` status for more than thirty days is reported by the auditor as advisory; the auto-spawned `adr-stuck-proposed` task of DEC-623f8f rule two is not built (ADR-ERR-005) |
 | Implementation verification | Status transitions follow draft → proposed → decided → implemented; the `closes: DEC-xxxxxx` commit token signals implementation completion; a future post-merge hook will auto-flip the status |
-| Monthly audit | `bc-docs/scripts/adr-audit.js` runs monthly; output is compared to the prior month; regressions open a governance task |
+| Monthly audit | Decided, not built: the auditor `scripts/docs-control/audit_adrs.py` runs on every push and pull request; the monthly comparison and `docs/governance/adr-audit-history.md` do not exist (ADR-ERR-005) |
 | D-code guidance | UIDs are canonical; D-codes are nicknames. New content uses UIDs; D-codes remain readable in conversation |
 | Orphan tolerance | Zero incoming references does not auto-mark stale; the orphan count is informational; no closure pressure |
 | Authoring gates | Existing gates are kept; the supersession pair check is added as a new gate; if `supersedes:` is present in frontmatter, the target ADR must exist and the status flip must be staged in the same commit |
 | Quarterly sweep | A quarterly review reruns the audit, reads the top twenty orphan ADRs, and reviews retired SOPs for ADR coverage |
 
-The audit script is `bc-docs/scripts/adr-audit.js`. It is a pure diagnostic; it writes nothing. The operator runs it ad hoc; the monthly cron is a future surface owned by Operations.
+The audit script is `bc-docs/scripts/docs-control/audit_adrs.py` (`npm run docs:audit:adrs`). It writes its report to `docs-control/reports/adr-hygiene.md` and exits non-zero on a supersession issue; `.github/workflows/adr-hygiene.yml` runs it on every push to main and every pull request. The monthly run of DEC-623f8f rule four is not built (ADR-ERR-005). The registry `docs/governance/adrs/README.md` is regenerated from frontmatter by `scripts/docs-control/generate_adr_registry.py` (`npm run docs:generate:adr-registry`).
 
-**Governing source.** DEC-623f8f (ADR Hygiene Policy); `bc-docs/scripts/adr-audit.js`.
+**Governing source.** DEC-623f8f (ADR Hygiene Policy); ADR-ERR-005; `bc-docs/scripts/docs-control/audit_adrs.py`.
 
 ## ADR Authoring with Subdomain and Focus
 
@@ -168,7 +168,7 @@ The gate consumes the L-node verdict; it does not author the verdict. The verdic
 
 | Constraint | Form |
 |---|---|
-| ADR file is canonical | The DevHub `decisions.decision_text` column is deprecated; the ADR file under `bc-docs/docs/adrs/` is the authority |
+| ADR file is canonical | The DevHub `decisions.decision_text` column is deprecated; the ADR file under `bc-docs/docs/governance/adrs/` is the authority |
 | UID canonical, D-code nickname | Body prose, code, schema comments cite the UID; D-codes appear in conversation and in optional frontmatter parentheticals only |
 | Caller-supplied D-code rejected | `devhub_decision_record` ignores any caller-supplied `decision_code`; the allocator runs unconditionally |
 | Supersession pair commit | A new ADR with `supersedes: DEC-xxx` and the target's status flip to `superseded` land in the same commit |
@@ -185,8 +185,8 @@ The gate consumes the L-node verdict; it does not author the verdict. The verdic
 |---|---|
 | ADR file write fails after registry row insert | Registry row is created; file is missing; next `devhub_doc_scan` flags the registry row as having no corresponding file; operator writes the file by hand or reruns `devhub_decision_record` |
 | Concurrent decision-record calls allocate the same D-code | Cannot occur: the allocator runs under `db.transaction()` and serializes |
-| Supersession-pair commit lands without target status flip | The audit script `adr-audit.js` flags the gap on the next run; operator amends the target ADR's frontmatter and recommits |
-| ADR proposed for more than thirty days | The audit script auto-spawns a `adr-stuck-proposed` task; the operator either advances the ADR to decided or closes it as reversed or superseded |
+| Supersession-pair commit lands without target status flip | The auditor `audit_adrs.py` fails the push or pull request; the author amends the target ADR's frontmatter and recommits |
+| ADR proposed for more than thirty days | The auditor reports it as advisory (the auto-spawned task is not built, ADR-ERR-005); the owning controller advances the ADR to decided or closes it as reversed or superseded |
 | Session close blocked by L-node regression | Operator inspects the regression via `devhub_l_node_verify`; either fixes the regression and reruns close, or supplies an `l_node_override` rationale per CLAUDE.md |
 | L-node gate cannot reach bc-core | Gate fails open with a warning; close proceeds; regression detection runs again on the next session boot |
 | Session closes without `self_audit_json` | Honest absence is recorded; the absence is visible in subsequent audits |
