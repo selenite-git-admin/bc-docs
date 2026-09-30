@@ -58,9 +58,9 @@ The as-built discipline is the section's defining trait. A reader who finds an a
 
 **Governing source.** outline.md §4.5; The Authority Model.
 
-## The Six Chapters That Follow
+## The Chapters That Follow
 
-Development has seven chapters: this overview plus the six chapters that follow. The grouping below is for navigation; section order is fixed by the outline and by chapter dependencies.
+Development has twelve chapters: this overview plus the eleven chapters that follow. The grouping below is for navigation; section order is fixed by the outline and by chapter dependencies.
 
 | Group | Chapters | What the group covers |
 |---|---|---|
@@ -70,8 +70,13 @@ Development has seven chapters: this overview plus the six chapters that follow.
 | Quality enforcement | Quality Assurance | Navigation entry for the bc-qa repository, the audit harness, the gate-config severity matrix, the eslint-config package, the pre-commit hook, the QA NC register |
 | Documentation tooling | Documentation System | Navigation entry for the bc-docs SSOT, the bc-admin embedded reader, the bc-core JWT-served document endpoints, the sync-docs manifest builder, the data-dictionary generator, the DevHub document scanner |
 | Developer-machine substrate | Developer Experience | Navigation entry for the per-repo CLAUDE.md instruction surface, the SOP catalog, the .claude harness, the worktree harness, the verification surface, the port reservation discipline, the AWS profile discipline, the database change protocol |
+| Engineering-coordination substrate | The Controller Operating Model | Navigation entry for the fleet of controller sessions: the roster of thirteen controllers, the collective rules and their rollout status, the escalation ladder, one charter per controller, and how a brief derives from a charter |
+| Build cycle | Continuous Integration and CI Runners | Navigation entry for where CI runs, what each repository requires before a merge, how a run picks a runner, and the self-hosted MacBook runner |
+| Quality enforcement | Metric Readiness Toolkit | Navigation entry for the readiness dials that project from the metric lifecycle ladder |
+| Developer-machine substrate | Development Workstation: Mac Mini and Laptop | Navigation entry for what runs on the Mac Mini and the Windows laptop, the daily commands, maintenance, and troubleshooting |
+| Lessons | Lessons: Platform Readiness umbrella (2026-09-25 to 27) | Navigation entry for the lessons written down after the Platform Readiness umbrella; informative, not authoritative |
 
-The six groups cover the six chapters that follow without overlap. A chapter that does not fit a group is a chapter that does not belong in Development.
+The groups cover the eleven chapters that follow. A chapter that does not fit a group is a chapter that does not belong in Development.
 
 **Governing source.** outline.md §4.5.
 
