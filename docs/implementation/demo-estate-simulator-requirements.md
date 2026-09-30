@@ -2,7 +2,7 @@
 id: demo-estate-simulator-requirements
 title: "Demo-Estate Simulator (bc-demo v2) — Requirements & Disposition Registers"
 status: approved
-authority: derived
+authority: authoritative
 depends_on: [the-invariants]
 governing_sources:
   - DEC-8b17b1 (D561 demo-estates doctrine)
