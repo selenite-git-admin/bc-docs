@@ -8,6 +8,8 @@ project: barecount-devhub
 domain: devhub
 subdomain: devhub/session-protocol
 focus: governance
+errata:
+  - ADR-ERR-004 (roster amended from twelve to thirteen controllers, 2026-09-30)
 ---
 
 # Session protocol for controllers: roster, responsibility map, work binding, review ledger, close gates, daily seal
