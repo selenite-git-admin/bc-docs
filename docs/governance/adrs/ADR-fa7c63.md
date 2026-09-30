@@ -177,7 +177,7 @@ Amendment 1's two sentences read accordingly: (a) "MDM-d1510b is superseded in m
 
 This amendment corrects the grain declared for D-6's successor, and writes down the rule behind the correction. It changes no D-rule and no meaning: D-6 already defines `dso(E, T, W)` for one legal entity E at a date T, and D-7 scopes it to "one legal entity E". It is required before the U9.6 authoring of the DSO successor (TSK-3ceb0e).
 
-**Authority:** operator approval in chat, 2026-09-29 ("amendment approved"), in answer to the umbrella's plain-language summary (DSO declared at the Legal Entity grain; the reporting-grain rule for pure compositions written down); relayed by the umbrella session SES-bc9863. No bc-exchange grant: this is a metric-onboarding design decision in which Codex has no role (operator grant ead781aa), so the operator's direct word is the authority. The approval covers this amendment as drafted at bc-docs commit 78b041d3; recording this authority line is the only later change. The umbrella confirmed (e).
+**Authority:** operator approval in chat, 2026-09-29 ("amendment approved"), in answer to the umbrella's plain-language summary (DSO declared at the Legal Entity grain; the reporting-grain rule for pure compositions written down); relayed by the umbrella session SES-bc9863. No bc-exchange grant: this is a metric-onboarding design decision in which Codex has no role (operator grant ead781aa), so the operator's direct word is the authority. The approval covers this amendment as drafted at bc-docs commit 78b041d3; recording this authority line and the (f) rounding correction are the only later changes. The umbrella confirmed (e). (f) rounding corrected to half-up on operator decision in chat, 2026-09-30, relayed by SES-bc9863.
 
 **Why.**
 - Amendment 1 (d) put the successors of D-1, D-5 **and D-6** on the Journal Entry Line grain, and Amendment 3 put the DSO's derived directory group on the same grain. That is right for the two base metrics, which add up journal-entry lines. It is wrong for DSO, which adds up nothing.
@@ -224,7 +224,7 @@ Its operands keep the Journal Entry Line grain: `receivable_control_balance` (D-
 
 **(f) Acceptance scale, not a declared output scale.**
 - This ADR declares no output scale or rounding for DSO, and MCF has no output-scale declaration today (TSK-642d25).
-- For acceptance only (D-9, and the U9.5/U9.6 gate a3), the DSO snapshot is compared with the exact recomputation `ar_balance × days(W) / billed`, both rounded half-even at **2 decimal places** (umbrella ruling, 2026-09-29).
+- For acceptance only (D-9, and the U9.5/U9.6 gate a3), the DSO snapshot is compared with the exact recomputation `ar_balance × days(W) / billed`, both rounded half-up (half away from zero, the platform default) at **2 decimal places** (umbrella ruling, 2026-09-29; rounding corrected from half-even to half-up on 2026-09-30, see the Authority line).
 - The comparison fails closed: a value whose rounding differs is a stop, never a pass. It asserts nothing about the stored value's scale.
 
 ## Amendment 5 (2026-09-30): the DSO's own aggregation currency is not_applicable; D-7's currency basis is the operands' (U9.6)
