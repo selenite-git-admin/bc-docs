@@ -2,7 +2,7 @@
 uid: DEC-eea376
 title: "Platform scope follows the user: admin-client tokens need the bc-platform Cognito group; explicit roles on every platform write; operator-only registry-shape confirm"
 description: "Amends DEC-3a6f74 Current State: platform scope is no longer granted by the admin app client alone; it also requires membership of the Cognito group named by COGNITO_PLATFORM_GROUP (bc-platform)."
-status: decided
+status: implemented
 date: 2026-09-29T05:29:52.189Z
 project: bc-core
 domain: auth
@@ -38,10 +38,11 @@ Scope granted by the choice of app client is a property of the client, which any
 - bc-core PR 871 (head aecdc46d, one commit), reviewed by Codex at full depth (gen-f3c411-03, ACCEPTED WITH BOUNDARY) and approved and merged by the auditor App at merge commit 03153973.
 - Cognito changes, each under its own recorded operator grant: self sign-up closed (429ab235); client read/write attribute lists (d77e1e01); group bc-platform with its three members (08e67a88); bc-ai-service added (fa0170ba). S1 was verified by operator sign-ins through both clients.
 - Tests: strategy unit tests (16), RSA-signed token tests against a local JWKS (7), operator-authority tests at the write point (4), and the zero-exception route metadata gate with a prove-it-reds fixture.
+- Served (2026-09-30 00:56 UTC, serve move 7 under operator grant 2026-09-29T17-18-36-345Z-038ea90f): bc-core 858d9a58 serves :3100. That build contains 03153973 (this decision) and da3765d7 (bc-core PR 886, the issuer must name the pool), and the served .env sets COGNITO_PLATFORM_GROUP=bc-platform. Evidence: barecount-devhub branch claude/serve-move-7 at 7e924a7e, `artifacts/serve-move-7/live-closure/`. Independent read-only check the same day: an admin-client token whose cognito:groups is [bc-platform] was admitted (200). That account also holds super_admin, so the live check proves admission only; the refusal cases rest on the RSA-signed token tests.
 
 ## Consequences
 
-- Status stays `decided` until the served bc-core runs a build containing 03153973 with COGNITO_PLATFORM_GROUP and COGNITO_ADMIN_CLIENT_ID set. That serve move needs its own recorded operator grant, and the ADR flips to `implemented` with it.
+- Status is `implemented` since serve move 7 (see Implementation and evidence).
 - Any new controller must declare scope, and any new platform write must declare roles, or CI fails.
 - A platform admin who is not in bc-platform can no longer use bc-admin; membership is managed through Cognito under an operator grant.
 - Follow-ups (TSK-846529): require the user pool ID at boot independently of the issuer URL; stop the route gate from accepting an unrelated route guard in place of @Roles; fix the stale "D065" citation in the strategy comment to DEC-3a6f74 and this ADR. Later: bind bc-core to 127.0.0.1 (F5), inventory GET routes with side effects, and review whether bc-ai-service can drop to viewer.
