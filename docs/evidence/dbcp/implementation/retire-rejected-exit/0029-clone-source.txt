@@ -1,0 +1,3 @@
+source: live bc_platform_dev, pg_dump -Fc read-only, taken 2026-09-30T06:12:37Z, cluster sysid 7689410286420172840
+728dd496067a4f198726510f3b8d24e5bb4925fcf625aedef6d1e1a595fa213e  platform.dump
+restored WITH owners and grants (roles recreated with live LOGIN/NOLOGIN attributes) into a throwaway postgres:17.11-alpine container (127.0.0.1:55971, cov-rre-proof); 0 restore errors; container and dump deleted after the proof
