@@ -227,6 +227,36 @@ Its operands keep the Journal Entry Line grain: `receivable_control_balance` (D-
 - For acceptance only (D-9, and the U9.5/U9.6 gate a3), the DSO snapshot is compared with the exact recomputation `ar_balance × days(W) / billed`, both rounded half-even at **2 decimal places** (umbrella ruling, 2026-09-29).
 - The comparison fails closed: a value whose rounding differs is a stop, never a pass. It asserts nothing about the stored value's scale.
 
+## Amendment 5 (2026-09-30): the DSO's own aggregation currency is not_applicable; D-7's currency basis is the operands' (U9.6)
+
+This amendment corrects one declaration and clarifies D-7's currency wording. It changes no measured value: DSO is still `balance / billed × days(W)` over local-currency operands.
+
+**Authority:** pending. The operator's approval is to be recorded here, as for Amendment 4. The companion engine change is bc-core#895.
+
+**Why.**
+- In the U9.6 continuation rehearsal (2026-09-30, a clone of live on the serve move 7 build, devhub `728a6605` `artifacts/w9-u96-dso-grain/CURRENCY-FINDING-2026-09-30.md`), the certification panel rejected the DSO successor.
+- The moderator upheld one point: the DSO declared `aggregation_currency_code = local_currency` while its output is a number of days, and "a days duration cannot carry local currency semantics".
+- The panel is right. D520 (DEC-31dc55) says a dimensionless quantity (a ratio, margin, turnover or day count) declares `not_applicable`: its value carries no currency.
+- The DSO declaration copied D-7's "aggregation_currency = local_currency", which describes the **operands**, onto the composite itself.
+- The same panel ruled the grain (Amendment 4) and the formula correct.
+
+**(a) D-7, clarified.**
+- "Currency: E's functional currency, aggregation_currency = local_currency" describes the **operands**: the receivable balance (D-1) and the billing (D-5) each aggregate functional amounts and declare `local_currency`.
+- A composite whose value is dimensionless, as DSO (days) is, declares its **own** aggregation currency `not_applicable`, per D520.
+- "A composite evaluation whose operands differ in … currency basis … is refused" means the operands must share **one** basis **with each other**.
+  - For a composite that declares a currency (a sum or difference of amounts), that one basis is its own, so every operand must equal it.
+  - For a `not_applicable` composite, every operand must share one basis with the others.
+- bc-core#895 aligns the evaluation guard (`composite-guards.ts` `operandScopeRefusal`) with this wording. Before it, the guard compared each operand with the composite, which refused every `not_applicable` composite over currency operands.
+
+**(b) The DSO successor.** `receivable_days_sales_outstanding` declares `aggregation_currency_code = not_applicable`. Its operands `receivable_control_balance` and `receivable_billed_amount` keep `local_currency`. Amendment 4 (b)'s line "currency `local_currency`" reads: "currency: its own `not_applicable` (D520), over `local_currency` operands (Amendment 5)".
+
+**(c) What does not change.**
+- The formula, bindings, window (N = 3, `window_days`), grain (Legal Entity, Amendment 4) and D-8.
+- The legal-entity, calendar, period and window guards.
+- The acceptance comparison (Amendment 4 (f)).
+
+**(d) The same contradiction elsewhere.** On 2026-09-30, 18 current composites declared `document_currency` to match their operands, including the superseded-to-be DSO f660fb7b, days_payable_outstanding, and the margin and ratio family. Where their value is dimensionless, they carry the same D520 contradiction. They are corrected by new versions over time, after bc-core#895 is served. That is a separate task, not this ADR's act.
+
 ## Alternatives considered
 
 - **Keep the open-item face value as the numerator.** Rejected: it ignores partial payments and credit notes, and it cannot reconcile to the receivable control account.
