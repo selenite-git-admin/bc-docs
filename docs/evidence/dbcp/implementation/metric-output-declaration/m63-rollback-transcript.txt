@@ -1,0 +1,11 @@
+--- rollback with declarations present:
+psql:/tmp/m63r.sql:21: ERROR:  m63 rollback refused: output declarations exist (immutable) — roll back by governance, not DROP
+CONTEXT:  PL/pgSQL function inline_code_block line 7 at RAISE
+--- fresh db: apply then rollback:
+APPLY_OK
+ROLLBACK_OK
+0
+--- re-apply after rollback:
+REAPPLY_OK
+--- second apply must refuse:
+CONTEXT:  PL/pgSQL function inline_code_block line 10 at RAISE
