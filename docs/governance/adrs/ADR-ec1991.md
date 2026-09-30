@@ -31,7 +31,7 @@ bc-demo is the authority for everything that changes when the estate changes. Th
 | Repository | `README.md` | The repository layout, the collection-of-demos model, and this split |
 | Global (Foundry) | `sources/odoo19ee/foundry/` (`SCHEMA.md`, `worlds.py` with the capability tree, `LESSONS.csv`, `DESIGN-*.md`, `design/metric-coverage/STUDY-GOVERNANCE.md`) | The world model, the method, scope (the capability tree is the only place scope lives), and the reload-versus-rebuild rule |
 | Source system | `ops/RUNBOOK.md`, `ops/aws/*RUNBOOK.md`, `ops/mac/*RUNBOOK.md` | Box-level serving of any Odoo demo: hosts, ports, containers, the one build rule (no raw SQL), the licence rules as applied on the box, moves |
-| World | `sources/odoo19ee/demos/<world>/world-spec.yaml`, `model/world-model.json`, `runpkg/stages/*/stage.json` and the decision sheets under each stage | Each world's declared scope, decisions and build order |
+| World | `sources/odoo19ee/demos/<world>/model/world-model.json`, the typed model (DEC-39514f) | Each world's declared scope, decisions and build order. `world-spec.yaml` and the decision sheets under `runpkg/stages/*/` are the model's import surface, and `stage.json` is what the generated RUNBOOK is projected from; none of them is authority on its own |
 | World design | `sources/odoo19ee/demos/<world>/design/*` (the living registers) and program documents such as `LC6-PROGRAM.md` | Realism, compliance, join keys, roster, treasury, UI surface, metric coverage; the design of the next world |
 
 Projections are never authority: the demo's generated `RUNBOOK.md`, the ops UI, the QA portfolio and the build plan are rendered from the model and the stage manifests (DEC-39514f) and are regenerated, never hand-edited.
@@ -60,12 +60,12 @@ bc-docs is the authority for what the platform and the operator must know regard
 
 ### The Foundry ops UI and port 8600
 
-The Foundry ops UI (`sources/odoo19ee/tooling/ops-ui/ops_ui.py`) is an on-demand local tool started by hand, not a service of the Mac stack: it has no process-compose entry, nothing listens on port 8600 between uses, and DevHub's Servers page registers it as an on-demand tool with its start command. Port 8600 stays reserved for it under DEC-e50b83 (the dev-tools range is 4000 to 4099 there; 8600 is a reservation outside that range, recorded here so the reservation has a source). The barecount-devhub project instructions' port table is corrected in the same change to say "on demand" with the start command, in the style of the port 8100 row.
+The Foundry ops UI (`sources/odoo19ee/tooling/ops-ui/ops_ui.py`) is an on-demand local tool started by hand, not a service of the Mac stack: it has no process-compose entry, nothing listens on port 8600 between uses, and DevHub's Servers page registers it as an on-demand tool with its start command. DEC-e50b83 does not reserve 8600 (its dev-tools range is 4000 to 4099); this record is the source of the 8600 reservation, as an exception to the ranges DEC-e50b83 lists, until an amendment of the master port decision consolidates the table. The barecount-devhub project instructions' port table is corrected in the same change to say "on demand" with the start command, in the style of the port 8100 row.
 
 ### Consequences
 
 - bc-demo `README.md` cites this record under its split paragraph.
 - The frontmatter of `demo-estate-simulator-requirements.md` is corrected to `authoritative` (DEC-40b510, point 6) in the same pull request as this record.
 - The Docs controller's rebase of `demo-operations.md` (TSK-892697) targets the placement rule.
-- The five coverage and status chapters keep their `derived` value until DEC-e0a8ca's sweep maps it.
+- The four coverage and status chapters keep their `derived` value until DEC-e0a8ca's sweep maps it.
 - The stale wording of the Foundry and Odoo rows on DevHub's Servers page is a DevHub controller task, recorded at this decision.
