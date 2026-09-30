@@ -231,7 +231,7 @@ Its operands keep the Journal Entry Line grain: `receivable_control_balance` (D-
 
 This amendment corrects one declaration and clarifies D-7's currency wording. It changes no measured value: DSO is still `balance / billed × days(W)` over local-currency operands.
 
-**Authority:** pending. The operator's approval is to be recorded here, as for Amendment 4. The companion engine change is bc-core#895.
+**Authority:** operator approval in chat, 2026-09-30, relayed by SES-bc9863. The approval covers this amendment as drafted at bc-docs commit e6d84c23, with the unit-of-measure sentence in (b) added at the operator's direction; recording this authority line is the only other change. The companion engine change is bc-core#895.
 
 **Why.**
 - In the U9.6 continuation rehearsal (2026-09-30, a clone of live on the serve move 7 build, devhub `728a6605` `artifacts/w9-u96-dso-grain/CURRENCY-FINDING-2026-09-30.md`), the certification panel rejected the DSO successor.
@@ -248,7 +248,7 @@ This amendment corrects one declaration and clarifies D-7's currency wording. It
   - For a `not_applicable` composite, every operand must share one basis with the others.
 - bc-core#895 aligns the evaluation guard (`composite-guards.ts` `operandScopeRefusal`) with this wording. Before it, the guard compared each operand with the composite, which refused every `not_applicable` composite over currency operands.
 
-**(b) The DSO successor.** `receivable_days_sales_outstanding` declares `aggregation_currency_code = not_applicable`. Its operands `receivable_control_balance` and `receivable_billed_amount` keep `local_currency`. Amendment 4 (b)'s line "currency `local_currency`" reads: "currency: its own `not_applicable` (D520), over `local_currency` operands (Amendment 5)".
+**(b) The DSO successor.** `receivable_days_sales_outstanding` declares `aggregation_currency_code = not_applicable`. The DSO's unit (days) is not yet a declared field of the metric contract; aggregation currency `not_applicable` (D520) is the correct value under the current grammar until the metric output declaration (TSK-af9706) adds unit of measure, decimals and rounding. Its operands `receivable_control_balance` and `receivable_billed_amount` keep `local_currency`. Amendment 4 (b)'s line "currency `local_currency`" reads: "currency: its own `not_applicable` (D520), over `local_currency` operands (Amendment 5)".
 
 **(c) What does not change.**
 - The formula, bindings, window (N = 3, `window_days`), grain (Legal Entity, Amendment 4) and D-8.
