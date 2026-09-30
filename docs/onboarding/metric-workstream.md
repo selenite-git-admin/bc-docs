@@ -338,7 +338,7 @@ If you observe yourself doing one of these, stop and surface the violation. Each
 | Treating `progression.metric_snapshot_index` as if it were value storage | The index is a lookup helper; the fact row is the projection; the evidence row is the authority. Confusing them masks gaps. | Use the service-first diagnostic order (§6): evidence first, ledger next, index/fact for verification. |
 | Using cumulative-through-anchor as a stand-in for open-balance-at-anchor | A flow approximation of a balance metric. Mathematically distinct. Honest only if labelled and constrained. | If the metric needs balance semantics, do not ship until open-item / as-of semantics exist upstream. |
 | Adding grammar the engine cannot honestly evaluate | A declared semantic with no implementation is a false advertisement; the engine will silently approximate or quietly fall back. | Grammar and engine extensions land together (B+D pair). Phase-gate by `$contract` version. |
-| Closing a session with "tests pass" but Foundation Gate violations un-recorded | D268 Rule 7 + the DEC-79b62f override mechanic exist precisely so violations are visible. | Record the override (≥40-char rationale) and auto-spawn the follow-up task; do not bury. |
+| Closing a session with "tests pass" but Foundation Gate violations un-recorded | D268 Rule 7 + the DEC-79b62f override mechanic exist precisely so violations are visible. | Record the override (≥40-char rationale) and file the follow-up task by hand until the DevHub enforcer (TSK-083286) spawns it; do not bury. |
 
 ## 11. Metric Work Records
 
@@ -492,7 +492,7 @@ A reusable template lives at `bc-docs/docs/onboarding/metric-work-records/_templ
 
 - `bc-docs/docs/foundation/the-invariants.md` — six invariants
 - `bc-docs/docs/foundation/the-evaluation-boundaries.md` — four boundaries + boundary-independent rules
-- `bc-docs/docs/foundation/the-contract-grammar.md` — twelve grammar artifacts
+- `bc-docs/docs/foundation/the-contract-grammar.md` — fifteen grammar artifacts (DEC-5a9dee)
 - `bc-docs/docs/adrs/ADR-ebf0b4.md` (D268) — Session Discipline Rules
 - `bc-docs/docs/governance/adrs/ADR-79b62f.md` — the Foundation gate; override mechanic (its origin DEC-804874 / D366 is superseded by DEC-b390ef)
 - `bc-docs/docs/adrs/ADR-chain-invariants.md` — machine-checkable chain invariants

@@ -32,7 +32,7 @@ Foundation is the architectural authority for the platform. Every claim that any
 
 | Property | Operational form |
 |---|---|
-| Authoritative | The nine-chapter Foundation section defines the architectural rules that bind every later section. A claim that contradicts a Foundation chapter is incorrect against the platform's architecture, regardless of where in the documentation it appears. |
+| Authoritative | The ten-chapter Foundation section defines the architectural rules that bind every later section. A claim that contradicts a Foundation chapter is incorrect against the platform's architecture, regardless of where in the documentation it appears. |
 | Locked | Foundation chapters are not amended through ordinary authoring acts. Material changes to a Foundation chapter require an ADR or an Errata entry under the Authority Model's discipline. The lock prevents per-session reinterpretation of the platform's bedrock rules. |
 | Section-independent | Foundation depends on no other section. Operating Model, Implementation, AI, Development, Onboarding, Operations, and Compliance all depend on Foundation; Foundation depends on none of them for its own correctness. |
 | Source of constraint | Foundation's claims appear in later sections as constraints, not as descriptions. Operating Model obeys the Object Model; it does not redefine the Object Model. The same discipline applies to every later section. |
