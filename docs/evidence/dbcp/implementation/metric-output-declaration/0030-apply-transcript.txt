@@ -1,0 +1,16 @@
+== apply 0030 (one transaction, bootstrap principal barecount)
+APPLY_OK
+ERROR:  new row for relation "schema_migration_event" violates check constraint "chk_sme_shape"
+DETAIL:  Failing row contains (e377b6de-d7cb-4054-965e-d642d9a307fa, 36, 0030_mcf_metric_output_declaration, sha256:c7da14541197ad9b26de6b113ead95c4d0314a9201bcd405de00f9bc4..., clone-proof, applied, sha256:000000000000000000000000000000000000000000000000000000000..., 2026-09-30 05:54:25.903929+00, null, clone proof only (not a live apply), 2026-09-30 05:54:25.903929+00, barecount).
+CONTEXT:  SQL statement "INSERT INTO infrastructure.schema_migration_event (
+    migration_name, migration_sha256, git_ref, event_kind, review_disposition_sha256,
+    applied_at, applied_by_name, rationale_text, recorded_by_name
+  ) VALUES (
+    p_migration_name, p_migration_sha256, p_git_ref, p_event_kind, p_review_disposition_sha256,
+    CASE WHEN p_event_kind = ANY (ARRAY['applied','adopted']) THEN now() ELSE NULL END,        -- W1.5: adopted stamps the witness time
+    CASE WHEN p_event_kind = ANY (ARRAY['applied','adopted']) THEN p_applied_by_name ELSE NULL END, -- W1.5: adopted stamps the witness actor
+    p_rationale_text, p_recorded_by_name
+  ) RETURNING schema_migration_event_id"
+PL/pgSQL function infrastructure.fn_record_migration_event(text,text,text,text,text,text,text,text) line 21 at SQL statement
+== ledger applied event (as the runner records it; clone only)
+LEDGER state:  applied
