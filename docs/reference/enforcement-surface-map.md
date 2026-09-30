@@ -2,8 +2,8 @@
 
 **GENERATED — do not edit.** Regenerate: `node scripts/docs-control/generate_enforcement_surface_map.mjs`
 
-Generated: 2026-08-03T06:38:32.856Z
-Sources: bc_platform_dev + bc_audit_dev (live), bc-core@7ff2fd8, auditor@05106574
+Generated: 2026-09-30T08:43:34.254Z
+Sources: bc_platform_dev + bc_audit_dev (live), bc-core@802fdee30, auditor@8c0188bb
 
 **Usage rule (operator, 2026-07-26):** no design, no ADR applied-instance, and no population count
 is claimed without citing this map. Counts are computed from the gate predicates below, never from
@@ -4379,12 +4379,13 @@ Columns: 11 | **NOT NULL:** `supersession_uid`, `predecessor_metric_contract_uid
 
 ### `mcf.metric_variable_binding`
 
-Columns: 19 | **NOT NULL:** `metric_variable_binding_uid`, `metric_contract_version_uid`, `variable_role_code`, `role_kind_code`, `structural_sort_key`, `created_at`
+Columns: 20 | **NOT NULL:** `metric_variable_binding_uid`, `metric_contract_version_uid`, `variable_role_code`, `role_kind_code`, `structural_sort_key`, `created_at`
 
 | Kind | Name | Definition |
 |---|---|---|
-| CHECK | `mvb_role_kind_chk` | `CHECK ((role_kind_code = ANY (ARRAY['input'::text, 'output'::text, 'constant'::text, 'metric_input'::text])))` |
-| CHECK | `mvb_role_target_chk` | `CHECK ((((role_kind_code = 'constant'::text) AND (constant_value_json IS NOT NULL) AND (bound_business_concept_id IS NULL) AND (bound_entity_id IS NULL) AND (bound_metric_contract_uid IS NULL)) OR ((role_kind_code = ANY (ARRAY['input'::text, 'output'::text])) AND (constant_value_json IS NULL) AND (bound_metric_contract_uid IS NULL) AND ((bound_business_concept_id IS NOT NULL) OR (bound_entity_id IS NOT NULL))) OR ((role_kind_code = 'metric_input'::text) AND (bound_metric_contract_uid IS NOT NULL) AND (snapshot_selection_rule_code IS NOT NULL) AND (constant_value_json IS NULL) AND (bound_business_concept_id IS NULL) AND (bound_entity_id IS NULL))))` |
+| CHECK | `mvb_calendar_context_code_chk` | `CHECK (((calendar_context_code IS NULL) OR (calendar_context_code = 'window_days'::text)))` |
+| CHECK | `mvb_role_kind_chk` | `CHECK ((role_kind_code = ANY (ARRAY['input'::text, 'output'::text, 'constant'::text, 'metric_input'::text, 'calendar_context'::text])))` |
+| CHECK | `mvb_role_target_chk` | `CHECK ((((role_kind_code = 'constant'::text) AND (constant_value_json IS NOT NULL) AND (bound_business_concept_id IS NULL) AND (bound_entity_id IS NULL) AND (bound_metric_contract_uid IS NULL) AND (calendar_context_code IS NULL)) OR ((role_kind_code = ANY (ARRAY['input'::text, 'output'::text])) AND (constant_value_json IS NULL) AND (bound_metric_contract_uid IS NULL) AND ((bound_business_concept_id IS NOT NULL) OR (bound_entity_id IS NOT NULL)) AND (calendar_context_code IS NULL)) OR ((role_kind_code = 'metric_input'::text) AND (bound_metric_contract_uid IS NOT NULL) AND (snapshot_selection_rule_code IS NOT NULL) AND (constant_value_json IS NULL) AND (bound_business_concept_id IS NULL) AND (bound_entity_id IS NULL) AND (calendar_context_code IS NULL)) OR ((role_kind_code = 'calendar_context'::text) AND (calendar_context_code IS NOT NULL) AND (constant_value_json IS NULL) AND (bound_business_concept_id IS NULL) AND (bound_entity_id IS NULL) AND (bound_metric_contract_uid IS NULL) AND (snapshot_selection_rule_code IS NULL))))` |
 | CHECK | `mvb_selection_rule_chk` | `CHECK (((snapshot_selection_rule_code IS NULL) OR (snapshot_selection_rule_code = ANY (ARRAY['as_of_period_end'::text, 'period_matched'::text, 'prior_period_end'::text]))))` |
 | FK | `fk_mvb_bound_bc_version` | `FOREIGN KEY (bound_business_concept_version_id) REFERENCES concept_registry.business_concept_version(concept_version_id)` |
 | FK | `fk_mvb_mcv` | `FOREIGN KEY (metric_contract_version_uid) REFERENCES mcf.metric_contract_version(metric_contract_version_uid) ON DELETE RESTRICT` |
@@ -7360,5 +7361,5 @@ SELECT count(*) AS live_mcvs,
 FROM act;
 ```
 
-Live at generation time: live_mcvs=75, arm_exact_snapshot=39, arm_exact_reproof=14, arm_reproducible=1, no_computed_snapshot=21
+Live at generation time: live_mcvs=83, arm_exact_snapshot=39, arm_exact_reproof=27, arm_reproducible=1, no_computed_snapshot=16
 
