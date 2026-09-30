@@ -260,7 +260,7 @@ Consumer actions are descriptive and read-only with respect to authoritative sta
 
 This chapter has defined the six authoritative object types, their cardinality, their lifecycle, the proof chain that accompanies them, and the consumption discipline applied to them. It has deferred:
 
-- Contract grammar and the 12-artifact taxonomy (The Contract Grammar).
+- Contract grammar and the fifteen-artifact taxonomy, extended from twelve by DEC-5a9dee (The Contract Grammar).
 - Evaluation boundary semantics and the once-only guarantee at each boundary (The Evaluation Boundaries).
 - The authority model and how objects relate to the governance ladder (The Authority Model).
 - Runtime component descriptions for Readers, Canonical evaluators, Metric evaluators, and Action processors (Sources and the Catalog through Action Evaluation).

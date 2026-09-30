@@ -98,7 +98,7 @@ Version coexistence is a first-class property (Foundation). No version is consid
 - A silent deprecation marks a prior version as invalid and hides it from consumers.
 - A consolidation collapses multiple versions into a single stored value.
 
-**Governing source.** Foundation and §5.4.
+**Governing source.** Foundation (governed state and version coexistence).
 
 ## Invariant IV. All references are explicit
 
@@ -121,7 +121,7 @@ Reference handling is constrained as follows.
 - Query-driven selection that is not represented by a governed artifact.
 - Alias-only reference that names the object identity without naming a version.
 
-**Governing source.** Foundation and §5.5.
+**Governing source.** Foundation (references and referential stability); The Governed Selection.
 
 ## Invariant V. Evaluation is non-replayable
 
@@ -140,7 +140,7 @@ Reference handling is constrained as follows.
 - Reconstructing historical state for audit by running evaluations against preserved copies of inputs.
 - Treating a backfill of prior periods as equivalent to the original evaluation act.
 
-**Governing source.** Foundation, §6.5, and §10.4.
+**Governing source.** Foundation (metric evaluation discipline; platform guarantees).
 
 ## Invariant VI. Evidence is emitted, not inferred
 
@@ -202,6 +202,8 @@ Any proposed behavior is tested against the six invariants by applying the follo
 
 A behavior that passes all six checks is consistent with the execution model. A behavior that fails any one is incorrect under the execution model regardless of intent or utility.
 
+The pre-action procedure that applies these checks to a proposed change (the repair-location vocabulary, the four questions, the hard rules and the override path) is defined in DEC-79b62f, the Foundation gate.
+
 ## Chapter boundaries
 
 This chapter states the invariants and their consequences. It does not define the objects (The Object Model), the contract grammar (The Contract Grammar), or the evaluation boundaries (The Evaluation Boundaries) in full. Where the invariants reference those artifacts, the treatment here is minimal and points to the chapter that defines them.
@@ -219,6 +221,7 @@ Parts II through V describe how runtime components, services, operational proced
 - Foundation: Platform guarantees that emerge from the invariants
 - FND-ERR-004: N:1 Source Object to Canonical Object cardinality (Errata)
 - DEC-97bb94: N:1 canonical evaluation (Decisions, upon migration)
+- DEC-79b62f: The Foundation gate (Decisions)
 - The Object Model: The Object Model
 - The Contract Grammar: The Contract Grammar
 - The Evaluation Boundaries: The Evaluation Boundaries

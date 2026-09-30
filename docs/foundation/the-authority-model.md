@@ -31,7 +31,7 @@ v2_sources:
 
 ## Scope
 
-This chapter defines the authority model under which platform documentation and decisions are governed. It defines the three-level authority ladder, the mechanism by which contradictions are recorded and resolved, the structure and lifecycle of Architecture Decision Records, the distinction between `DEC-xxxxxx` UIDs and `Dxxx` nicknames, and the patent's status as an evidentiary track rather than an operational one. It does not redefine the execution model described in The Invariants through The Evaluation Boundaries, the contract grammar described in The Contract Grammar, or the runtime systems that store governance records and session artifacts (DevHub and Governance).
+This chapter defines the authority model under which platform documentation and decisions are governed. It defines the five-level authority ladder, the mechanism by which contradictions are recorded and resolved, the structure and lifecycle of Architecture Decision Records, the distinction between `DEC-xxxxxx` UIDs and `Dxxx` nicknames, and the patent's status as an evidentiary track rather than an operational one. It does not redefine the execution model described in The Invariants through The Evaluation Boundaries, the contract grammar described in The Contract Grammar, or the runtime systems that store governance records and session artifacts (DevHub and Governance).
 
 ## Authority ladder
 
