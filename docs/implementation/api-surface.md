@@ -20,6 +20,8 @@ governing_adrs:
   - DEC-771baf (Tenant database topology; platform-tenant one-way dependency)
   - DEC-3395bc (v3 documentation structure; bc-core JWT-guarded /api/docs/*)
   - DEC-c06f41 (Spine expansion to eight sections plus home)
+  - DEC-eea376 (Platform scope follows the user; admin-client tokens need the bc-platform Cognito group)
+  - DEC-f0e78e (Platform and tenant authority classes; /api/t/* is for tenant identities)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -68,15 +70,16 @@ Every NestJS controller in bc-core uses the `@Controller(<route>)` decorator wit
 
 ## Authorization at the API Boundary
 
-Authorization is enforced by three globally-registered guards, in fixed order, per Internal Modules AuthModule. The order is enforced because each guard's invariant depends on the prior:
+Authorization is enforced by four globally-registered guards, in fixed order (`bc-core/src/auth/auth.module.ts:26-30`). The order is enforced because each guard's invariant depends on the prior:
 
 | Order | Guard | What it enforces |
 |---|---|---|
-| 1 | `JwtAuthGuard` | The request carries a Cognito JWT validated locally against the issuer's published JWKS. Rejects unauthenticated requests with `401 Unauthorized` |
-| 2 | `ScopeGuard` | The route's required scope (`@PlatformOnly()` or `@TenantScoped()`) matches the JWT scope (derived from the JWT audience: admin client identifier resolves to platform; portal client identifier resolves to tenant). Rejects scope mismatch with `403 Forbidden` |
-| 3 | `RolesGuard` | The route's `@Roles(...)` requirement intersects with the user's `custom:roles` claim. Rejects role mismatch with `403 Forbidden` |
+| 1 | `JwtAuthGuard` | The request carries a Cognito ID token validated locally against the issuer's published JWKS; the Cognito JWT strategy then decides the scope (see Request Authorization Chain for Tenant Routes). Rejects a missing, invalid or expired token with `401 Unauthorized` |
+| 2 | `ScopeGuard` | The route's required scope (`@PlatformOnly()` or `@TenantScoped()`) matches the token's scope. Rejects scope mismatch with `403 Forbidden` |
+| 3 | `TenantClaimGuard` | On a request that carries a resolved tenant (the `/api/t/` family), the resolved tenant slug equals the token's `custom:tenant_id` claim. Rejects a mismatch or an absent claim with `403 Forbidden` |
+| 4 | `RolesGuard` | The route's `@Roles(...)` requirement intersects with the user's `custom:roles` claim. Rejects role mismatch with `403 Forbidden` |
 
-The `super_admin` role bypasses ScopeGuard (a privileged platform role used for cross-scope governance acts). Role enforcement is per-route via `@Roles(...)`.
+The `super_admin` role bypasses ScopeGuard (`scope.guard.ts:40-41`), TenantClaimGuard (`tenant-claim.guard.ts:50-61`) and RolesGuard (which also lets `admin` through, `roles.guard.ts:34-35`). Role enforcement is per-route via `@Roles(...)`.
 
 The five route-decorator families are:
 
@@ -88,9 +91,34 @@ The five route-decorator families are:
 | `@Public()` | The route bypasses authentication; reserved for the health probe |
 | `@Roles(...)` | The route additionally requires one of the named roles |
 
-The `custom:tenant_id` JWT claim is the platform-side tenant identifier the user is bound to. The request-scope tenant identifier (the operational tenant the request targets) is resolved separately by `TenantMiddleware` from the `x-tenant-id` header or the request subdomain. ScopeGuard enforces platform-vs-tenant route scope only; a direct comparison of `custom:tenant_id` against the resolved request tenant is not enforced in the current implementation, which is recorded as a security-hardening gap in Internal Modules.
+The `custom:tenant_id` JWT claim is the tenant the user is bound to. The tenant a request targets is resolved separately by `TenantMiddleware` from the `x-tenant-id` header or the request subdomain. TenantClaimGuard binds the two: the header selects the tenant, the claim authorizes it. The next section gives the chain in the order the code runs it.
 
-**Governing source.** Architecture; Internal Modules; The Authority Model.
+**Governing source.** Architecture; Internal Modules; The Authority Model; DEC-eea376.
+
+## Request Authorization Chain for Tenant Routes
+
+A request to a tenant route (`/api/t/...`) passes these steps, in this order. Every statement below is read from bc-core `main` (84be5df6).
+
+| Step | Component | What it does | Refusal |
+|---|---|---|---|
+| 1 | `TenantMiddleware` (`src/tenancy/tenant.middleware.ts`) | Applied to every route (`tenancy.module.ts:13`), but resolves a tenant only when the path starts with `/api/t/` (`tenant.middleware.ts:47`, `69-71`). It takes the slug from the `x-tenant-id` header first, then from the host's first subdomain, ignoring `www` and `api` (`73-90`). It looks the slug up and stores the tenant context in request-scoped storage (`55-59`). Other paths are marked platform scope and get no tenant context (`64`) | No slug: `400 Bad Request`, detail "Tenant identification required. Provide x-tenant-id header or use a tenant subdomain." (`49-53`). Unknown or inactive slug: `404 Not Found`, detail "Tenant not found or inactive: <slug>" (`tenant.service.ts:36-37`) |
+| 2 | `JwtAuthGuard` and the Cognito JWT strategy (`src/auth/strategies/cognito-jwt.strategy.ts`) | Verifies the bearer token's RS256 signature against the pool's JWKS, its expiry and its issuer (`77-88`). Accepts only ID tokens (`104-106`). Decides scope from the app client and the user: a portal-client token is tenant scope (`128-129`); an admin-client token is platform scope only if its `cognito:groups` claim contains the group named by `COGNITO_PLATFORM_GROUP`, per DEC-eea376 (`116-127`). Copies `custom:tenant_id` into the user's `tenantId` (`165`) | Missing, invalid or expired token: `401`. Admin-client token without the platform group, or with a malformed groups claim: `401` (`121-126`). An access token, a token with no audience, or a token from an unknown client throws a plain error (`105`, `113`, `131`), which the Problem Detail filter reports as `500` (see Drift Inventory) |
+| 3 | `ScopeGuard` (`src/auth/guards/scope.guard.ts`) | Compares the route's `@TenantScoped()` or `@PlatformOnly()` requirement with the token's scope (`28-43`). `super_admin` passes whatever the route requires (`40-41`) | `403 Forbidden`, detail "This endpoint requires 'tenant' scope (your scope: 'platform')" (`44-46`) |
+| 4 | `TenantClaimGuard` (`src/auth/guards/tenant-claim.guard.ts`) | Runs only when step 1 stored a tenant context; platform routes pass (`43-44`). Requires the resolved tenant slug to equal the token's `custom:tenant_id` (`63`). `super_admin` passes for any tenant; when the slugs differ, the guard logs a `cross_tenant_access` warning with the user, both tenants and the path (`50-60`) | Mismatch or absent claim: `403 Forbidden`, detail "Tenant context does not match token tenant claim" (`63-65`). This happens before any Tenant DB access (`21-22`) |
+| 5 | `RolesGuard` | Checks the route's `@Roles(...)`; `super_admin` and `admin` pass (`roles.guard.ts:34-35`) | `403 Forbidden` |
+
+The guard order comes from `auth.module.ts:26-30`. The middleware runs before all of them: the guard's own comment records that TenantMiddleware resolves the tenant "BEFORE authentication runs" (`tenant-claim.guard.ts:11-12`). One consequence is that a tenant route with a missing or unknown tenant is refused with `400` or `404` even when the request carries no token. `@Public()` routes skip every guard (`tenant-claim.guard.ts:37-41`, `scope.guard.ts:22-26`), and the paths `/api/health`, `/api/auth/login`, `/api/auth/callback` and `/api/docs` skip the middleware (`tenant.middleware.ts:26-31`).
+
+**What a client sends on a tenant route.**
+
+- `Authorization: Bearer <Cognito ID token>` issued to the portal app client. An access token is refused (step 2).
+- `x-tenant-id: <tenant slug>`, equal to the token's `custom:tenant_id`. The header wins over the subdomain; if the header is sent more than once, the first value is used (`tenant.middleware.ts:75-78`).
+
+All refusals use the Problem Detail format below, with the message in `detail`. The guard spec (`tenant-claim.guard.spec.ts`) covers a match, a mismatch, an absent claim, the `super_admin` crossing, a missing user and a `@Public()` route.
+
+**Probing refusals needs a non-super_admin identity.** Because `super_admin` passes ScopeGuard, TenantClaimGuard and RolesGuard, a request made with an operator token that holds `super_admin` cannot show any of their refusals: it is admitted to tenant routes of any tenant, whatever its scope. DEC-eea376 (Implementation and evidence) records the same limit for its live check: the account used also holds `super_admin`, so the live check proves admission only. The refusal cases rest on the unit specs (`tenant-claim.guard.spec.ts:54-68`, `cognito-jwt.strategy.spec.ts:281-296`) or on a live call with a tenant user's token.
+
+**Governing source.** bc-core `src/auth/auth.module.ts`, `src/tenancy/tenant.middleware.ts`, `src/auth/strategies/cognito-jwt.strategy.ts`, `src/auth/guards/scope.guard.ts`, `src/auth/guards/tenant-claim.guard.ts`; DEC-eea376; DEC-f0e78e.
 
 ## Response Envelope
 
@@ -241,6 +269,8 @@ CORS is configured in `main.ts`. The allowed origins at the time of writing are 
 | `/api/docs/*` rate limit exceeded | `DocsRateLimiterInterceptor` rejects with `429 Too Many Requests`; Problem Detail body |
 | Uncaught server exception | `ProblemDetailFilter` catches; Problem Detail with `500 Internal Server Error`; the `detail` field carries a sanitized message |
 | Tenant-scoped route reached without resolved tenant context | `TenantMiddleware` returns `400 Bad Request` before the controller handler executes |
+| `x-tenant-id` (or subdomain) names an unknown or inactive tenant | `TenantMiddleware` propagates `404 Not Found` from the tenant lookup, before any guard runs |
+| Resolved tenant differs from the token's `custom:tenant_id`, or the claim is absent | `TenantClaimGuard` rejects with `403 Forbidden`, detail "Tenant context does not match token tenant claim"; `super_admin` is admitted and logged instead |
 
 **Governing source.** Internal Modules; Infrastructure.
 
@@ -251,7 +281,9 @@ Per pattern 69, the gaps below are recorded explicitly rather than glossed.
 | Gap | Severity | Detail |
 |---|---|---|
 | `@nestjs/throttler` not globally wired | Low | Rate limiting is applied only to `/api/docs/*` via the in-memory interceptor. Routes outside the documentation surface have no per-route rate limit. The single-runtime topology makes this acceptable for the current state; multi-instance deployment would require a Redis-backed limiter |
-| Tenant-identifier divergence not enforced at the API boundary | Medium | `ScopeGuard` enforces platform-vs-tenant route scope only; it does not compare `custom:tenant_id` against the resolved request tenant. A user with one tenant in the JWT could in principle target another tenant via the `x-tenant-id` header. Closing the gap requires adding a header-vs-claim comparison in `ScopeGuard` or `TenantMiddleware`. Recorded in Internal Modules as well |
+| Tenant-identifier divergence (closed) | Closed | Earlier revisions recorded that nothing compared `custom:tenant_id` with the resolved request tenant. bc-core `main` closes this with `TenantClaimGuard` (see Request Authorization Chain for Tenant Routes). Internal Modules (AuthModule and TenancyModule paragraphs) still describes three guards and the old gap, and needs the same correction |
+| `super_admin` is admitted to any tenant's routes | Open | ScopeGuard and TenantClaimGuard both let `super_admin` through (`scope.guard.ts:40-41`, `tenant-claim.guard.ts:50-61`), so a platform identity holding `super_admin` can call `/api/t/*` for any tenant by setting `x-tenant-id`; the crossing is logged, not refused. DEC-f0e78e D-2 says `/api/t/*` is for tenant identities only and that `x-tenant-id` from a platform identity is rejected. The code on `main` and that decision disagree for `super_admin`; for a platform identity without `super_admin`, ScopeGuard's 403 holds as D-2 describes |
+| Some token refusals surface as `500`, not `401` | Low | The Cognito JWT strategy throws a plain `Error` for an access token, a token with no audience and a token from an unknown client (`cognito-jwt.strategy.ts:105`, `113`, `131`). The Problem Detail filter maps any non-HTTP exception to `500` (`problem-detail.filter.ts:63`, `85-88`), so these arrive as `500 Internal Server Error` with the refusal message in `detail`. The platform-group refusals use `UnauthorizedException` and arrive as `401` |
 | Approximately 8 percent of controllers lack Swagger decorators | Low | The future API Reference auto-generation will not cover those controllers' routes until the decorators are added. The affected controllers are listed in the survey output that grounds this chapter; closing the gap is mechanical |
 | Custom `HttpException` subclasses not used | Low | The platform uses standard NestJS exceptions with domain-specific messages. A typed-exception hierarchy could carry richer per-domain error metadata; not implemented |
 
@@ -265,6 +297,8 @@ Per pattern 69, the gaps below are recorded explicitly rather than glossed.
 | DEC-771baf | Tenant database topology; one-way dependency | The `/api/t/` route prefix and the `@TenantScoped()` decorator preserve the asymmetric ownership at the API boundary |
 | DEC-3395bc | v3 documentation structure; bc-core JWT-guarded `/api/docs/*` | The documentation read-surface routes plus the in-memory rate limiter |
 | DEC-c06f41 | Spine expansion to eight sections plus home | The API Surface chapter exists in the reshaped Implementation section per DEC-c06f41 |
+| DEC-eea376 | Platform scope follows the user | An admin-client token is platform scope only for a member of the `COGNITO_PLATFORM_GROUP` group; otherwise `401` |
+| DEC-f0e78e | Platform and tenant authority classes | `/api/t/*` is for tenant identities; the `super_admin` bypass on `main` departs from D-2 (see Drift Inventory) |
 
 **Governing source.** The Authority Model.
 
@@ -283,6 +317,8 @@ Per pattern 69, the gaps below are recorded explicitly rather than glossed.
 - DEC-771baf: Tenant database topology
 - DEC-3395bc: v3 documentation structure
 - DEC-c06f41: Spine expansion to eight sections plus home
+- DEC-eea376: Platform scope follows the user
+- DEC-f0e78e: Platform and tenant authority classes
 - RFC 7807: Problem Details for HTTP APIs
 - outline.md §4.3: Implementation
 - Decisions: ADR Registry

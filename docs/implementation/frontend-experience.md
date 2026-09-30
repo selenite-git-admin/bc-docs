@@ -19,6 +19,7 @@ governing_adrs:
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules)
   - DEC-771baf (Tenant database topology; platform-tenant one-way dependency)
   - DEC-f0e78e (Platform and tenant authority classes; x-tenant-id from a platform identity is rejected)
+  - DEC-eea376 (Platform scope follows the user; admin-client tokens need the bc-platform Cognito group)
   - DEC-8dc51d (bc-portal tenant header derived from the JWT tenant claim)
   - DEC-f0c0f7 (No hardcoded enum arrays; consume master-data hooks)
   - DEC-e50b83 (Master port reservation)
@@ -52,7 +53,7 @@ The platform serves browser experience through two frontends. The split realizes
 | Frontend | Scope | Routes consumed | Authorization |
 |---|---|---|---|
 | bc-portal | Tenant scope | `/api/t/...` routes on bc-core | `@TenantScoped()` per API Surface; the JWT audience resolves to the tenant scope |
-| bc-admin | Platform scope | `/api/...` routes on bc-core | `@PlatformOnly()` per API Surface; the JWT audience resolves to the platform scope; ScopeGuard enforces |
+| bc-admin | Platform scope | `/api/...` routes on bc-core | `@PlatformOnly()` per API Surface; the admin-client token is platform scope only for a member of the platform Cognito group (DEC-eea376); ScopeGuard enforces |
 
 Neither frontend is a privileged surface above the API. Both go through the same global guard chain in bc-core, registered in this order: JwtAuthGuard, ScopeGuard, TenantClaimGuard, RolesGuard (`src/auth/auth.module.ts`); both consume the same response envelope and Problem Detail formats; both share the same Cognito user pool with the audience claim distinguishing scope. The dual-layer trust contract per The Dual-Layer Interaction Model holds: each frontend can read and surface what its scope admits; neither can author beyond what its bound role permits at bc-core.
 
@@ -93,7 +94,7 @@ Both frontends authenticate against the same Cognito user pool provisioned by th
 7. On `401 Unauthorized`, the frontend redirects to the login route.
 8. Logout clears the SDK-managed localStorage entries.
 
-The two audience-claim values in the user pool distinguish scope: the bc-admin client identifier resolves to the platform scope; the bc-portal client identifier resolves to the tenant scope. ScopeGuard in bc-core consults this audience to enforce route-level scope.
+The token's app client and the user's group decide scope (bc-core `src/auth/strategies/cognito-jwt.strategy.ts:108-131`). A token from the bc-portal client is tenant scope. A token from the bc-admin client is platform scope only if the user belongs to the Cognito group named by `COGNITO_PLATFORM_GROUP` (bc-platform); otherwise bc-core answers `401` (DEC-eea376). ScopeGuard in bc-core then enforces route-level scope against that decision.
 
 Multi-factor authentication is configured per Infrastructure (optional in dev, required in prod for AuthStack). MFA verification uses TOTP; it is a second step in the login sequence between SUCCESS and the authenticated landing page.
 
@@ -133,6 +134,26 @@ bc-admin is platform-scope and does not attach `x-tenant-id` on most requests. P
 
 **Governing source.** API Surface; Internal Modules.
 
+## Calling Tenant Routes: What a Client Must Do
+
+bc-core checks every `/api/t/` call in the order recorded in API Surface (Request Authorization Chain for Tenant Routes). For a frontend, that comes down to three requirements, each read from the code on `main`:
+
+| Requirement | Why | Source |
+|---|---|---|
+| Sign in through the bc-portal app client and send the **ID token** as `Authorization: Bearer <token>` | bc-core accepts only ID tokens. A bc-portal client token is tenant scope; a bc-admin client token is platform scope and is refused on `@TenantScoped()` routes | bc-core `cognito-jwt.strategy.ts:104-131`, `scope.guard.ts:43-46` |
+| Send `x-tenant-id: <slug>` equal to the token's `custom:tenant_id` | TenantMiddleware resolves the tenant from this header (or, without it, from the subdomain); TenantClaimGuard then refuses the call unless the slug equals the claim | bc-core `tenant.middleware.ts:73-90`, `tenant-claim.guard.ts:63-65` |
+| Send a token whose user has a `custom:tenant_id` | A token with no tenant claim is refused on every tenant route, whatever header it sends | bc-core `tenant-claim.guard.ts:63` |
+
+Which app client a frontend uses is deployment configuration: each frontend reads `VITE_COGNITO_CLIENT_ID` (bc-portal `apps/web/src/config/env.ts:25`, bc-admin `src/config/env.ts:19`), and bc-core knows the two clients as `COGNITO_CLIENT_ID` (portal) and `COGNITO_ADMIN_CLIENT_ID` (admin) (`cognito-jwt.strategy.ts:62-69`).
+
+**bc-portal meets these by construction.** Its API client reads the tenant slug from the signed-in user's ID token (`getTenantSlugSync()`, bc-portal `apps/web/src/adapters/auth.adapter.ts:76-89`) and sends it as `x-tenant-id` (`apps/web/src/api/client.ts:46-49`), so header and claim match. A mismatch can arise only on the fallback path: when the token carries no tenant claim, the client falls back to `VITE_TENANT_ID` (`client.ts:46`), and bc-core refuses that call because the claim is absent.
+
+**What a tenant user sees on a mismatch.** bc-core answers `403 Forbidden` with a Problem Detail body whose `detail` is "Tenant context does not match token tenant claim". The bc-portal client does not redirect on `403`; it throws an `ApiError` carrying the status and the parsed body (`client.ts:62-65`), and the calling page renders its own error state. Only a `401` sends the user to `/login` (`client.ts:57-60`). An unknown or inactive slug is refused earlier, by TenantMiddleware, with `404` and "Tenant not found or inactive: <slug>" (bc-core `tenant.service.ts:36-37`).
+
+**bc-admin and tenant routes.** bc-admin does not send `x-tenant-id`, with one known exception: the Runtime console hooks in `src/api/runtime.ts`, which a shrink-only architecture test allowlists as debt (bc-admin `src/__architecture__/tenant-header-boundary.test.ts:8-26`, TSK-df381f). Those hooks call `t/runtime-console`, a `@TenantScoped()` controller (bc-core `src/boundary/runtime-console.controller.ts:31-32`). A platform-scope token is refused there by ScopeGuard with `403`, unless the user holds `super_admin`, which passes ScopeGuard and TenantClaimGuard for any tenant; TenantClaimGuard logs each such crossing (`tenant-claim.guard.ts:50-61`). For this reason an operator account holding `super_admin` cannot be used to see the refusals a tenant user would see.
+
+**Governing source.** API Surface; DEC-eea376; DEC-8dc51d; DEC-f0e78e.
+
 ## bc-admin: Maturing Surface
 
 bc-admin is the more matured of the two frontends. The route catalogue has stabilized into clusters that mirror the Internal Modules clusters: Sources (Source Catalog tiers and discovery), Registry (the seven contract families plus connectors and readers and packages), Catalog (business and metric catalogs), Business Chain (Business Field, Business Object, Canonical Field authoring), Operations (data readiness, runs, boundaries, health, integrity, activity, rejections, test bench), Governance (libraries, masters, nullification), Platform (tenants, tickets, infrastructure), and Docs (the embedded documentation reader per DEC-b97390 and DEC-3395bc).
@@ -167,8 +188,9 @@ Per pattern 67, the reader's protocol detail (manifest shape, frontmatter handli
 
 | Cause | System response |
 |---|---|
-| `401 Unauthorized` on any API call | The fetch wrapper throws an `ApiError`; the calling React Query hook surfaces it. There is no automatic redirect inside the fetch wrapper. Redirect to the login route happens at route load when `ProtectedRoute` finds no active Cognito session; a 401 response mid-session that does not trigger a route change leaves the user with a thrown error in the calling component until the next route navigation re-checks the session |
+| `401 Unauthorized` on any API call | In bc-admin, the fetch wrapper throws an `ApiError`; the calling React Query hook surfaces it. There is no automatic redirect inside the bc-admin fetch wrapper (bc-portal's client does redirect to `/login` on `401`, bc-portal `apps/web/src/api/client.ts:57-60`). Redirect to the login route happens at route load when `ProtectedRoute` finds no active Cognito session; a 401 response mid-session that does not trigger a route change leaves the user with a thrown error in the calling component until the next route navigation re-checks the session |
 | `403 Forbidden` (scope or role mismatch) | The error propagates to the calling component; the component renders a "not permitted" surface |
+| `403 Forbidden` on a tenant route because `x-tenant-id` differs from the token's `custom:tenant_id` | bc-portal's client throws an `ApiError` with status `403` and the Problem Detail body (detail "Tenant context does not match token tenant claim"); no redirect. See Calling Tenant Routes |
 | Network failure or timeout | The fetch wrapper rejects the promise; React Query's retry policy applies in the readiness baseline; the calling component renders an error state |
 | Cognito session expired | The Cognito SDK auto-renews via the renewal token; if the renewal token has also expired, the next API call returns `401` and the redirect-to-login path runs |
 | `/api` proxy not running (bc-core down in dev) | The fetch wrapper rejects with a connection error; the user sees an error state per page; the dev console shows the failed proxy attempt |
@@ -196,6 +218,7 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 | DEC-1918d0 | Deployment and database architecture | The two-database split underlies the platform-vs-tenant scope split that the two frontends realize |
 | DEC-771baf | Tenant database topology; platform-tenant one-way dependency | The asymmetric ownership rule shows up in the API client: bc-portal's `x-tenant-id` header reaches the addressed Tenant DB; bc-admin's platform-scope requests do not address a Tenant DB except through governed authoring acts |
 | DEC-e50b83 | Master port reservation | bc-portal on 3000; bc-admin on 3010 |
+| DEC-eea376 | Platform scope follows the user | bc-admin sign-in yields platform scope only for members of the platform Cognito group; others get `401` |
 | DEC-b97390 | bc-admin embedded documentation reader | The reader is part of bc-admin's surface |
 | DEC-3395bc | v3 documentation structure; bc-core JWT-guarded `/api/docs/*` | The reader fetches manifest and content from bc-core under the documented JWT-guarded routes |
 | DEC-c06f41 | Spine expansion to eight sections plus home | The Frontend Experience chapter exists in the reshaped Implementation section per DEC-c06f41 |
@@ -216,6 +239,7 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 - DEC-1918d0: Deployment and database architecture
 - DEC-771baf: Tenant database topology
 - DEC-e50b83: Master port reservation
+- DEC-eea376: Platform scope follows the user
 - DEC-b97390: bc-admin embedded documentation reader
 - DEC-3395bc: v3 documentation structure
 - DEC-ee6018: bc-qa standalone repo
