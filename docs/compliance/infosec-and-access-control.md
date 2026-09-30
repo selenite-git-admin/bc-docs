@@ -17,7 +17,7 @@ governing_adrs:
   - DEC-771baf (Tenant database topology; one database per tenant; one-way dependency platform reads contracts only, tenant owns its data)
   - DEC-3395bc (bc-docs SSOT cutover; the docs anti-scraping mechanism with JWT-guarded endpoints, rate limiting, audit log)
   - DEC-441665 (NPM supply chain mitigation via AWS CodeArtifact; mitigates RSK-cb8929)
-  - DEC-ee6018 (bc-qa standalone repo; the preventive control surface)
+  - DEC-ee6018 (Power of Ten adapted coding rules; the preventive control surface, enforced in each repository's CI per DEC-5b760c)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -27,9 +27,9 @@ diagrams: []
 
 ## Scope
 
-This chapter records the platform's information-security posture and the access-control surfaces that bind it. It states the Cognito JWT authentication boundary at bc-core, the ScopeGuard that classifies every authenticated request as platform-scope or tenant-scope, the `@PlatformOnly()` and tenant-scoped decorators that gate per-route access, the TenantMiddleware that resolves tenant identity from header or subdomain, the two-database split as the access-isolation substrate, the docs anti-scraping mechanism that protects the documentation surface, the AWS CodeArtifact npm registry as the supply-chain control mitigating `RSK-cb8929`, the bc-qa pre-commit hook as the developer-machine preventive boundary, and the AWS profile discipline that prevents cross-account leakage.
+This chapter records the platform's information-security posture and the access-control surfaces that bind it. It states the Cognito JWT authentication boundary at bc-core, the ScopeGuard that classifies every authenticated request as platform-scope or tenant-scope, the `@PlatformOnly()` and tenant-scoped decorators that gate per-route access, the TenantMiddleware that resolves tenant identity from header or subdomain, the two-database split as the access-isolation substrate, the docs anti-scraping mechanism that protects the documentation surface, the AWS CodeArtifact npm registry as the supply-chain control mitigating `RSK-cb8929`, the per-repository CI gates as the preventive boundary for code (there is no developer-machine hook since DEC-5b760c), and the AWS profile discipline that prevents cross-account leakage.
 
-This chapter does not redefine the runtime tenant scope (Tenancy and Binding), the audit substrate that records access (Audit and Activity Logging), the operational secrets management (Security Operations), or the bc-qa rule set itself (Quality Assurance).
+This chapter does not redefine the runtime tenant scope (Tenancy and Binding), the audit substrate that records access (Audit and Activity Logging), the operational secrets management (Security Operations), or the coding rules and their enforcement (Quality Assurance).
 
 **Governing source.** outline.md §4.8; The Authority Model.
 
@@ -131,21 +131,11 @@ The control is structural: the `.npmrc` files are committed; an install that byp
 
 **Governing source.** DEC-441665; CLAUDE.md (NPM Registry section); Build and Release.
 
-## Pre-Commit Hook as the Developer-Machine Preventive Boundary
+## Preventive Boundary for Code: CI, Not a Hook
 
-The bc-qa pre-commit hook at `bc-qa/hooks/pre-commit` runs at developer commit time. It blocks the introduction of dynamic code execution, suppression of type-check errors, and dynamic Python execution.
+Earlier versions of this chapter named the bc-qa pre-commit hook as the developer-machine preventive boundary. `DEC-5b760c` (2026-08-24) retired bc-qa and its hook templates; no repository carries a commit-time lint hook today (barecount-devhub's scoped hook guards its MCP tools list and runbook paths only). The preventive boundary for code is each repository's CI and branch protection: `no-eval`, `no-new-func` and `no-implied-eval` are `error` in the shared `@barecount/eslint-config` and fail the build wherever ESLint runs (bc-core, bc-portal, barecount-devhub); type errors fail the typecheck gate in bc-core, bc-admin and bc-portal; and no change merges to a protected `main` without a green check and an approving review. Quality Assurance records the enforcement per repository and its gaps (bc-admin runs no lint step).
 
-| Check | Block or warn |
-|---|---|
-| `eval()` or `new Function()` introduced | Block |
-| Python `eval()` or `exec()` introduced | Block |
-| `@ts-ignore` introduced | Block; `@ts-expect-error` with justification is the substitute |
-| ESLint errors on staged files | Block |
-| `console.log` introduced in `src/` | Warn |
-
-The hook is installed via `bash bc-qa/hooks/install-hooks.sh <repo-path>` per Developer Experience. It is the developer-machine boundary; the bc-qa audit harness is the on-demand boundary that catches drift in the repository state. Quality Assurance records the rule set; this chapter records the access-control role of the hook as a preventive control.
-
-**Governing source.** `bc-qa/hooks/pre-commit`; Quality Assurance.
+**Governing source.** DEC-5b760c; Quality Assurance.
 
 ## AWS Profile Discipline
 
@@ -170,7 +160,7 @@ Every BareCount service that consumes AWS APIs runs under a single named AWS pro
 | Two-database split is structural | Cross-tier access is prevented by connection isolation, not by application-level checks |
 | One-way dependency | Platform reads contracts; tenant owns tenant data; the dependency direction does not reverse |
 | CodeArtifact is mandatory | Every npm install routes through the mirror; bypassing the mirror is a discipline violation |
-| Pre-commit hook is the developer-machine boundary | The hook blocks the highest-risk introductions; the audit harness catches the rest |
+| CI is the preventive boundary for code | `no-eval` and its siblings fail the build wherever ESLint runs; there is no developer-machine hook (DEC-5b760c) |
 | AWS profile is mandatory | The default profile is rejected; the named profile is the only authorized identity |
 
 **Governing source.** DEC-1918d0; DEC-771baf; DEC-3395bc; DEC-441665; CLAUDE.md.
@@ -188,7 +178,7 @@ Every BareCount service that consumes AWS APIs runs under a single named AWS pro
 | Docs rate-limit exceeded | HTTP 429 with `retryAfter`; the rate limiter logs a warning; the durable audit row is not written for the rejected request |
 | CodeArtifact token expired | `npm install` returns HTTP 401 or 403; the operator runs `npm run codeartifact:refresh` |
 | AWS profile resolution fails at startup | bc-core refuses to start; the operator confirms the profile name and reruns |
-| Pre-commit hook blocks a commit | Staged files remain in place; the developer fixes the violation and recommits |
+| A CI gate fails on a pull request | Branch protection refuses the merge until the head is green |
 
 **Governing source.** `bc-core/src/auth/strategies/cognito-jwt.strategy.ts`; `bc-core/src/auth/guards/scope.guard.ts`; `bc-core/src/tenancy/tenant.middleware.ts`; DEC-441665.
 

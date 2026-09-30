@@ -4,13 +4,17 @@ order: 41
 title: "Quality Assurance"
 status: drafting
 authority: authoritative
-depends_on: [the-authority-model, devhub, build-and-release]
+depends_on: [the-authority-model, devhub, build-and-release, continuous-integration, decision-and-change-procedure]
 governing_sources:
   - The Authority Model
   - DevHub
   - Build and Release
+  - Continuous Integration
+  - Decision and Change Procedure
 governing_adrs:
-  - DEC-ee6018 (bc-qa standalone repo; QA tooling lives in its own repo, audits all platform repos cross-cutting)
+  - DEC-5b760c (QA enforcement consolidates into per-repo CI; DevHub is the sole NC authority; bc-qa retires and archives)
+  - DEC-ee6018 (Power of Ten, adapted coding rules; the rule set that CI enforces through @barecount/eslint-config)
+  - DEC-f0c0f7 (No hardcoded enums; a convention with no enforcer, recorded here as such)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -20,205 +24,190 @@ diagrams: []
 
 ## Scope
 
-This chapter records the platform's quality-assurance substrate: the bc-qa standalone repository, the audit harness that scans every platform repo for code-quality non-conformities, the gate-config that encodes per-repo severity, the eslint-config package that every TypeScript repo consumes, the pre-commit hook that runs at developer-machine commit time, the QA NC register that holds non-conformity records to resolution, the DevHub MCP integration that wraps the audit harness from a Claude session, and the as-built gaps in CI integration.
+This chapter records where the platform's engineering quality is enforced and what that enforcement is. Since `DEC-5b760c` (decided 2026-08-24) each repository's own continuous-integration workflow is the only place quality rules are enforced, the DevHub `qa_nc_records` table is the only non-conformance register, and the bc-qa repository that once held a cross-repository audit is archived. The chapter states the coding rules (`DEC-ee6018`) as the executable configuration defines them, the enforcement each repository actually applies on every push (with the file and line that applies it), the architecture gates that bc-core runs as tests, the non-conformance register and what does and does not write to it, and the gaps between the written standard and the enforced one.
 
-This chapter does not redefine the build and release procedure that consumes the QA tooling (Build and Release), the developer environment that installs the pre-commit hook (Developer Experience), or the change-record substrate that QA findings are linked to (Decision and Change Procedure).
+This chapter does not redefine the build and release procedure and the CI workflows themselves (Build and Release; Continuous Integration), the DevHub tables and tools (DevHub), or the change-record trail that a non-conformance links to (Decision and Change Procedure).
 
-**Governing source.** outline.md §4.5; The Authority Model.
+The chapter's rule is the Compliance section's rule: a control is described only where it exists, at the level at which it binds. A rule set to `warn` binds only in a repository whose CI fails on warnings. Everything in the enforcement table below was read from the named files on 2026-09-30; the drift inventory records where the standard and the enforcement differ.
 
-## bc-qa as the QA Authority
+**Governing source.** DEC-5b760c; DEC-ee6018; The Authority Model.
 
-Per `DEC-ee6018`, the platform's quality-assurance tooling lives in `bc-qa`, a standalone repository, not in any application repo and not in DevHub. The discipline is "the platform has one QA authority"; every platform repo consumes bc-qa's tooling, and bc-qa audits every platform repo.
+## Where Quality Is Enforced
 
-| Repo concern | bc-qa structure |
+`DEC-5b760c` moved enforcement to where code changes: each repository's CI, on every push and pull request. The decision was taken after the cross-repository audit mechanism ran once in five months and returned a verdict dominated by defects in the gate itself (a vacuous forbidden-vocabulary scan, two false-positive blocks, a summary-only report, a file register never written by tooling). The principle it recorded: a gate that runs on every push beats an audit that runs never.
+
+| Disposition (DEC-5b760c) | State on 2026-09-30 |
 |---|---|
-| The audit harness | `bc-qa/audits/` carries the audit-repo.sh runner and a `checks/` subdirectory of modular check scripts |
-| The pre-commit hooks | `bc-qa/hooks/` carries the pre-commit hook plus the install-hooks.sh script that copies it into a target repo |
-| The gate configuration | `bc-qa/gates/` carries gate-config.json (per-repo severity matrix) and compliance-gate.sh (the CI integration wrapper) |
-| The eslint-config package | `bc-qa/eslint/` is the source of `@barecount/eslint-config`, published to CodeArtifact and consumed by every TypeScript repo |
-| The non-conformity register | `bc-qa/audits/nc-register.json` carries per-NC entries with lifecycle state (open through resolved) |
+| Each repository's CI is its QA enforcement authority; severity lives in each repository's own lint and test configuration | In force; see the enforcement table |
+| The DevHub database is the single non-conformance authority; the bc-qa file register is retired | In force; the file register had zero entries for its whole life (NC-04b0bb) |
+| `@barecount/eslint-config` is sourced from `bc-core/tools/eslint-config` and published to CodeArtifact under the unchanged name | In force; version 1.0.0; four consumers pin `^1.0.0` |
+| The two unique checks (frozen imports, forbidden vocabulary) become bc-core vitest architecture tests | In force; `src/__architecture__/frozen-imports.spec.ts` and `forbidden-vocab.spec.ts` with `frozen-registry.json` and `forbidden-vocab.baseline.json`, run in the sharded vitest job |
+| The shell audit layer, compliance gate, reports directory, `nc-manage.sh` and hook templates retire with the repository | Retired; no repository carries the bc-qa hook (no `.husky`, no `lint-staged`, no `.pre-commit-config.yaml` anywhere) |
+| `check-chain-invariants.sh` is preserved by the archive for the chain-invariants track | Archived; not running anywhere |
+| bc-qa is archived (GitHub archive flag; local copy under `_archived-repos`) | Done 2026-08-24 |
 
-The bc-qa repo has no runtime; it is tooling-only. There is no port, no service, no pm2 entry. Per `DEC-ee6018`, bc-qa is tooling only, with no running service, no port, and no pm2 entry.
+Nothing runs across repositories any more. The DevHub Guards page keeps a read-only rule scan of every repository's `main` (Hotspots; ten rules) as a mirror, not a gate: it fails nothing and writes no register.
 
-**Governing source.** DEC-ee6018 (bc-qa standalone repo); CLAUDE.md (QA Tooling section).
+**Governing source.** DEC-5b760c; `bc-core/src/__architecture__/`; barecount-devhub `src/lib/rule-audits.js`.
 
-## The Audit Harness
+## The Coding Rules as the Executable Configuration Defines Them
 
-The audit harness scans a target repo for code-quality non-conformities. The runner is `bc-qa/audits/audit-repo.sh`; it iterates a set of modular check scripts under `bc-qa/audits/checks/` and produces a verdict.
+`DEC-ee6018` adapted the Power of Ten rules for BareCount. The executable form is the `@barecount/eslint-config` package (`bc-core/tools/eslint-config/eslint/`, version 1.0.0). It exports three configurations; a consumer spreads the ones it wants into its own `eslint.config`. The levels below are the package's, read on 2026-09-30. The project instructions' prose summary of the rules is not the authority; these files are.
 
-| Check | What it scans for |
+| Rule | `base.cjs` (all `src/**`) | `pipeline.cjs` (the safety-critical directories) | `scripts.cjs` (seeds, scripts, tools, drizzle) |
+|---|---|---|---|
+| `no-eval`, `no-new-func`, `no-implied-eval` | error | error | error |
+| `prefer-const`, `no-var` | error | error | error |
+| `no-empty` (empty catch not allowed) | error | error | error |
+| `no-with`, `no-debugger` | error | error | error |
+| `max-depth` | warn, 3 | error, 2 | warn, 3 |
+| `max-lines-per-function` | warn, 60 (blank lines and comments skipped) | error, 40 | off |
+| `max-nested-callbacks` | warn, 2 | error, 1 | warn, 2 |
+| `no-nested-ternary` | warn | warn | warn |
+| `no-console` | warn, allowing `warn` and `error` | error | off |
+| `no-restricted-syntax`: dynamic `require`, module-level `let`, `new Proxy` | warn | warn | off |
+
+Two rules the project instructions list are not in the shared package. `@typescript-eslint/no-explicit-any` is set to `warn` in the bc-core, bc-admin and bc-portal repository configurations and is not set in barecount-devhub (plain JavaScript). The ban on `@ts-ignore` comes from typescript-eslint's recommended set, which the three TypeScript repositories extend.
+
+The `pipeline.cjs` file globs name `src/evaluation/`, `src/readers/`, `src/canonical/`, `src/metrics/`, `src/boundaries/`, `src/admission/` and `src/observation/`. None of those directories exists in bc-core, whose evaluation code lives under `src/boundary/` (singular). bc-core's own `eslint.config.mjs` therefore restates the four pipeline rules at `error` for `src/boundary/**` (lines 78 to 85). In every other consumer the pipeline configuration matches no file.
+
+**Governing source.** `bc-core/tools/eslint-config/eslint/base.cjs`, `pipeline.cjs`, `scripts.cjs`, `index.cjs`; `bc-core/eslint.config.mjs`; DEC-ee6018.
+
+## Enforcement per Repository
+
+What each repository's CI runs on every push and pull request, and whether the `warn`-level rules bind there. A `warn` rule binds only where ESLint runs with `--max-warnings 0`. Branch protection on `main` was read from the GitHub API on the same day.
+
+| Repository | Lint in CI | Warn-level rules bind? | Other gates in CI | Branch protection on `main` |
+|---|---|---|---|---|
+| bc-core | `npx eslint . --max-warnings 0` (`.github/workflows/ci.yml:76`) | Yes | `npm run lint:columns` (ISO 11179 column names, `ci.yml:84`); `npm run typecheck` (three tsconfigs, `ci.yml:86`); vitest in three shards including the architecture tests (`ci.yml:155`); a database integration job | One approval, `quality-gate` check, enforced for administrators |
+| bc-portal | `npm run lint --workspace=apps/web` (`ci.yml:44`), which is `eslint src/ --max-warnings 0` (`apps/web/package.json:10`) | Yes | typecheck, build, vitest | One approval, `quality-gate`, enforced for administrators |
+| barecount-devhub | `npx eslint src/` (`ci.yml:105`; the step is named "errors fail; warnings backlog tracked separately") | No: errors only | hook-mode check, MCP tools-list check, exchange publisher tests, `npm test` (node test runner) | One approval, `quality-gate` and `unit-tests (macos-latest)`, enforced for administrators |
+| bc-admin | None: no ESLint step in `ci.yml` and no `lint` script in `package.json` | No: nothing lints | `npm run typecheck` (`ci.yml:63`; a hard gate since 2026-09-30, TSK-6d58ee), `npm run test` (`ci.yml:70`), `npx vite build` (`ci.yml:73`) | One approval, `build`, enforced for administrators |
+| bc-db | None (SQL and shell; no JavaScript source) | Not applicable | Five rehearsal shards of shell and node tests, aggregated by `quality-gate` | One approval, `quality-gate`, enforced for administrators |
+| bc-demo | None (Python) | Not applicable | pytest, build gates, `compileall` | One approval, `test` and `build-gates`, enforced for administrators |
+| bc-infra | None | Not applicable | `npm test`, `cdk synth`, `cdk diff --fail` with a replacement guard (`ci-validate.yml`) | One approval, `validate`, enforced for administrators |
+| bc-docs | None | Not applicable | `python scripts/docs-control/audit_adrs.py` (`adr-hygiene.yml:25`; merge-blocking on supersession issues only) | One approval, `adr-hygiene`, enforced for administrators |
+| bc-exchange | None (`node --check` syntax checks only, `ci.yml:18`) | Not applicable | `npm test` | One approval, `test`; not enforced for administrators |
+| bc-external-audit | No CI workflow at all | Not applicable | None | No branch protection; the operator merges by hand after the auditor's review (see ISO 27001 Conformance, A.8.32) |
+
+So the Power of Ten `warn` rules (function length, nesting depth, callback depth, nested ternaries, console use, module-level `let`) bind in bc-core and bc-portal only. In barecount-devhub they are advisory; in bc-admin nothing lints at all. The `error` rules (`no-eval`, `prefer-const`, `no-var`, `no-empty`) bind wherever ESLint runs: bc-core, bc-portal and barecount-devhub.
+
+There is no developer-machine hook anywhere except barecount-devhub's own scoped pre-commit hook (`scripts/hooks/pre-commit`, installed through `core.hooksPath`), which guards the MCP tools list and runbook paths and runs no lint. The bc-qa hook that earlier versions of this chapter and of InfoSec and Access Control described is gone.
+
+**Governing source.** Each repository's `.github/workflows/*.yml` and `package.json`; the GitHub branch-protection API, read 2026-09-30.
+
+## Architecture Gates in bc-core
+
+bc-core carries gates that no lint rule can express, as vitest specifications under `src/__architecture__/`, run in the sharded vitest job of its CI. They are shrink-only registers: a new violation fails the build, and a baseline entry that no longer matches fails too until the baseline is lowered.
+
+| Gate | What it holds |
 |---|---|
-| `check-eslint.sh` | ESLint runs against the repo's source; rule violations are recorded |
-| `check-eslint-config.sh` | Confirms `@barecount/eslint-config` is consumed; absence is the violation |
-| `check-ts-strict.sh` | Confirms `tsconfig.json` declares `strict: true` |
-| `check-ts-ignore.sh` | Confirms no new `@ts-ignore` markers; `@ts-expect-error` with a justification comment is the substitute |
-| `check-any-types.sh` | Confirms no new explicit `any` (literal `: any`, `as any`, `<any>`); the any-count baseline is held |
-| `check-function-length.sh` | Confirms maximum function length: sixty effective lines repo-wide, forty effective lines in safety-critical directories |
-| `check-nesting-depth.sh` | Confirms maximum nesting depth: three repo-wide, two in safety-critical directories |
-| `check-no-eval.sh` | Confirms no `eval()`, `new Function()`, `vm.runInContext()`, or `vm.createScript()` anywhere |
-| `check-console-log.sh` | Confirms no `console.log`, `console.info`, `console.debug`, `console.trace` in `src/`; `console.warn` and `console.error` permitted |
-| `check-forbidden-vocab.sh` | Scans the safety-critical directories (evaluation, readers, canonical, metrics, boundaries, admission, observation) for forbidden roots |
-| `check-hardcoded-enums.sh` | Scans frontend repos for `*_OPTIONS`, `*_TYPES`, `*_STATUSES` arrays; the `// qa-approved: static-enum` comment is the explicit escape |
-| `check-ruff.sh` | Runs ruff against bc-ai's Python source |
-| `check-chain-invariants.sh` | Queries the platform PostgreSQL container for chain invariant violations; runs only when the container is reachable |
+| `frozen-imports.spec.ts` with `frozen-registry.json` | The modules whose import surface is frozen (the DEC-5b760c port of the bc-qa check, with import-specifier parsing and a refusal-test exemption) |
+| `forbidden-vocab.spec.ts` with `forbidden-vocab.baseline.json` | The forbidden vocabulary in the evaluation code, failing closed when zero files are scanned |
+| `boundary-quality.spec.ts` with `boundary-quality.baseline.json` | Per-file counts for the evaluation code (calculator rules, security, length, lint suppression, smell, tests, docs, duplication), frozen at a dated `main` |
+| The other specifications in the same directory | Plane discipline (D575), controller injection and request validation, route scope and roles, persisted codes, fetch depth and further structural rules; the directory listing on `main` is the inventory |
 
-The audit runner reads a per-repo gate-config to classify each finding into block, warn, skip, or info. The verdict logic: any blocked finding produces NON-COMPLIANT (exit code 1); any warned or failed finding produces CONDITIONAL (exit code 0); zero of either produces COMPLIANT (exit code 0).
+These gates are the only place where quality rules bind at the level of the evaluation code's structure rather than its syntax. The review rule that accompanies them: a pull request that raises a baseline count or adds a baseline key is refused, since the test cannot block that by itself.
 
-By default the harness is informational: every check runs and findings are reported, but only blocked findings produce a non-zero exit. The `--gate` flag flips the runner into gating mode: the configured severity for each check is honored. The CI integration wrapper at `bc-qa/gates/compliance-gate.sh` runs the audit in gating mode and is the integration point when CI lands.
+**Governing source.** `bc-core/src/__architecture__/`; DEC-5b760c dispositions 4 and 5.
 
-**Governing source.** `bc-qa/audits/audit-repo.sh`; `bc-qa/audits/checks/`.
+## Rule 14: No Hardcoded Enum Arrays (a Convention)
 
-## The Gate Configuration
+`DEC-f0c0f7` requires that front-end dropdowns are API-driven and forbids hardcoded `{value, label}` arrays outside a short list of exceptions, with `// qa-approved: static-enum` as the escape hatch. Its enforcement table names `check-hardcoded-enums.sh` in bc-qa and a planned ESLint rule. Neither exists: the script exists in no live or archived repository, and no consumer's ESLint configuration and no shared configuration carries such a rule. The ADR's `implemented` status is therefore wider than its enforcement, and the marker is used in bc-admin only (eleven occurrences) while bc-portal carries hundreds of unmarked `value`/`label` lines.
 
-The gate-config at `bc-qa/gates/gate-config.json` records per-repo severity for each check. The per-repo overrides tighten or loosen the default severity according to the repo's role.
+Until an enforcer exists, rule 14 is a code-review convention, not a gate. This chapter records it as such; the decision on building the rule or amending the ADR by erratum is queued (see the drift inventory).
 
-| Check | Default | bc-core | bc-admin | bc-portal | bc-ai | DevHub |
-|---|---|---|---|---|---|---|
-| `no-eval` | block | block | block | block | block | block |
-| `eslint-config` | warn | block | block | warn | skip | skip |
-| `eslint` | warn | block | block | warn | skip | skip |
-| `ts-strict` | warn | block | block | warn | skip | skip |
-| `ts-ignore` | warn | block | warn | warn | skip | skip |
-| `forbidden-vocab` | warn | block | warn | warn | warn | skip |
-| `any-types` | warn | warn | warn | warn | skip | skip |
-| `function-length` | warn | warn | warn | warn | skip | warn |
-| `console-log` | warn | warn | warn | warn | skip | skip |
-| `hardcoded-enums` | warn | skip | warn | warn | skip | skip |
-| `ruff` | warn | not applicable | not applicable | not applicable | block | not applicable |
+**Governing source.** DEC-f0c0f7; the consumer `eslint.config` files.
 
-The `no-eval` row is the only universally-blocking check; every repo blocks on the introduction of dynamic code execution. bc-core carries the strictest profile because the contract evaluation acts run there. bc-ai carries the Python-first profile (ruff blocking; TypeScript checks not applicable). DevHub carries the relaxed profile (engineering-coordination tooling, not contract execution).
+## The Non-Conformance Register
 
-**Governing source.** `bc-qa/gates/gate-config.json`; CLAUDE.md (Coding Standards section, Severity Quick Reference table).
-
-## The eslint-config Package
-
-The platform's TypeScript rule set is the `@barecount/eslint-config` package, published from `bc-qa/eslint/` to AWS CodeArtifact. The package exports three entry points.
-
-| Module | Scope | Tightening |
-|---|---|---|
-| `base` | Default for every TypeScript repo | The Power-of-Ten rules adapted for BareCount: max-depth 3 (warn), no-eval (error), no-new-func, max-lines-per-function 60 (warn), prefer-const, no-var, no-empty, max-nested-callbacks 2 (warn), no-nested-ternary, no-console (allowing warn and error), no-debugger |
-| `pipeline` | Override for `src/evaluation/`, `src/readers/`, `src/canonical/`, `src/metrics/`, `src/boundaries/`, `src/admission/`, `src/observation/` in bc-core | max-depth 2 (error), max-lines-per-function 40 (error), max-nested-callbacks 1 (error, forces async/await), no-console (error, structured logger only) |
-| `scripts` | Override for seed scripts and one-shot tools | Relaxed; some rules are downgraded from warn to off because seed scripts have different cardinality concerns from runtime code |
-
-Every TypeScript repo's `eslint.config.js` extends `@barecount/eslint-config`; the package handles base rule definition, parser configuration, and the per-directory overrides. Platform repos do not redefine rules locally; if a rule needs to change, it changes in bc-qa and propagates through the next install.
-
-**Governing source.** `bc-qa/eslint/index.cjs`, `base.cjs`, `pipeline.cjs`, `scripts.cjs`.
-
-## The Pre-Commit Hook
-
-The pre-commit hook runs at developer commit time. The install-hooks.sh script copies `bc-qa/hooks/pre-commit` into a target repo's `.git/hooks/pre-commit`, backing up any existing hook with a timestamp suffix.
-
-| Check | Severity | Behavior |
-|---|---|---|
-| ESLint on staged TS or JS files | Block | Hook exits non-zero, commit is rejected |
-| `@ts-ignore` introduced | Block | Suggests `@ts-expect-error` with justification |
-| `eval()` or `new Function()` introduced | Block | The universally-blocking discipline, applied at commit time |
-| `console.log` introduced | Warn | The hook prints a warning but does not reject the commit |
-| ruff on staged Python files (bc-ai) | Block | Same exit-on-failure path |
-| `eval` or `exec` introduced in Python | Block | The Python equivalent of the no-eval discipline |
-
-The hook does not unstage on failure. Per pattern 86: a hook that exits non-zero leaves staged files in place; the developer fixes the issue and recommits. There is no automatic recovery; the discipline is "the developer reviews the rejected commit and chooses the next action."
-
-The pre-commit hook is the developer-machine enforcement; the bc-qa audit harness is the on-demand or scheduled enforcement. The two surfaces overlap in coverage but run at different times: pre-commit catches violations before they enter the repository; the audit harness catches drift in the repository state.
-
-**Governing source.** `bc-qa/hooks/pre-commit`; `bc-qa/hooks/install-hooks.sh`.
-
-## The QA NC Register
-
-The non-conformity register at `bc-qa/audits/nc-register.json` records every NC raised by the audit harness or by manual entry. The register is the audit trail: an NC is a row that lives until it is resolved, waived, or accepted.
+The register is the DevHub `qa_nc_records` table, the single non-conformance authority since `DEC-5b760c`. It is queryable through `GET /api/qa/nc` and `GET /api/qa/nc/stats`, written through `POST /api/qa/nc` and `PATCH /api/qa/nc/:uid`, and wrapped by the MCP tools `devhub_qa_nc_raise`, `devhub_qa_nc_update`, `devhub_qa_nc_list` and `devhub_qa_nc_stats`.
 
 | Field | Form |
 |---|---|
-| `nc_id` | `NC-YYYYMMDD-NNN`, auto-generated by `nc-manage.sh raise` |
-| `raised_at` | ISO 8601 timestamp |
-| `repo`, `check`, `severity` | The target, the check, the severity per gate-config |
-| `finding`, `file`, `line` | The human-readable finding; optional file path and line number |
-| `status` | `open`, `investigating`, `resolved`, `accepted`, or `waived` |
-| `assigned_to`, `resolved_at`, `resolution`, `resolution_type` | Lifecycle attributes |
-| `waiver_reason` | Mandatory when `status` becomes `waived`; the rationale is preserved |
-| `session_ref`, `commit_ref` | Linkage back to the change-record trail |
+| `uid` | `NC-xxxxxx`, allocated by DevHub |
+| `repo_slug`, `check_name`, `severity` | The repository, the check (for ESLint findings, `eslint:<ruleId>`), `block` or `warn` |
+| `finding`, `file_path`, `line_number` | The finding and its location |
+| `nc_status` | `open`, `investigating`, `resolved`, `accepted` or `waived`; `resolved_at` is set when the status moves to `resolved`, `waived` or `accepted` |
+| `resolution`, `resolution_type`, `waiver_reason`, `assigned_to` | Lifecycle attributes; a waiver carries its reason |
+| `commit_ref`, `session_ref`, `audit_uid`, `actor_name` | Links to the change-record trail and to the run that raised the row |
 
-NCs are created by two paths. The manual path runs `bc-qa/audits/nc-manage.sh raise <repo> <check> <severity> <finding> [file] [line]`. The automated path runs through the DevHub `devhub_qa_audit` MCP tool, which scans audit output for ESLint findings and bulk-inserts NC rows into the DevHub `qa_nc_records` table; the DevHub-side and the bc-qa-side registers are parallel substrates that the operator reconciles at audit-review time.
+The register has no idempotency key: two raises of the same finding produce two rows. Any automated writer must supply one.
 
-**Governing source.** `bc-qa/audits/nc-register.json`; `bc-qa/audits/nc-manage.sh`.
+Its consumers are the DevHub ISO readiness page (counts by status and open rows by repository) and the daily NC-aging housekeeping digest, which reports counts, aging buckets and rows from retired tooling.
 
-## DevHub MCP Integration
+**What writes it today: nothing.** The register's rows were raised by the retired bc-qa audit through DevHub's `devhub_qa_audit` wrapper, which `DEC-5b760c` retired with the mechanism. CI fails a build when a gate goes red but writes no row. As read on 2026-09-30 the register holds 1,581 rows, 1,566 of them open, all raised on or before 2026-08-24, and no row has been raised or resolved since. The aging digest therefore reports a frozen register, and the register is not evidence of any current non-conformance process. The Compliance & Quality controller has put two decisions to the operator (barecount-devhub task TSK-1c4ae3): a writer inside DevHub that reconciles the register from its own per-repository rule scan of `main`, restricted to the rules CI actually fails on and keyed for idempotency; and one bulk ruling on the 1,565 bc-qa-era rows, waiving them as superseded by per-repository CI while keeping the one real finding (NC-e886b3) open. Until a writer exists and is proven by one row raised and one resolved through it, this chapter claims none.
 
-`devhub_qa_audit` (the MCP tool) wraps the bc-qa audit harness from a Claude session. The wrapper at `barecount-devhub/src/lib/qa-audit.js` shells out to `bash bc-qa/audits/audit-repo.sh`, parses the output, persists the run, and auto-raises NCs from any ESLint findings.
-
-| Step | Behavior |
-|---|---|
-| Shell out | `runAuditShell(repoPath)` invokes the bc-qa runner; stdout is captured even on non-zero exit |
-| Verdict parse | `parseAuditCounts(output)` extracts PASS, WARN, FAIL, BLOCK, SKIP counts and computes the verdict |
-| Report write | `writeAuditReport(repo, verdict, counts, output)` writes a markdown report to `bc-docs/docs/qa-reports/AUDIT-{repo}-{date}.md` with frontmatter |
-| ESLint parse | `parseEslintFindings(output)` reads structured `ESLINT_NC` lines (format `ESLINT_NC|file|line|col|ruleId|severity|message`) and returns finding rows |
-| NC creation | `createNcsFromFindings(...)` bulk-inserts NC records into the DevHub `qa_nc_records` table; `severity` maps `error` to `block` and `warning` to `warn`; `check_name` is `eslint:{ruleId}`; the audit UID provides linkage |
-
-The DevHub side persists per-run rows in `qa_audit_runs` (with verdict, counts, and report-file path) and per-NC rows in `qa_nc_records` (with the lifecycle fields parallel to the bc-qa-side register). The two substrates are reconciled at review time; see the drift inventory below.
-
-**Governing source.** `barecount-devhub/src/lib/qa-audit.js`; `barecount-devhub/src/db.js` (qa_audit_runs and qa_nc_records).
+**Governing source.** barecount-devhub `src/db.js` (the `qa_nc_records` schema), `src/routes/qa.js`, `src/mcp-server.js`; the NC-aging digest (TSK-b0685b); DEC-5b760c disposition 2.
 
 ## Constraints
 
 | Constraint | Form |
 |---|---|
-| Single QA authority | bc-qa is the only repo that owns quality-assurance tooling; no platform repo defines its own rule set |
-| `no-eval` is universally blocking | Every repo blocks on dynamic code execution introduction |
-| Safety-critical directories tighten the rule set | bc-core's evaluation, readers, canonical, metrics, boundaries, admission, and observation directories carry stricter limits than the rest of the codebase |
-| Pre-commit hook is local-only | The hook is a developer-machine discipline; nothing prevents bypass with `git commit --no-verify` other than the discipline that the bc-qa audit will catch the violation later |
-| Audit is post-hoc by default | The harness runs on demand or on a schedule; CI gating is queued |
-| ESLint config delivers through CodeArtifact | Per Build and Release, every install resolves `@barecount/eslint-config` through CodeArtifact; the package version evolves in bc-qa and propagates through the next install |
-| Two parallel NC registers | The bc-qa-side register is the file-of-record; the DevHub-side register is the queryable substrate; reconciliation is operator-driven |
+| Per-repository CI is the only enforcement home | No cross-repository audit runs; severity is each repository's own configuration (DEC-5b760c) |
+| The DevHub table is the only register | No file register; `bc-qa/audits/nc-register.json` is retired and must not be cited |
+| The executable configuration is the authority for rule levels | Prose summaries (including the project instructions) restate; the `.cjs` files and each repository's `eslint.config` decide |
+| A `warn` rule binds only under `--max-warnings 0` | Today: bc-core and bc-portal |
+| The safety-critical directories are `src/boundary/**` in bc-core | The shared `pipeline.cjs` globs match nothing; bc-core restates the rules for the real directory |
+| The shared package is delivered through CodeArtifact | Every install resolves `@barecount/eslint-config` through the `barecount` domain (Build and Release) |
+| No claim without an enforcer | Rule 14 is a convention; the register has no writer; both are recorded as such |
 
-**Governing source.** DEC-ee6018; CLAUDE.md (Coding Standards section).
+**Governing source.** DEC-5b760c; DEC-ee6018; Build and Release.
 
 ## Failure Modes
 
 | Failure | Behavior |
 |---|---|
-| `audit-repo.sh` cannot read a target repo | The runner exits with the input-validation error; operator confirms the repo path and reruns |
-| ESLint version drift between bc-qa and a target repo | Different rule interpretations may produce different findings; operator reconciles by aligning the package versions in the next install |
-| `check-chain-invariants.sh` cannot reach the postgres container | The check is skipped with a warning; the audit continues without the chain-invariant signal |
-| Pre-commit hook is bypassed via `git commit --no-verify` | The commit lands without enforcement; the next audit run catches the violation; the bypass is a discipline violation |
-| `@barecount/eslint-config` install fails (CodeArtifact 401 or 403) | Standard CodeArtifact renewal procedure (Build and Release); audit cannot run until the install completes |
-| ESLint config rule rename in bc-qa breaks a target repo's lint | Operator pins the bc-qa version in the target repo's package.json until the rule rename is reconciled; the discipline is "bc-qa is the authority, but rule renames coordinate across consumers" |
-| NC registered in bc-qa-side but missing from DevHub-side | Reconciliation procedure runs at audit review; operator either reraises in the missing register or accepts the partial coverage as a known reconciliation gap |
-| pre-commit hook not installed in a repo | The repo carries no commit-time enforcement; the audit harness catches violations later; install-hooks.sh restores the hook |
+| A lint error or a failing test on a pull request | The repository's CI check fails; branch protection refuses the merge until the head is green |
+| A warning in bc-core or bc-portal | Fails the build (`--max-warnings 0`); the change is fixed or the rule is deliberately disabled inline with a reason, which review sees |
+| A warning in barecount-devhub | Passes CI; it joins the warnings backlog and nothing tracks it except the Guards page rule scan |
+| A lint violation in bc-admin | Nothing catches it in CI; typecheck, tests and build are the only gates |
+| A new architecture-gate violation in bc-core | The shrink-only spec fails; the baseline may not be raised in the same pull request |
+| A CodeArtifact token expiry (401 or 403 on install) | The standard renewal (Build and Release) |
+| A finding that should be a non-conformance | Nothing files it automatically; a person raises it with `devhub_qa_nc_raise`, or it stays outside the register |
+| A rule-14 violation | Only code review can catch it; there is no gate |
 
-**Governing source.** `bc-qa/audits/audit-repo.sh`; `bc-qa/hooks/`.
+**Governing source.** Each repository's CI workflow; `bc-core/src/__architecture__/`.
 
 ## Drift Inventory
 
 | Drift item | Status |
 |---|---|
-| No CI integration | Recorded; `bc-qa/gates/compliance-gate.sh` exists as the integration point but no GitHub Actions workflow invokes it |
-| `check-chain-invariants.sh` is asymmetric | Recorded; the check queries postgres directly rather than scanning source; it is not in `gate-config.json`; runs only when invoked directly or as part of a full audit |
-| `check-nesting-depth.sh` is missing from `gate-config.json` | Recorded; when the audit-runner encounters this check it falls through to the warn default; the gate-config entry is queued |
-| Two parallel NC registers (bc-qa-side and DevHub-side) | Recorded; the reconciliation procedure is operator-driven; an automated reconciliation pass is queued |
-| Pre-commit hook does not unstage on failure | Recorded; the discipline is intentional ("prevent" rather than "recover"); a documented memory note describing the hook as auto-unstaging is incorrect and is being corrected |
-| bc-qa repo carries zero unit tests | Recorded; tooling repos validate through their consumers; testing through integration with target repos is the as-built model |
-| ESLint version pinning across consumers is informal | Recorded; consumers install the package version resolved at install time; coordinated rule-rename rollouts are operator-driven |
+| Enforcement is uneven: `warn`-level Power of Ten rules bind only in bc-core and bc-portal; barecount-devhub passes warnings; bc-admin has no lint step | Recorded 2026-09-30; adding ESLint with `--max-warnings 0` to bc-admin and barecount-devhub CI is queued with the Admin Portal and DevHub controllers |
+| The shared `pipeline.cjs` globs match no directory in any consumer | Recorded; bc-core restates the rules for `src/boundary/**`; renaming the globs in the package is queued |
+| Rule 14 has no enforcer while `DEC-f0c0f7` reads `implemented` | Recorded; build `@barecount/no-hardcoded-selects` in the shared package, or amend the ADR by erratum |
+| The non-conformance register has no writer and has been frozen since 2026-08-24 | Recorded; the writer and the bulk ruling on the old rows are with the operator (TSK-1c4ae3) |
+| The register has no idempotency key | Recorded; required before any automated writer runs |
+| bc-external-audit has no CI and no branch protection | Recorded; review there is by practice on the exchange (ISO 27001 Conformance, A.8.32) |
+| The project instructions describe the rules at their intended levels and say they are "enforced in each repo's CI" | Recorded; true only as this chapter's table qualifies it |
+| Other chapters still describe bc-qa as live (Build and Release, Developer Experience, DevHub, Decision and Change Procedure, the Development and Compliance overviews, SOC 2 Conformance, Security Operations, and others) | Recorded 2026-09-30 as a docs gap for their owning controllers; this chapter and ISO 27001 Conformance are corrected in this unit |
 
-**Governing source.** `bc-qa/gates/gate-config.json`; CLAUDE.md (Coding Standards Severity Quick Reference table).
+**Governing source.** This chapter's enforcement table; DEC-5b760c; DEC-f0c0f7.
 
 ## Boundaries with Other Chapters
 
 | Chapter | What it owns | What this chapter records |
 |---|---|---|
-| DevHub | The DevHub MCP tool surface and the `qa_audit_runs` and `qa_nc_records` tables | The `devhub_qa_audit` integration and the auto-raise procedure that writes into those tables |
-| Build and Release | The CodeArtifact registry through which `@barecount/eslint-config` is installed; the per-repo build commands that consume the config | The QA tooling that the build-side commands invoke |
-| Developer Experience | The developer-machine setup, including the install-hooks.sh invocation | The hook definitions and the rule set the hook enforces |
-| Decision and Change Procedure | The change-record substrate that NC `session_ref` and `commit_ref` link back to | The QA NC register as a parallel governance trail to the change-record substrate |
-| Operating Model | The platform's contract-evaluation runtime; the safety-critical directories whose stricter rule set the QA tooling enforces | The lint and audit checks that enforce the tighter rules in those directories |
+| DevHub | The `qa_nc_records` table, the `/api/qa/nc` routes and the `devhub_qa_nc_*` tools; the Guards page rule scan | The register's role as the single non-conformance authority and its current state |
+| Build and Release; Continuous Integration | The CI workflows as build procedure; the CodeArtifact registry through which the shared configuration installs | The quality gates those workflows enforce and at what level |
+| Decision and Change Procedure | The change-record trail that `session_ref` and `commit_ref` link to | The non-conformance register as a parallel trail |
+| ISO 27001 Conformance | The conformance mapping (A.8.8 technical vulnerabilities, A.8.25 secure development, A.8.28 secure coding, A.8.32 change management) | The enforcement those clauses cite |
+| InfoSec and Access Control | The access-control surfaces | Nothing at commit time: the developer-machine hook it once cited is gone |
+| Operating Model | The evaluation runtime whose code lives under `src/boundary` | The stricter rules and the architecture gates that bind there |
 
-**Governing source.** outline.md §4.5; The Authority Model.
+**Governing source.** The Authority Model.
 
 ## References
 
 - The Authority Model
 - DevHub
 - Build and Release
-- Developer Experience
+- Continuous Integration
 - Decision and Change Procedure
-- DEC-ee6018 (bc-qa standalone repo)
-- CLAUDE.md (QA Tooling, Coding Standards, Severity Quick Reference sections)
+- ISO 27001 Conformance
+- InfoSec and Access Control
+- DEC-5b760c (QA enforcement consolidates into per-repo CI; DevHub is the sole NC authority; bc-qa retires)
+- DEC-ee6018 (Power of Ten, adapted coding rules)
+- DEC-f0c0f7 (No hardcoded enums)
+- `bc-core/tools/eslint-config/eslint/` (the executable rule set)
+- `bc-core/src/__architecture__/` (the architecture gates)
