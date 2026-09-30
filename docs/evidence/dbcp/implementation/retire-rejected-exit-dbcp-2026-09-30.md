@@ -36,7 +36,7 @@ superseded_by:
 
 ## 2. What changes
 
-**The migration:** bc-db `migrations/0029_mcf_retire_rejected_exit.sql` (`transactional: true`, `plane: bootstrap`; sha256 `8132c7ae8beb0466a822fe318f46e8a0d65e2b834a84cd8e94a2a6af8e6d2d7e`), on branch `claude/0029-retire-rejected-exit`, commit b205639a, draft PR selenite-git-admin/bc-db#97.
+**The migration:** bc-db `migrations/0029_mcf_retire_rejected_exit.sql` (`transactional: true`, `plane: bootstrap`; sha256 `88b9ae429b085d22ba05e05550324ada4d266693e1027bff9c8826ce6295282b`), on branch `claude/0029-retire-rejected-exit`, commit 8145ef12, draft PR selenite-git-admin/bc-db#97.
 
 - **Why bc-db.** It was first drafted as bc-core `docker/redesign/64-…`. The bc-core CI freeze guard showed that `docker/redesign` is frozen (DEC-4c1396): the bc-db forward-migration spine is the only platform schema path. bc-core PR #901 is closed and superseded.
 - **Why the bootstrap plane.** It changes baseline-owned objects: the certificate CHECKs, and a trigger on `mcf.metric_contract`.
@@ -67,7 +67,7 @@ superseded_by:
   - The certificate table is not widened: it already has 25 columns against the 20-column rule.
 - **New triggers** (3, `trg_rre_*`):
   - `trg_rre_record_immutable`: refuses UPDATE and DELETE on the record.
-  - `trg_rre_record_insert_guard`: locks the parent (FOR UPDATE) and every child, then requires:
+  - `trg_rre_record_insert_guard`: **locks first, then reads** (auditor gen-0ad039-01). It locks the parent FOR UPDATE and then every child FOR UPDATE, the same order as the archive guard, so the two cannot deadlock. It then reads the target's state under the lock (a version that moved off the locked parent refuses) and requires:
     - the version is `audit_pending` and not current;
     - the cited decision IS `metric_audit.fn_decision_stream_head(version)` and is a `REJECT` for this version;
     - there is no non-archived `audit_admit`;
@@ -75,7 +75,7 @@ superseded_by:
     - there is no `active` or `is_current` child;
     - the parent is unarchived and no directory member is realized to it.
   - `trg_rre_archive_guard`: BEFORE UPDATE OF `archived_at` on `mcf.metric_contract`, when `archived_at` goes NULL → NOT NULL.
-    - With **no live child**, every child whose stream head is a non-admitted `REJECT` needs a record whose `rejected_decision_uid` equals the **current** head, and a `REVOKE` head refuses.
+    - With **no live child**, every child whose stream head is a non-admitted `REJECT` needs a record whose `rejected_decision_uid` equals the **current** head, AND that child must STILL be `audit_pending` and not current at the archive. A `REVOKE` head refuses.
     - With a **live child**, it is silent. That is the `retireActiveErroneousMetric` path (branch b′, which the auditor accepted).
 - **Rows at apply:** 0 records. The verification block asserts the empty table, the 3 triggers and the new code.
 
@@ -95,7 +95,17 @@ superseded_by:
 - **The service slice** also updates `src/__architecture__/persisted-codes.snapshot.json` (the persisted certificate codes) and is reviewed separately (engine lane).
 - **After the service is served,** each retirement is an operator-granted act per metric (the metric onboarding lane, operator grant ead781aa).
 
-## 5. Clone proof (2026-09-30, bc-db 0029)
+## 5. Clone proof (2026-09-30, bc-db 0029 at 8145ef12)
+
+**The auditor's landing finding (gen-0ad039-01, blocking), and its fix.**
+- **The finding.** At b205639a the record-insert guard read the target's state BEFORE its locks and validated the saved value afterwards. A concurrent `audit_pending → audit_blocked` change in that interval was accepted.
+- **The interleaving I1** (`0029-interleave-I1.zsh`, transcript `0029-interleave-I1-transcript.txt`):
+  - Session B moves the version to `audit_blocked` in an open transaction.
+  - Session A starts the retirement 2 s later.
+- **On b205639a the bug reproduces:** A's retirement succeeds, and it archives a parent whose version is by then `audit_blocked`.
+- **On 8145ef12 it is REFUSED:** A waits for B, reads `audit_blocked` under the lock, and refuses; the parent stays unarchived.
+- The archive guard's state re-check is V17. The full-text precondition and a strict S2 are the auditor's two non-blocking follow-ups.
+
 
 - **Source.** Live `bc_platform_dev`, `pg_dump -Fc` read-only. It was restored **with owners and grants**, the roles recreated with their live LOGIN/NOLOGIN attributes, into a throwaway `postgres:17.11-alpine` container on 127.0.0.1 (`retire-rejected-exit/0029-clone-source.txt`: dump sha256 and sysid; the container and dump are deleted).
   - 0 restore errors; 450 versions and 1,381 certificates. `mcf.metric_contract` is owned by `bc_schema_owner`, and the served login's real privileges are present.
@@ -104,7 +114,7 @@ superseded_by:
   - Apply 1 is clean: 3 triggers, the record owned by `bc_schema_owner`, and the served login granted exactly INSERT and SELECT.
   - The reverse draft restores both CHECKs **byte-identical**, with no triggers left.
   - Apply 2 is clean, and a third apply is refused (fail-closed).
-- **Vectors: 32 of 32 PASS** (`0029-vectors-transcript.txt`, harness `0029-vector-harness.sql`, runner `0029-run-vectors.zsh`).
+- **Vectors: 33 of 33 PASS** (`0029-vectors-transcript.txt`, harness `0029-vector-harness.sql`, runner `0029-run-vectors.zsh`).
   - Each vector is its own transaction, rolled back.
   - Fixture shapes not present in live data were built with `session_replication_role = replica`. Every guard under test ran with triggers on.
 
@@ -123,11 +133,12 @@ superseded_by:
 | V13 | A non-archived admit is refused |
 | V14 | A realized member is refused |
 | V15, V16 | UPDATE and DELETE on the record are refused |
+| V17 | A record written while `audit_pending` does not authorize the archive after the version moves to `audit_blocked` |
 | **G1** | retire-active archives a MIXED parent (its live target plus the REJECTed sibling), with the sibling's version row and decisions unchanged |
 | **G2** | A REJECT record on that mixed parent is refused |
 | **G3** | A no-live-child archive without a current-head record is refused |
 | S1 | retire-active on a sole live version is unaffected |
-| S2 | A demoted twin with no decision is unaffected |
+| S2 | A demoted twin with no decision is unaffected: the parent is identified and asserted archived |
 | S3 | abandon of a draft parent is unaffected |
 | **L1** | The served login `bc_platform_runtime` performs the whole act (certificate, record, archive) under its real grants |
 | **L2** | A direct archive by the served login is refused by the guard |

@@ -1,0 +1,19 @@
+=== I1 against the PREVIOUS head b205639a (0029 sha 8132c7ae): the stale-state bug REPRODUCED
+--- session B
+B changed to audit_blocked (uncommitted) at 2026-09-30 06:13:04.331276+00
+
+B committed at 2026-09-30 06:13:10.338231+00
+--- session A
+A starts the retirement at 2026-09-30 06:13:06.386198+00
+A-RESULT=OK
+A sees version state audit_blocked, parent archived=true
+
+=== I1 against the corrected 0029 (sha 88b9ae42): REFUSED under the lock
+--- session B
+B changed to audit_blocked (uncommitted) at 2026-09-30 06:13:21.664418+00
+
+B committed at 2026-09-30 06:13:27.680583+00
+--- session A
+A starts the retirement at 2026-09-30 06:13:23.689432+00
+A-RESULT=REFUSED: retirement refused: version 293045c9-ed1f-48fb-aaaa-39566f91eec1 is audit_blocked/is_current=f (needs audit_pending and not current)
+A sees version state audit_blocked, parent archived=false

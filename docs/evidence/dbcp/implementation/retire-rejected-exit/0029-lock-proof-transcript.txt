@@ -1,10 +1,12 @@
-A (as bc_platform_runtime) cert+record at 2026-09-30 05:47:16.973292+00
+--- session A
+A (as bc_platform_runtime) cert+record at 2026-09-30 06:14:51.930172+00
 
-A committed at 2026-09-30 05:47:24.991786+00
+A committed at 2026-09-30 06:15:03.966497+00
 --- session B (concurrent, lock_timeout 3s)
-B1 make the version live at 2026-09-30 05:47:18.931594+00
+B1 make the version live at 2026-09-30 06:14:53.960343+00
 ERROR:  canceling statement due to lock timeout
-CONTEXT:  while locking tuple (45,3) in relation "metric_contract_version"
-B2 touch the parent at 2026-09-30 05:47:21.938356+00
+CONTEXT:  while locking tuple (44,6) in relation "metric_contract_version"
+B2 touch the parent at 2026-09-30 06:14:56.970171+00
 ERROR:  canceling statement due to lock timeout
-CONTEXT:  while locking tuple (46,3) in relation "metric_contract"
+CONTEXT:  while locking tuple (46,4) in relation "metric_contract"
+B done at 2026-09-30 06:14:59.977966+00

@@ -79,3 +79,52 @@ BEGIN
     RETURN 'REFUSED: ' || left(msg, 170);
   END;
 END $$;
+
+-- ---- fixture corrections found while proving (folded in so the harness reproduces the transcript) ----
+-- panel decisions carry panel_run_uid, so ck_decision_panel_checker_only forbids a feed_event_uid: keep it NULL;
+-- digests must be sha256:<64 hex>; REVOKE nulls the report fields and carries revocation_json.
+CREATE OR REPLACE FUNCTION proof.supersede(p_mcv uuid, p_code text, p_supersede boolean DEFAULT true) RETURNS uuid LANGUAGE plpgsql AS $$
+DECLARE d jsonb; nu uuid := gen_random_uuid(); h uuid;
+BEGIN
+  h := metric_audit.fn_decision_stream_head(p_mcv);
+  SELECT to_jsonb(x) INTO d FROM metric_audit.decision x WHERE x.decision_uid = h;
+  d := d || jsonb_build_object('decision_uid', nu, 'decision_code', p_code,
+        'decision_payload_digest', 'sha256:' || encode(sha256(convert_to(random()::text,'UTF8')),'hex'),
+        'decision_digest', 'sha256:' || encode(sha256(convert_to(random()::text,'UTF8')),'hex'),
+        'supersedes_decision_uid', CASE WHEN p_supersede THEN h::text ELSE NULL END);
+  IF p_code = 'REVOKE' THEN
+    d := d || jsonb_build_object('report_uid', null, 'report_digest', null, 'structural_verdict', null, 'foundation_verdict', null,
+          'exactness_result', null, 'contextual_definition_score', null, 'contextual_formula_score', null,
+          'contextual_input_semantics_score', null, 'contextual_overall_score', null, 'contextual_decision', null,
+          'semantic_conformance_verdict', null, 'revocation_json', '{"reason":"clone proof fixture"}'::jsonb);
+  END IF;
+  SET LOCAL session_replication_role = replica;
+  INSERT INTO metric_audit.decision SELECT * FROM jsonb_populate_record(NULL::metric_audit.decision, d);
+  SET LOCAL session_replication_role = origin;
+  RETURN nu;
+END $$;
+-- a decision with an explicit predecessor (NULL = a second genesis): triggers off so ONLY the unique indexes decide
+CREATE OR REPLACE FUNCTION proof.decision_of(p_mcv uuid, p_code text, p_of uuid) RETURNS uuid LANGUAGE plpgsql AS $$
+DECLARE d jsonb; nu uuid := gen_random_uuid();
+BEGIN
+  SELECT to_jsonb(x) INTO d FROM metric_audit.decision x WHERE x.decision_uid = metric_audit.fn_decision_stream_head(p_mcv);
+  d := d || jsonb_build_object('decision_uid', nu, 'decision_code', p_code,
+        'decision_payload_digest', 'sha256:' || encode(sha256(convert_to(random()::text,'UTF8')),'hex'),
+        'decision_digest', 'sha256:' || encode(sha256(convert_to(random()::text,'UTF8')),'hex'),
+        'supersedes_decision_uid', p_of);
+  SET LOCAL session_replication_role = replica;
+  INSERT INTO metric_audit.decision SELECT * FROM jsonb_populate_record(NULL::metric_audit.decision, d);
+  SET LOCAL session_replication_role = origin;
+  RETURN nu;
+END $$;
+CREATE OR REPLACE FUNCTION proof.try(p_sql text) RETURNS text LANGUAGE plpgsql AS $$
+DECLARE msg text;
+BEGIN
+  BEGIN EXECUTE p_sql; RETURN 'OK';
+  EXCEPTION WHEN OTHERS THEN GET STACKED DIAGNOSTICS msg = MESSAGE_TEXT; RETURN 'REFUSED: ' || left(msg, 400);
+  END;
+END $$;
+-- the served-login vectors call the harness as bc_platform_runtime
+GRANT USAGE ON SCHEMA proof TO bc_platform_runtime;
+GRANT SELECT ON ALL TABLES IN SCHEMA proof TO bc_platform_runtime;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA proof TO bc_platform_runtime;
