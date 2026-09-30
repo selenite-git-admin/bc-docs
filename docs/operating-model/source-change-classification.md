@@ -17,8 +17,8 @@ governing_adrs:
 errata_referenced: []
 v2_sources:
   - system/sops/cc-creation-sop.md (cc-creation-sop §"CC Versioning policy" — change classification table)
-  - decisions/ADR-0002.md (Version model — Major / Minor / Update)
-  - decisions/ADR-0003.md (Major = breaking change; explicit approval and downstream re-alignment)
+  - ../governance/adrs/ADR-000002.md (Version model — Major / Minor / Update)
+  - ../governance/adrs/ADR-000003.md (Major = breaking change; explicit approval and downstream re-alignment)
   - decisions/ADR-09b8e6.md (New fields enter as `registered`, trigger minor version bump)
   - decisions/ADR-05140c.md (Approved object → contract auto-creation; new fields trigger MINOR bump)
 diagrams: []
