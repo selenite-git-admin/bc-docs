@@ -17,6 +17,7 @@
  *
  * Output: docs/reference/enforcement-surface-map.md
  * Run:    node scripts/docs-control/generate_enforcement_surface_map.mjs
+ *         (BC_CORE_PATH / BC_AUDITOR_PATH pick the source checkouts; use checkouts at origin/main)
  */
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -25,8 +26,10 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const OUT = resolve(ROOT, 'docs', 'reference', 'enforcement-surface-map.md');
-const BC_CORE = 'C:/MyProjects/_wt/rintake';
-const AUDITOR = 'C:/MyProjects/bc-external-audit-ramp5';
+// Source checkouts: override per host; defaults sit under the projects root (BC_PROJECTS: ~/MyProjects on the Mac).
+const PROJECTS = process.env.BC_PROJECTS ?? resolve(ROOT, '..');
+const BC_CORE = process.env.BC_CORE_PATH ?? resolve(PROJECTS, 'bc-core');
+const AUDITOR = process.env.BC_AUDITOR_PATH ?? resolve(PROJECTS, 'bc-external-audit');
 
 function psql(db, query) {
   return execFileSync('docker', ['exec', 'bc-postgres', 'psql', '-U', 'barecount', '-d', db, '-t', '-A', '-F', '\u0001', '-c', query], { encoding: 'utf8' })
