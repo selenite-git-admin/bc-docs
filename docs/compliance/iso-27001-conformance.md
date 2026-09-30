@@ -176,7 +176,7 @@ The 2013 revision's A.14.2.1 control (referenced in CLAUDE.md as the historical 
 
 ISO 27001 mandates a documented risk-treatment procedure. The platform's risk register is the DevHub `risks` table per Risk and Vendor Management. The schema records category, likelihood, impact, an auto-calculated score, mitigation, owner, status (`identified` through `closed`), and a review date. The MCP tool family `devhub_risk_*` is the operator surface.
 
-The risk register is wired and operational. The drift: `RSK-cb8929` is referenced in `DEC-441665` and in committed `.npmrc` files but is not yet present as a row; reconciliation lands per Risk and Vendor Management. A scheduled risk-review cadence is queued; the readiness-baseline review is operator-driven.
+The risk register is wired and operational. `RSK-cb8929` (npm supply chain) is a row in it, status `mitigated`, with the CodeArtifact mirror per `DEC-441665` as its treatment; earlier versions of this chapter said the row was missing, which was true before the reconciliation and is not now (verified against the register on 2026-09-30). The daily risk-review housekeeping digest (barecount-devhub TSK-a8ba06) reports scores, owners and overdue review dates; it found the register unchanged since 2026-04-29, eleven of twelve open risks without a review date, and the two critical risks without an owner. A review cadence that acts on the digest is queued.
 
 **Governing source.** Risk and Vendor Management; `barecount-devhub/src/db.js` (risks schema).
 
@@ -188,10 +188,10 @@ ISO 27001 mandates non-conformity tracking. The platform's register is the DevHu
 |---|---|
 | The register | DevHub `qa_nc_records`; read through `GET /api/qa/nc` and the `devhub_qa_nc_*` tools; written through `POST /api/qa/nc` and `PATCH /api/qa/nc/:uid` |
 | Lifecycle | `open`, `investigating`, `resolved`, `accepted`, `waived`; a waiver carries its reason; `resolved_at` is set on closure |
-| Writer | None today. The rows were raised by the retired bc-qa audit; CI fails builds but writes no row; nothing has been raised or resolved since 2026-08-24 (as read on 2026-09-30: 1,581 rows, 1,566 open) |
+| Writer | None today. The rows were raised by the retired bc-qa audit; CI fails builds but writes no row; nothing has been raised or resolved since 2026-08-24 (as read on 2026-09-30: 1,581 rows, 1,566 open). Decided 2026-09-30: DevHub's own rule scan becomes the writer, proven first on one small repository (build TSK-aae076); the bc-qa-era rows are waived in bulk once the operator's grant is recorded |
 | Review | The daily NC-aging housekeeping digest (barecount-devhub TSK-b0685b) reports counts, aging and rows from retired tooling; it is read by the Compliance & Quality controller |
 
-The gap is stated plainly: the register exists and is queryable, but it has no intake, so it is not evidence of a current non-conformity process. The writer and one bulk ruling on the old rows are with the operator (TSK-1c4ae3); Quality Assurance records the decision and its options.
+The gap is stated plainly: the register exists and is queryable, but it has no intake yet, so it is not evidence of a current non-conformity process. The writer is decided and not built; Quality Assurance records the decision, the build task and the proof the chapter waits for before claiming a writer.
 
 **Governing source.** Quality Assurance; DEC-5b760c; `barecount-devhub/src/db.js` (qa_nc_records schema).
 
@@ -249,15 +249,15 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 |---|---|
 | Formal information-security policy documents are queued | Recorded; operational substrates carry the discipline in the readiness baseline |
 | Scheduled internal-audit calendar is queued | Recorded; ADR hygiene and code review run continuously, digests daily; no audit of the management system exists |
-| Scheduled risk-review cadence is queued | Recorded; review is operator-driven |
+| Scheduled risk-review cadence is queued | Recorded; a daily read-only digest exists (TSK-a8ba06); acting on it is not yet scheduled |
 | Management-review meeting cadence is queued | Recorded; the discipline is the founder cold-read substrate in the readiness baseline |
 | Network and segregation controls (A.8.20-A.8.22) are AWS-shared-responsibility in the readiness baseline | Recorded; in-platform application-layer controls carry the load |
 | Backup posture (A.8.13) is queued | Recorded; the staged deployment relies on AWS RDS managed-service substrate |
 | Redundancy (A.8.14) is out of scope in the readiness baseline | Recorded; the readiness roadmap names this as a queued surface |
-| `RSK-cb8929` is documented but not registered in `risks` | Recorded per Risk and Vendor Management; reconciliation queued |
+| The risk register had no movement from 2026-04-29 to 2026-09-30; most open risks carry no review date and the two critical ones no owner | Recorded 2026-09-30 from the risk-review digest; assigning owners and dates is a Compliance & Quality unit |
 | ISMS documents at `barecount-devhub/ISO27001/` are operator-internal | Recorded; they support the readiness posture; the public conformance position is this chapter |
 | Statement of Applicability baseline is at the early-readiness percentage; the readiness roadmap drives the percentage upward | Recorded; the readiness roadmap is internal |
-| The non-conformance register has no writer and has been frozen since 2026-08-24 | Recorded 2026-09-30; the writer decision is with the operator (TSK-1c4ae3) |
+| The non-conformance register has no writer and has been frozen since 2026-08-24 | Recorded 2026-09-30; the writer is decided (DevHub's rule scan, TSK-aae076) and not yet built or proven |
 | Coding-standard enforcement is uneven across repositories (warn-level rules bind only in bc-core and bc-portal; bc-admin does not lint) | Recorded 2026-09-30 per Quality Assurance; evening it out is queued with the Admin Portal and DevHub controllers |
 | `bc-external-audit`, the auditor's own repository (the App tool server, the Mac service, the standing instructions), has no branch protection; its review on the exchange is practice, not enforced, and the operator merges it by hand | Recorded 2026-09-30; enforcement there is queued with the Audit Controller |
 

@@ -123,7 +123,7 @@ Per `DEC-441665`, every npm install in every BareCount repository routes through
 |---|---|
 | Domain | `barecount` (CodeArtifact domain identifier owned by Infrastructure) |
 | Repository | `npm-mirror` plus a delegate chain to `npm-public` then npmjs.org |
-| `.npmrc` distribution | Five repos carry committed `.npmrc` (barecount-devhub, bc-core, bc-portal, bc-admin, bc-qa); two repos do not consume npm (bc-ai is Python, bc-docs is markdown-only) |
+| `.npmrc` distribution | The npm-consuming repositories carry a committed `.npmrc` that routes installs through CodeArtifact (barecount-devhub, bc-core, bc-portal, bc-admin; bc-qa's is archived with it); bc-docs, bc-db and bc-demo do not consume npm for their build |
 | Token TTL | Twelve hours; renewal via `npm run codeartifact:refresh` per Build and Release |
 | Mitigated risk | `RSK-cb8929`: npm registry outage, package yanking incidents, dependency compromise events |
 
@@ -193,7 +193,7 @@ Every BareCount service that consumes AWS APIs runs under a single named AWS pro
 | Docs Markdown watermark mechanism is named in `DEC-3395bc` but per-line wiring is in the docs service module | Recorded per Documentation System; not re-stated here |
 | Cross-tier prevention is by connection isolation rather than by application-level scope check on every query | Recorded; the structural prevention is the load-bearing control; an additional defense-in-depth scope check at query time is queued |
 
-**Governing source.** `bc-qa/.npmrc`; `bc-core/.env.example`; Documentation System.
+**Governing source.** `bc-core/.npmrc`; `bc-core/.env.example`; Documentation System.
 
 ## Boundaries with Other Chapters
 
@@ -204,7 +204,7 @@ Every BareCount service that consumes AWS APIs runs under a single named AWS pro
 | Backend Services | The deployable boundary of bc-core, DevHub, bc-pg-mcp | The auth boundary as a feature of bc-core specifically |
 | Audit and Activity Logging | The audit substrate and the JSONL trail | The audit emission on access events |
 | Security Operations | The operational secrets, key rotation, JIT access | The runtime gate; the operational discipline is owned by Operations |
-| Quality Assurance | The bc-qa rule set and the audit harness | The pre-commit hook as the developer-machine preventive boundary |
+| Quality Assurance | The coding rules as configured and their enforcement per repository | The CI gates as the preventive boundary for code; the absence of a developer-machine hook |
 | Risk and Vendor Management | The risk register and the vendor inventory | The CodeArtifact supply-chain mitigation as a recorded risk treatment |
 | ISO 27001 Conformance | The conformance posture | The InfoSec controls as the technical control surface that conformance reports against |
 | SOC 2 Conformance | The Trust Services Criteria mapping | The CC6 logical-access surface specifically |
@@ -227,5 +227,6 @@ Every BareCount service that consumes AWS APIs runs under a single named AWS pro
 - DEC-771baf (Tenant database topology)
 - DEC-3395bc (bc-docs SSOT cutover and anti-scraping mechanism)
 - DEC-441665 (NPM supply chain mitigation via AWS CodeArtifact)
-- DEC-ee6018 (bc-qa standalone repo)
+- DEC-ee6018 (Power of Ten adapted coding rules)
+- DEC-5b760c (QA enforcement in per-repo CI; bc-qa retired)
 - CLAUDE.md (AWS section, NPM Registry section, Don't section)
