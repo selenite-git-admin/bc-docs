@@ -51,7 +51,15 @@ A `quality-gate` job is the single aggregate check: it fails when any job it dep
 
 ## 2. Where jobs run: the `pick-runner` job
 
-bc-core and bc-db start every workflow with a small `pick-runner` job on a GitHub-hosted Ubuntu runner. The heavy jobs run on the MacBook (`["self-hosted","Linux","ARM64","bc-ci"]`) only when all three of these hold; otherwise they run on `ubuntu-latest`:
+bc-core and bc-db start every workflow with a small `pick-runner` job on a GitHub-hosted Ubuntu runner. The repository variable `CI_RUNNER_MODE` selects the first choice:
+
+| `CI_RUNNER_MODE` | First choice | If that fails |
+|---|---|---|
+| `ec2` (**set on both since 2026-09-30**) | this run's own EC2 spot machines (§2a) | the MacBook/hosted rules below |
+| `self-hosted` (by hand, during a GitHub billing hold) | the MacBook for every job, including pick-runner and quality-gate | none: jobs wait for the MacBook |
+| unset or anything else | the MacBook/hosted rules below | — |
+
+Under the MacBook/hosted rules, the heavy jobs run on the MacBook (`["self-hosted","Linux","ARM64","bc-ci"]`) only when all three of these hold; otherwise they run on `ubuntu-latest`:
 
 1. **A MacBook runner is online.** It checks the runner list with the read-only secret `RUNNER_STATUS_TOKEN` (3 tries, 10 s apart).
 2. **Fewer than 4 MacBook jobs are already waiting** across the repository's other active runs.
@@ -90,7 +98,56 @@ The fallback applies to each **new** `pick-runner` decision. Switching the MacBo
 - `pick-runner` and `quality-gate` (seconds each);
 - bc-db's `baseline-runner` and `capture-fixtures`, because `versions/contract.json` pins the linux/amd64 database engine. Measured 2026-09-29: plain-mode Lima has no Rosetta, and QEMU emulation ran the amd64 Postgres about 8 times slower to load and 12 times slower in throughput. They stay hosted for good (about $20–25 a month).
 
-## 3. The MacBook runner
+## 2a. EC2 spot runners (the default since 2026-09-30)
+
+**What:** each CI run gets its own fresh spot machines in AWS (account 546549546538, ap-south-1), one per heavy job, all at the same time. Each machine runs exactly one job and then terminates itself. Tracked as TSK-ab4419; design Codex gen-b2cc21-02; build and pilot gen-d79be8 and gen-207933.
+
+| | bc-core | bc-db |
+|---|---|---|
+| Machines per run | 5 × c7g.large (ARM64): static-analysis, vitest ×3, e6b-db-integration | 3 × c7g.large (ARM64): unit-tests, backup-adoption, tenant-fleet; **2 × c6a.large (X64)**: baseline-runner, capture-fixtures |
+| A PR, end to end (pilot, 2026-09-29/30) | about 5.5 min (the MacBook took 20–25) | about 9.7 min, with the amd64 pair off GitHub for the first time |
+
+**How a run gets its machines:**
+1. `pick-runner` assumes `bcp-dev-aps1-cir-oidc-role`, whose only right is invoking the launcher, and sends its GitHub OIDC token (audience `bc-ci-launcher`) to the Lambda `bcp-dev-aps1-cir-launcher`.
+2. The launcher:
+   - verifies the token (RS256 against GitHub's keys; issuer, audience, time, repository, that repository's `ci.yml`, event);
+   - confirms the run with GitHub;
+   - reserves the repository's **fixed** set of slots in one DynamoDB transaction (table `bcp-dev-aps1-cir-alloc`: once per run attempt; at most 20 machines at once and 400 a day; all or nothing);
+   - only then registers single-job runners and launches the machines from pinned launch templates.
+   A failure part-way rolls everything back.
+3. `pick-runner` waits up to 3 minutes for the 5 runners (about 65–75 s in practice), then routes the jobs to labels `self-hosted, Linux, ARM64|X64, bc-ec2, run-<run>-<attempt>`. If EC2 refuses, errors or times out, the MacBook/hosted rules apply.
+
+**Isolation:**
+- its own VPC (`bcp-dev-aps1-cir-vpc`) with public subnets only; no NAT, peering or route to the platform;
+- the security group admits nothing and lets out only HTTPS, HTTP and DNS;
+- machines have **no AWS role**, IMDSv2 with hop limit 1, and an encrypted disk deleted with the machine;
+- the GitHub token that registers runners lives only in Secrets Manager (`bcp-dev-aps1-cir-gh-secret`, fine-grained, bc-core/bc-db, Administration RW + Actions read, operator-filled, 90-day expiry, renew by about 2026-12-28).
+
+**Cleanup:** the machine shuts down after its job, or after 15 minutes idle, 2 hours at most, and shutdown means termination. The sweeper Lambda `bcp-dev-aps1-cir-sweeper` runs every 5 min:
+- releases finished slots;
+- terminates anything older than 150 min;
+- deletes leftover offline registrations;
+- logs `{"sweeper":{…,"ec2Runners":{"<repo>":{"total","online","busy"}}}}`, the runner inventory the auditor reads.
+
+**Operating it:**
+- **Find machines:** EC2, tag `bc-ci = ephemeral`, Name `ec2-<run>-<attempt>-<job>`.
+- **State:** `COUNTER/ACTIVE.active` in the table (0 when idle).
+- **Spend:** budget `bcp-dev-aps1-cir-budget` (40 USD/month, all EC2 in the region, email alerts; it alerts but does not stop). About $0.10 for the whole pilot; projected $15–18/month at the volume on 2026-09-29.
+- **Turn off:** delete the `CI_RUNNER_MODE` variable (or set another value); runs fall back at once.
+- **Remove entirely:** `cdk destroy` the stack `bcp-dev-aps1-cir`.
+- **Machine images:** rebuilt by bc-infra `scripts/ci-runner/build-ami.sh` and proved by `verify-ami.sh` (arm64 ami-0b1e6cb36092c1878, amd64 ami-068bf16c6c07231d8, built 2026-09-29).
+- **Changes:** the bc-infra stack follows §4: a PR, Codex review at the exact head, a recorded operator grant for deploys.
+
+**Proved live in the pilot** (report gen-207933-02):
+- forged, garbage and wrong-audience tokens, and payloads with extra fields, are refused;
+- 6 concurrent calls give exactly 1 allocation; a replay is a duplicate;
+- a mid-launch failure rolls back fully (seen twice);
+- idle machines terminate and are cleaned up;
+- a failing test turns quality-gate red;
+- a reduced ceiling refuses everything and falls back;
+- after the test, the settings were restored with no drift.
+
+## 3. The MacBook runner (fallback since 2026-09-30)
 
 **The machine:** the spare M1 MacBook Pro, 8 GB, macOS 27, FileVault on. It stays on Wi-Fi only: never on the desk cable network, never on Tailscale. The installer checks this, and every job re-checks it.
 
@@ -175,6 +232,8 @@ The runner executes untrusted PR code on a machine BareCount owns, so every chan
 
 ## 6. Cost
 
+Since the EC2 cutover (2026-09-30), bc-core's and bc-db's heavy jobs run on EC2 spot (about $15–18/month projected, capped by an alerting $40 budget), so paid GitHub minutes are mostly pick-runner, quality-gate and the other repositories. Before that:
+
 GitHub bills per job-minute, rounded up: Linux ×1, Windows ×2, macOS ×10. Daily spend peaked at about $25 on 2026-09-26/27 and was $0.02 early on 2026-09-29, with the MacBook live and the Windows and most macOS legs gone. What remains paid:
 - bc-db's two amd64 jobs;
 - the `pick-runner` and `quality-gate` seconds;
@@ -192,11 +251,12 @@ GitHub bills per job-minute, rounded up: Linux ×1, Windows ×2, macOS ×10. Dai
 | Golden image with a persistent runner identity | Rejected (Codex gen-a1af30); JIT registrations only |
 | Several parallel slots on the 8 GB MacBook | Tried and reverted (§3.2) |
 | x86 mini PC, 32 GB | Open: 4–6 parallel jobs and native amd64 (bc-db's hosted jobs could move too); one-time cost; needs a Linux port of the kit |
-| EC2 spot machine per job (8 GB class; t3.micro/small are too small for eslint) | Open: parallel, amd64, cheap per minute; needs an isolated network with no IAM permissions for PR code, a cloud-change go and a Codex design review |
+| EC2 spot machine per job | **Chosen; the default since 2026-09-30** (§2a). t3.micro/small are too small for eslint; c7g.large (4 GB) is used |
 
 ## 8. Where to look
 
 - The kit and its runbook: barecount-devhub `scripts/ci/macbook-runner/README.md`.
 - The routing: `pick-runner` in bc-core and bc-db `.github/workflows/ci.yml` (bc-core#864, bc-core#868, bc-db#85; queue overflow bc-core#881, bc-db#91).
 - The devhub CI shape: barecount-devhub#100. The slot kit: barecount-devhub#121.
-- Open follow-ups: TSK-72a75a (drain on stop).
+- The EC2 runners: bc-infra `cdk/lib/stacks/ci-runner-stack.ts` and `cdk/lambda/ci-runner/` (bc-infra#32, #33); routing bc-db#93, bc-core#893; registry domain `cir` (bc-docs#102).
+- Open follow-ups: TSK-72a75a (drain on stop, MacBook); MacBook retirement is a separate operator decision.

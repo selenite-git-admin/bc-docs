@@ -175,7 +175,8 @@
       "sweep-rule",
       "alloc",
       "gh-secret",
-      "oidc-role"
+      "oidc-role",
+      "probe-role"
     ]
   },
   "unclassifiedPolicy": "fail-closed",
