@@ -173,6 +173,60 @@ This amendment replaces two sentences of Amendment 1 about directory member MDM-
 
 Amendment 1's two sentences read accordingly: (a) "MDM-d1510b is superseded in meaning; its `derivation_json` is not reconciled (G4); see Amendment 3", and (e) "is realized on the new member `receivable_days_sales_outstanding`; see Amendment 3".
 
+## Amendment 4 (2026-09-29): the DSO successor's grain is Legal Entity, the reporting grain of a pure composition (U9.6)
+
+This amendment corrects the grain declared for D-6's successor, and writes down the rule behind the correction. It changes no D-rule and no meaning: D-6 already defines `dso(E, T, W)` for one legal entity E at a date T, and D-7 scopes it to "one legal entity E". It is required before the U9.6 authoring of the DSO successor (TSK-3ceb0e).
+
+**Authority:** operator approval in chat, 2026-09-29 ("amendment approved"), in answer to the umbrella's plain-language summary (DSO declared at the Legal Entity grain; the reporting-grain rule for pure compositions written down); relayed by the umbrella session SES-bc9863. No bc-exchange grant: this is a metric-onboarding design decision in which Codex has no role (operator grant ead781aa), so the operator's direct word is the authority. The approval covers this amendment as drafted at bc-docs commit 78b041d3; recording this authority line is the only later change. The umbrella confirmed (e).
+
+**Why.**
+- Amendment 1 (d) put the successors of D-1, D-5 **and D-6** on the Journal Entry Line grain, and Amendment 3 put the DSO's derived directory group on the same grain. That is right for the two base metrics, which add up journal-entry lines. It is wrong for DSO, which adds up nothing.
+- The composite evaluator produces one value per evaluation, keyed on the fiscal period, with no grain keys (bc-core `src/boundary/composite-metric-evaluation.service.ts:207`, `:220` at `9bae959d0`). A DSO declared "at Journal Entry Line grain" claims a population its value does not have.
+- In the U9.5 rehearsal (run r22, panel run `5bb897e3`, decision REJECT `403e2590`), a panel-2 seat said so: "doing so at the declared grain 'Journal Entry Line' yields semantically meaningless results … The formula structure is correct but applied at the wrong aggregation level."
+- The note behind this amendment is devhub `artifacts/w9-u96-dso-grain/DSO-GRAIN-NOTE.md` (barecount-devhub#132).
+
+**(a) The rule: a pure composition declares its reporting grain.**
+- **What a pure composition is.** A Metric Contract whose every non-constant variable binding is a `metric_input` (DEC-0f3e57) or a `calendar_context` (DEC-6fd09d D-2), and which binds no Business Concept. It reads upstream Metric Snapshots and aggregates no Canonical Object rows.
+- **What its grain is.** Its declared grain is its **reporting grain**: the Registry entity one instance of which its value describes. The grain is not inherited from its operands. Each operand keeps its own declared grain, and the operands' grains may differ from each other and from the composite's.
+- **This records a rule the engine already applies.** It does not introduce one. At bc-core `9bae959d0`:
+  - PE-MC-11 passes a pure composition as `derived-composition-vacuous` ("Its declared grain is the REPORTING grain (e.g. Legal Entity for entity-level ratios over GL-Account-grain bases)"), `src/registry/mcf/metric-publication-eligibility-evaluator.service.ts:1983-2008`;
+  - the directory's derived-envelope builder takes the member's group grain, not its inputs' grain ("a ratio of grain-G aggregates is a scalar at the group's declared reporting grain"), `src/registry/metric-directory/metric-directory.service.ts:2098-2104`;
+  - the preflight compares the envelope grain with the directory group's grain only (`src/registry/mcf/mcf-read.service.ts:203-235`);
+  - the currency policy (`src/registry/mcf/currency-policy-support.ts:105`) and the chain-status check `grain_cc_active` (`vacuous:derived_composition`) skip the grain of a pure composition.
+- **Origin.** The rule came from SES-daa0cb / bc-core PR #449. There, 16 directory-derived ratio MCs "passed only by mislabeling their grain as the bases' grain".
+- **Live precedent (2026-09-29).** Six active pure compositions declare Legal Entity over GL Account or Asset operands: `gross_profit`, `free_cash_flow`, `free_cash_flow_margin`, `capex_to_operating_cash_flow`, `operating_cash_flow_ratio` and `days_working_capital`. `gross_profit` (MCV ae64ac54) passed the certification panel on 2026-08-02 (`PANEL_VERIFIED`); its moderator overruled a "grain mismatch" refutation because the population was declared in the grain.
+- **How this sits with the requirements.** MCF requirements §6.3 (5), grain alignment, is about a concept binding's reachability from the grain. It does not apply to `metric_input` bindings, and this rule does not change it.
+
+**(b) The DSO successor.** D-6's successor, `receivable_days_sales_outstanding`, declares the grain **Legal Entity** (Registry entity `3bd1857e-8dfd-4b74-9fd5-935974d382b0`), its reporting grain. Nothing else about it changes:
+- formula, bindings and window (N = 3, `trailing_window {fiscal_period, 3}`, `window_days` from `calendar_context`);
+- currency `local_currency`;
+- the D-7/D-8 enforcement at evaluation.
+
+Its operands keep the Journal Entry Line grain: `receivable_control_balance` (D-1) and `receivable_billed_amount` (D-5).
+
+**(c) Sentences this amendment replaces.**
+- **Amendment 1 (d)** reads: "The grain is fixed on an MC, so the successors of D-1 and D-5 are new MCs on the Journal Entry Line grain, and the successor of D-6 is a new MC at the Legal Entity reporting grain (Amendment 4). They are not new versions of f660fb7b / 61a876e7 / 8a38e79c."
+- **Amendment 3, "New groups and members"**: the derived group `receivable_control_derived` is created on the **Legal Entity** grain, not the Journal Entry Line grain. The base group `receivable_control_base` stays on the Journal Entry Line grain.
+  - The directory requires the Metric Contract's grain to equal its member version's grain, and that grain comes from the group. So the group's grain decides the MC's grain.
+  - As of 2026-09-29 the derived group has not been created, so nothing is moved.
+- **Consequences, "Successor metrics"** reads: "NEW MCs: line-grained for the balance (D-1) and billing (D-5), and a DSO at the Legal Entity reporting grain (Amendment 4) …".
+
+**(d) What does not change.**
+- **The guards.** They compare the operands' legal entity, calendar, period, currency and window with the composite's evaluation scope. None of them reads the declared grain, so they hold as they are; the declared grain now names the scope the legal-entity guard enforces.
+- **M15.** The successor declaration records the grain change Customer Invoice → Legal Entity (`grain_change_flag`).
+- **"Two DSOs never coexist"** and the Amendment 3 stop condition.
+- **MDM-d1510b's disposition.**
+- **The retirement of `dso_to_credit_term_ratio`.** Its re-author (TSK-d9fdca) is a pure composition too, so it declares its own reporting grain under (a).
+
+**(e) Timing and a known gap.**
+- **Timing.** Under the umbrella's fallback B for U9.5 (SES-d4213d), only `receivable_control_balance` went live in U9.5. The billing successor, the DSO successor, the M15 supersession of f660fb7b and the retirement of 11fb263d are executed in U9.6 (TSK-3ceb0e). Amendment 2's "In U9.5" reads "in U9.6" for those acts.
+- **Known gap.** Tenant onboarding (`POST /schema-provisioner/onboard-metric`) walks a metric's grain to the single active Canonical Contract of that grain. That is correct for a base metric. It is not yet taught rule (a), so a pure composition at a reporting grain with no Canonical Contract, such as Legal Entity, is refused. The class fix is TSK-9cdd9a (engine lane); the DSO successor's onboarding waits for it.
+
+**(f) Acceptance scale, not a declared output scale.**
+- This ADR declares no output scale or rounding for DSO, and MCF has no output-scale declaration today (TSK-642d25).
+- For acceptance only (D-9, and the U9.5/U9.6 gate a3), the DSO snapshot is compared with the exact recomputation `ar_balance × days(W) / billed`, both rounded half-even at **2 decimal places** (umbrella ruling, 2026-09-29).
+- The comparison fails closed: a value whose rounding differs is a stop, never a pass. It asserts nothing about the stored value's scale.
+
 ## Alternatives considered
 
 - **Keep the open-item face value as the numerator.** Rejected: it ignores partial payments and credit notes, and it cannot reconcile to the receivable control account.
