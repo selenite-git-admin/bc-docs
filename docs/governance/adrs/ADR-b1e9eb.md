@@ -67,8 +67,10 @@ Given in chat on 2026-09-30 and relayed by SES-bc9863: half_up is the default; p
 
 **Authority:** the operator's direct grant `2026-09-30T04-17-11-265Z-dac91602` (thread gen-fe8f9d), recorded in bc-exchange.
 
-**The DSO successor (W9 U9.6)** declares days, two places and half_up, the platform default and the same as every other metric.
-- A grant proposing half_even for the DSO (`2026-09-30T04-16-40-014Z-bed807b6`) was approved by mistake and is withdrawn by the operator (withdrawal request `2026-09-30T04-17-56-533Z-1df55ae8`, cited here once it is recorded).
+**The DSO.**
+- **Before the cutover:** the U9.6 DSO taken live before the cutover (the operator's choice, 2026-09-30) is a **pre-cutover version**. It runs under DEC-fa7c63 Amendment 5, with its own aggregation currency `not_applicable` and an acceptance gate of half up at two places. Like every pre-cutover version, it carries no output declaration and behaves as today (decision 7, no backfill).
+- **After the cutover:** the first DSO version created after the cutover declares days, two places and half_up, the platform default and the same as every other metric. It supersedes the pre-cutover version through the governed supersession path (M15).
+- **The withdrawn grant:** a grant proposing half_even for the DSO (`2026-09-30T04-16-40-014Z-bed807b6`) was approved by mistake. It is withdrawn by the operator's recorded grant `2026-09-30T04-19-43-857Z-1df55ae8` (text sha256 `1df55ae88ab551d4694edb4c348f17ff1f85761145de512fe3b75d0e90c8e6e4`).
 - DEC-fa7c63 Amendment 4 (f)'s acceptance comparison is corrected in place to half up at two places (bc-docs PR #105, verified by the auditor at head 79888e8).
 
 ## Rationale
