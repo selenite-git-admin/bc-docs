@@ -1,4 +1,4 @@
--- 0030 clone proof (ADR DEC-b1e9eb, DBCP vectors 1-13). THROWAWAY CLONE ONLY (container m0030-proof).
+-- 0032 clone proof (ADR DEC-b1e9eb, DBCP vectors 1-13). THROWAWAY CLONE ONLY (container m0032-proof).
 -- Each vector either succeeds or must be refused; any deviation raises VECTOR FAILED and stops the run.
 \set ON_ERROR_STOP 1
 SET client_min_messages = notice;
@@ -31,7 +31,7 @@ CREATE FUNCTION proof.new_member(tag text, acc text) RETURNS uuid LANGUAGE plpgs
 DECLARE t mcf.metric_contract_version; u uuid := gen_random_uuid();
 BEGIN
   SELECT * INTO t FROM mcf.metric_contract_version WHERE governance_state_code = 'draft' ORDER BY metric_contract_version_uid LIMIT 1;
-  t.metric_contract_version_uid := u; t.version_code := 'm0030-' || tag; t.is_current := false;
+  t.metric_contract_version_uid := u; t.version_code := 'm0032-' || tag; t.is_current := false;
   t.governance_state_code := 'draft'; t.aggregation_currency_code := acc; t.created_at := now(); t.supersedes_version_uid := NULL;
   INSERT INTO mcf.metric_contract_version SELECT t.*;
   RETURN u;
@@ -46,9 +46,9 @@ INSERT INTO proof.ids VALUES
   ('D', proof.new_member('D', 'not_applicable'));
 -- two pre-cutover drafts (no membership), different from the template
 INSERT INTO proof.ids SELECT 'P1', metric_contract_version_uid FROM mcf.metric_contract_version
-  WHERE governance_state_code = 'draft' AND version_code NOT LIKE 'm0030-%' ORDER BY metric_contract_version_uid OFFSET 1 LIMIT 1;
+  WHERE governance_state_code = 'draft' AND version_code NOT LIKE 'm0032-%' ORDER BY metric_contract_version_uid OFFSET 1 LIMIT 1;
 INSERT INTO proof.ids SELECT 'P2', metric_contract_version_uid FROM mcf.metric_contract_version
-  WHERE governance_state_code = 'review' AND version_code NOT LIKE 'm0030-%' ORDER BY metric_contract_version_uid LIMIT 1;
+  WHERE governance_state_code = 'review' AND version_code NOT LIKE 'm0032-%' ORDER BY metric_contract_version_uid LIMIT 1;
 
 DO $$ BEGIN
   IF (SELECT count(*) FROM mcf.metric_output_declaration_required) <> 4 THEN RAISE EXCEPTION 'VECTOR FAILED setup — expected 4 membership rows (one per new version)'; END IF;
@@ -60,7 +60,7 @@ END $$;
 CREATE FUNCTION proof.u(tag text) RETURNS text LANGUAGE sql AS $f$ SELECT quote_literal(uid) FROM proof.ids WHERE ids.tag = $1 $f$;
 CREATE FUNCTION proof.decl(tag text, unit text, places text, mode text) RETURNS text LANGUAGE sql AS $f$
   SELECT format('INSERT INTO mcf.metric_output_declaration (metric_contract_version_uid, unit_type_code, decimal_places_count, rounding_mode_code, declared_by_name) VALUES (%s::uuid, %L, %s, %L, %L)',
-                proof.u($1), $2, $3, $4, 'm0030-clone-proof') $f$;
+                proof.u($1), $2, $3, $4, 'm0032-clone-proof') $f$;
 
 -- V1 the DSO-shaped declaration on a post-cutover draft with not_applicable
 SELECT proof.expect_ok('V1 days/2/half_up on member A', proof.decl('A', 'days', '2', 'half_up'));

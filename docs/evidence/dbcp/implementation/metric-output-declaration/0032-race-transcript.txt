@@ -1,0 +1,18 @@
+== [FIXED ec3946e1 (0032)] R1 update-first: T2 changes X to local_currency and holds it 4s uncommitted; T1 declares X days at +1s
+   T2 finished at 18:16:11
+   T1 started 18:16:08 ended 18:16:11: ERROR:  metric output declaration refused: unit days is incoherent with aggregation_currency_code local_currency (DEC-b1e9eb decision 2)
+   R1 final: (no declaration) / local_currency
+== [FIXED ec3946e1 (0032)] R2 declaration-first: T1 declares Y days and holds it 4s uncommitted; T2 changes Y to local_currency at +1s
+   T1 finished at 18:16:16
+   T2 started 18:16:12 ended 18:16:16: ERROR:  aggregation_currency_code of version 11e93db7-8f27-46a8-8359-303073948965 is frozen by its output declaration (DEC-b1e9eb)
+   R2 final: days / not_applicable
+   incoherent pairs in the database: 0
+== [PREVIOUS c7da1454 (red check; then named 0030)] R1 update-first: T2 changes X to local_currency and holds it 4s uncommitted; T1 declares X days at +1s
+   T2 finished at 18:16:20
+   T1 started 18:16:17 ended 18:16:17: COMMITTED
+   R1 final: days / local_currency
+== [PREVIOUS c7da1454 (red check; then named 0030)] R2 declaration-first: T1 declares Y days and holds it 4s uncommitted; T2 changes Y to local_currency at +1s
+   T1 finished at 18:16:24
+   T2 started 18:16:21 ended 18:16:21: COMMITTED
+   R2 final: (no declaration) / local_currency
+   incoherent pairs in the database: 1

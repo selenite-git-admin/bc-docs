@@ -1,0 +1,10 @@
+== A. rollback on the proof database (declarations exist): must refuse
+ERROR:  0032 rollback refused: output declarations exist (immutable evidence) — roll back by governance, not DROP
+== B. rb_fresh: apply (runner) -> rollback -> objects gone + ledger rolled_back -> re-apply (runner) -> direct second run refused
+APPLY: applied
+ROLLBACK_OK
+objects remaining: 0 tables, 0 triggers, 0 functions; ledger: rolled_back
+RE-APPLY: applied
+ERROR:  0032 refused: the output-declaration objects already (partly) exist; refusing a second apply
+== C. rollback without the ledger variables: must refuse
+ERROR:  0032 rollback refused: psql variable m0032_git_ref is not set

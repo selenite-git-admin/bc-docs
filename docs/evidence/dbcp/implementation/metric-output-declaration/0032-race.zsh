@@ -1,6 +1,6 @@
 #!/bin/zsh
-# Two-session race vectors for migration 0030 (gen-fe8f9d-05 finding). Throwaway container ONLY.
-# usage: 0030-race.zsh <container> <db> <label>
+# Two-session race vectors for migration 0032 (gen-fe8f9d-05 finding). Throwaway container ONLY.
+# usage: 0032-race.zsh <container> <db> <label>
 set -u
 C=$1; DB=$2; L=$3
 q(){ docker exec -i $C psql -X -qAt -v ON_ERROR_STOP=1 -U barecount -d $DB; }

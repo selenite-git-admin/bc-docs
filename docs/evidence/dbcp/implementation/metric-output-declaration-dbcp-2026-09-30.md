@@ -1,6 +1,6 @@
 ---
 uid: metric-output-declaration-dbcp-2026-09-30
-title: "DBCP — metric output declaration (bc-db migration 0030; ADR DEC-b1e9eb)"
+title: "DBCP — metric output declaration (bc-db migration 0032, renumbered from 0030; ADR DEC-b1e9eb)"
 description: "Adds mcf.metric_output_declaration (1:1 with a post-cutover metric contract version: unit, decimals, rounding), its immutable cutover membership written at version creation, and SECURITY DEFINER guards that require a declaration before a new version freezes. Additive; no backfill; existing versions untouched. Clone-proved on an owner- and grant-faithful restore of a fresh read-only live dump, including served-login vectors. NOT APPLIED: needs the operator's explicit DB yes, applied together with the declaration writer."
 status: proposed
 date: 2026-09-30
@@ -12,15 +12,23 @@ supersedes:
 superseded_by:
 ---
 
-# DBCP — metric output declaration (bc-db migration 0030)
+# DBCP — metric output declaration (bc-db migration 0032)
 
 **Decision:** ADR DEC-b1e9eb (D636, proposed). The design was accepted with boundary by the auditor on gen-fe8f9d-03, after three rounds.
 
-**Task:** TSK-af9706. **Author:** SES-a5e264.
+**Task:** TSK-af9706.
+- **Author:** SES-a5e264 (ended).
+- **Owner since 2026-09-30:** the DB Controller, for the migration PR, this DBCP and the re-review. The Metric Controller owns the declaration semantics and the bc-core slice (the Chief's routing).
+
+**Renumbered 0030 → 0032** (the Chief Controller's ruling, 2026-09-30T16:00Z), so that the ledger-only bc-db 0031 (merged `e47c1c8`) is not held behind this migration's joint window.
+- The live order is 0028 → 0029 → 0031 → 0032.
+- The rename changes only the migration-number literals: the header, the RAISE texts, the rollback's ledger name and psql variables. The rollback is re-pinned to the new migration sha256.
+- The body is otherwise byte-identical to `ec1aba34` (the gen-fe8f9d-05 fix).
+- The number 0030 is recorded as a gap in bc-db `docs/migration-number-gaps.md`.
 
 **Status: NOT APPLIED.** Applying is a separate act. It needs the operator's explicit DB yes, recorded as a bc-exchange grant.
 
-**Where the migration lives:** bc-db `migrations/0030_mcf_metric_output_declaration.sql` (PR bc-db#98).
+**Where the migration lives:** bc-db `migrations/0032_mcf_metric_output_declaration.sql` (PR bc-db#98, head `99dfd55f`).
 - It supersedes the first draft, bc-core#897, which was written in bc-core `docker/redesign`. That tree is frozen by ADR DEC-4c1396: bc-core CI `docker-redesign-freeze.spec.ts` failed the draft, run 36669976926.
 - Platform schema changes are bc-db forward migrations.
 
@@ -30,8 +38,8 @@ superseded_by:
 
 | File | sha256 |
 |---|---|
-| migration `migrations/0030_mcf_metric_output_declaration.sql` | `6a5018cb7a6f19cc564a54068767d97971851f6a5c278fa51dfdc18c9123534f` |
-| rollback `rollback/0030_mcf_metric_output_declaration.rollback.sql` | `c68199a4f37fff84c2267986522b6364792791029f09fcc8c9ae6ec5dcabbf2f` |
+| migration `migrations/0032_mcf_metric_output_declaration.sql` | `ec3946e19d3a30a40447fe6c296e09cd7642bb6b3cb4765451c4f117c1141c83` |
+| rollback `rollback/0032_mcf_metric_output_declaration.rollback.sql` | `59dc8d594dd481b163372e31095aeae61ad5cec9b5455ee6df27ab3d11d5f91e` |
 
 The rollback is pinned to the migration bytes and bound to the ledger.
 
@@ -77,41 +85,31 @@ The rollback is pinned to the migration bytes and bound to the ledger.
 From the apply on, **every new metric contract version is a member**, and needs its declaration before approval or a package snapshot.
 
 - The only governed writer of new versions is bc-core `src/registry/mcf/mcf-cert-writer.service.ts`, whose `insertMcv` is reached through `createMetricDraft` / `createMetricDraftWithGrainPin`. It is the only non-test inserter; checked by grep of bc-core src.
-- **Apply 0030 only in the same deploy window that serves the bc-core build whose cert writer writes the declaration** (the authoring slice). Otherwise approval of every new metric stops.
-- The umbrella's window plan puts this in the joint cutover window: 0030, plus the authoring slice, plus the DECLARED_DECIMAL evaluator, under one operator grant that pins the migration bytes and the build. It must be announced on gen-d2e52d.
+- **Apply 0032 only in the same deploy window that serves the bc-core build whose cert writer writes the declaration** (the authoring slice). Otherwise approval of every new metric stops.
+- The umbrella's window plan puts this in the joint cutover window: 0032, plus the authoring slice, plus the DECLARED_DECIMAL evaluator, under one operator grant that pins the migration bytes and the build. It must be announced on gen-d2e52d.
 
-## 4. Clone proof (2026-09-30, owner- and grant-faithful)
+## 4. Clone proof (2026-09-30T12:45Z, re-run after the renumber; owner- and grant-faithful)
+
+**The driver:** `metric-output-declaration/0032-clone-proof.zsh`, with its transcript `0032-clone-proof.txt`. Every evidence file is hashed in `metric-output-declaration/MANIFEST.sha256`.
 
 **Source:**
-- A fresh read-only `pg_dump -Fc` of live `bc_platform_dev`, taken 2026-09-30T06:36:48Z (cluster sysid 7689410286420172840; dump sha256 `364386ca…5203`).
-- Restored **with owners and grants** into a throwaway `postgres:17.11-alpine` container (127.0.0.1:55975).
-- The 15 roles were recreated with their live LOGIN / INHERIT attributes (`0030-clone-roles.sql`; passwords are clone-only).
+- A fresh read-only `pg_dump -Fc` of live `bc_platform_dev` (dump sha256 `e2969fea…53e4`; live ledger 32 rows / max seq 35), plus `pg_dumpall --roles-only --no-role-passwords`.
+- Restored **with owners and grants** into a throwaway container of the pinned engine, with **no published port**. The script refuses a clone that reports the live system identifier (7689410286420172840).
 - The dump was restored into three databases:
   - `bc_platform_dev`: the proof;
-  - `prev_bytes`: the previous 0030 bytes `c7da1454…`, for the race red check;
+  - `prev_bytes`: the previous, unfixed bytes `c7da1454…` (bc-db `46453b57`, then named 0030), for the race red check;
   - `rb_fresh`: the rollback test.
-- 0 restore errors across all three; 450 versions; `mcf.metric_contract_version` owned by `bc_schema_owner`.
-- **The container and the dump were deleted after the proof.** Nothing ran against live.
+- 0 restore errors; 451 versions.
+- **The container, the dump and the runner tree were removed after the proof.** Nothing ran against live.
 
-**Evidence files** (in `metric-output-declaration/`):
-
-| File | sha256 |
-|---|---|
-| `0030-clone-source.txt` | `8de26cabd3298801f386d2b8be348f30886365029b64e0222f65bd861f2f1b6c` |
-| `0030-clone-roles.sql` | `04d4c621e4ff058c41d3f07ca7cdcc20935e50798ea4bdf2e4ccacaa2562a4cd` |
-| `0030-apply-transcript.txt` | `2595449f686337589bd7e271ef698a7368d827f74b4a027ea7cab0a05c58c8bb` |
-| `0030-vectors.sql` | `74805c76ddbb9ce5ebe101e87b5ef5b6358cabd4af867509f85f287ee52e3e8e` |
-| `0030-vectors-transcript.txt` | `bc15060b1a8932f1e32be20dec41378b6df46f557931a1a476393f00bca43126` |
-| `0030-race-setup.sql` | `aafe9b2e289aab26442e309a279c2ccf5d94f981f6a6f0d161448b939d53b6d7` |
-| `0030-race.zsh` | `36efeed1959bd13ba662b6e14324510fbd3520f40ca07b4c1d8cb6dc472f5a83` |
-| `0030-race-transcript.txt` | `8b1309f5f1705d0a0b808832ff7d0919b76df765d1bfe8a243f7f1416341d5e9` |
-| `0030-rollback-transcript.txt` | `763126eaaa725be7b53ef7e146db8a66c8cf28d902ff5c036943f091762f2631` |
+**The window's true pre-state first, on all three databases, through the bc-db runner** (bc-db main `13ba8d14`):
+- 0029;
+- then the 0031 window: 0003, 0031, and `record-exception` for 0001, 0002 and 0008.
 
 **Apply:**
-- 0030 (sha256 `6a5018cb…`) was applied as one transaction by the bootstrap principal, and its verification blocks passed.
-- The ledger `applied` event was recorded as the runner records it, through `infrastructure.fn_record_migration_event`. Its argument order is `(name, sha, kind, recorded_by, git_ref, review_sha, applied_by, rationale)`. Git ref `clone-proof`, and a clone-only review disposition.
-- The ledger state is `applied`.
-- **About the earlier proof's transcript:** the previous proof (for bytes `c7da1454`) showed a failed first ledger insert followed by an `applied` state. That failure was my own call error: I passed `applied_by_name` in the wrong position, and `chk_sme_shape` refused the row, as it should. The corrected call then succeeded. This proof's transcript has no such failure.
+- 0032 (sha256 `ec3946e1…`) was applied **through the bc-db runner**, from a staged directory holding only 0032: the same command as live.
+- Its in-transaction verification passed: 1 policy row, 0 members, 0 declarations, 9 `trg_mod_*` triggers, ownership, the served login's exact grants, and SECURITY DEFINER.
+- The runner recorded the ledger `applied` event. This replaces the earlier proofs' hand-recorded ledger call, so the transcript-clarity note from gen-fe8f9d-05 no longer arises.
 
 **Vectors: all passed** (the transcript ends "ALL VECTORS PASSED: 3 declarations, 5 members").
 - Where a pre-existing platform trigger would refuse first, an **isolated** variant disables that one trigger on the clone, to show the new gate itself refuses. Those triggers are `trg_mcf_mcv_state_transition`, `trg_mcv_package_snapshot_guard`, and for V10 `trg_mcv_grain_entity_version_guard`.
@@ -145,17 +143,17 @@ From the apply on, **every new metric contract version is a member**, and needs 
 | L6 | the served login changes the currency of its declared version | refused |
 | L7 | the served login declares `currency` with places | refused |
 
-**Two-session race vectors** (`0030-race.zsh`, `0030-race-transcript.txt`; Codex gen-fe8f9d-05 finding). Two draft members, X and Y, start at `not_applicable`.
+**Two-session race vectors** (`0032-race.zsh`, `0032-race-transcript.txt`; Codex gen-fe8f9d-05 finding). Two draft members, X and Y, start at `not_applicable`.
 
-| Case | What happens | Fixed bytes `6a5018cb` | Previous bytes `c7da1454` (red check) |
+| Case | What happens | Fixed bytes `ec3946e1` (0032) | Previous bytes `c7da1454` (red check) |
 |---|---|---|---|
 | **R1, update first** | T2 sets X to `local_currency` and holds it 4 s uncommitted; T1 declares X `days` at +1 s | T1 **waits** until T2 commits, then is refused ("incoherent with aggregation_currency_code local_currency"). Final: no declaration / local_currency. | T1 commits at once; T2 then commits. Final: **days / local_currency, incoherent**. |
 | **R2, declaration first** | T1 declares Y `days` and holds it 4 s uncommitted; T2 sets Y to `local_currency` at +1 s | T2 **waits**, then is refused ("frozen by its output declaration"). Final: days / not_applicable. | T2 commits; T1's deferred recheck refuses it at commit. |
 | **Incoherent pairs afterwards** | | **0** | **1** |
 
-**Rollback** (the real rollback file, `0030-rollback-transcript.txt`):
+**Rollback** (the real rollback file, `0032-rollback-transcript.txt`):
 - **A:** on the proof clone, where declarations exist, it is refused: "output declarations exist (immutable evidence)".
-- **B:** on a fresh restore: apply, ledger `applied`, rollback OK, then **0** objects remaining and the ledger showing `rolled_back`. Re-applying works. A double apply is refused at the absence precondition.
+- **B:** on a fresh restore (`rb_fresh`): apply through the runner, ledger `applied`, rollback OK, then **0** tables, triggers and functions remaining, and the ledger showing `rolled_back`. Re-applying through the runner works. Running the SQL directly a second time is refused at the absence precondition.
 - **C:** without the ledger variables, it is refused.
 
 ## 5. Apply procedure (after the DB yes)
@@ -163,8 +161,8 @@ From the apply on, **every new metric contract version is a member**, and needs 
 1. Confirm the window:
    - no live window open on gen-d2e52d;
    - the declaration-writer build is Codex-accepted and ready to serve in the same window;
-   - read the grants-list for the DB yes grant and verify its bytes. It must pin the migration sha256 `6a5018cb…` and the build.
-2. Apply `0030_mcf_metric_output_declaration` with the bc-db runner, on the bootstrap plane. The runner records the ledger event; keep the transcript.
+   - read the grants-list for the DB yes grant and verify its bytes. It must pin the migration sha256 `ec3946e1…` and the build.
+2. Apply `0032_mcf_metric_output_declaration` with the bc-db runner, on the bootstrap plane. The runner records the ledger event; keep the transcript.
 3. Verify: 1 policy row, 0 members, 0 declarations, 9 `trg_mod_*` triggers, the served login's exact grants, and unchanged counts of existing versions.
 4. Serve the declaration-writer build in the same window, and prove that one new version is created with its declaration under the served login.
 5. **Rollback:** the rollback file, with the operator's authority, only while zero declarations exist. After that, stop writing declarations (governance). Never DROP populated immutable evidence.

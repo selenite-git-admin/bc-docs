@@ -1,4 +1,0 @@
-== apply 0030 (sha256 6a5018cb; one transaction, bootstrap principal barecount)
-APPLY_OK
-== ledger applied event, recorded through infrastructure.fn_record_migration_event with the argument order (name, sha, kind, recorded_by, git_ref, review_sha, applied_by, rationale)
-LEDGER state:  applied

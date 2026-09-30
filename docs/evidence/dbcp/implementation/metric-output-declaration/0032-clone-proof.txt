@@ -1,0 +1,13 @@
+[2026-09-30T12:45:36Z] runner tree: bc-db main 13ba8d147c10a332b07e0fc2248601403013adc2 + 0032 from PR head 99dfd55f3d9cf0d20b93be59a4f8f5f8760400e3; migration sha256 ec3946e19d3a30a40447fe6c296e09cd7642bb6b3cb4765451c4f117c1141c83; rollback 59dc8d594dd481b163372e31095aeae61ad5cec9b5455ee6df27ab3d11d5f91e; previous bytes c7da14541197ad9b26de6b113ead95c4d0314a9201bcd405de00f9bc46b2e73f
+[2026-09-30T12:45:39Z] fresh dump: platform.dump sha256 e2969fea3b78b50223330b37c34b0c223125117dbd98ba837e3d13aad24a53e4; live ledger rows/max seq 32/35
+[2026-09-30T12:45:40Z] clone m0032c1 up (no published port), sysid 7691308633841946664 (live is 7689410286420172840)
+[2026-09-30T12:46:01Z] restored bc_platform_dev, prev_bytes, rb_fresh; ledger 32/35; versions 451
+[2026-09-30T12:46:03Z] bc_platform_dev pre-state (the 0032 window's): 0029 applied, 0003 applied, 0031 applied, exceptions 3
+[2026-09-30T12:46:05Z] prev_bytes pre-state (the 0032 window's): 0029 applied, 0003 applied, 0031 applied, exceptions 3
+[2026-09-30T12:46:07Z] rb_fresh pre-state (the 0032 window's): 0029 applied, 0003 applied, 0031 applied, exceptions 3
+[2026-09-30T12:46:07Z] apply 0032 through the runner: applied; policy/members/declarations 1/0/0; trg_mod_* 9
+[2026-09-30T12:46:07Z] vectors: 32 PASS lines; ALL VECTORS PASSED: 3 declarations, 5 members
+[2026-09-30T12:46:24Z] race: fixed bytes incoherent pairs 0 (both orders refused: 2); previous bytes incoherent pairs 1 (red check)
+[2026-09-30T12:46:26Z] rollback: == A. rollback on the proof database (declarations exist): must refuse ERROR:  0032 rollback refused: output declarations exist (immutable evidence) — roll back by governance, not DROP == B. rb_fresh: apply (runner) -> rollback -> objects gone + ledger rolled_back -> re-apply (runner) -> direct second run refused APPLY: applied ROLLBACK_OK objects remaining: 0 tables, 0 triggers, 0 functions; ledger: rolled_back RE-APPLY: applied ERROR:  0032 refused: the output-declaration objects already (partly) exist; refusing a second apply == C. rollback without the ledger variables: must refuse ERROR:
+[2026-09-30T12:46:26Z] clone, dump and runner tree removed (hashes recorded above)
+[2026-09-30T12:46:26Z] 0032 PROOF GREEN: fresh read-only live dump restored owner/grant-faithfully; the window's pre-state (0029, 0003, 0031, three exceptions) through the runner; 0032 applied through the runner with its in-transaction verification; vectors 1-13 + L1-L7 passed; race vectors refused in both orders with 0 incoherent pairs (previous bytes c7da1454: >=1, red check); rollback A refused, B round trip exact, C refused; clone removed
