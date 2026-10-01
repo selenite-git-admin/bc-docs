@@ -31,6 +31,8 @@ The following values are retired and mapped: `source-derived` becomes `generated
 
 Architecture decision records do not carry `authority`. An ADR's force is its status; the 273 ADR files that carry an `authority` key today (values `authoritative`, `retired`, `evolving`, `reference`) lose it in the sweep.
 
+These four values record where a file's force comes from within its own level of the authority ladder that The Authority Model and DEC-5a9dee define; they are not a second ladder. The ladder's five levels are Foundation, the ADR and errata layer, the generated enforcement map, the live substrate, and the descriptive layer. `authoritative` on a section chapter means the declaring document for its subject inside the descriptive layer; it is never authority over a Foundation chapter, an ADR, an erratum, the enforcement map or the live substrate, and a file marked `authoritative` wins only against files at its own level or lower. A `generated` file's force is its source at the named commit, and the enforcement-surface and lifecycle maps sit at the ladder's generated-enforcement-map level, above every descriptive chapter, so `generated` is not read as ranking below `authoritative`. Document lifecycle words are declared here and in `documentation-system.md`; the status words of metrics and tenants are declared in `docs/reference/vocabulary.md` under DEC-c897cd, and neither page governs the other's words.
+
 ## The status axis: one list per document kind
 
 | Kind | Path rule | Status values | Source of the lifecycle |
@@ -43,6 +45,8 @@ Architecture decision records do not carry `authority`. An ADR's force is its st
 | Evidence record | `docs/evidence/**`, `docs/governance/plans/**` | `drafting`, `locked`, `superseded`, `retired`; `authority` is always `evidentiary` | This decision. A finalised record is `locked`. The decision a record was produced under moves from the `authority` key, where 100 files carry it today as free text, to `governing_adrs`. |
 | Archive | `docs/archive/**` | `retired` | This decision |
 | Exempt | `docs/README.md`, `docs/NAVIGATION.md`, every `README.md` that is a folder index, `docs/assets/**` | none required | Navigation files |
+
+**Foundation's lock and the `status` field.** Binding force for a chapter requires `authoritative` plus `locked`, unchanged. Foundation is the top of the ladder and binds regardless of this rule: The Authority Model makes Foundation the top authority and `foundation-overview.md` declares it locked, so Foundation's force comes from the model, not from a `status` value, even though all ten Foundation chapters still carry `status: drafting`. Moving those chapters to `status: locked`, so the field matches the model, is a Foundation-level act for the Architect; it is named here as a consequence, owned under TSK-65f57d, and is not performed by this ADR. Until then the gap between the declared lock and the `status` field is recorded, not resolved here.
 
 ## The declaring document
 
