@@ -10,6 +10,7 @@ governing_sources:
   - Business Vocabulary
   - Metric Catalog
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-d72560 (D301 Canonical Field as 3rd contract primitive)
   - DEC-9d1f4b (D327 Shared dimension normalization)
   - DEC-69f09e (ISO 11179 naming discipline)
@@ -34,7 +35,7 @@ This chapter records the governed sequence by which Canonical Fields (CFs) are a
 
 This chapter does not redefine the contract grammar that introduces CF as the third contract primitive (The Contract Grammar; DEC-d72560), the metric catalog that owns metric definitions and their formula variables (Metric Catalog), or the BF and BO vocabulary that CFs are explicitly distinct from (Business Vocabulary; Business Field and Business Object Onboarding).
 
-**Governing source.** outline.md §4.6; The Contract Grammar.
+**Governing source.** DEC-3395bc; The Contract Grammar.
 
 ## What a Canonical Field Is
 
@@ -462,6 +463,6 @@ The chapter records four forbidden patterns. They are forbidden because each one
 - DEC-d72560: Canonical Field as 3rd contract primitive
 - DEC-9d1f4b: Shared dimension normalization
 - legacy-v2/docs/sops/cf-seeding-sop.md (predecessor SOP)
-- outline.md §4.6: Onboarding
+- DEC-3395bc: Onboarding
 
 

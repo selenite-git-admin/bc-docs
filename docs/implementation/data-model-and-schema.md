@@ -17,6 +17,7 @@ governing_sources:
   - Internal Modules
   - Infrastructure
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules)
   - DEC-771baf (Tenant database topology; platform-tenant one-way dependency)
   - DEC-69f09e (ISO 11179 naming convention)
@@ -47,7 +48,7 @@ This chapter does not enumerate every table or every column. The per-schema, per
 
 This chapter sits between Infrastructure and API Surface. Infrastructure records where the databases run and how they are provisioned; API Surface records the endpoints that read and write them; this chapter records the structural shape of what is stored. It does not redefine boundary semantics (deferred to Operating Model), the contract grammar (deferred to The Contract Grammar), per-endpoint shapes (deferred to API Surface), per-module catalog (deferred to Internal Modules), or the operational procedures that maintain the schema (deferred to Operations).
 
-**Governing source.** Architecture; Infrastructure; outline.md §4.3.
+**Governing source.** Architecture; Infrastructure; DEC-3395bc.
 
 ## The Two-Database Model
 
@@ -302,5 +303,5 @@ The drift inventory is stable as of the survey date; future migrations will eith
 - DEC-c3e57f: Foundational MCF ADR
 - DEC-9c0da7: Runtime Spine program
 - BCF Audit Remediation Closeout (`docs/implementation/bcf-audit-remediation-closeout-2026-07-07.md`)
-- outline.md §4.3: Implementation
+- DEC-3395bc: Implementation
 - Decisions: ADR Registry

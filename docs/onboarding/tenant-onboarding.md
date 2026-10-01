@@ -10,6 +10,7 @@ governing_sources:
   - Tenancy and Binding
   - Tenant Entitlement Enforcement
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-324d9e (Stripe Billing integration; four subscription tiers; four hosting variants)
   - DEC-1392ee (Demo tier policy; AWS Shared only; 14-day trial; 30-day data retention)
   - DEC-a67518 (Tenant Onboarding Gate; BYO-DB and BC-Agent prerequisite)
@@ -35,7 +36,7 @@ This chapter does not redefine the Subscription artifact or the lifecycle state 
 
 This chapter is the procedural authority for tenant creation. Tenant Lifecycle and Subscription is the authority for the Subscription artifact this procedure produces.
 
-**Governing source.** outline.md §4.6; Tenant Lifecycle and Subscription.
+**Governing source.** DEC-3395bc; Tenant Lifecycle and Subscription.
 
 ## What the Procedure Produces
 
@@ -272,6 +273,6 @@ A tenant that passes the three checks is operational. A tenant that fails any ch
 - DEC-005ea7: Single production environment per tenant
 - DEC-f02230: Tenant DB schema organization
 - DEC-3ee0f6: Per-tenant S3 archive bucket (D379)
-- outline.md §4.6: Onboarding
+- DEC-3395bc: Onboarding
 
 

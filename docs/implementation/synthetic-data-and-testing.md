@@ -17,6 +17,7 @@ governing_sources:
   - API Surface
   - Audit and Activity Logging
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; this chapter exists in the reshaped Implementation section)
   - DEC-e50b83 (Master port reservation; bc-sdg's main and SAP ECC simulator ports are out-of-band against this reservation)
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules)
@@ -38,7 +39,7 @@ This chapter sits between Audit and Activity Logging and the Implementation sect
 
 This chapter does not redefine Foundation invariants, the Authority Model, or the Architecture chapter's commitments. It does not enumerate the runtime proof emission acts (deferred to Evidence and Lineage), the per-flavor synthetic field-by-field schema (deferred to bc-sdg's own profile files and the future Contract Schemas reference), the QA audit emissions and non-conformance records (covered in Audit and Activity Logging), the AI gate verdict trust model (deferred to AI Trust and Verification when drafted in the AI section), the per-environment deployment posture for bc-sdg (deferred to Infrastructure and Operations), or the security operations procedure for the test tenant lifecycle (deferred to Security Operations when drafted).
 
-**Governing source.** Architecture; Backend Services; Audit and Activity Logging; outline.md §4.3.
+**Governing source.** Architecture; Backend Services; Audit and Activity Logging; DEC-3395bc.
 
 ## Test Bench Emits Real Runtime Proof
 
@@ -222,7 +223,7 @@ Several adjacent chapters have surfaces that resemble synthetic data or testing 
 | Tenant Onboarding | Onboarding section, queued | Owns the provisioning sequence for qa-bench and any other tenant. This chapter records only that qa-bench is design intent, not that it is provisioned |
 | bc-qa | bc-qa repository per DEC-ee6018 | Hosts the lint and audit infrastructure (ESLint config, pre-commit hooks, audit drivers). bc-qa does not run application tests |
 
-**Governing source.** Operating Model; Audit and Activity Logging; outline.md §4.
+**Governing source.** Operating Model; Audit and Activity Logging; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -255,5 +256,5 @@ Several adjacent chapters have surfaces that resemble synthetic data or testing 
 - DEC-771baf: Tenant database topology
 - DEC-ee6018: bc-qa standalone repo
 - DEC-bebaec: Chain Status SSOT
-- outline.md §4.3: Implementation
+- DEC-3395bc: Implementation
 - Decisions: ADR Registry

@@ -40,7 +40,7 @@ This chapter does not redefine the InfoSec controls (InfoSec and Access Control)
 
 This chapter is honest per pattern 81: the platform has not undergone a SOC 2 audit. There is no SOC 2 Type I report, no Type II report, and no auditor engagement underway in the readiness baseline. The chapter records what the substrate provides and what a future Type I audit would surface as the in-scope control evidence and the queued-control gaps. Aspirational SOC-2-grade attestation claims are not made.
 
-**Governing source.** outline.md §4.8; DEC-ae331f.
+**Governing source.** DEC-3395bc; DEC-ae331f.
 
 ## Staged Pursuit per DEC-ae331f
 
@@ -207,7 +207,7 @@ Per `DEC-ae331f`, the platform's first engagement is Type I on the three reduced
 | Privacy and the Immutable Fact | The nullification mechanism | The future Privacy criterion's substrate |
 | Operations: Incident and Change Management | The incident triage path | The CC7 mapping; the future Availability criterion's substrate |
 
-**Governing source.** outline.md §4.8; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## References
 

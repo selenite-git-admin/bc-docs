@@ -38,7 +38,7 @@ This chapter does not redefine Foundation invariants, the Object Model, the Cont
 
 The chapter records modules by name, by source directory, and by the small set of facts that locate the module in the platform: the spec it implements (cross-referenced by chapter), the controllers and services and repositories it registers, the modules it imports, the providers it exports, and the test surface that exercises it.
 
-**Governing source.** Architecture; Backend Services; outline.md §4.3.
+**Governing source.** Architecture; Backend Services; DEC-3395bc.
 
 ## Module Catalog Overview
 
@@ -348,5 +348,5 @@ Module-level failures all surface as Problem Detail responses through the global
 - DEC-bebaec: Chain completeness SSOT
 - DEC-804874: L-node semantic verification gate
 - DEC-3395bc: v3 documentation structure
-- outline.md §4.3: Implementation
+- DEC-3395bc: Implementation
 - Decisions: ADR Registry

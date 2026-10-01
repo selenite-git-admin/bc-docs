@@ -13,6 +13,7 @@ governing_sources:
   - Implementation: Overview
   - AI: Overview
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; Onboarding section shape)
   - DEC-1918d0 (Two-database split; Onboarding writes platform-scope artifacts the tenant later consumes)
   - DEC-771baf (Tenant database topology; Onboarding's tenant scope produces tenant-scope substrate)
@@ -34,7 +35,7 @@ This chapter does not redefine any Onboarding claim. Source Registration, Seed C
 
 This chapter exists so that a reader who opens Onboarding cold can locate any specific chapter without having read the others, and so that a reader who has finished Onboarding can hold the fifteen chapters that follow as one coherent set rather than as fifteen independent files.
 
-**Governing source.** outline.md §4.6.
+**Governing source.** DEC-3395bc.
 
 ## What Onboarding Means
 
@@ -51,7 +52,7 @@ Onboarding is the descriptive authority for the platform's governed sequences. W
 
 The procedural-and-gated discipline is the section's defining trait. A reader who finds a procedure that bypasses a gate should treat the bypass as drift, not as the chapter's authority. The chapter's authority is the gated procedure; the bypass is recorded as drift if it exists.
 
-**Governing source.** outline.md §4.6; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## The Chapters That Follow
 
@@ -68,7 +69,7 @@ Onboarding currently has **thirteen** live chapters: this overview plus twelve t
 
 The six groups cover the fifteen chapters that follow without overlap. A chapter that does not fit a group is a chapter that does not belong in Onboarding.
 
-**Governing source.** outline.md §4.6.
+**Governing source.** DEC-3395bc.
 
 ## Reading Sequence
 
@@ -84,7 +85,7 @@ The fifteen chapters can be read in outline order, but the section also supports
 
 The reading sequences do not reorder the chapters in the section. They guide a reader who needs to extract a coherent subset for a specific purpose.
 
-**Governing source.** outline.md §4.6.
+**Governing source.** DEC-3395bc.
 
 ## Boundaries with Other Sections
 
@@ -102,7 +103,7 @@ Onboarding describes governed procedures. The boundaries with other sections are
 
 The dependency direction is one-way. An Onboarding chapter that depends on a later section for its own correctness is a boundary violation. A later section that redefines an Onboarding procedure instead of consuming it is also a boundary violation.
 
-**Governing source.** outline.md §4.6; The Authority Model; Operating Model: Overview; Implementation: Overview; AI: Overview.
+**Governing source.** DEC-3395bc; The Authority Model; Operating Model: Overview; Implementation: Overview; AI: Overview.
 
 ## Cross-Cutting Concerns
 
@@ -133,14 +134,14 @@ The constraints below apply to Onboarding as a whole and are inherited by every 
 | Substrate-canonicality scope matches drift inventory | When a chapter spans procedures of varying maturity (canonical, functional, scaffolded, aspirational), the chapter's lead-paragraph scope statement matches the chapter's own drift inventory. A canonical claim that the chapter's own drift inventory immediately contradicts is internal incoherence |
 | Behavior-search grounding for Foundation-invariant claims | An Onboarding chapter that asserts a Foundation invariant about runtime behavior verifies the claim against the code path the procedure produces. A name-based search alone is not sufficient grounding |
 | Bidirectional citation discipline | Every `DEC-xxxxxx` and `FND-ERR-xxx` cited in body appears in frontmatter `governing_adrs` or `errata_referenced`, and vice versa. The Governing Decisions table is bidirectionally complete with frontmatter and body citations |
-| Forbidden-vocabulary scrub | The forbidden roots (the ETL-style framing tokens listed in `outline.md` §2) are not used in body prose. Replacements (observe, admit, evaluate, resolve, preserve, record, reference, bind, finalize, surface) are used instead |
+| Forbidden-vocabulary scrub | The forbidden roots (the ETL-style framing tokens listed in the Documentation System chapter) are not used in body prose. Replacements (observe, admit, evaluate, resolve, preserve, record, reference, bind, finalize, surface) are used instead |
 | AI verification cannot be silently bypassed | Where a chapter declares an AI gate (Source Registration, Metric Registration, BF and BO certification, MC Chain Integrity), absence of the AI surface defers the procedure with explicit drift recording, never silent admission |
 | Direct DB writes are forbidden | Catalog mutations, contract mutations, and metric mutations route through the API surface only. Direct SQL writes against the platform database bypass the audit substrate; the chapter does not admit such writes as governed activity |
 | Voice and vocabulary discipline | No em dashes; no chapter numbers; section-mark byte integrity; the eighty-eight voice patterns in `aws-rewrite-checklist.md` apply to every chapter |
 
 A chapter that violates any of these constraints is incorrect against the section's discipline.
 
-**Governing source.** The Authority Model; outline.md §4.6; `scripts/reference/aws-rewrite-checklist.md`.
+**Governing source.** The Authority Model; DEC-3395bc; `scripts/reference/aws-rewrite-checklist.md`.
 
 ## Governing Decisions
 
@@ -150,7 +151,7 @@ A chapter that violates any of these constraints is incorrect against the sectio
 | DEC-1918d0 | Supplies the two-database split as a cross-cutting concern readers will see across most Onboarding chapters (platform-scope artifacts vs tenant-scope substrate) | This overview routes the concern; child chapters own the database-write behavior |
 | DEC-771baf | Supplies tenant database topology that Tenant Onboarding produces and other Onboarding chapters defer to | This overview routes the concern; Tenant Onboarding records the as-built tenant behavior |
 
-**Governing source.** Decisions: ADR Registry; outline.md §4.6.
+**Governing source.** Decisions: ADR Registry; DEC-3395bc.
 
 ## References
 
@@ -178,6 +179,6 @@ A chapter that violates any of these constraints is incorrect against the sectio
 - DEC-c06f41: Spine expansion to eight sections plus home
 - DEC-1918d0: Deployment and database architecture
 - DEC-771baf: Tenant database topology
-- outline.md §4.6: Onboarding
+- DEC-3395bc: Onboarding
 
 

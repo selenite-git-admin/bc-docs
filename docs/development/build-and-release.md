@@ -10,6 +10,7 @@ governing_sources:
   - Infrastructure
   - Deployment Topology
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-890417 (pm2 service supervisor; superseded; the as-built model starts each service independently in its own repo)
   - DEC-1918d0 (Two-database split; the platform plus tenant DB topology that bc-core seeds)
   - DEC-e50b83 (Port reservation; build outputs run against reserved ports)
@@ -28,7 +29,7 @@ This chapter does not name specific port numbers, AWS account identifiers, AWS r
 
 This chapter also does not redefine the engineering session protocol (Decision and Change Procedure) or the QA gate substrate (Quality Assurance).
 
-**Governing source.** outline.md §4.5; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## CodeArtifact as the npm Registry
 
@@ -190,7 +191,7 @@ The platform also does not use a formal release tool in the readiness baseline. 
 | Documentation System | The bc-docs SSOT and the bc-admin reader build path through `bc-admin/scripts/sync-docs.js` | The sync-docs script as a build-time procedure that produces the manifest the bc-core docs endpoints serve |
 | Decision and Change Procedure | The session protocol and the change-record substrate that govern release-bearing changes | The build-side commands that release-bearing changes invoke |
 
-**Governing source.** outline.md §4.5; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## References
 

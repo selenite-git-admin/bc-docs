@@ -40,7 +40,7 @@ This chapter sits between Notifications and Webhooks and Synthetic Data and Test
 
 This chapter does not redefine Foundation invariants, the Authority Model, or the Architecture chapter's commitments. It does not enumerate the runtime proof emission acts (deferred to Evidence and Lineage; the four boundary acts in Operating Model own the proof commitment), the per-event audit retention policy (deferred to Operations: Security Operations when drafted), the per-control SOC 2 or ISO 27001 conformance mapping (deferred to Compliance: ISO 27001 Conformance and Compliance: SOC 2 Conformance when drafted), the AI gate verdict authoring contract (deferred to AI Gates when drafted), the surfacing of audit events to humans through notification channels (deferred to Notifications and Webhooks), the per-table column inventory of every audit-bearing table (deferred to the Data Dictionary reference, which generates from live PostgreSQL state), or the gate-by-gate definition of what each governed gate evaluates (deferred to Quality Gates and Chain Integrity).
 
-**Governing source.** Architecture; Backend Services; Internal Modules; outline.md §4.3.
+**Governing source.** Architecture; Backend Services; Internal Modules; DEC-3395bc.
 
 ## The Two Logging Surfaces
 
@@ -108,11 +108,11 @@ DevHub stores structured verdicts for three distinct audit types. Each type has 
 |---|---|---|---|---|
 | Session governance audit | `process_audit` | `process_audit_finding` | bc-ai Gemini-based session governance auditor; POST `/api/process-audits` from `bc-ai/app/auditor/reporter.py` | `devhub_process_audit_list`, `devhub_process_audit_get` |
 | QA audit (code quality) | `qa_audit_runs` | `qa_nc_records` (auto-created from findings) | bc-qa shell-based audit runner; MCP tool `devhub_qa_audit` invokes `audit-repo.sh` and parses ESLint + custom-check output | `GET /api/qa/audits/:uid/report`, MCP read tools |
-| ADR audit | `adr_audit_snapshot` | `adr_orphan_triage` (per-decision triage decisions) | External `legacy-v2/scripts/adr-audit.js` runner (local CLI or GitHub Actions cron) pushing via MCP `devhub_adr_audit_save` | `devhub_adr_audit_history`, `devhub_adr_orphan_triage_list` |
+| ADR audit | `adr_audit_snapshot` | `adr_orphan_triage` (per-decision triage decisions) | The `devhub_adr_audit_save` MCP tool records a snapshot; the ADR-hygiene diagnostic `bc-docs/scripts/docs-control/audit_adrs.py` writes a report and gates CI, and no runner calls the MCP tool today | `devhub_adr_audit_history`, `devhub_adr_orphan_triage_list` |
 
 The session governance audit is advisory at the time of writing. A `fail` verdict from bc-ai's auditor records into `process_audit` but does not block session close; only the D366 L-node gate is the hard close-blocker. The QA audit is also advisory; non-conformances are auto-created with `nc_status: 'open'` and follow a triage workflow (open then investigating then resolved or waived or accepted) but the audit run itself does not block any platform operation. The ADR audit is purely diagnostic; it produces a snapshot per run with denormalized counts (`decided_count`, `implemented_count`, `superseded_count`, `proposed_count`, `supersession_issues`, `stuck_proposed`, `dcode_duplicates`) and a full payload, plus the orphan triage table for decisions that do not resolve cleanly under the D370 ADR Hygiene Policy.
 
-**Governing source.** `barecount-devhub/src/routes/process-audits.js`; `barecount-devhub/src/routes/qa.js`; `barecount-devhub/src/routes/adr.js`; `legacy-v2/scripts/adr-audit.js`.
+**Governing source.** `barecount-devhub/src/routes/process-audits.js`; `barecount-devhub/src/routes/qa.js`; `barecount-devhub/src/routes/adr.js`; `bc-docs/scripts/docs-control/audit_adrs.py`.
 
 ### Session Trail
 
@@ -299,7 +299,7 @@ Several adjacent chapters have surfaces that resemble audit and activity logging
 | Security Operations | Operations section, queued | Owns the retention policy, the access-control review schedule, the credential rotation procedure, the audit-log review cadence. This chapter records the substrates; the operational policy on top of them is owned by Security Operations |
 | Observability and Telemetry | Operations section, queued | Owns the runtime metrics surface (logs at stdout, CloudWatch pickup, future tracing). This chapter records governance audit substrates; the runtime telemetry is owned by Observability and Telemetry |
 
-**Governing source.** Operating Model; Notifications and Webhooks; outline.md §4.
+**Governing source.** Operating Model; Notifications and Webhooks; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -336,5 +336,5 @@ Several adjacent chapters have surfaces that resemble audit and activity logging
 - DEC-1918d0: Deployment and database architecture
 - DEC-771baf: Tenant database topology
 - DEC-623f8f: ADR Hygiene Policy (D370)
-- outline.md §4.3: Implementation
+- DEC-3395bc: Implementation
 - Decisions: ADR Registry

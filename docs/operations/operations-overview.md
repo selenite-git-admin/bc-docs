@@ -12,6 +12,7 @@ governing_sources:
   - Implementation: Overview
   - Onboarding: Overview
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; Operations section shape)
   - DEC-3b86ea (Section renames; Operations as the section name; clean slate migration moved into Upgrade and Migration)
   - DEC-1918d0 (Two-database split; Operations honors the platform plus tenant DB topology)
@@ -33,7 +34,7 @@ This chapter does not redefine any Operations claim. Tenant Lifecycle and Subscr
 
 This chapter exists so that a reader who opens Operations cold can locate any specific chapter without having read the others, and so that a reader who has finished Operations can hold the eight chapters that follow as one coherent set rather than as eight independent files.
 
-**Governing source.** outline.md §4.7.
+**Governing source.** DEC-3395bc.
 
 ## What Operations Means
 
@@ -49,7 +50,7 @@ Operations is the descriptive authority for running the platform day-to-day. Whe
 
 The as-built discipline is the section's defining trait. A reader who finds an aspirational claim in an Operations chapter (an SLA, an on-call rotation, a status page, a customer health score) should treat it as a recorded gap if the chapter's drift inventory catches it, or as an undocumented gap to surface for the next cold-read. Operations records what is true in the readiness baseline.
 
-**Governing source.** outline.md §4.7; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## The Eight Chapters That Follow
 
@@ -66,7 +67,7 @@ Operations has nine chapters: this overview plus the eight chapters that follow.
 
 The six groups cover the eight chapters that follow without overlap. A chapter that does not fit a group is a chapter that does not belong in Operations.
 
-**Governing source.** outline.md §4.7.
+**Governing source.** DEC-3395bc.
 
 ## Reading Sequence
 
@@ -82,7 +83,7 @@ The eight chapters can be read in outline order, but the section also supports a
 
 The reading sequences do not reorder the chapters in the section. They guide a reader who needs to extract a coherent subset for a specific purpose.
 
-**Governing source.** outline.md §4.7.
+**Governing source.** DEC-3395bc.
 
 ## Boundaries with Other Sections
 
@@ -100,7 +101,7 @@ Operations describes running the platform. The boundaries with other sections ar
 
 The dependency direction is one-way. An Operations chapter that depends on a later section for its own correctness is a boundary violation. A later section that redefines an Operations procedure instead of consuming it is also a boundary violation.
 
-**Governing source.** outline.md §4.7; The Authority Model; Operating Model: Overview; Implementation: Overview; Onboarding: Overview.
+**Governing source.** DEC-3395bc; The Authority Model; Operating Model: Overview; Implementation: Overview; Onboarding: Overview.
 
 ## Cross-Cutting Concerns
 
@@ -131,13 +132,13 @@ The constraints below apply to Operations as a whole and are inherited by every 
 | As-built discipline matches drift inventory | Per pattern 81, when a chapter spans operational practices of varying maturity (formalized, partial, aspirational), the chapter's lead-paragraph scope statement matches the chapter's own drift inventory. A claim that the chapter's own drift inventory immediately contradicts is internal incoherence |
 | Behavior-search grounding for code-bearing claims | Per pattern 71, an Operations chapter that asserts an operational behavior verifies the claim against the code path or the configuration file that implements it. A name-based search alone is not sufficient grounding; the chapter cites the actual file path |
 | Bidirectional citation discipline | Every `DEC-xxxxxx` and `FND-ERR-xxx` cited in body appears in frontmatter `governing_adrs` or `errata_referenced`, and vice versa. The Governing Decisions table is bidirectionally complete with frontmatter and body citations |
-| Forbidden-vocabulary scrub | The forbidden roots (the ETL-style framing tokens listed in `outline.md` §2, plus the broader tightening that replaces preceding-layer and later-layer language with neutral adjacency wording in non-DAG contexts) are not used in body prose. Replacements (observe, admit, evaluate, resolve, preserve, record, reference, bind, finalize, surface) are used instead |
+| Forbidden-vocabulary scrub | The forbidden roots (the ETL-style framing tokens listed in the Documentation System chapter, plus the broader tightening that replaces preceding-layer and later-layer language with neutral adjacency wording in non-DAG contexts) are not used in body prose. Replacements (observe, admit, evaluate, resolve, preserve, record, reference, bind, finalize, surface) are used instead |
 | Deploy-specific figures cited from Infrastructure | Per pattern 85; an Operations chapter that needs port numbers, account identifiers, IAM ARNs, region codes, or other deploy-time figures cites Infrastructure or Deployment Topology; the figures live in those chapters, not duplicated across Operations |
 | Voice and vocabulary discipline | No em dashes; no chapter numbers; section-mark byte integrity; the live voice-pattern checklist in `aws-rewrite-checklist.md` applies to every chapter |
 
 A chapter that violates any of these constraints is incorrect against the section's discipline.
 
-**Governing source.** The Authority Model; outline.md §4.7; `scripts/reference/aws-rewrite-checklist.md`.
+**Governing source.** The Authority Model; DEC-3395bc; `scripts/reference/aws-rewrite-checklist.md`.
 
 ## Governing Decisions
 
@@ -149,7 +150,7 @@ A chapter that violates any of these constraints is incorrect against the sectio
 | DEC-771baf | Supplies tenant database topology and the per-tenant isolation that the operational practices honor | This overview routes the concern; child chapters own the operational consequence |
 | DEC-324d9e | Supplies the four subscription tiers and four hosting variants whose operational consequences this section's chapters carry | This overview routes the concern; Tenant Lifecycle and Subscription is the authoring authority |
 
-**Governing source.** Decisions: ADR Registry; outline.md §4.7.
+**Governing source.** Decisions: ADR Registry; DEC-3395bc.
 
 | DEC-bebaec | Keeps chain-status and test-bench reconciliation routed to owning chapters while this overview remains navigational. |
 
@@ -174,7 +175,7 @@ A chapter that violates any of these constraints is incorrect against the sectio
 - DEC-1918d0: Deployment and database architecture
 - DEC-771baf: Tenant database topology
 - DEC-324d9e: Stripe billing; four subscription tiers; four hosting variants
-- outline.md §4.7: Operations
+- DEC-3395bc: Operations
 
 
 

@@ -29,7 +29,7 @@ This chapter records the platform's risk register and vendor inventory: the DevH
 
 This chapter does not redefine the InfoSec controls (InfoSec and Access Control), the operational secrets management (Security Operations), or the support escalation path that consumes vendor-incident triage (Support and Escalation).
 
-**Governing source.** outline.md §4.8; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## The DevHub Risk Register
 
@@ -161,7 +161,7 @@ Each vendor surface produces a risk profile that the DevHub registry should reco
 | ISO 27001 Conformance | The conformance posture | The risk register as the platform's risk treatment substrate per ISO 27001 |
 | SOC 2 Conformance | The Trust Services Criteria mapping | The CC3 risk-assessment surface |
 
-**Governing source.** outline.md §4.8; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## References
 

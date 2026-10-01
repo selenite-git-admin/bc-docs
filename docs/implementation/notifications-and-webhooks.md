@@ -38,7 +38,7 @@ This chapter sits between Frontend Experience and Audit and Activity Logging. Fr
 
 This chapter does not redefine Foundation invariants, the Authority Model, or the Architecture chapter's commitments. It does not enumerate the fact-emission acts that would feed notifications (those are the boundary acts owned by Operating Model: Admission and Observation, Canonical Evaluation, Metric Evaluation, Action Evaluation), the gate verdicts that might surface as notifications (deferred to Quality Gates and Chain Integrity), the AI activations that might produce notifications (deferred to AI Gates and AI Trust and Verification when drafted in the AI section), the contracted source-system observation surface that is sometimes confused with inbound webhooks (deferred to Connectors and Readers; a tenant-bound source connector is not a webhook receiver), or the Stripe billing artifact whose webhook receiver is anticipated (deferred to Tenant Lifecycle and Subscription).
 
-**Governing source.** Architecture; Backend Services; Infrastructure; outline.md §4.3.
+**Governing source.** Architecture; Backend Services; Infrastructure; DEC-3395bc.
 
 ## Wired In The Readiness Baseline
 
@@ -133,7 +133,7 @@ Several adjacent chapters have surfaces that resemble notifications or webhooks 
 | Sonner toasts in the frontends | Frontend Experience | Transient UI feedback; not a durable notification record |
 | Documentation reader access log | Backend Services (the structured JSONL audit log per DEC-3395bc) | A tenant-visible delivery record of who read what would be a future notification surface; the access log itself is governance, not notification |
 
-**Governing source.** Operating Model; Frontend Experience; outline.md §4.
+**Governing source.** Operating Model; Frontend Experience; DEC-3395bc.
 
 ## Drift Inventory
 
@@ -182,5 +182,5 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 - DEC-1918d0: Deployment and database architecture
 - DEC-771baf: Tenant database topology
 - DEC-3395bc: v3 documentation structure
-- outline.md §4.3: Implementation
+- DEC-3395bc: Implementation
 - Decisions: ADR Registry

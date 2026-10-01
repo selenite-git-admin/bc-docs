@@ -12,6 +12,7 @@ governing_sources:
   - Evidence and Lineage
   - Audit and Activity Logging
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-bd5492 (GDPR/DPDP/CCPA Nullification Object; sentinel-based privacy erasure for the immutable-fact platform; PII registry, nullification request, nullification action, DSAR response, retention policy schema)
   - DEC-1918d0 (Two-database split; the platform DB versus per-tenant DB topology that the nullification mechanism acts against)
   - DEC-771baf (Tenant database topology; per-tenant DB schemas the nullification engine traverses)
@@ -29,7 +30,7 @@ This chapter records the platform's privacy posture and the resolution of the ap
 
 This chapter does not redefine the immutability invariant (The Object Model and The Invariants), the audit substrate that records the nullification act (Audit and Activity Logging), the access boundary that authorizes a Data Subject Access Request (InfoSec and Access Control), or the SOC 2 Privacy criterion's scope (SOC 2 Conformance records the deferral per `DEC-ae331f`).
 
-**Governing source.** outline.md §4.8; DEC-bd5492.
+**Governing source.** DEC-3395bc; DEC-bd5492.
 
 ## The Foundation Tension
 
@@ -241,7 +242,7 @@ The pattern: nullify the field, preserve the structure, hash the original, exten
 | SOC 2 Conformance | The Trust Services Criteria mapping | The Privacy criterion's deferral per `DEC-ae331f` |
 | Operations: Tenant Lifecycle and Subscription | The Subscription artifact and tier model | The end-of-tenant-relationship erasure trigger when a tenant offboards |
 
-**Governing source.** outline.md §4.8; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## References
 

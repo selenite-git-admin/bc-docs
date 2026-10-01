@@ -13,6 +13,7 @@ governing_sources:
   - Development: Overview
   - Operations: Overview
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus a home; Compliance section shape)
   - DEC-376587 (Section renames; Compliance as the section name for conformance and privacy posture)
   - DEC-ae331f (Staged pursuit of ISO 27001 readiness and SOC 2 Type I on reduced criteria; the section's load-bearing decision)
@@ -39,7 +40,7 @@ This chapter does not redefine any Compliance claim. InfoSec and Access Control,
 
 This chapter exists so that a reader who opens Compliance cold can locate any specific chapter without having read the others, and so that a reader who has finished Compliance can hold the five chapters that follow as one coherent set rather than as five independent files.
 
-**Governing source.** outline.md §4.8.
+**Governing source.** DEC-3395bc.
 
 ## What Compliance Means
 
@@ -56,7 +57,7 @@ Compliance is the descriptive authority for the platform's conformance and priva
 
 The honesty discipline is the section's defining trait. A reader who finds an aspirational claim in a Compliance chapter (an attested control, an audited statement, a guaranteed SLA) should treat it as a recorded gap if the chapter's drift inventory catches it, or as an undocumented gap to surface for the next cold-read. Compliance records what the readiness-baseline substrate provides.
 
-**Governing source.** outline.md §4.8; DEC-ae331f.
+**Governing source.** DEC-3395bc; DEC-ae331f.
 
 ## The Five Chapters That Follow
 
@@ -71,7 +72,7 @@ Compliance has six chapters: this overview plus the five chapters that follow. T
 
 The four groups cover the five chapters that follow without overlap. A chapter that does not fit a group is a chapter that does not belong in Compliance.
 
-**Governing source.** outline.md §4.8.
+**Governing source.** DEC-3395bc.
 
 ## Reading Sequence
 
@@ -88,7 +89,7 @@ The five chapters can be read in outline order, but the section also supports au
 
 The reading sequences do not reorder the chapters in the section. They guide a reader who needs to extract a coherent subset for a specific purpose.
 
-**Governing source.** outline.md §4.8.
+**Governing source.** DEC-3395bc.
 
 ## Boundaries with Other Sections
 
@@ -106,7 +107,7 @@ Compliance reports against the substrate. The boundaries with other sections are
 
 Compliance is the consumer; the prior sections are the producers. Compliance does not author the substrate.
 
-**Governing source.** outline.md §4.8; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## Cross-Cutting Concerns
 
@@ -128,7 +129,7 @@ Several concerns thread the five Compliance chapters. The matrix below routes th
 
 The matrix is navigation. Following the cell to the owning chapter produces the chapter's substantive treatment; following the cell to an adjacent chapter produces the partial treatment that chapter carries.
 
-**Governing source.** outline.md §4.8; per-chapter Boundaries with Other Chapters tables.
+**Governing source.** DEC-3395bc; per-chapter Boundaries with Other Chapters tables.
 
 ## Constraints
 
@@ -143,7 +144,7 @@ The matrix is navigation. Following the cell to the owning chapter produces the 
 | Voice discipline | Every chapter passes the AWS rewrite checklist's pre-commit grep before commit |
 | ISO/IEC 27001:2022 standard choice | The four-theme Annex A revision; the 2013 revision's control numbers are accepted as historical references where they appear |
 
-**Governing source.** outline.md §2; outline.md §4.8; DEC-ae331f.
+**Governing source.** DEC-3395bc; DEC-ae331f.
 
 ## Governing Decisions
 
@@ -165,7 +166,7 @@ The Compliance section rests on the ADRs below. Each row carries the bounded sco
 
 This overview routes governance to the owning chapter. The bounded scope language above prevents this overview from claiming authority over the platform behavior the ADRs govern; the chapter that owns the topic carries the substantive treatment.
 
-**Governing source.** outline.md §4.8; per-chapter `governing_adrs` frontmatter.
+**Governing source.** DEC-3395bc; per-chapter `governing_adrs` frontmatter.
 
 ## References
 
@@ -195,5 +196,5 @@ This overview routes governance to the owning chapter. The bounded scope languag
 - DEC-bebaec (Chain Completeness SSOT)
 - DEC-804874 (L-Node Verification with Semantic Family Classification)
 - DEC-ebf0b4 (Session Discipline and Data Integrity Rules)
-- bc-docs outline.md (section structure)
-- bc-docs HANDOFF.md (current drafting state)
+- bc-docs Documentation System chapter (section structure)
+- DEC-3395bc (current drafting state)

@@ -40,7 +40,7 @@ This chapter does not redefine any Development claim. DevHub, Decision and Chang
 
 This chapter exists so that a reader who opens Development cold can locate any specific chapter without having read the others, and so that a reader who has finished Development can hold the six chapters that follow as one coherent set rather than as six independent files.
 
-**Governing source.** outline.md §4.5.
+**Governing source.** DEC-3395bc.
 
 ## What Development Means
 
@@ -56,7 +56,7 @@ Development is the descriptive authority for the engineering practice that maint
 
 The as-built discipline is the section's defining trait. A reader who finds an aspirational claim in a Development chapter (a CI workflow, a release manifest, a coordinated reconciliation procedure) should treat it as a recorded gap if the chapter's drift inventory catches it, or as an undocumented gap to surface for the next cold-read. Development records the engineering practice represented by the readiness baseline.
 
-**Governing source.** outline.md §4.5; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## The Chapters That Follow
 
@@ -78,7 +78,7 @@ Development has twelve chapters: this overview plus the eleven chapters that fol
 
 The groups cover the eleven chapters that follow. A chapter that does not fit a group is a chapter that does not belong in Development.
 
-**Governing source.** outline.md §4.5.
+**Governing source.** DEC-3395bc.
 
 ## Reading Sequence
 
@@ -94,7 +94,7 @@ The six chapters can be read in outline order, but the section also supports aud
 
 The reading sequences do not reorder the chapters in the section. They guide a reader who needs to extract a coherent subset for a specific purpose.
 
-**Governing source.** outline.md §4.5.
+**Governing source.** DEC-3395bc.
 
 ## Boundaries with Other Sections
 
@@ -110,7 +110,7 @@ Development describes the engineering practice. The boundaries with other sectio
 | Operations | Consumes Development tooling | Operations chapters cite DevHub (the substrate Incident and Change Management uses), the change-record discipline (Decision and Change Procedure as the procedure Operations honors), the build cycle (the artifacts Operations deploys); Operations is not authored in Development |
 | Compliance | Consumes Development records | Compliance chapters cite the change records as audit evidence, the QA NC register as preventive control evidence, and the ADR registry as decision authority; Compliance reports conformance against Development records, not against the Development discipline itself |
 
-**Governing source.** outline.md §4.5; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## Cross-Cutting Concerns
 
@@ -130,7 +130,7 @@ Several concerns thread the six Development chapters. The matrix below routes th
 
 The matrix is navigation. Following the cell to the owning chapter produces the chapter's substantive treatment; following the cell to an adjacent chapter produces the partial treatment that chapter carries.
 
-**Governing source.** outline.md §4.5; per-chapter Boundaries with Other Chapters tables.
+**Governing source.** DEC-3395bc; per-chapter Boundaries with Other Chapters tables.
 
 ## Constraints
 
@@ -146,7 +146,7 @@ The matrix is navigation. Following the cell to the owning chapter produces the 
 | Voice discipline | Every chapter passes the AWS rewrite checklist's pre-commit grep before commit |
 | Section-internal dependency direction | Decision and Change Procedure reads DevHub; Build and Release reads Quality Assurance; Documentation System reads Decision and Change Procedure; Developer Experience consumes all five |
 
-**Governing source.** outline.md §2; outline.md §4.5; the constraints table on each chapter.
+**Governing source.** DEC-3395bc; the constraints table on each chapter.
 
 ## Governing Decisions
 
@@ -170,7 +170,7 @@ The Development section rests on the ADRs below. Each row carries the bounded sc
 
 This overview routes governance to the owning chapter. The bounded scope language above prevents this overview from claiming authority over the platform behavior the ADRs govern; the chapter that owns the topic carries the substantive treatment.
 
-**Governing source.** outline.md §4.5; per-chapter `governing_adrs` frontmatter.
+**Governing source.** DEC-3395bc; per-chapter `governing_adrs` frontmatter.
 
 ## References
 
@@ -198,5 +198,5 @@ This overview routes governance to the owning chapter. The bounded scope languag
 - DEC-890417 (pm2 service supervisor; superseded)
 - DEC-1918d0 (Two-database split)
 - DEC-e50b83 (Port reservation)
-- bc-docs outline.md (section structure)
-- bc-docs HANDOFF.md (current drafting state)
+- bc-docs Documentation System chapter (section structure)
+- DEC-3395bc (current drafting state)

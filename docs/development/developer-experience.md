@@ -32,7 +32,7 @@ This chapter does not redefine the DevHub MCP tool surface (DevHub), the change-
 
 This chapter does not name specific port numbers, AWS account identifiers, AWS profile names, or AWS region codes. Those deploy coordinates are owned by Infrastructure and Operations: Deployment Topology per pattern 85.
 
-**Governing source.** outline.md §4.5; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## CLAUDE.md as the Per-Repo Agent Instruction Surface
 
@@ -207,7 +207,7 @@ The agent drafts; the founder cold-reads. The cold-read produces `_opt2.md` file
 
 The cold-read is the gate that flips a chapter from `drafting` to `reviewing`; locking requires founder approval. The pattern is established and is recorded in the AWS rewrite checklist under multiple patterns (the most relevant: pattern 87 for section-overview locating discipline, pattern 88 for universal-claim per-instance enumeration).
 
-**Governing source.** bc-docs `HANDOFF.md` (drafting workflow section); aws-rewrite-checklist.md.
+**Governing source.** DEC-3395bc (drafting workflow section); aws-rewrite-checklist.md.
 
 ## Constraints
 
@@ -251,7 +251,7 @@ The cold-read is the gate that flips a chapter from `drafting` to `reviewing`; l
 | Worktree cleanup on abrupt session termination relies on the next session's sweep | Recorded; the harness cleanup is best-effort |
 | Auto-memory file lives outside the committed repo (in the operator's user profile) | Recorded; the auto-memory is local to the developer machine and does not propagate across operators |
 
-**Governing source.** CLAUDE.md (Verification section); bc-docs `HANDOFF.md` (drift inventory section).
+**Governing source.** CLAUDE.md (Verification section); DEC-3395bc (drift inventory section).
 
 ## Boundaries with Other Chapters
 
@@ -264,7 +264,7 @@ The cold-read is the gate that flips a chapter from `drafting` to `reviewing`; l
 | Documentation System | bc-docs SSOT, the bc-admin reader, the sync-docs script | The agent reading documentation as part of session research |
 | Infrastructure | Reserved port assignments; AWS account, region, profile, IAM | The discipline of consuming reserved ports and named profiles without naming the values |
 
-**Governing source.** outline.md §4.5; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## References
 
@@ -280,4 +280,4 @@ The cold-read is the gate that flips a chapter from `drafting` to `reviewing`; l
 - DEC-3395bc (bc-docs SSOT cutover)
 - DEC-ebf0b4 (Session Discipline and Data Integrity Rules)
 - CLAUDE.md (Session Protocol section, Don't section, AWS section, Database Change Protocol section, Verification section)
-- bc-docs `HANDOFF.md` (current drafting state, drafting workflow)
+- DEC-3395bc (current drafting state, drafting workflow)
