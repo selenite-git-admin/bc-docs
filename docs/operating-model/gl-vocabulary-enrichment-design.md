@@ -3,7 +3,7 @@ id: gl-vocabulary-enrichment-design
 order: 10.85
 title: "GL Vocabulary Enrichment — design (Metric Directory GL gaps)"
 status: drafting
-authority: draft-authoritative
+authority: authoritative
 depends_on: [business-vocabulary, metric-directory, metric-management-system]
 governing_sources:
   - Business Vocabulary (BCF — entity / characteristic / business_concept, semantic roles, canonical_value_set)

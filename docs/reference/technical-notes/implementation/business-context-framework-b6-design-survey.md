@@ -2,8 +2,8 @@
 id: business-context-framework-b6-design-survey
 title: "Business Context Framework — B6 Unified Registry Authoring Panel: Design Survey"
 description: "Draft design survey for B6, the unified Registry Authoring Panel — grounded in repo state, Foundation invariants, and BCF requirements; surfaces the decisions to lock before the B6 build."
-status: draft
-authority: informative
+status: drafting
+authority: reference
 date: 2026-05-22
 project: bc-core
 domain: business-context-framework

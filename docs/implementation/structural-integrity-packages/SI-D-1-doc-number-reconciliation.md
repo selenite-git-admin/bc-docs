@@ -1,6 +1,6 @@
 ---
 title: "SI-D-1 — Point docs at the source; never freeze a stat"
-status: draft-for-review
+status: reviewing
 package: SI-D-1
 program: Structural Integrity (DEC-027ef6/D619)
 plane: d (SSOT / authority structure)

@@ -2,7 +2,7 @@
 uid: bcf-mcf-panel-workbench-alignment-note
 title: BCF / MCF Panel Workbench Alignment Note
 description: Short alignment note that reconciles three positions on the panel architecture for the Business Context Framework (BCF) and the Metric Context Framework (MCF). (1) BCF requirements doctrine — governed tool workbench with same-workbench rule, closed read-tool surface, per-agent transcripts (locked in commit 1d7d209). (2) BCF v1 implementation — already built and uses a bounded authoring-context packet assembled by bc-core from governed F5 reads as the v1 retrieval vehicle; BCF enrichment proceeds on this v1. (3) MCF doctrine — explicit workbench-not-packet wording locked in M0 commit 6ce9451; MCF starts with workbench because it is not yet implemented and metric authoring requires broader read awareness than BCF v1 currently exposes. The note is descriptive and informative, not an ADR and not a build plan. It exists to prevent future confusion when a reader sees the BCF v1 packet implementation alongside the requirements doctrine and wonders which is the target.
-status: draft
+status: drafting
 date: 2026-05-26
 project: bc-docs
 domain: contracts

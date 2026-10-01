@@ -2,7 +2,7 @@
 id: demo-estate-program-status
 title: "Demo-Estate Simulator — bc-demo v2.1 program status (as-built current state)"
 status: approved
-authority: derived
+authority: reference
 depends_on: [demo-estate-simulator-requirements, demo-estate-max-coverage-rescope, demo-estate-metric-coverage, demo-estate-module-coverage]
 governing_sources:
   - D566 / DEC-40b510 (bc-demo v2 simulator-as-product — the authority)

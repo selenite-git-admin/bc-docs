@@ -2,7 +2,7 @@
 uid: business-context-framework-requirements
 title: Business Context Framework (BCF) — Requirements
 description: Requirements for the Business Context Framework (BCF), the AI-assisted governance discipline for the contextual accuracy of the catalog's business vocabulary and meaning-anchoring layer. Scope is three framework scopes (BF/BO, CF, BF↔CF field-level mapping). AI proposes, prepares, and approves context for these members under Framework Approval, an ADR-governed authoring path; operator overrides as exception. Not a runtime component; not part of the contracts chain. Metric concerns (MC context, formula, variable binding, chain integrity, runtime-readiness) are scoped to the future Metric Context Framework (MCF), a sibling document.
-status: draft
+status: drafting
 date: 2026-05-18
 project: bc-docs
 domain: contracts

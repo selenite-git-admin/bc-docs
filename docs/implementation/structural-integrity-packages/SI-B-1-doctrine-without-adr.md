@@ -1,6 +1,6 @@
 ---
 title: "SI-B-1 — Doctrine-without-ADR (backfill the missing decision records)"
-status: draft-for-review
+status: reviewing
 package: SI-B-1
 program: Structural Integrity (DEC-027ef6/D619)
 plane: b (decision / doc hygiene)

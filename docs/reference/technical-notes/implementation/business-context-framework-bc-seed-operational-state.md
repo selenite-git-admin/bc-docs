@@ -2,7 +2,7 @@
 uid: business-context-framework-bc-seed-operational-state
 title: Business Context Framework (BCF) — bc-seed Operational State (E1)
 description: Evidence document for build-plan item E1, converting gap-research G21 from "provisional" into a verdict. Read-only operational pull against bc-seed Mongo (port 27017, db bc_seed). Pairs every coverage number with its gap inventory per N30 anti-coverage-KPI discipline.
-status: draft
+status: drafting
 date: 2026-05-19
 project: bc-docs
 domain: contracts

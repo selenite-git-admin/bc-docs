@@ -2,7 +2,7 @@
 title: "Operations Data Dictionary"
 type: generated-reference
 status: generated
-authority: source-derived
+authority: generated
 source_repo: bc-core
 source_commit: 44767f0
 generated_at: 2026-07-06T09:32:32.971208+00:00

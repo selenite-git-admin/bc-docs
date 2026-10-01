@@ -3,7 +3,7 @@ id: audited-metrics-differentiator
 order: 3
 title: "Audited Metrics Differentiator"
 status: drafting
-authority: informative
+authority: reference
 depends_on: [platform-overview, structural-differentiators, the-invariants]
 governing_sources:
   - Foundation (the locked architectural authority)
