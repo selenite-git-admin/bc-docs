@@ -1,7 +1,7 @@
 ---
 uid: dir004-feasibility-history-dbcp-2026-10-01
 title: "DBCP — Metric Directory feasibility-result history + BCV change re-eval (bc-db migration 0033; TSK-209877)"
-description: "Adds the deferred DIR-004 Phase B storage: an append-only feasibility-result history, a normalised record of the active-BCV references each result relied on, an append-only change-detected re-evaluation queue, a current-view, and one SECURITY DEFINER trigger that queues a member for re-evaluation when a referenced concept's active version changes. New objects only; no existing object changed; no data written. Not applied."
+description: "Adds the deferred DIR-004 Phase B storage: an append-only feasibility-result history, a normalised record of the active-BCV references each result relied on, an append-only change-detected re-evaluation queue, a current-view, and one SECURITY DEFINER trigger that queues a member for re-evaluation when a referenced concept's active version changes. First guards-drops the empty legacy pre-spine feasibility table and its two dependent functions (docker/redesign/37), replacing them with the governed normalised shape. Clone-proved; not applied."
 status: proposed
 date: 2026-10-01
 project: bc-core
@@ -28,7 +28,9 @@ Phase B makes the verdict **evidence** (Invariant VI — emitted, not inferred) 
 
 ## 2. What changes
 
-All objects are new, in schema `metric_directory`:
+**0. Guarded disposal of the legacy pre-spine feasibility objects.** An older `metric_directory.member_feasibility_result` exists on live from `docker/redesign/37-metric-directory-versioning.sql` (db3bb9b5, 2026-07-12, audit-accepted) and the bc-db baseline candidate (`0000_baseline.rds.sql`) — legacy schema predating DEC-4c1396 (not out-of-band), EMPTY, and a non-compliant JSONB shape (`resolved_bcv_set_json`, against D162 rule 1). Section 0 of the migration drops it **and** its two dependent legacy functions `fn_effective_feasibility(uuid)` and `fn_feasibility_head_guard()` (its own triggers `trg_feasibility_head` + `trg_member_feasibility_result_immutable` and its grants drop with the table). **Guarded:** the drop fires only if the table exists and is EMPTY — a non-empty table raises and the whole (transactional) migration aborts, so a real table can never be dropped. No other live object references the two functions (grep: only file 37 + the baseline). Shared functions (`fn_reject_mutation`, `fn_stream_lock`, `fn_require_read_committed`) and `member_version` are untouched. Operator direction to drop in 0033: 2026-10-01 (via the Chief).
+
+Then the new objects, in schema `metric_directory`:
 
 1. **`member_feasibility_result`** — append-only, one row per evaluation: `feasibility_result_id` (PK), `member_uid` → `metric_directory.member`, `intent_state_code` (planned|blocked), `blocker_code` (bcf_gap|bcf_value_gap|null), `blocker_reason_text`, `trigger_reason_code` (initial|bcf_active_version_change|manual), `evaluated_at`, `evaluated_by_name`. CHECKs mirror the member's intent/blocker invariant. Current state is **derived on read** (the directory's `v_member_realized` / derive-not-cache doctrine), never an in-place update.
 2. **`member_feasibility_reference`** — the resolved BCV references per result, **normalised, not JSONB**, so a BCV change finds affected members by query (DB rule 1): `feasibility_reference_id` (PK), `feasibility_result_id` → result, `concept_id` → `concept_registry.business_concept`, `resolved_version_id` → `concept_registry.business_concept_version` (NULL = the concept was absent/not active at eval time, i.e. the gap), `reference_role` (measure|discriminator).
@@ -40,7 +42,7 @@ Grants (least-privilege): owned by `bc_schema_owner`; the served login `bc_platf
 
 ## 3. What does not change
 
-No existing table, column, row, grant, routine, or trigger is modified. `business_concept` / `business_concept_version` are read only (the trigger reads `active_version_id`; it does not alter the BCF). No data is written by the migration. The re-evaluation **itself** — re-running `checkMemberFeasibility` and appending a new result — is bc-core application logic that drains the queue (a follow-up PR, no DDL); a read never evaluates (the Evaluation Boundary).
+Apart from the guarded disposal of the empty legacy feasibility objects in §2.0, no existing table, column, row, grant, routine, or trigger is modified. `business_concept` / `business_concept_version` are read only (the trigger reads `active_version_id`; it does not alter the BCF). `member_version` and the shared functions are untouched. No data is written by the migration. The re-evaluation **itself** — re-running `checkMemberFeasibility` and appending a new result — is bc-core application logic that drains the queue (a follow-up PR, no DDL); a read never evaluates (the Evaluation Boundary).
 
 ## 4. Sequencing
 
@@ -48,20 +50,25 @@ Independent of the 0028/0029 (applied) and 0031/0032 (queued) migrations — it 
 
 ## 5. Clone proof
 
-**PENDING — the DB Controller runs the owner- and grant-faithful clone-apply proof on commit `765ea4c`, reusing the fresh read-only dump `20261001T064658Z`, and the evidence is inserted here before Codex review.** The proof must show, on a clone with `bc_schema_owner` / `bc_platform_runtime` / `chain_auditor_readonly` present:
+**GREEN** — the DB Controller ran the owner- and grant-faithful clone-apply proof on commit `6f8a7c4` (migration sha `883ed0ad`), on a throwaway clone of the fresh read-only dump `20261001T075638Z` (which carries the legacy table; sysid ≠ live). Evidence: barecount-devhub `artifacts/db-manager/0033-proof-2026-10-01/` @ `e0ba3471` (README, `0033-green-PROOF.txt`, `0033-safety-planted-row-runner.err`, the driver, MANIFEST.sha256). Both phases:
 
-1. Pre-state: the five objects absent; preconditions pass.
-2. Apply through the bc-db runner (bootstrap plane): the five objects created; postconditions pass; exit 0.
-3. Grants exactly as §2 (the served login has INSERT+SELECT on result/reference, SELECT on queue+view, and **no** write on the queue).
-4. Served-login vectors as `bc_platform_runtime`: can INSERT a result + its references and SELECT the view; **cannot** INSERT/UPDATE/DELETE the reeval queue (permission denied).
-5. The trigger: as `bc_platform_runtime`, update a test concept's `active_version_id` (on the clone) for a concept referenced by a seeded current result at the old version → exactly one reeval request appears for that member; a change to an unreferenced concept → none.
-6. Idempotency/refusal: re-applying refuses (the pre-state guard on `member_feasibility_result` existing).
+1. **Pre-state:** the three legacy objects present (table + `fn_effective_feasibility` + `fn_feasibility_head_guard`, true/true/true).
+2. **Section 0:** dropped the empty legacy table **and both** dependent functions → all gone after.
+3. **Create:** 3 tables / 1 view / 1 trigger fn / 1 trigger, all owned by `bc_schema_owner`; postconditions pass.
+4. **Grants:** `bc_platform_runtime` INSERT+SELECT on result & reference, SELECT-only on queue & view (queue writes refused); auditor SELECT.
+5. **Served-login vectors** as `bc_platform_runtime`: V1/V2 INSERT a result + references ok; V3 SELECT ok; V4 INSERT/UPDATE/DELETE on the reeval queue all **refused**.
+6. **Trigger:** a concept `active_version_id` change queued exactly one reeval (before 0 → after 1).
+7. **Safety:** with a planted row (valid FK), 0033 **refuses** (runner exit 1, "exists and is NOT empty", no 0033 ledger row, table + both functions intact) — the guard never drops a non-empty table; the transactional migration rolled back.
+
+The live window will run the gated driver `window-0033.sh` (barecount-devhub `claude/0028-kit-successor` @ `877fe282`, driver sha `128f0275…`), which pins commit `6f8a7c4` + runner `e35fcc2d` + migration `883ed0ad`, refuses unless the legacy table is present and empty before any mutation, and asserts the post-state (both legacy fns gone, 3/1/1/1 objects, exact grants).
 
 ## 6. Apply plan (for the operator's DB yes)
 
+The DB Controller runs the gated driver `window-0033.sh` (above) for the live apply; Platform schedules the window apart from any arc act and verifies read-only. Needs the operator's explicit DB yes (a bc-exchange grant) — the drop of the legacy objects makes the grant text name the drop as well as the create.
+
 1. Check that nothing is live: no `run-live-*` running; the kit claim absent or held by this act.
 2. Back up to governed custody: a fresh read-only dump, sha256 recorded.
-3. Apply through the bc-db runner (bootstrap plane), capturing the verbatim transcript (pre-checks, apply, postconditions, exit code).
-4. Post-checks: the five objects present; grants as §2; 0 rows in all three tables; the trigger present on `business_concept`.
+3. Run `window-0033.sh` live (pins `6f8a7c4` / runner `e35fcc2d` / migration `883ed0ad`): it confirms the legacy table is present and EMPTY, applies through the bc-db runner (bootstrap plane), and captures the verbatim transcript.
+4. Post-checks (the driver asserts): both legacy functions gone and the legacy table gone; the five new objects present (3/1/1/1); grants as §2; 0 rows in all three new tables; the trigger present on `business_concept`.
 5. Commit the applied-byte SQL hash, the transcript and the backup reference to the exchange.
-6. **Reverse** (only while no `member_feasibility_result` row exists): a later forward migration from the proven draft. Once any result row exists it is refused — results are immutable evidence.
+6. **Reverse** (only while no `member_feasibility_result` row exists): a later forward migration from the proven draft. Once any result row exists it is refused — results are immutable evidence. (The legacy drop is not reversed by this migration; the legacy objects were empty and audit-accepted-as-superseded.)
