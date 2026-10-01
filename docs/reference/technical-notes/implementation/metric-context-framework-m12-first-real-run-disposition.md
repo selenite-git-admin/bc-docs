@@ -55,8 +55,8 @@ superseded_by:
 | PR #28 deferred prerequisites DBCP | bc-docs main `55bc4759` |
 | PR #167 first real M11 intake row evidence | bc-core main `0e5e501d`; intake uid `4d849778-3989-4caf-8a71-7d44b782d98e` |
 | PR #168 first real M12 execution evidence (amended per MCF-ERR-001) | bc-core main `16cf3781` |
-| Stance ADR | `docs/adrs/ADR-7f9597.md` (DEC-7f9597 / D423) |
-| MCF bridge ADR | `docs/adrs/ADR-c3e57f.md` (DEC-c3e57f / D422) |
+| Stance ADR | `docs/governance/adrs/ADR-7f9597.md` (DEC-7f9597 / D423) |
+| MCF bridge ADR | `docs/governance/adrs/ADR-c3e57f.md` (DEC-c3e57f / D422) |
 | M12 authoring panel DBCP | `docs/implementation/metric-context-framework-m12-authoring-panel-dbcp.md` |
 | M12.5 materialization DBCP | `docs/implementation/metric-context-framework-m12-5-materialization-legacy-bridge-dbcp.md` |
 | Session discipline | ADR DEC-ebf0b4 / D268 (one-then-many; independent verification; no shortcuts) |

@@ -74,7 +74,7 @@ One AR metric, end-to-end on the clean path, producing a trustworthy tenant Metr
 | TSK-7a2699 | Mark + later-retire legacy mapping surfaces | later |
 
 ## 7. References
-- ADR: `docs/adrs/ADR-b54a43.md` (DEC-b54a43 / D437)
+- ADR: `docs/governance/adrs/ADR-b54a43.md` (DEC-b54a43 / D437)
 - Foundation: `the-evaluation-boundaries.md` (four boundaries) · `the-contract-grammar.md` (three-level governance; tenant Contract Binding = tenant-scoped Z-field/custom extensions, not metric activation)
 - Lineage referenced (kept, not superseded): D305 chain-status · D397 funnel · D432 legacy-MC guard · DEC-02f5a9 BCF · DEC-7ab22b/D429 materialization · D430/D431 concept resolvers
 - Orientation: `mcf-re-entry-index.md`

@@ -159,7 +159,7 @@ DevHub depends on bc-core for the L-node verification check that runs during ses
 - DevHub may be deployed to a team-shared host for cross-developer visibility (a deployment script in `scripts/deploy.sh` targets a long-running host). Each developer instance, local or shared, holds its own better-sqlite3 store; the durable cross-instance authority for decisions is the ADR file in the bc-docs repository, not the better-sqlite3 row.
 - DevHub's port is 4000. Per DEC-e50b83, the port is reserved and a change requires a governed port-reservation update.
 - DevHub is started independently. Per DEC-9b23a7, no service supervisor manages it; the repository's `npm run dev` command starts the Express server under Node's `--watch`, and `npm run mcp` starts the MCP server separately.
-- DevHub stores governance metadata; the durable authority is the ADR file. The decision row stored in better-sqlite3 carries the UID, title, status, description, file path, and domain; the decision content lives in the ADR file under `bc-docs/docs/adrs/`. A reader who needs the decision's full context reads the ADR file, not the better-sqlite3 row.
+- DevHub stores governance metadata; the durable authority is the ADR file. The decision row stored in better-sqlite3 carries the UID, title, status, description, file path, and domain; the decision content lives in the ADR file under `bc-docs/docs/governance/adrs/`. A reader who needs the decision's full context reads the ADR file, not the better-sqlite3 row.
 
 ### Failure modes
 
@@ -175,7 +175,7 @@ DevHub does not silently lose governance records. A failed `devhub_session_close
 
 ### Interactions
 
-DevHub is invoked by AI development assistants (via the MCP server) and by developers (via the browser surface on port 4000). DevHub reads from `bc-docs/docs/` as the documentation source; it writes ADR files to `bc-docs/docs/adrs/` when `devhub_decision_record` is invoked, per DEC-3395bc. DevHub does not depend on bc-core at runtime, but its L-node semantic verification gate calls a bc-core endpoint when computing the session-close verdict; the gate fails open if that endpoint is unavailable. DevHub does not depend on bc-pg-mcp; it reads its own better-sqlite3 store and the documentation files directly.
+DevHub is invoked by AI development assistants (via the MCP server) and by developers (via the browser surface on port 4000). DevHub reads from `bc-docs/docs/` as the documentation source; it writes ADR files to `bc-docs/docs/governance/adrs/` when `devhub_decision_record` is invoked, per DEC-3395bc. DevHub does not depend on bc-core at runtime, but its L-node semantic verification gate calls a bc-core endpoint when computing the session-close verdict; the gate fails open if that endpoint is unavailable. DevHub does not depend on bc-pg-mcp; it reads its own better-sqlite3 store and the documentation files directly.
 
 **Governing source.** Architecture; DEC-a4e550; DEC-ebf0b4; DEC-804874; DEC-3395bc; DEC-e50b83; DEC-9b23a7.
 
@@ -302,7 +302,7 @@ The decisions that govern the deployable backend services are listed below. Per-
 | DEC-3395bc | v3 documentation structure; bc-core JWT-guarded `/api/docs/*` | bc-core hosts the documentation read-surface for the bc-admin embedded reader; DevHub indexes the same source for `devhub_doc_*` tools |
 | DEC-b97390 | bc-admin embedded documentation reader | bc-core's `/api/docs/*` routes serve the canonical reader hosted in bc-admin |
 | DEC-441665 | NPM supply chain mitigation via AWS CodeArtifact | All three services install npm packages through the `barecount/npm-mirror` CodeArtifact registry |
-| DEC-a4e550 | ADR-first decision workflow; ADR files are the source of truth | DevHub stores decision metadata; the ADR file under `bc-docs/docs/adrs/` is the durable authority |
+| DEC-a4e550 | ADR-first decision workflow; ADR files are the source of truth | DevHub stores decision metadata; the ADR file under `bc-docs/docs/governance/adrs/` is the durable authority |
 | DEC-ebf0b4 | Session discipline and data integrity | DevHub participates in the session-discipline protocol; detailed gate semantics are owned by Decision and Change Workflow |
 | DEC-804874 | L-node semantic verification gate at session close | DevHub depends on bc-core for the L-node verification check used during session close; detailed override semantics are owned by Decision and Change Workflow |
 | DEC-c06f41 | Spine expansion to eight sections plus home | The Backend Services chapter exists in the reshaped Implementation section per DEC-c06f41 |

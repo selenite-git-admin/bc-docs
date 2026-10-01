@@ -18,10 +18,10 @@ focus: mcf-re-entry
 ## 1. Canonical MCF authority stack (precedence order)
 | # | Artifact | Role | Status |
 |---|---|---|---|
-| 1 | **ADR DEC-c3e57f / D422** (`docs/adrs/ADR-c3e57f.md`) | **Foundational MCF ADR = Gate M1.** The authority (10 decisions). | **decided** 2026-05-26 |
-| 1a | **ADR DEC-3f093f / D426** (`docs/adrs/ADR-3f093f.md`) | **Decided the metric-contract STORE / RUNTIME boundary** (`mcf.*` canonical; no legacy writes; future `mcf → NEW shadow`). **Store mechanism amended by D428 (below);** D426's runtime-boundary + three-store findings remain in force. | **decided** 2026-06-02 |
-| 1a-amend | **ADR DEC-61f7c8 / D428** (`docs/adrs/ADR-61f7c8.md`) | **Amends D426's store mechanism → "clean single published metric-contract store":** `contract.metric_contract*` = single clean published runtime store (MCF materializes after clean-slate adoption); raw PG `mcf.seed_metric` operational reservoir (Mongo/export = preserved upstream seed archive); panel = enricher; legacy archived/exported then wiped under DBCP. | **decided** 2026-06-07 |
-| 1b | **ADR DEC-7f9597 / D423** (`docs/adrs/ADR-7f9597.md`) | Execution-discipline stance (no shortcuts / synthetic writes / boundary blurring). **NOT a store-architecture decision.** | decided |
+| 1 | **ADR DEC-c3e57f / D422** (`docs/governance/adrs/ADR-c3e57f.md`) | **Foundational MCF ADR = Gate M1.** The authority (10 decisions). | **decided** 2026-05-26 |
+| 1a | **ADR DEC-3f093f / D426** (`docs/governance/adrs/ADR-3f093f.md`) | **Decided the metric-contract STORE / RUNTIME boundary** (`mcf.*` canonical; no legacy writes; future `mcf → NEW shadow`). **Store mechanism amended by D428 (below);** D426's runtime-boundary + three-store findings remain in force. | **decided** 2026-06-02 |
+| 1a-amend | **ADR DEC-61f7c8 / D428** (`docs/governance/adrs/ADR-61f7c8.md`) | **Amends D426's store mechanism → "clean single published metric-contract store":** `contract.metric_contract*` = single clean published runtime store (MCF materializes after clean-slate adoption); raw PG `mcf.seed_metric` operational reservoir (Mongo/export = preserved upstream seed archive); panel = enricher; legacy archived/exported then wiped under DBCP. | **decided** 2026-06-07 |
+| 1b | **ADR DEC-7f9597 / D423** (`docs/governance/adrs/ADR-7f9597.md`) | Execution-discipline stance (no shortcuts / synthetic writes / boundary blurring). **NOT a store-architecture decision.** | decided |
 | 2 | **`metric-context-framework-build-plan.md`** (commit `40a9adc`) | **Canonical Gate M0–M20 map.** The M-numbering source of truth. | draft (mechanics) |
 | 3 | `metric-context-framework-requirements.md` (`13f9bb6`) | The spec. Ratified-by-reference via M1. ⚠ its **§20 gate table uses divergent numbering, pending sync to the build plan**. | proposed |
 | 4 | inventory (`d9b10d2`), gap-survey (`0ba202b`), reservoir/authority addendum (`0e3644b`) | Step-1/2 supporting artifacts | draft |

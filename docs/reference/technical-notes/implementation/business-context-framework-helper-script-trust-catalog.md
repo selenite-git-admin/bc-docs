@@ -231,5 +231,5 @@ The combined inventory update driver session (after E1 + E2 both land) carries t
 | `business-context-framework-inventory-gap-research.md` §8.1 G24 | Original gap finding (Codex 138/156 baseline) |
 | `business-context-framework-failure-evidence.md` F42 | PLN-c028cd helper-script-trust failure mode; canonical example of why default-untrusted is correct |
 | `business-context-framework-build-plan.md` §13.5, §13.7 | CI integration spec — defect-tag-grep rule, CI-vs-reviewer split |
-| `docs/adrs/ADR-149ab2.md` | The authority context this audit informs (no direct ADR position, but the discipline pattern is from ADR Q9 + N30) |
+| `docs/governance/adrs/ADR-149ab2.md` | The authority context this audit informs (no direct ADR position, but the discipline pattern is from ADR Q9 + N30) |
 | `business-context-framework-bc-seed-operational-state.md` (E1) | Sibling evidence document; combined inventory update lands both together |

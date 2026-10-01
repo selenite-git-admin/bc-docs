@@ -23,7 +23,7 @@ focus: mcf-legacy-bridge
 
 ## Authority
 
-- ADR: `bc-docs/docs/adrs/ADR-c3e57f.md` (DEC-c3e57f / D422)
+- ADR: `bc-docs/docs/governance/adrs/ADR-c3e57f.md` (DEC-c3e57f / D422)
 - DBCP: `bc-docs/docs/implementation/metric-context-framework-m12-5-materialization-legacy-bridge-dbcp.md` (`52fb8bc`) §12.2 + §12.3
 
 ## Context

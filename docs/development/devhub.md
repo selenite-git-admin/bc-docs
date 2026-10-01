@@ -232,7 +232,7 @@ These are the gaps between the substrate as documented and the substrate as impl
 | Decision and Change Procedure | The ADR-first procedure (D221), the eight ADR hygiene rules (D370), the supersession-pair discipline, the change-record plan-and-report pair semantics | The DevHub registry tables and tools that the procedure writes through |
 | Audit and Activity Logging | The DevHub activity log as the cross-domain governance trail; the JSONL docs trail; the bc-core operational logging | The activity-log write semantics and the per-domain event-type enumeration as DevHub-side facts |
 | Quality Assurance | The bc-qa repository, the audit script, the gate-config, the eslint-config package, the pre-commit hooks | The DevHub QA NC tables and `devhub_qa_audit` MCP tool that auto-raises NCs from audit findings |
-| Documentation System | bc-docs as the documentation SSOT; the bc-admin reader; bc-core JWT-served document endpoints | The DevHub document registry as a derived index; `devhub_decision_record` writing into `bc-docs/docs/adrs/` |
+| Documentation System | bc-docs as the documentation SSOT; the bc-admin reader; bc-core JWT-served document endpoints | The DevHub document registry as a derived index; `devhub_decision_record` writing into `bc-docs/docs/governance/adrs/` |
 | Operating Model: Chain Completeness and Verdict | The chain-status SSOT and the L-node semantic verdict table in bc-core | The DevHub `devhub_chain_status` and L-node MCP tools that proxy to bc-core; the session-close gate that reads them |
 | Backend Services | bc-core, DevHub, bc-pg-mcp as deployable services | DevHub specifically as the engineering-coordination service |
 
