@@ -113,9 +113,9 @@ Homebrew marks downloaded casks with `com.apple.quarantine`. Your account cleare
 
 **Homebrew 7 has no way to skip the flag.** `--no-quarantine` was deprecated and then removed (Homebrew commits `ffe95475` and `ba25213c`), and no setting replaces it: on 2026-10-01 Homebrew 7.0.7 answered `brew upgrade --cask --no-quarantine codex` with `Error: invalid option: --no-quarantine` and upgraded nothing. So every upgrade is a normal one, followed by a verified clear of the flag on the two binaries the auditor runs.
 
-**The one line** (runs every step below, stops safely on any failure):
+**The one line** (runs every step below, stops safely on any failure). It runs the reviewed script exactly as committed on bc-external-audit main (`service/shadow/upgrade-codex.zsh`):
 ```bash
-zsh ~/bc-stack/upgrade-codex.zsh
+git -C ~/MyProjects/bc-external-audit fetch -q origin && zsh =(git -C ~/MyProjects/bc-external-audit show origin/main:service/shadow/upgrade-codex.zsh)
 ```
 It asks once for your Mac login password. If anything fails after the service is stopped, it leaves the service stopped rather than let Gatekeeper kill reviews in a loop, and says so.
 
@@ -140,7 +140,7 @@ It asks once for your Mac login password. If anything fails after the service is
      else echo "NOT verified: $f (flag kept; stopped)"; break; fi
    done
    ```
-   Tested 2026-10-01 on throwaway copies: an OpenAI-signed copy is cleared; an Apple-signed copy (wrong team) and a tampered copy (signature fails) keep their flag.
+   Tested 2026-10-01 on throwaway copies (`service/shadow/upgrade-codex.test.zsh`, macOS): an OpenAI-signed copy is cleared; an Apple-signed copy (wrong team) and a tampered copy (signature fails) keep their flag.
 5. **Check both binaries are clear.** Each should print `No such xattr`:
    ```bash
    xattr -p com.apple.quarantine /opt/homebrew/Caskroom/codex/$V/bin/codex /opt/homebrew/Caskroom/codex/$V/bin/codex-code-mode-host
