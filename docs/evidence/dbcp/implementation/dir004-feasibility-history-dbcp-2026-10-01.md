@@ -50,9 +50,16 @@ Independent of the 0028/0029 (applied) and 0031/0032 (queued) migrations — it 
 
 ## 5. Clone proof
 
-**Round 1 was GREEN on `6f8a7c4`** (details below). **Round 2 (`ea9ce08`) adds the §2.0 lock and the §2.2 composite FK per Codex gen-9bab57-01 #1/#2 and is being re-proved** with two new vectors to insert here before round-2 review: (a) a concurrent-writer / lock proof — a writer blocked by the ACCESS EXCLUSIVE lock cannot lose a row across the emptiness check; (b) the composite FK — a reference with a version OF its concept is accepted, and a reference pairing a concept with another concept's version is refused (while a NULL-version gap is accepted).
+**Round 2 is GREEN on `ea9ce08`** (migration sha `21e41da7`), with both Codex gen-9bab57-01 fixes demonstrated. DB Controller, owner/grant-faithful clone-apply on a throwaway clone of dump `20261001T075638Z` (carries the legacy table; sysid ≠ live). Evidence: barecount-devhub `artifacts/db-manager/0033-proof-2026-10-01/` @ `276d0352` (`0033-green-PROOF.txt`, `0033-lock-vector.txt`, `0033-safety-planted-row-runner.err`, driver, README, MANIFEST):
 
-Round-1 evidence (DB Controller, owner/grant-faithful clone-apply on `6f8a7c4`, migration sha `883ed0ad`, throwaway clone of dump `20261001T075638Z`, sysid ≠ live): barecount-devhub `artifacts/db-manager/0033-proof-2026-10-01/` @ `e0ba3471`. Both phases:
+- **#1 lock race (fixed):** the lock vector mirrors section 0 — T1 holds ACCESS EXCLUSIVE, counts 0, drops, commits; a concurrent T2 insert (+1s) is BLOCKED ~3s then FAILS "relation does not exist" — no row landed between the count and the drop; the table is gone after.
+- **#2 composite FK (fixed):** b1 accept (a reference with a version OF its concept); b2 REFUSE (a concept paired with ANOTHER concept's version — foreign-key violation); b3 accept (a NULL-version gap, MATCH SIMPLE).
+- **Apply (GREEN):** the empty legacy table + BOTH dependent functions dropped → gone; new objects 3/1/1/1 (bc_schema_owner); grants `bc_platform_runtime` INSERT+SELECT result&reference, SELECT-only queue&view; served-login vectors V1–V4 (queue writes refused); a concept `active_version_id` change queues exactly one reeval.
+- **Safety:** with a planted row, 0033 refuses (runner exit 1, "exists and is NOT empty", no ledger row, table + both functions intact; transactional rollback).
+
+The live window runs the gated driver `window-0033.sh` re-pinned to `ea9ce08` + migration `21e41da7` (runner `e35fcc2d` unchanged): barecount-devhub `claude/0028-kit-successor` @ `6b279274`, driver sha `f54911522e…`. Its empty pre-check is **advisory**; section 0's in-transaction ACCESS EXCLUSIVE re-count is authoritative (written into the driver + README).
+
+Round-1 evidence (on `6f8a7c4`, migration `883ed0ad`, @ `e0ba3471`) is retained for history. Both phases below:
 
 1. **Pre-state:** the three legacy objects present (table + `fn_effective_feasibility` + `fn_feasibility_head_guard`, true/true/true).
 2. **Section 0:** dropped the empty legacy table **and both** dependent functions → all gone after.
@@ -70,7 +77,7 @@ The DB Controller runs the gated driver `window-0033.sh` (above) for the live ap
 
 1. Check that nothing is live: no `run-live-*` running; the kit claim absent or held by this act.
 2. Back up to governed custody: a fresh read-only dump, sha256 recorded.
-3. Run `window-0033.sh` live (pins `6f8a7c4` / runner `e35fcc2d` / migration `883ed0ad`): it confirms the legacy table is present and EMPTY, applies through the bc-db runner (bootstrap plane), and captures the verbatim transcript.
+3. Run `window-0033.sh` live (re-pinned to `ea9ce08` / runner `e35fcc2d` / migration `21e41da7`): its advisory pre-check confirms the legacy table is present and EMPTY, then the migration applies through the bc-db runner (bootstrap plane) where section 0's in-transaction ACCESS EXCLUSIVE re-count is authoritative; captures the verbatim transcript.
 4. Post-checks (the driver asserts): both legacy functions gone and the legacy table gone; the five new objects present (3/1/1/1); grants as §2; 0 rows in all three new tables; the trigger present on `business_concept`.
 5. Commit the applied-byte SQL hash, the transcript and the backup reference to the exchange.
 6. **Reverse** (only while no `member_feasibility_result` row exists): a later forward migration from the proven draft. Once any result row exists it is refused — results are immutable evidence. (The legacy drop is not reversed by this migration; the legacy objects were empty and audit-accepted-as-superseded.)
