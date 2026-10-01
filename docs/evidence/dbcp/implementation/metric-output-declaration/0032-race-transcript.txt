@@ -1,18 +1,51 @@
-== [FIXED ec3946e1 (0032)] R1 update-first: T2 changes X to local_currency and holds it 4s uncommitted; T1 declares X days at +1s
-   T2 finished at 18:16:11
-   T1 started 18:16:08 ended 18:16:11: ERROR:  metric output declaration refused: unit days is incoherent with aggregation_currency_code local_currency (DEC-b1e9eb decision 2)
+== [FIXED 16c8cde5 (0032)] R1 update-first: T2 changes X to local_currency and holds it 4s uncommitted; T1 declares X days at +1s
+   T2 finished at 11:08:58
+   T1 started 11:08:55 ended 11:08:58: ERROR:  metric output declaration refused: unit days is incoherent with aggregation_currency_code local_currency (DEC-b1e9eb decision 2)
    R1 final: (no declaration) / local_currency
-== [FIXED ec3946e1 (0032)] R2 declaration-first: T1 declares Y days and holds it 4s uncommitted; T2 changes Y to local_currency at +1s
-   T1 finished at 18:16:16
-   T2 started 18:16:12 ended 18:16:16: ERROR:  aggregation_currency_code of version 11e93db7-8f27-46a8-8359-303073948965 is frozen by its output declaration (DEC-b1e9eb)
+== [FIXED 16c8cde5 (0032)] R2 declaration-first: T1 declares Y days and holds it 4s uncommitted; T2 changes Y to local_currency at +1s
+   T1 finished at 11:09:02
+   T2 started 11:08:59 ended 11:09:02: ERROR:  aggregation_currency_code of version a02fdd78-f68f-426e-9614-760bed18f84b is frozen by its output declaration (DEC-b1e9eb)
    R2 final: days / not_applicable
+== [FIXED 16c8cde5 (0032)] R3 declaration-first at REPEATABLE READ: T1 declares 350a070a-018f-49f2-969b-f2dada6b6ccf days and holds it 4s; T2 (REPEATABLE READ) takes its snapshot at +1s, then changes 350a070a-018f-49f2-969b-f2dada6b6ccf to local_currency
+   T1 finished at 11:09:06
+   T2 started 11:09:03 ended 11:09:06: ERROR:  aggregation_currency_code of version 350a070a-018f-49f2-969b-f2dada6b6ccf may change only at READ COMMITTED, not repeatable read, so a committed output declaration is always seen (DEC-b1e9eb)
+   R3 final: days / not_applicable
+== [FIXED 16c8cde5 (0032)] R4 declaration-first at SERIALIZABLE: T1 declares e75e92bd-11ca-4c45-9236-7dc39b7d6340 days and holds it 4s; T2 (SERIALIZABLE) takes its snapshot at +1s, then changes e75e92bd-11ca-4c45-9236-7dc39b7d6340 to local_currency
+   T1 finished at 11:09:10
+   T2 started 11:09:07 ended 11:09:10: ERROR:  aggregation_currency_code of version e75e92bd-11ca-4c45-9236-7dc39b7d6340 may change only at READ COMMITTED, not serializable, so a committed output declaration is always seen (DEC-b1e9eb)
+   R4 final: days / not_applicable
    incoherent pairs in the database: 0
 == [PREVIOUS c7da1454 (red check; then named 0030)] R1 update-first: T2 changes X to local_currency and holds it 4s uncommitted; T1 declares X days at +1s
-   T2 finished at 18:16:20
-   T1 started 18:16:17 ended 18:16:17: COMMITTED
+   T2 finished at 11:09:15
+   T1 started 11:09:12 ended 11:09:12: COMMITTED
    R1 final: days / local_currency
 == [PREVIOUS c7da1454 (red check; then named 0030)] R2 declaration-first: T1 declares Y days and holds it 4s uncommitted; T2 changes Y to local_currency at +1s
-   T1 finished at 18:16:24
-   T2 started 18:16:21 ended 18:16:21: COMMITTED
+   T1 finished at 11:09:19
+   T2 started 11:09:16 ended 11:09:16: COMMITTED
    R2 final: (no declaration) / local_currency
+== [PREVIOUS c7da1454 (red check; then named 0030)] R3 declaration-first at REPEATABLE READ: T1 declares 1dca263a-e90f-47e8-b610-2c8f060aff22 days and holds it 4s; T2 (REPEATABLE READ) takes its snapshot at +1s, then changes 1dca263a-e90f-47e8-b610-2c8f060aff22 to local_currency
+   T1 finished at 11:09:23
+   T2 started 11:09:20 ended 11:09:20: COMMITTED
+   R3 final: (no declaration) / local_currency
+== [PREVIOUS c7da1454 (red check; then named 0030)] R4 declaration-first at SERIALIZABLE: T1 declares a4ee50f1-3106-436d-85e3-d6d2eaa810d1 days and holds it 4s; T2 (SERIALIZABLE) takes its snapshot at +1s, then changes a4ee50f1-3106-436d-85e3-d6d2eaa810d1 to local_currency
+   T1 finished at 11:09:27
+   T2 started 11:09:24 ended 11:09:24: COMMITTED
+   R4 final: (no declaration) / local_currency
    incoherent pairs in the database: 1
+== [ROUND-2 ec3946e1 (red check for R3; the READ COMMITTED fix only)] R1 update-first: T2 changes X to local_currency and holds it 4s uncommitted; T1 declares X days at +1s
+   T2 finished at 11:09:32
+   T1 started 11:09:29 ended 11:09:32: ERROR:  metric output declaration refused: unit days is incoherent with aggregation_currency_code local_currency (DEC-b1e9eb decision 2)
+   R1 final: (no declaration) / local_currency
+== [ROUND-2 ec3946e1 (red check for R3; the READ COMMITTED fix only)] R2 declaration-first: T1 declares Y days and holds it 4s uncommitted; T2 changes Y to local_currency at +1s
+   T1 finished at 11:09:36
+   T2 started 11:09:33 ended 11:09:36: ERROR:  aggregation_currency_code of version b1623928-9dae-4748-b7b1-afa13f1b5679 is frozen by its output declaration (DEC-b1e9eb)
+   R2 final: days / not_applicable
+== [ROUND-2 ec3946e1 (red check for R3; the READ COMMITTED fix only)] R3 declaration-first at REPEATABLE READ: T1 declares fda8e0e4-9777-451d-a726-0ac31695c0dd days and holds it 4s; T2 (REPEATABLE READ) takes its snapshot at +1s, then changes fda8e0e4-9777-451d-a726-0ac31695c0dd to local_currency
+   T1 finished at 11:09:40
+   T2 started 11:09:37 ended 11:09:40: COMMITTED
+   R3 final: days / local_currency
+== [ROUND-2 ec3946e1 (red check for R3; the READ COMMITTED fix only)] R4 declaration-first at SERIALIZABLE: T1 declares 16dd4633-4a70-4492-ae96-2d30f79222e2 days and holds it 4s; T2 (SERIALIZABLE) takes its snapshot at +1s, then changes 16dd4633-4a70-4492-ae96-2d30f79222e2 to local_currency
+   T1 finished at 11:09:44
+   T2 started 11:09:41 ended 11:09:44: COMMITTED
+   R4 final: days / local_currency
+   incoherent pairs in the database: 2

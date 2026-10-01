@@ -10,4 +10,4 @@ BEGIN
   RETURN u;
 END $f$;
 CREATE TABLE race.ids (tag text PRIMARY KEY, uid uuid);
-INSERT INTO race.ids VALUES ('X', race.new_member('X')), ('Y', race.new_member('Y'));
+INSERT INTO race.ids VALUES ('X', race.new_member('X')), ('Y', race.new_member('Y')), ('Z', race.new_member('Z')), ('W', race.new_member('W'));

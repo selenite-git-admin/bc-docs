@@ -35,12 +35,12 @@ psql:/tmp/v.sql:71: NOTICE:  PASS V3 days with NULL places refused: new row for 
  
 (1 row)
 
+psql:/tmp/v.sql:73: NOTICE:  PASS V4 declaration on pre-cutover P1 refused: metric output declaration refused: version 37de34d0-7e93-427a-a113-ac69e7acc570 predates the DEC-b1e9eb cutover (no membership)
  expect_refusal 
 ----------------
  
 (1 row)
 
-psql:/tmp/v.sql:73: NOTICE:  PASS V4 declaration on pre-cutover P1 refused: metric output declaration refused: version 37de34d0-7e93-427a-a113-ac69e7acc570 predates the DEC-b1e9eb cutover (no membership)
 ALTER TABLE
 psql:/tmp/v.sql:78: NOTICE:  PASS V5 setup: A (declared) enters approved — the new gate lets a declared member through accepted
  expect_ok 
@@ -48,13 +48,13 @@ psql:/tmp/v.sql:78: NOTICE:  PASS V5 setup: A (declared) enters approved — the
  
 (1 row)
 
-psql:/tmp/v.sql:79: NOTICE:  PASS V5 declaration on frozen member A refused: metric output declaration refused: version d5cfd576-2db6-4dbb-8fde-aae9f97b07c6 is frozen (state or approval snapshot)
+psql:/tmp/v.sql:79: NOTICE:  PASS V5 declaration on frozen member A refused: metric output declaration refused: version d24dd5ef-4ac1-434d-9c45-89ea5f0469e7 is frozen (state or approval snapshot)
  expect_refusal 
 ----------------
  
 (1 row)
 
-psql:/tmp/v.sql:82: NOTICE:  PASS V6 member C -> approved without declaration refused: version 23ff8371-4453-41ae-b7d7-90d3bcaa64dd cannot enter state approved without its output declaration (DEC-b1e9eb)
+psql:/tmp/v.sql:82: NOTICE:  PASS V6 member C -> approved without declaration refused: version 3a80922c-55d7-4eac-bc34-78076a2f3031 cannot enter state approved without its output declaration (DEC-b1e9eb)
  expect_refusal 
 ----------------
  
@@ -78,19 +78,19 @@ psql:/tmp/v.sql:92: NOTICE:  PASS V6r member C draft -> approved (platform rules
 ALTER TABLE
 SELECT 1
 UPDATE 1
+psql:/tmp/v.sql:98: NOTICE:  PASS V7 snapshot for undeclared member C refused: package snapshot for version 3a80922c-55d7-4eac-bc34-78076a2f3031 refused: no output declaration (DEC-b1e9eb)
  expect_refusal 
 ----------------
  
 (1 row)
 
-psql:/tmp/v.sql:98: NOTICE:  PASS V7 snapshot for undeclared member C refused: package snapshot for version 23ff8371-4453-41ae-b7d7-90d3bcaa64dd refused: no output declaration (DEC-b1e9eb)
 psql:/tmp/v.sql:101: NOTICE:  PASS V8 setup: declare D days/0/half_up accepted
  expect_ok 
 -----------
  
 (1 row)
 
-psql:/tmp/v.sql:103: NOTICE:  PASS V8 change aggregation_currency_code on declared draft D refused: aggregation_currency_code of version de0b422f-8499-447b-8443-8643202fd6ca is frozen by its output declaration (DEC-b1e9eb)
+psql:/tmp/v.sql:103: NOTICE:  PASS V8 change aggregation_currency_code on declared draft D refused: aggregation_currency_code of version 0ede2c43-eb82-446e-a70c-f5d827e04f7f is frozen by its output declaration (DEC-b1e9eb)
  expect_refusal 
 ----------------
  
@@ -124,19 +124,19 @@ UPDATE 1
 psql:/tmp/v.sql:114: NOTICE:  PASS V11 setup: member C created_at backdated to 2020-01-01
 DO
 ALTER TABLE
-psql:/tmp/v.sql:117: NOTICE:  PASS V11 backdated member C -> approved without declaration refused: version 23ff8371-4453-41ae-b7d7-90d3bcaa64dd cannot enter state approved without its output declaration (DEC-b1e9eb)
+psql:/tmp/v.sql:117: NOTICE:  PASS V11 backdated member C -> approved without declaration refused: version 3a80922c-55d7-4eac-bc34-78076a2f3031 cannot enter state approved without its output declaration (DEC-b1e9eb)
  expect_refusal 
 ----------------
  
 (1 row)
 
 ALTER TABLE
-psql:/tmp/v.sql:119: NOTICE:  PASS V11 snapshot for backdated member C refused: package snapshot for version 23ff8371-4453-41ae-b7d7-90d3bcaa64dd refused: no output declaration (DEC-b1e9eb)
  expect_refusal 
 ----------------
  
 (1 row)
 
+psql:/tmp/v.sql:119: NOTICE:  PASS V11 snapshot for backdated member C refused: package snapshot for version 3a80922c-55d7-4eac-bc34-78076a2f3031 refused: no output declaration (DEC-b1e9eb)
 ALTER TABLE
 psql:/tmp/v.sql:123: NOTICE:  PASS V12 UPDATE a membership row refused: mcf.metric_output_declaration_required is immutable (DEC-b1e9eb): UPDATE refused
  expect_refusal 
@@ -150,26 +150,26 @@ psql:/tmp/v.sql:124: NOTICE:  PASS V12 DELETE a membership row refused: mcf.metr
  
 (1 row)
 
- expect_refusal 
-----------------
- 
-(1 row)
-
 psql:/tmp/v.sql:125: NOTICE:  PASS V12 direct INSERT of membership for pre-cutover P1 refused: mcf.metric_output_declaration_required is written only when a version is created (DEC-b1e9eb): direct insert for 37de34d0-7e93-427a-a113-ac69e7acc570 refused
-UPDATE 1
  expect_refusal 
 ----------------
  
 (1 row)
 
+UPDATE 1
 psql:/tmp/v.sql:129: NOTICE:  PASS V13 declaration on forward-dated pre-cutover P1 refused: metric output declaration refused: version 37de34d0-7e93-427a-a113-ac69e7acc570 predates the DEC-b1e9eb cutover (no membership)
+ expect_refusal 
+----------------
+ 
+(1 row)
+
 GRANT
 GRANT
 GRANT
 SET
 INSERT 0 1
-DO
 psql:/tmp/v.sql:141: NOTICE:  PASS L1 served login creates a version; the SECURITY DEFINER trigger writes its membership
+DO
 psql:/tmp/v.sql:142: NOTICE:  PASS L2 served login declares E days/2/half_up accepted
  expect_ok 
 -----------
@@ -182,11 +182,6 @@ psql:/tmp/v.sql:143: NOTICE:  PASS L3 served login UPDATE of a declaration refus
  
 (1 row)
 
- expect_refusal 
-----------------
- 
-(1 row)
-
 psql:/tmp/v.sql:144: NOTICE:  PASS L4 served login direct INSERT of membership refused: permission denied for table metric_output_declaration_required
  expect_refusal 
 ----------------
@@ -194,7 +189,12 @@ psql:/tmp/v.sql:144: NOTICE:  PASS L4 served login direct INSERT of membership r
 (1 row)
 
 psql:/tmp/v.sql:145: NOTICE:  PASS L5 served login declares a pre-cutover version refused: metric output declaration refused: version 37de34d0-7e93-427a-a113-ac69e7acc570 predates the DEC-b1e9eb cutover (no membership)
-psql:/tmp/v.sql:146: NOTICE:  PASS L6 served login changes the currency of declared E refused: aggregation_currency_code of version d2f34c05-8ced-48fa-8fe9-e61850e15338 is frozen by its output declaration (DEC-b1e9eb)
+ expect_refusal 
+----------------
+ 
+(1 row)
+
+psql:/tmp/v.sql:146: NOTICE:  PASS L6 served login changes the currency of declared E refused: aggregation_currency_code of version 94063950-ae07-49dd-bb03-0dafdc1db575 is frozen by its output declaration (DEC-b1e9eb)
  expect_refusal 
 ----------------
  

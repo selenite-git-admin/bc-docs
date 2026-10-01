@@ -7,8 +7,9 @@
 #    the runner tree = bc-db origin/main (e47c1c8 or later: 0029 + 0031 + the excepted-aware runner) + the 0032 files.
 #  3 the window's true pre-state on each: 0029, then the 0031 window (0003, 0031, record-exception 0001/0002/0008).
 #  4 0032 through the runner (staged dir holding only 0032) -> its in-transaction verification; then vectors 1-13 + L1-L7.
-#  5 race vectors (0032-race.zsh): fixed bytes on proof; the PREVIOUS unfixed bytes c7da1454 (bc-db 46453b57, then
-#    named 0030) on prev_bytes as the red check.
+#  5 race vectors (0032-race.zsh; R1/R2 at READ COMMITTED, R3 REPEATABLE READ, R4 SERIALIZABLE, gen-fe8f9d-06): fixed bytes
+#    on proof (all four refused, 0 incoherent); red checks: the unfixed bytes c7da1454 (bc-db 46453b57, then named 0030)
+#    on prev_bytes, and the round-2 bytes ec3946e1 (bc-db 99dfd55f, the READ COMMITTED fix only) on rr_prev (R3 incoherent).
 #  6 rollback A (proof: declarations exist -> refused), B (rb_fresh: apply, rollback, 0 objects, rolled_back, re-apply
 #    through the runner, a direct second SQL run refused), C (no ledger variables -> refused). 7 clone + dump removed.
 set -u; setopt pipefail
@@ -21,10 +22,12 @@ BC=$OUT/bcdb; mkdir -p $BC; git -C $WT fetch -q origin main 2>/dev/null; MAIN=$(
 git -C $WT archive $MAIN | tar -x -C $BC || fail "export main"
 cp $WT/migrations/$M.sql $BC/migrations/ && cp $WT/rollback/$M.rollback.sql $BC/rollback/ || fail "copy 0032 files"
 git -C $WT show 46453b571932ad4ff11324deef0bb86cec396f32:migrations/0030_mcf_metric_output_declaration.sql > $OUT/prev-0030.sql || fail "previous bytes"
+git -C $WT show 99dfd55f3d9cf0d20b93be59a4f8f5f8760400e3:migrations/$M.sql > $OUT/rr-prev-0032.sql || fail "round-2 bytes"
 SHA=$(shasum -a 256 < $BC/migrations/$M.sql | cut -c1-64); RSHA=$(shasum -a 256 < $BC/rollback/$M.rollback.sql | cut -c1-64)
 PSHA=$(shasum -a 256 < $OUT/prev-0030.sql | cut -c1-64); PR_HEAD=$(git -C $WT rev-parse HEAD)
 log "runner tree: bc-db main $MAIN + 0032 from PR head $PR_HEAD; migration sha256 $SHA; rollback $RSHA; previous bytes $PSHA"
 [[ $PSHA == c7da1454* ]] || fail "previous bytes are not c7da1454"
+RRSHA=$(shasum -a 256 < $OUT/rr-prev-0032.sql | cut -c1-64); [[ $RRSHA == ec3946e1* ]] || fail "round-2 bytes are not ec3946e1"
 PIN=$(node -e "process.stdout.write(require('$BC/versions/contract.json').engine.pinned_reference)"); C=m0032c$N
 docker inspect $C >/dev/null 2>&1 && fail "container $C exists"
 
@@ -43,11 +46,11 @@ log "clone $C up (no published port), sysid $SYS (live is $LIVE_SYSID)"
 grep -v -E '^(CREATE|ALTER) ROLE barecount;?' $OUT/dump/roles.sql | docker exec -i $C psql -X -q -U barecount -d postgres > $OUT/roles-restore.log 2>&1
 docker cp $OUT/dump/platform.dump $C:/tmp/platform.dump >/dev/null || fail "copy dump"
 q(){ docker exec -i $C psql -X -qAt -v ON_ERROR_STOP=1 -U barecount -d $1; }
-for db in bc_platform_dev prev_bytes rb_fresh; do
+for db in bc_platform_dev prev_bytes rr_prev rb_fresh; do
   print "CREATE DATABASE $db" | q postgres >/dev/null || fail "create $db"
   docker exec $C pg_restore -U barecount -d $db --exit-on-error /tmp/platform.dump > $OUT/restore-$db.log 2>&1 || fail "restore $db: $(tail -1 $OUT/restore-$db.log)"
 done
-log "restored bc_platform_dev, prev_bytes, rb_fresh; ledger $(print "SELECT count(*)||'/'||max(event_seq) FROM infrastructure.schema_migration_event" | q bc_platform_dev); versions $(print "SELECT count(*) FROM mcf.metric_contract_version" | q bc_platform_dev)"
+log "restored bc_platform_dev, prev_bytes, rr_prev, rb_fresh; ledger $(print "SELECT count(*)||'/'||max(event_seq) FROM infrastructure.schema_migration_event" | q bc_platform_dev); versions $(print "SELECT count(*) FROM mcf.metric_contract_version" | q bc_platform_dev)"
 
 # ---- helpers: the SAME runner command as live (staged dir holding only one migration) ----
 DISP="sha256:$(printf 'm0032-clone-proof-placeholder-disposition' | shasum -a 256 | cut -c1-64)"
@@ -64,7 +67,7 @@ prewindow(){ local db=$1 m
   done
   log "$db pre-state (the 0032 window's): 0029 $(state $db 0029_mcf_retire_rejected_exit), 0003 $(state $db 0003_nontxn_ledger), 0031 $(state $db 0031_ledger_excepted_kind), exceptions $(print "SELECT count(*) FROM infrastructure.schema_migration_event WHERE event_kind='excepted'" | q $db)"
 }
-for db in bc_platform_dev prev_bytes rb_fresh; do prewindow $db; done
+for db in bc_platform_dev prev_bytes rr_prev rb_fresh; do prewindow $db; done
 
 # ---- 4 apply 0032 + vectors ----
 apply1 bc_platform_dev $BC/migrations/$M.sql
@@ -76,15 +79,21 @@ log "vectors: $(grep -c 'PASS ' $OUT/0032-vectors-transcript.txt) PASS lines; $(
 # ---- 5 race vectors: fixed (0032) and previous bytes (red check) ----
 docker cp $H/0032-race-setup.sql $C:/tmp/rs.sql >/dev/null
 docker exec $C psql -X -q -v ON_ERROR_STOP=1 -U barecount -d bc_platform_dev -f /tmp/rs.sql > /dev/null || fail "race setup (proof)"
-zsh $H/0032-race.zsh $C bc_platform_dev "FIXED ${SHA:0:8} (0032)" > $OUT/0032-race-transcript.txt 2>&1
+zsh $H/0032-race.zsh $C bc_platform_dev "FIXED ${SHA:0:8} (0032)" > $OUT/race-fixed.txt 2>&1
 docker cp $OUT/prev-0030.sql $C:/tmp/prev.sql >/dev/null
 docker exec $C psql -X -q -v ON_ERROR_STOP=1 -1 -U barecount -d prev_bytes -f /tmp/prev.sql > $OUT/prev-apply.log 2>&1 || fail "previous bytes apply: $(tail -1 $OUT/prev-apply.log)"
 docker exec $C psql -X -q -v ON_ERROR_STOP=1 -U barecount -d prev_bytes -f /tmp/rs.sql > /dev/null || fail "race setup (prev)"
-zsh $H/0032-race.zsh $C prev_bytes "PREVIOUS ${PSHA:0:8} (red check; then named 0030)" >> $OUT/0032-race-transcript.txt 2>&1
-FX=$(grep -A99 'FIXED' $OUT/0032-race-transcript.txt | grep -m1 'incoherent pairs' | grep -oE '[0-9]+$'); PV=$(grep -A99 'PREVIOUS' $OUT/0032-race-transcript.txt | grep -m1 'incoherent pairs' | grep -oE '[0-9]+$')
-log "race: fixed bytes incoherent pairs $FX (both orders refused: $(grep -A8 'FIXED' $OUT/0032-race-transcript.txt | grep -c 'ERROR')); previous bytes incoherent pairs $PV (red check)"
-[[ $FX == 0 && $(grep -A8 'FIXED' $OUT/0032-race-transcript.txt | grep -c 'ERROR') == 2 && $PV -ge 1 ]] || fail "race vectors"
-
+zsh $H/0032-race.zsh $C prev_bytes "PREVIOUS ${PSHA:0:8} (red check; then named 0030)" > $OUT/race-prev.txt 2>&1
+docker cp $OUT/rr-prev-0032.sql $C:/tmp/rrprev.sql >/dev/null
+docker exec $C psql -X -q -v ON_ERROR_STOP=1 -1 -U barecount -d rr_prev -f /tmp/rrprev.sql > $OUT/rrprev-apply.log 2>&1 || fail "round-2 bytes apply: $(tail -1 $OUT/rrprev-apply.log)"
+docker exec $C psql -X -q -v ON_ERROR_STOP=1 -U barecount -d rr_prev -f /tmp/rs.sql > /dev/null || fail "race setup (rr_prev)"
+zsh $H/0032-race.zsh $C rr_prev "ROUND-2 ${RRSHA:0:8} (red check for R3; the READ COMMITTED fix only)" > $OUT/race-rrprev.txt 2>&1
+cat $OUT/race-fixed.txt $OUT/race-prev.txt $OUT/race-rrprev.txt > $OUT/0032-race-transcript.txt
+inc(){ grep -m1 'incoherent pairs' $1 | grep -oE '[0-9]+$'; }
+FX=$(inc $OUT/race-fixed.txt); FE=$(grep -c 'ERROR' $OUT/race-fixed.txt); PV=$(inc $OUT/race-prev.txt); RV=$(inc $OUT/race-rrprev.txt)
+R3OLD=$(grep -A3 'R3 declaration-first' $OUT/race-rrprev.txt | grep -m1 'R3 final' | sed 's/.*final: //')
+log "race: fixed bytes incoherent pairs $FX, refusals $FE of 4 (R1, R2 at READ COMMITTED; R3 REPEATABLE READ; R4 SERIALIZABLE); previous bytes c7da1454 incoherent $PV (red check); round-2 bytes ec3946e1 incoherent $RV, R3 final [$R3OLD] (red check)"
+[[ $FX == 0 && $FE == 4 && $PV -ge 1 && $RV -ge 1 ]] || fail "race vectors"
 # ---- 6 rollback A / B / C ----
 docker cp $BC/rollback/$M.rollback.sql $C:/tmp/rb.sql >/dev/null
 docker cp $BC/migrations/$M.sql $C:/tmp/m.sql >/dev/null
@@ -108,4 +117,4 @@ grep -q 'output declarations exist' $OUT/0032-rollback-transcript.txt && grep -q
 
 # ---- 7 cleanup ----
 docker rm -f -v $C >/dev/null; rm -rf $OUT/dump $OUT/bcdb; log "clone, dump and runner tree removed (hashes recorded above)"
-log "0032 PROOF GREEN: fresh read-only live dump restored owner/grant-faithfully; the window's pre-state (0029, 0003, 0031, three exceptions) through the runner; 0032 applied through the runner with its in-transaction verification; vectors 1-13 + L1-L7 passed; race vectors refused in both orders with 0 incoherent pairs (previous bytes c7da1454: >=1, red check); rollback A refused, B round trip exact, C refused; clone removed"
+log "0032 PROOF GREEN: fresh read-only live dump restored owner/grant-faithfully; the window's pre-state (0029, 0003, 0031, three exceptions) through the runner; 0032 applied through the runner with its in-transaction verification; vectors 1-13 + L1-L7 passed; race vectors refused in both orders at READ COMMITTED and at REPEATABLE READ and SERIALIZABLE, 0 incoherent pairs (red checks: c7da1454 and ec3946e1 >=1); rollback A refused, B round trip exact, C refused; clone removed"
