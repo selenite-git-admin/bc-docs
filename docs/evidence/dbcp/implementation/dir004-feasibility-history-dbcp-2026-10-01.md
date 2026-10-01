@@ -14,7 +14,7 @@ superseded_by:
 
 # DBCP — Metric Directory feasibility-result history (bc-db migration 0033)
 
-**Design:** this DBCP and the migration `bc-db/migrations/0033_metric_directory_feasibility_history.sql` (branch `claude/0033-feasibility-history`, commit `765ea4c`, draft PR bc-db #101). The DIR-004 core fix landed in bc-core #460 (checkMemberFeasibility resolves the ACTIVE BCV and validates discriminator values against its `canonical_value_set`); Phase B — recording the resolved BCV set and re-evaluating on a BCV change — was explicitly deferred to this DBCP.
+**Design:** this DBCP and the migration `bc-db/migrations/0033_metric_directory_feasibility_history.sql`, accepted by Codex (gen-9bab57-02, ACCEPTED WITH BOUNDARY, round 2) and merged: bc-db PR #101 at reviewed head `ea9ce08` (migration sha `21e41da7`, merge commit `30746c53`); this DBCP at bc-docs PR #139 (merge commit `febbfa36`). The DIR-004 core fix landed in bc-core #460 (checkMemberFeasibility resolves the ACTIVE BCV and validates discriminator values against its `canonical_value_set`); Phase B — recording the resolved BCV set and re-evaluating on a BCV change — was explicitly deferred to this DBCP.
 
 **Task:** TSK-209877. **Author:** SES-3e2822 (Platform Controller).
 
@@ -78,6 +78,6 @@ The DB Controller runs the gated driver `window-0033.sh` (above) for the live ap
 1. Check that nothing is live: no `run-live-*` running; the kit claim absent or held by this act.
 2. Back up to governed custody: a fresh read-only dump, sha256 recorded.
 3. Run `window-0033.sh` live (re-pinned to `ea9ce08` / runner `e35fcc2d` / migration `21e41da7`): its advisory pre-check confirms the legacy table is present and EMPTY, then the migration applies through the bc-db runner (bootstrap plane) where section 0's in-transaction ACCESS EXCLUSIVE re-count is authoritative; captures the verbatim transcript.
-4. Post-checks (the driver asserts): both legacy functions gone and the legacy table gone; the five new objects present (3/1/1/1); grants as §2; 0 rows in all three new tables; the trigger present on `business_concept`.
+4. Post-checks: the driver `window-0033.sh` asserts both legacy functions gone and the legacy table gone, the five new objects present (3/1/1/1), grants as §2, and the trigger present on `business_concept`. Platform additionally verifies, read-only at post-state, 0 rows in all three new tables (the migration writes no rows). (Codex gen-9bab57-02 follow-up: the driver asserts object + grant shape, not row counts; the 0-row check is Platform's read-only post-verification.)
 5. Commit the applied-byte SQL hash, the transcript and the backup reference to the exchange.
 6. **Reverse** (only while no `member_feasibility_result` row exists): a later forward migration from the proven draft. Once any result row exists it is refused — results are immutable evidence. (The legacy drop is not reversed by this migration; the legacy objects were empty and audit-accepted-as-superseded.)
