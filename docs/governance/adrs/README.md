@@ -6,8 +6,8 @@ status: drafting
 authority: authoritative
 generator: scripts/docs-control/generate_adr_registry.py
 source_repo: bc-docs
-source_commit: fc38549
-generated_at: 2026-09-30T13:08:56Z
+source_commit: 441000e
+generated_at: 2026-10-01T05:46:29Z
 ---
 
 
@@ -15,7 +15,7 @@ generated_at: 2026-09-30T13:08:56Z
 
 The ADR Registry is the canonical index of platform decisions. Each entry has a structurally unique UID (`DEC-xxxxxx`) used in cross-references throughout the documentation. The ADR files are the source of truth (DEC-a4e550); this registry is generated from their frontmatter and is never edited by hand.
 
-**Counts at generation.** 621 records: accepted 1, decided 202, implemented 270, proposed 13, reversed 8, superseded 127. Quarantined duplicates (not counted): 1 (ADR-DEC-e82f0a.md). Non-canonical filenames: 4 (ADR-DEC-e82f0a.md, ADR-chain-invariants.md, ADR-d315ve.md, ADR-d316mr.md).
+**Counts at generation.** 624 records: accepted 1, decided 206, implemented 270, proposed 12, reversed 7, superseded 128. Quarantined duplicates (not counted): 1 (ADR-DEC-e82f0a.md). Non-canonical filenames: 4 (ADR-DEC-e82f0a.md, ADR-chain-invariants.md, ADR-d315ve.md, ADR-d316mr.md).
 
 **Hygiene.** The supersession pair rule (DEC-623f8f rule 1) is enforced on every push and pull request by `.github/workflows/adr-hygiene.yml` running `scripts/docs-control/audit_adrs.py`. That auditor's report is `docs-control/reports/adr-hygiene.md`. See erratum ADR-ERR-005 for the rules DEC-623f8f names that are not built.
 
@@ -232,7 +232,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-4a17e0` | [Observation Contract field-level semantic identity (sibling to DEC-a6258b; old Business Field role)](./ADR-4a17e0.md) | decided |  |  |  |
 | `DEC-4a515b` | [All 4 process chains from day one — P2P, O2C, R2R, Plan-to-Produce](./ADR-4a515b.md) | implemented |  |  |  |
 | `DEC-4a8abb` | [MC Constant Value Propagation — End-to-End](./ADR-4a8abb.md) | decided |  |  |  |
-| `DEC-4aa2fd` | [Subscription-plan-driven contract binding automation (metric entitlement is the control surface)](./ADR-4aa2fd.md) | reversed |  |  |  |
+| `DEC-4aa2fd` | [Subscription-plan-driven contract binding automation (metric entitlement is the control surface)](./ADR-4aa2fd.md) | superseded |  | DEC-c220e4 |  |
 | `DEC-4bff1c` | [Reader \"flavors\" are \"Target Sources\](./ADR-4bff1c.md) | decided |  |  |  |
 | `DEC-4c1396` | [bc-db spine is the sole platform schema authoring and apply path](./ADR-4c1396.md) | decided | DEC-b1a286 |  |  |
 | `DEC-4ca5a5` | [Metric Landscape — single-page UI consolidation of three overlapping metric-lifecycle surfaces](./ADR-4ca5a5.md) | superseded |  | DEC-b049f6 |  |
@@ -304,6 +304,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-6edbe3` | [D409 catalog factory — four-stage division of labor (Rules shortlist → AI panel → Endpoint gates → Operator approval)](./ADR-6edbe3.md) | decided |  |  |  |
 | `DEC-6ee36c` | [Metric discipline taxonomy — function sub-grouping on metric_definition](./ADR-6ee36c.md) | implemented |  |  |  |
 | `DEC-6f5199` | [D226: bc-docs Restructuring — Essentials/Domains/Tier Documentation Model](./ADR-6f5199.md) | superseded |  | DEC-b80330 |  |
+| `DEC-6f7615` | [The Chief's deputy: the Architect stands in on operator-facing duties when the Chief is silent; scope, limits and records](./ADR-6f7615.md) | decided |  |  |  |
 | `DEC-6f7d38` | [Fresh bc-admin repo — Datajettyadminportal stays as Figma reference](./ADR-6f7d38.md) | implemented |  |  |  |
 | `DEC-6fc629` | [Build All Custom UinBAT Readers — No Airbyte Runtime Dependency](./ADR-6fc629.md) | implemented |  |  |  |
 | `DEC-6fd09d` | [Evaluation-context inputs: metric variables that take governed fiscal-calendar facts (calendar_context), and fiscal-period rolling windows](./ADR-6fd09d.md) | decided |  |  |  |
@@ -328,7 +329,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-78b437` | [Email OTP MFA deferred — TOTP retained with UX improvements](./ADR-78b437.md) | implemented |  |  |  |
 | `DEC-793e13` | [Retire the external metric-audit exchange; metric audit collapses into bc-core as self-certification](./ADR-793e13.md) | decided | DEC-29c80b |  |  |
 | `DEC-794023` | [Scoped lift of the D555 OC/CC-authoring hold for the finance/Odoo lane; metric activation stays certification-gated](./ADR-794023.md) | decided |  |  |  |
-| `DEC-79b62f` | [The Foundation gate: the repair-location vocabulary, the four pre-action questions, the hard rules and the override path](./ADR-79b62f.md) | proposed |  |  |  |
+| `DEC-79b62f` | [The Foundation gate: the repair-location vocabulary, the four pre-action questions, the hard rules and the override path](./ADR-79b62f.md) | decided |  |  |  |
 | `DEC-7a18af` | [Source field capability is empirically probed and stored in a source_field_capability satellite — never derived from type](./ADR-7a18af.md) | proposed |  |  |  |
 | `DEC-7a1c98` | [Vocabulary Lock for the Opaque Workflow-Code Family — MMS / MCF doctrinal renaming policy](./ADR-7a1c98.md) | superseded |  | DEC-54f221 |  |
 | `DEC-7a8cbc` | [Binding-realized issuer identity: a source-key component on the pinned primary leg may realize an identity-bearing issuer reference whose canonical value is the binding-resolved legal-entity code (amends DEC-a57eb8)](./ADR-7a8cbc.md) | decided |  |  |  |
@@ -504,6 +505,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-c10d05` | [bc-core Base Refactoring — Build, Type Safety, Error Handling, Module Structure](./ADR-c10d05.md) | decided |  |  |  |
 | `DEC-c19242` | [bc-admin UI Development Freeze — Runtime Over Registry](./ADR-c19242.md) | superseded |  | DEC-b39a00 |  |
 | `DEC-c193a1` | [Server-Side Onboarding Orchestrator — SSE streaming for all onboarding workflows](./ADR-c193a1.md) | implemented |  |  |  |
+| `DEC-c220e4` | [A tenant's metric scope: every active tenant gets every active metric until the Subscription model is built; the entitlement record must be live before the first tenant for a prospect or client; DEC-4aa2fd split](./ADR-c220e4.md) | decided | DEC-4aa2fd |  |  |
 | `DEC-c2f499` | [Control Plane / Data Plane Architecture Split](./ADR-c2f499.md) | superseded |  |  |  |
 | `DEC-c318b2` | [Tenant Database Segregation — separate DB per tenant](./ADR-c318b2.md) | superseded |  |  |  |
 | `DEC-c338b3` | [BF/BO versioning model for supersede-active (Model E)](./ADR-c338b3.md) | superseded |  | DEC-b390ef |  |
@@ -598,6 +600,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-ebb3cd` | [Evidence and Lineage Write Semantics — Best-Effort + Degraded Marker, Per-Evaluation Lineage with Snapshot Fan-Out](./ADR-ebb3cd.md) | decided |  |  |  |
 | `DEC-ebf0b4` | [Session Discipline & Data Integrity Rules (NOT-TO-DO)](./ADR-ebf0b4.md) | implemented |  |  |  |
 | `DEC-ec00f2` | [Dual-model execution for judgment-bearing audit acts](./ADR-ec00f2.md) | decided |  |  |  |
+| `DEC-ec1991` | [Demo documentation split: the estate's authority lives in bc-demo; bc-docs holds the platform's view of the demo and the rules on shared assets](./ADR-ec1991.md) | decided |  |  |  |
 | `DEC-ec341c` | [Admission scope as primary policy axis (cross_function / function_scoped / industry_scoped)](./ADR-ec341c.md) | implemented |  |  |  |
 | `DEC-ec9e89` | [Contract Governance Model — Master Shape, Platform Instance, Tenant Override](./ADR-ec9e89.md) | implemented | DEC-03db11 |  |  |
 | `DEC-ecd55c` | [Connection authority reconciled — config in platform runtime.connection (D168), credentials in AWS Secrets Manager](./ADR-ecd55c.md) | implemented |  |  |  |
@@ -644,4 +647,4 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-fc41a3` | [Source Chain Contract Generation — SAP ECC Finance](./ADR-fc41a3.md) | superseded |  | DEC-b390ef |  |
 | `DEC-ffee4e` | [Retire bc-ai — port the BCF registry-authoring panel in-process into bc-core, roster preserved](./ADR-ffee4e.md) | implemented | DEC-14fb98 |  |  |
 
-*Generated by `scripts/docs-control/generate_adr_registry.py` at 2026-09-30T13:08:56Z from the ADR files as they stood at bc-docs `fc38549`, the commit checked out when the generator ran; the regenerated registry lands in that commit's successor.*
+*Generated by `scripts/docs-control/generate_adr_registry.py` at 2026-10-01T05:46:29Z from the ADR files as they stood at bc-docs `441000e`, the commit checked out when the generator ran; the regenerated registry lands in that commit's successor.*
