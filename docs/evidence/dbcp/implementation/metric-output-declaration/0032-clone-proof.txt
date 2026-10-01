@@ -1,0 +1,14 @@
+[2026-10-01T05:38:23Z] runner tree: bc-db main 209ff624caa1976db87105ddbe70d7abcf7b6a4d + 0032 from PR head b840b8e06da3491f281176e8fc95ab3a152e9942; migration sha256 16c8cde599671936088352b167957858e652c1b7816345bea58e6f4256279f4f; rollback c582689a4b991eb8b5be875afe4a9b8f1e51de8a41edbc740fd6a93484327918; previous bytes c7da14541197ad9b26de6b113ead95c4d0314a9201bcd405de00f9bc46b2e73f
+[2026-10-01T05:38:26Z] fresh dump: platform.dump sha256 17579ba1c279b22f7f501e9345869707325674e6cfc1423e974d16ffd264780a; live ledger rows/max seq 32/35
+[2026-10-01T05:38:27Z] clone m0032c3 up (no published port), sysid 7691569624740585512 (live is 7689410286420172840)
+[2026-10-01T05:38:47Z] restored bc_platform_dev, prev_bytes, rr_prev, rb_fresh; ledger 32/35; versions 451
+[2026-10-01T05:38:49Z] bc_platform_dev pre-state (the 0032 window's): 0029 applied, 0003 applied, 0031 applied, exceptions 3
+[2026-10-01T05:38:50Z] prev_bytes pre-state (the 0032 window's): 0029 applied, 0003 applied, 0031 applied, exceptions 3
+[2026-10-01T05:38:52Z] rr_prev pre-state (the 0032 window's): 0029 applied, 0003 applied, 0031 applied, exceptions 3
+[2026-10-01T05:38:53Z] rb_fresh pre-state (the 0032 window's): 0029 applied, 0003 applied, 0031 applied, exceptions 3
+[2026-10-01T05:38:54Z] apply 0032 through the runner: applied; policy/members/declarations 1/0/0; trg_mod_* 9
+[2026-10-01T05:38:54Z] vectors: 32 PASS lines; ALL VECTORS PASSED: 3 declarations, 5 members
+[2026-10-01T05:39:44Z] race: fixed bytes incoherent pairs 0, refusals 4 of 4 (R1, R2 at READ COMMITTED; R3 REPEATABLE READ; R4 SERIALIZABLE); previous bytes c7da1454 incoherent 1 (red check); round-2 bytes ec3946e1 incoherent 2, R3 final [days / local_currency] (red check)
+[2026-10-01T05:39:45Z] rollback: == A. rollback on the proof database (declarations exist): must refuse ERROR:  0032 rollback refused: output declarations exist (immutable evidence) — roll back by governance, not DROP == B. rb_fresh: apply (runner) -> rollback -> objects gone + ledger rolled_back -> re-apply (runner) -> direct second run refused APPLY: applied ROLLBACK_OK objects remaining: 0 tables, 0 triggers, 0 functions; ledger: rolled_back RE-APPLY: applied ERROR:  0032 refused: the output-declaration objects already (partly) exist; refusing a second apply == C. rollback without the ledger variables: must refuse ERROR:
+[2026-10-01T05:39:46Z] clone, dump and runner tree removed (hashes recorded above)
+[2026-10-01T05:39:46Z] 0032 PROOF GREEN: fresh read-only live dump restored owner/grant-faithfully; the window's pre-state (0029, 0003, 0031, three exceptions) through the runner; 0032 applied through the runner with its in-transaction verification; vectors 1-13 + L1-L7 passed; race vectors refused in both orders at READ COMMITTED and at REPEATABLE READ and SERIALIZABLE, 0 incoherent pairs (red checks: c7da1454 and ec3946e1 >=1); rollback A refused, B round trip exact, C refused; clone removed
