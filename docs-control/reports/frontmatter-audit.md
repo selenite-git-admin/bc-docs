@@ -1,0 +1,762 @@
+# Frontmatter vocabulary audit (TSK-d3dd83)
+
+Files by kind: {'adr': 620, 'archive': 6, 'chapter': 153, 'docket': 94, 'erratum': 16, 'evidence': 290, 'generated': 26}; exempt: 13
+Offenders: 744; not in baseline: 0; baseline entries now clean: 0
+
+## Offenders not in the baseline (MUST be 0)
+- (none)
+
+## Baseline entries now clean (remove them from the baseline)
+- (none)
+
+## All offenders by kind
+### adr (273)
+- governance/adrs/ADR-0001.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-0002.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-0003.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-0004.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-005ea7.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-00bba0.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-010bf9.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-011c93.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-03cf97.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-03db11.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-05140c.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-057c1f.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-0659d9.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-068fe7.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-06cb2c.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-075dd3.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-08dc92.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-09b8e6.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-0a0843.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-0a5947.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-0a75b5.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-0b3c08.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-0e3c64.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-0f61dd.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-103528.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-136a23.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-1392ee.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-13a260.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-14592e.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-14fb98.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-164830.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-176a8e.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-177c52.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-1918d0.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-192116.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-1ab381.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-1b32a9.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-1bad13.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-1cdc5e.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-1edaaa.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-1f6659.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-1fcbc0.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-20eefe.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-22eaaf.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-22ed4b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-2342bf.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-2347a3.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-246a24.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-24b4ec.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-24f6da.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-2589d0.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-2658ff.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-28741f.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-29477a.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-29c324.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-29e378.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-2b5a82.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-2bd5d6.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-2c79c8.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-2dab98.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-2f406b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-3196eb.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-324d9e.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-339c97.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-351108.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-3562a5.md: [adr] status 'accepted' not in ['decided', 'implemented', 'proposed', 'reversed', 'superseded']
+- governance/adrs/ADR-35b34b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-365f51.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-36d78f.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-375e6b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-376c9c.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-37967b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-3805f6.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-381254.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-388129.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-38c8bb.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-3a6f74.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-3ac7d6.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-3c1084.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-3c2917.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-3cc8a1.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-3d4949.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-3d6e11.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-3f4105.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-3fc279.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-40a68b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-40b650.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-40c29f.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-422db8.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-42421d.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-4282d7.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-42b9c0.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-43e93f.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-43fd36.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-441665.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-4472ca.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-495eaf.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-4a515b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-4a8abb.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-4bff1c.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-5017fe.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-50995f.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-520b33.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-5213e3.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-523a5d.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-552ddd.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-57d540.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-586ccb.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-58bf7f.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-5bfa81.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-5c39ea.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-5cef91.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-5d3f0f.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-5d4b1b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-5dfee7.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-5f11f8.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-5fa096.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-5fd322.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-615b87.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-616e02.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-625d0b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-637072.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-683cf3.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-69a24a.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-69f09e.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-6a1b47.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-6a9777.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-6bc7ef.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-6c1bd2.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-6d8be5.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-6f5199.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-6f7d38.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-6fc629.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-70573b.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-71c50d.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-737b58.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-739207.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-762336.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-76a91b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-771baf.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-77f4b5.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-78b437.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-7bbdba.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-7c4c39.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-7d0116.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-7df811.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-7eec2e.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-81cd26.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-824ae2.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-855b77.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-856d61.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-861a88.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-87ab35.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-890417.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-8c232d.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-8c489b.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-8d180b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-8e857a.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-8eb2b4.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-8f09d9.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-909e64.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-90faff.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-912f4f.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-938450.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-95687d.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-973363.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-974ff3.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-97bb94.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-9ab097.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-9b23a7.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-9c5dbe.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-9d1f4b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-9e0cd0.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-9eb783.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-9ec48f.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-9f801c.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-9f8c13.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-DEC-e82f0a.md: [adr] authority must be absent on an ADR (found 'reference')
+- governance/adrs/ADR-a1110e.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-a25931.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-a2af9e.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-a466c5.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-a4e550.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-a537bf.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-a560bf.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-a5df75.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-a67518.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-a7c0f9.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-aa6251.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-ab0b7c.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-ab1546.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-ac05fc.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-ace519.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-ad76e9.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-ada431.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-adeba8.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-ae0d33.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-afdb59.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-affb24.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-b10dad.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-b228ec.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-b28b13.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-b36558.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-b39a00.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-b51b48.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-b5bedb.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-b7349d.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-b79d16.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-b80330.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-baaa09.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-bc7281.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-bd5fed.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-be4ff9.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-bf5e61.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-c19242.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-c2f499.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-c318b2.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-c3fef3.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-c566f3.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-c800d2.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-c8dd31.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-cafc1b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-cb906b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-cbc07b.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-ccb7f7.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-ccfa3f.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-cd3046.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-cf2cbc.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-d214ed.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-d2eeb8.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-d4a383.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-d53320.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-d5c352.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-d5fb43.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-d6a1d4.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-d6f6e1.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-d785d4.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-d7c1dd.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-d9578e.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-db1c63.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-ddbce8.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-deac26.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-e27625.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-e29de9.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-e50b83.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-e7a4f5.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-e7b1c9.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-e82f0a.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-e9294b.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-e93a19.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-e9a1a7.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-e9bba0.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-eaba02.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-eba2aa.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-ebf0b4.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-ec9e89.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-ecec75.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-edd9bb.md: [adr] authority must be absent on an ADR (found 'evolving')
+- governance/adrs/ADR-efb5bf.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-efe97f.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-f0866a.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-f0eb14.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-f1565d.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-f26528.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-f275d7.md: [adr] authority must be absent on an ADR (found 'retired')
+- governance/adrs/ADR-f28021.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-f5018a.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-f5111d.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-f656a6.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-f6c2e5.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-f82a8a.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-faef79.md: [adr] authority must be absent on an ADR (found 'authoritative')
+- governance/adrs/ADR-fc41a3.md: [adr] authority must be absent on an ADR (found 'authoritative')
+### archive (5)
+- archive/development/historical-plans/v1-contract-objects-migration.md: [archive] no frontmatter block
+- archive/onboarding/mc-chain-integrity.md: [archive] status 'drafting' not in ['retired']
+- archive/onboarding/metric-contract-creation.md: [archive] status 'drafting' not in ['retired']
+- archive/onboarding/metric-registration.md: [archive] status 'drafting' not in ['retired']
+- archive/onboarding/metric-seed-catalog-management.md: [archive] status 'drafting' not in ['retired']
+### chapter (56)
+- development/lessons-platform-readiness-umbrella.md: [chapter] authority 'informative' not in ['authoritative', 'evidentiary', 'generated', 'reference']
+- implementation/business-concept-registry.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'accepted' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- implementation/demo-estate-max-coverage-rescope.md: [chapter] authority 'derived' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'approved' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- implementation/demo-estate-metric-coverage.md: [chapter] authority 'derived' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'approved' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- implementation/demo-estate-module-coverage.md: [chapter] authority 'derived' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'approved' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- implementation/demo-estate-program-status.md: [chapter] authority 'derived' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'approved' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- implementation/demo-estate-simulator-requirements.md: [chapter] authority 'derived' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'approved' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- implementation/platform-db-foundation-requirements.md: [chapter] status 'implemented' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- implementation/platform-readiness-evidence-2026-09-19.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'evidence' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- implementation/platform-readiness-program.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'closed' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- implementation/source-variability-and-field-provenance.md: [chapter] authority 'derived' not in ['authoritative', 'evidentiary', 'generated', 'reference']
+- implementation/structural-integrity-packages/SI-B-1-doctrine-without-adr.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'draft-for-review' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- implementation/structural-integrity-packages/SI-D-1-doc-number-reconciliation.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'draft-for-review' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- implementation/structural-integrity-packages/doc-integrity-register.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'living' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- implementation/structural-integrity-program.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']
+- implementation/tenant-readiness-program.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']
+- operating-model/finance-core-vocabulary-manifest.md: [chapter] authority 'draft-authoritative' not in ['authoritative', 'evidentiary', 'generated', 'reference']
+- operating-model/gl-vocabulary-enrichment-design.md: [chapter] authority 'draft-authoritative' not in ['authoritative', 'evidentiary', 'generated', 'reference']
+- operating-model/mcf-legacy-bridge.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']
+- operating-model/metric-directory.md: [chapter] authority 'draft-authoritative' not in ['authoritative', 'evidentiary', 'generated', 'reference']
+- operating-model/metric-lifecycle.md: [chapter] authority 'descriptive' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'None' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- operations/evaluation-evidence-dbcp-application.md: [chapter] status 'authoritative' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- operations/mac-auditor-operations.md: [chapter] status 'active' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- operations/runtime-operations.md: [chapter] status 'active' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- operations/runtime-runbook.md: [chapter] status 'active' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- overview/audited-metrics-differentiator.md: [chapter] authority 'informative' not in ['authoritative', 'evidentiary', 'generated', 'reference']
+- overview/platform-db-foundation.md: [chapter] status 'implemented' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- overview/platform-readiness.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'closed' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- overview/structural-differentiators.md: [chapter] authority 'informative' not in ['authoritative', 'evidentiary', 'generated', 'reference']
+- reference/mfg-in-world-known-limitations.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'active' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/bcf-backbone-breadth-and-batch-doctrine.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'accepted' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/bcf-mcf-evidence-boundary-operator-decisions-d1-d11.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'decided' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/bcf-mcf-panel-workbench-alignment-note.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'draft' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-concept-registry-b10-implementation-design.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'accepted' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-concept-registry-b10-publication-lifecycle-design.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'accepted' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-concept-registry-f1-forward-design.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'accepted' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-concept-registry-f3-authoring-service-design.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'accepted' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-concept-registry-f4-governed-vocabulary-seed-design.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'accepted' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-concept-registry-f4-s1-characteristic-seed-list.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'accepted' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-concept-registry-f4-v2-vocabulary-expansion-design.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'accepted' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-concept-registry-vocabulary-evidence-framework.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'accepted — amended 2026-06-19 (see §11 and §11.6)' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-context-framework-b6-design-survey.md: [chapter] authority 'informative' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'draft' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-context-framework-b6-track2-survey.md: [chapter] authority 'informative' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'draft' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-context-framework-bc-seed-operational-state.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'draft' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-context-framework-c5-high-risk-operator-confirm-extension-design.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'accepted' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-context-framework-helper-script-trust-catalog.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'draft' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/business-context-framework-requirements.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'draft' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/core-chain-golden-path.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'active' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/finance-package-v0-gold-universe.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'active' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/mcf-re-entry-index.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'draft' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/metric-context-framework-candidate-reservoir-and-authority-classification.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'draft' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/metric-context-framework-gap-survey.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'draft' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/metric-context-framework-m12-first-real-run-disposition.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'implemented' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/metric-context-framework-m12-panel-framework-calibration-followup.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'proposed' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/metric-context-framework-requirements-sketch.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'proposed' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+- reference/technical-notes/implementation/metric-context-framework-requirements.md: [chapter] authority 'None' not in ['authoritative', 'evidentiary', 'generated', 'reference']; [chapter] status 'proposed' not in ['drafting', 'locked', 'retired', 'reviewing', 'superseded']
+### docket (94)
+- reference/source-systems/_template/catalog.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/_template/contracts.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/_template/evidence.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/_template/index.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/_template/onboarding-log.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/asana.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/atlassian-jira.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/aveva-mes.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/bamboohr.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/blue-yonder.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/bmc-helix.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/busy-accounting.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/chargebee.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/coupa.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/darwinbox.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/dassault-delmia.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/ecb.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/epicor-kinetic.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/freshbooks.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/freshsales.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/freshservice.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/gep.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/google-ads.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/greythr.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/hubspot.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/imf.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/index.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/infor-cloudsuite.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/jaggaer.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/jira-sm.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/kinaxis.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/linkedin-ads.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/manageengine.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/meta-ads.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/microsoft-d365-bc/catalog.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/microsoft-d365-bc/contracts.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/microsoft-d365-bc/evidence.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/microsoft-d365-bc/index.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/microsoft-d365-bc/onboarding-log.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/microsoft-d365-fo.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/monday.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/odoo-crm.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/odoo-erp/catalog.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/odoo-erp/contracts.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/odoo-erp/evidence.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/odoo-erp/index.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/odoo-erp/onboarding-log.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/oracle-ebs.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/oracle-fusion/catalog.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/oracle-fusion/contracts.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/oracle-fusion/evidence.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/oracle-fusion/index.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/oracle-fusion/onboarding-log.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/oracle-netsuite.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/pipedrive.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/quickbooks-online.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/razorpay.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/rbi.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/rockwell-factorytalk.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/sage-intacct.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/salesforce/catalog.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/salesforce/contracts.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/salesforce/evidence.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/salesforce/index.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/salesforce/onboarding-log.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/sap-bw4hana.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/sap-dm.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/sap-ecc/catalog.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/sap-ecc/contracts.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/sap-ecc/evidence.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/sap-ecc/index.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/sap-ecc/onboarding-log.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/sap-licensing-reference.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4); [docket] status 'verification_required' not in ['draft', 'published', 'retired']
+- reference/source-systems/sap-s4hana.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/sap-successfactors.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/servicenow.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/siemens-opcenter.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/stripe.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/tally-prime/catalog.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/tally-prime/contracts.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/tally-prime/evidence.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/tally-prime/index.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/tally-prime/onboarding-log.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/workday-financials.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/workday-hcm.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/world-bank.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/xero.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/zoho-books/catalog.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/zoho-books/contracts.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/zoho-books/evidence.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/zoho-books/index.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/zoho-books/onboarding-log.md: [docket] authority must be 'reference' (found 'None')
+- reference/source-systems/zoho-crm.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+- reference/source-systems/zoho-people.md: [docket] authority must be 'reference' (found 'None'); [docket] docket must carry authority_role: projection (DEC-8570d4)
+### evidence (290)
+- evidence/audits/implementation/bcf-characteristic-scope-audit-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-audit'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/audits/implementation/devhub-decision-registration-integrity-audit-2026-06-22.md: [evidence] authority must be 'evidentiary' (found 'reference'); [evidence] status 'None' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/audits/implementation/foundation-contract-governance-audit-2026-06-07.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/audits/implementation/mcf-framework-audit-2026-06-22.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/audits/implementation/mcf-framework-audit-brief-2026-06-22.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'open' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/audits/implementation/mcf-post-bcf-metric-workflow-wiring-impact.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/audits/mcf-active-metrics-batch-001-2026-07-07.md: [evidence] authority must be 'evidentiary' (found 'audit-record'); [evidence] status 'current' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/audits/onboarding/2026-05-12-pool1-trust-audit-46-producing-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/audits/onboarding/2026-05-12-semantic-base-audit-SES-a223ea.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/audits/operations/2026-04-23-bc-docs-v2-foundation-ssot-audit.md: [evidence] no frontmatter block
+- evidence/audits/operations/2026-04-23-pre-pilot-foundation-sop-audit.md: [evidence] no frontmatter block
+- evidence/closeouts/implementation/bcf-audit-remediation-closeout-2026-07-07.md: [evidence] authority must be 'evidentiary' (found 'informative'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/bcf-customer-invoice-id-resolution-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/bcf-enrichment-execution-closeout-for-mcf-step-4.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/bcf-evidence-schema-phase-a3-step-20-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'implemented' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/bcf-evidence-schema-phase-a4-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'implemented' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/bcf-evidence-schema-phase-a5-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'implemented' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/bcf-oagis-pass-1-c1-closeout-2026-06-24.md: [evidence] authority must be 'evidentiary' (found 'dec-f94895-execution-closeout'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/bcf-oagis-pass-1-c1-v2-closeout-2026-06-24.md: [evidence] authority must be 'evidentiary' (found 'dec-f94895-c1-v2-execution-closeout'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/bcf-oagis-pass-1-retrofit-batch-1-failure-closeout-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'failure_closeout' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/bcf-posted-amount-operator-resolution-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/bcf-step-4-publication-confirm-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/bcf-wave-a-supplier-invoice-header-parity-closeout-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-checkpoint'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/bcf-wave-b-fast-track-parity-closeout-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-checkpoint'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/business-concept-registry-backend-mvp-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'accepted' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/business-concept-registry-ui-mvp-shipped.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'accepted' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/d429-step5-arpi-materialization-closeout-2026-06-09.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/devhub-decision-registration-integrity-repair-closeout-2026-06-22.md: [evidence] authority must be 'evidentiary' (found 'reference'); [evidence] status 'None' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-arpi-editorial-rebind-arc-closeout-2026-06-09.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-m10-apply-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-m11-apply-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-m12-5-implementation-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-m12-implementation-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-m13-implementation-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-m2-ddl-apply-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-m3-cert-amendment-apply-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-m3-ddl-apply-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-m4-ddl-apply-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-m5-apply-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-m7-m8-apply-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mcf-m9-apply-closeout.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mls24-je-g1-2026-09-28/CLOSEOUT-mls24-je-g1-2026-09-28.md: [evidence] authority must be 'evidentiary' (found 'implementation-checkpoint'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/mms-recovery-closeout-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-checkpoint'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/implementation/w9-dso-grain-feasibility-2026-09-28/EVIDENCE-w9-dso-grain-feasibility-2026-09-28.md: [evidence] authority must be 'evidentiary' (found 'implementation-checkpoint'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/onboarding/2026-05-15-phase1-bulk-bf-semantic-remediation-closeout-TSK-9515d5.md: [evidence] authority must be 'evidentiary' (found 'DEC-a49413'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/onboarding/2026-05-15-phase2-multi-high-bf-semantic-remediation-closeout-TSK-9515d5.md: [evidence] authority must be 'evidentiary' (found 'DEC-a49413'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/onboarding/2026-05-16-d408-bf-catalog-admission-cleanup-closeout-DEC-1ce490.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/onboarding/2026-05-16-d408-service-guard-closeout-DEC-1ce490.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/onboarding/2026-05-17-d408-correction-cleanup-closeout-DEC-1ce490.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/onboarding/2026-05-17-d409-asset-queue-closeout-DEC-b8ec00.md: [evidence] authority must be 'evidentiary' (found 'DEC-b8ec00 (D409 — BF-BO Catalog Expansion Factory)'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/closeouts/onboarding/2026-05-17-d409-pilot-1-cc-credit-closeout-DEC-b8ec00.md: [evidence] authority must be 'evidentiary' (found 'DEC-b8ec00 (D409 — BF-BO Catalog Expansion Factory)'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/bc-infra-r12-cognito-iam-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/bcf-authoring-test-row-cleanup-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/bcf-evidence-schema-phase-a1-apply-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/bcf-evidence-schema-phase-a1-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/bcf-evidence-schema-phase-a2-migration-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/bcf-evidence-schema-phase-a3-step-20-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/bcf-evidence-schema-phase-a3-writer-reader-cutover-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/bcf-evidence-schema-phase-a4-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/bcf-evidence-schema-phase-a5-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/bcf-mcf-evidence-boundary-and-contract-schema-retirement-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/business-concept-registry-b10b-characteristic-supersession-dbcp-design.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'accepted' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/business-concept-registry-f2-schema-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'approved' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/business-concept-registry-f3-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'approved' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/business-context-framework-phase-a-alignment-dbcp-bucket-1.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'approved' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/contract-version-immutability-dbcp-2026-06-07.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/contract-version-transition-evidence-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/core-chain-data-reset-dbcp-2026-06-09.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'active' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/d418-gate-5-physical-disposition-dbcp-design.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/d429-step5-arpi-materialization-writer-dbcp-2026-06-09.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/d429-step5-metric-definition-id-nullable-dbcp-2026-06-09.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'applied' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/d430-canonical-field-identity-dbcp-2026-06-08.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/d430-d431-v2-meta-schema-seed-dbcp-2026-06-08.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/d431-observation-field-identity-dbcp-2026-06-08.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/d432-legacy-mc-authoring-guard-dbcp-2026-06-08.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/d433-activation-gate-fix-dbcp-2026-06-07.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/d445-cas-v0-evidence-substrate-dbcp.md: [evidence] authority must be 'evidentiary' (found 'DEC-1fa08f (D445)'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/d446-cee-v0-plan-substrate-dbcp.md: [evidence] authority must be 'evidentiary' (found 'DEC-739e23 / D446'); [evidence] status 'applied' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/d461-canonical-reduction-derived-field-dbcp-2026-06-27.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/local-only-operating-model-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/mcf-editorial-rebind-evidence-handling-dbcp-2026-06-08.md: [evidence] authority must be 'evidentiary' (found 'None')
+- evidence/dbcp/implementation/mcf-gate0-seed-reservoir-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'implemented' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/mcf-mcv-binding-refresh-rebind-dbcp-2026-06-08.md: [evidence] authority must be 'evidentiary' (found 'None')
+- evidence/dbcp/implementation/mcf-readiness-bridge-writer-honesty-dbcp-2026-06-09.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/mcf-rebind-successor-governed-abandon-dbcp-2026-06-08.md: [evidence] authority must be 'evidentiary' (found 'None')
+- evidence/dbcp/implementation/mcf-role-grant-service-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/mcf-role-grant-service-implementation-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-duplicate-alias-handling-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m10-self-verification-result-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m11-reservoir-ingestion-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m12-5-materialization-legacy-bridge-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m12-authoring-panel-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m12-deferred-prereqs-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m12-first-real-run-authorization-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m12-first-real-run-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m12-panel-framework-calibration-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m12-trust-path-reconciliation-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m13-pe-mc-evaluator-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m14-invocation-surface-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m14-m12-governance-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m14-unblock-apply-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m2-identity-substrate-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m3-certification-target-amendment-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m3-lifecycle-substrate-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m4-lifecycle-certification-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m5-panel-substrate-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m7-m8-formula-hash-authority-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-m9-fixture-substrate-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-secondary-metric-dag-substrate-dbcp-2026-06-30.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/metric-context-framework-service-ification-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/platform-role-catalog-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/pr-g2-first-service-surface-m12-authz.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/retire-rejected-exit-dbcp-2026-09-30.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/implementation/super-admin-bootstrap-dbcp.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/onboarding/2026-05-12-phase1-dbcp-drafts-1a-1b-1c-1f-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/onboarding/2026-05-12-phase1-tranche1-dbcp-bundle-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/onboarding/2026-05-12-phase2-dbcp-1k-lifecycle-alignment-draft-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'applied' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/onboarding/2026-05-12-phase2-dbcp-1l-bf-semantic-family-draft-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'applied' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/onboarding/2026-05-14-dbcp-verdict-code-extension-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'executed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/onboarding/2026-05-16-d408-bf-catalog-admission-cleanup-dbcp-plan-DEC-1ce490.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/onboarding/2026-05-16-d408-dbcp-1q-a-verification-plan.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/onboarding/2026-05-16-d408-dbcp-1q-b-verification-plan.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/onboarding/2026-05-17-d408-dbcp-1q-c-credit-type-code-mapping-removal-verification-plan.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/onboarding/2026-05-17-d408-dbcp-1q-d-no-cc-type-incoherence-demotion-verification-plan.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/onboarding/2026-05-17-d408-dbcp-1q-e-a1-mismatch-cc-mapping-removal-verification-plan.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/dbcp/onboarding/2026-05-17-d408-dbcp-1q-g-admit-from-correction-required-action-verification-plan.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/ledgers/implementation/bcf-bc-coverage-ledger-view-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'bc-docs-v3 SSOT synthesis'); [evidence] status 'generated_ledger_view' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/ledgers/implementation/bcf-oagis-pass-1-retrofit-scoping-ledger-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'held_operator_gate' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/ledgers/implementation/bcf-oagis-retry-ledger-2026-06-24.md: [evidence] authority must be 'evidentiary' (found 'a0-compile-preflight'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/ledgers/operations/runtime-retirement-register.md: [evidence] status 'evidence' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/ac-v1-ladder-milestone-2026-06-16.md: [evidence] authority must be 'evidentiary' (found 'implementation-milestone'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/activation-publication-gates-failopen-study-2026-06-07.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-c3-c6-projection-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'projection' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-characteristic-amendment-doctrine-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-doctrine'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-coverage-compiler-validation-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'validation_complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-desktop-prep-handoff-contract-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'dec-f94895 + operator architecture revision 2026-06-24'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-enrichment-pre-execution-plan-for-mcf-step-4.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-enrichment-preflight-for-mcf-seed-cases.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-grounding-recheck-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-recheck'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-a0.5-template-catalogue-2026-06-24.md: [evidence] authority must be 'evidentiary' (found 'a0.5-template-catalogue'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-broad-buildout-blueprint-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-blueprint'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-compile-report-2026-06-24.md: [evidence] authority must be 'evidentiary' (found 'a0-compile-preflight'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-1-c1-closure-checkpoint-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'closeout_held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'dec-f94895 + operator decision packet ratified 2026-06-25'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-1-c1-packet-builder-v2-design-2026-06-24.md: [evidence] authority must be 'evidentiary' (found 'dec-f94895 + operator-stated v2 packet discipline 2026-06-24'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-1-c1-repair-pass-2-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'dec-f94895 + operator instruction 2026-06-24 (C1 contextual repair pass 2)'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-1-c1-repair-pass-2-packet-prep-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25 + DEC-f94895 + operator correction 2026-06-25 (relax Global-only filter)'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-1-c1-rp2-parked-row-analysis-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'dec-f94895 + bcf-oagis-pass-1-c1-operator-decision-packet-2026-06-25 + required-doctrine-correction-2026-06-25 (admission scope is cross_function, function_scoped, or industry_scoped; anti-leakage rule applies only to source-system-specific leakage, local aliases, implementation artifacts, source-field copies, and semantic duplicates)'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-1-c1-rp3-packet-prep-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-1-c2-closure-checkpoint-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'closeout_held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-1-c5-closure-checkpoint-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'closeout_complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-1-retrofit-batch-1-v2-pilot-activation-checkpoint-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'closeout_complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-1-retrofit-batch-1-v2-pilot-closure-checkpoint-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'closeout_complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-1-retrofit-checker-first-preflight-v2-doctrine-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'doctrine_active' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-2-e1-item-closure-checkpoint-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'closeout_complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-2-e2-asset-maintenance-closure-checkpoint-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'closeout_complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-2-e2-equipment-operator-decision-packet-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'held_operator_gate' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-2-entry-note-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'pass_2_entry_held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-oagis-pass-3-item-shelf-life-bc-binding-closure-checkpoint-2026-06-25.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'closeout_complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-orphan-characteristic-decision-inventory-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-inventory'); [evidence] status 'held' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/bcf-to-mcf-step-4-readiness-handoff.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/business-concept-registry-b10a-s4-ui-readiness-checklist.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'accepted' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/business-concept-registry-f3-service-slice-plan.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'accepted' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/business-concept-registry-f5-read-surface-slice-plan.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'accepted' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/business-concept-registry-greenfield-enrichment-plan-sketch.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/business-concept-registry-ui-mvp-planning.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'accepted' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/business-context-framework-b6-slice-plan.md: [evidence] authority must be 'evidentiary' (found 'informative'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/business-context-framework-build-plan.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/business-context-framework-ci-harness-plan.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/business-context-framework-failure-evidence.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/business-context-framework-inventory-gap-research.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/business-context-framework-inventory.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/business-context-framework-phase-a-governance-scope-alignment-design.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'accepted' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/canonical-field-semantic-identity-study-2026-06-07.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/chain-engine-loop-milestone-2026-06-16.md: [evidence] authority must be 'evidentiary' (found 'DEC-1fa08f / DEC-739e23'); [evidence] status 'milestone' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/chain-engines-design-packet-2026-06-15.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decisions-locked' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/connection-onboarding-model-note-2026-07-01.md: [evidence] authority must be 'evidentiary' (found 'note'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/connection-slice-platform-note-2026-07-01.md: [evidence] authority must be 'evidentiary' (found 'note'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/d430-arpi-cc-v2-slice-proposal-2026-06-08.md: [evidence] authority must be 'evidentiary' (found 'None')
+- evidence/work-records/implementation/d431-arpi-oc-v2-slice-proposal-2026-06-08.md: [evidence] authority must be 'evidentiary' (found 'None')
+- evidence/work-records/implementation/housekeeping-residual-pendency-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-checkpoint'); [evidence] status 'closed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/legacy-metric-contract-authoring-guard-study-2026-06-07.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mcf-arpi-contract-json-synthesis-proof-2026-06-07.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mcf-arpi-mc-rebind-proposal-2026-06-08.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'locked-pending-dbcp' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mcf-arpi-step5-slice0-synthesis-reproof-2026-06-09.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mcf-d426-amendment-draft-2026-06-07.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mcf-enrichment-experiment-2026-06-07.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mcf-final-operating-flow-pre-doctrine-decisions-2026-06-22.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mcf-materialization-boundary-options-2026-06-07.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mcf-materialized-metric-readiness-visibility-study-2026-06-09.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'study' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mcf-seed-reservoir-postgres-design-2026-06-07.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mcf-step-4-first-representative-metrics-and-bcf-enrichment-slice.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-build-plan.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-inventory.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-m0-pre-m1-decision-packet.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-m10-self-verification-result-preflight.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-m11-reservoir-ingestion-preflight.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-m12-5-materialization-legacy-bridge-preflight.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-m12-authoring-panel-preflight.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-m2-preflight-decisions.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-m3-lifecycle-substrate-preflight.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-m3-m4-cert-substrate-correction-preflight.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-m4-lifecycle-certification-preflight.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-m5-panel-substrate-preflight.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-m7-m8-formula-hash-authority-preflight.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-m9-fixture-substrate-preflight.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-context-framework-reference-dimension-cross-entity-scope-2026-06-30.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/metric-evaluation-boundary-governance-parity-study-2026-07-01.md: [evidence] authority must be 'evidentiary' (found 'study')
+- evidence/work-records/implementation/mms-layer1-cluster-g-prompt-regression-plan-2026-06-22.md: [evidence] authority must be 'evidentiary' (found 'reference'); [evidence] status 'None' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mms-layer1-consolidation-checkpoint-2026-06-22.md: [evidence] authority must be 'evidentiary' (found 'reference'); [evidence] status 'None' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mms-layer1-interpretation-surfaces-inventory-2026-06-22.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mms-layer1-track2-comments-tests-plan-2026-06-22.md: [evidence] authority must be 'evidentiary' (found 'reference'); [evidence] status 'None' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mms-layer2-implementation-names-inventory-2026-06-22.md: [evidence] authority must be 'evidentiary' (found 'implementation-inventory'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mms-layer2-route-alias-inventory-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-inventory'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mms-layer3-compatibility-names-inventory-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-inventory'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mms-publication-review-evidence-fingerprint-design-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-design'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mms-r3-filter-clause-verifier-repair-design-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-design'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mms-r3-filter-clause-verifier-v2-plan-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-plan'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mms-runtime-recovery-inventory-2026-06-23.md: [evidence] authority must be 'evidentiary' (found 'implementation-inventory'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/mms-step2-operator-facing-docs-ui-labels-inventory-2026-06-22.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/observation-field-semantic-identity-study-2026-06-07.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/odoo-connector-build-plan.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/phase-1-execution-runbook-2026-06-09.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'active' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/pilot-e2e-readiness-consolidated-plan-2026-07-01.md: [evidence] authority must be 'evidentiary' (found 'plan'); [evidence] status 'active' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/platform-tenant-boundary-runtime-operations-study-2026-09-20.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'evidence' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/implementation/reader-boundary-governance-parity-study-2026-07-01.md: [evidence] authority must be 'evidentiary' (found 'study')
+- evidence/work-records/implementation/reader-governance-first-principles-pov-2026-07-01.md: [evidence] authority must be 'evidentiary' (found 'study'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/2026-05-12-phase1-tranche1-final-execution-packet-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/2026-05-12-sda-certify-with-override-experiment-plan-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'plan' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/2026-05-12-sda-external-standard-g4-experiment-plan-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'plan' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/2026-05-14-slice0-mc-onboarding-extension-plan-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'plan' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/2026-05-14-slice1-promotion-gate-plan-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'plan' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/2026-05-15-phase1-bulk-bf-semantic-remediation-plan-TSK-9515d5.md: [evidence] authority must be 'evidentiary' (found 'DEC-a49413'); [evidence] status 'plan' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/2026-05-15-phase2-multi-high-bf-semantic-remediation-plan-TSK-9515d5.md: [evidence] authority must be 'evidentiary' (found 'DEC-a49413'); [evidence] status 'plan' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/2026-05-15-phase3-medium-bf-semantic-remediation-plan-TSK-9515d5.md: [evidence] authority must be 'evidentiary' (found 'DEC-a49413'); [evidence] status 'plan' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/2026-05-15-phase3-oagis-description-root-cause-study-TSK-9515d5.md: [evidence] authority must be 'evidentiary' (found 'DEC-a49413'); [evidence] status 'study' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/2026-05-16-d408-service-guards-plan-DEC-1ce490.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/2026-05-17-d408-correction-required-bf-cleanup-plan-DEC-1ce490.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-11-operating-cash-flow-production-gap-SES-524cdc.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'deferred' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-11-receivable-open-item-onboarding-design-SES-524cdc.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-11-total-company-revenue-production-gap-SES-524cdc.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-11-total-revenue-production-gap-SES-1c080e.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decided' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-apex-phase0-readiness-walkthrough-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-binding-evidence-trace-mc-total-revenue-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-c1-bf-cf-compatibility-amendment-draft-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-c1-matrix-review-against-apex-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-c2-mc-envelope-dedup-draft-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-c3-cross-domain-scope-draft-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-pass1-grammar-artifact-register-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'Foundation (locked)'); [evidence] status 'read-only' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-sda-certification-operator-runbook-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'active' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-sda-certify-with-override-experiment-result-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-sda-external-standard-g4-experiment-result-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-sda-first-honest-certification-canary-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-sda-phase1-proof-summary-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-semantic-definitions-authority-design-SES-a223ea.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-12-tier1-cf-certification-design-SES-a223ea.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decision-pending' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-13-legacy-vs-sda-dictionary-certified-bf-classification-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-14-pass1-calibration-q1-q4-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-14-session-findings-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-14-slice0-execution-result-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'executed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-14-slice0.5-execution-result-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'executed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-14-slice0.7-execution-result-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'executed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-14-slice0.8-execution-result-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'executed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-14-slice0.9-execution-result-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'executed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-14-slice1-execution-result-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'executed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-14-slice1-preflight-result-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'complete' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-14-slice1b-execution-result-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'executed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-15-slice2-execution-result-SES-594568.md: [evidence] authority must be 'evidentiary' (found 'DEC-a17d0f'); [evidence] status 'executed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-17-d408-admit-from-correction-required-design-DEC-1ce490.md: [evidence] authority must be 'evidentiary' (found 'DEC-1ce490'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-17-d409-admit-from-candidate-import-design-DEC-b8ec00.md: [evidence] authority must be 'evidentiary' (found 'DEC-b8ec00 (D409 — BF-BO Catalog Expansion Factory)'); [evidence] status 'proposed' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-17-d409-agent-prompt-scaffold.md: [evidence] authority must be 'evidentiary' (found 'DEC-b8ec00 (D409 — BF-BO Catalog Expansion Factory)'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-17-d409-bf-bo-catalog-expansion-factory-sop.md: [evidence] authority must be 'evidentiary' (found 'DEC-b8ec00 (D409 — BF-BO Catalog Expansion Factory)'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-17-d409-credit-facility-modeling-policy.md: [evidence] authority must be 'evidentiary' (found 'DEC-b8ec00 (D409 — BF-BO Catalog Expansion Factory)'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-17-d409-intangible-asset-PARKED.md: [evidence] authority must be 'evidentiary' (found 'DEC-b8ec00 (D409 — BF-BO Catalog Expansion Factory)'); [evidence] status 'PARKED_GOVERNANCE_GAP' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/_cross/2026-05-17-d409-intangible-asset-cc-scope-decision-DEC-b8ec00.md: [evidence] authority must be 'evidentiary' (found 'DEC-b8ec00 (D409 — BF-BO Catalog Expansion Factory)'); [evidence] status 'decided' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/onboarding/metric-work-records/days-sales-outstanding/2026-05-11-grammar-design-SES-b7db1a.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'decided' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/operating-model/demo-plan-cfo-pack-storyboard.md: [evidence] authority must be 'evidentiary' (found 'authoritative')
+- evidence/work-records/operating-model/demo-plan-cfo-pack.md: [evidence] authority must be 'evidentiary' (found 'authoritative')
+- evidence/work-records/operations/apex-cfo-pack-demo-readiness-triage.md: [evidence] authority must be 'evidentiary' (found 'reference'); [evidence] status 'draft' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/operations/d335/2026-04-15-finance-runway.md: [evidence] no frontmatter block
+- evidence/work-records/operations/d335/2026-04-15-mc-walkthrough-log.md: [evidence] no frontmatter block
+- evidence/work-records/operations/d335/2026-04-15-phase3-followups.md: [evidence] no frontmatter block
+- evidence/work-records/operations/d335/2026-04-15-runway-diagnose.md: [evidence] no frontmatter block
+- evidence/work-records/operations/d335/2026-04-15-runway-findings.md: [evidence] no frontmatter block
+- evidence/work-records/operations/mcf-panel-run-evidence/2026-05-31-pr-e2-first-service-surface-m12.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'committed_post_execution_evidence' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/operations/metric-onboarding-case-book.md: [evidence] status 'evidence' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/operations/mms-terminology-transition-note-2026-06-22.md: [evidence] authority must be 'evidentiary' (found 'reference'); [evidence] status 'None' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/operations/role-bootstrap-evidence/2026-05-31-super-admin-bootstrap.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'committed_post_execution_evidence' not in ['drafting', 'locked', 'retired', 'superseded']
+- evidence/work-records/operations/role-grant-evidence/2026-05-31-pr-g1-5-first-mcf-author-grant.md: [evidence] authority must be 'evidentiary' (found 'None'); [evidence] status 'committed_post_execution_evidence' not in ['drafting', 'locked', 'retired', 'superseded']
+- governance/plans/PLAN-Codex-bc-external-audit-shutdown-cleanup-2026-08-01.md: [evidence] no frontmatter block
+### generated (26)
+- reference/code-index/config.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/code-index/module.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/code-index/script.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/code-index/service.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/admin.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/contract.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/envelope.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/evidence.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/execution.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/fact.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/infrastructure.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/master.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/metric.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/operations.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/organization.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/pricing.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/progression.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/runtime.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/source.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/support.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/tenant.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/tenant_dim.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/test_bench.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/data-dictionary/users.md: [generated] authority must be 'generated' (found 'source-derived')
+- reference/enforcement-surface-map.md: [generated] no frontmatter block
+- reference/lifecycle-map.md: [generated] no frontmatter block
