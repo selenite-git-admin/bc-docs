@@ -210,7 +210,7 @@ The migrations directory is the SSOT for schema evolution. When a migration land
 3. The Drizzle definitions in `bc-core/src/database/schema/` are updated to match.
 4. The Data Dictionary reference (when built) regenerates from the updated DDL.
 
-Each migration's governing decision is recorded in the migration's filename (D-code or date prefix) and in the corresponding ADR under `docs/adrs/`. The migration list itself is not enumerated here; a reader who needs the full migration list runs `ls bc-core/docker/redesign/migrations/`.
+Each migration's governing decision is recorded in the migration's filename (D-code or date prefix) and in the corresponding ADR under `docs/governance/adrs/`. The migration list itself is not enumerated here; a reader who needs the full migration list runs `ls bc-core/docker/redesign/migrations/`.
 
 **Governing source.** `bc-core/docker/redesign/migrations/`.
 

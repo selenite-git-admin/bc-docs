@@ -18,7 +18,7 @@ collection: glossary
 
 **Action Object.** An authoritative object representing declared intent bound at creation time to one or more Metric Snapshots. Produced at the action evaluation boundary. First-use: [The Object Model](../../foundation/the-object-model.md). Related: [The Invariants](../../foundation/the-invariants.md); [Action Evaluation](../../operating-model/action-evaluation.md).
 
-**ADR (Architecture Decision Record).** A markdown file in `docs/adrs/` recording a single architectural decision with status, rationale, and consequences. Per `DEC-a4e550`, the ADR file is the source of truth; DevHub holds metadata that points at it. First-use: [Decision and Change Procedure](../../development/decision-and-change-procedure.md). Related: [DevHub](../../development/devhub.md); [Documentation System](../../development/documentation-system.md).
+**ADR (Architecture Decision Record).** A markdown file in `docs/governance/adrs/` recording a single architectural decision with status, rationale, and consequences. Per `DEC-a4e550`, the ADR file is the source of truth; DevHub holds metadata that points at it. First-use: [Decision and Change Procedure](../../development/decision-and-change-procedure.md). Related: [DevHub](../../development/devhub.md); [Documentation System](../../development/documentation-system.md).
 
 **Admission and Observation.** The runtime acts at the first evaluation boundary that produce Source Objects from external state under governed Admission and Observation Contracts. First-use: [Admission and Observation](../../operating-model/admission-and-observation.md). Related: [The Evaluation Boundaries](../../foundation/the-evaluation-boundaries.md); [Connectors and Readers](../../operating-model/connectors-and-readers.md).
 

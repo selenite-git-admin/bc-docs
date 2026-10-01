@@ -11,7 +11,7 @@ governing_sources:
   - Decision and Change Procedure
   - Audit and Activity Logging
 governing_adrs:
-  - DEC-3395bc (bc-docs SSOT cutover; flat layout under docs/; ADR files written into docs/adrs/; bc-core JWT-served document endpoints)
+  - DEC-3395bc (bc-docs SSOT cutover; flat layout under docs/; ADR files written into docs/governance/adrs/; bc-core JWT-served document endpoints)
   - DEC-b97390 (bc-admin embedded reader is canonical; reader fetches manifest, markdown, and assets from bc-core; URL uglification rejected)
   - DEC-c06f41 (Spine expansion to eight sections plus a home; Implementation reshape; section-overview discipline)
   - DEC-a4e550 (ADR-First Decision Workflow; the ADR file is SSOT)

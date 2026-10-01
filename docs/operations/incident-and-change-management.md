@@ -198,7 +198,7 @@ The change-management consequence: an ADR cited in a change record uses the `DEC
 | DEC-bebaec | Establishes the chain completeness SSOT; this chapter records SSOT regressions as the primary incident-detection surface |
 | DEC-633b2a | Establishes the D-code monotonic allocator; the discipline applies when this chapter's change records cite new ADRs |
 
-The L-node semantic verdict gate (D366; ADR-804874) and the D268 session-discipline rules (referenced in CLAUDE.md) govern the session-close gate this chapter records. The corresponding ADR files are present in `docs/adrs/`; the standalone ADR for D268 itself is referenced in CLAUDE.md without a directly verified ADR file in the chapter's review.
+The L-node semantic verdict gate (D366; ADR-804874) and the D268 session-discipline rules (referenced in CLAUDE.md) govern the session-close gate this chapter records. The corresponding ADR files are present in `docs/governance/adrs/`; the standalone ADR for D268 itself is referenced in CLAUDE.md without a directly verified ADR file in the chapter's review.
 
 **Governing source.** Decisions: ADR Registry.
 

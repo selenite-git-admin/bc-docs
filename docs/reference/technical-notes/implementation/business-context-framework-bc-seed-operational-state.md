@@ -187,5 +187,5 @@ The earlier v1 coverage script also serves as a worked example of why §13 / G24
 | `business-context-framework-inventory-gap-research.md` §8.5 G21 | Original gap finding |
 | `business-context-framework-failure-evidence.md` F34, F35 | Where bc-seed evidence was flagged thin |
 | `business-context-framework-requirements.md` PE1(c), N1, Chapter 8 | bc-seed authority claim and no-fabrication discipline |
-| `docs/adrs/ADR-149ab2.md` Q4 + Q9 + first-delegation prereqs | bc-seed implicit dependency on Scope 1 first delegation |
+| `docs/governance/adrs/ADR-149ab2.md` Q4 + Q9 + first-delegation prereqs | bc-seed implicit dependency on Scope 1 first delegation |
 | `business-context-framework-build-plan.md` E1, E3 | Build-plan items this document closes (E1) and re-scopes (E3) |
