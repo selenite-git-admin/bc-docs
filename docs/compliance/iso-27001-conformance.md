@@ -47,7 +47,7 @@ This chapter does not redefine the InfoSec controls (InfoSec and Access Control)
 
 This chapter is deliberately honest about the certification gap per pattern 81: the platform has not undergone an ISO 27001 audit. The chapter records what the platform's substrate provides in the readiness baseline and what a future audit would surface as gaps. Aspirational SRE-grade conformance claims are not made.
 
-**Governing source.** outline.md §4.8; DEC-ae331f.
+**Governing source.** DEC-3395bc; DEC-ae331f.
 
 ## Staged Pursuit per DEC-ae331f
 
@@ -71,12 +71,12 @@ The platform's information-security policy surface is operational rather than fo
 | Substrate | Form |
 |---|---|
 | `CLAUDE.md` (at the barecount-devhub repo root) | The agent-instruction policy surface; records the session protocol, the SOP compliance discipline, the dev-service management model, the AWS profile discipline, the database change protocol, the QA coding standards, and the don't-list |
-| `bc-docs/outline.md` and the chapter authority axis | The documentation-authority policy: every chapter declares `authority` (`authoritative`, `reference`, `evidentiary`) and `status` (`drafting`, `reviewing`, `locked`, `superseded`, `retired`); binding force requires `authority: authoritative` plus `status: locked` |
+| The Documentation System chapter and the chapter authority axis | The documentation-authority policy: every chapter declares `authority` (`authoritative`, `reference`, `evidentiary`) and `status` (`drafting`, `reviewing`, `locked`, `superseded`, `retired`); binding force requires `authority: authoritative` plus `status: locked` |
 | `DEC-ebf0b4` (the D268 Session Discipline rules) | The ten-rule policy that governs engineering session behavior; rules cover bulk-generation prohibition, cosmetic status restraint, one-then-many, checkpoint discipline, self-audit at session close, independent verification |
 
 The platform's stance: these substrates are the as-built information-security policy. Formal board-approved policy documents are queued; the operational policy substrate carries the discipline in the readiness baseline.
 
-**Governing source.** CLAUDE.md; `bc-docs/outline.md`; DEC-ebf0b4.
+**Governing source.** CLAUDE.md; DEC-3395bc; DEC-ebf0b4.
 
 ## A.5.36 Compliance with Policies: The Change-Record Plan-and-Report Pair
 
@@ -141,7 +141,7 @@ A.8 is the largest control family. The platform's substrate maps to A.8 controls
 | A.8.4 Access to source code | GitHub repositories in the founder's organization; access gated by GitHub identity |
 | A.8.6 Capacity management | Per-tenant isolation; Operations: Performance and Scale records the per-tenant resource discipline |
 | A.8.8 Management of technical vulnerabilities | Each repository's CI per `DEC-5b760c` (lint, typecheck, tests, the bc-core architecture gates); no developer-machine hook; Quality Assurance records the enforcement per repository |
-| A.8.9 Configuration management | Per-repo `CLAUDE.md` and `outline.md`; configuration declared in source-controlled files |
+| A.8.9 Configuration management | Per-repo `CLAUDE.md` and the Documentation System chapter; configuration declared in source-controlled files |
 | A.8.10 Information deletion | Sentinel-based nullification per `DEC-bd5492`; Privacy and the Immutable Fact records the mechanism |
 | A.8.11 Data masking | Out of scope in the readiness baseline; nullification mechanism handles the erasure case |
 | A.8.12 Data leakage prevention | Docs anti-scraping per `DEC-3395bc`; JWT-guarded endpoints |
@@ -278,7 +278,7 @@ ISO 27001 expects a documented management-review cadence. The platform's readine
 | SOC 2 Conformance | The Trust Services Criteria mapping | The companion conformance posture per `DEC-ae331f` |
 | Mac Auditor Operations | The auditor service, the exchange desk, the grants and their procedures | The conformance role of independent review as the A.8.32 change-management control |
 
-**Governing source.** outline.md §4.8; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## References
 

@@ -14,6 +14,7 @@ governing_sources:
   - Internal Modules
   - Auxiliary Services
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules)
   - DEC-771baf (Tenant database topology; platform-tenant one-way dependency)
   - DEC-e50b83 (Master port reservation)
@@ -35,7 +36,7 @@ This chapter sits between Auxiliary Services and Data Model and Schema. Auxiliar
 
 This chapter does not redefine Foundation invariants, the Authority Model, or the Architecture chapter's commitments. It does not enumerate the tenant database schema (deferred to Data Model and Schema), the per-environment deployment SOP (deferred to Deployment Topology in the Operations section), the hosting variant inventory (deferred to Tenant Lifecycle and Subscription), the security operations procedure (deferred to Security Operations), or the per-service deployment shape that lives in Backend Services and Auxiliary Services.
 
-**Governing source.** Architecture; Backend Services; Auxiliary Services; outline.md §4.3.
+**Governing source.** Architecture; Backend Services; Auxiliary Services; DEC-3395bc.
 
 ## AWS Account, Region, Profile
 
@@ -241,5 +242,5 @@ The deployment role is `arn:aws:iam::<ACCOUNT_ID>:role/GitHubCICDInfraRole`, gra
 - DEC-324d9e: Subscription tiers and hosting variants
 - DEC-441665: NPM supply chain mitigation via AWS CodeArtifact
 - DEC-c06f41: Spine expansion to eight sections plus home
-- outline.md §4.3: Implementation
+- DEC-3395bc: Implementation
 - Decisions: ADR Registry

@@ -50,7 +50,7 @@ Four diagrams accompany the chapter prose: a conceptual view of sources, the fou
 
 ![Architecture: Conceptual View](/docs/assets/diagrams/DG-architecture-conceptual.svg)
 
-**Governing source.** Foundation; outline.md §4.3.
+**Governing source.** Foundation; DEC-3395bc.
 
 ## Architectural Commitments
 
@@ -350,5 +350,5 @@ The decisions that govern the architecture are listed below. The list is the arc
 - DEC-441665: NPM supply chain mitigation via AWS CodeArtifact
 - DEC-324d9e: Subscription tiers and hosting variants
 - DEC-c06f41: Spine expansion to eight sections plus home
-- outline.md §4.3: Implementation
+- DEC-3395bc: Implementation
 - Decisions: ADR Registry

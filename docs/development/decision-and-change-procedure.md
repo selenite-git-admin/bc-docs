@@ -16,7 +16,7 @@ governing_adrs:
   - DEC-623f8f (ADR Hygiene Policy; eight rules for supersession pairs, stuck-proposed audit, implementation verification, monthly audit, D-code guidance, orphan tolerance, authoring gates, quarterly sweep)
   - DEC-ebf0b4 (Session Discipline and Data Integrity Rules; the ten D268 rules)
   - DEC-804874 (L-Node Verification with Semantic Family Classification; the session-close gate per D366)
-  - DEC-3395bc (bc-docs SSOT cutover; the v3 layout under docs/; ADR files written into docs/adrs/)
+  - DEC-3395bc (bc-docs SSOT cutover; the v3 layout under docs/; ADR files written into docs/governance/adrs/)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -30,7 +30,7 @@ This chapter records the procedure for recording architectural decisions and gov
 
 This chapter does not redefine the DevHub registry tables (DevHub), the audit substrate that holds the records (Audit and Activity Logging), or the operational triage path for incidents (Incident and Change Management).
 
-**Governing source.** outline.md §4.5; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## Architectural Decisions Are ADR Files
 
@@ -260,7 +260,7 @@ acceptance `ae250de5`).
 | Operating Model: Chain Completeness and Verdict | The chain-status SSOT and the L-node semantic verdict definition | The session-close gate that consumes the verdict at the engineering boundary |
 | Quality Assurance | The bc-qa repository and the audit harness | The QA NC records that link to commits and to session UIDs through the change-record trail |
 
-**Governing source.** outline.md §4.5; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## References
 

@@ -14,6 +14,7 @@ governing_sources:
   - AI Architecture
   - AI Agents
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; this chapter exists in the AI section)
   - DEC-804874 (D366 L-node semantic gate at session close; consumes the cc-field-audit triplet's verdict; the one hard close-blocker that depends on AI)
   - DEC-bebaec (Chain Status SSOT; the chain-completeness gate substrate that runs alongside the AI gate but does not consume AI verdicts)
@@ -32,7 +33,7 @@ This chapter sits between AI Agents and AI Trust and Verification. AI Agents rec
 
 This chapter does not redefine the maker-checker-gate triplet pattern (deferred to AI Architecture), the agent inventory (deferred to AI Agents), the model substrate (deferred to Bedrock and Inference Profiles), the trust ladder (deferred to AI Trust and Verification), the chain-status SSOT that runs alongside but separate from the AI gate (deferred to Quality Gates and Chain Integrity in Operating Model), or the per-tenant accept-and-reject trail (deferred to AI Usage Visibility). The chapter records the verdict shape and the consumption posture; the gate authority over runtime decisions is owned by Quality Gates and Chain Integrity.
 
-**Governing source.** AI Architecture; AI Agents; Audit and Activity Logging; outline.md §4.4.
+**Governing source.** AI Architecture; AI Agents; Audit and Activity Logging; DEC-3395bc.
 
 ## The Verdict Response Shape
 
@@ -164,7 +165,7 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 | Evidence and Lineage | Operating Model | Owns the runtime proof chain at the four boundary acts. This chapter records that AI verdicts are governance, not runtime proof; Evidence and Lineage records the proof commitment |
 | Audit and Activity Logging | Implementation section | Owns the operational governance trail substrate including the change record discipline at session close. This chapter records the L-node gate's consumption; Audit and Activity Logging records the substrate |
 
-**Governing source.** Operating Model; Implementation; outline.md §4.4.
+**Governing source.** Operating Model; Implementation; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -188,6 +189,6 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 - DEC-c06f41: Spine expansion to eight sections plus home
 - DEC-804874: L-node semantic gate (D366)
 - DEC-bebaec: Chain Status SSOT
-- outline.md §4.4: AI
+- DEC-3395bc: AI
 - Decisions: ADR Registry
 

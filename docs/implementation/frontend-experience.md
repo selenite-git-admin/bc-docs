@@ -44,7 +44,7 @@ Per-screen, per-component, per-route inventory is the role of the future **Scree
 
 This chapter sits between API Surface and Notifications and Webhooks. API Surface records the endpoints the frontends consume; this chapter records the design rationale of the consumers. It does not redefine boundary semantics (deferred to Operating Model), the dual-layer trust contract (deferred to The Dual-Layer Interaction Model), the per-endpoint shapes (deferred to API Surface), the embedded documentation reader's documentation discipline (deferred to Documentation System in the Development section), or the bc-portal subscription tier surface (deferred to Tenant Lifecycle and Subscription).
 
-**Governing source.** Architecture; Backend Services; API Surface; outline.md §4.3.
+**Governing source.** Architecture; Backend Services; API Surface; DEC-3395bc.
 
 ## Two Frontends, Two Scopes
 
@@ -205,7 +205,7 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 |---|---|---|
 | bc-portal carries three incomplete UI iterations | Open | None of the three is the canonical surface; this chapter cannot describe a stable bc-portal page catalogue until one iteration is selected |
 | bc-portal `useMaster*` hook adoption is partial | Low | bc-admin enforces the master-data hook discipline; bc-portal has it queued. Some legacy pages still hardcode enum arrays |
-| Screen Registry auto-generation is not yet built | Low | The DevHub screen registry has the data structure but is seeded by hand, bc-admin only (83 rows, 0 bc-portal on 2026-09-30); no generator analogous to `scripts/generate-data-dictionary.mjs` exists |
+| Screen Registry auto-generation is not yet built | Low | The DevHub screen registry has the data structure but is seeded by hand, bc-admin only (83 rows, 0 bc-portal on 2026-09-30); no generator analogous to the data-dictionary generator (`scripts/docs-control/generate_source_references.py`) exists |
 | The chapter is a stub | Open | A non-stub treatment requires the bc-portal canonical iteration to land and the Screen Registry to generate per-screen detail |
 | Login redirect does not preserve the prior route | Low | A user who is mid-session and times out is bounced to login then back to the home page, not back to the page they were on. Implementation gap; no dedicated tracking yet |
 
@@ -244,5 +244,5 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 - DEC-3395bc: v3 documentation structure
 - DEC-ee6018: bc-qa standalone repo
 - DEC-c06f41: Spine expansion to eight sections plus home
-- outline.md §4.3: Implementation
+- DEC-3395bc: Implementation
 - Decisions: ADR Registry

@@ -38,7 +38,7 @@ This chapter does not redefine any platform claim. The section openers (Foundati
 
 This chapter exists so that a reader who opens the documentation cold can locate any section without prior context, and so that a reader who has finished one section can hold the eight sections as one coherent set rather than as eight independent surfaces.
 
-**Governing source.** outline.md §1; outline.md §4.
+**Governing source.** DEC-3395bc.
 
 ## What BareCount Is
 
@@ -67,11 +67,11 @@ The documentation is one home plus eight top-level sections. The home is this Pl
 
 The total is 84 chapters: 1 home plus 83 across the eight sections per `DEC-c06f41`. Section order is the canonical sidebar order; chapter order within a section is fixed by the section opener and by the chapter's `order` frontmatter field.
 
-**Governing source.** outline.md §4; DEC-c06f41.
+**Governing source.** DEC-3395bc; DEC-c06f41.
 
 ## Reading Paths by Audience
 
-The documentation supports the audiences named by outline §1. Each audience has a recommended reading path that produces a coherent subset for a specific purpose.
+The documentation supports the audiences named by the Documentation System chapter. Each audience has a recommended reading path that produces a coherent subset for a specific purpose.
 
 | Audience | Sequence | Outcome |
 |---|---|---|
@@ -84,7 +84,7 @@ The documentation supports the audiences named by outline §1. Each audience has
 
 The reading paths do not reorder the sections. They guide a reader who needs to extract a coherent subset for a specific purpose. The reference materials are for lookup and derive from the chapters; no audience reads them front-to-back.
 
-**Governing source.** outline.md §1; outline.md §5.
+**Governing source.** DEC-3395bc.
 
 ## The Frontmatter State Machine
 
@@ -106,7 +106,7 @@ Every chapter and every governance file under `docs/` carries two orthogonal fro
 
 Binding force equals `authority == authoritative` and `status == locked`. Any other combination is non-binding. The chapter that a reader follows for a specific platform behavior is binding only when both conditions hold.
 
-**Governing source.** outline.md §2.
+**Governing source.** DEC-3395bc.
 
 ## Voice and Citation Discipline
 
@@ -118,14 +118,14 @@ Every chapter is written in a single voice across all sections. The discipline b
 | Em dashes | None in titles, headings, or body prose; commas, colons, periods, semicolons, or parentheses substitute |
 | Forbidden vocabulary | The ten roots `pipeline`, `ingest`, `transform`, `materialize`, `flow`, `stage`, `job`, `refresh`, `recompute`, `process` are forbidden in body prose; the carve-out for `upstream` and `downstream` admits DAG-direction terms on declared chains; protocol-vocabulary identifiers (such as `codeartifact:refresh` or "OAuth refresh token") are admissible inside backticks or as standards-vocabulary protocol identifiers |
 | Section pattern | Behavior sections carry Purpose, Scope, Behavior, Constraints, Failure modes, and Governing source; component sections add Interactions |
-| Citation discipline | Every substantive section ends with a `Governing source.` footer naming the authoritative references; queued chapters are not cited as governing source; `outline.md` is cited only for documentation-structure claims, not for system-behavior claims |
+| Citation discipline | Every substantive section ends with a `Governing source.` footer naming the authoritative references; queued chapters are not cited as governing source; the Documentation System chapter is cited only for documentation-structure claims, not for system-behavior claims |
 | Bidirectional frontmatter | Every `DEC-xxxxxx` and `FND-ERR-xxx` cited in body appears in `governing_adrs` or `errata_referenced`; every frontmatter-listed reference appears in body |
 | Numbering | None in chapter titles, headings, or cross-references; chapters are name-keyed; only frontmatter `order` provides sort stability |
 | Diagram discipline | Source format is SVG; bidirectional declaration in frontmatter `diagrams` and body references; prose is the spec, the diagram is the navigation aid |
 
 The discipline is enforced by a pre-commit grep, by the founder cold-read, and by the earned voice patterns the checklist records.
 
-**Governing source.** outline.md §2; `scripts/reference/aws-rewrite-checklist.md`.
+**Governing source.** DEC-3395bc; `scripts/reference/aws-rewrite-checklist.md`.
 
 ## Reference Materials
 
@@ -135,7 +135,7 @@ The reference materials sit as first-class top-level peers under `docs/`. Each h
 |---|---|---|
 | Decisions | `docs/adrs/` | Authoritative; ADRs created and governed via DevHub MCP tools per `DEC-a4e550`; the ADR file is the source of truth |
 | Errata | `docs/errata/` | Authoritative; governed contradictions to Foundation; entries tracked by the errata register |
-| Data Dictionary | `docs/data-dictionary/` | Reference; auto-generated from live PostgreSQL state by `scripts/generate-data-dictionary.mjs` |
+| Data Dictionary | `docs/data-dictionary/` | Reference; auto-generated by `scripts/docs-control/generate_source_references.py` |
 | Contract Schemas | `docs/schemas/` (queued) | Reference; per-contract-family JSON schemas plus body pages |
 | API Reference | `docs/api/` (queued) | Reference; per-endpoint request and response shape; generated from the DevHub API scanner |
 | Screen Registry | `docs/screen-registry/` (queued) | Reference; per-screen route, layout, child screens, API consumption, auth scope; generated from DevHub when both frontends stabilize |
@@ -145,7 +145,7 @@ The reference materials sit as first-class top-level peers under `docs/`. Each h
 
 The chapter is the authority for the rationale and the design intent; the reference is the authority for the inventory. Chapters describe; references enumerate.
 
-**Governing source.** outline.md §4.9.
+**Governing source.** DEC-3395bc.
 
 ## Repository and Reader
 
@@ -161,14 +161,14 @@ The legacy `legacy v2 archive` repository is read-only archive. New chapters lan
 |---|---|
 | Eight top-level sections plus one home | Per `DEC-c06f41`; replaces prior Part I-V framing; replaces prior six-section spine |
 | No chapter numbering | Chapters are name-keyed; H1 has no `Chapter N` prefix; H2 has no `N.N`; cross-references use names |
-| Single voice across all sections | Per outline §2; the AWS rewrite checklist is the refining authority |
+| Single voice across all sections | Per the Documentation System chapter; the AWS rewrite checklist is the refining authority |
 | Bidirectional frontmatter | Every `DEC-xxxxxx` cited in body appears in `governing_adrs`; every frontmatter-listed reference appears in body |
 | No deploy-specific figures in feature chapters | Port numbers, AWS account identifiers, region codes, profile names, IAM ARNs route to Infrastructure or Operations: Deployment Topology per pattern 85 |
 | Section openers locate, do not restate | Per pattern 87; this home overview applies the same discipline at the documentation level |
 | ADR file is canonical | DevHub holds metadata; the ADR file under `docs/adrs/` is the source of truth per `DEC-a4e550` |
 | The platform's correctness is structural | The contract grammar is the platform's discipline; correctness emerges from the invariants, not from any particular run |
 
-**Governing source.** outline.md §2; outline.md §4; DEC-c06f41; DEC-a4e550.
+**Governing source.** DEC-3395bc; DEC-c06f41; DEC-a4e550.
 
 ## Governing Decisions
 
@@ -186,7 +186,7 @@ The documentation rests on a small set of structural decisions. Each row carries
 
 This overview routes governance to the owning chapter or owning section. The bounded scope language above prevents this overview from claiming authority over the platform behavior the ADRs govern; the chapter that owns the topic carries the substantive treatment.
 
-**Governing source.** outline.md §4; per-chapter `governing_adrs` frontmatter.
+**Governing source.** DEC-3395bc; per-chapter `governing_adrs` frontmatter.
 
 ## References
 
@@ -212,6 +212,6 @@ This overview routes governance to the owning chapter or owning section. The bou
 - DEC-b97390 (bc-admin embedded reader)
 - DEC-a4e550 (ADR-First Decision Workflow)
 - DEC-ebf0b4 (Session Discipline and Data Integrity Rules)
-- bc-docs outline.md (the framework)
-- bc-docs HANDOFF.md (the per-session entry point)
+- bc-docs Documentation System chapter (the framework)
+- DEC-3395bc (the per-session entry point)
 - `scripts/reference/aws-rewrite-checklist.md` (the eighty-eight earned voice patterns)

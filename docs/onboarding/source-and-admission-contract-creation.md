@@ -10,6 +10,7 @@ governing_sources:
   - Admission and Observation
   - Quality Gates and Chain Integrity
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-242d60 (D245 AC body purity; SC body declares structure only)
   - DEC-ca4c1e (D247 AC master shape locked, DQC integrated, GL/PL/TN scope prefixes)
 governing_sops:
@@ -28,7 +29,7 @@ This chapter records the governed sequence by which a Source Contract (SC) and i
 
 This chapter does not redefine the contract grammar that introduces Source Contract and Admission Contract as the entry-boundary contract families (The Contract Grammar), the admission and observation runtime acts (Admission and Observation), the source catalog the contracts reference (Sources and the Catalog), or the chain integrity rules that govern contract composition (Quality Gates and Chain Integrity).
 
-**Governing source.** outline.md §4.6; The Contract Grammar.
+**Governing source.** DEC-3395bc; The Contract Grammar.
 
 ## What the Procedure Produces
 
@@ -304,6 +305,6 @@ Several adjacent governance points (D018 contract families, D246 AC body as DQC 
 - DEC-242d60: AC body purity (drift moved to header)
 - DEC-ca4c1e: AC master shape locked (DQC integrated, scope-prefix rule)
 - legacy-v2/docs/sops/contract-creation-sop.md (predecessor SOP)
-- outline.md §4.6: Onboarding
+- DEC-3395bc: Onboarding
 
 

@@ -10,6 +10,7 @@ governing_sources:
   - AI Gates
   - AI Trust and Verification
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-1918d0 (D162 database rules)
   - DEC-69f09e (D148 ISO 11179 naming)
 governing_sops:
@@ -29,7 +30,7 @@ This chapter records the governed sequence by which a source system, its tables,
 
 This chapter does not redefine the catalog inventory or the catalog hierarchy (Sources and the Catalog), the AI gate envelope or the maker-checker-gate verdict shape (AI Gates and AI Trust and Verification), the JWT-guarded API surface that mutates the catalog (API Surface), or the DDL that backs the catalog tables (Data Model and Schema).
 
-**Governing source.** outline.md §4.6; Sources and the Catalog.
+**Governing source.** DEC-3395bc; Sources and the Catalog.
 
 ## What the Procedure Produces
 
@@ -183,7 +184,7 @@ Additional decisions that govern the catalog's hierarchy and verification surfac
 - DEC-1918d0: Deployment and database architecture
 - DEC-69f09e: ISO 11179 naming convention
 - legacy-v2/docs/sops/source-registration-sop.md (predecessor SOP)
-- outline.md §4.6: Onboarding
+- DEC-3395bc: Onboarding
 
 
 ## Amendment note (2026-08-07, DEC-3078ce / D557)

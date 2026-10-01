@@ -15,6 +15,7 @@ governing_sources:
   - AI Agents
   - AI Gates
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; this chapter exists in the AI section)
   - DEC-804874 (D366 L-node semantic gate; the trust ladder anchors at this gate's behavior)
   - DEC-ebf0b4 (D268 Session Discipline and Data Integrity; the auditor is one node on the trust ladder)
@@ -33,7 +34,7 @@ This chapter sits between AI Gates and AI Usage Visibility. AI Gates records the
 
 This chapter does not redefine the maker-checker-gate triplet pattern (deferred to AI Architecture), the agent inventory (deferred to AI Agents), the model substrate or per-provider client detail (deferred to Bedrock and Inference Profiles), the verdict consumption posture (deferred to AI Gates), or the tenant-facing transparency surface (deferred to AI Usage Visibility). The chapter records the trust ladder; it does not enumerate which agents produce which trust level in the readiness baseline (that is per-agent detail in AI Agents).
 
-**Governing source.** AI Architecture; AI Gates; outline.md §4.4.
+**Governing source.** AI Architecture; AI Gates; DEC-3395bc.
 
 ## Why Cross-Family Verification
 
@@ -147,7 +148,7 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 | Quality Gates and Chain Integrity | Operating Model | Owns the gate authority over runtime decisions. This chapter records that the L-node gate consumes AI verdicts; Quality Gates records the gate's authority |
 | Audit and Activity Logging | Implementation section | Owns the operational governance trail. This chapter records the auditor's place on the trust ladder; Audit and Activity Logging records the substrate that captures the auditor's verdicts |
 
-**Governing source.** Foundation; Operating Model; Implementation; outline.md §4.4.
+**Governing source.** Foundation; Operating Model; Implementation; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -172,6 +173,6 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 - DEC-c06f41: Spine expansion to eight sections plus home
 - DEC-804874: L-node semantic gate (D366)
 - DEC-ebf0b4: Session Discipline and Data Integrity (D268)
-- outline.md §4.4: AI
+- DEC-3395bc: AI
 - Decisions: ADR Registry
 

@@ -10,6 +10,7 @@ governing_sources:
   - Tenant Lifecycle and Subscription
   - Incident and Change Management
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-324d9e (Stripe billing; four subscription tiers)
   - DEC-1392ee (Demo tier policy)
   - DEC-b97390 (Embedded documentation reader in bc-admin with native React implementation)
@@ -28,7 +29,7 @@ This chapter does not redefine the Subscription artifact or the lifecycle state 
 
 The chapter records the readiness baseline honestly per pattern 81. Most of the customer-facing support surface is queued; the chapter does not present an aspirational SLA-and-on-call posture as if it were real.
 
-**Governing source.** outline.md §4.7; Tenant Lifecycle and Subscription.
+**Governing source.** DEC-3395bc; Tenant Lifecycle and Subscription.
 
 ## Per-Tier Support Posture
 
@@ -166,7 +167,7 @@ The chapter records the absence honestly. A mature support function will need au
 | Performance and Scale | Customer-reported performance concerns route through this chapter's escalation path |
 | Incident and Change Management | Provides the platform-side substrate; this chapter is the customer-side complement |
 
-**Governing source.** The owning Operations chapters; outline.md §4.7.
+**Governing source.** The owning Operations chapters; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -194,7 +195,7 @@ The chapter records the absence honestly. A mature support function will need au
 - DEC-324d9e: Stripe billing; four subscription tiers
 - DEC-1392ee: Demo tier policy
 - CLAUDE.md (Session Protocol section)
-- outline.md §4.7: Operations
+- DEC-3395bc: Operations
 
 [^residual-bc-portal]: **Residual risk (audit GAP-010).** bc-portal and BareCount-Customer-Portal repos were not readable in the referenced platform code/docs gap audit. Claims about bc-portal frontend behavior, design system, tenant override, embedded widgets, and information architecture rest on prior grounding, not on this-pass verification. Treat as unverified until a dedicated readable bc-portal pass confirms the frontend state. Source: `bc-docs/reports/platform-code-doc-gap-report.md` GAP-010.
 

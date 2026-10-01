@@ -31,7 +31,7 @@ This chapter records the platform's information-security posture and the access-
 
 This chapter does not redefine the runtime tenant scope (Tenancy and Binding), the audit substrate that records access (Audit and Activity Logging), the operational secrets management (Security Operations), or the coding rules and their enforcement (Quality Assurance).
 
-**Governing source.** outline.md §4.8; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## Cognito JWT Authentication Boundary
 
@@ -209,7 +209,7 @@ Every BareCount service that consumes AWS APIs runs under a single named AWS pro
 | ISO 27001 Conformance | The conformance posture | The InfoSec controls as the technical control surface that conformance reports against |
 | SOC 2 Conformance | The Trust Services Criteria mapping | The CC6 logical-access surface specifically |
 
-**Governing source.** outline.md §4.8; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## References
 
