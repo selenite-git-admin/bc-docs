@@ -66,9 +66,9 @@ The `risks` table is the authority. The risk treatment record lives in DevHub; A
 
 `RSK-cb8929` is the platform's known supply-chain risk. The risk is documented in `DEC-441665` (NPM supply chain mitigation via AWS CodeArtifact) and in every committed `.npmrc` file across the five npm-consuming repos. The treatment is the CodeArtifact mirror itself: by routing every install through the cache, the platform ensures that an npmjs.org origin outage does not block the build, and that a yanked or compromised package version does not silently propagate.
 
-The drift: `RSK-cb8929` is absent from the DevHub `risks` table in the readiness baseline. The risk is acknowledged in ADR text and in the `.npmrc` comments, but the registry row that would record the treatment status is missing. Reconciliation lands as a `devhub_risk_add` call with the title "NPM supply-chain compromise" and a `mitigated` status pointing at `DEC-441665` as the treatment ADR.
+`RSK-cb8929` is a row in the DevHub `risks` table: category technical, score 12 (medium likelihood, high impact), status `mitigated`, owner the operator, with the CodeArtifact domain and mirror recorded as the implemented treatment (verified against the register on 2026-09-30). Earlier versions of this chapter recorded the row as missing; that reconciliation has landed. Its review date (2026-04-05) has passed, and the daily risk-review digest (barecount-devhub TSK-a8ba06) lists it among the mitigated risks due for review.
 
-**Governing source.** DEC-441665; `bc-qa/.npmrc`; CLAUDE.md (NPM Registry section).
+**Governing source.** DEC-441665; `bc-core/.npmrc`; the DevHub `risks` row RSK-cb8929; CLAUDE.md (NPM Registry section).
 
 ## External Vendor Inventory
 
@@ -77,7 +77,7 @@ The platform consumes eleven external vendor surfaces. Each surface has a define
 | Vendor | Surface consumed | Consumer in the platform | Failure mode |
 |---|---|---|---|
 | AWS Cognito | JWT issuance, JWKS endpoint, token validation | bc-core JwtAuthGuard plus CognitoJwtStrategy | Authentication unavailable; HTTP 401 across every authenticated route; the platform is unreachable until Cognito recovers |
-| AWS CodeArtifact | npm registry mirror per `DEC-441665` | npm install in every npm-consuming repo (barecount-devhub, bc-core, bc-portal, bc-admin, bc-qa) | Token expiry returns HTTP 401 or 403 on install; the operator runs the renewal command per Build and Release |
+| AWS CodeArtifact | npm registry mirror per `DEC-441665` | npm install in every npm-consuming repo (barecount-devhub, bc-core, bc-portal, bc-admin) | Token expiry returns HTTP 401 or 403 on install; the operator runs the renewal command per Build and Release |
 | AWS Bedrock | Foundation-model invocation surface (Claude, Gemini, Titan) | bc-ai agents per AI Architecture and AI Agents | AI verification unavailable; gates fall back to the per-gate posture defined in AI Gates (advisory or unverified per the gate's own policy) |
 | AWS S3 | Object storage for static assets and WORM archives | bc-portal and bc-admin SPA bundles, S3 nullification markers per Privacy and the Immutable Fact | Static assets unreachable; bc-admin or bc-portal cannot load; nullification markers cannot be placed |
 | AWS Secrets Manager | API keys, OAuth tokens, Cognito client secrets, third-party credentials | bc-core service startup, runtime secret reads | Secrets unavailable; consumer services cannot authenticate; bc-core fails to start |
@@ -139,7 +139,7 @@ Each vendor surface produces a risk profile that the DevHub registry should reco
 
 | Drift item | Status |
 |---|---|
-| `RSK-cb8929` is documented in `DEC-441665` and in committed `.npmrc` files but is not present as a row in the DevHub `risks` table | Recorded; reconciliation queued |
+| `RSK-cb8929` is registered and `mitigated`, but its review date (2026-04-05) has passed; the register as a whole had no movement from 2026-04-29 to 2026-09-30 | Recorded 2026-09-30 from the risk-review digest; a review pass with owners and dates is a Compliance & Quality unit |
 | The eleven external vendor surfaces are not all enumerated as `risks` rows | Recorded; the per-vendor risk profile is documented in this chapter; the registry rows are queued |
 | Provider price drift is recorded per AI Usage Visibility but auto-tracking is queued | Recorded; the static price snapshots in bc-ai code are operator-updated |
 | Quarterly risk review schedule is not yet wired | Recorded; per `DEC-623f8f` the ADR audit script runs ad hoc; the risk-register equivalent cadence is queued |

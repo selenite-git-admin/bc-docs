@@ -2,7 +2,8 @@
 uid: DEC-6cdceb
 title: "bc-portal surface split — Beyond (viewing) + Settings/Workspace + Settings/Data Infra (plumbing)"
 description: "bc-portal has three top-level surfaces: /beyond for viewing/insight, /settings/workspace for tenant admin, /settings/data-infra for data plumbing. Greenfield design, no retrofit."
-status: implemented
+status: superseded
+superseded_by: DEC-c562d5
 subdomain: bc-portal
 focus: information-architecture
 date: 2026-04-19T15:03:15.324Z

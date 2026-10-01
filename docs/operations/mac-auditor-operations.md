@@ -4,7 +4,7 @@ description: "Operator runbook for the Codex auditor on the Mac: what runs, who 
 authority: authoritative
 domain: operations
 status: active
-date: 2026-09-29
+date: 2026-10-01
 refs:
   - type: decision
     label: "DEC-44456d — the auditor runs on the Mac (account bcauditor)"
@@ -104,24 +104,36 @@ sudo rm -f /Users/bcauditor/auditor-shadow/runs/<gen-id>/<NN>/{writer-attempts,a
 
 `<NN>` is the message number. The service picks the message up again within a minute.
 
-### 4.4 Upgrade Codex (keep the quarantine flag off)
+### 4.4 Upgrade Codex (clear the quarantine flag on the two binaries)
 
 Homebrew marks downloaded casks with `com.apple.quarantine`. Your account cleared it the first time you ran Codex. The headless `bcauditor` daemon cannot, so macOS Gatekeeper kills every review run within a second of starting.
 - **Symptom:** early kills (rc 137).
 - **In the log:** `ASP: Security policy would not allow process … /codex`.
 - **History:** on 2026-09-29 this caused several kill windows.
 
-1. **Upgrade without the flag:**
+**Homebrew 7 has no way to skip the flag.** `--no-quarantine` was deprecated and then removed (Homebrew commits `ffe95475` and `ba25213c`), and no setting replaces it: on 2026-10-01 Homebrew 7.0.7 answered `brew upgrade --cask --no-quarantine codex` with `Error: invalid option: --no-quarantine` and upgraded nothing. So every upgrade is a normal one, followed by a verified clear of the flag on the two binaries the auditor runs.
+
+**The one line** (runs every step below, stops safely on any failure). It runs the reviewed script `service/shadow/upgrade-codex.zsh` only if the reviewed commit is on bc-external-audit main and the extracted file has exactly the reviewed SHA-256; otherwise it runs nothing:
+```bash
+R=~/MyProjects/bc-external-audit; C=1d8846edcd90486aee90dc957c0abd281e3c3d77; H=ad3fcd11f7a76ff5e0d8dcf9d76e29f6f97988ba0aeba137b2685bd9aad66d0c; S=$(mktemp); if git -C $R fetch -q origin && git -C $R merge-base --is-ancestor $C origin/main && git -C $R show "${C}:service/shadow/upgrade-codex.zsh" > $S && [[ -s $S && $(shasum -a 256 $S | cut -d' ' -f1) == $H ]]; then zsh $S; else echo "STOP: the reviewed upgrade script is not on main or does not match; nothing was run"; fi; rm -f $S
+```
+A new version of the script needs its own review, and this line updated to its commit and hash. Keep `"${C}:…"` in braces: in zsh, `$C:s…` is a substitution modifier and mangles the path.
+It asks once for your Mac login password. If anything fails after the service is stopped, it leaves the service stopped rather than let Gatekeeper kill reviews in a loop, and says so.
+
+**The steps it runs** (do them by hand only if the script is unavailable):
+1. **Download first,** while reviews keep running: `brew fetch --cask codex`.
+2. **Wait for no running review, then stop the review service:**
    ```bash
-   brew upgrade --cask --no-quarantine codex
+   while pgrep -u bcauditor -f 'codex exec' >/dev/null; do sleep 20; done
+   sudo launchctl bootout system/co.selenite.bcauditor.shadow
    ```
-2. **Verify both binaries are clear.** Each should print `No such xattr`:
+3. **Upgrade normally:**
+   ```bash
+   brew upgrade --cask codex
+   ```
+4. **Clear the flag per binary, only after that binary's own signature verifies and its team is exactly OpenAI's** (`2DC432GLL2`). Anything else keeps its flag, and you stop there with the service still stopped:
    ```bash
    V=$(ls /opt/homebrew/Caskroom/codex | sort -V | tail -1)
-   xattr -p com.apple.quarantine /opt/homebrew/Caskroom/codex/$V/bin/codex /opt/homebrew/Caskroom/codex/$V/bin/codex-code-mode-host
-   ```
-3. **If it was upgraded the normal way,** clear the flag **per binary, only after that binary's own signature verifies and its team is exactly OpenAI's** (`2DC432GLL2`). Anything else keeps its flag, and you stop there:
-   ```bash
    for b in codex codex-code-mode-host; do f=/opt/homebrew/Caskroom/codex/$V/bin/$b
      if codesign --verify --strict "$f" && [[ $(codesign -dv "$f" 2>&1 | sed -n 's/^TeamIdentifier=//p') == 2DC432GLL2 ]]; then
        if xattr -d com.apple.quarantine "$f" 2>/dev/null || ! xattr -p com.apple.quarantine "$f" >/dev/null 2>&1; then echo "clear: $b"
@@ -129,12 +141,25 @@ Homebrew marks downloaded casks with `com.apple.quarantine`. Your account cleare
      else echo "NOT verified: $f (flag kept; stopped)"; break; fi
    done
    ```
-   Tested 2026-09-29: both current binaries verify, and a non-OpenAI binary is refused.
-4. **Prove the auditor account can run it:**
+   Tested 2026-10-01 on throwaway copies (`service/shadow/upgrade-codex.test.zsh`, macOS): an OpenAI-signed copy is cleared; an Apple-signed copy (wrong team) and a tampered copy (signature fails) keep their flag.
+5. **Check both binaries are clear.** Each should print `No such xattr`:
+   ```bash
+   xattr -p com.apple.quarantine /opt/homebrew/Caskroom/codex/$V/bin/codex /opt/homebrew/Caskroom/codex/$V/bin/codex-code-mode-host
+   ```
+   Other executables in the cask (`codex-path/rg`, the bundled `zsh`, the voice host) keep their flag, as they did under 0.157.1; reviews have not needed them. If a log hit ever names one of them, extend step 4 to it.
+6. **Prove the auditor account can run it:**
    ```bash
    sudo -u bcauditor -H zsh -lc 'cd /tmp && codex exec --skip-git-repo-check -c sandbox_mode="read-only" "Reply with the single word OK."'
    ```
-5. **Check the model.** The service pins its model and effort (`BC_AUDITOR_MODEL`, `BC_AUDITOR_EFFORT` in `watch.zsh`; shown on the desk's Configuration page). After an upgrade, confirm the next review runs normally.
+7. **Start the service and watch the next review:**
+   ```bash
+   sudo launchctl bootstrap system /Library/LaunchDaemons/co.selenite.bcauditor.shadow.plist
+   /usr/bin/log show --last 30m --style compact --predicate 'eventMessage CONTAINS "Security policy would not allow"'
+   ```
+   The next review should run past its first minute with no hit naming `codex`.
+8. **Check the model.** The service pins its model and effort (`BC_AUDITOR_MODEL`, `BC_AUDITOR_EFFORT` in `watch.zsh`; shown on the desk's Configuration page). After an upgrade, confirm the next review runs normally.
+
+**When:** the desk shows `update available` beside the Codex version. Upgrade between reviews; never during a governed live window.
 
 ### 4.5 Change the auditor App's repositories
 
@@ -180,7 +205,7 @@ How the auditor was built, for a rebuild on a new Mac or after a loss. Where a s
 
 **2. Tools inside the account.**
 - **Node:** nvm with Node 22.18.0. The services use `/Users/bcauditor/.nvm/versions/node/v22.18.0/bin/node`.
-- **Codex:** the Homebrew cask, shared with the Mac. Install it with `brew install --cask --no-quarantine codex` (see §4.4).
+- **Codex:** the Homebrew cask, shared with the Mac. Install it with `brew install --cask codex`, then clear the flag on the two binaries exactly as in §4.4 steps 4 and 5 (Homebrew 7 has no `--no-quarantine`).
 - **Sign-in:** sign Codex in as `bcauditor@selenite.co` (paid plan) with `codex login`, run as bcauditor (`sudo -u bcauditor -H zsh -l`).
 
 **3. Codex's standing instructions.**
