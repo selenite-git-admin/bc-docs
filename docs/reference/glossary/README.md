@@ -8,6 +8,8 @@ collection: glossary
 
 # Glossary
 
+> **Status words are defined in [Vocabulary: status words](../vocabulary.md), the only authority for them (ADR DEC-c897cd).** This glossary is the A to Z of the platform's nouns: its objects, contracts, evaluation boundaries, records and systems. It holds no status word. For whether a metric is a seed, candidate, registered, draft, certified, released or retired, or whether a tenant is subscribed to a metric, has it enabled, visible or reporting, read the vocabulary page.
+
 ## A
 
 **Action Contract.** See `Intervention Contract`.
@@ -188,7 +190,7 @@ collection: glossary
 
 **Source System.** A named software system offered by one Source Provider, registered in the Source Catalog with versions, modules, and observable tables. First-use: [Sources and the Catalog](../../operating-model/sources-and-the-catalog.md). Related: [Connectors and Readers](../../operating-model/connectors-and-readers.md); [The Contract Grammar](../../foundation/the-contract-grammar.md).
 
-**Subscription.** A tenant's entitlement to a metric or metric family. Governs access visibility and execution scope at runtime under the tenant-scoped permission model. First-use: [Tenant Lifecycle and Subscription](../../operations/tenant-lifecycle-and-subscription.md). Related: [Tenancy and Binding](../../operating-model/tenancy-and-binding.md); [Tenant Entitlement Enforcement](../../operating-model/tenant-entitlement-enforcement.md).
+**Subscription.** The platform-scoped governance record that holds a tenant's entitled scope: its tier and hosting variant, its catalog entitlement (the subset of platform-cataloged content the tenant may operate against, metrics among it), its operational envelope, and its lifecycle state. Platform-side governance acts author it; the tenant does not author its own. Whether a tenant's package includes a given metric is the status word **subscribed** (see [Vocabulary: status words](../vocabulary.md)); "entitlement" is the name of that part of the record, not a status word. First-use: [Tenant Lifecycle and Subscription](../../operations/tenant-lifecycle-and-subscription.md). Related: [Tenancy and Binding](../../operating-model/tenancy-and-binding.md); [Tenant Entitlement Enforcement](../../operating-model/tenant-entitlement-enforcement.md).
 
 ## T
 
