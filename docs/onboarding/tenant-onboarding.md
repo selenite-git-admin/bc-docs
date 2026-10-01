@@ -10,6 +10,7 @@ governing_sources:
   - Tenancy and Binding
   - Tenant Entitlement Enforcement
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-324d9e (Stripe Billing integration; four subscription tiers; four hosting variants)
   - DEC-1392ee (Demo tier policy; AWS Shared only; 14-day trial; 30-day data retention)
   - DEC-a67518 (Tenant Onboarding Gate; BYO-DB and BC-Agent prerequisite)

@@ -10,6 +10,7 @@ governing_sources:
   - Metric Evaluation
   - Infrastructure
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c0290f (Metric evaluation engine; grain-aware GROUP BY; schedule-driven orchestration)
   - DEC-01bd6b (Runtime Orchestration — governed scheduled commands; no-read-trigger; immutable forward acts; target doctrine)
   - DEC-bebaec (Chain Completeness SSOT)

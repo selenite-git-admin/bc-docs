@@ -17,6 +17,7 @@ governing_sources:
   - API Surface
   - Audit and Activity Logging
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; this chapter exists in the reshaped Implementation section)
   - DEC-e50b83 (Master port reservation; bc-sdg's main and SAP ECC simulator ports are out-of-band against this reservation)
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules)

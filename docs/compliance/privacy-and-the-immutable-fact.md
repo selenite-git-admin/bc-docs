@@ -12,6 +12,7 @@ governing_sources:
   - Evidence and Lineage
   - Audit and Activity Logging
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-bd5492 (GDPR/DPDP/CCPA Nullification Object; sentinel-based privacy erasure for the immutable-fact platform; PII registry, nullification request, nullification action, DSAR response, retention policy schema)
   - DEC-1918d0 (Two-database split; the platform DB versus per-tenant DB topology that the nullification mechanism acts against)
   - DEC-771baf (Tenant database topology; per-tenant DB schemas the nullification engine traverses)

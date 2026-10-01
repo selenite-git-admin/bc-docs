@@ -10,6 +10,7 @@ governing_sources:
   - Business Vocabulary
   - Business Field and Business Object Onboarding
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-9361cd (D302 cc_field_mapping; canonical uniqueness invariant)
   - DEC-9a5dc0 (D068 CF boundary; reporting standards promote to canonical fields)
   - DEC-f66378 (D292 BO-scoped BF naming applies across all tiers)

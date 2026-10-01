@@ -13,6 +13,7 @@ governing_sources:
   - Architecture
   - Backend Services
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-e50b83 (Master port reservation)
   - DEC-9b23a7 (pm2 removed; independent service startup)
   - DEC-c06f41 (Spine expansion to eight sections plus home)

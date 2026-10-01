@@ -14,6 +14,7 @@ governing_sources:
   - Internal Modules
   - Auxiliary Services
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules)
   - DEC-771baf (Tenant database topology; platform-tenant one-way dependency)
   - DEC-e50b83 (Master port reservation)

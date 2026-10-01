@@ -10,6 +10,7 @@ governing_sources:
   - Infrastructure
   - Deployment Topology
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-890417 (pm2 service supervisor; superseded; the as-built model starts each service independently in its own repo)
   - DEC-1918d0 (Two-database split; the platform plus tenant DB topology that bc-core seeds)
   - DEC-e50b83 (Port reservation; build outputs run against reserved ports)

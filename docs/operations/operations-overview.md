@@ -12,6 +12,7 @@ governing_sources:
   - Implementation: Overview
   - Onboarding: Overview
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; Operations section shape)
   - DEC-3b86ea (Section renames; Operations as the section name; clean slate migration moved into Upgrade and Migration)
   - DEC-1918d0 (Two-database split; Operations honors the platform plus tenant DB topology)

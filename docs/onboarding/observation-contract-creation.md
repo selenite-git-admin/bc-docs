@@ -11,6 +11,7 @@ governing_sources:
   - Business Vocabulary
   - AI Gates
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-d72560 (D301 Two-vocabulary model; OC operates in source-side BF vocabulary)
   - DEC-9d1f4b (D327 Shared dimension normalization across the chain)
 governing_sops:

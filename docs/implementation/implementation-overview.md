@@ -10,6 +10,7 @@ governing_sources:
   - The Authority Model
   - Operating Model: Overview
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; Implementation reshape into twelve chapters)
   - DEC-376587 (Section rename from "The Platform" to "Implementation")
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules; the two-database split as cross-cutting concern)

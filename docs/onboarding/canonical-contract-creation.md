@@ -11,6 +11,7 @@ governing_sources:
   - Business Vocabulary
   - Fiscal Time and Temporal Gates
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-d72560 (D301 CC translates BF vocabulary to CF vocabulary via cc_field_mapping)
   - DEC-9d1f4b (D327 Shared dimension normalization in field_selection)
   - DEC-9361cd (D302 cc_field_mapping; one BF to many CFs with filters; canonical uniqueness)

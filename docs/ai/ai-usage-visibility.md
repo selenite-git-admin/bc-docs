@@ -17,6 +17,7 @@ governing_sources:
   - AI Gates
   - AI Trust and Verification
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; this chapter exists in the AI section)
 errata_referenced: []
 v2_sources: []

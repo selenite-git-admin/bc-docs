@@ -8,7 +8,8 @@ depends_on: [the-object-model, the-authority-model, sources-and-the-catalog, sou
 governing_sources:
   - Sources and the Catalog
   - Source Registration
-governing_adrs: []
+governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
 governing_sops:
   - legacy-v2/docs/sops/seed-catalog-sop.md (D269 Seed Catalog as the only entry point for tables and fields)
 errata_referenced: []

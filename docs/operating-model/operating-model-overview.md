@@ -12,6 +12,7 @@ governing_sources:
   - The Evaluation Boundaries
   - The Authority Model
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-771baf (Tenant database architecture; platform-tenant one-way dependency)
   - DEC-81cd26 (Connections are platform-scoped; reverses D163 connection-table placement — amends DEC-771baf for Connections)
   - DEC-ecd55c (Connection authority reconciled — config in platform runtime.connection, credentials in AWS Secrets Manager)

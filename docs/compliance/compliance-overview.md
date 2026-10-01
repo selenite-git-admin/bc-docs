@@ -13,6 +13,7 @@ governing_sources:
   - Development: Overview
   - Operations: Overview
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus a home; Compliance section shape)
   - DEC-376587 (Section renames; Compliance as the section name for conformance and privacy posture)
   - DEC-ae331f (Staged pursuit of ISO 27001 readiness and SOC 2 Type I on reduced criteria; the section's load-bearing decision)

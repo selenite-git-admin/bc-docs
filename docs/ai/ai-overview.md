@@ -12,6 +12,7 @@ governing_sources:
   - Operating Model: Overview
   - Implementation: Overview
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; the AI section exists as a first-class peer)
   - DEC-804874 (D366 L-node semantic gate at session close; the one hard close-blocker depending on AI verdicts)
   - DEC-ebf0b4 (D268 Session Discipline and Data Integrity; the auditor agent reports against this discipline)

@@ -10,6 +10,7 @@ governing_sources:
   - Infrastructure
   - Deployment Topology
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-3b86ea (Section renames; clean slate migration absorbed into this chapter)
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules)
   - DEC-bebaec (Chain Completeness SSOT; version-aware tracing)

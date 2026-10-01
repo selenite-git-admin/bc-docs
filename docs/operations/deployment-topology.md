@@ -10,6 +10,7 @@ governing_sources:
   - Backend Services
   - Tenant Lifecycle and Subscription
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-1918d0 (Deployment and database architecture; two-database split; ten normalization rules)
   - DEC-771baf (Tenant database topology; one tenant database per tenant)
   - DEC-005ea7 (Single production environment per tenant; trial equals real tenant)

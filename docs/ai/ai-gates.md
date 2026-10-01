@@ -14,6 +14,7 @@ governing_sources:
   - AI Architecture
   - AI Agents
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; this chapter exists in the AI section)
   - DEC-804874 (D366 L-node semantic gate at session close; consumes the cc-field-audit triplet's verdict; the one hard close-blocker that depends on AI)
   - DEC-bebaec (Chain Status SSOT; the chain-completeness gate substrate that runs alongside the AI gate but does not consume AI verdicts)

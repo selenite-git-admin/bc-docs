@@ -76,7 +76,7 @@ The platform's information-security policy surface is operational rather than fo
 
 The platform's stance: these substrates are the as-built information-security policy. Formal board-approved policy documents are queued; the operational policy substrate carries the discipline in the readiness baseline.
 
-**Governing source.** CLAUDE.md; `bc-docs/DEC-3395bc; DEC-ebf0b4.
+**Governing source.** CLAUDE.md; DEC-3395bc; DEC-ebf0b4.
 
 ## A.5.36 Compliance with Policies: The Change-Record Plan-and-Report Pair
 

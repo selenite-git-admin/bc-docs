@@ -11,6 +11,7 @@ governing_sources:
   - Infrastructure
   - Deployment Topology
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-1918d0 (Deployment and database architecture; two-database split)
   - DEC-771baf (Tenant database topology; tenant ownership boundary)
   - DEC-490520 (PII classification at source field level)

@@ -10,6 +10,7 @@ governing_sources:
   - Tenant Lifecycle and Subscription
   - Incident and Change Management
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-324d9e (Stripe billing; four subscription tiers)
   - DEC-1392ee (Demo tier policy)
   - DEC-b97390 (Embedded documentation reader in bc-admin with native React implementation)

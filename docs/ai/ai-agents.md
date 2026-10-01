@@ -13,6 +13,7 @@ governing_sources:
   - AI Architecture
   - Bedrock and Inference Profiles
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; this chapter exists in the AI section)
   - DEC-ebf0b4 (D268 Session Discipline and Data Integrity; the auditor agent reports against this discipline)
   - DEC-804874 (D366 L-node semantic gate; consumes the cc-field-audit triplet's verdict)

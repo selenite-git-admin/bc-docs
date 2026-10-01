@@ -92,7 +92,7 @@ collection: glossary
 
 ## E
 
-**Errata.** A first-class governance peer under `docs/errata/`. Each entry records a Foundation contradiction or correction. The errata register is the source of truth for active entries. First-use: [Documentation System](../../development/documentation-system.md). Related: [Documentation System](../../development/documentation-system.md).
+**Errata.** A first-class governance peer under `docs/governance/errata/`. Each entry records a Foundation contradiction or correction. The errata register is the source of truth for active entries. First-use: [Documentation System](../../development/documentation-system.md). Related: [Errata ledger](../../governance/errata/README.md).
 
 **Evidence (Object).** A proof object that records what occurred at an evaluation boundary, including evaluation type, inputs, outputs, evaluation context, outcome, and timestamp. Emitted at the same act that produces the authoritative object per Invariant VI. First-use: [The Object Model](../../foundation/the-object-model.md). Related: [The Invariants](../../foundation/the-invariants.md); [Evidence and Lineage](../../operating-model/evidence-and-lineage.md).
 

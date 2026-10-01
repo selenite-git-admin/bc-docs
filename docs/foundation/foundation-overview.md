@@ -7,6 +7,7 @@ authority: authoritative
 depends_on: []
 governing_sources: []
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-5a9dee (five-level authority ladder; fifteen grammar artifacts)
   - DEC-c4c742 (the governed selection artifact, the tenth chapter)
   - DEC-79b62f (authorises this editorial alignment, item 8)

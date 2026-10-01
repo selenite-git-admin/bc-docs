@@ -10,6 +10,7 @@ governing_sources:
   - Audit and Activity Logging
   - Observability and Telemetry
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules)
   - DEC-bebaec (Chain Completeness SSOT)
   - DEC-633b2a (D-code monotonic allocator; concurrent-session safety)

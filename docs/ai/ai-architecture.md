@@ -15,6 +15,7 @@ governing_sources:
   - Auxiliary Services
   - Audit and Activity Logging
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; the AI section exists as a first-class peer to Implementation)
   - DEC-804874 (D366 L-node semantic gate; consumes AI verdicts at session close)
   - DEC-ebf0b4 (D268 Session Discipline and Data Integrity; the session-governance auditor reports against this discipline)

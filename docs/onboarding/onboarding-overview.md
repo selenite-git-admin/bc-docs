@@ -13,6 +13,7 @@ governing_sources:
   - Implementation: Overview
   - AI: Overview
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-c06f41 (Spine expansion to eight sections plus home; Onboarding section shape)
   - DEC-1918d0 (Two-database split; Onboarding writes platform-scope artifacts the tenant later consumes)
   - DEC-771baf (Tenant database topology; Onboarding's tenant scope produces tenant-scope substrate)

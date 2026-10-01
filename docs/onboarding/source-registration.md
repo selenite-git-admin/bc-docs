@@ -10,6 +10,7 @@ governing_sources:
   - AI Gates
   - AI Trust and Verification
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-1918d0 (D162 database rules)
   - DEC-69f09e (D148 ISO 11179 naming)
 governing_sops:

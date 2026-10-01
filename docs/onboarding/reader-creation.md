@@ -10,6 +10,7 @@ governing_sources:
   - Admission and Observation
   - Observation Contract Creation
 governing_adrs:
+  - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-b228ec (D018 Source Catalog and Integration as separate trees)
   - DEC-90faff (D069 Canonical-driven reader creation sequence; top-down assembly)
   - DEC-36d78f (D069 Reader observation schema; selective observation with standard field naming)
