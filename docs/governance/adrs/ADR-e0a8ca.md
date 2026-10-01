@@ -2,7 +2,7 @@
 uid: DEC-e0a8ca
 title: "One frontmatter vocabulary for bc-docs: one authority axis for every document kind, one status axis per kind, enforced in CI and read by the DevHub scanner"
 description: "Declares the four authority values and the per-kind status values for every bc-docs file, a shrink-only CI check, and the DevHub scanner change to read both axes; carries the operator's open question on collapsing source-derived, derived and projection."
-status: proposed
+status: decided
 date: 2026-09-30T11:06:20.497Z
 project: bc-docs
 domain: docs
@@ -64,8 +64,12 @@ The scanner reads both axes from the file. `authority` is recorded as one of the
 
 One mechanical pull request per repository after this decision is `decided`, reviewed through the gen- exchange. Counts from `audit_frontmatter.py` on 2026-09-30 at fa17b924, 1,205 files checked and 13 exempt: 56 chapter-kind files (27 in the nine sections, 27 technical notes, 2 other reference files), 26 generated files (`source-derived` to `generated`) plus the 2 generated maps that carry no frontmatter (generator change), 94 dockets (add `authority: reference`; 1 status correction), 273 ADR files (drop `authority`; 1 status outlier), 290 evidence records (authority; the status mapping is done by each record's owning controller from the table the check's report lists), 5 archive files. The check's report `docs-control/reports/frontmatter-audit.md` is the sweep worklist; the baseline holds the same 744 paths and only shrinks. Docs owns form and placement; the owning controller of each chapter confirms its classification where the mapping marks a judgement call.
 
-## The operator's question
+## The operator's question, answered
 
 Do `projection`, `source-derived` and `derived` collapse into `generated`, or stay?
 
-Recommendation: `source-derived` collapses into `generated` (28 files; the same meaning). `derived` does not: the six files that carry it are hand-written coverage tables under `docs/implementation/` that nothing generates, so they become `reference`. `projection` stays where it is, as the docket field `authority_role` defined by DEC-8570d4, and dockets declare `authority: reference` beside it; collapsing it would amend DEC-8570d4 and re-touch 95 files for no gain in meaning.
+The operator answered on 2026-09-30 (desk grant `2026-09-30T12-40-45-252Z-594d93aa`, text SHA-256 `594d93aa12aa04e819ca474a43631993abccd659d2545228b245630da9c9e525`, decision 6 of the fleet resume plan): the collapse is as this record recommends. `source-derived` becomes `generated` (28 files; the same meaning). `derived` becomes `reference`: the six files that carry it are hand-written coverage tables under `docs/implementation/` that nothing generates. `projection` stays as the docket field `authority_role` defined by DEC-8570d4, with every docket also declaring `authority: reference`; collapsing it would amend DEC-8570d4 and re-touch about 95 files for no gain in meaning. The grant also states that the ADR may be decided after the Architect and DevHub reviews.
+
+## Decision record
+
+Decided 2026-10-01, citing the operator's grant above. The Architect reviewed four rounds and recorded ACCEPTED WITH BOUNDARY at head 58c09001 (PR 122 comment; deliverable DLV-82f036), confirming the two musts (the authority axis placed under the five-level ladder; the Foundation-lock reconciliation) and the should (`generated` at the enforcement-map level) are applied, and the DEC-c897cd boundary sentence added. The DevHub Controller reviewed the scanner section (no blocker; three points for the later DevHub database-change unit, brought to the operator as exact DDL). The scanner code change (the `documents.authority_code` CHECK constraint and the new status column) is a DevHub database change under the Database Change Protocol and is not performed by this record; the sweep and the scanner work follow as named consequences.

@@ -203,7 +203,7 @@ The pattern set evolves with each founder cold-read. New patterns are extracted 
 | Per-section ordering is frontmatter-driven | Section folders carry chapters whose `order` field provides sort stability |
 | Naming has no numbers | No `ch-NN-` prefix in filenames; no `Chapter N.` prefix in titles |
 
-**Governing source.** DEC-3395bc; DEC-b97390; DEC-3395bc.
+**Governing source.** DEC-3395bc; DEC-b97390.
 
 ## Failure Modes
 
