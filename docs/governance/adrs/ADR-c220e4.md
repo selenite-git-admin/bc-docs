@@ -1,6 +1,6 @@
 ---
 uid: DEC-c220e4
-title: "A tenant's metric scope: every active tenant gets every active metric until the Subscription model is built; the entitlement record must be live before a second customer tenant; DEC-4aa2fd split"
+title: "A tenant's metric scope: every active tenant gets every active metric until the Subscription model is built; the entitlement record must be live before the first tenant for a prospect or client; DEC-4aa2fd split"
 description: "States the rule in force (every active tenant may see and evaluate every active platform metric on its own data), keeps the Subscription metric entitlement as the declared target, sets the trigger by which that record and its two checks must be live, and supersedes DEC-4aa2fd by splitting it into its implemented onboarding walk and its deferred entitlement control."
 status: decided
 date: 2026-10-01T05:35:58.507Z
@@ -11,9 +11,9 @@ focus: governance
 supersedes: DEC-4aa2fd
 ---
 
-# A tenant's metric scope: every active tenant gets every active metric until the Subscription model is built; the entitlement record must be live before a second customer tenant; DEC-4aa2fd split
+# A tenant's metric scope: every active tenant gets every active metric until the Subscription model is built; the entitlement record must be live before the first tenant for a prospect or client; DEC-4aa2fd split
 
-> **Decided 2026-10-01.** The operator decided the rule, the trigger and the split in these words: desk grant `2026-10-01T05-33-56-929Z-ce64ce72` (text SHA-256 `ce64ce72bb4d6fc6ddcff3cf879723643e506bcfdb6765ec6229ec58835d0509`, recorded 2026-10-01T05:33:56Z, request 146): "Yes: until the subscription model is built, every active tenant may see and evaluate every active platform metric on its own data, and the metric entitlement record with its evaluation and catalog checks must be live before a second customer tenant is activated or a plan narrower than the whole catalog is sold. The Architect records this as an ADR, which also splits DEC-4aa2fd into its implemented onboarding walk and its deferred entitlement control. Anant". The Decision section restates that grant and adds nothing to it. The sections after it are the Architect's reading, rulings and design notes under its charter; they are marked as such.
+> **Decided 2026-10-01.** The operator decided the rule, the trigger and the split in these words: desk grant `2026-10-01T05-33-56-929Z-ce64ce72` (text SHA-256 `ce64ce72bb4d6fc6ddcff3cf879723643e506bcfdb6765ec6229ec58835d0509`, recorded 2026-10-01T05:33:56Z, request 146): "Yes: until the subscription model is built, every active tenant may see and evaluate every active platform metric on its own data, and the metric entitlement record with its evaluation and catalog checks must be live before a second customer tenant is activated or a plan narrower than the whole catalog is sold. The Architect records this as an ADR, which also splits DEC-4aa2fd into its implemented onboarding walk and its deferred entitlement control. Anant". **Trigger wording corrected the same day:** desk grant `2026-10-01T05-45-59-134Z-c9e0356a` (text SHA-256 `c9e0356a854ea0435f6c09899991901b81be0af2e00bbe9e973ed218aa527e49`, recorded 2026-10-01T05:45:59Z, request 148): "Yes: correct the trigger in ADR DEC-c220e4. Kaveri is the pilot tenant and is not counted as a customer. The metric entitlement record with its evaluation and catalog checks must be live before the first tenant for a prospect or client is activated, on any source system, or before a plan narrower than the whole catalog is sold. This replaces the words second customer tenant in my grant of 1 October 2026 ending ce64ce72. Anant". The Decision section restates the two grants, with the trigger in the words of the second, and adds nothing to them. The sections after it are the Architect's reading, rulings and design notes under its charter; they are marked as such.
 
 ## Context
 
@@ -44,7 +44,7 @@ The Platform Controller found that nothing checks whether a metric is bound to a
 
 2. **The declared target stands.** A tenant's metric scope is the metric entitlement on its Subscription record, authored under `docs/operations/tenant-lifecycle-and-subscription.md` and consulted at the surfaces named in `docs/operating-model/tenant-entitlement-enforcement.md`. This record changes neither chapter's target. Their "Not yet wired" rows remain the true status, and this record is the decision those rows rest on.
 
-3. **The trigger.** The metric entitlement record, with its check before metric evaluation and its check on the tenant's catalog view, must be live before either of these acts: (a) a second customer tenant is activated; (b) a plan narrower than the whole catalog is sold. Either act without the record live breaks this decision; it is not a scheduling slip. Until the record is live, no surface derives a tenant's metric scope from anything else: not from contract bindings, not from provisioning commands, not from past evaluations.
+3. **The trigger.** The metric entitlement record, with its check before metric evaluation and its check on the tenant's catalog view, must be live before either of these acts: (a) the first tenant for a prospect or client is activated, on any source system; (b) a plan narrower than the whole catalog is sold. Kaveri is the pilot tenant and is not counted as a customer. Either act without the record live breaks this decision; it is not a scheduling slip. Until the record is live, no surface derives a tenant's metric scope from anything else: not from contract bindings, not from provisioning commands, not from past evaluations.
 
 4. **DEC-4aa2fd is split, and this record supersedes it.**
    - (a) **The onboarding walk: implemented.** Given a tenant and a metric, the governed onboarding act walks back from the metric to the canonical and source contracts it depends on, records the canonical and source bindings, and enqueues the tenant's provisioning (DEC-4aa2fd items 2 to 4, as built in bc-core `MetricOnboardingService`). It is live, and this record is its authority from this date. The walk sets a metric up for a tenant. It does not entitle the tenant to the metric, and nothing reads it as entitlement.
@@ -53,7 +53,8 @@ The Platform Controller found that nothing checks whether a metric is bound to a
 ## Reading of the terms (Architect)
 
 - **Active tenant, active metric:** a tenant whose registry status is active; a Metric Contract that is not archived and whose current version is in governance state `active`.
-- **Customer tenant:** `kaveri`, the pilot tenant, is the first. The second is the first tenant activated for a prospect or a client after it, on any source system. Disposable proof tenants are not customer tenants.
+- **Pilot tenant:** `kaveri`. It proves the mechanism and is not counted as a customer.
+- **Tenant for a prospect or client:** any tenant activated for a party outside BareCount, whatever its source system. Disposable proof tenants are not such tenants.
 - **Live:** the record exists in the platform database under a governed authoring act, the evaluation precondition refuses a metric outside it, the catalog view shows only what is inside it, and the two rows of the "Wiring Status" table are flipped with a release reference.
 
 ## Rationale
@@ -98,7 +99,7 @@ The ADR that re-proposes the entitlement control starts from these, and may chan
 
 On 2026-10-01 the operator described to the Chief what the pilot is for: `kaveri` proves the mechanism and a defined set of metrics; a new tenant on the same source system gets the proven metrics according to its data profile; a tenant with more data or an explicit need widens the portfolio for every later client; a new source system needs its contracts and mapping built once, with the engine unchanged. The Chief recorded those words the same day.
 
-The trigger in item 3(a) is the moment that model calls onboarding the next client. The Architect's reading, for the future ADR: at that moment the entitlement record is what carries "the proven metrics, by data profile" to the new tenant as a named, governed set, so that what a client may run is declared and not inferred from what happened to be provisioned.
+The trigger in item 3(a) is the moment that model calls onboarding a client. The Architect's reading, for the future ADR: at that moment the entitlement record is what carries "the proven metrics, by data profile" to the new tenant as a named, governed set, so that what a client may run is declared and not inferred from what happened to be provisioned.
 
 ## Non-goals
 
