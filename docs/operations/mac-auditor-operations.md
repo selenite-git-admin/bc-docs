@@ -113,10 +113,11 @@ Homebrew marks downloaded casks with `com.apple.quarantine`. Your account cleare
 
 **Homebrew 7 has no way to skip the flag.** `--no-quarantine` was deprecated and then removed (Homebrew commits `ffe95475` and `ba25213c`), and no setting replaces it: on 2026-10-01 Homebrew 7.0.7 answered `brew upgrade --cask --no-quarantine codex` with `Error: invalid option: --no-quarantine` and upgraded nothing. So every upgrade is a normal one, followed by a verified clear of the flag on the two binaries the auditor runs.
 
-**The one line** (runs every step below, stops safely on any failure). It runs the reviewed script exactly as committed on bc-external-audit main (`service/shadow/upgrade-codex.zsh`):
+**The one line** (runs every step below, stops safely on any failure). It runs the reviewed script `service/shadow/upgrade-codex.zsh` only if the reviewed commit is on bc-external-audit main and the extracted file has exactly the reviewed SHA-256; otherwise it runs nothing:
 ```bash
-git -C ~/MyProjects/bc-external-audit fetch -q origin && zsh =(git -C ~/MyProjects/bc-external-audit show origin/main:service/shadow/upgrade-codex.zsh)
+R=~/MyProjects/bc-external-audit; C=1d8846edcd90486aee90dc957c0abd281e3c3d77; H=ad3fcd11f7a76ff5e0d8dcf9d76e29f6f97988ba0aeba137b2685bd9aad66d0c; S=$(mktemp); if git -C $R fetch -q origin && git -C $R merge-base --is-ancestor $C origin/main && git -C $R show "${C}:service/shadow/upgrade-codex.zsh" > $S && [[ -s $S && $(shasum -a 256 $S | cut -d' ' -f1) == $H ]]; then zsh $S; else echo "STOP: the reviewed upgrade script is not on main or does not match; nothing was run"; fi; rm -f $S
 ```
+A new version of the script needs its own review, and this line updated to its commit and hash. Keep `"${C}:…"` in braces: in zsh, `$C:s…` is a substitution modifier and mangles the path.
 It asks once for your Mac login password. If anything fails after the service is stopped, it leaves the service stopped rather than let Gatekeeper kill reviews in a loop, and says so.
 
 **The steps it runs** (do them by hand only if the script is unavailable):
