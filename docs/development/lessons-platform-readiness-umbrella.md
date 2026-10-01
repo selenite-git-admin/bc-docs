@@ -3,7 +3,7 @@ id: lessons-platform-readiness-umbrella
 order: 44
 title: "Lessons: Platform Readiness umbrella (2026-09-25 to 27)"
 status: drafting
-authority: informative
+authority: reference
 depends_on: [devhub, decision-and-change-procedure, dev-workstation-mac-mini]
 governing_sources:
   - Tenant Readiness Program (implementation/tenant-readiness-program.md)

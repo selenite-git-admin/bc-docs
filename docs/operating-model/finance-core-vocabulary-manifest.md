@@ -3,7 +3,7 @@ id: finance-core-vocabulary-manifest
 order: 10.86
 title: "Finance-core BCF Vocabulary Manifest + Dedup (gap sizing)"
 status: drafting
-authority: draft-authoritative
+authority: authoritative
 depends_on: [business-vocabulary, metric-directory, gl-vocabulary-enrichment-design]
 governing_sources:
   - Business Vocabulary (BCF — entity / characteristic / business_concept)

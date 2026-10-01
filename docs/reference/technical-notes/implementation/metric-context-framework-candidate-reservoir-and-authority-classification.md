@@ -2,7 +2,7 @@
 uid: metric-context-framework-candidate-reservoir-and-authority-classification
 title: Metric Context Framework (MCF) — Candidate Reservoir and Authority Classification (Step 2 Addendum)
 description: Step 2 addendum to the MCF gap/risk survey. Locks the reservoir-vs-authority discipline before Step 3 build plan. Defines five classes (candidate intent / weak hint / semantic authority / binding authority / formula authority), evidence-grounded with live samples from bc_seed.seed_metrics (~12.5k loosely-formed candidates), the 2 non-archived contract.metric_contract rows, and spot-checks of 10 active+chain-complete legacy MCs. Records 7 architectural risks and 7 guardrails to encode in the foundational MCF ADR (Gate M1). Recommends a single decision wording for operator lock. Not an ADR. Not a build plan. Direct precondition for Step 3.
-status: draft
+status: drafting
 date: 2026-05-26
 project: bc-docs
 domain: contracts

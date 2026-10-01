@@ -2,7 +2,7 @@
 uid: business-context-framework-helper-script-trust-catalog
 title: Business Context Framework (BCF) — Helper-Script Trust Catalog (E2)
 description: Evidence document for build-plan item E2, converting gap-research G24 from coarse "default-untrusted" (138/156 hardcoded scope) into a per-script trust catalog with four bands and a defect-surface verdict that CI can consume as its second defect-tag source besides gap-research G-findings.
-status: draft
+status: drafting
 date: 2026-05-19
 project: bc-docs
 domain: contracts

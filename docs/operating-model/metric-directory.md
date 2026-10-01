@@ -3,7 +3,7 @@ id: metric-directory
 order: 10.8
 title: "The Metric Directory"
 status: drafting
-authority: draft-authoritative
+authority: authoritative
 depends_on: [business-vocabulary, metric-management-system, metric-catalog, metric-evaluation, mcf-legacy-bridge]
 governing_sources:
   - Foundation (Invariant I — meaning is evaluated once, at its boundary; Invariant IV — all references are explicit)

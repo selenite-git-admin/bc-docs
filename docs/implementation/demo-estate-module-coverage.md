@@ -2,7 +2,7 @@
 id: demo-estate-module-coverage
 title: "Demo-Estate Module Coverage — Odoo apps/modules exercised, mapped to metric functions"
 status: approved
-authority: derived
+authority: reference
 depends_on: [demo-estate-simulator-requirements, demo-estate-metric-coverage]
 governing_sources:
   - DEC-8b17b1 (D561 demo-estates doctrine)

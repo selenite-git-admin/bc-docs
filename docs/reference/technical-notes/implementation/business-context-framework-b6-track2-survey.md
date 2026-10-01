@@ -2,8 +2,8 @@
 id: business-context-framework-b6-track2-survey
 title: "Business Context Framework — B6 Track 2 (live bc-ai panel): Design Survey"
 description: "Draft design survey for B6 Track 2 — the live registry-authoring bc-ai flow, bounded F5 context delivery, and the bc-core run entry point. Locks the Track 2 decisions and names the durable registry framework_policy prerequisite gate."
-status: draft
-authority: informative
+status: drafting
+authority: reference
 date: 2026-05-22
 project: bc-core
 domain: business-context-framework

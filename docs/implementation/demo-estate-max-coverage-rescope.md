@@ -2,7 +2,7 @@
 id: demo-estate-max-coverage-rescope
 title: "Demo-Estate Max-Coverage Re-scope — bc-demo v2.1 build reoriented to widest metric horizon"
 status: approved
-authority: derived
+authority: reference
 depends_on: [demo-estate-metric-coverage, demo-estate-module-coverage, demo-estate-simulator-requirements]
 governing_sources:
   - D566 (bc-demo v2 simulator-as-product)

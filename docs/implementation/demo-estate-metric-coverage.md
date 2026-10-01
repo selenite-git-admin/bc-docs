@@ -2,7 +2,7 @@
 id: demo-estate-metric-coverage
 title: "Demo-Estate Metric Coverage — finance deep, adjacent worlds one layer thick (coverage → metrics)"
 status: approved
-authority: derived
+authority: reference
 depends_on: [demo-estate-simulator-requirements, demo-estate-module-coverage]
 governing_sources:
   - DEC-8b17b1 (D561 demo-estates doctrine)

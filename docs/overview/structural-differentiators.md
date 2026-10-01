@@ -3,7 +3,7 @@ id: structural-differentiators
 order: 2
 title: "Structural Differentiators"
 status: drafting
-authority: informative
+authority: reference
 depends_on: [platform-overview, the-invariants]
 governing_sources:
   - Foundation (the locked architectural authority — this document derives from it and adds nothing to it)

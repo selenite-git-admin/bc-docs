@@ -3,7 +3,7 @@ id: source-variability-and-field-provenance
 order: 22
 title: "Source Variability and Field Provenance"
 status: drafting
-authority: derived
+authority: reference
 depends_on: [the-invariants, the-contract-grammar, the-evaluation-boundaries, data-model-and-schema]
 governing_sources:
   - Foundation

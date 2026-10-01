@@ -1,7 +1,7 @@
 ---
 title: MCF Re-Entry Index
 description: One-screen orientation for resuming the MCF M-track without falling into legacy-substrate or M-numbering confusion. Names the canonical authority stack, reconciles M-numbering (build plan is canonical), classifies what is implemented / exploratory / proposed / obsolete, fixes D386/D400/D401 framing, and names the next governed gate. Navigation/orientation index — NOT an authority document.
-status: draft
+status: drafting
 date: 2026-06-06
 project: bc-core
 domain: contracts

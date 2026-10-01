@@ -2,7 +2,7 @@
 uid: metric-context-framework-gap-survey
 title: Metric Context Framework (MCF) — Gap / Risk Survey
 description: Step 2 of the MCF arc. Converts the inventory (metric-context-framework-inventory.md, commit d9b10d2) into decision points, risks, and recommended dispositions against the requirements (metric-context-framework-requirements.md, commit 13f9bb6). Live read-only bc-postgres SELECT queries used for decision-sensitive counts (query log in §6). Recommendations do not create authority — operator-owned decisions are marked explicitly. Not an ADR. Not an implementation plan. Direct input to Step 3 MCF build plan.
-status: draft
+status: drafting
 date: 2026-05-26
 project: bc-docs
 domain: contracts

@@ -1,7 +1,7 @@
 ---
 title: The Metric Lifecycle — Companion
 description: What the lifecycle states MEAN — the hand-authored companion to the generated lifecycle and enforcement-surface maps. Descriptive layer; meaning, history, and doctrine in one place.
-authority: descriptive
+authority: reference
 ---
 
 # The Metric Lifecycle — Companion
