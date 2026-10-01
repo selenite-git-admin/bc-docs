@@ -29,7 +29,7 @@ This chapter records the operational view of platform security: the JWT authenti
 
 This chapter does not redefine the AuthN substrate (Cognito; Infrastructure governs the deployment), the tenant ownership boundary (Tenancy and Binding), the audit substrate that records security events (Audit and Activity Logging in Implementation), or the formal compliance control map (Compliance section, queued).
 
-**Governing source.** outline.md §4.7; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## What the Procedure Produces
 
@@ -202,7 +202,7 @@ AWS CloudTrail is not consumed in the readiness baseline. The Cognito user pool 
 | Incident and Change Management | Owns the change-record substrate that records security-relevant changes (Cognito user pool changes, secret rotations, CodeArtifact policy changes) |
 | Support and Escalation | Owns the customer-side response surface for security incidents (queued) |
 
-**Governing source.** The owning Operations chapters; outline.md §4.7.
+**Governing source.** The owning Operations chapters; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -238,7 +238,7 @@ The CodeArtifact supply-chain mitigation referenced in CLAUDE.md and Infrastruct
 - `bc-qa/hooks/pre-commit`
 - `platform-infra-stack/cdk/lib/constructs/cognito-user-pool.ts`
 - CLAUDE.md (NPM Registry, AWS Profile, Coding Standards sections)
-- outline.md §4.7: Operations
+- DEC-3395bc: Operations
 
 
 

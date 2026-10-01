@@ -24,7 +24,7 @@ This chapter does not redefine any Foundation concept. The Problem, The Solution
 
 This chapter exists so that a reader who opens Foundation cold can locate any specific chapter without having read the later chapters, and so that a reader who has finished Foundation can hold the nine chapters that follow as one coherent set rather than as nine independent files.
 
-**Governing source.** outline.md §4.1.
+**Governing source.** DEC-3395bc.
 
 ## What Foundation Means
 
@@ -39,7 +39,7 @@ Foundation is the architectural authority for the platform. Every claim that any
 
 The lock-status discipline is the section's defining trait. A reader who finds an apparent inconsistency between a Foundation chapter and a later chapter should treat the Foundation chapter as authoritative until an ADR or Errata entry records a governed change to the Foundation reading.
 
-**Governing source.** outline.md §4.1; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## The Nine Chapters That Follow
 
@@ -56,7 +56,7 @@ Foundation has ten chapters: this overview plus the nine chapters that follow. T
 
 The six groups cover the nine chapters that follow without overlap. A chapter that does not fit a group is a chapter that does not belong in Foundation.
 
-**Governing source.** outline.md §4.1.
+**Governing source.** DEC-3395bc.
 
 ## Reading Sequence
 
@@ -70,7 +70,7 @@ Foundation is written so the nine chapters that follow are read in outline order
 
 The reading sequences do not reorder the chapters in the section. They guide a reader who needs to extract a coherent subset for a specific purpose.
 
-**Governing source.** outline.md §4.1.
+**Governing source.** DEC-3395bc.
 
 ## Boundaries with Other Sections
 
@@ -88,7 +88,7 @@ Foundation supplies the architectural authority that every other section consume
 
 The dependency direction is uniform and one-way. A Foundation chapter that depends on a later section for its own correctness is a boundary violation. A later section that redefines a Foundation invariant instead of consuming it is also a boundary violation. The boundaries make these violations detectable through cross-section citation patterns.
 
-**Governing source.** outline.md §4.1; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## Cross-Cutting Concerns
 
@@ -102,7 +102,7 @@ Three concerns thread through multiple Foundation chapters. The cross-cutting na
 
 A Foundation chapter that introduces a new claim about any of the three cross-cutting concerns must align with the threading discipline. A later section that consumes a Foundation chapter must consume the cross-cutting concern as the chapter states it.
 
-**Governing source.** outline.md §4.1; The Invariants; The Object Model; The Evaluation Boundaries; The Authority Model.
+**Governing source.** DEC-3395bc; The Invariants; The Object Model; The Evaluation Boundaries; The Authority Model.
 
 ## Constraints
 
@@ -130,6 +130,6 @@ A Foundation chapter that violates any of these constraints is incorrect against
 - The Evaluation Boundaries
 - The Authority Model
 - The Dual-Layer Interaction Model
-- outline.md §4.1: Foundation
+- DEC-3395bc: Foundation
 - Decisions: ADR Registry
 - Errata: FND-ERR Registry

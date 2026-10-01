@@ -27,7 +27,7 @@ This chapter records the governed sequence by which curated reference data about
 
 This chapter does not redefine the Source Catalog itself (Sources and the Catalog) or the registration sequence that consumes the Seed Catalog (Source Registration). The Seed Catalog is the curated reference store that feeds Step 2 and Step 3 of registration; it is not a contract artifact and it is not consumed by any contract family directly.
 
-**Governing source.** outline.md §4.6; Sources and the Catalog.
+**Governing source.** DEC-3395bc; Sources and the Catalog.
 
 ## What the Procedure Produces
 
@@ -205,5 +205,5 @@ The Seed Catalog discipline (no manual data entry, no in-UI table or field autho
 - API Surface
 - Audit and Activity Logging
 - legacy-v2/docs/sops/seed-catalog-sop.md (predecessor SOP; D269 Seed Catalog as the only entry point)
-- outline.md §4.6: Onboarding
+- DEC-3395bc: Onboarding
 

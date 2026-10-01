@@ -31,7 +31,7 @@ This chapter records DevHub as the platform's engineering-coordination substrate
 
 This chapter does not redefine the decision and change procedure (Decision and Change Procedure), the audit and change-record substrate (Audit and Activity Logging), or the QA tool surface (Quality Assurance). Those chapters consume DevHub and own their own claims.
 
-**Governing source.** outline.md §4.5; Audit and Activity Logging.
+**Governing source.** DEC-3395bc; Audit and Activity Logging.
 
 ## What DevHub Is
 
@@ -236,7 +236,7 @@ These are the gaps between the substrate as documented and the substrate as impl
 | Operating Model: Chain Completeness and Verdict | The chain-status SSOT and the L-node semantic verdict table in bc-core | The DevHub `devhub_chain_status` and L-node MCP tools that proxy to bc-core; the session-close gate that reads them |
 | Backend Services | bc-core, DevHub, bc-pg-mcp as deployable services | DevHub specifically as the engineering-coordination service |
 
-**Governing source.** outline.md §4.5; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## References
 

@@ -30,7 +30,7 @@ This chapter does not redefine any Implementation claim. Architecture, Backend S
 
 This chapter exists so that a reader who opens Implementation cold can locate any specific chapter without having read the others, and so that a reader who has finished Implementation can hold the eleven chapters that follow as one coherent set rather than as eleven independent files.
 
-**Governing source.** outline.md §4.3.
+**Governing source.** DEC-3395bc.
 
 ## What Implementation Means
 
@@ -46,7 +46,7 @@ Implementation is the descriptive authority for the platform's built artifact. W
 
 The as-built and drift discipline is the section's defining trait. A reader who finds an apparent inconsistency between an Implementation chapter and the code in the relevant repository should treat the inconsistency as a signal that the chapter or the code has drifted; the resolution is either to update the chapter to reflect reality or to record the gap as drift, never to silently align the chapter with an aspirational reading.
 
-**Governing source.** outline.md §4.3; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## The Eleven Chapters That Follow
 
@@ -62,7 +62,7 @@ Implementation has twelve chapters: this overview plus the eleven chapters that 
 
 The five groups cover the eleven chapters that follow without overlap. A chapter that does not fit a group is a chapter that does not belong in Implementation.
 
-**Governing source.** outline.md §4.3.
+**Governing source.** DEC-3395bc.
 
 ## Reading Sequence
 
@@ -78,7 +78,7 @@ The eleven chapters that follow are written so they can be read in outline order
 
 The reading sequences do not reorder the chapters in the section. They guide a reader who needs to extract a coherent subset for a specific purpose.
 
-**Governing source.** outline.md §4.3.
+**Governing source.** DEC-3395bc.
 
 ## Boundaries with Other Sections
 
@@ -96,7 +96,7 @@ Implementation describes the built artifact. The boundaries with the other secti
 
 The dependency direction is one-way. An Implementation chapter that depends on a later section for its own correctness is a boundary violation. A later section that redefines an Implementation surface instead of consuming it is also a boundary violation.
 
-**Governing source.** outline.md §4.3; The Authority Model; Operating Model: Overview.
+**Governing source.** DEC-3395bc; The Authority Model; Operating Model: Overview.
 
 ## Cross-Cutting Concerns
 
@@ -129,11 +129,11 @@ The constraints below apply to Implementation as a whole and are inherited by ev
 | Adjacency in Scope implies dependency in frontmatter | Per pattern 78, when a chapter's Scope says "this chapter sits between X and Y" or names a prior chapter as a governing source, the prior chapter appears in `depends_on` and `governing_sources`. Per pattern 83 (the inverse), the frontmatter does not list governing sources that the body does not substantively cite. |
 | Deploy-specific figures belong in Infrastructure or Operations | Per pattern 85, an Implementation chapter outside Infrastructure and Operations does not embed specific port numbers, AWS account identifiers, IAM role ARNs, region codes, profile names, or other deploy-time figures. Those figures are owned by Infrastructure (deployed-surface record) or Operations: Deployment Topology when drafted. |
 | Persistence-claim precision | Per pattern 86, when a chapter says an endpoint creates a record, writes to a table, persists a value, or maintains a durable ledger, the chapter verifies the actual write path, the FK constraints, and the raise-vs-warn semantics. A persistence claim that the implementation does not honor creates a guarantee reviewers depend on falsely. |
-| Voice and vocabulary discipline | Forbidden vocabulary scrub per outline §2.6; no em dashes; no chapter numbers; section-mark byte integrity per pattern 84; the eighty-six voice patterns in `aws-rewrite-checklist.md` apply to every chapter. |
+| Voice and vocabulary discipline | Forbidden vocabulary scrub per the Documentation System chapter; no em dashes; no chapter numbers; section-mark byte integrity per pattern 84; the eighty-six voice patterns in `aws-rewrite-checklist.md` apply to every chapter. |
 
 A chapter that violates any of these constraints is incorrect against the section's discipline.
 
-**Governing source.** The Authority Model; outline.md §4.3; `scripts/reference/aws-rewrite-checklist.md`.
+**Governing source.** The Authority Model; DEC-3395bc; `scripts/reference/aws-rewrite-checklist.md`.
 
 ## Governing Decisions
 
@@ -147,7 +147,7 @@ The table below records the ADRs that govern the section shape or the cross-cutt
 | DEC-771baf | Supplies tenant database topology and the platform-tenant dependency direction used by several Implementation chapters | This overview routes the concern; the owning chapters record the as-built tenant behavior and drift |
 | DEC-e50b83 | Supplies the master port-reservation concern that Infrastructure and deployable-substrate chapters consume | This overview routes the concern without embedding deploy-specific figures |
 
-**Governing source.** Decisions: ADR Registry; outline.md §4.3.
+**Governing source.** Decisions: ADR Registry; DEC-3395bc.
 
 ## References
 
@@ -169,5 +169,5 @@ The table below records the ADRs that govern the section shape or the cross-cutt
 - DEC-1918d0: Deployment and database architecture
 - DEC-771baf: Tenant database topology
 - DEC-e50b83: Master port reservation
-- outline.md §4.3: Implementation
+- DEC-3395bc: Implementation
 - Decisions: ADR Registry

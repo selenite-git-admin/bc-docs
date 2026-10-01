@@ -33,7 +33,7 @@ This chapter sits at the front of the AI section. It is the architectural binder
 
 This chapter does not redefine Foundation invariants, the Authority Model, the Dual-Layer Interaction Model, or the Operating Model's contract grammar. Per the Dual-Layer Interaction Model, AI participation runs on the Conversation surface; the Trust surface (metrics, Canonical Objects, the proof chain) is authoritative and is not produced by AI. Where AI verdicts feed the Trust surface (the L-node semantic gate at session close per DEC-804874), the verdict is a recorded input that governs the surface's gates; the surface's authoritative state remains produced by the four governed boundary acts.
 
-**Governing source.** Architecture; Backend Services; Auxiliary Services; outline.md §4.4.
+**Governing source.** Architecture; Backend Services; Auxiliary Services; DEC-3395bc.
 
 ## The bc-ai Service
 
@@ -167,7 +167,7 @@ Several adjacent chapters have surfaces that resemble parts of the AI architectu
 | Audit and Activity Logging | Implementation section | Owns the operational governance trail substrate. This chapter records that bc-ai pushes process-audit verdicts to DevHub; Audit and Activity Logging records the substrate |
 | Quality Gates and Chain Integrity | Operating Model | Owns the gate authority over runtime decisions. This chapter records that AI verdicts feed bc-core's L-node semantic gate; Quality Gates records the gate's authority |
 
-**Governing source.** Operating Model; Implementation; outline.md §4.4.
+**Governing source.** Operating Model; Implementation; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -198,6 +198,6 @@ Several adjacent chapters have surfaces that resemble parts of the AI architectu
 - DEC-c06f41: Spine expansion to eight sections plus home
 - DEC-804874: L-node semantic gate (D366)
 - DEC-ebf0b4: Session Discipline and Data Integrity (D268)
-- outline.md §4.4: AI
+- DEC-3395bc: AI
 - Decisions: ADR Registry
 

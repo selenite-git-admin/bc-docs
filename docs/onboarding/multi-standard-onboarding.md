@@ -31,7 +31,7 @@ This chapter generalizes Business Field and Business Object Onboarding to suppor
 
 This chapter does not redefine the BF and BO derivation rules or the certification and approval gates (Business Field and Business Object Onboarding), the Canonical Field registry (Canonical Field Seeding), or the AI maker-checker-gate envelope (AI Gates).
 
-**Governing source.** outline.md §4.6; Business Vocabulary.
+**Governing source.** DEC-3395bc; Business Vocabulary.
 
 ## The Three-Tier Sourcing Hierarchy
 
@@ -332,6 +332,6 @@ The parser inventory is the chapter's record of which standards have been wired 
 - DEC-9a5dc0: CF boundary; reporting standards promote to canonical fields
 - DEC-f66378: BO-scoped BF naming
 - legacy-v2/docs/sops/multi-standard-onboarding-sop.md (predecessor SOP)
-- outline.md §4.6: Onboarding
+- DEC-3395bc: Onboarding
 
 

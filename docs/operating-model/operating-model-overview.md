@@ -32,7 +32,7 @@ Operating Model chapters named here are mapped as section navigation and bounded
 
 This chapter exists so that a reader who opens Operating Model cold can locate any specific chapter without having read the prior chapters, and so that a reader who has finished Operating Model can hold the section's claims as one coherent set rather than nineteen independent files.
 
-**Governing source.** Foundation; The Object Model; The Contract Grammar; The Evaluation Boundaries; The Authority Model; outline.md §4.2.
+**Governing source.** Foundation; The Object Model; The Contract Grammar; The Evaluation Boundaries; The Authority Model; DEC-3395bc.
 
 ## What Operating Model Means
 
@@ -48,7 +48,7 @@ Operating Model does not mean every runtime concern in the platform. Three categ
 
 The boundary is operationally consequential. A reader who expects to find billing integration, deployment topology, or contract authoring procedures here will not find them. A reader who finds claims about entitlement consultation, lifecycle state reads, or quality gate verdict consumption here is reading a consumption boundary, not the artifact's home.
 
-**Governing source.** Foundation; The Authority Model; outline.md §4.2; DEC-ce6e2b; DEC-9c58c6.
+**Governing source.** Foundation; The Authority Model; DEC-3395bc; DEC-ce6e2b; DEC-9c58c6.
 
 ## The Architectural Through-Line
 
@@ -89,7 +89,7 @@ This overview remains the section entry point: a reader who opens Operating Mode
 
 The eleven groups cover the section without overlap. A chapter that does not fit a group is a chapter that does not belong in this section.
 
-**Governing source.** outline.md §4.2; Foundation.
+**Governing source.** DEC-3395bc; Foundation.
 
 ## Reading Sequence
 
@@ -103,7 +103,7 @@ The section is written to be read in outline order. Two alternative sequences se
 
 The reading sequences do not reorder the chapters in the section. They guide a reader who needs to extract a coherent subset for a specific purpose.
 
-**Governing source.** outline.md §4.2; Foundation.
+**Governing source.** DEC-3395bc; Foundation.
 
 ## Boundaries with Other Sections
 
@@ -121,7 +121,7 @@ Operating Model depends on Foundation and supplies the contract-execution substr
 
 The dependency directions are observable in cross-section citations. An Operating Model chapter that depends on a later section for its own correctness, or a later section that redefines an Operating Model invariant instead of consuming it, is a boundary violation.
 
-**Governing source.** Foundation; The Authority Model; outline.md §4.2.
+**Governing source.** Foundation; The Authority Model; DEC-3395bc.
 
 ## Cross-Cutting Concerns
 
@@ -180,7 +180,7 @@ Operating Model chapters that carry diagrams in this snapshot:
 - The Evaluation Boundaries
 - The Authority Model
 - The Dual-Layer Interaction Model
-- outline.md §4.2: Operating Model
+- DEC-3395bc: Operating Model
 - Sources and the Catalog
 - Business Vocabulary
 - Contract Chain Assembly

@@ -28,7 +28,7 @@ This chapter records the operational view of platform change governance and inci
 
 This chapter does not redefine the audit substrate (Audit and Activity Logging), the chain completeness SSOT (Chain Completeness and Verdict), or the per-migration discipline (Upgrade and Migration).
 
-**Governing source.** outline.md §4.7; Audit and Activity Logging.
+**Governing source.** DEC-3395bc; Audit and Activity Logging.
 
 ## Change Records: The DevHub Substrate
 
@@ -187,7 +187,7 @@ The change-management consequence: an ADR cited in a change record uses the `DEC
 | Performance and Scale | Owns the performance regression detection; this chapter records the response |
 | Support and Escalation | Owns the customer-side response; this chapter records the platform-side change |
 
-**Governing source.** The owning Operations chapters; outline.md §4.7.
+**Governing source.** The owning Operations chapters; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -221,5 +221,5 @@ The L-node semantic verdict gate (D366; ADR-804874) and the D268 session-discipl
 - DEC-bebaec: Chain Completeness SSOT
 - DEC-633b2a: D-code monotonic allocator
 - CLAUDE.md (Session Protocol; D-code allocation; L-Node Semantic Gate; Session Discipline sections)
-- outline.md §4.7: Operations
+- DEC-3395bc: Operations
 

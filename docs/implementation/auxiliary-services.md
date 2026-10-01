@@ -25,13 +25,13 @@ diagrams: []
 
 ## Scope
 
-This chapter records the smaller deployables that support BareCount development and platform observability without participating in the tenant-data execution path: bc-core-dashboard (an operational dashboard for bc-core), bc-sdg (the synthetic data generator with per-system-type simulators), and bc-website (the marketing site). Per outline §4.3 thesis, treatment is lighter than Backend Services: each service's section records purpose, runtime, port, role, deployment shape, and a short list of constraints and failure modes. The chapter does not enumerate per-page UI detail, per-simulator data shape, or per-route API surface.
+This chapter records the smaller deployables that support BareCount development and platform observability without participating in the tenant-data execution path: bc-core-dashboard (an operational dashboard for bc-core), bc-sdg (the synthetic data generator with per-system-type simulators), and bc-website (the marketing site). Per the Documentation System chapter thesis, treatment is lighter than Backend Services: each service's section records purpose, runtime, port, role, deployment shape, and a short list of constraints and failure modes. The chapter does not enumerate per-page UI detail, per-simulator data shape, or per-route API surface.
 
 This chapter sits adjacent to Backend Services. Backend Services records the deployable backend services that participate in the contract-execution spine (bc-core, DevHub, bc-pg-mcp). Auxiliary Services records deployables that are independent of the spine: none of them produces authoritative tenant state, none of them is on the request path that traverses the four boundary acts, and none of them holds tenant data.
 
 This chapter does not redefine Foundation invariants, the Object Model, the Authority Model, or the Architecture chapter's commitments. It does not enumerate the synthetic-data methodology that bc-sdg supports (deferred to Synthetic Data and Testing), the bc-admin operational dashboards (deferred to Frontend Experience), the platform observability schema (deferred to Observability and Telemetry in the Operations section), or the marketing content of bc-website (out of platform scope).
 
-**Governing source.** Architecture; Backend Services; outline.md §4.3.
+**Governing source.** Architecture; Backend Services; DEC-3395bc.
 
 ## Service Inventory
 
@@ -199,5 +199,5 @@ None of the three has a dependency that the bc-core execution spine consumes at 
 - DEC-e50b83: Master port reservation
 - DEC-9b23a7: pm2 removed; independent service startup
 - DEC-c06f41: Spine expansion to eight sections plus home
-- outline.md §4.3: Implementation
+- DEC-3395bc: Implementation
 - Decisions: ADR Registry

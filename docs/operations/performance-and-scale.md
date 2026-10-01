@@ -31,7 +31,7 @@ This chapter does not redefine the metric engine (Metric Evaluation), the canoni
 
 The chapter records what is measurable in the readiness baseline and what is queued; it does not assert performance numbers without their measurement substrate.
 
-**Governing source.** outline.md §4.7; Metric Evaluation.
+**Governing source.** DEC-3395bc; Metric Evaluation.
 
 ## Measured Performance Surfaces In The Readiness Baseline
 
@@ -182,7 +182,7 @@ The Metric Registration chapter records that the platform applies a concurrency 
 | Incident and Change Management | Owns the change-record substrate; performance regressions are governed change events |
 | Support and Escalation | Consumes the per-tenant performance signal to drive customer-side communication when wired |
 
-**Governing source.** The owning Operations chapters; outline.md §4.7.
+**Governing source.** The owning Operations chapters; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -222,7 +222,7 @@ The Metric Registration chapter records that the platform applies a concurrency 
 - DEC-771baf: Tenant database topology
 - `bc-ai/config.py`
 - CLAUDE.md (Chain Completeness SSOT section)
-- outline.md §4.7: Operations
+- DEC-3395bc: Operations
 
 
 

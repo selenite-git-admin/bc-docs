@@ -29,7 +29,7 @@ This chapter records the platform's privacy posture and the resolution of the ap
 
 This chapter does not redefine the immutability invariant (The Object Model and The Invariants), the audit substrate that records the nullification act (Audit and Activity Logging), the access boundary that authorizes a Data Subject Access Request (InfoSec and Access Control), or the SOC 2 Privacy criterion's scope (SOC 2 Conformance records the deferral per `DEC-ae331f`).
 
-**Governing source.** outline.md §4.8; DEC-bd5492.
+**Governing source.** DEC-3395bc; DEC-bd5492.
 
 ## The Foundation Tension
 
@@ -241,7 +241,7 @@ The pattern: nullify the field, preserve the structure, hash the original, exten
 | SOC 2 Conformance | The Trust Services Criteria mapping | The Privacy criterion's deferral per `DEC-ae331f` |
 | Operations: Tenant Lifecycle and Subscription | The Subscription artifact and tier model | The end-of-tenant-relationship erasure trigger when a tenant offboards |
 
-**Governing source.** outline.md §4.8; The Authority Model.
+**Governing source.** DEC-3395bc; The Authority Model.
 
 ## References
 

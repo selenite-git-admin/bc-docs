@@ -35,7 +35,7 @@ This chapter does not redefine the Subscription artifact or the lifecycle state 
 
 This chapter is the procedural authority for tenant creation. Tenant Lifecycle and Subscription is the authority for the Subscription artifact this procedure produces.
 
-**Governing source.** outline.md §4.6; Tenant Lifecycle and Subscription.
+**Governing source.** DEC-3395bc; Tenant Lifecycle and Subscription.
 
 ## What the Procedure Produces
 
@@ -272,6 +272,6 @@ A tenant that passes the three checks is operational. A tenant that fails any ch
 - DEC-005ea7: Single production environment per tenant
 - DEC-f02230: Tenant DB schema organization
 - DEC-3ee0f6: Per-tenant S3 archive bucket (D379)
-- outline.md §4.6: Onboarding
+- DEC-3395bc: Onboarding
 
 

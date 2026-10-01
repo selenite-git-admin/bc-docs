@@ -29,7 +29,7 @@ This chapter sits between AI Architecture and AI Agents. AI Architecture records
 
 This chapter does not redefine the AWS account, region, profile, or hosting topology (deferred to Infrastructure), the per-agent inventory or the maker-checker-gate triplet pattern (deferred to AI Architecture and AI Agents), the gate verdict authoring contract (deferred to AI Gates), the cross-family verification model (deferred to AI Trust and Verification), or the tenant-facing usage transparency surface (deferred to AI Usage Visibility). Concrete deploy figures (port number, AWS account identifier, region code, profile name) belong to Infrastructure per pattern 85; this chapter names the concepts and routes the figures.
 
-**Governing source.** AI Architecture; Infrastructure; outline.md §4.4.
+**Governing source.** AI Architecture; Infrastructure; DEC-3395bc.
 
 ## Why Inference Profiles
 
@@ -150,7 +150,7 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 | Infrastructure | Implementation section | Owns the AWS account, region, profile, port reservation, and CodeArtifact substrate. This chapter records that the Bedrock client uses the platform's AWS profile; Infrastructure records the figures |
 | Auxiliary Services | Implementation section | Owns bc-ai's deployable shape. This chapter records bc-ai's model substrate; Auxiliary Services records bc-ai's deployable posture |
 
-**Governing source.** Operating Model; Implementation; outline.md §4.4.
+**Governing source.** Operating Model; Implementation; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -171,6 +171,6 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 - Infrastructure
 - Auxiliary Services
 - DEC-c06f41: Spine expansion to eight sections plus home
-- outline.md §4.4: AI
+- DEC-3395bc: AI
 - Decisions: ADR Registry
 

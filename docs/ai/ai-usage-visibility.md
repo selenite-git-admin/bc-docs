@@ -33,7 +33,7 @@ This chapter sits at the back of the AI section. It is the section's tenant-faci
 
 This chapter does not redefine the maker-checker-gate triplet pattern (deferred to AI Architecture), the agent inventory (deferred to AI Agents), the gate verdict consumption posture (deferred to AI Gates), the trust ladder (deferred to AI Trust and Verification), or the per-tenant binding model that governs which AI features a tenant has access to (deferred to Tenant Entitlement Enforcement in Operating Model and Tenant Lifecycle and Subscription in Operations). The chapter records what is visible; the chapter does not record what is happening underneath the visible surface.
 
-**Governing source.** AI Architecture; Frontend Experience; outline.md §4.4.
+**Governing source.** AI Architecture; Frontend Experience; DEC-3395bc.
 
 ## What Tenants See In The Readiness Baseline
 
@@ -159,7 +159,7 @@ Per pattern 69, gaps between the design intent recorded above and the readiness 
 | Tenant Lifecycle and Subscription | Operations section | Owns the Subscription artifact and the tier-policy substrate. A per-tenant AI policy may attach as a tier dimension; the chapter is named here as the candidate home |
 | Notifications and Webhooks | Implementation section | Owns the notification surface (scaffolds only in the readiness baseline). A future tenant notification when an AI verdict affects the tenant's data would land here; the chapter routes the concern |
 
-**Governing source.** Implementation; Operating Model; outline.md §4.4.
+**Governing source.** Implementation; Operating Model; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -180,6 +180,6 @@ Per pattern 69, gaps between the design intent recorded above and the readiness 
 - Audit and Activity Logging
 - The Dual-Layer Interaction Model
 - DEC-c06f41: Spine expansion to eight sections plus home
-- outline.md §4.4: AI
+- DEC-3395bc: AI
 - Decisions: ADR Registry
 

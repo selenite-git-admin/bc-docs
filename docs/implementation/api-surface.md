@@ -33,11 +33,11 @@ diagrams: []
 
 This chapter records the design rationale for the BareCount API surface served by bc-core: the route shape and conventions, the authorization decorators and their global-guard enforcement, the response envelope and ETag interceptors, the Problem Detail error format per RFC 7807, request validation, pagination, rate limiting, the endpoint families at the Internal Modules cluster level, and the conventions that keep the controller surface coherent as bc-core evolves.
 
-This chapter does not enumerate every endpoint. Per-endpoint detail (HTTP method, route, request and response shape, query parameters, response codes per route) belongs to the **API Reference** reference (`docs/api/`, queued; auto-generated from the DevHub API scanner per outline §4.9). When the API Reference lands, a reader who needs per-route detail consults it; this chapter records the conventions every endpoint follows.
+This chapter does not enumerate every endpoint. Per-endpoint detail (HTTP method, route, request and response shape, query parameters, response codes per route) belongs to the **API Reference** reference (`docs/api/`, queued; auto-generated from the DevHub API scanner per the Documentation System chapter). When the API Reference lands, a reader who needs per-route detail consults it; this chapter records the conventions every endpoint follows.
 
 This chapter sits between Data Model and Schema and Frontend Experience. Data Model and Schema records what is stored; this chapter records how the frontends and external consumers read and write that store; Frontend Experience records the UI that consumes the API. It does not redefine boundary semantics (deferred to Operating Model), the authorization invariants (deferred to The Authority Model), the per-module catalog (deferred to Internal Modules), the tenant lifecycle (deferred to Tenant Lifecycle and Subscription), or the operational SOPs that consume the API (deferred to Operations).
 
-**Governing source.** Architecture; Internal Modules; outline.md §4.3.
+**Governing source.** Architecture; Internal Modules; DEC-3395bc.
 
 ## Route Shape
 
@@ -320,5 +320,5 @@ Per pattern 69, the gaps below are recorded explicitly rather than glossed.
 - DEC-eea376: Platform scope follows the user
 - DEC-f0e78e: Platform and tenant authority classes
 - RFC 7807: Problem Details for HTTP APIs
-- outline.md §4.3: Implementation
+- DEC-3395bc: Implementation
 - Decisions: ADR Registry

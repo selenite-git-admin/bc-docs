@@ -92,7 +92,7 @@ collection: glossary
 
 ## E
 
-**Errata.** A first-class governance peer under `docs/errata/`. Each entry records a Foundation contradiction or correction. The errata register is the source of truth for active entries. First-use: [Documentation System](../../development/documentation-system.md). Related: outline.md §4.9.
+**Errata.** A first-class governance peer under `docs/errata/`. Each entry records a Foundation contradiction or correction. The errata register is the source of truth for active entries. First-use: [Documentation System](../../development/documentation-system.md). Related: [Documentation System](../../development/documentation-system.md).
 
 **Evidence (Object).** A proof object that records what occurred at an evaluation boundary, including evaluation type, inputs, outputs, evaluation context, outcome, and timestamp. Emitted at the same act that produces the authoritative object per Invariant VI. First-use: [The Object Model](../../foundation/the-object-model.md). Related: [The Invariants](../../foundation/the-invariants.md); [Evidence and Lineage](../../operating-model/evidence-and-lineage.md).
 
@@ -100,13 +100,13 @@ collection: glossary
 
 ## F
 
-**Foundation.** The platform's locked architectural authority. Nine chapters define the Problem, the Solution, the Invariants, the Object Model, the Contract Grammar, the Evaluation Boundaries, the Authority Model, and the Dual-Layer Interaction Model, plus the section opener. First-use: [Foundation: Overview](../../foundation/foundation-overview.md). Related: [Operating Model: Overview](../../operating-model/operating-model-overview.md); outline.md §4.1.
+**Foundation.** The platform's locked architectural authority. Nine chapters define the Problem, the Solution, the Invariants, the Object Model, the Contract Grammar, the Evaluation Boundaries, the Authority Model, and the Dual-Layer Interaction Model, plus the section opener. First-use: [Foundation: Overview](../../foundation/foundation-overview.md). Related: [Operating Model: Overview](../../operating-model/operating-model-overview.md); [Documentation System](../../development/documentation-system.md).
 
 ## G
 
 **GDPR.** The European Union's General Data Protection Regulation 2016/679. Per `DEC-bd5492`, the platform implements the right to erasure (Article 17) and the right of access (Article 15) with thirty-day deadlines through sentinel-based nullification and DSAR discovery. First-use: [Privacy and the Immutable Fact](../../compliance/privacy-and-the-immutable-fact.md). Related: [InfoSec and Access Control](../../compliance/infosec-and-access-control.md).
 
-**Governing Source.** A footer convention per outline §2.7. Every substantive prose section ends with a `Governing source.` line naming the authoritative references (Foundation chapter, ADR, Errata entry, drafted chapter elsewhere). First-use: outline.md §2.7. Related: AWS rewrite checklist patterns 35, 52, 53.
+**Governing Source.** A footer convention per the Documentation System chapter. Every substantive prose section ends with a `Governing source.` line naming the authoritative references (Foundation chapter, ADR, Errata entry, drafted chapter elsewhere). First-use: [Documentation System](../../development/documentation-system.md). Related: AWS rewrite checklist patterns 35, 52, 53.
 
 ## I
 

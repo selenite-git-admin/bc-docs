@@ -33,7 +33,7 @@ This chapter records the governed sequence by which a Canonical Contract (CC) is
 
 This chapter does not redefine the canonical evaluation runtime act (Canonical Evaluation), the contract grammar's two-vocabulary model (The Contract Grammar; DEC-d72560), the BF and BO registries (Business Vocabulary), the CF registry (Canonical Field Seeding), or the Observation Contract that feeds the CC at runtime via Canonical Mapping (Observation Contract Creation).
 
-**Governing source.** outline.md §4.6; The Contract Grammar.
+**Governing source.** DEC-3395bc; The Contract Grammar.
 
 ## What the Procedure Produces
 
@@ -393,6 +393,6 @@ Removing a field is blocked while any active MC references it. Changing grain re
 - DEC-9361cd: cc_field_mapping (1-to-many with filters)
 - DEC-35b34b: Aggregation authority
 - legacy-v2/docs/sops/cc-creation-sop.md (predecessor SOP)
-- outline.md §4.6: Onboarding
+- DEC-3395bc: Onboarding
 
 

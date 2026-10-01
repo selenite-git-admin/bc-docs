@@ -27,7 +27,7 @@ This chapter does not redefine the audit substrate (Audit and Activity Logging),
 
 The chapter records what the platform observes in the readiness baseline, not what an aspirational SRE-grade observability surface would look like.
 
-**Governing source.** outline.md §4.7; Audit and Activity Logging.
+**Governing source.** DEC-3395bc; Audit and Activity Logging.
 
 ## What the Platform Emits
 
@@ -170,7 +170,7 @@ Each row in this table is a queued observability surface. The platform's readine
 | Incident and Change Management | Owns the change-record substrate; this chapter records the change events as part of the operational read surface |
 | Support and Escalation | Consumes the observability surface to drive customer-side incident response |
 
-**Governing source.** The owning Operations chapters; outline.md §4.7.
+**Governing source.** The owning Operations chapters; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -205,7 +205,7 @@ Each row in this table is a queued observability surface. The platform's readine
 - `bc-core/src/audit/audit.service.ts`
 - `bc-core/src/registry/connection.controller.ts`
 - CLAUDE.md (Coding Standards; Chain Completeness SSOT sections)
-- outline.md §4.7: Operations
+- DEC-3395bc: Operations
 
 
 

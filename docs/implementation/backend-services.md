@@ -45,7 +45,7 @@ This chapter sits between Architecture and the rest of Implementation. Architect
 
 This chapter does not redefine Foundation invariants, the Object Model, the Contract Grammar, the Evaluation Boundaries, the Authority Model, or the Dual-Layer Interaction Model. It does not redefine the architectural commitments, layers, surfaces, execution spine, contract chain, two-database split, port reservation, or residency boundary recorded in Architecture. It does not enumerate AWS network, compute, secret, or storage detail (deferred to Infrastructure); database schemas (deferred to Data Model and Schema); endpoint catalogues (deferred to API Surface); the NestJS module catalog inside bc-core (deferred to Internal Modules); the per-service deployment topology in production (deferred to Infrastructure and to Deployment Topology in Operations); the development-tooling protocol that DevHub implements (deferred to Decision and Change Workflow in the Development section); the AI service runtime (deferred to AI Architecture in the AI section); or the synthetic-data and testing surfaces (deferred to Synthetic Data and Testing).
 
-**Governing source.** Architecture; outline.md §4.3.
+**Governing source.** Architecture; DEC-3395bc.
 
 ## Service Inventory
 
@@ -330,5 +330,5 @@ The decisions that govern the deployable backend services are listed below. Per-
 - DEC-ebf0b4: Session discipline and data integrity
 - DEC-804874: L-node semantic verification gate
 - DEC-c06f41: Spine expansion to eight sections plus home
-- outline.md §4.3: Implementation
+- DEC-3395bc: Implementation
 - Decisions: ADR Registry

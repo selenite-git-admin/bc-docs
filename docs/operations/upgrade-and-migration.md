@@ -28,7 +28,7 @@ This chapter records the operational procedures for moving the platform between 
 
 This chapter does not redefine the schema itself (Data Model and Schema in Implementation), the per-contract-family creation procedures (the Onboarding section's contract-creation chapters), or the deploy-time DDL application that runs on first container start (Deployment Topology).
 
-**Governing source.** outline.md §4.7; DEC-3b86ea.
+**Governing source.** DEC-3395bc; DEC-3b86ea.
 
 ## What the Procedure Produces
 
@@ -205,7 +205,7 @@ A migration that the runner applies to some tenants but not others leaves the pl
 | Incident and Change Management | Owns the change-record substrate that records each migration as a governed change event |
 | Support and Escalation | Owns the customer-side communication when a migration affects tenant data structure |
 
-**Governing source.** The owning Operations chapters; outline.md §4.7.
+**Governing source.** The owning Operations chapters; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -243,6 +243,6 @@ A migration that the runner applies to some tenants but not others leaves the pl
 - `bc-core/scripts/golden-snapshot.mjs`
 - `bc-core/src/registry/seed/seed-tenant-dbs.ts`
 - legacy-v2/docs/sops/clean-slate-migration.md (predecessor SOP)
-- outline.md §4.7: Operations
+- DEC-3395bc: Operations
 
 

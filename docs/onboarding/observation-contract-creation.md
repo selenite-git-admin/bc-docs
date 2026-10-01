@@ -31,7 +31,7 @@ This chapter records the governed sequence by which an Observation Contract (OC)
 
 This chapter does not redefine the contract grammar's two-vocabulary model (The Contract Grammar; DEC-d72560), the admission and observation runtime acts (Admission and Observation), the BF and BO registries (Business Vocabulary; Business Field and Business Object Onboarding), or the SC and AC pair the OC references (Source and Admission Contract Creation).
 
-**Governing source.** outline.md §4.6; The Contract Grammar.
+**Governing source.** DEC-3395bc; The Contract Grammar.
 
 ## What the Procedure Produces
 
@@ -328,7 +328,7 @@ The OC family-level governance (CR-OC-001 through CR-OC-011, twelve quality chec
 - DEC-d72560: Canonical Field as 3rd contract primitive (two-vocabulary model)
 - DEC-9d1f4b: Shared dimension normalization
 - legacy-v2-archive/docs/sops/oc-creation-sop.md (predecessor SOP)
-- outline.md §4.6: Onboarding
+- DEC-3395bc: Onboarding
 
 
 

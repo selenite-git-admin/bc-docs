@@ -31,7 +31,7 @@ This chapter records the operational view of where the platform deploys, how the
 
 This chapter does not redefine the AWS account, region, or resource inventory (Infrastructure), the per-service deployable shape (Backend Services, Auxiliary Services), the hosting-variant commercial categorization (Tenant Lifecycle and Subscription), or the upgrade and migration procedures that move the platform between schema versions (Upgrade and Migration).
 
-**Governing source.** outline.md §4.7; Infrastructure.
+**Governing source.** DEC-3395bc; Infrastructure.
 
 ## What the Procedure Produces
 
@@ -214,7 +214,7 @@ The chapter records this honestly per pattern 81. The hosting-variant inventory 
 | Incident and Change Management | Owns the change-record substrate this chapter's deploys produce; deploy events are governed-change events the substrate records |
 | Support and Escalation | Independent at the deploy layer |
 
-**Governing source.** The owning Operations chapters; outline.md §4.7.
+**Governing source.** The owning Operations chapters; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -258,7 +258,7 @@ The chapter records this honestly per pattern 81. The hosting-variant inventory 
 - `platform-infra-stack/cdk/lib/stacks/auth-stack.ts`
 - `bc-core/src/registry/seed/seed-tenant-dbs.ts`
 - `bc-core/docker/redesign/03-tenant-db.sql`
-- outline.md §4.7: Operations
+- DEC-3395bc: Operations
 
 
 

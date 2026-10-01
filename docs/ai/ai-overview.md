@@ -26,11 +26,11 @@ diagrams: []
 
 This chapter is the section opener for AI. It states what AI is and what role it plays in the documentation, maps the six chapters that follow this overview into reading groups, gives a recommended reading sequence by audience, declares the boundaries between AI and the other sections of the documentation, and records the section-wide constraints that every AI chapter inherits.
 
-This chapter does not redefine any AI claim. AI Architecture, Bedrock and Inference Profiles, AI Agents, AI Gates, AI Trust and Verification, and AI Usage Visibility each govern their own claims. Per pattern 87, this overview locates the chapters and routes the reader; it does not restate child-chapter behavior. Where the overview names a section-wide property, the governing source is `outline.md` (for documentation structure), the relevant Foundation chapter (for binding architectural authority), or the chapter that owns the property.
+This chapter does not redefine any AI claim. AI Architecture, Bedrock and Inference Profiles, AI Agents, AI Gates, AI Trust and Verification, and AI Usage Visibility each govern their own claims. Per pattern 87, this overview locates the chapters and routes the reader; it does not restate child-chapter behavior. Where the overview names a section-wide property, the governing source is the Documentation System chapter (for documentation structure), the relevant Foundation chapter (for binding architectural authority), or the chapter that owns the property.
 
 This chapter exists so that a reader who opens the AI section cold can locate any specific chapter without having read the others, and so that a reader who has finished AI can hold the six chapters that follow as one coherent set rather than as six independent files.
 
-**Governing source.** outline.md §4.4.
+**Governing source.** DEC-3395bc.
 
 ## What AI Means
 
@@ -46,7 +46,7 @@ AI is the descriptive authority for the platform's AI surface: the bc-ai service
 
 The Conversation-surface commitment is the section's defining trait. A reader who finds an apparent contradiction between an AI verdict and the platform's authoritative state should treat the authoritative state as binding; the AI verdict is a verification or a recommendation, not the source of truth.
 
-**Governing source.** outline.md §4.4; The Dual-Layer Interaction Model; The Authority Model.
+**Governing source.** DEC-3395bc; The Dual-Layer Interaction Model; The Authority Model.
 
 ## The Six Chapters That Follow
 
@@ -62,7 +62,7 @@ The AI section has seven chapters: this overview plus the six chapters that foll
 
 The five groups cover the six chapters that follow without overlap. A chapter that does not fit a group is a chapter that does not belong in AI.
 
-**Governing source.** outline.md §4.4.
+**Governing source.** DEC-3395bc.
 
 ## Reading Sequence
 
@@ -78,7 +78,7 @@ The six chapters that follow are written so they can be read in outline order, b
 
 The reading sequences do not reorder the chapters in the section. They guide a reader who needs to extract a coherent subset for a specific purpose.
 
-**Governing source.** outline.md §4.4.
+**Governing source.** DEC-3395bc.
 
 ## Boundaries with Other Sections
 
@@ -96,7 +96,7 @@ AI describes the platform's AI surface. The boundaries with the other sections a
 
 The dependency direction is explicit. Foundation and Operating Model bind AI; the rest of the documentation consumes AI.
 
-**Governing source.** outline.md §4.4; The Authority Model; Operating Model: Overview; Implementation: Overview.
+**Governing source.** DEC-3395bc; The Authority Model; Operating Model: Overview; Implementation: Overview.
 
 ## Cross-Cutting Concerns
 
@@ -129,12 +129,12 @@ The constraints below apply to AI as a whole and are inherited by every chapter 
 | Persistence-claim precision | Per pattern 86, when a chapter says an AI verdict creates a record, writes to a table, persists a value, or maintains a durable ledger, the chapter verifies the actual write path, the FK constraints, and the raise-vs-warn semantics |
 | Bidirectional citation discipline | Per the chapter-Scope frontmatter discipline, every `DEC-xxxxxx` and `FND-ERR-xxx` cited in body appears in frontmatter `governing_adrs` or `errata_referenced`, and vice versa; the Governing Decisions table is bidirectionally complete with frontmatter and body citations per pattern 77 |
 | Deploy-specific figures belong elsewhere | Per pattern 85, an AI chapter does not embed specific port numbers, AWS account identifiers, IAM role ARNs, region codes, profile names, or other deploy-time figures; those figures are owned by Infrastructure |
-| Voice and vocabulary discipline | Forbidden vocabulary scrub per outline §2.6; no em dashes; no chapter numbers; section-mark byte integrity per pattern 84; the eighty-seven voice patterns in `aws-rewrite-checklist.md` apply to every chapter |
+| Voice and vocabulary discipline | Forbidden vocabulary scrub per the Documentation System chapter; no em dashes; no chapter numbers; section-mark byte integrity per pattern 84; the eighty-seven voice patterns in `aws-rewrite-checklist.md` apply to every chapter |
 | Section-overview locates, does not restate | Per pattern 87, this overview's tables identify each chapter's group role and route the reader to the owning chapter; the overview does not restate child-chapter behavior |
 
 A chapter that violates any of these constraints is incorrect against the section's discipline.
 
-**Governing source.** The Authority Model; outline.md §4.4; `scripts/reference/aws-rewrite-checklist.md`.
+**Governing source.** The Authority Model; DEC-3395bc; `scripts/reference/aws-rewrite-checklist.md`.
 
 ## Governing Decisions
 
@@ -146,7 +146,7 @@ The table below records the ADRs that govern the section shape or the cross-cutt
 | DEC-804874 | Supplies the L-node semantic gate at session close as the one hard close-blocker that depends on AI verdicts; AI Gates routes the consumption posture | This overview routes the concern; AI Gates and Audit and Activity Logging own the gate's authority |
 | DEC-ebf0b4 | Supplies the session-discipline rules the auditor agent reviews against; AI Agents owns the auditor's role | This overview routes the concern; AI Agents and Audit and Activity Logging own the auditor's substrate |
 
-**Governing source.** Decisions: ADR Registry; outline.md §4.4.
+**Governing source.** Decisions: ADR Registry; DEC-3395bc.
 
 ## References
 
@@ -163,5 +163,5 @@ The table below records the ADRs that govern the section shape or the cross-cutt
 - DEC-c06f41: Spine expansion to eight sections plus home
 - DEC-804874: L-node semantic gate (D366)
 - DEC-ebf0b4: Session Discipline and Data Integrity (D268)
-- outline.md §4.4: AI
+- DEC-3395bc: AI
 - Decisions: ADR Registry

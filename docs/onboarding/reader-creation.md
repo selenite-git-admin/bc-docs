@@ -36,7 +36,7 @@ The chapter names the four-artifact runtime model (`runtime.reader`, `runtime.re
 
 This chapter does not redefine the UniBAT Reader pattern (Connectors and Readers), the admission and observation runtime acts the Runner performs (Admission and Observation), the Observation Contract the Runner applies (Observation Contract Creation), or the Connection that resolves credentials at runtime (Tenancy and Binding). It uses the **Business Concept Registry** vocabulary (a Business Concept and its properties, `entity.property`); the former Business Object / Business Field / Canonical Field identity is superseded (DEC-02f5a9).
 
-**Governing source.** outline.md §4.6; Connectors and Readers; DEC-0d5b39.
+**Governing source.** DEC-3395bc; Connectors and Readers; DEC-0d5b39.
 
 ## What the Procedure Produces
 
@@ -298,4 +298,4 @@ The Registry-Entity Reader convention is decided in DEC-0d5b39, which whole-supe
 - DEC-0d5b39: The Reader Model and the Runtime Ecosystem
 - DEC-02f5a9: Business Concept Registry
 - legacy-v2/docs/sops/reader-creation-sop.md (predecessor SOP)
-- outline.md §4.6: Onboarding
+- DEC-3395bc: Onboarding

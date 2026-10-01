@@ -25,13 +25,13 @@ diagrams: []
 
 ## Scope
 
-This chapter records the AI agent inventory at the cluster level: the twelve maker-checker-gate triplets that bc-core consumes for governed verdicts, the eight housekeeping agents that run against DevHub state, the session governance auditor that runs against Claude Code session payloads, and the KPI decomposition and KPI assistant acts that surface in bc-admin. Per pattern 67 and pattern 74, the chapter is the cluster-level inventory; per-agent prompt content, per-agent input shape, and per-agent output schema are owned by the agent source files in bc-ai and by the queued AI Agent Inventory reference (analogous to the queued Screen Registry reference per outline §4.9). The chapter records what kinds of agents exist, what role each kind plays, and how each is invoked.
+This chapter records the AI agent inventory at the cluster level: the twelve maker-checker-gate triplets that bc-core consumes for governed verdicts, the eight housekeeping agents that run against DevHub state, the session governance auditor that runs against Claude Code session payloads, and the KPI decomposition and KPI assistant acts that surface in bc-admin. Per pattern 67 and pattern 74, the chapter is the cluster-level inventory; per-agent prompt content, per-agent input shape, and per-agent output schema are owned by the agent source files in bc-ai and by the queued AI Agent Inventory reference (analogous to the queued Screen Registry reference per the Documentation System chapter). The chapter records what kinds of agents exist, what role each kind plays, and how each is invoked.
 
 This chapter sits between Bedrock and Inference Profiles and AI Gates. Bedrock and Inference Profiles records the model substrate; this chapter records the agents the substrate serves; AI Gates records the gate verdict authoring contract that bc-core consumes from the triplets recorded here.
 
 This chapter does not redefine the maker-checker-gate triplet pattern (deferred to AI Architecture), the model registry shape (deferred to Bedrock and Inference Profiles), the gate verdict authoring contract (deferred to AI Gates), the cross-family verification model (deferred to AI Trust and Verification), or the tenant-facing transparency surface (deferred to AI Usage Visibility). Where this chapter names an agent, the per-agent prompt and the per-agent decision rules are owned by the agent's source file at `bc-ai/app/agents/` or `bc-ai/app/housekeeping/agents/`.
 
-**Governing source.** AI Architecture; outline.md §4.4.
+**Governing source.** AI Architecture; DEC-3395bc.
 
 ## The Twelve Maker-Checker-Gate Triplets
 
@@ -149,7 +149,7 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 | Audit and Activity Logging | Implementation section | Owns the operational governance trail. This chapter records that the auditor posts to `/api/process-audits`; Audit and Activity Logging records the substrate |
 | Quality Gates and Chain Integrity | Operating Model | Owns the gate authority over runtime decisions. This chapter records the agent inventory; Quality Gates records which gates run when |
 
-**Governing source.** Operating Model; Implementation; outline.md §4.4.
+**Governing source.** Operating Model; Implementation; DEC-3395bc.
 
 ## Governing Decisions
 
@@ -172,7 +172,7 @@ Per pattern 69, gaps between the design intent recorded above and the current st
 - DEC-c06f41: Spine expansion to eight sections plus home
 - DEC-ebf0b4: Session Discipline and Data Integrity (D268)
 - DEC-804874: L-node semantic gate (D366)
-- outline.md §4.4: AI
+- DEC-3395bc: AI
 - Decisions: ADR Registry
 
 
