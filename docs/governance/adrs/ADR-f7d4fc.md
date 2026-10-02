@@ -27,7 +27,7 @@ Platform's grounded study (on TSK-8376a8, 2026-10-02) found that the engine and 
 The Architect read the decisions by UID, at bc-docs origin/main:
 - D250 is DEC-bae0ef ("IC Simplification"), unrelated to bindings. The citation is wrong.
 - The authority for contract_binding is DEC-ec9e89 (D233, implemented): level 3, "Tenant Override (per tenant, per contract), Storage: tenant.contract_binding (override_json + extensions_json)", for every family. For source it names two override cases: drift_detection enforcement (overridable) and fields[] Z-fields (extensible). DEC-0b3c08 (D112) is the earlier master and tenant-override pattern.
-- This use is live: bc-core schema-provisioner.repository.ts reads contract_binding.override_json for tenant Z-field mappings (:134, :160-165).
+- Override reading is live for canonical, metric and intervention only: bc-core schema-provisioner.repository.ts reads contract_binding.override_json for tenant Z-field mappings (:134, :160-165), but skips rows of every other family (:140-141). **Source overrides are decided by DEC-ec9e89 and not yet built** (corrected 2026-10-02; see "Correction" below).
 - DEC-005ea7 (implemented) fixes a single production environment: no dev, staging or prod per tenant.
 
 Grounded at bc-core origin/main: tenant_binding is written by TenantBindingPopulatorService (tenant-binding-populator.service.ts:57, upsertTenantBinding) and by reader.repository.ts:453. It is read for source by findActiveSourceBindings (schema-provisioner.repository.ts:92). contract_binding is written by upsertContractBinding (:604, from contract-activation.service.ts) for canonical and metric, and read by findActiveContractBindings (:124).
@@ -48,7 +48,7 @@ Grounded at bc-core origin/main: tenant_binding is written by TenantBindingPopul
    - The rule in point 3 is held by a test: no code path reads contract_binding to decide source adoption. A database rule (for example, that a source row must carry an override) is a later option if a second writer appears.
 
 Rejected:
-- (A) narrowing contract_binding's CHECK to exclude source: it would forbid DEC-ec9e89's source overrides, a decided and live use.
+- (A) narrowing contract_binding's CHECK to exclude source: it would forbid DEC-ec9e89's source overrides, a decided use (not yet built; see "Correction").
 - (B) moving source adoption into contract_binding with an environment column: no decision mandates the move, and per-environment adoption contradicts DEC-005ea7.
 
 ## Foundation gate
@@ -65,6 +65,10 @@ Rejected:
 - Docs correct tenancy-and-binding.md ("Contract Binding"), which describes one generic artifact for every family, to describe both records and both meanings.
 - Platform corrects the bc-core comment in contract-binding.ts ("Replaces tenant_override (D054 Pattern B)") to cite DEC-ec9e89, and adds the point-6 test.
 - Vocabulary (slice 4, S4.2): "contract binding" now means a tenant's adoption (canonical, metric) or override (any family) recorded in contract_binding. Source adoption is the "source binding" in tenant_binding.
+
+## Correction (2026-10-02)
+
+The Context first said that bc-core already reads source overrides from contract_binding. That was wrong: the reader skips source rows (schema-provisioner.repository.ts:140-141), as Codex found when it checked this ADR (gen-4aa145-01). The decision does not change: DEC-ec9e89 decides that source overrides are stored in contract_binding, and that is enough to reject (A). What changes is the claim of live use. The source override runtime path, when built, is a separate act, and so is the test in decision point 6.
 
 ## Status
 
