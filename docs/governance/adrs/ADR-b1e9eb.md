@@ -73,6 +73,15 @@ Given in chat on 2026-09-30 and relayed by SES-bc9863: half_up is the default; p
 - **The withdrawn grant:** a grant proposing half_even for the DSO (`2026-09-30T04-16-40-014Z-bed807b6`) was approved by mistake. It is withdrawn by the operator's recorded grant `2026-09-30T04-19-43-857Z-1df55ae8` (text sha256 `1df55ae88ab551d4694edb4c348f17ff1f85761145de512fe3b75d0e90c8e6e4`).
 - DEC-fa7c63 Amendment 4 (f)'s acceptance comparison is corrected in place to half up at two places (bc-docs PR #105, verified by the auditor at head 79888e8).
 
+### Who supplies the declaration: decision 6, phase 1 (2026-10-02)
+
+The operator decided on 2026-10-02 (desk grant `2026-10-02T10-17-59-497Z-6a37263f`, text SHA-256 `6a37263fe72d53fdf5445fa5b8f7745e2e0454017d90cead5d410d29a0c6fc4d`, request 186) how a new version's declaration under decision 1 is supplied, in two phases:
+
+- **Phase 1 (now):** the declaration is supplied with the candidate, in its envelope, the way aggregation_currency_code already is. The metric authoring panel's prompt and calibration do not change. Decision 6's authoring check (PE-MC check 5, "output unit matches", Annex A) applies to it unchanged, and so do decisions 1 to 5, 7 and 8.
+- **Phase 2 (later):** the panel's maker proposes the declaration and its checker validates it, released as a calibrated panel version (m12-panel-v2) with its own calibration evidence.
+
+This records the order of delivery. No rule of this decision changes. (Architect's reading: until phase 2, the panel does not review the declaration; PE-MC check 5 is the gate that holds it.)
+
 ## Rationale
 
 It realises a declaration the grammar already requires, removes the misuse of aggregation_currency_code as a unit, and makes the DSO's value equal to the exact quotient at its declared decimals by construction. It is grounded in a reading study (TSK-af9706; Codex design review gen-fe8f9d-01, pending).
