@@ -20,7 +20,15 @@ governing_adrs:
 
 **Read at:** bc-docs `origin/main` a6f4fc7; bc-core `origin/main` 4f163044; the live platform database, read-only, 2026-10-01. The Chief's helper census of where each word is used (barecount-devhub `.claude/briefs-view/drafts/clean-slate-inventory-2026-10-01.md`, part D) was used as a list of leads, not as a source.
 
-**Second slice: the object chain, the acts and the states of the other contracts.** Approved by the operator on 2026-10-01, desk grant `2026-10-01T11-24-00-154Z-db431e4e` (text SHA-256 `db431e4e78fefa72fd771e3c74f8beb0a952bd1a78e70efd28d4d3ad48e9d80a`), as written on the Architect page in barecount-devhub pull request 201 at commit `42dcbaf6fa3da2e110002cebf2f7a5ff911f457e`. It is carried below as slice 2 with two changes only: its question is replaced by the operator's answer ("in force"), and its section headings are numbered S2.1 to S2.7. Its approval route and next-slices section are left out. It was read at bc-docs `origin/main` 3ce3b52, bc-core `origin/main` 43c8f67b2 and the live platform and pilot tenant databases, read-only.
+**Second slice: the object chain, the acts and the states of the other contracts.** Approved by the operator on 2026-10-01, desk grant `2026-10-01T11-24-00-154Z-db431e4e` (text SHA-256 `db431e4e78fefa72fd771e3c74f8beb0a952bd1a78e70efd28d4d3ad48e9d80a`), as written on the Architect page in barecount-devhub pull request 201 at commit `42dcbaf6fa3da2e110002cebf2f7a5ff911f457e`. It is carried below as slice 2 with two changes only: its question is replaced by the operator's answer ("in force"), and its section headings are numbered S2.1 to S2.7. Its approval route and next-slices section are left out. It was read at bc-docs `origin/main` 3ce3b52, bc-core `origin/main` 43c8f67b2 and the live platform and demo tenant databases, read-only.
+
+**Third slice: sources and tenants.** Approved by the operator on 2026-10-02, desk grant `2026-10-02T06-27-21-496Z-7584571d` (text SHA-256 `7584571d9b2e732ac98f181cbb8829415a221479ea3e14e7e907597a4a29f3da`), as written on the Architect page in barecount-devhub pull request 218 at commit `42de889af65d154043a3e4b6a5a13194ecbb4704` (revision 3). His earlier grant of revision 2, `2026-10-02T06-20-25-640Z-e7d71682`, is replaced by this one: revision 3 adds only the closing of slice 1's open point 7. It is carried below as slice 3, with these changes only:
+- its section headings are numbered S3.0 to S3.9;
+- its S3.7 corrections are applied to slices 1 and 2 above, and the section itself is kept as the record of what changed;
+- its question on ADR DEC-c220e4 is replaced by the operator's answer (S3.9);
+- its approval route is left out.
+
+It was read at bc-docs `origin/main` 5e64c2f, bc-core `origin/main` 44828a95c and the live platform database, read-only.
 
 **This page holds no counts.** Section 6 says where each count is read.
 
@@ -42,7 +50,7 @@ The repair is the same for every word: **say which thing the word describes, and
 1. **One word, one meaning, one record.** A status word is approved only when a named record and field makes it true. If no record does, the word is not approved, however useful it sounds.
 2. **A count is a read, never a memory.** Anyone who needs a number reads the field named beside the word, at that moment, and says where it was read. No count is written into memory, a brief, a chapter or a task title.
 3. **Foundation's state names stay as the values of the state field.** The seven states of a Metric Contract version are named in `docs/foundation/the-contract-grammar.md` ("MCF Metric Contract family"), and this page renames none of them and adds none. For six of them the plain word and the field value go together. For one they differ: the field value is `active`, and the word people say is "certified". Changing the Foundation state name itself, so that the field says what people say, would be a change to Foundation: a design act for the operator to decide, named here and not done.
-4. **A word for a tenant always names the tenant.** "Enabled for Kaveri", never "enabled".
+4. **A state word is always said with its subject** (slice 3, S3.0). No state word is reserved to one kind of thing: "metric available", "connector available", "tenant archived". A word for one tenant names the tenant: "Enabled for Kaveri", never "enabled".
 5. **A new status word enters through this page first,** in the same change that first uses it.
 
 ## 3. A metric's life, in the operator's six groups
@@ -127,13 +135,13 @@ A tenant stops seeing a retired metric. A superseded version's values remain as 
 
 ### Group 6. Tenant
 
-**Which word "available" equals** (the operator's answer, grant `2026-10-01T06-36-21-158Z-648f1a32`): **available means released.** A tenant is offered what the platform has released, not everything it has certified. Until the release record is built, the two are the same set.
+**Which word "available" equals** (the operator's answer, grant `2026-10-01T06-36-21-158Z-648f1a32`): **metric available means released.** A tenant is offered what the platform has released, not everything it has certified. Until the release record is built, the two are the same set.
 
 The operator's ladder, with his answer of the same day: "enabled/disabled is producing state. We need one more - Visible/hidden". So there are **two separate switches**: one says whether the metric is produced for the tenant, the other says whether the tenant's users see it. Each step needs the ones before it.
 
 | Word | Plain meaning | True when | Made true by | What the tenant sees |
 |---|---|---|---|---|
-| **available** | In the platform's portfolio: any tenant could have it. It is the tenant-side word for a released metric | the same record as **released** (group 4); until that record exists, the same as **certified** | The platform's release | The metric exists in the catalog |
+| **metric available** | In the platform's portfolio: any tenant could have it. It is the tenant-side word for a released metric | the same record as **released** (group 4); until that record exists, the same as **certified** | The platform's release | The metric exists in the catalog |
 | **subscribed** | The tenant's package includes the metric | **no record yet.** It will be the metric entitlement on the tenant's Subscription record, which is not built (ADR DEC-c220e4 sets the latest moment). Until then, by that ADR's rule and not by any record, every active tenant is treated as subscribed to every available metric | A platform-side governed act on the tenant's Subscription. The tenant does not write it | The metric is in the tenant's own list |
 | **enabled / disabled** | Whether the metric is **produced** for that tenant: its tables and contract bindings exist there, so it can be evaluated on the tenant's data | **Enabled:** the **current** provisioning command for the metric's current version is `provisioned`, and so are the current commands for the canonical and source tables it depends on, with their bindings recorded (`schema_provisioner.provisioning_command` and its transitions; `tenant.contract_binding`; `tenant.tenant_binding`). An accepted request, or an obsolete or historical command, does not count. **Disabled: not built.** Nothing switches production off for one tenant today: there is no governed unbind (`docs/onboarding/tenant-metric-binding.md`, "Rollback / unbind"), and evaluation reads no binding. Until it is built, a metric is either enabled or "not enabled" | **The tenant's admin** (the operator, 2026-10-01). **That route is not built:** today only a platform operator can start the governed onboarding act, and the provisioning worker then creates the tables. An admin's choice would have to be recorded and then start that same act and worker | While the tables are being created: "being enabled". Then: enabled. If it fails: not enabled, with the failure shown |
 | **visible / hidden** | The tenant's admin chooses whether an enabled metric is shown to the tenant's users. It never stops production | **no record today, and no such choice exists today. This is new.** It needs a record the tenant owns (tenant, metric, visible or hidden, who chose, when) and a route for the tenant's admin. Until it is built, every metric is treated as visible | The tenant's admin (the operator, 2026-10-01) | Visible: shown to the tenant's users. Hidden: not shown; it is still produced, and its values are kept |
@@ -162,7 +170,7 @@ Until the records for "subscribed" and "visible" exist, a tenant-facing screen d
 3. On 2026-08-02 the operator dispositioned the versions that had been made active the old way (DEC-21ca17): they are raw material for certification, and they were moved to awaiting certification through the governed reintake act.
 4. **The deadlock.** That act identifies a metric by its entry in the Metric Directory. A named group had no usable entry (no directory member, or a member with no member version), so the act could not move them. DEC-21ca17 item 3 left them marked active, named in the manifest, pending the minting of their directory identities and a second manifest. Item 4 set the deadline: the disposition must be complete before the first real tenant onboards. The follow-up (DevHub TSK-fa743d, owner Metric) is parked.
 
-**What it does today.** These versions are in every tenant's list, and the evaluation act will evaluate one if asked. None of the metrics enabled for the pilot tenant is among them (the Architect's read-only query of 2026-10-01, comparing the pilot's provisioning commands with the line named below).
+**What it does today.** These versions are in every tenant's list, and the evaluation act will evaluate one if asked. None of the metrics enabled for Kaveri is among them (the Architect's read-only query of 2026-10-01, comparing Kaveri's provisioning commands with the line named below).
 
 **Where to read it.** The group: the `residue_legacy_active` line of `GET /api/registry/mcf/readiness-projection`, and by name in DEC-21ca17 item 3 and its manifest (excluded cohort `pre_c8_member_identity_unresolvable`). A second line, `unattributed_active` (marked active with no record at all), must stay empty; it was empty on 2026-10-01.
 
@@ -170,9 +178,9 @@ Until the records for "subscribed" and "visible" exist, a tenant-facing screen d
 
 | Option | What is done | What a tenant sees | Cost and limits |
 |---|---|---|---|
-| **1. Finish the decided route (recommended)** | Mint the missing directory identity for each, then a second manifest moves each to awaiting certification through the governed reintake act. Each is certified only through the certification panel (DEC-21ca17 items 3 and 5) | They leave the list until certified. Nothing changes for the pilot's set-up metrics | Directory work per metric, then one operator-authorized batch. It is already decided; it needs to be scheduled with the Metric Controller |
+| **1. Finish the decided route (recommended)** | Mint the missing directory identity for each, then a second manifest moves each to awaiting certification through the governed reintake act. Each is certified only through the certification panel (DEC-21ca17 items 3 and 5) | They leave the list until certified. Nothing changes for Kaveri's set-up metrics | Directory work per metric, then one operator-authorized batch. It is already decided; it needs to be scheduled with the Metric Controller |
 | **2. Retire each** | The governed retire act archives the whole metric | They leave the list and do not return unless restored or written again | Quick, and it needs no directory identity. But the retire act is for a metric authored in error, and these are candidates for certification, not errors. Using it here would need the operator's decision to widen what that act is for |
-| **3. Leave them until the deadline** | Nothing now; clear them before the first tenant for a prospect or client | They stay listed with no value, and can be evaluated without a certificate | No work now. It keeps the state the operator has just called a problem |
+| **3. Leave them until the deadline** | Nothing now; clear them before the moment DEC-c220e4 sets | They stay listed with no value, and can be evaluated without a certificate | No work now. It keeps the state the operator has just called a problem |
 
 **Why option 1.** It is the route the operator already decided, it uses only governed acts, and it leaves each metric able to earn its place through certification. A filter that hides these versions in the list or in evaluation is not offered: the defect is in the state they carry, and the repair is to change that state through the governed act, not to read around it.
 
@@ -180,7 +188,7 @@ Until the records for "subscribed" and "visible" exist, a tenant-facing screen d
 
 | Not approved | Why | Say instead |
 |---|---|---|
-| activated | No record holds an activation, for a tenant or for a metric | "was certified" (platform); "subscribed" or "enabled", whichever is meant |
+| activated | No record holds an activation for a metric | "was certified" (platform); "subscribed" or "enabled", whichever is meant |
 | active on (tenant) | "Active" is a value of the platform's state field. It has no tenant form | "subscribed", "enabled" or "reporting", whichever is meant |
 | active (as a status people say), active certified | "Active" is the state field's value, and it has also been true of versions with no certificate | "certified" |
 | entitled (as a status) | Two words for one record | "subscribed". "Entitlement" stays as the name of that part of the Subscription record |
@@ -193,10 +201,10 @@ Until the records for "subscribed" and "visible" exist, a tenant-facing screen d
 | complete, chain complete | The chain record has a verdict, not a completion | "chain verdict green" |
 | proven (for one metric) | Has meant "went green once" | "done for (tenant)" as defined in section 5; "proven" is kept for the route |
 | seeded | Not a status in any record | "seed" |
-| archived (as a status) | It is a field that both retired and abandoned set | "retired" or "abandoned" |
+| archived (of a metric) | It is a field that both retired and abandoned set; "tenant archived" is approved (slice 3) | "retired" or "abandoned" |
 | blocked (alone) | Two records use it: certification, and the directory | "certification blocked"; "registered, blocked in the directory" |
 | queued, published (of a metric) | They are statuses of a seed on a retired route | the metric's own word from section 3 |
-| second tenant, first customer, customer tenant | Ordinals and "customer" miscount the pilot | "pilot tenant", "tenant for a prospect or client" (section 6) |
+| second tenant, first customer, customer tenant | Ordinals and "customer" miscount the demo tenant | "Kaveri" or "demo tenant"; for another tenant, name it |
 
 ## 5. What "done" means
 
@@ -219,14 +227,10 @@ So "a Kaveri-proven metric" means: a metric that is **done for Kaveri**, through
 
 ## 6. The tenant kinds, and where counts are read
 
-The first three rows are **the operator's classifications, not yet status words under rule 1:** no field records a tenant's kind. They are used only as the operator defined them, and nothing may decide that a tenant is "for a prospect or client" by inference. Until a record names the kind, the act that DEC-c220e4 gates is decided by the operator, case by case.
-
 | Word | Meaning | True when |
 |---|---|---|
-| **pilot tenant** | `kaveri`. It proves the mechanism and is not counted as a customer | the operator's grant of 2026-10-01 recorded in DEC-c220e4. No field records it |
-| **tenant for a prospect or client** | Any tenant activated for a party outside BareCount, on any source system | no field records a tenant's kind today (open point 7) |
-| **proof tenant** | A disposable tenant made for a test. Never counted as a customer | no field records a tenant's kind today (open point 7) |
-| **active tenant** | A tenant whose registration is active | `tenant.tenants.status_code` is `active` |
+| **demo tenant** | `kaveri`: the tenant on which the platform is proven and shown. It is not counted as a customer | the operator's word (slice 3); no field records it |
+| **tenant active** | A tenant whose registration is active | `tenant.tenants.status_code` is `active` |
 
 | To know how many metrics are | Read |
 |---|---|
@@ -248,13 +252,13 @@ The first three rows are **the operator's classifications, not yet status words 
 
 | # | Open point | Whose |
 |---|---|---|
-| 1 | **Where "done" is recorded.** One named list of metrics done for the pilot tenant, with the six reads and their dates, and an owner. Without it, "done" stays a claim | Metric Controller with the Demo Controller; the operator approves the shape |
+| 1 | **Where "done" is recorded.** One named list of metrics done for the demo tenant, with the six reads and their dates, and an owner. Without it, "done" stays a claim | Metric Controller with the Demo Controller; the operator approves the shape |
 | 2 | **Reads 3 and 4 of "done" need their records named exactly:** the proof record the evaluation act writes, and where the agreement with the expected value is written | Metric and Platform Controllers |
 | 3 | **The acts in section 3 are named by what they do.** The exact governed endpoint for each belongs in the metric procedure, which the Metric Controller checks against practice | Metric Controller |
 | 4 | **The live metric procedure still names retired tables** (`docs/onboarding/metric-workstream.md`, section 3, lists `contract.metric_contract` and related legacy tables as places to search) | Docs and Metric Controllers, in the clean-up |
 | 5 | **Seeds and the directory.** Whether any live act still writes the seed statuses queued, in review, authored and published; whether a seed "queued to be entered in the directory" should become a recorded step (it is not one today); the remaining words of the Metric Directory | Architect with the Metric Controller |
 | 6 | **The 25-step ladder** (ADR DEC-c9e623) describes much of section 3 in older words. Whether it stays as the detailed form of the life, or is retired with a notice, is a decision for the next slice | Architect with the Metric Controller |
-| 7 | **A tenant's kind is not recorded.** Pilot, prospect or client, and proof are words with no field behind them, and the trigger of DEC-c220e4 depends on telling them apart. Where the kind is recorded is to be decided; a schema change would need the operator's yes | Architect, with the Platform and DB Controllers |
+| 7 | **Closed (slice 3, 2026-10-02).** No field records a tenant's kind, and none is to be added. Kaveri is the demo tenant. Activating a tenant for a party outside BareCount, the moment DEC-c220e4 gates, is the operator's own decision, case by case; nothing infers it | (closed) |
 | 8 | **No read counts the metrics reporting for a tenant and a period.** The list's flag is the weaker "ever accepted" signal | Platform Controller, after the page is approved |
 | 9 | **The versions marked active without a certificate** are cleared by the option the operator chooses in section 3a | Metric Controller, on the operator's choice |
 | 10 | **The tenant admin's two switches are not built.** Enabling: a record of the admin's choice that starts the governed onboarding act and the provisioning worker, which only a platform operator can start today. Disabling: a governed act that switches production off for one tenant, which does not exist. Visible or hidden: the record the tenant owns and the admin's route. Any schema change needs the operator's yes | Architect for the design; Customer Portal, Platform and DB Controllers to build |
@@ -334,12 +338,12 @@ Five contract families keep the legacy lifecycle Foundation names for them (`the
 
 ### S2.6 Defects found while reading, named, not fixed here
 
-1. **A seventh state not named by Foundation.** The live database allows `pending_provisioning` on the version tables of source, admission, canonical, the mapping and the provisional AI contract (CHECK constraints in `contract`), beside Foundation's five. No version holds it today. Either Foundation names it (an erratum) or a migration removes it. Architect with the DB Controller; the operator decides.
+1. **A sixth state value not named by Foundation.** The live database allows `pending_provisioning` on the version tables of source, admission, canonical, the mapping and the provisional AI contract (CHECK constraints in `contract`), beside Foundation's five. No version holds it today. Either Foundation names it (an erratum) or a migration removes it. Architect with the DB Controller; the operator decides.
 2. **A second state field that says something else.** `contract.observation_contract.status_code` (`draft`, `active`, `deprecated`) sits on the parent. On 2026-10-01 every observation contract parent says `draft` while its versions are `active` or `superseded`. The same parent-level field exists on `canonical_mapping` and `contract_meta_schema`. Retire the parent field, or define it and keep it true. DB with Platform.
-3. **Canonical evaluation writes no lineage object.** Foundation says every boundary emits evidence and lineage (`the-object-model.md`, "Object-boundary mapping"). On the pilot tenant, `evidence.lineage_object` holds `observed_as` rows for admissions and `evaluated_by` rows for metric evaluations, and nothing for canonical evaluations. The canonical resolver records its references in foreign keys and in `progression.source_legal_entity_binding_lineage`, not as lineage objects. This is the same family of question as FND-005 (TSK-9914fa) and goes there.
+3. **Canonical evaluation writes no lineage object.** Foundation says every boundary emits evidence and lineage (`the-object-model.md`, "Object-boundary mapping"). On the demo tenant, `evidence.lineage_object` holds `observed_as` rows for admissions and `evaluated_by` rows for metric evaluations, and nothing for canonical evaluations. The canonical resolver records its references in foreign keys and in `progression.source_legal_entity_binding_lineage`, not as lineage objects. FND-005 is decided (DEC-48d222, no proof, no record); the canonical boundary is brought to it under TSK-1e8eaa.
 4. **The action object is not built.** The table that would record it carries `triggered` and `not_triggered`, which do not express Foundation's lifecycle (a terminal state, or non-closure recorded explicitly). Its words are settled when its design is (the readiness program's action lane).
 5. **`progression.canonical_run` is vestigial.** Nothing writes or reads it (ruling TSK-29e34a). Retire it with a later migration.
-6. **The intervention contract's state field is named and checked differently.** `contract.intervention_contract_version.status_code` has no rule on its values, while the other four families' `governance_state_code` is checked; the observation version table has no rule on its values either (only source, admission, canonical, the mapping and the AI contract are checked). Bring the five families under one checked field. DB Controller.
+6. **The intervention contract's state field is named and checked differently.** `contract.intervention_contract_version.status_code` has no rule on its values, while the `governance_state_code` of source, admission and canonical (and of the mapping and AI contract versions) is checked; the observation version table has no rule on its values either (only source, admission, canonical, the mapping and the AI contract are checked). Bring the five families under one checked field. DB Controller.
 
 ### S2.7 Where counts are read
 
@@ -348,3 +352,131 @@ Five contract families keep the legacy lifecycle Foundation names for them (`the
 | source objects, canonical objects, metric snapshots for a tenant | the tenant's `progression.admission`, `progression.canonical_evaluation`, `progression.metric_evaluation`, by status |
 | contract versions in each state | each family's version table, `governance_state_code` |
 | evidence and lineage for a tenant | `evidence.evidence_object` by type; `evidence.lineage_object` by relationship |
+
+## Slice 3: sources and tenants
+
+### S3.0 The rule this slice adds: a state word is said with its subject
+
+State words such as available, active, approved, archived and activated are **not reserved** to one kind of thing. Each is always said **with its subject**, for example "metric available", "connector available", "source table approved" or "tenant archived". The meaning comes from the subject and the word together, and each pair has one record.
+
+A bare state word with no subject is not approved. A word for one tenant also names the tenant: "enabled for Kaveri". This replaces slice 1's rule 4 (S3.7).
+
+### S3.1 What can be read: the source catalog
+
+The catalog describes the structure of the systems we can read. It holds no business data. It has six levels, each pointing to the one above (`sources-and-the-catalog.md`):
+
+| Word | Plain meaning | Record |
+|---|---|---|
+| **source provider** | The vendor or organization that makes a source system | `source.source_provider` |
+| **source system** | A product we can read, for example an ERP | `source.source_system` |
+| **source version** | One version of that product | `source.source_version` |
+| **source module** | A functional area inside it | `source.source_module` |
+| **source table** | One table, model or object of a source system | `source.source_object`. The field name does not match the word; this is recorded as a known mismatch (defect 1) |
+| **source field** | One field of a source table | `source.source_field` |
+
+**"Source object" keeps only Foundation's meaning:** one admitted observation (slice 2). It is never said of a catalog entry.
+
+**Catalog states** (field `catalog_status` on all six levels), said with the entry, for example "source table approved":
+
+| Field value | Plain meaning |
+|---|---|
+| `registered` | Known, not yet approved for building contracts on |
+| `approved` | Approved for building contracts on |
+| `deprecated` | Kept, no longer preferred for new contracts |
+| `archived` | Kept for history, out of every default view |
+
+Two further fields record checks on a catalog entry. They are evidence about the entry, not its state, and are said only with the entry named:
+- `verification_status`: whether its existence and shape were confirmed against the source (unverified, verified, disputed, manually verified, rejected);
+- `validation_status`: not validated, validated.
+
+### S3.2 How a tenant reaches a source
+
+| Word | Plain meaning | Record and its state words |
+|---|---|---|
+| **connector** | Our technical ability to reach a kind of source system over a declared protocol. Platform-wide, not a tenant's | `runtime.connector.status_code`: `draft`, `available`, `deprecated`, `retired`, said "connector available" and so on |
+| **connection** | One tenant's access to one source system through a connector. Its credentials live outside our records | `runtime.connection.connection_status`: the code writes `connected`, `disconnected`, `paused`, `disabled`; the database default is `draft`, and the field has no rule (defect 4) |
+| **reader** | The admission definition for one business entity, reused by every tenant | `runtime.reader.status_code`: `draft`, `active`, `deprecated` |
+| **reader flavor** | A reader specialised for one source system and scenario | `runtime.reader_flavor.status_code`: `draft`, `active`, `deprecated` |
+| **reader binding** | Which admission contract a reader uses for a source entity | `runtime.reader_binding` (bound, then unbound) |
+
+For readers and flavors, as for the contracts in slice 2, the field value `active` is said **"in force"**.
+
+### S3.3 Tenants
+
+| Word | Plain meaning | Record and its state words |
+|---|---|---|
+| **tenant** | One organization's identity on the platform, with its own database | `tenant.tenants.status_code`, said with the tenant: "tenant provisioning" (being created), "tenant active", "tenant suspended", "tenant archived", "tenant failed" (creation failed) |
+| **demo tenant** | `kaveri`: the tenant on which the platform is proven and shown. It is not counted as a customer | the operator's word; no field records it |
+| **tenant infrastructure** | The database and compute a tenant runs on | `tenant.tenant_infrastructure.status_code`: `provisioning`, `active`, `decommissioning`, `decommissioned`, said "infrastructure active" and so on (defect 3) |
+| **subscription** | The tenant's plan and its lifecycle, as the chapter declares it: active, suspended, terminated | **not built** (slice 1; DEC-c220e4). When built, its end is said "subscription terminated" |
+
+A tenant's end is "tenant archived"; a subscription's end is "subscription terminated". Each word is said with its own subject.
+
+**A tenant's kind is not recorded, and no field is to be added for it.** Kaveri is the demo tenant, by the operator's word. Activating a tenant for a party outside BareCount, the moment DEC-c220e4 gates, is the operator's own decision, made case by case. Nothing infers it from a tenant's data or name.
+
+### S3.4 The operator's decisions on revision 1 (2026-10-02)
+
+1. A catalog entry is a **source table**: a table, model or object of a source system. "Source object" keeps only Foundation's meaning. The field name `source.source_object` is a known mismatch. Renaming it is a separate database decision.
+2. **Generic words are not reserved.** A state word is always said with its subject (S3.0). "Open for connections" is dropped: it is "connector available". Slice 1 is corrected where it reserved "available" for metrics.
+3. **Demo tenant** is the word for Kaveri, and "pilot" in any form is retired. The onboarding-record row is dropped from this page, and so are the classifications pilot tenant, tenant for a prospect or client, and proof tenant. Slice 1 is corrected where it introduced them.
+4. "Tenant archived" and "subscription terminated", each said with its subject.
+5. Not approved: "source object" for a catalog entry, and any bare state word without its subject. "In force" stays for readers and flavors.
+6. The six defects go to their owners as tasks. Those that touch the database need the operator's yes. Defect 3 goes to Platform's plan PLN-940b0c (Tenant readiness).
+7. The slice 2 wording corrections (S3.7).
+
+### S3.5 Words not approved, and what to say instead
+
+| Not approved | Say instead |
+|---|---|
+| source object (meaning a catalog entry) | "source table". "Source object" means one admitted observation (slice 2) |
+| a bare state word without its subject ("available", "active", "archived", "activated") | the word with its subject: "metric available", "connector available", "tenant archived" |
+| pilot, pilot tenant, the pilot (any form) | "demo tenant", or "Kaveri" |
+| live, up (of a connection) | "connected", or the connection's other state |
+| active (of a reader or reader flavor) | "in force" |
+| onboarded, provisioned (of a tenant) | "tenant active", or "infrastructure active" |
+
+### S3.6 Defects found while reading, named, not fixed here
+
+Each goes to its owner as a task once this slice is approved. A defect that touches the database needs the operator's yes before any change.
+
+1. **The catalog's table of source tables is named `source.source_object`.** The chapter calls the entity "Source Table", and Foundation uses "source object" for an admitted observation, so the name invites exactly the confusion this page exists to end. It is recorded as a known mismatch. Renaming is a separate database decision (DB Controller; the operator's yes). Until then, always say "source table".
+2. **Two records are named "admission run", with different states.**
+   - The platform's `runtime.admission_run.run_status` allows `running`, `completed`, `failed`, `cancelled`, `reconciled`.
+   - Each tenant's `progression.admission_run.status_code` allows `pending`, `running`, `completed`, `failed`, `cancelled`.
+
+   Say which one is meant, every time. Whether both should exist is to be settled by Platform with DB.
+3. **The tenant infrastructure record is not kept true.** On 2026-10-02 the demo tenant is "tenant active" while its infrastructure record says `provisioning`. An archived tenant made for a test also shows `provisioning`. Either the act that changes the infrastructure maintains the record, or the record is retired. Platform, under plan PLN-940b0c, with Infra & CI.
+4. **The connection's state has no rule.** `runtime.connection.connection_status` has no CHECK. The code writes `connected`, `disconnected`, `paused` and `disabled`, and the database default is `draft`, which is not in the code's list. DB with Platform; the operator's yes for the change.
+5. **Readers say `draft` while their flavors are in force.** Every reader parent reads `draft` while the flavors under it are `active`. It is the same parent-and-child mismatch as the observation contracts in slice 2. DB with Platform; the operator's yes for any change to the record.
+6. **Tenant states and subscription states differ.** The registry's five tenant states and the chapter's three subscription states overlap in name (`active`, `suspended`), but they are different records. Keep them apart, each said with its subject, until the subscription is built. Owner: Architect, with the subscription design.
+
+### S3.7 Corrections to slices 1 and 2, made in `vocabulary.md` with this slice
+
+**Slice 1:**
+1. **Rule 4** is replaced by section 0 of this page: a state word is always said with its subject, and a word for one tenant names the tenant.
+2. **Group 6, "Which word 'available' equals":** it reads "**metric available** means released". The row for **available** reads "metric available". Nothing reserves "available" to metrics: "connector available" is its own pair with its own record.
+3. **Not-approved list, "activated":** the reason reads "no record holds an activation for a metric". The tenant clause is removed. The say-instead is unchanged.
+4. **Not-approved list, "archived (as a status)":** it reads "archived (of a metric)". "Tenant archived" is approved by this slice.
+5. **Not-approved list, "second tenant, first customer, customer tenant":** the reason reads "ordinals and 'customer' miscount the demo tenant". The say-instead reads "'Kaveri' or 'demo tenant'; for another tenant, name it".
+6. **Section 6, "The tenant kinds":** the opening paragraph and the rows pilot tenant, tenant for a prospect or client, and proof tenant are removed. A **demo tenant** row is added, as in S3.3. The **active tenant** row reads "tenant active".
+7. **Every other "pilot":** it becomes "demo tenant" or "Kaveri", with no change of meaning. This covers the deadlock section, its option table, and open points 1 and 7.
+8. **Open point 7 is closed.** Its row reads "**Closed (slice 3, 2026-10-02).** No field records a tenant's kind, and none is to be added. Kaveri is the demo tenant. Activating a tenant for a party outside BareCount, the moment DEC-c220e4 gates, is the operator's own decision, case by case; nothing infers it."
+9. **Option 3 of the deadlock table:** "before the first tenant for a prospect or client" reads "before the moment DEC-c220e4 sets".
+
+**Slice 2:**
+1. **S2.6 defect 1:** "A seventh state not named by Foundation" reads "**A sixth state value** not named by Foundation". The database allows `pending_provisioning` beside Foundation's five, six values in all.
+2. **S2.6 defect 6:** "the other four families' `governance_state_code` is checked" reads "the `governance_state_code` of source, admission and canonical (and of the mapping and AI contract versions) is checked". The observation version table has no rule, and neither does intervention.
+3. **S2.6 defect 3:** the last sentence reads "FND-005 is decided (DEC-48d222, no proof, no record); the canonical boundary is brought to it under TSK-1e8eaa". This is a fact update from 2026-10-02.
+
+### S3.8 Where counts are read
+
+| To know how many | Read |
+|---|---|
+| catalog entries in each state | each `source.*` table, `catalog_status` |
+| connectors, readers, flavors in each state | `runtime.connector`, `runtime.reader`, `runtime.reader_flavor`, `status_code` |
+| connections by state, for a tenant | `runtime.connection.connection_status` |
+| tenants by state | `tenant.tenants.status_code` |
+
+### S3.9 The operator's answer on ADR DEC-c220e4
+
+"Amend the wording of ADR DEC-c220e4 as proposed there, with the rule unchanged" (the operator's grant below). ADR DEC-c220e4 now says: "Kaveri is the demo tenant and is not counted as a customer. The metric entitlement record, with its evaluation and catalog checks, must be live before any tenant is activated for a party outside BareCount, on any source system, or before a plan narrower than the whole catalog is sold."
