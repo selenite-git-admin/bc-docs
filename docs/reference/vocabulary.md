@@ -30,6 +30,13 @@ governing_adrs:
 
 It was read at bc-docs `origin/main` 5e64c2f, bc-core `origin/main` 44828a95c and the live platform database, read-only.
 
+**Fourth slice: business concepts and the contract grammar.** Approved by the operator on 2026-10-02, desk grant `2026-10-02T07-04-13-353Z-08123cd1` (text SHA-256 `08123cd1b71e84895f9057146960eff5d3b5dace04c05e6bc1707db433a0a8d5`), as written on the Architect page in barecount-devhub pull request 223 at commit `01b766a9a81ec6c357a2026cb072ff2de6d761eb` (revision 1), with the three proposals of its section 3. It is carried below as slice 4, with these changes only:
+- its section headings are numbered S4.1 to S4.6;
+- its questions are replaced by the operator's answers, and the words "if the operator agrees" are removed from its not-approved list;
+- its approval route is left out.
+
+It was read at bc-docs `origin/main` 9dca4a5, bc-core `origin/main` 05cbe79c and the live platform database, read-only.
+
 **This page holds no counts.** Section 6 says where each count is read.
 
 ## 1. Why the words became a trap
@@ -480,3 +487,108 @@ Each goes to its owner as a task once this slice is approved. A defect that touc
 ### S3.9 The operator's answer on ADR DEC-c220e4
 
 "Amend the wording of ADR DEC-c220e4 as proposed there, with the rule unchanged" (the operator's grant below). ADR DEC-c220e4 now says: "Kaveri is the demo tenant and is not counted as a customer. The metric entitlement record, with its evaluation and catalog checks, must be live before any tenant is activated for a party outside BareCount, on any source system, or before a plan narrower than the whole catalog is sold."
+
+## Slice 4: business concepts and the contract grammar
+
+### S4.1 The business vocabulary: what a concept is
+
+The business vocabulary is **one governed registry** (DEC-02f5a9; `the-contract-grammar.md`, "Vocabulary: the Business Concept Registry"). It replaced the earlier three primitives: business object, business field and canonical field, joined by a canonical mapping.
+
+| Word | Plain meaning | Record |
+|---|---|---|
+| **business concept registry** | The one governed list of everything the business talks about, which contracts refer to by identity | the `concept_registry` schema |
+| **entity** | A governed business thing that plays a role, such as Customer, Supplier or Invoice. Customer and Supplier are different entities even when one party plays both. It was called "business object" before | `concept_registry.entity`, named and defined on `entity_version` |
+| **business concept** | The unit contracts refer to: one property of one entity, identified as **entity.property** (for example `invoice.bill_to`) | `concept_registry.business_concept` |
+| **value concept** | A business concept that holds a value, such as a credit limit or a balance | `business_concept.kind` = `value` |
+| **reference concept** | A business concept that points to another entity and names the role it plays (`invoice.bill_to` points to Customer) | `business_concept.kind` = `reference`, with `reference_role` and `target_entity_id` |
+| **identity-bearing / descriptive** | Whether the concept is part of what identifies its entity. Changing an entity's identity-bearing set makes a new entity; adding a descriptive concept does not | `business_concept.identity_role` |
+| **characteristic** | The meaning part of a concept's name, such as "credit limit", "balance" or "status" | `concept_registry.characteristic` |
+| **representation term** | The form part of the name, from a small closed list: amount, date, code, quantity, count, indicator, identifier, text | `concept_registry.representation_term` |
+| **concept version** | One fixed wording of a concept. Versions never change; a change of meaning is a new version or a new concept | `concept_registry.business_concept_version`. It has no state field of its own: its state is read from its concept |
+| **semantic role** | What a concept does in analysis. Eight values: amount, identity, status, temporal, reference, dimension, diagnostic, strategic filter | `business_concept_version.semantic_role` (S4.6 defect 2) |
+| **value set** | The governed list of allowed values for a concept, required for the roles status and strategic filter | `business_concept_version.canonical_value_set` |
+
+**Registry states** (`lifecycle_state`, said with the subject, for example "concept active" or "entity superseded"):
+
+| Field value | Plain meaning |
+|---|---|
+| `draft` | Being written |
+| `review` | Under review |
+| `approved` | Reviewed, not yet in force |
+| `active` | In force: contracts may refer to it |
+| `superseded` | Replaced for new work. What already refers to it keeps referring to it |
+| `archived` | Withdrawn because it was admitted in error (DEC-1fbaf1). Concepts and characteristics have it; entities do not (S4.6 defect 3) |
+
+**"Property"** is the docs' name for the second half of entity.property. The registry has no record of its own for it: the business concept row is the property (S4.6 defect 4). Say "concept" for the record, and "property" only when explaining the entity.property name.
+
+### S4.2 The contract grammar: the words that tie things together
+
+| Word | Plain meaning | Record |
+|---|---|---|
+| **canonical grain** | The set of values that identifies one canonical object: two canonical objects with the same grain values in the same period are the same observation (`canonical-contract-creation.md`, "Grain: The Key Decision") | `grain[]` inside the canonical contract version's body |
+| **metric grain** | The entity one instance of which a metric's value describes, for example Legal Entity or Customer | `mcf.metric_contract_version.grain_entity_version_id` (and `metric_contract.grain_entity_id`) |
+| **composition metric** | A metric computed only from other metrics' values: at least one metric input, and otherwise only calendar context or constants. It reads no source data of its own (DEC-fa7c63 amendment 4) | no field: a test over its variable bindings (bc-core `src/registry/mcf/pure-composition.ts`) |
+| **metric variable** | One named input or output of a metric's formula, tied to what it reads | `mcf.metric_variable_binding` |
+| **concept input / metric input** | A metric variable that reads a business concept, or one that reads another metric's value | `role_kind_code` = `input` or `metric_input` |
+| **contract binding** | A tenant's adoption of one contract version, with the variation the tenant is allowed (`tenancy-and-binding.md`, "Contract Binding") | `tenant.contract_binding` (and see S4.6 defect 6) |
+| **reader binding** | Which admission contract a reader uses for a source entity (slice 3) | `runtime.reader_binding`; for observation contracts, `runtime.reader_observation_binding` |
+| **legal-entity binding** | Which legal entity a source's company code belongs to, for one tenant | in each tenant's database (`tenant_dim.source_legal_entity_binding_revision`) |
+| **account classification binding** | How a tenant's general ledger account range is classified (class, type, cash-flow category) | `tenant.gl_account_classification_binding` |
+| **observation field mapping** | How an observation contract reads each source field into a business concept: type, unit and form | inside the observation contract version's body |
+
+**"Binding" is never said alone.** Each binding above is a different record with a different meaning, so it is always said with what it ties: "contract binding", "reader binding", "legal-entity binding".
+
+**Canonical mapping is retired.** The canonical mapping, which tied a business field to a canonical field, was eliminated by DEC-02f5a9, because one business concept now serves both sides. Its tables still exist, empty (TSK-68722f). Field-reading content lives in the observation and canonical contract bodies.
+
+### S4.3 The operator's answers (2026-10-02)
+
+1. **The registry's name.** The record is the **business concept registry**. **BCF** means **Business Concept Framework**: the registry together with its authoring and certification. "Business Context Framework" is retired.
+2. **"Certified" for a concept: no.** A concept says its own state, "concept active". "Certified" stays a metric word only.
+3. **"Reporting grain" is retired.** "Metric grain" is said for every metric. A composition metric's metric grain is declared, never inherited.
+
+### S4.4 Words not approved, and what to say instead
+
+| Not approved | Say instead |
+|---|---|
+| business object | "entity" |
+| business field, canonical field | "business concept" |
+| canonical mapping (as a live thing) | retired: "observation field mapping", or the canonical contract's resolution rules, whichever is meant |
+| binding (alone), metric binding, CO bindings | the binding with what it ties: "metric variable", "contract binding", "reader binding", "legal-entity binding" |
+| grain (alone) | "canonical grain" or "metric grain" |
+| reporting grain | "metric grain" |
+| field role | "semantic role" (of a concept version) or "metric variable" (of a metric). No record holds a "field role" |
+| semantic input | "concept input" |
+| Business Context Framework | "business concept registry", or "BCF" |
+| certified (of a concept) | "concept active" |
+
+### S4.5 Where counts are read
+
+| To know how many | Read |
+|---|---|
+| entities, concepts, characteristics in each state | `concept_registry.entity`, `business_concept`, `characteristic`, `lifecycle_state` |
+| concept versions by semantic role | `concept_registry.business_concept_version.semantic_role` |
+| a metric's variables by kind | `mcf.metric_variable_binding.role_kind_code` |
+| a tenant's contract bindings | `tenant.contract_binding` |
+
+### S4.6 Defects found while reading, named, not fixed here
+
+1. **The business vocabulary chapter has a lifecycle that matches no record.** `business-vocabulary.md` ("Certification Lifecycle") gives proposed, reviewing, certified, superseded, withdrawn. The grammar and the registry's CHECK rules give draft, review, approved, active, superseded, archived. The chapter is to be corrected to the record. Owner: Docs.
+2. **Two different lists are both called "semantic role".**
+   - `canonical-contract-creation.md` ("BF semantic role", the default resolution rule per role) lists identifier, dimension, measure, temporal, descriptor.
+   - The registry's CHECK lists eight values: amount, identity, status, temporal, reference, dimension, diagnostic, strategic filter.
+
+   Only two values are shared. The chapter's table is to be restated against the registry's list. Owner: Docs, with the Architect.
+3. **Entities have no `archived` state, while concepts and characteristics do.** The grammar gives "registry concepts" six states. Whether an entity can be withdrawn for an admission error, and so needs `archived`, is to be decided. Owner: Architect, with DB; a schema change needs the operator's yes.
+4. **"Property" is a construct in the docs with no record.** The grammar says concept identity is unique as `UNIQUE(entity_id, property_id)`. The registry has no property table: the business concept row carries the property's kind and identity role. Either the grammar text is corrected to the record, or a design act adds the record. Owner: Architect.
+5. **Docs name records that do not exist.**
+   - The grammar's metric contract section names `metric_binding`, and `data-model-and-schema.md` lists it among the `mcf` tables; the record is `mcf.metric_variable_binding`.
+   - `metric-workstream.md` uses `co_bindings`.
+
+   Owner: Docs.
+6. **Two records for a tenant adopting a source contract.** `tenant.tenant_binding` (source contract, version, tenant, environment) and `tenant.contract_binding` (any family, including source) both say that a tenant adopted a contract version. Today only canonical rows are in `contract_binding`. Which one is the record is to be settled. Owner: Platform, with DB; a schema change needs the operator's yes.
+7. **A metric variable's role has no rule, and one kind is ambiguous.** `mcf.metric_variable_binding.variable_role_code` is free text. `role_kind_code` = `input` means a concept input, beside `metric_input`, which means a metric input. Owner: Metric, with DB.
+8. **Handed to slice 5:**
+   - three tables named `certification_record` (`bcf`, `contract`, `mcf`) and two named `panel_output_record` (`bcf`, `contract`);
+   - the act called `createCharacteristic` in the docs and `registerCharacteristic` in the code;
+   - "park" in the docs (`awaiting_operator_confirm`), which is a different outcome from `parked` in the code;
+   - verdict codes with no value rule.
