@@ -2,7 +2,7 @@
 uid: DEC-85fd8d
 title: "Directory entry rejection: a terminal, evidenced intent state for a Metric Directory entry (extends DEC-b5c7ff and DEC-5842d4)"
 description: "A Metric Directory entry can be rejected through one governed act that records its evidence in the same transaction; rejected is terminal. Extends, does not supersede, DEC-b5c7ff and DEC-5842d4."
-status: proposed
+status: decided
 date: 2026-10-02T12:53:58.868Z
 project: bc-docs
 domain: metrics
@@ -46,7 +46,7 @@ The design is barecount-devhub artifacts/architect/DESIGN-directory-entry-reject
    - A rejected entry cannot be realized or authored (the realization guard and the M12 door of DEC-fa9424 refuse it).
    - The feasibility re-evaluation skips it.
    - A wrong rejection is not undone: the idea is registered again as a new entry that references the rejected one.
-5. **Authority.** Each rejection's authority_ref cites the operator's standing grant for the directory-clearing program. That grant is recorded on the desk, and every rejection row names it.
+5. **Authority.** Each rejection's authority_ref cites the operator's standing grant for the directory-clearing program. That grant is desk grant `2026-10-02T12-55-08-285Z-0a35dc47` (request 193), and every rejection row names it.
 6. **No backfill.** The migration rejects nothing; each rejection is its own act.
 7. **The migration** is the DB Controller's: a bc-db forward migration with its DBCP and the operator's DB yes, holding the rules of points 1, 3 and 4 with red-first vectors.
 8. **Vocabulary.** "Entry rejected in the directory" joins slice 1, group 3. It is always said with its subject, never as plain "rejected".
@@ -63,4 +63,4 @@ This ADR extends DEC-b5c7ff (its D2 intent set) and DEC-5842d4 (its Phase-1 unga
 
 ## Status
 
-Proposed. It becomes decided on the operator's recorded grant.
+Decided on 2026-10-02 by the operator's desk grant `2026-10-02T12-55-08-285Z-0a35dc47` (text SHA-256 `0a35dc479201702f057a67b7d82b9dfd2ac339aeb599ed91196a34e643c6591f`, request 193). The grant approves this ADR as written in bc-docs pull request 160 at commit 66561c16, and records the clearing-program standing grant of point 5. The only changes since that commit are this status paragraph and the grant id in point 5.
