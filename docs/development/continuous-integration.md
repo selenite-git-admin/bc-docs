@@ -114,7 +114,7 @@ The fallback applies to each **new** `pick-runner` decision. Switching the MacBo
    - confirms the run with GitHub;
    - reserves the repository's **fixed** set of slots in one DynamoDB transaction (table `bcp-dev-aps1-cir-alloc`: once per run attempt; at most 20 machines at once and 400 a day; all or nothing);
    - only then registers single-job runners and launches the machines from pinned launch templates.
-   A failure part-way rolls everything back.
+   A failure part-way rolls everything back. When `c7g.large` spot is short, the launcher tries, in order and across every zone, six ARM64 Graviton pools — `c7g, c8g, c6g, m7g, m8g, m6g` — then `c6a` for amd64 (bc-infra#35, #36); on 2026-09-30 this absorbed a transient spot shortage (13 refusals that day, ~0 since).
 3. `pick-runner` waits up to 3 minutes for the 5 runners (about 65–75 s in practice), then routes the jobs to labels `self-hosted, Linux, ARM64|X64, bc-ec2, run-<run>-<attempt>`. If EC2 refuses, errors or times out, the MacBook/hosted rules apply.
 
 **Isolation:**
@@ -134,6 +134,7 @@ The fallback applies to each **new** `pick-runner` decision. Switching the MacBo
 - **State:** `COUNTER/ACTIVE.active` in the table (0 when idle).
 - **Spend:** budget `bcp-dev-aps1-cir-budget` (40 USD/month, all EC2 in the region, email alerts; it alerts but does not stop). About $0.10 for the whole pilot; projected $15–18/month at the volume on 2026-09-29.
 - **Turn off:** delete the `CI_RUNNER_MODE` variable (or set another value); runs fall back at once.
+- **Re-running after a failure:** in EC2 mode, GitHub's "re-run failed jobs" does **not** re-run `pick-runner`, so the re-run keeps the first attempt's run labels while that attempt's single-use machines are already gone — the job then queues with nothing to serve it (seen ~3 h, bc-core run 36680511561). Always **cancel the run and re-run all jobs**; the new attempt allocates fresh machines (TSK-a66c1d).
 - **Remove entirely:** `cdk destroy` the stack `bcp-dev-aps1-cir`.
 - **Machine images:** rebuilt by bc-infra `scripts/ci-runner/build-ami.sh` and proved by `verify-ami.sh` (arm64 ami-0b1e6cb36092c1878, amd64 ami-068bf16c6c07231d8, built 2026-09-29).
 - **Changes:** the bc-infra stack follows §4: a PR, Codex review at the exact head, a recorded operator grant for deploys.
