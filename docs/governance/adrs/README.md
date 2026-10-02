@@ -6,8 +6,8 @@ status: drafting
 authority: authoritative
 generator: scripts/docs-control/generate_adr_registry.py
 source_repo: bc-docs
-source_commit: a6f4fc7
-generated_at: 2026-10-01T06:42:40Z
+source_commit: f2d87eb
+generated_at: 2026-10-02T11:35:23Z
 ---
 
 
@@ -15,7 +15,7 @@ generated_at: 2026-10-01T06:42:40Z
 
 The ADR Registry is the canonical index of platform decisions. Each entry has a structurally unique UID (`DEC-xxxxxx`) used in cross-references throughout the documentation. The ADR files are the source of truth (DEC-a4e550); this registry is generated from their frontmatter and is never edited by hand.
 
-**Counts at generation.** 625 records: accepted 1, decided 207, implemented 270, proposed 12, reversed 7, superseded 128. Quarantined duplicates (not counted): 1 (ADR-DEC-e82f0a.md). Non-canonical filenames: 4 (ADR-DEC-e82f0a.md, ADR-chain-invariants.md, ADR-d315ve.md, ADR-d316mr.md).
+**Counts at generation.** 627 records: accepted 1, decided 209, implemented 270, proposed 12, reversed 7, superseded 128. Quarantined duplicates (not counted): 1 (ADR-DEC-e82f0a.md). Non-canonical filenames: 4 (ADR-DEC-e82f0a.md, ADR-chain-invariants.md, ADR-d315ve.md, ADR-d316mr.md).
 
 **Hygiene.** The supersession pair rule (DEC-623f8f rule 1) is enforced on every push and pull request by `.github/workflows/adr-hygiene.yml` running `scripts/docs-control/audit_adrs.py`. That auditor's report is `docs-control/reports/adr-hygiene.md`. See erratum ADR-ERR-005 for the rules DEC-623f8f names that are not built.
 
@@ -505,7 +505,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-c10d05` | [bc-core Base Refactoring — Build, Type Safety, Error Handling, Module Structure](./ADR-c10d05.md) | decided |  |  |  |
 | `DEC-c19242` | [bc-admin UI Development Freeze — Runtime Over Registry](./ADR-c19242.md) | superseded |  | DEC-b39a00 |  |
 | `DEC-c193a1` | [Server-Side Onboarding Orchestrator — SSE streaming for all onboarding workflows](./ADR-c193a1.md) | implemented |  |  |  |
-| `DEC-c220e4` | [A tenant's metric scope: every active tenant gets every active metric until the Subscription model is built; the entitlement record must be live before the first tenant for a prospect or client; DEC-4aa2fd split](./ADR-c220e4.md) | decided | DEC-4aa2fd |  |  |
+| `DEC-c220e4` | [A tenant's metric scope: every active tenant gets every active metric until the Subscription model is built; the entitlement record must be live before any tenant is activated for a party outside BareCount; DEC-4aa2fd split](./ADR-c220e4.md) | decided | DEC-4aa2fd |  |  |
 | `DEC-c2f499` | [Control Plane / Data Plane Architecture Split](./ADR-c2f499.md) | superseded |  |  |  |
 | `DEC-c318b2` | [Tenant Database Segregation — separate DB per tenant](./ADR-c318b2.md) | superseded |  |  |  |
 | `DEC-c338b3` | [BF/BO versioning model for supersede-active (Model E)](./ADR-c338b3.md) | superseded |  | DEC-b390ef |  |
@@ -573,6 +573,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-deb4d4` | [Feed-integrity hardening package: rehearsal lane, zero-deferral rule, lane-retired supersession, enforcement-3 cut, evidence retention, vector siblings](./ADR-deb4d4.md) | implemented |  |  |  |
 | `DEC-def930` | [Pilot master-data framework — shared profile spine + real-system seeding adapters + living data (extends DEC-b0839a, DEC-9ec48f)](./ADR-def930.md) | decided |  |  |  |
 | `DEC-e01fcf` | [Chain enrichment doctrine — autonomous sequencing across BCF / SC / AC / OC / CC / MC / CAS / PE-MC](./ADR-e01fcf.md) | decided |  |  |  |
+| `DEC-e0a8ca` | [One frontmatter vocabulary for bc-docs: one authority axis for every document kind, one status axis per kind, enforced in CI and read by the DevHub scanner](./ADR-e0a8ca.md) | decided |  |  |  |
 | `DEC-e1241a` | [Source catalog artefacts carry identity; derivability verifies but never substitutes](./ADR-e1241a.md) | implemented |  |  |  |
 | `DEC-e1312a` | [Governed retirement as a distinct deletion class — a sibling carve-out in the source-catalog delete guard, with its own evidence relation](./ADR-e1312a.md) | implemented |  |  |  |
 | `DEC-e27625` | [Tenant-Scoped Admission Contracts — no shared production contracts](./ADR-e27625.md) | implemented |  |  |  |
@@ -633,6 +634,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-f656a6` | [Universal Protocol Readers — Connector Reclassification & Onboarding-Embedded Provisioning](./ADR-f656a6.md) | implemented |  |  |  |
 | `DEC-f66378` | [BO-Scoped BF Composition — No Shared Observation Fields Across BOs](./ADR-f66378.md) | superseded |  | DEC-b390ef |  |
 | `DEC-f6c2e5` | [Global auth guard on bc-core with @Public() exceptions](./ADR-f6c2e5.md) | implemented |  |  |  |
+| `DEC-f7d4fc` | [A tenant's adoption of a source contract is recorded in tenant.tenant_binding; a tenant's overrides of any contract, source included, stay in tenant.contract_binding (DEC-ec9e89)](./ADR-f7d4fc.md) | decided |  |  |  |
 | `DEC-f82a8a` | [Dynamic schema-per-tenant provisioning on tenant creation](./ADR-f82a8a.md) | superseded |  | DEC-1cdc5e |  |
 | `DEC-f83b8a` | [Source Specification Framework — 5-Dimensional Classification for Source Tables](./ADR-f83b8a.md) | implemented |  |  |  |
 | `DEC-f8f925` | [Foundational Metric Context Framework (MCF) — sibling of BCF for metric meaning and metric-context packages](./ADR-f8f925.md) | reversed |  | DEC-c3e57f |  |
@@ -648,4 +650,4 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-fc41a3` | [Source Chain Contract Generation — SAP ECC Finance](./ADR-fc41a3.md) | superseded |  | DEC-b390ef |  |
 | `DEC-ffee4e` | [Retire bc-ai — port the BCF registry-authoring panel in-process into bc-core, roster preserved](./ADR-ffee4e.md) | implemented | DEC-14fb98 |  |  |
 
-*Generated by `scripts/docs-control/generate_adr_registry.py` at 2026-10-01T06:42:40Z from the ADR files as they stood at bc-docs `a6f4fc7`, the commit checked out when the generator ran; the regenerated registry lands in that commit's successor.*
+*Generated by `scripts/docs-control/generate_adr_registry.py` at 2026-10-02T11:35:23Z from the ADR files as they stood at bc-docs `f2d87eb`, the commit checked out when the generator ran; the regenerated registry lands in that commit's successor.*
