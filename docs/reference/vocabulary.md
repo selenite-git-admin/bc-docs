@@ -20,6 +20,8 @@ governing_adrs:
 
 **Read at:** bc-docs `origin/main` a6f4fc7; bc-core `origin/main` 4f163044; the live platform database, read-only, 2026-10-01. The Chief's helper census of where each word is used (barecount-devhub `.claude/briefs-view/drafts/clean-slate-inventory-2026-10-01.md`, part D) was used as a list of leads, not as a source.
 
+**Second slice: the object chain, the acts and the states of the other contracts.** Approved by the operator on 2026-10-01, desk grant `2026-10-01T11-24-00-154Z-db431e4e` (text SHA-256 `db431e4e78fefa72fd771e3c74f8beb0a952bd1a78e70efd28d4d3ad48e9d80a`), as written on the Architect page in barecount-devhub pull request 201 at commit `42dcbaf6fa3da2e110002cebf2f7a5ff911f457e`. It is carried below as slice 2 with two changes only: its question is replaced by the operator's answer ("in force"), and its section headings are numbered S2.1 to S2.7. Its approval route and next-slices section are left out. It was read at bc-docs `origin/main` 3ce3b52, bc-core `origin/main` 43c8f67b2 and the live platform and pilot tenant databases, read-only.
+
 **This page holds no counts.** Section 6 says where each count is read.
 
 ## 1. Why the words became a trap
@@ -269,3 +271,80 @@ The first three rows are **the operator's classifications, not yet status words 
 - bc-core: `src/registry/mcf/readiness-projection.service.ts` (the three-line split of active); `src/registry/mcf/mcf-read.service.ts` (the catalog tiers); `src/registry/mcf/mcf-mcv-retire.controller.ts`; `src/registry/mcf/mcf-cert-writer.service.ts` (abandon); `src/tenant-views/beyond-metrics.service.ts` (what "has a value" reads); `src/database/schema/mcf/` (certification actions; candidate statuses).
 - Also for revision 6: ADR DEC-fa9424 (the directory entry as the only authoring door); ADR DEC-21ca17; bc-core `src/registry/mcf/mcf-seed-metric-status.ts` (the seed statuses), `src/registry/mcf/reservoir-ingestion.service.ts` (the retired from-seed intake), `src/registry/mcf/operator-direct-adapter.ts`; bc-db `migrations/0029_mcf_retire_rejected_exit.sql` at `origin/main`; `metric_directory.member` in the lifecycle map.
 - Live, read-only: the view `mcf.mcv_live`; the state and status columns of `mcf`, `metric`, `tenant` and `schema_provisioner`; the action codes in `mcf.certification_record`; the check names in `mcf.mcv_chain_status`.
+
+## Slice 2: the object chain, the acts and the states of the other contracts
+
+### S2.1 The chain, in Foundation's words
+
+Foundation fixes one order: external **source state** is observed, then admitted as **source objects**; those are evaluated into **canonical objects**; those into **metric snapshots**; those into **action objects**. Every evaluation act also records **evidence** (that the act happened, and its outcome) and **lineage** (what it referenced). Nothing is skipped, nothing points backwards, nothing is changed after it is recorded (`the-object-model.md`, "Object inventory"; the six invariants).
+
+The verbs for this chain are the approved ones: observe, admit, evaluate, resolve, preserve, record, reference, bind, finalize, surface. Words such as ingest, transform, process, refresh and recompute are not used for it.
+
+### S2.2 The objects: what each word means, and the record that holds it
+
+| Word | Plain meaning | Where it is recorded (in the tenant's own database) |
+|---|---|---|
+| **source state** | What the source system holds. Not a record of ours | none |
+| **source object** | One observation of source state that was admitted, kept exactly as received, never changed | an `admitted` row in `progression.admission`, with its row in the matching `fact.so_` table |
+| **rejected observation** | An observation that failed admission. It is not a source object; the rejection is kept as evidence | a `rejected` row in `progression.admission` |
+| **canonical object** | Business meaning resolved from one or more source objects, under one canonical contract version | an `accepted` row in `progression.canonical_evaluation`, with its row in the matching `fact.co_` table, which names it by foreign key |
+| **metric snapshot** | A metric's value for a period, evaluated from canonical objects | an `accepted` row in `progression.metric_evaluation`, with its row in the matching `fact.ms_` table. When a metric has one, the tenant word is "reporting" (slice 1) |
+| **action object** | A declared intent bound to metric snapshots, with its outcome | **not built.** `progression.intervention_evaluation` exists with the values `triggered` and `not_triggered`, and holds no rows. Foundation's action object has a lifecycle those two values do not express (S2.6, defect 4) |
+| **evidence** | The record that an evaluation act happened, with its outcome | `evidence.evidence_object` |
+| **lineage** | The record of what an act referenced | `evidence.lineage_object`, and for one case a progression table (S2.6, defect 3) |
+
+"Object" alone is not a status. A count of objects is read from the record named, for one tenant.
+
+### S2.3 Acts, runs and their outcomes
+
+| Word | Plain meaning | Record |
+|---|---|---|
+| **evaluation act** | One governed act at one boundary: admitting, resolving canonical meaning, evaluating a metric, evaluating an intervention | Foundation's term; its result is one of the records in S2.2 |
+| **run** | One invocation that performs many acts and is recorded as a whole | `progression.admission_run`, `metric_run`, `intervention_run` (and `canonical_run`, which nothing writes: S2.6, defect 5) |
+| **admitted / rejected** | The outcome of admitting one observation | `progression.admission.status` |
+| **accepted / rejected** | The outcome of one canonical or metric evaluation act | `progression.canonical_evaluation.status`, `progression.metric_evaluation.status` |
+| **run states:** pending, running, completed, failed, cancelled | Where a run is, or how it ended | the `status_code` of each run table |
+| **deferred** (of a metric run) | The run did not evaluate because its inputs were not available. Nothing was recorded as a value | `progression.metric_run.status_code` = `deferred_inputs_unavailable` |
+
+**Not approved for the chain:** "processed" or "ingested" (say admitted or evaluated); "landed" (say recorded); "materialized" for a fact row (say recorded); "succeeded" for an act (say accepted); "deferred" without saying what was deferred.
+
+### S2.4 The states of the contracts other than metrics
+
+Five contract families keep the legacy lifecycle Foundation names for them (`the-contract-grammar.md`, "Legacy contract-family envelope (frozen)"): **source, admission, observation, canonical, intervention**. The field is `governance_state_code` on the source, admission, observation and canonical version tables. Intervention versions carry `status_code` instead, with no rule on its values and no rows today (S2.6, defect 6).
+
+| Field value (Foundation) | Plain meaning |
+|---|---|
+| `draft` | Being written |
+| `review` | Under review |
+| `approved` | Review complete, not yet in force |
+| `active` | **In force:** the version runtime uses now |
+| `superseded` | Replaced by a newer version; what was produced under it stays as it was |
+
+**The operator's answer** (grant `2026-10-01T11-24-00-154Z-db431e4e`): for the source, admission, observation, canonical and intervention contracts, the field value `active` is said as **in force**, in speech and on screens, so that "active" is never said of anything.
+
+### S2.5 Words not approved here, and what to say instead
+
+| Not approved | Say instead |
+|---|---|
+| live (of a contract or a version) | "in force" |
+| deprecated (of a contract version) | "superseded"; `deprecated` is a value of two parent-level fields only (S2.6, defect 2) |
+| pending provisioning (as a contract state) | not a Foundation state (S2.6, defect 1) |
+| SO, CO, MS, AO in text for the operator | the full words: source object, canonical object, metric snapshot, action object |
+| canonical run | "the canonical evaluations of one resolution", with its evidence (ruling TSK-29e34a) |
+
+### S2.6 Defects found while reading, named, not fixed here
+
+1. **A seventh state not named by Foundation.** The live database allows `pending_provisioning` on the version tables of source, admission, canonical, the mapping and the provisional AI contract (CHECK constraints in `contract`), beside Foundation's five. No version holds it today. Either Foundation names it (an erratum) or a migration removes it. Architect with the DB Controller; the operator decides.
+2. **A second state field that says something else.** `contract.observation_contract.status_code` (`draft`, `active`, `deprecated`) sits on the parent. On 2026-10-01 every observation contract parent says `draft` while its versions are `active` or `superseded`. The same parent-level field exists on `canonical_mapping` and `contract_meta_schema`. Retire the parent field, or define it and keep it true. DB with Platform.
+3. **Canonical evaluation writes no lineage object.** Foundation says every boundary emits evidence and lineage (`the-object-model.md`, "Object-boundary mapping"). On the pilot tenant, `evidence.lineage_object` holds `observed_as` rows for admissions and `evaluated_by` rows for metric evaluations, and nothing for canonical evaluations. The canonical resolver records its references in foreign keys and in `progression.source_legal_entity_binding_lineage`, not as lineage objects. This is the same family of question as FND-005 (TSK-9914fa) and goes there.
+4. **The action object is not built.** The table that would record it carries `triggered` and `not_triggered`, which do not express Foundation's lifecycle (a terminal state, or non-closure recorded explicitly). Its words are settled when its design is (the readiness program's action lane).
+5. **`progression.canonical_run` is vestigial.** Nothing writes or reads it (ruling TSK-29e34a). Retire it with a later migration.
+6. **The intervention contract's state field is named and checked differently.** `contract.intervention_contract_version.status_code` has no rule on its values, while the other four families' `governance_state_code` is checked; the observation version table has no rule on its values either (only source, admission, canonical, the mapping and the AI contract are checked). Bring the five families under one checked field. DB Controller.
+
+### S2.7 Where counts are read
+
+| To know how many | Read |
+|---|---|
+| source objects, canonical objects, metric snapshots for a tenant | the tenant's `progression.admission`, `progression.canonical_evaluation`, `progression.metric_evaluation`, by status |
+| contract versions in each state | each family's version table, `governance_state_code` |
+| evidence and lineage for a tenant | `evidence.evidence_object` by type; `evidence.lineage_object` by relationship |
