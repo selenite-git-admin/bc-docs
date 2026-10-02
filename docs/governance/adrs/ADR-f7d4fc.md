@@ -2,7 +2,7 @@
 uid: DEC-f7d4fc
 title: "A tenant's adoption of a source contract is recorded in tenant.tenant_binding; a tenant's overrides of any contract, source included, stay in tenant.contract_binding (DEC-ec9e89)"
 description: "Settles the bound-source record (TSK-8376a8): adoption and override are two meanings with one home each; no database change; corrects the D250 mis-citation."
-status: proposed
+status: decided
 date: 2026-10-02T10:42:48.022Z
 project: bc-docs
 domain: tenants
@@ -68,4 +68,4 @@ Rejected:
 
 ## Status
 
-Proposed. It becomes decided on the operator's recorded grant.
+Decided on 2026-10-02 by the operator's desk grant `2026-10-02T11-34-45-990Z-4d15d8da` (text SHA-256 `4d15d8daf6713b41dcd70fc7369ed84a0d88dee5725d8fa90111d398da719d49`, request 188), which approved this ADR as written in bc-docs pull request 155 at commit f2d87eb6. This status paragraph is the only change since.
