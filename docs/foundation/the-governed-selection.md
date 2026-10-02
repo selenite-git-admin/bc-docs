@@ -10,6 +10,7 @@ governing_sources:
   - Foundation §6 (metric evaluation)
   - The Invariants — Invariant IV (governed selection artifact, reserved → defined here)
 governing_adrs:
+  - DEC-483f1e (the General Metric Runtime; cited in a Governing source footer, TSK-ab351b)
   - DEC-c4c742 (defining the governed selection artifact)
   - DEC-83fda0 (Route B — the as-of/state selection that motivated this definition)
 errata_referenced: []

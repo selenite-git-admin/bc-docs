@@ -13,6 +13,8 @@ governing_sources:
   - Quality Gates and Chain Integrity
   - Metric Evaluation
 governing_adrs:
+  - DEC-ebb3cd (reason_code values and triggers; cited in a Governing source footer, TSK-ab351b)
+  - DEC-952faa (reason_code values and triggers; cited in a Governing source footer, TSK-ab351b)
   - DEC-bebaec (Chain Completeness SSOT; Definition of Complete plus persisted chain status)
   - DEC-bef347 (Structural Completeness; required body keys per contract family)
 errata_referenced: []

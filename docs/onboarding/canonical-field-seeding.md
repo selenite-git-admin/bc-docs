@@ -10,6 +10,7 @@ governing_sources:
   - Business Vocabulary
   - Metric Catalog
 governing_adrs:
+  - DEC-804874 (semantic_family column / D366; cited in a Governing source footer, TSK-ab351b)
   - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-d72560 (D301 Canonical Field as 3rd contract primitive)
   - DEC-9d1f4b (D327 Shared dimension normalization)
