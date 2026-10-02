@@ -10,6 +10,7 @@ governing_sources:
   - The Contract Grammar, Metric Contract section
   - The Evaluation Boundaries, Metric evaluation boundary section
 governing_adrs:
+  - DEC-ebb3cd (reason_code values and triggers; cited in a Governing source footer, TSK-ab351b)
   - DEC-29c324 (N:1 Metric Contract to Canonical Contract cardinality)
   - DEC-771baf (Tenant database architecture and run scope)
   - DEC-f02230 (Tenant DB schema organization)

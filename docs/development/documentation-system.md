@@ -182,7 +182,7 @@ The documentation's voice is governed by `bc-docs/scripts/reference/aws-rewrite-
 | Forbidden roots | `pipeline`, `ingest`, `transform`, `materialize`, `flow`, `stage`, `job`, `refresh`, `recompute`, `process`; carve-outs for DAG-direction terms on declared chains and for protocol-vocabulary identifiers |
 | Em dashes | Zero in titles, headings, and body prose; commas, colons, periods, semicolons, or parentheses substitute |
 | Section numbering | None in chapter titles, headings, or cross-references; chapters are name-keyed; only frontmatter `order` provides sort stability |
-| Bidirectional frontmatter | Every `DEC-xxxxxx` and `FND-ERR-xxx` cited in body appears in `governing_adrs` or `errata_referenced`, and vice versa |
+| Bidirectional frontmatter | Every `DEC-xxxxxx` and `FND-ERR-xxx` cited in a `Governing source.` footer appears in `governing_adrs` or `errata_referenced`, and every entry in `governing_adrs` or `errata_referenced` appears in at least one `Governing source.` footer of the chapter. The field asserts governance, so a mention elsewhere in the body (see, superseded by, history, an example) is free and asserts nothing (DEC-5a9dee reading, 2026-10-01) |
 | Citation discipline | Each substantive section ends with a `Governing source.` footer; queued chapters are not cited as governing source |
 | Pre-commit grep | Operator runs the lint regex before committing a chapter |
 

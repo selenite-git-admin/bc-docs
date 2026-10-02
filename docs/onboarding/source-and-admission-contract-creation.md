@@ -10,6 +10,8 @@ governing_sources:
   - Admission and Observation
   - Quality Gates and Chain Integrity
 governing_adrs:
+  - DEC-f4084d (D511 registerSourceStack; cited in a Governing source footer, TSK-ab351b)
+  - DEC-3fe389 (D560 contract-identity doctrine; cited in a Governing source footer, TSK-ab351b)
   - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-242d60 (D245 AC body purity; SC body declares structure only)
   - DEC-ca4c1e (D247 AC master shape locked, DQC integrated, GL/PL/TN scope prefixes)

@@ -17,7 +17,8 @@ governing_adrs:
   - DEC-ebf0b4 (Session Discipline and Data Integrity Rules; the ten D268 rules)
   - DEC-804874 (L-Node Verification with Semantic Family Classification; the session-close gate per D366)
   - DEC-3395bc (bc-docs SSOT cutover; the v3 layout under docs/; ADR files written into docs/governance/adrs/)
-errata_referenced: []
+errata_referenced:
+  - ADR-ERR-005 (the ADR-hygiene enforcer erratum; cited in a Governing source footer, TSK-ab351b)
 v2_sources: []
 diagrams: []
 ---
