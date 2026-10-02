@@ -13,6 +13,8 @@ supersedes: DEC-f90ba3
 
 # Metric Directory — realized value-organizing subsystem (bc-core)
 
+> **Extended by DEC-85fd8d (2026-10-02):** a Metric Directory entry can be rejected through one governed act with same-transaction evidence in `directory_decision`; `rejected` is a terminal intent state. Read this ADR together with ADR-85fd8d.
+
 ## Context
 
 Metric onboarding capability was scattered across two repos (files, libs, a drifting devhub store, a cookbook), and each session patched a different part — the true source of session drift. The fix is a single governed dictionary that homes the missing "select" (value) layer and unifies coverage, modelled on BCF which succeeded by being a clean governed registry. Red-team review established the hard constraints now encoded here: it must live in bc-core (D501), must derive realized state rather than duplicate it (or it becomes onboarding_candidate v2 — D505), and must stamp the Member→MC link at authoring (the keystone, since 0/112 active MCs traced to any origin under the old reconcile-by-inference). Keystone-first proved the riskiest unknown before any schema. Seed labels were verified too noisy to bootstrap the taxonomy, so the value spine is operator-curated with APQC as a hint — keeping value judgment with the operator and mechanics with the engine.
