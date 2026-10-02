@@ -37,6 +37,13 @@ It was read at bc-docs `origin/main` 5e64c2f, bc-core `origin/main` 44828a95c an
 
 It was read at bc-docs `origin/main` 9dca4a5, bc-core `origin/main` 05cbe79c and the live platform database, read-only.
 
+**Fifth slice: AI panels and their verdicts.** Approved by the operator on 2026-10-02, desk grant `2026-10-02T07-28-50-143Z-e395cf73` (text SHA-256 `e395cf73148f229475cb139252341aeece6f09c164c529009eae0aa61c31ac13`), as written on the Architect page in barecount-devhub pull request 224 at commit `9b20363311fe1ad92f3587aadbfe0c146d804e0a` (revision 1), with the four proposals of its section 3. It is carried below as slice 5, with these changes only:
+- its section headings are numbered S5.1 to S5.6;
+- its questions are replaced by the operator's answers, and the words "if the operator agrees" are removed from its not-approved list;
+- its approval route is left out.
+
+It was read at bc-docs `origin/main` 9dca4a5, bc-core `origin/main` 05cbe79c and the live platform database, read-only.
+
 **This page holds no counts.** Section 6 says where each count is read.
 
 ## 1. Why the words became a trap
@@ -592,3 +599,92 @@ The business vocabulary is **one governed registry** (DEC-02f5a9; `the-contract-
    - the act called `createCharacteristic` in the docs and `registerCharacteristic` in the code;
    - "park" in the docs (`awaiting_operator_confirm`), which is a different outcome from `parked` in the code;
    - verdict codes with no value rule.
+
+## Slice 5: AI panels and their verdicts
+
+### S5.1 The panels
+
+An **AI panel** is a fixed set of AI models, each in a named seat, that answers one question about one case. The panels run inside bc-core (DEC-ffee4e). A panel advises or decides only as far as its governing decision says; the operator's acts and the gates stay in force.
+
+| Panel | The question it answers | Seats | Record of a run |
+|---|---|---|---|
+| **registry authoring panel** | May this act on the business concept registry be drafted: a new concept, characteristic, version or supersession? | maker, checker, moderator | `bcf.panel_output_record` |
+| **metric authoring panel** | Is this metric contract draft admissible as written? | maker, checker, judge (DEC-09f86b) | `mcf.metric_authoring_panel_run`, with one transcript per seat; its verdict is also written to `bcf.panel_output_record` |
+| **certification panel** | Does the frozen metric package pass certification, which gates the metric's activation (DEC-c48b0f)? | assessor, adversary, moderator | `mcf.audit_contextual_panel_run`; its decision is in `metric_audit.decision` |
+| **ABC reasoning panel** | Bounded reasoning inside the Autonomous Business Chain orchestrator (DEC-cff0cf) | maker, checker, judge | no record of its runs found (S5.6 defect 7) |
+
+"AI panel" in `the-dual-layer-interaction-model.md` names the advisory conversation surface of the user interface. That is a screen, not a panel in this sense. Say "conversation panel" for it.
+
+### S5.2 The words of a panel run
+
+| Word | Plain meaning | Record |
+|---|---|---|
+| **panel run** | One call of one panel on one case | the run's `panel_run_uid` in the record named in S5.1 |
+| **roster** | Which model sits in each seat of one panel. It is **calibration-locked**: it changes only with the operator's recorded sign-off | registry panel: ADR DEC-ffee4e, amended by DEC-53629b; certification panel: one row in `mcf.audit_panel_roster_registration`, authorized by the operator with its calibration evidence (DEC-d3b916); metric authoring panel: the model defaults in code (DEC-e87701) |
+| **seat** | One position on a panel, with its job: the maker drafts, the checker challenges, the moderator or judge decides; the assessor, adversary and moderator certify | the seat columns of the roster, or `model_role_code` on a transcript |
+| **panel verdict** | The panel's answer for one run (S5.2a) | `verdict_code` on the run's record |
+| **defect code** | Why a draft was rejected, from a fixed list | `defect_code` (registry panel: nine values; metric panel: `MC_DEFECT_*`) |
+| **sent to operator review** | The panel did not decide and hands the case to the operator, with a reason | verdict `OPERATOR_REVIEW`, with `operator_review_reason` where recorded |
+| **operator disposition** | The operator's recorded handling of a run sent to operator review: resolved in the registry, rejected by design, obsolete, replaced by a re-run, pending action, or unclassifiable | `bcf.panel_output_record.disposition_code`, written once |
+| **waiting for operator confirm** | A high-consequence registry act the panel approved, which is written only when the operator confirms it with a rationale of at least 40 characters | the API outcome `awaiting_operator_confirm`; the confirmation is kept in the registry certification record |
+| **re-run** | A new panel run on the same case, replacing an earlier one. The metric authoring panel allows two | `superseded_by_rerun` disposition; the metric panel's re-run count |
+| **vendor failure** | A model's vendor did not answer. The registry panel then writes nothing; the metric panel sends the case to operator review with the reason | the metric panel's `operator_review_reason` (for example `vendor_timeout`) |
+| **calibration** | The measured evidence that a roster's models are fit for their seats; for the registry panel, also the operator's sampled check of panel outputs | `calibration_evidence_ref` on a roster row; `bcf.calibration_event` |
+| **operator-direct entry** | A registry act written by the operator through a governed route, with no panel run. It is not a panel verdict, even where it is stored beside them (S5.6 defect 2) | rows in `bcf.panel_output_record` whose provider is operator-direct |
+
+#### S5.2a Panel verdicts
+
+Each verdict is said with its panel, for example "registry panel: approved for draft".
+
+| Field value | Plain meaning |
+|---|---|
+| `APPROVE_FOR_DRAFT` | **approved for draft.** The draft may be written as a draft; nothing is in force yet |
+| `OPERATOR_REVIEW` | **sent to operator review** |
+| `REJECT` / `REJECT_DEFECT` | **rejected, with a defect code.** Two spellings of one result (S5.6 defect 1) |
+| `PASS`, `REJECT`, `REVOKE` (certification panel) | **certification passed, rejected, or revoked** |
+
+**"Verdict" is never said alone.** Six records use a field called `verdict_code`, each with different values. These include the chain verdict (green, amber, red), self-verification (pass, fail) and publication eligibility. Say "panel verdict", "chain verdict" and so on.
+
+### S5.3 The operator's answers (2026-10-02)
+
+1. **The third seat keeps each panel's decided word,** always said with the panel: "moderator" for the registry and certification panels, "judge" for the metric authoring panel (DEC-09f86b). The metric panel's record is to be corrected to say judge (S5.6 defect 4).
+2. **"Park" is retired for panel outcomes.** Say "sent to operator review" or "waiting for operator confirm", whichever is meant. "Parked" stays a DevHub task state only.
+3. **"Certification" alone means metric certification** by the certification panel. The registry's records are said as **"registry certification record"**.
+4. **"Consensus", "quorum" and "dissent" are retired as panel words.** Say "the judge's holding" or "the moderator's verdict".
+
+### S5.4 Words not approved, and what to say instead
+
+| Not approved | Say instead |
+|---|---|
+| verdict (alone) | "panel verdict", "chain verdict", "certification decision", whichever is meant |
+| park, parked (of a panel outcome) | "sent to operator review" or "waiting for operator confirm" |
+| approved (of a panel draft) | "approved for draft". Nothing a panel approves is in force until its governed act and gates have run |
+| certification (of a registry act) | "registry certification record" |
+| consensus, quorum, dissent | "the judge's holding", "the moderator's verdict" |
+| gate (for the third seat) | "moderator" (DEC-149ab2 retired "gate" for this seat) |
+| unverified, degraded (of a panel) | "vendor failure" and the run's outcome. "Unverified" is a source catalog word (slice 3) |
+| AI panel (for the conversation surface) | "conversation panel" |
+| bc-ai | retired (DEC-ffee4e): "the registry authoring panel, in bc-core" |
+
+### S5.5 Where counts are read
+
+| To know how many | Read |
+|---|---|
+| registry panel runs by verdict | `bcf.panel_output_record.verdict_code`, excluding operator-direct rows |
+| runs waiting for an operator disposition | `bcf.panel_output_record` where the verdict is `OPERATOR_REVIEW` and `disposition_code` is empty |
+| metric authoring panel runs | `mcf.metric_authoring_panel_run` |
+| certification panel runs and decisions | `mcf.audit_contextual_panel_run`; `metric_audit.decision` |
+| the certification roster in force | `mcf.audit_panel_roster_registration` where `valid_to` is empty |
+
+### S5.6 Defects found while reading, named, not fixed here
+
+1. **The registry panel's verdict has no value rule, and one result has two spellings.** `bcf.panel_output_record.verdict_code` has no CHECK. ADR DEC-ffee4e names `REJECT_DEFECT`, while the registry panel's code writes `REJECT`; one row holds `PASS`. Owner: Platform, with DB; a schema change needs the operator's yes.
+2. **One table holds panel verdicts and entries no panel made.** `bcf.panel_output_record` also stores operator-direct entries and operator adjudications, written as `APPROVE_FOR_DRAFT`. So "approved for draft" in that table does not always mean a panel approved. Separate them, or record the origin in a field that every read must use. Owner: Architect, with Platform.
+3. **The documented roster is not the roster that runs.** The procedure and ADR DEC-ffee4e name GPT-5.5 as the registry panel's moderator; DEC-53629b replaced it with GLM-5. The metric panel's model-defaults header names models other than its constants. Docs and code headers are to be corrected to the decided rosters. Owner: Docs, with Platform.
+4. **The metric panel's third seat is a judge by decision but a moderator by record.** `mcf.metric_authoring_panel_transcript.model_role_code` allows maker, checker, moderator; DEC-09f86b's judge is stored as `moderator`. Owner: Metric, with DB; a schema change needs the operator's yes.
+5. **"Certification record" is three tables.** `bcf.certification_record` (registry and older business-field acts), `contract.certification_record` (frozen since 2026-05-26, yet cited by DEC-c48b0f) and `mcf.certification_record` (metric acts, still named `audit_*` although DEC-c48b0f retired "audit"). Its links to panel runs point into both `contract.` and `bcf.panel_output_record`. Owner: Architect, with DB and Metric.
+6. **One act, four names.** Adding a characteristic is `createCharacteristic` in the procedure and packet, `registerCharacteristic` in the registry service, `registry_author_vocabulary` as the certification action, and "characteristic admission" in the prompt. Owner: Platform, with Docs.
+7. **The ABC reasoning panel keeps no record of its runs.** No table holds ABC panel runs. Either its runs are recorded like the others, or the ADR states why not. Owner: Architect.
+8. **Retired material is still marked authoritative.** `docs/ai/` pages carry `authority: authoritative` and describe bc-ai, which DEC-ffee4e retired. ADR DEC-149ab2's title still says "Business Context Framework", retired by slice 4. Owner: Docs.
+
+**Raised separately, and not a vocabulary matter:** the off-pool maker's evidence records a vendor, a latency and timestamps that did not occur (Invariant VI). That is TSK-9e0b6e, owned by Metric with Platform.
