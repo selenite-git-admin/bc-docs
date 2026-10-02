@@ -15,6 +15,10 @@ governing_adrs:
   - DEC-f02230 (Tenant DB schema organization)
   - DEC-2c79c8 (Per-tenant SQL isolation)
   - DEC-bd5492 (Sentinel-based privacy erasure; referenced in deferrals)
+  - DEC-f7d4fc (Source adoption in tenant_binding; overrides of any family in contract_binding)
+  - DEC-ec9e89 (Tenant Override level 3; contract_binding holds overrides of every family)
+  - DEC-005ea7 (Single production environment; environment_code carries no decided meaning)
+  - DEC-1918d0 (Database rules; one source of truth per value)
 v2_sources:
   - system/tenant/T01-boundary-data/index.md
   - system/tenant/T02-record-data/index.md
@@ -84,27 +88,34 @@ The Tenant Override layer is the only level a tenant participates in. Master Sha
 
 ## Contract Binding
 
-The Contract Binding is the tenant-scoped artifact that pairs one tenant with one platform contract version under bounded variation.
+A tenant's relationship to a platform contract version carries two meanings, and each meaning has one record. The word "binding" is never used alone: each record is named with what it ties.
 
-**Purpose.** A Contract Binding records that a specific tenant has adopted a specific contract version and carries the tenant's bounded variation against that version.
+- **Adoption:** which contract version a tenant uses.
+- **Override:** the tenant's bounded variation of an adopted version, the Tenant Override level of The Contract Grammar (DEC-ec9e89).
 
-**Behavior.** A Binding identifies the tenant, identifies the platform contract version it binds to, and records any tenant-permitted variation in dedicated bounded fields of the Binding record. Runtime components consume the Binding alongside the contract version when applying the contract to tenant data. The contract version remains the authoritative source of platform-declared shape and rules.
+**Source binding.** A tenant's adoption of a source contract version is recorded in `tenant.tenant_binding`. A tenant is bound to a source contract version if and only if it holds a source binding for that version whose effective-to date is empty. A source binding is ended by setting its effective-to date, never by rewriting it. This is the record that the onboarding-completeness gate and the tenant views read to answer which source contract version a tenant has adopted. A source binding's `environment_code` carries no decided meaning: under DEC-005ea7 there is one production environment, so no reader selects a binding by environment.
 
-**Bounded variation.** Per the Three-level governance section of The Contract Grammar, a Binding cannot remove platform-declared fields and cannot modify platform-declared rules. The set of permitted variations for each contract family is governed by the family's master schema and is recorded against the Binding in dedicated fields. Variation outside that set is rejected at Binding creation.
+**Contract binding.** A tenant's adoption of a canonical or metric contract version is recorded in `tenant.contract_binding`, and a tenant's override of a contract version of any family, source included, is recorded in that same record. A contract binding states canonical or metric adoption, or a bounded override; it never states source adoption, and no reader treats a source-family contract binding as adoption. Overrides are live for the canonical, metric, and intervention families today; source overrides are decided (DEC-ec9e89) but not yet built.
 
-**Cardinality.** One tenant may hold N Contract Bindings, one per platform contract version the tenant has adopted. One contract version may be bound by N tenants independently. Each Binding references exactly one contract version.
+**Purpose.** Adoption records that a specific tenant uses a specific contract version. Override carries the tenant's bounded variation against that version. Each meaning has one record so that there is one source of truth per value (DEC-1918d0 rule 4): adoption is read from its own record and is never inferred from the presence of an override row.
 
-**Versioning.** A new contract version requires a new Binding for any tenant that adopts it. Previous Bindings continue to apply to previously emitted authoritative state under the prior version. Bindings are not retroactively rebound to a newer contract version.
+**Bounded variation.** Per the Three-level governance section of The Contract Grammar, an override cannot remove platform-declared fields and cannot modify platform-declared rules. The set of permitted variations for each contract family is governed by the family's master schema and is recorded against the contract binding in its override fields. Variation outside that set is rejected when the override is written. The contract version remains the authoritative source of platform-declared shape and rules; runtime components read the adoption and any override alongside the contract version when they apply the contract to tenant data.
+
+**Cardinality.** A tenant holds at most one active adoption per contract, the version it currently uses: a source binding for a source contract, a contract binding for a canonical or metric contract. Prior adoptions are ended by their effective-to date. A tenant holds at most one override per adopted contract. One contract version may be adopted by many tenants independently.
+
+**Versioning.** Adopting a new contract version is recorded as a new adoption; the prior adoption is ended by its effective-to date and continues to govern authoritative state already emitted under the prior version. Adoptions are not retroactively rebound to a newer contract version, and an override is not rewritten to alter authoritative state already produced under it.
 
 **Constraints.**
 
-- A Binding does not extend the contract's shape beyond what the family master schema permits.
-- A Binding does not introduce new validation, resolution, formula, or trigger logic. It parameterizes existing platform-declared logic within the bounded surface.
-- A Binding is not modified to retroactively alter authoritative state previously produced under it.
+- An override does not extend the contract's shape beyond what the family master schema permits.
+- An override does not introduce new validation, resolution, formula, or trigger logic. It parameterizes existing platform-declared logic within the bounded surface.
+- Neither an adoption nor an override is modified to retroactively alter authoritative state previously produced under it.
 
-**Failure modes.** Binding creation that asserts variation outside the permitted surface is rejected. A Binding whose referenced contract version is superseded does not silently follow the supersession. The tenant continues to operate against the originally bound version until a new Binding is created.
+**Failure modes.** An override that asserts variation outside the permitted surface is rejected. An adoption whose contract version is later superseded does not silently follow the supersession: the tenant operates against the adopted version until a new adoption is recorded.
 
-**Governing source.** The Contract Grammar; The Object Model; Contract Schemas reference.
+**Exact tables.** Data Model and Schema owns the exact columns of `tenant.tenant_binding` and `tenant.contract_binding`. Tenant Extensions and Overrides owns the per-family override surfaces that are broader than a single contract binding.
+
+**Governing source.** DEC-f7d4fc; DEC-ec9e89; DEC-005ea7; DEC-1918d0; The Contract Grammar; The Object Model; Contract Schemas reference.
 
 ## Connection
 
