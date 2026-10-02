@@ -12,6 +12,8 @@ focus: runtime-semantics
 
 # Evidence and Lineage Write Semantics — Best-Effort + Degraded Marker, Per-Evaluation Lineage with Snapshot Fan-Out
 
+> **Re-scoped by DEC-48d222 (decided 2026-08-19).** D-1 no longer holds as written. Local Evidence and Lineage are written in the same transaction as the act they prove: no proof, no record. Best-effort now applies only to the deferred S3 WORM archive copy, and the `proof_status` marker is retired. D-2, one Lineage per evaluation with `fromObjects[]` and `toObjects[]`, stays in force. Read this ADR together with ADR-48d222.
+
 ## Rationale
 
 Audit `bc-docs-v3/reports/platform-code-doc-gap-report.md` (Apr 28 2026) surfaced two P1 doc-vs-code drifts (GAP-001, GAP-002) on evidence/lineage write semantics. Operating-model docs assert synchronous, authoritative, per-snapshot proof emission; live boundary services (admission.service, action.service, metric.service) treat evidence/lineage writes as best-effort and emit one lineage per metric evaluation, not per snapshot. Without a written contract, every Inspector and chain-completeness claim built on top of these writes is structurally ambiguous. D386/D-5 ("chain-complete ⇒ inspectable") is a load-bearing invariant; it fails silently if a "complete" snapshot has a quietly-failed evidence write. This ADR locks the WHAT so D386 Stage 1 can encode the matching reason_code, Stage 2 Inspector can render the right per-section signal, and the operating-model chapters can be aligned in one pass instead of drifting further.
