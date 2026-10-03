@@ -45,15 +45,15 @@ Read at bc-core `origin/main`, bc-db `origin/main` and the live platform databas
 - A definition that will not be built is rejected under DEC-85fd8d once migration 0035 is applied.
 - A realization to a defective metric version is never rewritten. The corrected path supersedes it through MCF and asserts a new realization.
 
-**D2. The entry gate, all definitional and source-agnostic.** One pure evaluator decides five checks from declarations and the canonical layer alone:
+**D2. The entry gate: definitional, source-agnostic, and only what is mechanically decidable** (revised in Codex round 1). One pure evaluator decides five checks from **structured declarations** and the canonical layer alone. It does **not** judge free prose. Whether hand-written definition text faithfully and unambiguously expresses its declarations is a judgement, and it stays with the certification panel (DEC-c48b0f item 4; DEC-4c8bee point 3). The gate may attach **advisory** text flags (for example, a named date term matching no declared basis), but an advisory flag never refuses entry.
 
 | Check | Refuses |
 |---|---|
 | **G1 Declarations resolve** | An unknown or inactive grain entity version, measure concept, anchor concept or gate shape |
-| **G2 Definition is a function of the contract** | For a generated member: definition text ≠ the fixed generator's output for its declarations. For any member: a named date basis that is neither the gate's declared `anchor_field` (DEC-26f75a) nor, when no anchor is declared, the grain canonical contract's `posting_date_field` concept; or a currency promise that needs conversion (DEC-7bccf6, DEC-f4b2b0). Its statements come from the same derivation as the certification panel's `declared_semantics` exhibit. |
+| **G2 Declarations agree with the contract** | **Generated member:** definition text ≠ the fixed generator's output for its declarations (an exact, deterministic comparison). **Any member:** a **structured** declared date basis (the member's temporal intent) that is neither the gate's declared `anchor_field` (DEC-26f75a) nor, when no anchor is declared, the grain canonical contract's `posting_date_field` concept; or a structured currency declaration that needs conversion (DEC-7bccf6, DEC-f4b2b0). The statements come from the same derivation as the panel's `declared_semantics` exhibit. Prose is not parsed for a verdict, only for advisory flags. |
 | **G3 Concepts closed** | Any referenced concept missing or inactive in the concept registry |
 | **G4 Definitional bindability** | A grain with no active canonical contract in the platform canonical layer; an anchor, filter or required currency field not declared in that contract's resolved schema (DEC-a6cdae contract-layer readiness) |
-| **G5 Definition complete** | A definition missing the measure, the population, the boundaries or the temporal basis (DEC-4c8bee point 3) |
+| **G5 Declarations complete** | A member version missing a **structured** declaration of the measure (concept), the population (grain), the boundaries (declared filters, or an explicit unfiltered declaration) or the temporal basis (gate shape and basis). This is the structured part of DEC-4c8bee point 3's criterion. **Whether the prose is ambiguous is judged by the panel, not by the gate.** |
 
 **D3. Plane boundary.** The platform defines, certifies and releases, and never produces a value. Tenants produce and report.
 - No gate check uses a tenant evaluation outcome, data readiness or chain-status colour.
@@ -61,6 +61,8 @@ Read at bc-core `origin/main`, bc-db `origin/main` and the live platform databas
 - Validation against a source is evaluation-plane evidence, after release.
 
 **D4. Where the gate runs.** At member-version creation, and again at intake, at materialization, at realization (beside `fn_realization_event_guard`) and before certification. Realization and bindability are separate properties: the seven unbindable definitions show that a member can be realized to an unbindable metric version. A member version that fails is recorded as **not entry-ready**, with reasons, and is never silently fixed.
+
+**D4a. A result is bound to exactly what was checked** (revised in Codex round 1). Each gate result records the member version's content hash, the evaluator version, the canonical contract version, and, where applicable, the metric version and its package digest checked at that D4 point. A PASS is valid only for those exact inputs. Any change to them requires a new evaluation, so an old PASS can never be replayed onto changed content (Invariants IV and V).
 
 **D5. The record.** An append-only result per member version and evaluator version, with per-check rows (check code, outcome, reason). These are rows, not JSON (DEC-1918d0). They are a bc-db migration, presented with its DBCP for the operator's database yes before any build writes.
 
@@ -93,3 +95,10 @@ Read at bc-core `origin/main`, bc-db `origin/main` and the live platform databas
 5. ~900 intake through the gate.
 
 This runs in parallel with the certification-reliability track. Certification stays paused under DEC-b5978c.
+
+## Review
+
+- **Codex round 1** (gen-f0755f-01): CHANGES REQUIRED.
+  - **Blocking:** the gate claimed to decide prose fidelity and completeness deterministically. It is narrowed to **structured declarations**; prose fidelity and ambiguity stay with the panel (DEC-c48b0f item 4, DEC-4c8bee point 3); prose yields advisory flags only. G2 and G5 are reworded accordingly.
+  - **Added D4a:** each result is bound to the exact inputs it checked, so a PASS cannot be replayed.
+  - **Implementation dependency noted:** the package projection must carry `anchor_field` (TSK-694aba) before G2's shared statement or any anchored package is relied on.
