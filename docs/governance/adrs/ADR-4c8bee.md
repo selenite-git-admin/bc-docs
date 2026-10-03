@@ -2,7 +2,7 @@
 uid: DEC-4c8bee
 title: "The certification panel's calibration corpus is a hybrid: a real LC5-validated positive, oracle-proven value defects, and retained meaning defects"
 description: "Amends DEC-05815d's calibration-corpus methodology. The positive is a real certified, LC5-validated metric (DSO d0f73360) instead of a constructed control. Value-moving defect classes become LC5-proven negatives. Meaning-only classes (currency semantics, definition ambiguity, definition-contract fidelity) stay as constructed negatives, decided against cited declared-semantics facts. An oracle proves value fidelity, not meaning fidelity."
-status: proposed
+status: decided
 date: 2026-10-03T13:13:03.705Z
 project: bc-core
 domain: metrics
@@ -18,7 +18,9 @@ The constructed calibration positive had no declared ground truth: it carried a 
 
 ## Status and authority
 
-- **Proposed.** It moves to decided only on the operator's recorded grant at the bc-exchange desk. The operator's approval of the plan reached the authors through the Chief Controller on 2026-10-03 and is not authority by itself.
+- **Decided** on the operator's recorded grant `2026-10-03T13-28-19-092Z-ed1ce4f6` (desk request 201), text sha256 `ed1ce4f689f2441bdec4b80ef03ae627a62698e73d8186356cf4853ce8e968da`. That grant approves this ADR as written at commit `e263def9f604d21d32fd8560af1f94ab71315b35` (ADR sha256 `2f786cc7d6097cfade31e0972c9c2f9fb889419e3e67e8e3cc6da94b540f709a`), which Codex accepted with a boundary on gen-2e7075-02. The only change since those bytes is this status flip and authority text.
+- **The grant also states a clarification:** where the DSO package cannot express a defect as a single change (the two currency classes), the clean base is a second certified metric, `receivable_billed_amount` (MC 330ee92c). It matches the same oracle recompute (its `gross_window` column) and must pass the same recorded soundness check (point 1, conditions a–c).
+- **Codex's boundary**, which gates entry into the corpus: the oracle on main; the positive's semantic record and package hash; the move-1 exhibits built; and a committed recompute for each admitted value mutation. Certifications stay paused (DEC-b5978c).
 - **Amends** DEC-05815d's calibration-corpus methodology, which DEC-d3b916 clause 2 names as the methodology authority. **Stands alongside** DEC-b5978c (the fitness standard), unchanged.
 - **Retires** the constructed calibration positive set up by the Codex exchange rulings 4e10ff18 and 2aa6cfe7 (M2, narrowed 2026-08-01). Those were exchange rulings, not ADRs, so no ADR status changes.
 - **Authors:** Metric Controller (corpus composition) and Architect (Foundation). Task TSK-fa0e4b; decision page barecount-devhub PR 242.
