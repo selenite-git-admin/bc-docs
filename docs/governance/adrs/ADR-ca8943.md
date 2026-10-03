@@ -1,7 +1,7 @@
 ---
 uid: DEC-ca8943
 title: "The metric directory is refactored in place and every member version passes a deterministic definitional entry gate (G1–G5) before it can be realized or certified"
-description: "Refactor the metric directory in place (no rebuild; append-only history preserved). A deterministic, definitional entry gate (declarations resolve; definition is a function of the declared contract; concepts closed; definitional bindability to the canonical layer; definition completeness) runs at member-version creation and again at intake, realization and certification. Corrections are successor member versions; the generator names only declared bases. Plane-clean: the platform defines/certifies/releases and never needs a produced value. Template-derived certification is a separate later ADR."
+description: "Refactor the metric directory in place (no rebuild; append-only history preserved). A deterministic, definitional entry gate (declarations resolve; structured declarations agree with the contract, and generated text matches the generator exactly; concepts closed; definitional bindability to the canonical layer; structured completeness; prose judgement stays with the panel) runs at member-version creation and again at intake, realization and certification. Corrections are successor member versions; the generator names only declared bases. Plane-clean: the platform defines/certifies/releases and never needs a produced value. Template-derived certification is a separate later ADR."
 status: proposed
 date: 2026-10-03T14:30:22.219Z
 project: bc-core
