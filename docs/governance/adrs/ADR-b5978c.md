@@ -2,7 +2,7 @@
 uid: DEC-b5978c
 title: "Certification panel fitness is a declared multi-run standard; a moderator overrules a refutation only by citing the answer"
 description: "Panel-2 calibration fitness is computed over a pre-declared N=5 calibration set with an asymmetric predicate; a moderator VERIFIED over a refutation requires a cited, grounded answer enforced in derivePanelOutcome; structured attribution; bounded transport retry (incomplete is not a verdict); deterministic rules replace panel judgement for grain/temporal/closure/misbound; manifest record; registration stays the operator's act. Interim: new certifications pause until D2 lands."
-status: proposed
+status: decided
 date: 2026-10-03T08:43:30.853Z
 project: bc-core
 domain: metrics
@@ -106,7 +106,10 @@ The certification panel (panel 2 under DEC-c48b0f: assessor, adversary, moderato
 ## Authority and status
 
 - The operator signed off the recommended set (D1 N=5, D2 in the derivation, D3, D4, D5, D6 phase 1, D7) and the reliability-first interim on 2026-10-03, relayed by the Chief Controller.
-- This record is **proposed** until the operator's grant is recorded at the bc-exchange desk. It moves to **decided** citing that grant_id and text_sha256.
+- **Decided** on the operator's recorded grant `2026-10-03T09-16-41-363Z-61a7e531` (desk request 199), text sha256 `61a7e5316729bf3690e0f5695e65c8f0d2e89074101140d1ea760f7f18c2ff70`. That grant approves this ADR as written at commit `b230ed64eb41575d055ea6b1b74860b72adcae0b` (ADR sha256 `745dc5288e70f973b18d0e2beef181afaf17a7c5dfc1b7121239e9674bb57772`), the bytes Codex accepted with a boundary on gen-1b9e88-02. The only change since those bytes is this status flip and this authority section.
+- **Superseded in error:** grant `2026-10-03T09-14-45-864Z-458a46eb` (desk request 198, text sha256 `458a46ebfe09ffb80aa7ca4b9b2af9153add4c4329be4e927c85ef293d8c6e7d`) was recorded by mistake. It approved the pre-review bytes at `154a5dd0` (ADR sha256 `46a22d2b…`), which carried the withdrawn D1 bound and the overclaimed D2. It was never acted on and is not authority for this ADR. A grant cannot be withdrawn, so this note is its handling.
+- **The interim is in force from this grant:** no new metric certification runs until D2 is built and a five-attempt set under D1 has been measured. Metrics already active keep their status.
+- **Engine-review hard check** (Codex boundary, gen-1b9e88-02): an unmintable or malformed moderator output follows D4. It is retried within the limit, every refusal is kept, and the case is marked incomplete if the retries run out. It never counts as a completed rejection in D1.
 - It amends the calibration methodology of DEC-05815d, which DEC-d3b916 clause 2 names as the methodology authority, without superseding it.
 - Builds: Platform's engine lane builds D2–D5, reviewed against this ADR by the Architect. Engine code takes the normal Codex review. Calibration results go to the operator through the Chief.
 
