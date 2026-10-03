@@ -46,18 +46,33 @@ The prior constructed "sound positive" (`positive-constructed-control`) is RETIR
    - Its governed Kaveri values (48.77/37.03/38.24/41.24/35.98 days, TSK-3ceb0e) match an independent outside-platform LC5 recompute to the cent (mode-b-dso-recompute.sql).
    - A real validated metric answers "can the panel pass a genuinely sound package" without the r22 problem (the pool could not supply a sound constructed shape), because soundness is anchored to an external oracle, not to the fixture author's enumeration of the grammar.
    - **PRECONDITION (hard):** the oracle must be COMMITTED ON MAIN before it labels anything. The DSO recompute is on a branch today (aef885c0). It must land on main as the committed oracle-of-record before the corpus uses DSO as the labelled positive.
+   - **SOUNDNESS PRECONDITION (hard, added in review round 1).** Matching numbers prove value fidelity only. They cannot prove that the definition is faithful to its contract, which is the very failure this decision identifies. Before the exported DSO package receives the positive label, three things must all hold and be recorded in one committed artifact that cites the package's sha256:
+     - (a) it is certified and active;
+     - (b) its governed values match the committed oracle;
+     - (c) a **recorded semantic check** of the exported package shows that its definition, formula, grain, bindings and gate are faithful to the decided DSO meaning (DEC-fa7c63), and that it satisfies each meaning criterion in point 3 below. This makes it a clean base.
+     - The check is authored by Metric (corpus meaning) and co-signed by the Architect. It must explicitly resolve any refutation the panel has raised against this package. For example, the move-4 runs show the adversary questioning the input grain (journal-entry-line inputs against a legal-entity grain).
+     - If (c) fails or cannot be settled, DSO is not the positive, and another certified, oracle-matched metric that passes (a)–(c) is chosen.
 
 2. **Value-moving defects are LC5-proven negatives.**
    - A class is admitted as an LC5-proven negative only if its single-dimension mutation empirically changes the value against the committed oracle, or makes it non-computable.
    - The admitted classes: wrong_grain, missing_or_unsupported_filter, temporal_boundary_error (a real window or shape mutation, e.g. a fixed-day literal vs calendar days), formula_definition_mismatch, misbound_input, dependency_role_closure_omission, and currency (mixing variant).
    - Each carries its oracle evidence: the diverging recompute. Appendix A is the worked mapping.
+   - **Appendix A lists candidates, not admitted negatives.** A class is admitted only when its committed, single-dimension mutation has an **observed** oracle recompute, committed, showing divergence or non-computability against the oracle-of-record. Until then it is not in the corpus.
 
 3. **Meaning-only defects are retained as semantic negatives.** A class whose single-dimension mutation produces NO value divergence cannot be reduced to an oracle, so it stays a constructed or semantic negative:
    - **currency_semantics_contradiction:** same number, wrong declared currency meaning;
    - **definition_ambiguity:** same computation, under-specified definition;
    - **definition_contract_fidelity:** the "by value date" class, where the definition names a basis the contract cannot back and the computed value is unchanged, because the platform bins by posting date regardless.
 
-   The panel decides these against a CITED declared-semantics fact: the move-1 `declared_semantics` exhibit (PR 242: "rows are assigned to fiscal periods by the posting date; no other date basis exists"). D2 (the moderator's cite-to-pass) enforces exactly that.
+   **Each meaning class is labelled against its own decided semantics and its own cited exhibit** (revised in review round 1). The clean base (point 1, condition (c)) must satisfy all three before any mutation:
+
+   | Meaning class | Decided semantics the label rests on | Exhibit the panel can cite (move 1 `declared_semantics`) |
+   |---|---|---|
+   | definition_contract_fidelity (the date basis) | DEC-ea4523 and DEC-83fda0: rows are assigned to fiscal periods by the posting date declared by the canonical contract; no other date basis exists | the `temporal_gate` statement |
+   | currency_semantics_contradiction | DEC-f4b2b0 (the aggregation-currency policy is declared on the metric version) and DEC-7bccf6 (the platform never converts currency): an output that promises a currency basis requiring conversion, such as legal-entity currency from document-currency rows, cannot be backed | the `currency` statement |
+   | definition_ambiguity | **This decision** sets the criterion, which until now existed only as panel prompt prose (`audit-seat-prompts.ts` AXIS_GUIDE). A metric definition must state what is measured, over what population, with what inclusion and exclusion boundaries, and on what temporal basis. A definition that leaves any of these undetermined, so that more than one reading fits the declared contract, is ambiguous. | a `definition` statement carrying this criterion, added to the move-1 catalogue under this ADR |
+
+   **What the moderator's citation rule does and does not do.** DEC-b5978c D2 checks only structure: an overrule must carry an answer aimed at the exact refutation, citing package sections the moderator read in that run. It does not prove that the cited section answers the refutation; DEC-b5978c D2 says so itself. Whether the panel decides these classes correctly is therefore **measured** by the recorded calibration. These negatives exist to measure exactly that.
 
 4. **Why both halves are required.** An oracle proves VALUE fidelity, not MEANING fidelity. The evidence: the definition_contract_fidelity defect adjudicated DEFENSIBLE on TSK-9ce7f9 produces no value divergence. An oracle recompute also uses the posting date, so it gets an identical number, and a pure value-divergence corpus would wrongly VALIDATE that defect. The semantic corpus is therefore irreducible.
 
@@ -90,3 +105,11 @@ The prior constructed "sound positive" (`positive-constructed-control`) is RETIR
 ## Appendix A
 
 DSO mutation→divergence table: barecount-devhub `artifacts/metric-audit/calibration-reframe/DSO-MUTATION-DIVERGENCE-TABLE-2026-10-03.md` @ d842f14e (sha256 a1d6cc44).
+
+## Review
+
+- **Codex round 1** (gen-2e7075-01, sha256 e7af939f…): CHANGES REQUIRED.
+  - **Added a soundness precondition for the positive**: a recorded semantic check against DEC-fa7c63 plus the meaning criteria, co-signed, and resolving the panel's refutations, beside the oracle match.
+  - **Gave each meaning class its own decided semantics and exhibit**, and decided here the criterion for definition ambiguity, which was previously prompt prose only.
+  - **Narrowed the D2 claim** to structure, with correctness left to measurement.
+  - **Made explicit that Appendix A lists candidates**, each admitted only on an observed, committed divergence.
