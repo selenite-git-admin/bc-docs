@@ -16,7 +16,7 @@ DEC-4c8bee point 3 labels the date-basis meaning class with: "rows are assigned 
 
 ## Implementation behavior
 
-- The engine honours a declared `anchor_field` for `period_aggregate`: `metric-evaluation-orchestrator.service.ts:260-299` and `co-candidate-reader.ts:170, 274`, at bc-core `origin/main`.
+- The engine honours a declared `anchor_field` for `period_aggregate`: `metric-evaluation-orchestrator.service.ts:260-299` and `co-candidate-reader.ts:170, 274`, at bc-core `b5aa3a700428228be21c8e122599e310da73089a`.
 - With no `anchor_field`, the canonical resolver stamps fiscal fields from the grain contract's declared `posting_date_field` (`ccv2-canonical-resolver.service.ts:971, 1733-1757`).
 - Live, on 2026-10-03, no `period_aggregate` metric contract declares `anchor_field`; only `as_of` gates do.
 - The panel package projection for `period_aggregate` keeps only `period_type` and drops `anchor_field` (`package-signature.service.ts:88-91`). That is a separate defect, routed to Platform.
