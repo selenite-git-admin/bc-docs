@@ -2,7 +2,7 @@
 uid: DEC-ca8943
 title: "The metric directory is refactored in place and every member version passes a deterministic definitional entry gate (G1–G5) before it can be realized or certified"
 description: "Refactor the metric directory in place (no rebuild; append-only history preserved). A deterministic, definitional entry gate (declarations resolve; structured declarations agree with the contract, and generated text matches the generator exactly; concepts closed; definitional bindability to the canonical layer; structured completeness; prose judgement stays with the panel) runs at member-version creation and again at intake, realization and certification. Corrections are successor member versions; the generator names only declared bases. Plane-clean: the platform defines/certifies/releases and never needs a produced value. Template-derived certification is a separate later ADR."
-status: proposed
+status: decided
 date: 2026-10-03T14:30:22.219Z
 project: bc-core
 domain: metrics
@@ -14,11 +14,12 @@ focus: governance
 
 ## Summary
 
-The directory model is sound and append-only. What fails is content (a generator template naming undeclared date bases) and the absence of any deterministic check that a definition matches its contract or can bind. Moving that check to the declaration boundary (location A/B) makes the certification panel a confirmation of meaning rather than the first filter. Invariants I, III, IV and VI.
+The directory model is sound and append-only. What fails is content (a generator template naming undeclared date bases) and the absence of any deterministic check that a definition's structured declarations match its contract and can bind. Moving that structured check to the declaration boundary (location A/B) stops mechanically detectable defects before certification. Judging whether written prose faithfully and unambiguously expresses those declarations remains the certification panel's job (D2). Invariants I, III, IV and VI.
 
 ## Status and authority
 
-- **Proposed.** It moves to decided only on the operator's recorded grant at the bc-exchange desk. The operator adopted the proposal it records on 2026-10-03; the Chief Controller relayed that adoption, which is not authority by itself.
+- **Decided** on the operator's recorded grant `2026-10-03T14-45-43-956Z-46989791` (desk request 202), text sha256 `46989791cd1a1976b52eec9dc5bd0d13727ab107fb168c028a87f345da4fac78`. It approves this ADR as written at commit `856322bb1a654ab69e3d06d041d227dc9ebdd39c` (ADR sha256 `ed7e8a92d9736eaec4b367cdd2bf65d4aca7322dc08761d19bad9a49b6fb1747`), which Codex accepted with a boundary on gen-f0755f-02. The grant also authorizes rewording the Summary and the Invariant I sentence to the same narrower claim as D2 in this commit, as Codex asked. Those are the only changes besides this status and authority text.
+- **Build contract, from Codex's boundary, for the implementation unit:** the structured `unfiltered`, date-basis and currency declarations each get a defined field and a validator, and the gate fails closed when one is missing or malformed. It never infers them from empty prose or an empty filter list. The `anchor_field` projection (TSK-694aba) lands before G2's shared statement or any anchored package is relied on.
 - **The proposal:** barecount-devhub PR 245, `artifacts/architect/clean-directory-2026-10-03/PROPOSAL-clean-prechecked-directory.md` @083ebf78. Measurements: Metric's barecount-devhub `artifacts/metric-audit/calibration-reframe/SEED-UNIVERSE-BKM-MEASUREMENT-2026-10-03.md` @62ae8e38 and `TSK-41ee58-DATE-BASIS-FIDELITY-ENUMERATION-2026-10-03.md` @1df2bb28.
 - **Relation to other ADRs.** It extends DEC-b5c7ff (D506, the directory model) without superseding it. It builds on DEC-fa9424 (realization), DEC-85fd8d (rejection), DEC-4c8bee (the definition-completeness criterion), DEC-26f75a (the period_aggregate anchor_field) and DEC-a6cdae (contract-layer readiness).
 - **Authors:** Architect, with Metric (directory meaning) and DB (schema). Tasks TSK-c940ca and TSK-7082ae.
@@ -81,7 +82,7 @@ Read at bc-core `origin/main`, bc-db `origin/main` and the live platform databas
 ## Foundation gate
 
 - **Repair location: A/B, the declaration boundary.** Definitions are checked against their declared contract when they enter. Correcting them in the panel or a read model (D–F) would be compensation. This is a design act (DEC-c48b0f item 5): the missing declaration is the entry standard itself.
-- **Invariant I.** Meaning is judged once per definition, at the boundary, by a deterministic evaluator.
+- **Invariant I.** Each definition's structured declarations are checked once per exact input set, at the boundary, by a deterministic evaluator (D4a). The meaning of its written prose is judged by the certification panel, not by the gate.
 - **Invariant III.** Corrections are successors; nothing is edited or deleted.
 - **Invariant IV.** G2 and G4 make each definition's date basis, concepts and canonical contract explicit and resolvable.
 - **Invariant VI.** Each gate result is an emitted, append-only record.
