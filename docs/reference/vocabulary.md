@@ -44,6 +44,8 @@ It was read at bc-docs `origin/main` 9dca4a5, bc-core `origin/main` 05cbe79c and
 
 It was read at bc-docs `origin/main` 9dca4a5, bc-core `origin/main` 05cbe79c and the live platform database, read-only.
 
+**Addendum: realized, and validated against a proof source.** Approved by the operator on 2026-10-03, desk grant `2026-10-03T03-05-10-581Z-12be0a4c` (text SHA-256 `12be0a4ca479f3ea8960e5b548ae4437f641c378f89e3c2d5998ea6b69655e95`, request 196), as drafted on the Architect page in barecount-devhub pull request 236 at commit `56db94e3e1ac9bdc9cd52bdb5ed16f94372a4d82` (file sha256 `32ede28dcaf891284c75c43ce521af8d33b3168d57e3a06ce45599bf08db5014`). Its rows are carried into group 3 (after "registered") and group 4 (after "certified"), and its not-approved words into section 4, adapted to that table's three columns. Its three defects are owner tasks (TSK-eeb121, TSK-5ac376, and the interim-rule question).
+
 **This page holds no counts.** Section 6 says where each count is read.
 
 ## 1. Why the words became a trap
@@ -100,9 +102,12 @@ These are statuses of a **seed**, in `mcf.seed_metric.status_code`. They are nev
 | Word | Plain meaning | True when | Made true by |
 |---|---|---|---|
 | **registered** | The metric has an identity in the Metric Directory: what should exist, and why | a row in `metric_directory.member` | The governed directory acts |
+| **realized** (of a directory entry) | A specific metric version has been asserted, through the governed act, to fulfil the entry | the entry's current member version has an operative row in `metric_directory.realization_operative`: the effective head of the append-only `metric_directory.realization_event` ledger | The governed realize act, `PATCH /metric-directory/members/:memberUid/realize` (actor, authority reference, rationale; DEC-fa9424 D4). Its guard accepts only a metric version in state `approved` or `active`, and refuses an archived entry or a grain mismatch |
+| **realization revoked** | The assertion is withdrawn; the entry is unrealized again, and the revocation stays on record | a `realization_event` of kind `revoke` targets the current head, leaving no operative row | The governed revoke act, `PATCH /metric-directory/members/:memberUid/realization/revoke` (actor, authority, rationale) |
 
 - **The rule: nothing is drafted before it is registered.** It is decided: ADR DEC-fa9424 makes the directory entry the only door to writing a metric. It matters because the governed acts that withdraw or re-admit a certified metric find it by its directory entry; the defect in section 3a exists because older versions were written without one.
 - **It is not fully enforced.** The direct-submission intake still accepts a proposal with no directory entry (bc-core `src/registry/mcf/operator-direct-adapter.ts`, where the member reference is optional). Making it required is a build act for the Platform Controller, named here and not done.
+- **Realized is not certified** (addendum, 2026-10-03). The realize guard accepts an `approved` version as well as an `active` one; its own text calls this "interim". "Realized" says the entry is fulfilled by a version, and nothing about certification. Say "**realized and certified**" when both hold, reading each from its own record. The record is the ledger (DEC-fa9424 D4); realization is never emitted automatically and is not coupled to approval. It is separate from the entry's intent, and an entry with an operative realization cannot be rejected until its realization is revoked (DEC-85fd8d).
 - **A second "blocked".** A registered metric can be held for a named reason (`metric_directory.member.intent_state_code` is `blocked`, with a blocker code). Say "registered, blocked in the directory", never plain "blocked", which belongs to certification (group 4).
 
 A tenant sees nothing.
@@ -120,6 +125,7 @@ The record is the version row, `mcf.metric_contract_version`, field `governance_
 | **approved** | Review is complete and it may be sent for certification. **Approval is not a certificate** | state is `approved` | The governed approve act |
 | **awaiting certification** | Waiting to be judged by the certification panel. Nothing in this state is evaluated for any tenant | state is `audit_pending` | The request for certification, or the withdrawal of an earlier certificate |
 | **certified** | Passed by the certification panel and **deployable to a tenant** | state field `active`, `is_current`, parent not archived, **and** a standing certification record whose action is `audit_admit` (the `certified_active` line of the readiness projection) | The certification panel's pass, then the governed admit act, which the database allows only with that record |
+| **validated against** *source* (for example "validated against Odoo LC5") | A certified metric is proven to compute correctly against one of our named proof sources: its governed produced value matched an independent computation made outside the platform from that source's data, for a stated period | **No record yet.** It will be the append-only validation evidence record: the certified version, the proof source, the governed evaluation and snapshot identities it compared, the oracle artifact (path@commit and sha256), and when. That record is a design act of the metric catalog drive (DRIVE-2OCT §13a.1), not yet built | The governed validate act, **not yet built** |
 | **released** | The platform has chosen to offer this certified metric in its portfolio. Reversing a release returns it to certified, with nothing else changed | **no record yet. This is new.** Proposed: a separate portfolio record on the platform side (metric, released from, released until, who, why), not an eighth state. Until it is built, every certified metric is treated as released | The platform's own choice, by a governed act that does not exist yet |
 | **certification blocked** | Its certification was invalidated. It is not evaluated | state is `audit_blocked` | The invalidation act |
 
@@ -219,6 +225,9 @@ Until the records for "subscribed" and "visible" exist, a tenant-facing screen d
 | blocked (alone) | Two records use it: certification, and the directory | "certification blocked"; "registered, blocked in the directory" |
 | queued, published (of a metric) | They are statuses of a seed on a retired route | the metric's own word from section 3 |
 | second tenant, first customer, customer tenant | Ordinals and "customer" miscount the demo tenant | "Kaveri" or "demo tenant"; for another tenant, name it |
+| realized (to mean certified) | The realize guard also accepts an approved version (addendum, 2026-10-03) | "realized and certified", each read from its own record |
+| un-realized, de-realized | One act has one name | "realization revoked" |
+| validated (alone), verified, accurate (as a status) | Validation is always against a named source, and its record is not built yet | "validated against" *source*, said with its interim proof named until the record exists ("validated against Odoo LC5 (manual tally, *artifact@sha*)"); otherwise "certified, not yet validated against" *source*. Validation never certifies, and a failed validation never rejects |
 
 ## 5. What "done" means
 
