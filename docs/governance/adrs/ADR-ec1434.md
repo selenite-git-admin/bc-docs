@@ -1,7 +1,7 @@
 ---
 uid: DEC-ec1434
 title: "Validation against a proof source is a tenant-plane evidence act: a deterministic comparator records in the bench tenant whether governed values match an outside-platform oracle"
-description: "\"Validated against <source>\" is derived from append-only tenant evidence written by a deterministic, tenant-scoped comparator of governed evaluations against a committed oracle-of-record on a frozen bench; never a state, never a certification input, a mismatch never rejects."
+description: "\"Validated against <source> for <scope>\" is derived from append-only tenant evidence written by a deterministic, tenant-scoped comparator; a match needs full two-way cell coverage of an explicit legal-entity x period scope with every input proved back to admissions from the bench world; never a state, never a certification input; no outcome ever rejects."
 status: proposed
 date: 2026-10-03T16:00:39.755Z
 project: bc-core
@@ -18,7 +18,7 @@ A certified metric is **validated against a proof source** when its governed pro
 
 - A deterministic, tenant-scoped comparator compares the bench tenant's governed evaluations with a committed oracle-of-record computed on a frozen copy of the source.
 - It writes an append-only evidence record in that tenant.
-- "Validated against <source>" is derived from the newest record. It is never a state, never a certification input, and a mismatch never rejects a metric.
+- "Validated against <source> for <scope>" is derived from the newest record for that exact scope. A match needs full, input-proved cell coverage of the scope. It is never a state, never a certification input, and no other outcome ever rejects a metric.
 
 Invariants I, III, IV, V and VI.
 
@@ -56,9 +56,13 @@ Read at bc-core `origin/main` `4bae7f7`, bc-db `origin/main` and bc-demo `origin
 
 ## Decision
 
-**D1. Meaning.** A certified metric version is **validated against** a proof source when the **newest** validation record for (that metric version, that proof source) has outcome `match`.
+**D1. Meaning, always bounded by a stated scope** (revised in Codex round 1). A certified metric version is **validated against** a proof source **for a comparison scope** when the **newest** validation record for (that metric version, that proof source, that scope) has outcome `match`.
+- **A comparison scope** is an explicit set of legal entities × fiscal periods, with a canonical text key (the legal-entity codes and period keys, sorted). Every record carries one.
+- **The word is always said with its source and its scope**, for example "validated against Odoo LC5 for KAVERI-IN, FY2025 Q1–FY2026 Q1". The vocabulary defines the proof "for a stated period" (`docs/reference/vocabulary.md`, the "validated against" row).
+- **The unqualified "validated against <source>"** is allowed only as shorthand for the metric's **full declared scope**: the scope that source's oracle-of-record manifest declares for that metric (D3). A match on a narrower scope never yields the unqualified word.
+- **Scopes are independent:** a match for one scope says nothing about any other.
+- **Newest wins:** a later record for the same (metric version, proof source, scope) replaces the earlier one's meaning. A later `mismatch`, `incomplete_coverage` or `input_unbound` withdraws "validated" for that scope. The earlier record stays as history.
 - The word is derived on read. It is never a state of the metric contract version and never an input to certification.
-- It is always said with its source (vocabulary rule).
 
 **D2. Plane.** Validation consumes produced values, so it is an **evaluation-plane (tenant) act**. It runs after certification, activation and release (DEC-ca8943 D3).
 - It runs **tenant-scoped**, against the proof source's declared **bench tenant** only, over the standard tenant connection.
@@ -68,7 +72,9 @@ Read at bc-core `origin/main` `4bae7f7`, bc-db `origin/main` and bc-demo `origin
 **D3. Proof source.** Each proof source is declared once, in its committed **oracle-of-record manifest**:
 - its code (for example `odoo-lc5`);
 - its bench tenant (for `odoo-lc5`, the demo tenant Kaveri);
-- its frozen bench identity: the dump sha256 and the world pin.
+- its frozen bench identity: the dump sha256 and the world pin;
+- its **source identity**, the value an admission run must record to prove its data came from that bench's world (D5);
+- per metric, its **full declared comparison scope** (D1).
 
 Another proof source (SFDC, Business Central) is another manifest, with its own bench.
 
@@ -80,23 +86,39 @@ Another proof source (SFDC, Business Central) is another manifest, with its own 
 
 Nothing labels anything until the oracle-of-record is on main.
 
-**D5. Governed side.** The comparator compares only the bench tenant's **governed evaluations**, the normal campaign act and its records.
-- **Precondition:** the bench's world pin equals the world the bench tenant was admitted from, checked against admission evidence.
-- If it does not, the act refuses, because every comparison would be noise.
+**D5. Governed side: the inputs must be proved, not assumed** (revised in Codex round 1). The comparator compares only the bench tenant's **governed** metric snapshots and evaluations, the normal campaign act and its records.
 
-**D6. The record.** For each (metric version, proof source, comparison), one append-only `evidence.evidence_object`:
+A cell may count toward `match` only if the comparator **proves**, from recorded lineage and evidence, each of these:
+1. the snapshot was produced by that evaluation, of that metric version;
+2. the evaluation's legal entity and period are inside the record's scope;
+3. every canonical object the evaluation consumed was resolved from admission runs (the canonical resolution evidence carries `admissionRunIds`);
+4. each of those admission runs **recorded the proof source's source identity** (D3), so its data came from the bench's world and not from a later or different admission.
+
+If any link cannot be proved, the cell is unbound. A comparison with any unbound cell records `input_unbound`, never `match`. A coincidental equal value on unproved inputs is never validation evidence.
+
+**Prerequisite, stated plainly.** Admission runs do not record a source-world identity today. `progression.admission_run_context` (tenant migration 0004) pins contract versions and the filter, but not the extract or world. Until a separate design and build unit makes admission record it, every comparison resolves to `input_unbound`, and no metric can be validated. The guard is honest: it refuses rather than assumes.
+
+**D6. The record and its coverage** (revised in Codex round 1). For each (metric version, proof source, scope, comparison), one append-only `evidence.evidence_object`:
 - of the new code-level type **`metric_source_validation`**, whose `subject_ref` is the metric contract version;
-- with outcome `match`, `mismatch` (holding the diverging cells) or `no_oracle_data`;
-- with typed `evidence.evidence_record` context rows:
+- with exactly one outcome:
+  - **`match`**: every cell in scope (one per legal entity × period) exists on **both** sides, governed and oracle, is input-bound (D5), and agrees exactly at the metric's declared precision;
+  - **`mismatch`**: at least one bound cell present on both sides differs; it lists every diverging cell;
+  - **`incomplete_coverage`**: at least one cell in scope is missing on either side; it lists the missing cells;
+  - **`input_unbound`**: at least one cell's inputs could not be proved (D5); it lists them;
+  - **`no_oracle_data`**: the oracle-of-record has no cells for this metric;
+  - when several apply, the record takes the first in this order: `input_unbound`, `mismatch`, `incomplete_coverage`;
+- with typed `evidence.evidence_record` context rows, so every key is in text columns, not JSON (DEC-1918d0 rule 1):
   - `proof_source`;
-  - one `metric_evaluation` row per compared evaluation;
+  - `comparison_scope` (the canonical scope key);
+  - one `metric_snapshot` row and one `metric_evaluation` row per compared cell;
+  - one `admission_run` row per proved admission run;
   - one `oracle_artifact` row (path@commit), whose sha is in the input references;
 - with one `evidence.lineage_object` per compared evaluation, relationship `validated_by`;
-- written in the comparator's tenant transaction, through the existing evidence seam.
+- written atomically in the comparator's tenant transaction: the object, every context row and every lineage row together, with any archive published only after commit.
 
-The comparison rule (exact at the metric's declared precision) is recorded with the result. A rerun is a new record, never an edit. **No DDL is needed.**
+The comparison rule (exact at the metric's declared precision) is recorded with the result. A rerun is a new record, never an edit. **No DDL is needed**: the tenant evidence tables already carry free-text types and statuses and typed context rows (Codex, gen-263fe9-01).
 
-**D7. Consequences of a result.** A `mismatch` or `no_oracle_data` **never** rejects, abandons or decertifies a metric. It stays "certified, not yet validated against <source>", with the recorded reason. A mismatch is triaged by its cause:
+**D7. Consequences of a result.** No outcome other than `match` (`mismatch`, `incomplete_coverage`, `input_unbound`, `no_oracle_data`) **ever** rejects, abandons or decertifies a metric. It stays "certified, not yet validated against <source>", with the recorded reason. A mismatch is triaged by its cause:
 - the definition: Metric;
 - the engine: Platform;
 - the oracle or the bench: Demo with Metric.
@@ -115,19 +137,37 @@ Any change goes through that owner's governed path, never an automatic action.
 - **Invariants:**
   - **I:** the oracle never produces a platform value; it is only compared against.
   - **III:** records are append-only; a rerun is a new record.
-  - **IV:** every reference is explicit: evaluation ids, oracle path@commit and sha, bench dump sha and world pin, proof source.
+  - **IV:** every reference is explicit: snapshot and evaluation ids, the proved admission runs, the scope key, oracle path@commit and sha, bench dump sha and world pin, proof source.
   - **V:** validation references existing governed evaluations and never re-runs history.
   - **VI:** the result is emitted evidence, written in the act's transaction.
 - **Design or execution act:** a design act. It declares the record and the act that DRIVE-2OCT §13a.1 named as missing.
 
 ## Consequences and order
 
-1. **Demo:** confirm the S3 dump is the world drop Kaveri was admitted from, and that a local read-only restore is acceptable.
-2. **Metric with Demo:** the oracle registry, DSO first, as committed queries with typed rows.
-3. **Platform:** the `metric_source_validation` type code and the tenant-scoped comparator, with red-first cases:
-   - a world-pin mismatch refuses;
-   - a mismatch records the diverging cells and changes no metric state;
+1. **The prerequisite (D5): admission records its source identity.** A separate design act and build unit (Platform with Demo; any tenant schema change is a migration with the operator's DB yes): an admission run records the extract or world identity it read. Until it lands, every comparison resolves to `input_unbound`.
+2. **Demo:** confirm the S3 dump is the world drop Kaveri was admitted from, and that a local read-only restore is acceptable.
+3. **Metric with Demo:** the oracle registry, DSO first: committed queries with typed rows, and each metric's full declared scope (D3).
+4. **Platform:** the comparator and the code-level changes the existing seams lack (Codex, gen-263fe9-01):
+   - the `metric_source_validation` type, the five outcomes and the `validated_by` relationship added to the allowlists;
+   - `createEvidenceRecord` accepting the transaction executor, so the context rows commit atomically with the object (`createLineage` already does);
+   - archives published after commit.
+
+   Red-first cases:
+   - an unproved input → `input_unbound`;
+   - a missing cell → `incomplete_coverage`;
+   - a diverging cell → `mismatch` with that cell listed, and no metric state change;
+   - a full, bound, equal scope → `match`;
+   - a later mismatch for the same scope withdraws the word;
+   - a narrower-scope match never yields the unqualified word;
    - a rerun writes a second record.
-4. DSO end to end, then family by family.
+5. DSO end to end, then family by family.
 
 This ADR authorizes no build by itself; each build unit takes its normal review.
+
+## Review
+
+- **Codex round 1** (gen-263fe9-01): CHANGES REQUIRED, two blocking false-positive paths, both closed in this revision.
+  1. **The word had no bounded scope.** D1 now keys the word to an explicit comparison scope with two-way cell coverage. D6 defines `match` as full, bound, equal coverage and adds `incomplete_coverage`; a later non-match withdraws the word for that scope.
+  2. **The world pin alone did not bind the compared inputs.** D5 now requires proved lineage from snapshot to evaluation to canonical objects to admission runs that recorded the source identity, within scope. Otherwise the outcome is `input_unbound`. The missing admission-side identity is named as a prerequisite.
+
+  Codex's build boundaries (evidence-record writer transaction, allowlists, atomic context rows, archives after commit) are carried into Consequences 4.
