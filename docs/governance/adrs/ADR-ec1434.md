@@ -86,24 +86,28 @@ Another proof source (SFDC, Business Central) is another manifest, with its own 
 
 Nothing labels anything until the oracle-of-record is on main.
 
-**D5. Governed side: the inputs must be proved, not assumed** (revised in Codex round 1). The comparator compares only the bench tenant's **governed** metric snapshots and evaluations, the normal campaign act and its records.
+**D5. Governed side: the inputs must be proved, not assumed** (revised in Codex rounds 1 and 2). The comparator compares only the bench tenant's **governed** metric snapshots and evaluations, the normal campaign act and its records.
 
-A cell may count toward `match` only if the comparator **proves**, from recorded lineage and evidence, each of these:
-1. the snapshot was produced by that evaluation, of that metric version;
-2. the evaluation's legal entity and period are inside the record's scope;
-3. every canonical object the evaluation consumed was resolved from admission runs (the canonical resolution evidence carries `admissionRunIds`);
-4. each of those admission runs **recorded the proof source's source identity** (D3), so its data came from the bench's world and not from a later or different admission.
+A snapshot row counts toward `match` only if the comparator **proves its full input tree** from recorded lineage and evidence. The tree is never assumed, and it is never inferred from a run-wide list:
+1. **The snapshot row and its evaluation.** The snapshot row was produced by that evaluation, of that metric version, and its key is inside the record's scope (D6).
+2. **Composites, recursively.** For a composite, every upstream snapshot the evaluation consumed is recorded on it (bc-core `governed-metric-persistence.adapter.ts:303-326, 420-468` at `4bae7f7`). Each one is proved by this same list, recursively, down to base evaluations. One unproved branch makes the whole row unbound.
+3. **Base evaluations, per object.** Every canonical object a base evaluation consumed is named in that evaluation's own lineage. Each canonical object's own `evaluated_by` lineage names the admitted source objects it read. That per-object canonical lineage is TSK-1e8eaa (designed, not built), and it is never backfilled. The canonical resolution run's run-wide `admissionRunIds` (`ccv2-canonical-resolver.service.ts:347-359, 392-398, 464-475`) does **not** bind an object to its admission, and is not used as proof.
+4. **Admission, per source object.** Each admitted source object belongs to an admission run that **recorded the proof source's source identity** (D3). Any missing or different identity anywhere in the tree makes the row unbound.
 
-If any link cannot be proved, the cell is unbound. A comparison with any unbound cell records `input_unbound`, never `match`. A coincidental equal value on unproved inputs is never validation evidence.
+A comparison with any unbound row records `input_unbound`, never `match`. A coincidental equal value on unproved inputs is never validation evidence.
 
-**Prerequisite, stated plainly.** Admission runs do not record a source-world identity today. `progression.admission_run_context` (tenant migration 0004) pins contract versions and the filter, but not the extract or world. Until a separate design and build unit makes admission record it, every comparison resolves to `input_unbound`, and no metric can be validated. The guard is honest: it refuses rather than assumes.
+**Two prerequisites, stated plainly; neither exists today:**
+- **P1, source identity at admission.** `progression.admission_run_context` (tenant migration 0004) pins contract versions and the filter, but not the extract or world.
+- **P2, per-object canonical lineage.** This is TSK-1e8eaa. It is not retroactive, so canonical objects resolved before it lands can never be proved: their metrics need a new governed evaluation after P1 and P2 land. Whether to re-evaluate the demo tenant then is a Metric and operator decision.
+
+Until both prerequisites land, every comparison resolves to `input_unbound` and nothing is validated. The design refuses rather than assumes.
 
 **D6. The record and its coverage** (revised in Codex round 1). For each (metric version, proof source, scope, comparison), one append-only `evidence.evidence_object`:
 - of the new code-level type **`metric_source_validation`**, whose `subject_ref` is the metric contract version;
 - with exactly one outcome:
-  - **`match`**: every cell in scope (one per legal entity × period) exists on **both** sides, governed and oracle, is input-bound (D5), and agrees exactly at the metric's declared precision;
+  - **`match`**: the **cell key** is the governed snapshot key: the legal entity, the period, and **every grouping dimension** of the metric's declared output grain (bc-core `governed-metric-evaluation.service.ts` `snapshotKeyColumns`). Coverage is exhaustive and two-way on full keys. Every governed snapshot row in scope has an oracle row with the same full key, and every oracle row in scope has a governed row. Every row is input-bound (D5) and agrees exactly at the metric's declared precision. An extra or missing grouped row on either side is never ignored;
   - **`mismatch`**: at least one bound cell present on both sides differs; it lists every diverging cell;
-  - **`incomplete_coverage`**: at least one cell in scope is missing on either side; it lists the missing cells;
+  - **`incomplete_coverage`**: at least one full-key row in scope, including any grouped row, is missing on either side; it lists the missing keys;
   - **`input_unbound`**: at least one cell's inputs could not be proved (D5); it lists them;
   - **`no_oracle_data`**: the oracle-of-record has no cells for this metric;
   - when several apply, the record takes the first in this order: `input_unbound`, `mismatch`, `incomplete_coverage`;
@@ -144,7 +148,11 @@ Any change goes through that owner's governed path, never an automatic action.
 
 ## Consequences and order
 
-1. **The prerequisite (D5): admission records its source identity.** A separate design act and build unit (Platform with Demo; any tenant schema change is a migration with the operator's DB yes): an admission run records the extract or world identity it read. Until it lands, every comparison resolves to `input_unbound`.
+1. **The prerequisites (D5):**
+   - **P1:** admission records the extract or world identity it read. A separate design act and build unit (Platform with Demo); any tenant schema change is a migration with the operator's DB yes.
+   - **P2:** per-object canonical lineage, TSK-1e8eaa (Platform; designed and approved with conditions).
+
+   Until both land, every comparison resolves to `input_unbound`. After both land, the demo tenant's metrics need a new governed evaluation before any can be proved (Metric and operator decision).
 2. **Demo:** confirm the S3 dump is the world drop Kaveri was admitted from, and that a local read-only restore is acceptable.
 3. **Metric with Demo:** the oracle registry, DSO first: committed queries with typed rows, and each metric's full declared scope (D3).
 4. **Platform:** the comparator and the code-level changes the existing seams lack (Codex, gen-263fe9-01):
@@ -157,6 +165,9 @@ Any change goes through that owner's governed path, never an automatic action.
    - a missing cell → `incomplete_coverage`;
    - a diverging cell → `mismatch` with that cell listed, and no metric state change;
    - a full, bound, equal scope → `match`;
+   - a grouped metric with one extra or missing group → `incomplete_coverage`;
+   - a composite with one upstream branch from another world, or unproved → `input_unbound`;
+   - a run-wide `admissionRunIds` alone never proves a row;
    - a later mismatch for the same scope withdraws the word;
    - a narrower-scope match never yields the unqualified word;
    - a rerun writes a second record.
@@ -171,3 +182,8 @@ This ADR authorizes no build by itself; each build unit takes its normal review.
   2. **The world pin alone did not bind the compared inputs.** D5 now requires proved lineage from snapshot to evaluation to canonical objects to admission runs that recorded the source identity, within scope. Otherwise the outcome is `input_unbound`. The missing admission-side identity is named as a prerequisite.
 
   Codex's build boundaries (evidence-record writer transaction, allowlists, atomic context rows, archives after commit) are carried into Consequences 4.
+- **Codex round 2** (gen-263fe9-02): CHANGES REQUIRED, the final auditor round for this unit. Two residual false-positive paths, both closed in this revision.
+  1. **Grouped output.** A cell was entity × period, but a governed snapshot key also carries every grouping dimension. D6 now keys cells on the full snapshot key, with exhaustive two-way coverage; an extra or missing grouped row is `incomplete_coverage`.
+  2. **Composites and per-object binding.** A composite consumes upstream snapshots, not canonical objects, and the run-wide `admissionRunIds` does not bind an object to its admission. D5 now requires recursive proof through every upstream snapshot, down to per-object canonical lineage and source-identified admissions. P2 (TSK-1e8eaa) is named as the second prerequisite.
+
+  Per the auditor-session rule, no third review is opened without the operator's direction.
