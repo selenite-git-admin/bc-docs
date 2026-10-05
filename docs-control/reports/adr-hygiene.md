@@ -11,7 +11,6 @@ Status distribution: {'accepted': 1, 'decided': 215, 'implemented': 270, 'propos
 - DEC-116641 — 60d old — A profile is a parent manifest plus typed children — composition, not 
 - DEC-7a18af — 56d old — Source field capability is empirically probed and stored in a source_f
 - DEC-9e68e0 — 59d old — Period close is an idempotent act on (company, period), not a step ins
-- (none)
 
 ## advisory — missing subdomain/focus (62)
 ## quarantined duplicates skipped: 1
