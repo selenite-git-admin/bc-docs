@@ -2,7 +2,7 @@
 uid: DEC-ec1434
 title: "Validation against a proof source is a tenant-plane evidence act: a deterministic comparator records in the bench tenant whether governed values match an outside-platform oracle"
 description: "\"Validated against <source> for <scope>\" is derived from append-only tenant evidence written by a deterministic, tenant-scoped comparator; a match needs full two-way cell coverage of an explicit legal-entity x period scope with every input proved back to admissions from the bench world; never a state, never a certification input; no outcome ever rejects."
-status: proposed
+status: decided
 date: 2026-10-03T16:00:39.755Z
 project: bc-core
 domain: metrics
@@ -24,7 +24,9 @@ Invariants I, III, IV, V and VI.
 
 ## Status and authority
 
-- **Proposed.** The operator decides, through the Chief.
+- **Decided** on the operator's recorded grant `2026-10-05T02-13-20-149Z-d0995adb` (desk request 204), text sha256 `d0995adba24f2357f810a85b4c77f674b35fd6b9b06ddfdbfbbe7dad2953a724`. It approves this ADR as written at commit `319832cde4f428f5af6b64ee4ddebb2b29bb555f` (ADR sha256 `164f930eb5085a66c4fbbda53fba5b1c5c453b16884ba1497b9d31ad3c35b07e`), which Codex accepted with a boundary on gen-263fe9-03. Its third review round was authorized by grant `2026-10-05T02-05-54-741Z-fedacd9e` (request 203). The only changes since those bytes are this status and authority text and the boundary clarification below.
+- **Boundary clarification (Codex, gen-263fe9-03; added under grant d0995adb).** Validating data that already exists needs a **fresh** source-identified admission, per-object canonical resolution and governed evaluation, not a metric-only re-evaluation over existing canonical objects. Wherever D5 or the Consequences say "a new governed evaluation" after P1 and P2 land, it means that full fresh chain.
+- **Acceptance is of the design only.** P1 (TSK-9c7b32), P2 (TSK-1e8eaa), the oracle registry, the comparator and any positive validation record do not exist yet. Each is a separate unit with its own review.
 - **Proposal:** barecount-devhub PR 242, `artifacts/architect/panel-grounding-2026-10-03/DESIGN-move3-lc5-validation-at-scale.md` @`37cbdff9`, with its finalization section.
 - **Implements** the design act DRIVE-2OCT §13a.1 and the vocabulary row "validated against *source*" (`docs/reference/vocabulary.md`, addendum grant `12be0a4c`), which names this record as "not yet built".
 - **Relation to other ADRs.**
