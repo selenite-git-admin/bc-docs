@@ -1,8 +1,8 @@
 # ADR hygiene audit (D370 / DEC-623f8f)
 
-Generated: 2026-10-06T02:52:35.579396+00:00
-ADRs scanned: 635
-Status distribution: {'accepted': 1, 'decided': 216, 'implemented': 270, 'proposed': 12, 'reversed': 7, 'superseded': 129}
+Generated: 2026-10-06T03:01:22.233625+00:00
+ADRs scanned: 636
+Status distribution: {'accepted': 1, 'decided': 217, 'implemented': 270, 'proposed': 12, 'reversed': 7, 'superseded': 129}
 
 ## supersessionIssues (0) — MUST be 0
 - (none)
