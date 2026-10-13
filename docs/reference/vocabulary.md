@@ -546,13 +546,14 @@ The business vocabulary is **one governed registry** (DEC-02f5a9; `the-contract-
 | **composition metric** | A metric computed only from other metrics' values: at least one metric input, and otherwise only calendar context or constants. It reads no source data of its own (DEC-fa7c63 amendment 4) | no field: a test over its variable bindings (bc-core `src/registry/mcf/pure-composition.ts`) |
 | **metric variable** | One named input or output of a metric's formula, tied to what it reads | `mcf.metric_variable_binding` |
 | **concept input / metric input** | A metric variable that reads a business concept, or one that reads another metric's value | `role_kind_code` = `input` or `metric_input` |
-| **contract binding** | A tenant's adoption of one contract version, with the variation the tenant is allowed (`tenancy-and-binding.md`, "Contract Binding") | `tenant.contract_binding` (and see S4.6 defect 6) |
+| **source binding** | A tenant's adoption of a source contract version; the tenant is bound to it while the row's effective-to date is empty (`tenancy-and-binding.md`, "Contract Binding"; DEC-f7d4fc) | `tenant.tenant_binding` |
+| **contract binding** | A tenant's adoption of a canonical or metric contract version, or a tenant's override of a contract version of any family (source included), with the variation the tenant is allowed (`tenancy-and-binding.md`, "Contract Binding"; DEC-f7d4fc) | `tenant.contract_binding` |
 | **reader binding** | Which admission contract a reader uses for a source entity (slice 3) | `runtime.reader_binding`; for observation contracts, `runtime.reader_observation_binding` |
 | **legal-entity binding** | Which legal entity a source's company code belongs to, for one tenant | in each tenant's database (`tenant_dim.source_legal_entity_binding_revision`) |
 | **account classification binding** | How a tenant's general ledger account range is classified (class, type, cash-flow category) | `tenant.gl_account_classification_binding` |
 | **observation field mapping** | How an observation contract reads each source field into a business concept: type, unit and form | inside the observation contract version's body |
 
-**"Binding" is never said alone.** Each binding above is a different record with a different meaning, so it is always said with what it ties: "contract binding", "reader binding", "legal-entity binding".
+**"Binding" is never said alone.** Each binding above is a different record with a different meaning, so it is always said with what it ties: "source binding", "contract binding", "reader binding", "legal-entity binding".
 
 **Canonical mapping is retired.** The canonical mapping, which tied a business field to a canonical field, was eliminated by DEC-02f5a9, because one business concept now serves both sides. Its tables still exist, empty (TSK-68722f). Field-reading content lives in the observation and canonical contract bodies.
 
@@ -601,7 +602,7 @@ The business vocabulary is **one governed registry** (DEC-02f5a9; `the-contract-
    - `metric-workstream.md` uses `co_bindings`.
 
    Owner: Docs.
-6. **Two records for a tenant adopting a source contract.** `tenant.tenant_binding` (source contract, version, tenant, environment) and `tenant.contract_binding` (any family, including source) both say that a tenant adopted a contract version. Today only canonical rows are in `contract_binding`. Which one is the record is to be settled. Owner: Platform, with DB; a schema change needs the operator's yes.
+6. **Settled by DEC-f7d4fc (2026-10-02).** A tenant's adoption of a source contract version is recorded in `tenant.tenant_binding` (the source binding, active while effective-to is empty). A tenant's adoption of a canonical or metric contract version, and a tenant's override of a contract version of any family (source included), are recorded in `tenant.contract_binding` (the contract binding). A source-family `contract_binding` row is an override, never adoption, and no reader treats it as adoption. No schema change; `environment_code` on `tenant_binding` carries no decided meaning (DEC-005ea7). See S4.2 and `tenancy-and-binding.md`, "Contract Binding".
 7. **A metric variable's role has no rule, and one kind is ambiguous.** `mcf.metric_variable_binding.variable_role_code` is free text. `role_kind_code` = `input` means a concept input, beside `metric_input`, which means a metric input. Owner: Metric, with DB.
 8. **Handed to slice 5:**
    - three tables named `certification_record` (`bcf`, `contract`, `mcf`) and two named `panel_output_record` (`bcf`, `contract`);
