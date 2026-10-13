@@ -698,3 +698,27 @@ Each verdict is said with its panel, for example "registry panel: approved for d
 8. **Retired material is still marked authoritative.** `docs/ai/` pages carry `authority: authoritative` and describe bc-ai, which DEC-ffee4e retired. ADR DEC-149ab2's title still says "Business Context Framework", retired by slice 4. Owner: Docs.
 
 **Raised separately, and not a vocabulary matter:** the off-pool maker's evidence records a vendor, a latency and timestamps that did not occur (Invariant VI). That is TSK-9e0b6e, owned by Metric with Platform.
+
+## Slice 6: Integrity Assurance, and "certified" as a product claim
+
+Authority: ADR DEC-71c027 (operator-confirmed 2026-10-13), the thin formalization of the 2026-10-08 Integrity-Assurance thesis. This slice records only the two additive points that ADR decides. It does not touch the state-word lifecycle or any Foundation state name (see S6.3).
+
+### S6.1 The philosophy label
+
+| Word | Plain meaning | Where it is fixed |
+|---|---|---|
+| **Integrity Assurance** | The platform's product thesis: the deterministic machine gate is the primary, hard guarantee, with a residual true-meaning panel behind it. A philosophy label the docs may use for the doctrine; it is never a state word and names no record. | ADR DEC-71c027 |
+
+### S6.2 "Certified" is not a product claim
+
+"Certified" is retired as a product claim. The platform does not market a metric as externally "certified"; it says what it actually asserts: definitional validity established through the integrity bar (findings based on the supplied data; the method is guaranteed, the result is only as good as the data supplied).
+
+This is not a rename of any state. The internal lifecycle state whose field value is `active`, and whose state machine includes `certified_active`, is unchanged (slice 1, section 2 rule 3). Renaming a Foundation or lifecycle state is a separate operator design act, named in slice 1 and not done here.
+
+| Not said, as a product claim | Say instead |
+|---|---|
+| "certified" or "audited" (as a claim that a metric's value is externally correct) | "integrity-assured", or state the actual assertion: definitional validity through the integrity bar, findings based on the supplied data |
+
+### S6.3 Reserved, not decided here
+
+The state-word lifecycle (realized, active, validated, released) and any Foundation state rename are reserved to the operator and the Architect (section 8; section 2 rule 3). "Validated" is additionally a Phase-C, tenant-zone word. ADR DEC-71c027 walls these off explicitly; this page does not set them.
