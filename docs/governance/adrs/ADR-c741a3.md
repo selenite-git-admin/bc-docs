@@ -2,7 +2,7 @@
 uid: DEC-c741a3
 title: "PE-MC as-of conditional aggregate: the metric evaluator gains a P-aware signed sum over a sub-grain dated schedule"
 description: "PE-MC as-of conditional aggregate: the metric evaluator gains a P-aware signed sum over a sub-grain dated schedule"
-status: proposed
+status: decided
 date: 2026-10-14T14:57:13.703Z
 project: bc-core
 domain: metrics
