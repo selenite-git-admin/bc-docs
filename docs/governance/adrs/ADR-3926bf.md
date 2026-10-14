@@ -2,7 +2,7 @@
 uid: DEC-3926bf
 title: "Kaveri Wave-1 invoice-chain unblock: clearing_date as_of derivation on the invoice canonicals (Option A) + AR canonical activation + Supplier/Customer master-BO prerequisite (re-scoped; JE-line sub-ledger premise withdrawn)"
 description: "Re-scoped from the wrong-targeted JE-line sub-ledger projection to the invoice-chain repair the 20 invoice-grained Wave-1 AP/AR metrics actually need: a derived full-settlement clearing_date on the invoice canonicals (Option A) for the 12 as_of metrics, the AR customer_invoice canonical activation (sequences first), and a Supplier/Customer master-BO prerequisite for the 2 partner-keyed metrics. MCs unchanged."
-status: proposed
+status: decided
 date: 2026-10-14T09:50:44.785Z
 project: bc-core
 domain: contracts
