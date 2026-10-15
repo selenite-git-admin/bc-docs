@@ -2,7 +2,7 @@
 uid: DEC-4c1f0c
 title: "Reviewed engine-bytes authority is single-sided in bc-core — RUNTIME_SOURCE_PINS re-hashed at CI plus the auditor's independent exact-head re-hash and App head-pinned attestation; the external C4 dependency-record half is retired"
 description: "Reviewed engine-bytes authority is single-sided in bc-core — RUNTIME_SOURCE_PINS re-hashed at CI plus the auditor's independent exact-head re-hash and App head-pinned attestation; the external C4 dependency-record half is retired"
-status: proposed
+status: decided
 date: 2026-10-15T14:08:03.921Z
 project: bc-core
 domain: metrics
