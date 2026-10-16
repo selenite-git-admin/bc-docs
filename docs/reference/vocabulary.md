@@ -428,12 +428,17 @@ For readers and flavors, as for the contracts in slice 2, the field value `activ
 
 | Word | Plain meaning | Record and its state words |
 |---|---|---|
-| **tenant** | One organization's identity on the platform, with its own database | `tenant.tenants.status_code`, said with the tenant: "tenant provisioning" (being created), "tenant active", "tenant suspended", "tenant archived", "tenant failed" (creation failed) |
+| **tenant** | One organization's identity on the platform, with its own database | `tenant.tenants.status_code`, said with the tenant: "tenant provisioning" (being created), "tenant onboarding incomplete", "tenant active", "tenant suspended", "tenant archived", "tenant failed" (creation failed) |
 | **demo tenant** | `kaveri`: the tenant on which the platform is proven and shown. It is not counted as a customer | the operator's word; no field records it |
 | **tenant infrastructure** | The database and compute a tenant runs on | `tenant.tenant_infrastructure.status_code`: `provisioning`, `active`, `decommissioning`, `decommissioned`, said "infrastructure active" and so on (defect 3) |
+| **tenant onboarding incomplete** | A tenant that exists but is not yet active: its newest onboarding completeness result is not "complete". New tenants are born in this state | `tenant.tenants.status_code` is `onboarding_incomplete` |
+| **onboarding completeness result** | The recorded result of the completeness check that the activation act runs: "complete", or "incomplete" with its unmet conditions. Each run adds a row; none is changed | `tenant.onboarding_completeness_result.result_code` (`complete`, `incomplete`) |
+| **unmet condition** | Why a result is incomplete, said with the tenant: "no legal entity", "no fiscal calendar" (for a legal entity), "unresolved source binding" (for a bound source) | `unmet_code`: `no_legal_entity`, `no_fiscal_calendar`, `unresolved_source_binding` |
 | **subscription** | The tenant's plan and its lifecycle, as the chapter declares it: active, suspended, terminated | **not built** (slice 1; DEC-c220e4). When built, its end is said "subscription terminated" |
 
 A tenant's end is "tenant archived"; a subscription's end is "subscription terminated". Each word is said with its own subject.
+
+A tenant becomes active only through the activation act, and only when its newest onboarding completeness result is complete. Tenants made active before this rule (for example Kaveri) keep their state; the rule applies to the move into active. (Added with bc-db migration 0034, under the operator's grant for it.)
 
 **A tenant's kind is not recorded, and no field is to be added for it.** Kaveri is the demo tenant, by the operator's word. Activating a tenant for a party outside BareCount, the moment DEC-c220e4 gates, is the operator's own decision, made case by case. Nothing infers it from a tenant's data or name.
 
