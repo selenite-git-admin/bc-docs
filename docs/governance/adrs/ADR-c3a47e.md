@@ -2,7 +2,7 @@
 uid: DEC-c3a47e
 title: "Governed wholesale fixture re-provision: the Inv-III boundary + the tenant-reset governed act (fixture-only), replacing world-stamp supersession as the Kaveri AP/AR clean-world mechanism"
 description: "Governed wholesale fixture re-provision: the Inv-III boundary + the tenant-reset governed act (fixture-only), replacing world-stamp supersession as the Kaveri AP/AR clean-world mechanism"
-status: proposed
+status: decided
 date: 2026-10-16T04:48:21.023Z
 project: bc-core
 domain: tenants
