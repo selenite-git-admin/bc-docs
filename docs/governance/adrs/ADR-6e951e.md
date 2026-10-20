@@ -94,6 +94,12 @@ The ISO 4217 codes are **dereferenced from the source's own currency master**, p
 - **(c) Stale chain status is never green.** Each `mcv_chain_status` row records the **check-set version** it was computed under. A row computed under an older check set reads `stale`, and consumers (the close gate, certification, readiness, dashboards) treat it as **not green** until an explicit refresh. Reads still never trigger evaluation; the refresh is the explicit `POST …/refresh` act. Platform runs the refresh across all 332 rows after the check-set column lands.
 - **(d) Authoring refuses.** The MC authoring preflight refuses a currency-denominated MC whose grain CC lacks the field its declared policy needs.
 
+**D4 scope note.** D4 hardens the **currency** gate only. Its sibling **DEC-b01ed4** hardens the rest of the class:
+- "green" means the spec assembles against the active grain CC;
+- closed-set values are canonical at observation, in filters and at runtime.
+
+The two share D4(c)'s check-set staleness mechanism. The Customer Invoice payment-status `code_lookup` (DEC-b01ed4 G5) rides **this ADR's** new oc-3kgrr version, so there is one OC version and one fresh admission.
+
 **D5. Validation follows the source's own figures, with no inference.**
 - Per-currency values validate against Odoo's per-currency sums.
 - Local-currency values validate against Odoo's own company-currency totals.
