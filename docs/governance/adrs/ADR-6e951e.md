@@ -62,7 +62,11 @@ So the answer is **B plus source-booked local currency**: a hybrid in which **no
 - the document-currency amounts it already maps (`amount_total`, `amount_untaxed`, `amount_tax`, `amount_residual`).
 
 The ISO 4217 codes are **dereferenced from the source's own currency master**, per DEC-ea4523 (3):
-- through a **secondary observation leg on `res.currency` (`sc-198em`)**, using the existing join-semantics mechanism (DEC-0a187d), joined `currency_id` → `id` and `company_currency_id` → `id`, taking `res.currency.name`;
+- through **two separate, explicitly named secondary observation legs on `res.currency` (`sc-198em`)**, using the existing join-semantics mechanism (DEC-0a187d). **(Codex gen-f015aa-01, blocking finding 1.)**
+  - `doc_currency`: joined `currency_id` → `id`.
+  - `company_currency`: joined `company_currency_id` → `id`.
+  - Each leg takes `res.currency.name` and is **pinned** (OC id@version, scoped to the same source connection and admission as the primary leg). Each must resolve **exactly one** code.
+  - **They are never one conjunctive join.** The resolver treats one join's key list as a single composite key, and on a foreign-currency invoice the two keys differ, so a single join would lose or misidentify every foreign-currency row.
 - **not** by a platform map, and **not** by trusting a display label;
 - an unresolvable currency key is a recorded refusal.
 
@@ -73,7 +77,9 @@ The ISO 4217 codes are **dereferenced from the source's own currency master**, p
 
 **Integrity cross-check (refusal, Inv-VI):** `local_currency_code` must equal the resolved LE's declared functional currency (`dim_legal_entity` / the DEC-4aa1ff D10 attribute). A mismatch is a recorded resolution refusal (`local_currency_mismatch`), never coerced.
 
-**Sign semantics:** the `*_signed` amounts carry Odoo's document-direction sign (credit notes are negative) **as booked**. That is a declared meaning of these concepts, not a transform. A metric that wants gross invoice magnitudes filters `document_type_code = customer_invoice`. A metric that wants net billing (the DSO family) sums the signed amounts.
+**LE functional currency as-of (Codex gen-f015aa-01):** the cross-check resolves the LE and its governed functional-currency attribute revision **in force at the row's posting date** (the DEC-4aa1ff D10 as-of rule). Local-currency aggregation never spans LEs: it stays within one partition (DEC-4aa1ff D5).
+
+**Sign semantics:** the `*_signed` amounts carry Odoo's document-direction sign (credit notes are negative) **as booked**. That is a declared meaning of these concepts, not a transform. A metric that wants gross invoice magnitudes filters `document_type_code = customer_invoice`. A metric that wants net billing (the DSO family) sums the signed amounts. **Before any metric re-author, source-row proofs** (read through the LC5 validation seam) confirm the sign Odoo books for an invoice, a credit note and a residual. The declared meaning is proven, not assumed.
 
 **D3. Each amount metric declares its policy deliberately** (B, DEC-f4b2b0 D1). There is no blanket default. Each of the ~15 amount and ratio metrics on cc-das36 is re-declared, through Metric's re-author on the SOP rail under an approved family package, as either:
 - **`document_currency`:** one value **per document currency**, multi-valued output, keyed by `currency_code`. It validates **directly** against Odoo's per-currency sums (e.g. August INR 1,002,548,403.23 and USD 3,538,610); or
@@ -85,13 +91,18 @@ The ISO 4217 codes are **dereferenced from the source's own currency master**, p
 **D4. The currency gate is fail-closed** (repair location D for the runtime twin, F for the read model). It is an engine change: Platform builds it and Codex reviews it in the platform lane.
 - **(a) The runtime refuses; it never sums blind.** In `governed-metric-runtime.ts`, a currency-denominated aggregation is refused unless its policy is supported by the spec:
   - `document_currency` or `single_currency_required` with no `currencyField` → `MC_DEFECT_CURRENCY_UNSUPPORTED`;
-  - `local_currency` with no bound local amount, or a null one on any CO → `MC_DEFECT_LOCAL_CURRENCY_MISSING`, now implemented;
+  - **per-row validity (Codex gen-f015aa-01, blocking finding 2):** for `document_currency` and `single_currency_required`, **every selected monetary CO** must carry a non-blank, valid ISO 4217 `currency_code`. A null, blank or unknown code on any selected row refuses the evaluation (`MC_DEFECT_CURRENCY_MISSING_ON_ROW`). A present field is not enough. Today `checkSingleCurrency()` drops blanks from its set, so one known currency plus missing currencies passes; that is fixed;
+  - `local_currency`: **every selected row** must carry its `local_currency_code` **and** its local amount, else `MC_DEFECT_LOCAL_CURRENCY_MISSING`. This is now implemented, and the local code must equal the row's resolved LE functional currency (D2);
   - an **unset** policy is treated as `single_currency_required`, the DEC-f4b2b0 default for new metrics, **never** as "legacy, no check".
   - "Currency-denominated" uses the same test as the chain judge: a binding with unit `currency` or representation term `amount`.
 - **(b) The lifecycle refuses.** Certification, activation and evaluation of a currency-denominated metric refuse while its `currency_policy_supported` is not `pass`.
   - The chain-status verdict for that case moves from amber to **red** (`fail:currency_policy_unsupported`). The "tenant-agnostic" amber rationale no longer holds once the runtime refuses for every tenant: the metric is genuinely non-evaluable.
   - A tenant's declared `currency_posture_code = single_currency` is a declaration, not evidence, so it does **not** waive the requirement.
-- **(c) Stale chain status is never green.** Each `mcv_chain_status` row records the **check-set version** it was computed under. A row computed under an older check set reads `stale`, and consumers (the close gate, certification, readiness, dashboards) treat it as **not green** until an explicit refresh. Reads still never trigger evaluation; the refresh is the explicit `POST …/refresh` act. Platform runs the refresh across all 332 rows after the check-set column lands.
+- **(c) Freshness: the gate is recomputed at the point of use; the persisted status is a read model (Codex gen-f015aa-01, blocking finding 3).** A check-set version alone misses a changed active CC, OC mapping or BCF value set.
+  - **The lifecycle acts recompute the predicate.** Certification, activation and evaluation **recompute** the pure currency and evaluability predicates (DEC-b01ed4 G1/G2) at the moment of the act, against the exact MCV being acted on and the current declaration heads. They never trust a persisted row. The predicate is pure: it reads declarations, never tenant data, and triggers no evaluation.
+  - **The persisted `mcv_chain_status` row** (for dashboards, the close gate and readiness views) records a **dependency fingerprint**: the hash of the check-set version, the exact MCV version, the active grain CC version, its pinned OC versions and the BCF concept versions (including value sets) the checks read.
+  - **A consumer treats an absent, old or mismatched fingerprint as not green.** It does this as an **enforced read state** (`stale`), so the stored `green | amber | red` vocabulary needs no change. Refresh remains the explicit `POST …/refresh` act.
+  - **The fingerprint column** is a bc-db migration (operator DB yes). Without it, rows read `stale` by default.
 - **(d) Authoring refuses.** The MC authoring preflight refuses a currency-denominated MC whose grain CC lacks the field its declared policy needs.
 
 **D4 scope note.** D4 hardens the **currency** gate only. Its sibling **DEC-b01ed4** hardens the rest of the class:
@@ -117,8 +128,8 @@ The two share D4(c)'s check-set staleness mechanism. The Customer Invoice paymen
    - a new oc-3kgrr version (D1);
    - a `res.currency` observation contract on sc-198em;
    - a new major cc-das36 version (D2), with the secondary-leg join and the local-currency cross-check.
-3. **Platform engine (Codex platform lane):** the D4(a) runtime refusals plus the implemented `local_currency`; D4(b) the lifecycle refusal plus the red verdict; D4(c) the check-set version and staleness; D4(d) the preflight.
-4. **DB:** the `mcv_chain_status` check-set-version column (a bc-db migration; operator DB yes).
+3. **Platform engine (Codex platform lane):** the D4(a) runtime refusals plus the implemented `local_currency`; D4(b) the lifecycle refusal plus the red verdict; D4(c) point-of-use recomputation plus the fingerprinted read model; D4(d) the preflight.
+4. **DB:** the `mcv_chain_status` dependency-fingerprint column (a bc-db migration; operator DB yes). The stored verdict vocabulary is unchanged; `stale` is an enforced read state.
 5. **Metric:** re-declare each amount metric's policy (D3) under an approved family package, including `gross_revenue → untaxed`.
 6. **Prove-on-one, then many:** re-admit on a fresh tenant (the OC version change requires a fresh admission). Validate first one `document_currency` and one `local_currency` metric against LC5, then the family.
 

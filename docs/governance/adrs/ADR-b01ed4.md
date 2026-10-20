@@ -41,15 +41,30 @@ The deterministic gate is meant to be primary and hard (DEC-92f709). Today it **
 **G1. One evaluability decision, shared, like the D626 parity pattern.**
 - The **same pure function the evaluator uses to assemble a metric spec** is the evaluability predicate: bindings and filter concepts resolved against the **active grain CC's** field selection, group-by and stamped fields, temporal anchor and currency field (DEC-6e951e). It reads no tenant data and triggers no evaluation.
 - It is called by chain status (a new check `spec_assembles`), certification, activation and the runtime.
+- **Inputs (Codex gen-f015aa-01):**
+  - the **exact MCV version being judged**: certifying a candidate must never assemble the currently active MCV by accident; the loader takes the version explicitly;
+  - the selected active grain CC and its stamped fields;
+  - the filter bindings;
+  - the group-by count and columns;
+  - the temporal gate and anchor;
+  - the currency field and policy (DEC-6e951e);
+  - the fiscal-LE gate (DEC-4aa1ff, TSK-1ec1a7).
+- **Pure compositions** (metric-input-only formulas, D467) keep their no-grain-CC path. G1 uses a composition-aware assembly that checks each upstream input's own G1 status, because the current assembler refuses formulas that resolve to no CO-field variable.
 - **GREEN requires it to pass.** A metric that would refuse at spec assembly can never be green. This closes TSK-e5d962 and TSK-ce2a06 as a class.
 
 **G2. Closed-value-set conformance at every boundary** (Inv-I: meaning is produced once, at observation).
-- **(a) Observation.** An OC mapping onto a concept with a `canonical_value_set` must be a **`code_lookup`** whose `value_map` targets are ⊆ that set, with `unmapped_policy: reject`. A **`direct`** mapping onto a closed-set concept is refused at OC authoring and activation (`direct_mapping_onto_closed_set`). This is the root guard: a raw source vocabulary never reaches a CO as if it were canonical (the document_type_code lesson, now a rule).
+- **(a) Observation.** An OC mapping onto a concept with a `canonical_value_set` must be a **`code_lookup`** whose `value_map` targets are ⊆ that set, with `unmapped_policy: reject`. This is the root guard: a raw source vocabulary never reaches a CO as if it were canonical (the document_type_code lesson, now a rule).
+  - **The uniform rule (refined per Codex gen-f015aa-01):** a source independently shown to emit the canonical vocabulary is declared with an **explicit identity `code_lookup`** (each canonical value maps to itself). It is never `direct`.
+  - So `direct` onto a closed-set concept is refused at OC authoring and activation (`direct_mapping_onto_closed_set`), and correctness never rests on a coincidence (as with oc-vg0zn `posted`).
 - **(b) Metric.** Every filter literal, and every formula code literal compared to a closed-set concept, must be ∈ that concept's canonical set. This is refused at MC authoring and reported red by chain status (`literal_outside_canonical_set`).
-- **(c) Runtime.** A CO value of a closed-set concept outside its set is a recorded resolution refusal, never a silent non-match. It is already enforced at the OC by `reject` once (a) holds.
+- **(c) Runtime.** Before filtering, the runtime validates every selected CO's closed-set values against the set. A value outside it is a recorded refusal, never a silent non-match.
+  - This also covers **historical COs created under older `direct` mappings**: a new OC mapping does not repair old rows, so they are refused, not mis-counted.
+  - A row refused at observation (`reject`) cannot be "rescued" later by a metric filter.
 - **A canonical value with no source equivalent** (e.g. `written-off`, `in-dispute` on Odoo invoices) is **source-unsupported**. A metric filtering on it, on a source that cannot produce it, is reported `vacuous:value_not_produced_by_source`, **never** as a validated 0.
+  - That verdict is allowed **only** when the source's vocabulary for the field is established (the declared source enumeration) **and** the value map's coverage of it is complete.
+  - An **unknown** source value is a refusal, not evidence of absence.
 
-**G3. Fail-closed and fresh.** A failing G1 or G2 check is **red** and blocks certification, activation and evaluation. Chain-status rows computed under an older check set are **stale and never green** (shared with DEC-6e951e D4c: one check-set-version mechanism, not two).
+**G3. Fail-closed and fresh.** A failing G1 or G2 check is **red** and blocks certification, activation and evaluation. Freshness is DEC-6e951e D4(c), one mechanism shared by both ADRs: the lifecycle acts **recompute** G1, G2 and the currency predicate at the point of use, and the persisted chain-status row carries a dependency fingerprint. An absent, old or mismatched fingerprint reads as `stale` and is never green.
 
 **G4. Class sweep (execution, after the terms grant).** Re-run G1 and G2 over every active MCV and OC.
 - **Expected hits:**
