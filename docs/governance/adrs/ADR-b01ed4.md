@@ -2,7 +2,7 @@
 uid: DEC-b01ed4
 title: "The deterministic gate must predict evaluation: green means the spec assembles against the active grain CC, and every closed-set value is canonical at observation, in filters and at runtime"
 description: "Sibling of DEC-6e951e for the whole class of a passing hard gate. One shared evaluability decision (the evaluator's own spec assembly, no data read) used by chain status, certification, activation and runtime; closed-value-set conformance (no direct mapping of raw source values onto a closed-set concept; filter and code literals within the canonical set); fail-closed red; a class sweep; the payment_status value map as the instance."
-status: proposed
+status: decided
 date: 2026-10-20T12:53:25.446Z
 project: bc-core
 domain: metrics

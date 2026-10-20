@@ -2,7 +2,7 @@
 uid: DEC-6e951e
 title: "Multi-currency semantics are observed, never converted: currency at the OC, per-currency and source-booked local-currency aggregation, and a fail-closed currency gate"
 description: "Makes DEC-f4b2b0 effective and implements DEC-7bccf6's source obligation for the Customer Invoice chain: observe document + company currency and the source-booked company-currency amounts; CC projects currency_code + local amounts; each amount metric declares document_currency (per-currency) or local_currency (source-booked scalar); no platform FX; runtime and lifecycle refuse un-supported currency aggregation; stale chain-status rows are not green."
-status: proposed
+status: decided
 date: 2026-10-20T12:40:13.942Z
 project: bc-core
 domain: metrics
