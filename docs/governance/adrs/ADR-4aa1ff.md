@@ -235,7 +235,27 @@ The research's core finding: a source-agnostic platform mints its own canonical 
   - The D1 per-LE mandatory fields and the D5 conditional tax rule become registry required rules.
   - `dim_legal_entity.fiscal_calendar_code` is retired (one source of truth: the calendar revisions).
 
-**Interface (locked for parallel build):** barecount-devhub `artifacts/architect/INTERFACE-LOCK-le-identity-tenants-menu-2026-10-20.md` at commit `0928f230` (sha256 `ddb2428d…`, PR #299; rev 3, which folds Codex gen-c02c55-01). It contains the entity model, the governed-service API contracts (T1–T3, C1–C2, L1–L11, A1–A3, S1–S8) and the bc-admin Tenants-menu IA. Every shape carries `legal_entity_id`. **Only S7 (the `confirmed_disposition` lane) can realize an LE or count as mapped coverage.** The `legacy_direct` lane is restricted as in D3. Proposed matches are evidence only. **`legal_entity_code` is frozen until cutover** (D1).
+**D11. Two planes: which surface owns each act** (operator refinement, 2026-10-20; a surface and ownership assignment, **not** a model change).
+- **Platform plane: bc-admin (`platform_admin` / `operator`).** It does only minimal tenant provisioning:
+  - register the tenant shell (P1: a served registration request that the owner-plane `tenant:lifecycle` birth executes; the served `POST /tenants` stays refused by design);
+  - create the tenant admin user (P3: the existing `POST /api/admin/users`, DEC-42b9c0);
+  - activate the tenant (P2: the governed activation act, refused unless the newest recorded completeness result is complete; 0034, TSK-49f8d8);
+  - the technical part of source onboarding: connection, owning tenant, key domains, contract-tuple declarations;
+  - the `legacy_direct` binding lane.
+- **Tenant plane: the tenant app, bc-portal (`tenant_admin`, tenant-scoped).** It owns:
+  - LE declaration (D2's "tenant onboarding" means onboarding **in the tenant app**, after the platform provisions the shell and admin user);
+  - attributes (D10), calendars, readiness, and the tenant's completeness view;
+  - by default, **realization**: discover, review and dispose candidates (S5–S8), and retire xrefs.
+- **Open with the operator:** self-service realization (the default above) vs platform-assisted (S5–S8 in bc-admin, an operator acting for the tenant). The contracts are identical; only the rendering portal and the S7/S8 role change.
+- **The tenant app must work while `onboarding_incomplete`** for the onboarding acts. Otherwise onboarding deadlocks: no LEs without activation, no activation without LEs. Evaluation-bearing features stay gated by per-LE readiness (D8).
+
+**Boundary from Codex gen-c02c55-02 (folded).** `legacy_direct` rows stay valid for canonical resolution but never count toward D8 readiness. The now-track readiness and service review must prove two cases:
+- (a) a legacy row never passes the new readiness gate as mapped coverage, consistent with DEC-bacbf5 D4's witnessed coverage;
+- (b) the separately authorized label-key prove-on-one (kaveridemo2) is not regressed. It runs under the existing gates (binding resolution plus the fiscal-LE gate), not the new D8 readiness, until its LEs are realized through S7 or explicitly grandfathered by a recorded act.
+
+The D9 successor must also settle physical old-row timestamps and the alias-interval mechanics (an interval end is derived or recorded **without updating a sealed row**), and prove cross-form CO/snapshot/lineage queries and missing-alias refusal before any cutover.
+
+**Interface (locked for parallel build):** barecount-devhub `artifacts/architect/INTERFACE-LOCK-le-identity-tenants-menu-2026-10-20.md` at commit `7c5a01cd` (sha256 `eb338f07…`, PR #299; rev 4: rev 3, which Codex accepted with boundary in gen-c02c55-02, plus the D11 two-plane split). It contains the entity model, the governed-service API contracts (T1–T3, C1–C2, L1–L11, A1–A3, S1–S8) and the bc-admin Tenants-menu IA. Every shape carries `legal_entity_id`. **Only S7 (the `confirmed_disposition` lane) can realize an LE or count as mapped coverage.** The `legacy_direct` lane is restricted as in D3. Proposed matches are evidence only. **`legal_entity_code` is frozen until cutover** (D1).
 
 **Next:**
 1. A Codex design review (full depth, platform lane) of this ADR and the interface lock.
