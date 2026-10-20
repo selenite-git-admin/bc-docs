@@ -151,15 +151,40 @@ The research's core finding: a source-agnostic platform mints its own canonical 
 - **V:** evaluations are per-LE fresh acts, never re-pointed.
 - **VI:** realization, xref, survivorship conflicts and readiness are emitted records.
 
-## Needs an operator decision
+## Operator decisions: adopted 2026-10-20
 
-1. **Adopt the platform-minted opaque LE id** (executing DEC-c05551 B1's deferral) for new tenants? Recommended: yes.
-2. **Mint at declaration (`declared → realized`)**, or mint only at source onboarding? Recommended: declared → realized.
-3. **Survivorship:** first realizing source for legal attributes, tenant declaration for display, conflicts surfaced. Confirm?
-4. **Sequencing.** Recommended: **unpause** the cc-das36 fix and the prove-on-one now, on the status-quo label key, which DEC-c05551 B1 still governs and which is model-invariant. Migrate under D9 afterwards, on new CC versions and a new greenfield tenant. The alternative is to hold the prove-on-one until D9 lands.
-5. **Retire the SAP bukrs special route** into the uniform xref at migration? Recommended: yes.
+**Provenance, stated plainly:** the operator adopted all five decisions on 2026-10-20. The Chief Controller relayed this from the operator's chat (SES-1e49e0). **A recorded, byte-bound desk grant is requested alongside this revision.** That grant, not the relay, is the authority this ADR cites. The ADR stays `proposed` until the Codex design review **and** the operator's terms gate (a recorded grant on the final bytes).
 
-**Next:** a Codex design review, then the operator's terms, then separately reviewed execution units:
-- DB: skeleton DDL;
-- Platform: the partition-selection fix for G4, the scheduler, the readiness guard and the fiscal-LE gate;
-- Metric: contract versions.
+1. **Adopted.** A platform-minted opaque canonical LE id (D1), for **new tenants**. This executes DEC-c05551 B1's deferral.
+2. **Adopted.** Mint at declaration: `declared → realized` (D2).
+3. **Adopted.** Survivorship as D4: the first realizing source supplies legal attributes, the tenant declaration supplies display, and conflicts are surfaced and never overwritten.
+4. **Adopted. Sequencing:**
+   - **The cc-das36 instance fix and the prove-on-one resume now on the current label key.** That key is still governed by DEC-c05551 B1, and the fix is model-invariant (knock-on c).
+   - **The opaque-id migration (D9) is DEFERRED** to its own later program, on new major CC versions and a fresh tenant.
+5. **Adopted.** The SAP bukrs special route retires into the uniform xref **at migration** (D7). It is part of the deferred D9 program and does not apply now.
+
+**D10. Per-LE attributes are extensible and governed** (operator requirement, 2026-10-20; detailed in the interface lock §1A).
+- **The core LE stays minimal:** id, label, lifecycle state, xrefs and calendars. Nothing is ever added to it.
+- **Every descriptive field is an LE attribute,** stored in typed, normalized, **append-only attribute-family revision tables** (at most 20 columns each; no JSONB, no EAV; DB rules 1 and 6):
+  - `legal_entity_profile_revision` (single-valued): country, functional currency, posture, `reporting_standard_code`, LEI, legal name, registration number;
+  - the existing multi-valued, effective-dated **`tax_registration`** (DEC-9c430b/D503), re-keyed to the canonical id.
+- **Meaning:** each attribute is a published BCF concept on the Legal Entity entity (3bd1857e).
+- **Binding:** one platform **attribute registry** row binds the concept to its family and column, cardinality, value domain (master | closed set | typed), `inherits_from`, completeness `required_rule` and provenance policy.
+- **Adding an attribute** = a BCF concept + a bc-db tenant skeleton migration + a registry row. Nothing changes in the API, the UI or the engine.
+- **Metrics** read attributes as-of through the LE partition key (the fiscal-calendar precedent), never copied into COs.
+- **Reconciliation with ADR-103acb:**
+  - `org_profile` stays tenant-level, and its `reporting_standard` is the default that `reporting_standard_code` (D2's deferred per-LE override) inherits.
+  - The D1 per-LE mandatory fields and the D5 conditional tax rule become registry required rules.
+  - `dim_legal_entity.fiscal_calendar_code` is retired (one source of truth: the calendar revisions).
+
+**Interface (locked for parallel build):** barecount-devhub `artifacts/architect/INTERFACE-LOCK-le-identity-tenants-menu-2026-10-20.md` at commit `0cac5543` (sha256 `d3f5bdb3…`, PR #299). It contains the entity model, the governed-service API contracts (T1–T3, C1–C2, L1–L11, A1–A3, S1–S8) and the bc-admin Tenants-menu IA. Every shape carries `legal_entity_id`. **Only S7, candidate disposition, creates an xref**, and proposed matches are evidence only.
+
+**Next:**
+1. A Codex design review (full depth, platform lane) of this ADR and the interface lock.
+2. The operator's terms gate (a recorded grant on the final bytes).
+3. Separately reviewed execution units, none of which runs before step 2:
+   - **Now-track, on the label key:**
+     - Platform: the G4 partition-selection fix, the `'*'` scheduler removal, the readiness newer-version guard and the generalized fiscal-LE gate (TSK-1ec1a7);
+     - the governed services behind the interface, built on the label key under the interface's hinge (`legal_entity_id` = `legal_entity_code` until D9): declaration, source-entity discovery and candidates, S7 disposition (the xref), and the D10 attribute registry plus families (operator DB yes per migration);
+     - DB: 0034 + the birth/activation split (TSK-49f8d8).
+   - **Deferred program (D9):** the opaque-id mint and re-key (`dim_legal_entity`, families, xref, calendars, tax registration, CO LE values on new major CC versions), bukrs retirement, and a fresh tenant.
