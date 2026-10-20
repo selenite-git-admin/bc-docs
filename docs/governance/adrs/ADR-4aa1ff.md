@@ -57,7 +57,10 @@ The research's core finding: a source-agnostic platform mints its own canonical 
 
 **D1. Canonical LE identity is platform-minted and opaque.**
 - Each LE gets an opaque, immutable, never-reused identifier (D560 doctrine, e.g. `LE-xxxxxx`). It is minted by a governed writer and is never derived from a source key, a tax id or the tenant's label.
-- `legal_entity_code` becomes a tenant **label**, unique per tenant, changeable only by a governed rename event that never changes the id.
+- `legal_entity_code` becomes a tenant **label**, unique per tenant **and never reused**, changeable only by a governed rename event that never changes the id.
+- **Hinge-phase freeze (Codex gen-c02c55-01, finding 1).** Until a tenant's D9 cutover, `legal_entity_code` **is** the key: tenant-DB xrefs FK to it (bc-db tenant/0002), and COs, calendars, tax registrations and metric scope carry it. So during that phase:
+  - **`legal_entity_code` is immutable.** A rename is refused (`422 refusal_code: legal_entity_code_locked_until_cutover`). Only `display_name` and `intent_text` may be revised.
+  - **Code renames unlock only after cutover,** when the immutable canonical id and the D9 alias semantics exist.
 - Display name, country, functional currency and the optional registration, tax id and LEI are **attributes** with recorded provenance (D4).
 - Every reference to an LE (FKs, CO LE fields, fiscal calendar, tax registration, xref, metric scope, snapshots, evidence) uses the canonical id.
 
@@ -71,12 +74,36 @@ The research's core finding: a source-agnostic platform mints its own canonical 
     - (c) creates a new LE, realized at birth, for an entity found only in the source.
   - The platform may *propose* matches (equal registration or tax id, name similarity) **as evidence only**. **It never infers a mapping.**
 - **Only a `realized` LE can be evaluated.**
+- **Inv-VI records (Codex gen-c02c55-01).** Each of these emits its own governed record:
+  - the declaration;
+  - each S7 confirmation;
+  - the `declared → realized` transition;
+  - each readiness result.
+
+  Proposed matches remain evidence only.
+- **`exclude` disposition** (a dormant or foreign source entity):
+  - creates **no** xref;
+  - every future record carrying that key is still refused at canonical realization (`unresolved_source_binding`);
+  - it counts as *dispositioned* in coverage but **never** as *mapped*.
 
 **D3. The cross-reference is the DEC-bacbf5 mapping, retargeted to the canonical id.**
 - The xref is the existing two-step key-domain declaration plus mapping revision: `(connection_id, key_domain, source_key_value) → canonical LE id`. It is immutable, as-of, exactly-one, with governance events and lineage (DEC-c05551 B3).
 - One canonical LE has many xrefs: across connections and source systems, and many source companies to one LE.
 - Cross-source reconciliation (Odoo company 1 and SFDC account X are the same LE) is the D2(a) confirmed act on the second source.
 - **The first source to realize an LE does not own the identity.** The platform owns it. "First-source-wins" applies to attributes only (D4).
+- **One server-side binding invariant for every writer (Codex gen-c02c55-01, finding 2).**
+  - **The confirmed lane:** every mapping revision records its `writer_lane_code`.
+    - **`confirmed_disposition`** is written only by the S7 disposition service. It references the candidate and its disposition event, and it is the **only** lane that can move an LE `declared → realized` or count as **mapped** coverage.
+  - **The legacy lane:** **`legacy_direct`** is the existing `POST key-domains/:keyDomainId/bindings`. It is kept so current label-key tenants and the prove-on-one keep working.
+    - It is restricted to `operator` and `platform_admin`; `tenant_admin` is removed.
+    - It requires a ≥40-character rationale.
+    - It **cannot realize an LE, cannot create one, and never counts toward candidate coverage or D8 readiness.**
+    - Its rows stay valid for canonical **resolution**, with DEC-c05551 B3 lineage, so existing evaluation is unchanged.
+    - Existing bindings are grandfathered as `legacy_direct`.
+  - **Enforcement is server-side, not UI-only:**
+    - a sole-writer architecture test: only the disposition service and the legacy-lane service may call the DB binding writer (the `source-identity.sole-writer.spec.ts` pattern);
+    - the lane is derived by the service, never taken from the request body;
+    - a direct-call bypass test: a legacy-lane write leaves the LE `declared` and its coverage unchanged.
 
 **D4. Attribute survivorship.**
 - Source-supplied legal attributes (legal name, registration, tax id) **survive from the first realizing xref**, with lineage naming that xref.
@@ -107,26 +134,53 @@ The research's core finding: a source-agnostic platform mints its own canonical 
 - **Evaluation readiness per LE:** realized, calendar in force, and every entitled source key on every feeding connection xref'd (the DEC-bacbf5 D4 predicate, now per LE).
 - Birth ends in `onboarding_incomplete` (bc-db 0034 + the birth/activation split, TSK-49f8d8). Readiness is a computed, recorded result, never a controller's read (Inv-VI).
 
-**D9. Migration (B1's required content; each act separately reviewed).**
-- **Surfaces:**
-  - `tenant_dim.dim_legal_entity` (new id PK; the label stays unique);
-  - `tax_registration` and `organization.fiscal_calendar_config` FKs;
-  - the binding target (bc-db tenant/0002);
-  - the CO LE fields (derivation output);
-  - metric scope and snapshot keys;
-  - `metric-proof-scope` and evidence;
-  - the portal apex filter;
-  - the scheduler.
-- **Key transition:**
-  - New tenants are born on the canonical id.
-  - Existing tenants (`kaveri`, preserved by non-action) are **not re-keyed in place**. Their historical facts keep their code values, and the historical-query semantics name the key form per tenant and fact version.
-- **Version rule:** a change in what the derivation's output *means* (code → canonical id) requires a **new major CC version** (a new fact table). Values never mix inside one fact table (Inv-I, Inv-III).
-- **Execution home:**
-  - skeleton DDL as bc-db tenant migrations (`fact.*` is never targeted; TSK-4d297e);
-  - engine changes in the Codex platform lane;
-  - contract versions on the SOP rails;
-  - operator DB yes for each DDL.
-- **Rollback:** the label stays unique and resolvable throughout, so readers can fall back to label resolution until cutover.
+**D9. Migration contract (DEC-c05551 B1; Codex gen-c02c55-01, the D9 finding). DEFERRED program; no part starts until a reviewed D9 successor at a pinned head.**
+
+- **D9.1 Identity discriminator (persisted, never inferred).** Every LE-bearing persisted value carries its key form explicitly, as `legal_entity_key_form_code` ∈ {`label_v1`, `canonical_id_v1`}:
+  - **Contract-produced facts** (CO fact tables, metric snapshot tables): declared **per contract version** in the CC/MC body header. A fact table is wholly one form, because a form change is a new major version and a new table.
+  - **Tenant skeleton rows** (xref/mapping revisions, binding-selection lineage, calendar revisions, tax registrations, attribute families, evidence/proof-scope rows): a `legal_entity_key_form_code` column, added by a bc-db tenant migration, stamped at write.
+- **D9.2 Immutable old-code lookup.** A new append-only `tenant_dim.legal_entity_code_alias`:
+  - columns: `legal_entity_code`, `legal_entity_id`, `valid_from`, `valid_to`, `reason_code` ∈ {`cutover`, `rename`}, governance event;
+  - one row per code at cutover and per later rename;
+  - **codes are never reused within a tenant**, even after a rename (a unique constraint over the alias history);
+  - so any old `label_v1` value resolves deterministically to exactly one `legal_entity_id` for the time it was written.
+- **D9.3 Mixed-history query rule.** A read spanning both forms resolves **every row to `legal_entity_id`**:
+  - `canonical_id_v1` rows directly;
+  - `label_v1` rows via the alias **as-of the row's recorded time** (`recorded_at`; for COs, the evaluation's `recorded_at`).
+
+  Then:
+  - results group and filter by `legal_entity_id` and display the current label;
+  - old rows are never rewritten;
+  - **snapshot ↔ CO ↔ binding-lineage joins** go through `legal_entity_id` after resolution;
+  - a row whose code has no alias is a recorded read refusal (`unresolved_legal_entity_alias`), never a guess.
+- **D9.4 Cutover point (per tenant, a governed event).** `le_identity_cutover` is a recorded act per tenant. In one transaction, with lineage, it:
+  - mints canonical ids for each declared or realized LE (the label tenant's LEs);
+  - writes the `cutover` aliases;
+  - re-points the tenant-skeleton FKs, by adding the id columns and keeping the code columns as immutable aliases;
+  - stamps the tenant's form as `canonical_id_v1`.
+
+  From then on:
+  - only `canonical_id_v1` CC/MC versions activate for the tenant;
+  - code renames unlock (D1);
+  - new tenants are **born cut over** (no code-form history);
+  - existing tenants, including `kaveri`, are cut over **only** by an explicit governed act, otherwise never.
+- **D9.5 Rollback and recovery limits, per surface:**
+
+  | Surface | Before cutover | After cutover |
+  |---|---|---|
+  | `dim_legal_entity`, `legal_entity_code_alias` | **Full rollback:** drop the unused additions (nothing references them) | No rollback. Aliases are permanent (Inv-III); recovery is a forward rename or supersession event |
+  | Tenant-skeleton FKs (calendar, tax registration, attribute families, xref, lineage) | Full rollback (the id columns are unused) | Code columns kept as aliases, so readers can resolve by alias, but **writes stay on id**. No return to code-keyed writes |
+  | CO facts and metric snapshots | n/a (they stay `label_v1` tables) | `canonical_id_v1` tables are immutable; recovery is a corrective new major version. Old `label_v1` tables stay readable through D9.3 |
+  | Evidence and proof-scope rows | Unchanged | Stamped with form; read via D9.3 |
+  | Portal filter, scheduler, partition selection | Read label | Read id, display the current label |
+
+- **D9.6 Execution order** (each its own reviewed unit):
+  1. the D9 successor design;
+  2. the bc-db tenant migrations (alias table, form columns, id columns; operator DB yes each; never `fact.*`, TSK-4d297e);
+  3. the engine (resolver form stamping, D9.3 reads, the cutover service);
+  4. new major CC/MC versions in `canonical_id_v1`;
+  5. a fresh greenfield tenant born cut over;
+  6. bukrs retirement into the xref (operator decision 5).
 
 ## Knock-ons
 
@@ -170,14 +224,18 @@ The research's core finding: a source-agnostic platform mints its own canonical 
   - the existing multi-valued, effective-dated **`tax_registration`** (DEC-9c430b/D503), re-keyed to the canonical id.
 - **Meaning:** each attribute is a published BCF concept on the Legal Entity entity (3bd1857e).
 - **Binding:** one platform **attribute registry** row binds the concept to its family and column, cardinality, value domain (master | closed set | typed), `inherits_from`, completeness `required_rule` and provenance policy.
-- **Adding an attribute** = a BCF concept + a bc-db tenant skeleton migration + a registry row. Nothing changes in the API, the UI or the engine.
+- **Adding an attribute** = a BCF concept + a bc-db tenant skeleton migration + a registry row.
+  - Nothing changes in the API, UI or engine for **storage, validation, display and readiness**.
+  - A **metric** that uses the attribute still declares its own metric semantics.
+  - Registry publication checks schema, type, domain parity and as-of provenance at its own implementation gate.
+  - `tax_registration` stays an instance (multi-valued) family.
 - **Metrics** read attributes as-of through the LE partition key (the fiscal-calendar precedent), never copied into COs.
 - **Reconciliation with ADR-103acb:**
   - `org_profile` stays tenant-level, and its `reporting_standard` is the default that `reporting_standard_code` (D2's deferred per-LE override) inherits.
   - The D1 per-LE mandatory fields and the D5 conditional tax rule become registry required rules.
   - `dim_legal_entity.fiscal_calendar_code` is retired (one source of truth: the calendar revisions).
 
-**Interface (locked for parallel build):** barecount-devhub `artifacts/architect/INTERFACE-LOCK-le-identity-tenants-menu-2026-10-20.md` at commit `0cac5543` (sha256 `d3f5bdb3…`, PR #299). It contains the entity model, the governed-service API contracts (T1–T3, C1–C2, L1–L11, A1–A3, S1–S8) and the bc-admin Tenants-menu IA. Every shape carries `legal_entity_id`. **Only S7, candidate disposition, creates an xref**, and proposed matches are evidence only.
+**Interface (locked for parallel build):** barecount-devhub `artifacts/architect/INTERFACE-LOCK-le-identity-tenants-menu-2026-10-20.md` at commit `0928f230` (sha256 `ddb2428d…`, PR #299; rev 3, which folds Codex gen-c02c55-01). It contains the entity model, the governed-service API contracts (T1–T3, C1–C2, L1–L11, A1–A3, S1–S8) and the bc-admin Tenants-menu IA. Every shape carries `legal_entity_id`. **Only S7 (the `confirmed_disposition` lane) can realize an LE or count as mapped coverage.** The `legacy_direct` lane is restricted as in D3. Proposed matches are evidence only. **`legal_entity_code` is frozen until cutover** (D1).
 
 **Next:**
 1. A Codex design review (full depth, platform lane) of this ADR and the interface lock.
