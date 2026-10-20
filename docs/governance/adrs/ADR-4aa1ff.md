@@ -2,7 +2,7 @@
 uid: DEC-4aa1ff
 title: "Canonical legal-entity identity: a platform-minted LE id is the partition axis of the object progression; source company keys are confirmed cross-references; identity is declared at tenant onboarding and realized at source onboarding"
 description: "Executes DEC-c05551 B1's deferred opaque-LE-id migration; declared→realized LE lifecycle; the DEC-bacbf5 mapping becomes the xref to the canonical id; attribute survivorship; LE as an explicit evaluation partition (fixes the tenant-wide D-7 assertion); raw-key LE references banned; amends DEC-c05551, DEC-bacbf5, DEC-103acb and the DEC-fa7c63 D-7 enforcement."
-status: proposed
+status: decided
 date: 2026-10-20T05:05:30.854Z
 project: bc-core
 domain: tenants
