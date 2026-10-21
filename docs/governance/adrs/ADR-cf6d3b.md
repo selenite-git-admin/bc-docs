@@ -18,6 +18,11 @@ refs:
     uid: DEC-42b9c0
     label: "Admin-provisioned users only (no self-signup) — the tenant-admin provisioning act"
   - type: decision
+    uid: DEC-324d9e
+    label: "Stripe Billing; four subscription tiers — the future commercial authority the Welcome Offer is interim to"
+  - type: doc
+    label: "operating-model/tenant-entitlement-enforcement.md — the authoritative Subscription governance-record design (one-per-active-tenant; catalog-entitlement incl. metrics; all surfaces 'Not yet wired')"
+  - type: decision
     uid: DEC-a57eb8
     label: "D622 — onboarding-completeness result (verdict substrate re-scoped here to the Activation plane)"
   - type: decision
@@ -46,7 +51,7 @@ The platform today has a single governed operation — "Tenant Onboarding" — t
 Grounded at `origin/main` (bc-core `689dd240`, bc-db `49fb73cd`), the as-built state is:
 
 1. **`active` has no declared meaning.** `TenantManagementRepository.completeProvisioning(...)` flips a newborn straight to `active` at the end of the governed birth act (`TenantBirthService`), gated only by the birth postconditions (catalog digest, ownership, runtime verification). Nothing ties `active` to a real admin user or to a subscription. (The `UpdateTenantDto` comment describes a "completeness gate + verdict"; that is the *intended* invariant from `TSK-49f8d8`, not current enforcement — see point 4.)
-2. **The subscription surface is a bare, un-wired catalog.** `pricing.package` (D086) is a *platform-level, tenant-agnostic* catalog whose payload is *readers* (`reader_manifest_json`), not metrics. `ADR-7df811 §1` deliberately instantiated **no tenant subscription table** in v1. There is **no** tenant↔package assignment, **no** per-tenant metric-allowance model, and the string "welcome" appears nowhere in the domain. Consequently "all metrics allowed" is the *trivial current behavior* — nothing restricts metrics per tenant today. The nearest per-tenant metric surface is `tenant.contract_binding` (a metric-*contract* overlay / version pin, not an allow-list).
+2. **The Subscription is authoritatively designed but not instantiated; the catalog is a bare, un-wired reader-tier table.** The operating-model chapter `tenant-entitlement-enforcement.md` (authoritative) defines the **Subscription** as the platform-scoped governance record that holds tenant entitlement: *"each active tenant identity references exactly one Subscription record at a time"*, its **catalog-entitlement** axis is a reference set of entitled process chains / functions / subfunctions / **metrics** / Source Systems, and *"a tenant identity without a referenced Subscription record cannot proceed past Connection registration — the same outcome as a terminated state."* That chapter's Wiring Status declares **every** enforcement surface **"Not yet wired"** in the current release. Grounding confirms the record is **designed, not built**: the physical `tenant` schema has only `tenants / tenant_binding / contract_binding / tenant_infrastructure` — **no Subscription table**, consistent with `ADR-7df811 §1` deferring it. The only catalog that exists is `pricing.package` (D086; Drizzle `subscriptionPackage`) — a *platform-level, tenant-agnostic reader-tier* table whose payload is readers (`reader_manifest_json`), not metrics; it is un-wired (no module imports `PackageService`). There is **no** tenant↔Subscription link, **no** catalog-entitlement-of-metrics representation, and **no** per-tenant metric-allowance. So "all metrics allowed" is the *trivial current behavior* — nothing restricts metrics per tenant today. (The nearest per-tenant metric surface is `tenant.contract_binding`, a metric-*contract* overlay / version pin, not an allow-list.)
 3. **Admin provisioning exists.** `DEC-42b9c0` (admin-provisioned users only; no self-signup) now has its API: `POST /admin/users` (`UserProvisioningController`, `PlatformOnly` + `platform_admin`) → `CognitoAdminService.createUser` stamps `custom:tenant_id` + `custom:roles` and Cognito emails the temp-password invitation. First login runs the `FORCE_CHANGE_PASSWORD` flow; completing it moves the Cognito `UserStatus` to `CONFIRMED`.
 4. **The activation-gate substrate already exists, deferred.** bc-db migration `0034_onboarding_completeness_result` (DEFERRED / unapplied) creates the append-only `tenant.onboarding_completeness_result` verdict table, the `trg_tenants_activation_gate` trigger (refuses an `UPDATE` *into* `active` unless the newest verdict is `complete`), and a new `onboarding_incomplete` tenant status. Its verdict `unmet_code` vocabulary is `{no_legal_entity, no_fiscal_calendar, unresolved_source_binding}` — all **data / Onboarding-plane** concerns. 0034 is deferred precisely because its paired bc-core consumer (completeProvisioning emitting the verdict; a newborn resting at `onboarding_incomplete`) is not wired.
 
@@ -67,7 +72,7 @@ Through governed platform acts, the platform operator:
 
 ### B. The declared meaning of `active`
 
-A tenant is `active` **if and only if** Activation is complete, i.e. **(i)** a provisioned *and verified* Cognito admin exists for the tenant, **and (ii)** a subscription is assigned. `active` does **not** require any onboarded data — no connections, no admitted facts, no legal entity, no fiscal calendar, no source binding. An Activated tenant is an **empty-but-active bound container**.
+A tenant is `active` **if and only if** Activation is complete, i.e. **(i)** a provisioned *and verified* Cognito admin exists for the tenant, **and (ii)** the tenant references a **Subscription** record (per `tenant-entitlement-enforcement.md`: exactly one, lifecycle-state `active`). `active` does **not** require any onboarded data — no connections, no admitted facts, no legal entity, no fiscal calendar, no source binding. An Activated tenant is an **empty-but-active bound container**. Requirement (ii) makes the activation gate agree with the entitlement chapter, which already rejects a subscription-less tenant at Connection registration — closing the gap that a tenant could be `active` yet unable to onboard.
 
 This **amends `ADR-7df811`** (it does not supersede it; 7df811 remains authoritative for the isolation model, the onboarding-record lifecycle, and the status set):
 
@@ -96,10 +101,12 @@ The DB activation gate (`trg_tenants_activation_gate`, bc-db 0034, deferred) is 
 
 ## Welcome Offer (interim subscription)
 
-Because no per-tenant metric-allowance model exists, the Welcome Offer's role is to be an **explicit, recorded assignment** (Foundation IV), not to enforce restriction:
+The Welcome Offer is expressed in the real vocabulary of `tenant-entitlement-enforcement.md`: a **Subscription** whose **catalog entitlement references all metrics** (an all-permitting set), lifecycle-state `active`. Because enforcement is "Not yet wired" and no metric-allowance model exists, its job is to be an **explicit, recorded reference** (Foundation IV), not to enforce restriction in the interim.
 
-- A `pricing.package` row **"Welcome Offer"** (semantics: all-metrics-allowed; no reader/metric restriction), or — if the build prefers reuse — the existing seeded `Free` package may serve as the interim marker. A new, clearly-named row is preferred so the interim offer is legible and later-replaceable.
-- A **minimal tenant↔package assignment** (the record `ADR-7df811 §1` deferred), carrying the `active / suspended / terminated` lifecycle, `effective_from/effective_to`, and append-only history. Its *existence* is requirement B(ii); it enforces nothing further in the interim.
+- **It is an all-entitlement interim *template*, not a fifth commercial tier.** It sits outside the `DEC-324d9e` four-tier (Demo/Starter/Professional/Enterprise) Stripe taxonomy: no billing, no hosting-variant pairing. When real packages land, the Welcome Offer is retired/replaced; `DEC-324d9e` remains the future commercial authority.
+- **Catalog shape:** a `pricing.package` (Drizzle `subscriptionPackage`) row **"Welcome Offer"** with `status_code` `active`, marking the all-entitlement template. Reusing the seeded `Free` row is an acceptable fallback; a clearly-named row is preferred so the interim offer is legible and later-replaceable.
+- **The all-metrics entitlement** is represented so that it says "all" without enumerating every metric (an `all`-scope sentinel on the Subscription), avoiding both a brittle enumerated list and JSONB-for-queryable-data (D162). Enumerated per-metric entitlement link tables are the *future* shape for real packages.
+- **The tenant↔Subscription reference** is the Subscription record `ADR-7df811 §1` deferred and `tenant-entitlement-enforcement.md` assumes: one per active tenant, lifecycle `active / suspended / terminated`, `effective_from / effective_to`, append-only history. Its *existence and `active` state* is requirement B(ii).
 - The operator assigns it in **Activation step A(2)**, as a governed platform act alongside identity creation.
 
 ## Foundation invariant check
