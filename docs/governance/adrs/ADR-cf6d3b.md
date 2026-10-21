@@ -2,8 +2,10 @@
 uid: DEC-cf6d3b
 title: "Tenant Activation model: active = verified admin + assigned subscription; Activation/Onboarding plane split"
 description: "Declares the meaning of tenant `active` as Activation-complete (verified Cognito admin + assigned subscription); splits the bundled Tenant Onboarding SOP into a platform Activation plane and a tenant Onboarding plane; re-scopes the deferred bc-db 0034 activation-gate verdict to the Activation plane."
-status: proposed
+status: decided
 date: 2026-10-21
+decided_at: 2026-10-21
+decided_grant: 2026-10-21T10-01-47-948Z-6419188c
 project: platform
 domain: tenants
 subdomain: tenant-topology/activation
