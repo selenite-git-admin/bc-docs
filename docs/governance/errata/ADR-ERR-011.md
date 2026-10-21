@@ -1,58 +1,41 @@
 ---
 id: ADR-ERR-011
-title: "DEC-ffbc24 §4 Layer-A premise wrong: company_id is already observed on the SO; no re-observe needed"
-status: adopted
+title: "DEC-3926bf Amendment 2's residual-as-of-P derivation is at PE-MC (M13), not the canonical layer (C); C carries the dated application schedule"
+status: open
 authority: authoritative
-affected: DEC-ffbc24 (D673) §4 (Layer-A observation prerequisite) and §5/M-4 (honest-cost + G3 sequencing) — the claim that the source company key is not observed
-resolution: bc-core PR #963 (merged — regression guard pinning the company_id-observed invariant); no design change to DEC-ffbc24
-opened: 2026-10-21
+affected: DEC-3926bf (D664) — Amendment 2 ("Option B derivation shape") clause "DERIVE (C/CC): residual-as-of-P = gross − Σ(applied ≤ P) at the canonical", and its Foundation-gate "Repair A+B+C"
+resolution: correction recorded here; Amendment 2's gross→residual meaning-change and Option B decision stand unchanged; the residual-as-of-P derivation LAYER is PE-MC (M13), not the canonical (C) — C carries only the P-independent dated application schedule; the evaluator capability is declared in DEC-c741a3 (D665)
+opened: 2026-10-14
 ---
 
-# ADR-ERR-011 — DEC-ffbc24 §4: the Layer-A company_id premise is disconfirmed
+# ADR-ERR-011 — DEC-3926bf Amendment 2: residual-as-of-P is derived at PE-MC (M13), not the canonical (C)
 
 ## Contradiction summary
 
-DEC-ffbc24 §4 declared, as a **blocking** activation prerequisite, that LE-bearing observation contracts
-do **not** observe the source company key: *"oc-3kgrr does not fetch the SO columns needed, and Kaveri's
-reader never fetched `company_id`"* — and §5/M-4 inflated the opaque-id activation cost with a
-`company_id` **re-observe → re-admit → re-emit** chain, sequenced behind a "G3 admission fix."
+DEC-3926bf Amendment 2 adopted the gross→residual meaning-change for the aging/overdue family (Option B) and stated its derivation shape as: "ADMIT (A/OC) the dated application events; **DERIVE (C/CC): residual-as-of-P = gross − Σ(applied ≤ P) at the canonical**", with a Foundation gate of "Repair A+B+C". That names the **canonical layer (C)** as where residual-as-of-P is derived.
 
-Grounded at bc-core `origin/main` (689dd240 / ca2989eb) and the live `bc_platform_dev` registry, this is
-**factually wrong**:
+residual-as-of-P = f(P) is **P-dependent** (it varies with the evaluation period P). The canonical object (CO) is built **once per admission, P-independently** — so a quantity that varies with P cannot be a single canonical value. The "DERIVE at C" layer statement is therefore wrong: the derivation cannot live at the canonical layer.
 
-- All four LE-bearing posting-fact observation contracts **declare `company_id` in their `so_schema`**:
-  `oc-vg0zn` (journal_entry / cc-dh5d9), `oc-h827j` (journal_entry_line / cc-x13pb),
-  `oc-3kgrr` (customer_invoice / cc-das36), `oc-jbpz8` (supplier_invoice / cc-7174p); the parent source
-  contracts declare it too, so each `fact.so_*` table carries the column.
-- `deriveFetchFields` (`resolved-admission-context.ts`) unions **all** `so_schema.properties` into the
-  fetch list; the Odoo executor fetches them and admission coerces the many2one `[id, name] → id` onto the
-  scalar SO column. So a declared `company_id` **is** observed and projected.
-- The `kaveridemo` G3 admission HALT cited by §4 was a **different field — `currency_id`** (`nullable:false`,
-  not observed) hitting a storage NOT NULL — already resolved by bc-core **PR #959** (source-family columns
-  no longer projected NOT NULL; source-required enforced at admission as SC-required ∩ observed). It was
-  never a `company_id` problem.
+## Implementation behaviour
 
-Independent corroboration: the per-family LC5 validation (DLV-f771c6) computes its oracle by filtering
-`fact.so_sc_snedd` on **`company_id = 1`** — which only yields the validated figures if the admitted Source
-Objects already carry a populated `company_id`.
+Grounded at the served build (freeze-v `04cc7f97`), independently by Platform and the Chief:
+
+- `buildCoPayload` builds the CO once per admission, with no evaluation period — the CO is P-independent.
+- `evaluateGovernedMetric` (`governed-metric-runtime.ts:398`) threads `asOf` (P) **only** into `selectByGate` (selection). `buildSectionA` (L312/L415) and `FormulaExecutionEngine.execute` take **no** `asOf` — the aggregation phase is P-blind.
+- So the canonical/aggregation layers provably cannot compute `Σ(applied WHERE application_date ≤ P)`. P-dependent aggregation must live at the metric evaluator (PE-MC / M13), where P is bound.
 
 ## Resolution
 
-- The §4 **requirement** (the LE-bearing SO must carry the source company key so the canonical boundary can
-  resolve the legal entity) is **already satisfied** at origin/main. No `company_id` re-observe / re-admit
-  chain is needed; the §5/M-4 re-observe **cost for `company_id` is zero**; the "G3-first" sequencing
-  referred to a currency issue already fixed.
-- **No design change** to DEC-ffbc24: the LE axis, the universal opaque-id stamp, the source-to-entity
-  binding resolution, the per-LE evaluator/reader changes, and the opaque-id/D9 migration are unchanged.
-  Only the factual Layer-A premise and the associated cost/sequencing in §4/§5/M-4 are corrected.
-- bc-core **PR #963** (merged 2026-10-21) adds named regression guards pinning the invariant
-  (`deriveFetchFields` includes `company_id` from `so_schema`; the many2one → scalar `id` coercion onto the
-  SO column) so a future refactor cannot silently break the LE stamp's input.
+Amendment 2's **decision stands unchanged**: the aging/overdue family ages the residual/outstanding balance (gross+binary was a meaning-defect), gross − Σ(applied ≤ P) is the semantic, and `ar_balance` retires to the outstanding control balance. This entry corrects only **where** the P-dependent part is realized:
 
-## Note on review provenance
+1. **residual-as-of-P is computed at PE-MC (M13)**, not the canonical layer — Repair **D** (evaluation implementation); for the residual-bearing aging/overdue family the binary open/settled is residual > 0, also at PE-MC. The evaluator capability this requires is declared in **DEC-c741a3 (D665)** (the PE-MC as-of conditional aggregate: a P-aware signed sum over a sub-grain dated schedule, rolled to the metric grain). "Repair A+B+C" in Amendment 2's Option-B clause is corrected to **A + B + D** (A admits the schedule, B declares the meaning, D computes the P-dependent aggregate). This corrects **only** Amendment 2's Option-B residual layer — it does not touch Amendment 2's D1.
+2. **The canonical layer (C) carries only the P-INDEPENDENT dated application schedule** (per-event applied amount + application date, at event grain) — no as-of aggregation.
+3. **D1 / Option-A `clearing_date` is PRESERVED — not dropped.** Amendment 2 expressly keeps the NON-AGING binary-open as_of members on Option A, with `clearing_date` under D1 (D1 unchanged). R1 found no metric surfaces the `clearing_date` **value**, but `clearing_date` IS consumed as the **as_of-gate closing_field** (selection, open-at-P) by those members — a real consumer, not a value-surface. So this erratum does NOT drop `clearing_date`, retire D1, or move those members' selection to residual > 0; residual > 0 is the binary ONLY for the residual-bearing aging/overdue family (point 1). (Separately re-opened, non-blocking: the Option-A `clearing_date` derivation for D1's members — the P-independent full-settlement date, blocked by the numeric-only `latest_by` reduce — is its own design question, not resolved here.)
+4. **Realized `outstanding_amount` vocabulary** (which Amendment 2 referenced as the to-be-authored `amount_residual`): the governed characteristic `outstanding amount` `b3661d56` (frozen, cert `6e17814a`), bound as AR concept `9e5423e0` (Customer Invoice `e3963e45`) and AP concept `1a45f9e4` (Supplier Invoice `4471cb17`), representation amount/decimal. This is the P-dependent residual the DEC-c741a3 capability computes from the dated schedule.
+   - **Transparency note (immutable-freeze hygiene):** the frozen characteristic definition is a fuller prose version than the terse paraphrase quoted in the finality grant (bc-exchange #256); it was independently confirmed semantically identical and more complete, and the grant named the registry object by id (`b3661d56`), so the operator's finality affirmation bound to the registry object whose bytes are faithful. No semantic drift.
 
-DEC-ffbc24's §4 premise survived five Codex rounds and three adversarial red-team rounds because all of them
-inherited the same stale reading (that the OCs do not declare / the executor does not project `company_id`).
-The disconfirming datum was found only when Leg 0 of the build grounded the claim directly against the live
-registry and the admission code. Recorded here as the standing correction; verification is a direct source
-read, not a review consensus.
+This changes no decision: the P-dependent/as-of part is evaluation (DEC-c48b0f), which belongs at the evaluator; Amendment 2's meaning and Option B are intact.
+
+## Resolution state
+
+The layer correction stands as recorded. Full realization rides **DEC-c741a3 (D665)** (the PE-MC as-of aggregate capability) being accepted and built (red-first + Codex engine-lane + a Chief-gated serve-move), then the terminal demo-tenant fixture re-provision (Amendment 1) admitting the clean event-grain schedule. Open until DEC-c741a3 lands and the capability is built. Recorded by the Architect, SES-b9b0ef, 2026-10-14.
