@@ -19,7 +19,7 @@ refs:
     label: "Admin-provisioned users only (no self-signup) — the tenant-admin provisioning act"
   - type: decision
     uid: DEC-324d9e
-    label: "Stripe Billing; four subscription tiers — the future commercial authority the Welcome Offer is interim to"
+    label: "Stripe Billing; four subscription tiers — the future commercial authority the Pre Launch Exclusive offer is interim to"
   - type: doc
     label: "operating-model/tenant-entitlement-enforcement.md — the authoritative Subscription governance-record design (one-per-active-tenant; catalog-entitlement incl. metrics; all surfaces 'Not yet wired')"
   - type: decision
@@ -63,7 +63,7 @@ The bundled operation is split into two distinctly-named, strictly-sequenced pla
 Through governed platform acts, the platform operator:
 
 1. **Creates the tenant identity** — UUID + display name + unique slug + database-per-tenant — via the governed birth act (`TenantBirthService` → `completeProvisioning`), unchanged in mechanism.
-2. **Assigns a subscription** — in the interim a **"Welcome Offer"** package denoting *all-metrics-allowed*, until real pricing packages exist (see *Welcome Offer* below).
+2. **Assigns a subscription** — in the interim a **"Pre Launch Exclusive"** package denoting *all-metrics-allowed*, until real pricing packages exist (see *Pre Launch Exclusive* below).
 3. **Provisions the tenant admin** as a Cognito user under `DEC-42b9c0` (admin-provisioned only; `custom:tenant_id` + `custom:roles` stamped; invitation email).
 4. **The admin verifies the invitation** (completes `FORCE_CHANGE_PASSWORD` → `UserStatus = CONFIRMED`), on which the tenant transitions to `active`.
 
@@ -107,12 +107,12 @@ At the pinned bc-core commit, `completeProvisioning` calls `recordOnboardingActi
 - Activation completion is attested solely by the Activation-completeness verdict (D) and the tenant status `active`. (Naming tension noted: the verdict table is `onboarding_completeness_result`, yet it now attests *Activation*; a later cosmetic rename is possible but is **not** done here — no substrate rename on this design-only ADR.)
 - Cancelled/retry: a cancelled journey still blocks re-activation per the existing `recordOnboardingActivated` guard; the build must preserve that and add a test that an **empty active tenant is not reported as onboarded** (journey not `activated`).
 
-## Welcome Offer (interim subscription)
+## Pre Launch Exclusive (interim subscription)
 
-The Welcome Offer is expressed in the real vocabulary of `tenant-entitlement-enforcement.md`: a **Subscription** whose **catalog entitlement references all metrics** (an all-permitting set), lifecycle-state `active`. Because enforcement is "Not yet wired" and no metric-allowance model exists, its job is to be an **explicit, recorded reference** (Foundation IV), not to enforce restriction in the interim.
+The "Pre Launch Exclusive" offer (operator-named 2026-10-21) is expressed in the real vocabulary of `tenant-entitlement-enforcement.md`: a **Subscription** whose **catalog entitlement references all metrics** (an all-permitting set), lifecycle-state `active`. Because enforcement is "Not yet wired" and no metric-allowance model exists, its job is to be an **explicit, recorded reference** (Foundation IV), not to enforce restriction in the interim.
 
-- **It is an all-entitlement interim *template*, not a fifth commercial tier.** It sits outside the `DEC-324d9e` four-tier (Demo/Starter/Professional/Enterprise) Stripe taxonomy: no billing, no hosting-variant pairing. When real packages land, the Welcome Offer is retired/replaced; `DEC-324d9e` remains the future commercial authority.
-- **Catalog shape:** a `pricing.package` (Drizzle `subscriptionPackage`) row **"Welcome Offer"** with `status_code` `active`, marking the all-entitlement template. Reusing the seeded `Free` row is an acceptable fallback; a clearly-named row is preferred so the interim offer is legible and later-replaceable.
+- **It is an all-entitlement interim *template*, not a fifth commercial tier.** It sits outside the `DEC-324d9e` four-tier (Demo/Starter/Professional/Enterprise) Stripe taxonomy: no billing, no hosting-variant pairing. When real packages land, the Pre Launch Exclusive offer is retired/replaced; `DEC-324d9e` remains the future commercial authority.
+- **Catalog shape:** a `pricing.package` (Drizzle `subscriptionPackage`) row with `display_name = "Pre Launch Exclusive"` and `package_name = pre_launch_exclusive` (the stable natural-key code), `status_code` `active`, marking the all-entitlement template. Reusing the seeded `Free` row is an acceptable fallback; a clearly-named row is preferred so the interim offer is legible and later-replaceable.
 - **The all-metrics entitlement** is represented so that it says "all" without enumerating every metric (an `all`-scope sentinel on the Subscription), avoiding both a brittle enumerated list and JSONB-for-queryable-data (D162). Enumerated per-metric entitlement link tables are the *future* shape for real packages.
 - **The tenant↔Subscription reference** is the Subscription record `ADR-7df811 §1` deferred and `tenant-entitlement-enforcement.md` assumes: one *current* per tenant, lifecycle `active / suspended / terminated`. Because the record is **append-only** (Foundation III), a suspension or termination **appends a new row**, never overwrites — so the build must define *current active* explicitly: the latest row by `effective_from` with `status_code = active` and `effective_to` null, enforced as "exactly one active per tenant" via a partial unique index (`WHERE status_code = 'active' AND effective_to IS NULL`). Requirement B(ii) = a *current active* assignment so defined.
 - The operator assigns it in **Activation step A(2)**, as a governed platform act alongside identity creation.
