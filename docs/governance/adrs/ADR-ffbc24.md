@@ -2,8 +2,10 @@
 uid: DEC-ffbc24
 title: "Legal Entity is a system/runtime evaluation axis — no contract declares an LE axis; universal admission-context CO stamp on the opaque legal_entity_id (D9 successor; amends DEC-7a8cbc, realizes DEC-4aa1ff §D5)"
 description: "LE is a system/runtime axis on the opaque legal_entity_id; LE-bearing is a version-pinned governed entity_version classification; universal admission-context stamp; DEC-4aa1ff §D9 successor; no fiscal '*' fallback (DEC-ea4523); sequenced behind the G3 admission/Layer-A fix."
-status: proposed
+status: decided
 date: 2026-10-21T09:27:13.957Z
+decided_at: 2026-10-21
+decided_grant: 2026-10-21T11-23-38-693Z-b472437a
 project: bc-core
 domain: tenants
 subdomain: tenant-dim/legal-entity
