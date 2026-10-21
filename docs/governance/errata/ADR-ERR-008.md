@@ -1,58 +1,34 @@
 ---
 id: ADR-ERR-008
-title: "DEC-ffbc24 §4 Layer-A premise wrong: company_id is already observed on the SO; no re-observe needed"
-status: adopted
+title: "DEC-4c8bee states that no date basis other than the posting date exists; DEC-26f75a's optional period_aggregate anchor_field is one"
+status: open
 authority: authoritative
-affected: DEC-ffbc24 (D673) §4 (Layer-A observation prerequisite) and §5/M-4 (honest-cost + G3 sequencing) — the claim that the source company key is not observed
-resolution: bc-core PR #963 (regression guard pinning the company_id-observed invariant); no design change to DEC-ffbc24
-opened: 2026-10-21
+affected: DEC-4c8bee (D649) — Decision point 3, the meaning-label table row "definition_contract_fidelity (the date basis)"
+resolution: correction recorded here; the hybrid-corpus decision stands; the date-basis label rests on the two-branch rule below
+opened: 2026-10-03
 ---
 
-# ADR-ERR-008 — DEC-ffbc24 §4: the Layer-A company_id premise is disconfirmed
+# ADR-ERR-008 — DEC-4c8bee: the date basis is the posting date by default, or the gate's declared anchor_field
 
 ## Contradiction summary
 
-DEC-ffbc24 §4 declared, as a **blocking** activation prerequisite, that LE-bearing observation contracts
-do **not** observe the source company key: *"oc-3kgrr does not fetch the SO columns needed, and Kaveri's
-reader never fetched `company_id`"* — and §5/M-4 inflated the opaque-id activation cost with a
-`company_id` **re-observe → re-admit → re-emit** chain, sequenced behind a "G3 admission fix."
+DEC-4c8bee point 3 labels the date-basis meaning class with: "rows are assigned to fiscal periods by the posting date declared by the canonical contract; no other date basis exists" (citing DEC-ea4523 and DEC-83fda0). The last clause is false. DEC-26f75a (implemented) gives the `period_aggregate` gate an **optional** `anchor_field`: a date field of the grain canonical contract whose value must fall within the evaluation period for a row to be a member. Only when no `anchor_field` is declared is membership the stamped posting fiscal period.
 
-Grounded at bc-core `origin/main` (689dd240 / ca2989eb) and the live `bc_platform_dev` registry, this is
-**factually wrong**:
+## Implementation behavior
 
-- All four LE-bearing posting-fact observation contracts **declare `company_id` in their `so_schema`**:
-  `oc-vg0zn` (journal_entry / cc-dh5d9), `oc-h827j` (journal_entry_line / cc-x13pb),
-  `oc-3kgrr` (customer_invoice / cc-das36), `oc-jbpz8` (supplier_invoice / cc-7174p); the parent source
-  contracts declare it too, so each `fact.so_*` table carries the column.
-- `deriveFetchFields` (`resolved-admission-context.ts`) unions **all** `so_schema.properties` into the
-  fetch list; the Odoo executor fetches them and admission coerces the many2one `[id, name] → id` onto the
-  scalar SO column. So a declared `company_id` **is** observed and projected.
-- The `kaveridemo` G3 admission HALT cited by §4 was a **different field — `currency_id`** (`nullable:false`,
-  not observed) hitting a storage NOT NULL — already resolved by bc-core **PR #959** (source-family columns
-  no longer projected NOT NULL; source-required enforced at admission as SC-required ∩ observed). It was
-  never a `company_id` problem.
-
-Independent corroboration: the per-family LC5 validation (DLV-f771c6) computes its oracle by filtering
-`fact.so_sc_snedd` on **`company_id = 1`** — which only yields the validated figures if the admitted Source
-Objects already carry a populated `company_id`.
+- The engine honours a declared `anchor_field` for `period_aggregate`: `metric-evaluation-orchestrator.service.ts:260-299` and `co-candidate-reader.ts:170, 274`, at bc-core `b5aa3a700428228be21c8e122599e310da73089a`.
+- With no `anchor_field`, the canonical resolver stamps fiscal fields from the grain contract's declared `posting_date_field` (`ccv2-canonical-resolver.service.ts:971, 1733-1757`, same bc-core commit).
+- Live, on 2026-10-03, no `period_aggregate` metric contract declares `anchor_field`; only `as_of` gates do.
+- The panel package projection for `period_aggregate` keeps only `period_type` and drops `anchor_field` (`package-signature.service.ts:88-91`, same bc-core commit). That is a separate defect, routed to Platform.
 
 ## Resolution
 
-- The §4 **requirement** (the LE-bearing SO must carry the source company key so the canonical boundary can
-  resolve the legal entity) is **already satisfied** at origin/main. No `company_id` re-observe / re-admit
-  chain is needed; the §5/M-4 re-observe **cost for `company_id` is zero**; the "G3-first" sequencing
-  referred to a currency issue already fixed.
-- **No design change** to DEC-ffbc24: the LE axis, the universal opaque-id stamp, the source-to-entity
-  binding resolution, the per-LE evaluator/reader changes, and the opaque-id/D9 migration are unchanged.
-  Only the factual Layer-A premise and the associated cost/sequencing in §4/§5/M-4 are corrected.
-- bc-core **PR #963** adds named regression guards pinning the invariant (`deriveFetchFields` includes
-  `company_id` from `so_schema`; the many2one → scalar `id` coercion onto the SO column) so a future refactor
-  cannot silently break the LE stamp's input.
+The date-basis meaning label in DEC-4c8bee point 3 reads, in place of the false clause:
 
-## Note on review provenance
+> A row's period membership is **(a)** the period of the gate's declared `anchor_field` (DEC-26f75a), when the gate declares one; otherwise **(b)** the fiscal period stamped from the posting-date field declared by the grain canonical contract (DEC-ea4523, DEC-83fda0). A definition that names a date basis is faithful only if the named basis is (a), or is (b) when no anchor is declared.
 
-DEC-ffbc24's §4 premise survived five Codex rounds and three adversarial red-team rounds because all of them
-inherited the same stale reading (that the OCs do not declare / the executor does not project `company_id`).
-The disconfirming datum was found only when Leg 0 of the build grounded the claim directly against the live
-registry and the admission code. Recorded here as the standing correction; verification is a direct source
-read, not a review consensus.
+The hybrid-corpus decision stands. The TSK-9ce7f9 verdict also stands, for that package: its gate declared no `anchor_field`, so "by value date" named a basis the contract did not declare. Its stated reason ("the grammar cannot declare an anchor") is corrected by this entry.
+
+## Resolution state
+
+Open until the move-1 `declared_semantics` statement and the clean-directory G2 rule carry the two-branch rule, and the package projection carries `anchor_field`. Recorded by the Architect, SES-180ad4, 2026-10-03.
