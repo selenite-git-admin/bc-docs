@@ -2,8 +2,9 @@
 uid: DEC-9e68e0
 title: "Period close is an idempotent act on (company, period), not a step inside the backfill driver"
 description: "Extract the nine month-close acts out of forward_build into a standalone idempotent close keyed on (company, period), so the close survives the world cutoff and covers transactions the backfill driver did not create."
-status: proposed
+status: reversed
 date: 2026-08-07T15:58:33.199Z
+reversed_at: 2026-10-23
 project: bc-synth
 domain: sources
 subdomain: odoo-pilot/world-build
@@ -11,6 +12,8 @@ focus: lifecycle
 ---
 
 # Period close is an idempotent act on (company, period), not a step inside the backfill driver
+
+> **REVERSED 2026-10-23 (operator-directed, Chief SES-1e49e0).** This ADR belongs to `bc-synth`, an archived project — the Odoo world-build / pilot program was retired and replaced by the bc-demo Foundry model. The period-close concern has no active consumer under the current model. Reversed as part of the ADR-hygiene sweep (stuck `proposed` 77 days); the body is preserved as history.
 
 ## Context
 
