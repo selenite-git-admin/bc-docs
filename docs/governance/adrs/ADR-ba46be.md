@@ -2,8 +2,10 @@
 uid: DEC-ba46be
 title: "resolve_legal_entity_attribute: a governed canonical derivation projecting a declared attribute of the runtime-resolved legal entity (D330 compute-library addition; realizes DEC-7dca63 D1)"
 description: "Adds a 1-hop canonical-boundary derivation resolve_legal_entity_attribute (v1 attribute set = {currency_code}) that projects an attribute of the §2-resolved legal entity (dim_legal_entity) onto a canonical field, resolved after enrichLegalEntity, fail-closed on unresolved/NULL. Enabling it requires BOTH the checked-in canonical-v2 schema AND the governed active contract.contract_meta_schema row (two-principal change-request, digest parity) — not a DDL migration, not a bare code change. Realizes DEC-7dca63 D1's LE-derived local_currency_code; no lower-layer compensation."
-status: proposed
+status: decided
 date: 2026-10-25T02:12:19.333Z
+decided_at: 2026-10-25
+decided_grant: 2026-10-25T03-20-59-486Z-97648655
 project: bc-core
 domain: contracts
 subdomain: canonical/compute-library
