@@ -2,8 +2,10 @@
 uid: DEC-7dca63
 title: "Extend observed-never-converted currency to the GL / journal-entry-line chain (cc-x13pb) so the per-LE DSO evaluates through the governed evaluator — amends DEC-6e951e"
 description: "Amends DEC-6e951e (not supersede): extends its project→fail-closed-gate currency pattern to the GL chain cc-x13pb carrying the DSO family. On this chain the functional currency is LE-derived (dim_legal_entity.currency_code via the DEC-ffbc24 §2 selector), not observed — the GL fact carries none — projected as local_currency_code so receivable_days_sales_outstanding + its local_currency upstreams stop failing MC_DEFECT_LOCAL_CURRENCY_MISSING and validate governed vs LC5. No BareCount FX."
-status: proposed
+status: decided
 date: 2026-10-24T17:07:48.420Z
+decided_at: 2026-10-25
+decided_grant: 2026-10-25T01-37-59-482Z-73fd3fef
 project: bc-core
 domain: metrics
 subdomain: metric-contract/currency
