@@ -1,7 +1,7 @@
 ---
 uid: DEC-ba46be
 title: "resolve_legal_entity_attribute: a governed canonical derivation projecting a declared attribute of the runtime-resolved legal entity (D330 compute-library addition; realizes DEC-7dca63 D1)"
-description: "Adds a 1-hop canonical-boundary derivation resolve_legal_entity_attribute (v1 attribute set = {currency_code}) that projects an attribute of the §2-resolved legal entity (dim_legal_entity) onto a canonical field, resolved after enrichLegalEntity, fail-closed on unresolved/NULL. Code-level canonical-v2 enum add (contract_json is jsonb; no DB type). Realizes DEC-7dca63 D1's LE-derived local_currency_code; no lower-layer compensation."
+description: "Adds a 1-hop canonical-boundary derivation resolve_legal_entity_attribute (v1 attribute set = {currency_code}) that projects an attribute of the §2-resolved legal entity (dim_legal_entity) onto a canonical field, resolved after enrichLegalEntity, fail-closed on unresolved/NULL. Enabling it requires BOTH the checked-in canonical-v2 schema AND the governed active contract.contract_meta_schema row (two-principal change-request, digest parity) — not a DDL migration, not a bare code change. Realizes DEC-7dca63 D1's LE-derived local_currency_code; no lower-layer compensation."
 status: proposed
 date: 2026-10-25T02:12:19.333Z
 project: bc-core
@@ -31,7 +31,7 @@ Add **`resolve_legal_entity_attribute`** to the D330 canonical compute library (
 
 **D3. Grammar (repair B) — a CODE file PLUS a governed meta-schema DB-content change (Codex gen-b42801-01).** Enabling the function requires BOTH copies, kept in digest parity:
 - (i) the checked-in `bc-core/src/registry/meta-schemas/canonical-v2.schema.json` — add `resolve_legal_entity_attribute` to `derivations.function`, with the zero-input conditional of D1; and
-- (ii) the GOVERNED ACTIVE `canonical/v2` row in `contract.contract_meta_schema` (`json_schema` jsonb) — updated through the two-principal **meta-schema change-request** path (`meta-schema-change-request.service.ts`), because `ContractValidationService` validates a contract against that DB row, NOT the checked-in file; `meta-schema-drift-check` enforces digest parity between the two.
+- (ii) the GOVERNED ACTIVE `canonical/v2` row in `contract.contract_meta_schema` (`json_schema` jsonb) — updated through the two-principal **meta-schema change-request** path (`meta-schema-change-request.service.ts`), because `ContractValidationService` validates a contract against that DB row, NOT the checked-in file. The two copies MUST be kept in digest parity, verified by a **direct raw/canonical digest comparison of the two proposed schema copies before approval/use** (Codex gen-b42801-02). This is NOT provided by `meta-schema-drift-check`, which compares active-contract body keys to the DB row, warns, and is fail-open — it neither reads the checked-in file nor compares digests.
 
 A bc-core PR alone does NOT enable the function: the governed meta-schema row must receive the matching schema through its change-request + approval. This is a **governed meta-schema DB-CONTENT change** — a jsonb value in an existing table, through its own two-principal governance. It is NOT a bc-db DDL migration and NOT a Database-Change-Protocol/DDL act (no schema DDL; both `contract_json` and `contract_meta_schema.json_schema` are jsonb), but neither is it a bare code change. (This corrects an earlier "CODE-level only" framing of this step.)
 
