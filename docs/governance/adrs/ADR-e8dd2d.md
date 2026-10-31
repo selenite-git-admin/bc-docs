@@ -1,0 +1,21 @@
+---
+uid: DEC-e8dd2d
+title: "Oracle-authoring provenance for the Demoed terminal: governed authoring path for demo.oracle_custody + independent answer-key provenance"
+description: "Oracle-authoring provenance for the Demoed terminal: governed authoring path for demo.oracle_custody + independent answer-key provenance"
+status: proposed
+date: 2026-10-31T10:15:01.260Z
+project: bc-core
+domain: metrics
+subdomain: metrics/demoed
+focus: oracle-provenance
+---
+
+# Oracle-authoring provenance for the Demoed terminal: governed authoring path for demo.oracle_custody + independent answer-key provenance
+
+## Context
+
+The Demoed terminal's completeness + authenticity gate rests on demo.oracle_custody being an INDEPENDENTLY-authored immutable answer key (DEC-025bfc T4): DemoGovernedScopeReader resolves the full cell grid as the set of oracle_custody rows, and fn_emit_demo_proof refuses a proof unless every cell's result matches a governed oracle_value. Verified at source (bc-db 0051 @631f7b5e): the table is owned by bc_schema_owner and NO role has INSERT (prover EXECUTE-only, runtime SELECT-only, loader unchanged); the only INSERTs anywhere are in test harnesses + comments; oracle_frozen_sha256/independent_author/custody_coordinate/demo_world_version have no declared live-plane derivation (0051 FLAG 1). Foundation DEC-c48b0f: a missing declaration needs a NAMED DESIGN ACT, not emit-layer compensation and not fabricated provenance — hand-authoring a grid with invented provenance would make the authenticity gate a tautology and repeat the way active lied (DEC-89db41). Repair location A (the oracle is a declaration at the admission/answer-key boundary, the external truth a computation is checked against, uncomputable from that computation without circularity) + E (immutable storage) + C (explicit pinned-world binding). The LC5 world is the deterministic referee (project_panel_data_grounding) and the AR/AP oracle substrate exists READ-ONLY proven to the cent (project_lc5_oracle_from_so_snapshot); the design turns that referee answer into a custody-bound row via a governed act independent of the engine. Invariants III/IV/V/VI preserved; no invented data.
+
+## Decision
+
+Declare a governed oracle-authoring act, independent of the evaluation engine and of the proof-writer, that admits immutable demo.oracle_custody rows from the LC5 deterministic referee, binding each row's provenance to a pinned demo_world_version. (1) A NEW owns-nothing login principal bc_demo_oracle_author (reach {demo} only, no table privilege, no tenant CONNECT) with EXECUTE on exactly one new SECURITY DEFINER routine demo.fn_author_oracle_custody (owner bc_schema_owner, pinned search_path, first-statement caller-identity guard) as the SOLE INSERT path to demo.oracle_custody — distinct from bc_demo_prover (emit, EXECUTE-only) and bc_demo_runtime (SELECT-only), giving separation of duties so the author and the proof-emitter are never the same actor (anti-tautology). (2) The oracle VALUE is the LC5 (v3_lc5) referee's own figure, read from the READ-ONLY, proven-to-the-cent LC5 AR/AP substrate (e.g. the SO-snapshot recompute of Odoo's own trial balance), NEVER a re-derivation from the demo canonical objects the engine evaluates. oracle_frozen_sha256 = sha256 over the canonical serialization of the frozen referee answer-key record (value + pinned-world + referee coordinate + cell key); independent_author = the governed author identity + its independence tier; custody_coordinate = the addressable pointer back to the independent frozen source; demo_world_version = pinned and equal to the proof-emit and demo-CO-store world (Inv IV). (3) Rows are immutable (0051 triggers); a wrong/superseded oracle is remediated by authoring a NEW demo_world_version (UNIQUE cell key includes it), never UPDATE/DELETE; the emitted proof binds each cell to its oracle_custody_id (Ruling 1c) and oracle_custody_set_sha256 (Ruling 1d). Complements TSK-a20fd1 (oracle fenced OUT of the emit payload); fills the where-does-the-oracle-come-from gap (0051 FLAG 1). Full draft: artifacts/architect/DRAFT-ADR-oracle-authoring-provenance-TSK-72f47a-2026-10-31.md. OPERATOR DECISION (surfaced to Chief, not decided here): the exact independent_author identity string + whether the first Demoed is earned at the admitted-recompute tier or the best (live-world v3_lc5) tier.
