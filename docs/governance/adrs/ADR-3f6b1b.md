@@ -2,7 +2,7 @@
 uid: DEC-3f6b1b
 title: "Plane-scoped canonical-contract version resolution: a demo/platform-plane proof resolves its CC version on the plane, without a global activation"
 description: "Plane-scoped canonical-contract version resolution: a demo/platform-plane proof resolves its CC version on the plane, without a global activation"
-status: proposed
+status: decided
 date: 2026-10-31T10:15:23.096Z
 project: bc-core
 domain: contracts
