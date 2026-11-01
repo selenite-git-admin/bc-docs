@@ -2,8 +2,9 @@
 uid: DEC-0af48a
 title: "The exactness invariant governs all amount-producing operations — extend DEC-c4619b scope to the resolution layer"
 description: "Extends the scaled-decimal-int-v1 exactness profile (DEC-c4619b) from the evaluation engine to every amount-producing operation — resolution-layer reducers now, source-admission numeric parse later — through the one existing ScaledDecimal module under one prover boundary; no second engine."
-status: proposed
+status: decided
 date: 2026-11-01T10:09:33.260Z
+decided_at: 2026-11-01
 project: platform
 domain: metrics
 subdomain: metrics/numeric-execution
@@ -58,4 +59,4 @@ STAGING (one stage per PR, Platform lane, resolveSum first): Stage 1 = `resolveS
 
 ROUND-TWO / TWO-ROUND-RULE NOTE (gen-05b693): the two Codex design rounds resolved the arithmetic-path omission (finding 1), the EXACT-verdict bound-check contract (finding 2), and the `latest_by` false-tie (finding 3). Round two surfaced the amount-affecting filter-predicate path (folded in above as (iv) + the catch-all) and invoked the standing two-round rule, so there is NO third Codex design round. This revision (the filter-predicate class, the GOVERNED-OR-REFUSED catch-all, and the wording correction) POSTDATES both rounds and is therefore NOT itself Codex-design-reviewed; it is submitted for the OPERATOR's close/re-scope decision. Each Stage implementation PR still carries its own Codex code review regardless of the design two-round rule.
 
-STATUS = proposed. The decided-status flip and every merge remain operator-gated. Until this ADR is decided and Stage 1 lands, the resolver reduce is recorded as an explicitly labeled EXEMPTION to the DEC-c4619b profile (so it is never mistaken for proven-exact), guarded by the R2 U4 pre-emit gate (the multi-line-group count read against `tbc_kaveri_dev`). The exemption does NOT extend to R4-scale.
+STATUS = decided (2026-11-01): the operator accepted the rev2 design (the two gen-05b693 design rounds plus the operator's acceptance substituting for a third Codex design round); DEC-c4619b stays decided (amended, not superseded). Every impl-stage MERGE remains operator-gated, and each stage PR carries its own Codex code review. Until Stage 1 lands, the resolver reduce is recorded as an explicitly labeled EXEMPTION to the DEC-c4619b profile (so it is never mistaken for proven-exact), guarded by the R2 U4 pre-emit gate (the multi-line-group count read against `tbc_kaveri_dev`). The exemption does NOT extend to R4-scale.
