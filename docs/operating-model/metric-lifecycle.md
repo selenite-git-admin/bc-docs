@@ -95,6 +95,8 @@ groundedness of chain facts is out of scope by design — answer with a scope st
 prompt patch. The chain-health overlay on the readiness projection is display-only and must
 never become a hidden gate (DEC-b049f6 boundary).
 
+**Demo-plane evaluation of a sealed `audit_pending` MCV (plane-scope lift; ratified by the Chief as lifecycle owner on the R2 rung, 2026-11-02; DEC-1bb88e ACT H):** on a demo / platform plane a world may pin and COMPUTE a declaration-final MCV whose package is SEALED but not yet certified — governance state `audit_pending` — lifting "nothing in `audit_pending` reaches runtime" for the demo plane ONLY. It does not weaken the tenant certification-safety rule (tenants still compute only certified `active`), and it is consistent with DEC-346ae7 / DEC-b049f6: the harness proves `validated` over a FROZEN declaration, certification being the advisory flagger — so a Demoed proof never needs `active`/certification. C8 remains the tenant-activation gate.
+
 ## 6. The corrective arcs
 
 - **Withdrawal** (`active → audit_pending`; DEC-05815d, generalized by DEC-dd11e3): certification
