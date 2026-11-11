@@ -2,7 +2,7 @@
 uid: DEC-2f720a
 title: "Metric classification authority: the Metric Directory family governs a directory-linked metric's function/subfunction; the MCV classification is its governed projection"
 description: "Directory family = classification authority for directory-linked MCVs; P1-P4 write-gates and net; active-only governed reclassification act; extends DEC-31c212 + DEC-b5c7ff."
-status: proposed
+status: decided
 date: 2026-11-11T04:05:50.413Z
 project: bc-core
 domain: metrics
@@ -17,7 +17,7 @@ related: [DEC-31c212, DEC-b5c7ff, DEC-79b62f, DEC-c48b0f]
 
 Authored by the Architect (SES-ba2e87) from the Metric-lane design memo (barecount-devhub `artifacts/metric-classification/DESIGN-mcv-subfunction-misclassification-root-fix-2026-11-11.md`, DLV-b779fa) and the Architect co-verdict (`artifacts/metric-classification/ARCHITECT-COVERDICT-mcv-classification-authority-2026-11-11.md`).
 
-**Lane:** a metric-lifecycle act. The verdict belongs to the Chief and the Architect, and never to Codex (grant ead781aa). The status moves from proposed to decided only on a recorded operator grant.
+**Lane:** a metric-lifecycle act. The verdict belongs to the Chief and the Architect, and never to Codex (grant ead781aa). **Ratified to decided** by the operator under recorded grant `2026-11-11T04-53-39-946Z-49bd39f3` (bc-exchange #407).
 
 ## Context
 
@@ -125,7 +125,12 @@ Every rule is enforced where the value is written.
 
 - **The 4 active and current MCVs:** corrected through D3, one at a time, under grants.
 - **The 7 audit_pending predecessors and the 5 non-active successors** (4 approved, 1 audit_pending): placed on the **governed reclassification worklist**. This is the "governed re-assignment worklist" that DEC-31c212 named as a follow-up and that was never built. Each is corrected through D3 when it becomes active and current. Approved successors are locked until then (D2).
-- **The 1 active and current successor** (`invoiced_tax_amount__tacorr_6f5eff75`, MCV cafeb767): corrected through D3 to `finance/accounts_receivable` **after** its member is re-pointed onto it (a directory act). Only then is it directory-linked by D1 in the strict sense, so precondition 3 binds.
+- **The 1 active and current successor** (`invoiced_tax_amount__tacorr_6f5eff75`, MCV cafeb767): **correct first, then re-point.**
+  - It is directory-linked *now* under D1, through its corrective lineage: the member realizes the predecessor MC 6f5eff75. So D3 precondition 3 already binds, with its target resolved through that lineage member's family: `finance/accounts_receivable`.
+  - **Step 1:** D3 reclassifies cafeb767 to `finance/accounts_receivable` under a recorded grant.
+  - **Step 2:** the realization-gap directory act re-points the member onto the successor MC. P2 then accepts it, because the pairs already agree.
+  - No step needs a gate bypass or a transiently wrong realization.
+  - The general rule for every corrective successor: a lineage-linked successor's classification is corrected through D3 (once it is active) **before** any member is re-pointed onto it. P2 enforces that order.
 - **Placement ruling (G6):**
   - `invoiced_tax_amount` stays in `finance/accounts_receivable / ar_sales_adjustments`.
   - `payables_invoiced_tax_amount` stays in `finance/accounts_payable / ap_adjustments`.
