@@ -134,6 +134,8 @@ The **reference run** is one command that evaluates a fixed set of metrics throu
 
 The reference run is built in the third phase of work. No engine code is modified before it exists and passes. The dossier for OP, Operations, records only that it is not built, and makes it a condition of that function's lock. Its design and its limits are written in the Define step of Operations.
 
+**How the hold on the engine is enforced.** From phase 1, an automatic check on the engine's repository refuses any change to the files that produce values unless the operator has recorded an exception for that change. From the end of phase 3, the check instead requires that the reference run has passed on the exact commit proposed. The exit of phase 3 records the hash of the database copy, the engine commit, where each expected value came from, and the result of the run. A passing reference run shows that values have not moved; it does not show that they are correct. Correctness is tested by comparison with a value worked out independently, which is part of "done" and of the test that ends the program.
+
 ## DevHub: observe, act, prevent
 
 DevHub is the tool through which development is coordinated: it records sessions, tasks, plans and decisions, and it shows the state of the repositories. The operator calls it the spine. Today it shows a great deal and can do almost nothing, and part of what it shows is no longer true.
@@ -185,7 +187,7 @@ The program changes that by mechanism, not by exhortation:
 | 2 | Scope grows through "while we are here". | Work that belongs to no function and step. | The anchor requires each act to name its function and step. Anything else is listed for later. |
 | 3 | A change to the engine alters a number unnoticed. | The reference run fails. | No engine change before the reference run exists; it runs at every Modify exit. |
 | 4 | The guide becomes one more text beside the others. | A merged chapter with no retirement list. | A chapter merges only with its retirement list; the lock requires the replaced texts to be gone. |
-| 5 | Delivery to a tenant is again left for later. | Phase 7 begins with stitch contract 2 or 6 unwritten. | The contracts are a phase 2 exit; phase 7 cannot begin without them. |
+| 5 | Delivery to a tenant is again left for later. | Phase 5 begins with stitch contract 2 or 6 unapproved. | The contracts are a phase 2 exit; phase 7 cannot begin without them. |
 | 6 | The first reference run does not reproduce the recorded values. | The qualification run fails. | Ruling B2; the baseline is then set from evidence before any change. |
 | 7 | DevHub work expands and delays everything. | Phase 1 without its exit after its Define step. | Phase 1 is limited to the items in its exit; the rest of DevHub is phase 12. |
 | 8 | Context is lost between sessions, as before. | A session acts against this document. | The pinned anchor points here; the Chief's brief points here; DevHub holds the state. |

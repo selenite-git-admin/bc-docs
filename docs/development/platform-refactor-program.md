@@ -24,7 +24,7 @@ diagrams: []
 
 # Platform Refactor Program
 
-> **Status of this document.** It is a draft awaiting the operator's approval. By the documentation's own rule a text binds only when it is both authoritative and locked [21b], so nothing here binds until it is approved. What approval does is stated under "What the operator is asked to do now".
+> **Status of this document.** It is a draft awaiting the operator's approval. By the documentation's rule a chapter binds only when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca). So nothing here binds until it is approved. What approval does is stated under "What the operator is asked to do now".
 
 ## Summary
 
@@ -50,8 +50,8 @@ The program is finished when the test stated under "When the program is finished
 |---|---|---|
 | 1 | Approve this document, or say what to change. | Its status becomes `locked`. The decision is recorded as a decision record, whose number is then added here. The holds under "What is parked and what is held" begin to bind. |
 | 2 | Approve, at the approval desk, the pin of the program's anchor. | Every session is then shown this program at each turn, in place of the parked drive's goal. |
-| 3 | Confirm or correct the four decided rulings and the parts the Chief added to them (under "The rulings"). | They become final. |
-| 4 | Rule on the open rulings listed under "Open, and needed in phases 1 to 3". | Phase 1 can start once those marked phase 1 are made; the others are needed as their phase begins. |
+| 3 | Confirm or correct the five decided rulings, the parts the Chief added to them, and the record of the operator's words (under "The rulings" and in the annex of that name). | They become final. |
+| 4 | Rule on the four open rulings listed under "Open, and needed in phase 1". | Phase 1 can then start. |
 | 5 | Replace the two credentials that are present in the engine's history on three lines [17a]. | The exposure ends. Deleting the files does not remove them from history. |
 
 ## How to read this document
@@ -65,21 +65,11 @@ This file is the program. It is meant to be read from start to finish and to sta
 
 ## The decision
 
-**Decided by:** the operator, on 2026-11-13. **Recorded by:** the Chief. **Where the words are kept:** the transcript of that day's session of the Chief (Claude session `49b1f545-76dd-4dcb-bf1f-cf152b36c347`), and checkpoints 974 to 982 of DevHub session SES-7decb4. **DevHub task:** TSK-e5bf83.
+**Decided by:** the operator, on 2026-11-13. **Recorded by:** the Chief. **DevHub task:** TSK-e5bf83.
 
-The decision was reached in steps. The operator's words at each step are given exactly; an ellipsis marks words left out.
+The decision was reached in nine steps during one session. In order, the operator: judged that the platform is built but not defined or published, and asked for a deep review, a refactor of what is critical, one developer guide, and a check of every decision record and memory file; set the method of defining, auditing, modifying and locking one part at a time, and said the metric catalog should not have been started before the platform was locked; parked the demo drive and the controller fleet; named DevHub the spine and required it to act and not only show; widened the scope to the whole platform; asked that the services be usable like an application; asked that the code be stabilised; required functional coverage, naming subscription and tenant management and the design of how parts are joined; and required bc-docs to be studied first.
 
-| # | The operator's words | What the program takes from them |
-|---|---|---|
-| 1 | "I think the spine is built but not clear/well defined/published and each time at each junction we either reinvent or go in wrong direction. May be a deep code/services review (and critical refactoring too) and one SINGLE dev guide (in specific chapters) will solve this issue permanently. … Clear memory (MD) line by line, check and fix ADRs one by one. There is no short cut." | A deep review; a refactor of what is critical; one guide; a check of every decision record and memory file. |
-| 2 | "It evolved organically needs an deep audit. We will create chapters for each workflow - define the logic, flow, evaluate-modify-lock the code/service. I think before locking the platform completely we should not have started building metric directory/catalog. IMO there is huge duplication and ambiguity which keeps biting us." | The method. The hold on the metric estate. |
-| 3 | "Yes, park both and start with step zero. we will create a document about this first." | The park of the demo drive and of the controller fleet; this document. |
-| 4 | "Note: Devhub is our spine" … "DevHub is mostly read only we need to make it actually functional." | DevHub carries the program and must be able to act. |
-| 5 | "Study DevHub first - look at the bigger picture 'the platform' (metric is core of it but they are not the only candidate)" | The scope is the whole platform. |
-| 6 | "let us adjust/modify services so that you can use them like an application to finally onboard metric/business concepts" | Each function ends in commands. |
-| 7 | "IMO this is time to stabilize the codebase too." | The rules for stabilising the code. |
-| 8 | "This is mostly operational but the functional side coverage/integrity is missing. … e.g. subscription and tenant management are missing and stitching them later is not considered/designed well enough I guess." | The functional map; hand-offs designed first. |
-| 9 | "Study bc-docs in depth first. IMO last few month we moved away from consulting bc-docs frequently could be a major lap." | bc-docs is read before design. |
+The operator's exact words at each step are in the annex [The Rulings](platform-refactor-program/rulings.md), under "The decision, in the operator's words". They are an attributed record: they were taken from the transcript of the Chief's session of that day (Claude session `49b1f545-76dd-4dcb-bf1f-cf152b36c347`) and from checkpoints 974 to 982 of DevHub session SES-7decb4, and the auditor could not authenticate them independently. The operator confirms them by approving this document.
 
 ## The platform in brief
 
@@ -112,15 +102,8 @@ The platform's thesis is **Integrity Assurance** (decision record DEC-71c027): i
 | Package; Subscription; entitlement | A package is a named set of metrics offered to tenants. A Subscription is the record that a tenant has a package. Entitlement is what the Subscription allows. None of the three is built [16c, 16d]. |
 | The demo plane | A separate area of the platform database where, from 2026-10-26, metrics were compared with expected values on demo data. A metric that matched was called "Demoed". "Plane" has other meanings in the documents; ruling F2. |
 | Proof record | The record that a metric's value matched an expected value. It is distinct from Evidence. |
-| Function; functional map | One thing the platform does that has inputs, outputs and acts of its own; the list of all of them. |
-| Surface | Anything a person or a program can act through or read: a route, a service, a script, a command, a table, a screen, a document. |
-| Stitch point; stitch contract | A place where one function hands something to another; the written agreement for it. |
-| The thread | One tenant and one metric, followed from the metric being available to a user of the tenant seeing its value. |
-| Command | The one way to perform a function's act. It has four verbs: status, check, do, verify. |
-| Lock | What keeps a finished function finished. It has four parts, listed under "The method". |
 | Guard | A test, run automatically on every proposed change, that fails when a rule is broken. |
 | Code rules | The checks DevHub's "hotspots" page runs on each file, such as length, duplication and unsafe queries. |
-| Reference run | One command that evaluates a fixed set of metrics on fixed input and fails if any result differs from its recorded value. |
 | The frame | The things every function inherits: what the product is, the map, the words, the stitch contracts and the thread. Phase 2 settles it. |
 | The hard line | The acts never performed without the operator's recorded approval: a change applied to a database; an act on data that cannot be undone; a change to cloud resources; the writing of a credential. |
 
@@ -140,17 +123,15 @@ The same page retires "onboarded" and "validated" used alone [23c]; this documen
 
 ## What the evidence says
 
-Each item was re-established at its source on 2026-11-13 unless it says otherwise.
+Each item was re-established at its source on 2026-11-13. The annex "Evidence, Verified at Source" gives the full account.
 
-- **The code is unstable.** Of 2,610 files DevHub scanned in the engine, 731 pass every code rule and 542 share duplicated blocks with other files. The file changed most often in thirty days is the service that resolves business meaning, with 20 commits [13].
-- **Small breaks block the obvious route.** The route that should prepare a tenant's tables for a source matches none of the 19 records that tie a reader to a source [9]. DevHub's tool for taking a metric through its lifecycle calls a route the engine has retired [10a, 10b, 10c]. The served route for creating a tenant refuses by design, and four bc-docs documents and the project instruction file still name it [11a, 11b, 11c].
-- **Metric work stopped advancing.** The platform holds 463 metric contract versions; 430 were created in June and July, and none has become active since 2026-09-30 [2a, 2b, 2c]. Four proof records exist, for three metrics [3]. None of their expected values was worked out from the source system (dossier of PV).
-- **Proof was built by hand for each contract version.** Sixteen of 67 platform database migrations name a table made for one canonical contract version, and the choice of what to compare is written in three code files [4a, 4c, 6].
-- **bc-docs already holds a list of functions.** One chapter lists the platform's functions under the heading "The platform functions — the stable spine" [22]. The vocabulary page holds the words above [23a, 23b].
-- **No chapter binds, and most procedures have drifted.** None of the 124 chapters is locked [21a]. Of 13 procedure chapters, two name only, or nearly only, routes and tables that exist today; six name mostly ones that do not; five were not characterised [28].
-- **Delivery to a tenant is designed and not built.** The Subscription and its entitlement are defined; every point where they should be enforced is marked "Not yet wired"; the database has no table for either [25a, 25b, 16d]. Three chapters each name a different act that puts a metric before a tenant [26]. The rule in force is decision DEC-c220e4: every active tenant sees every active metric, and the entitlement record must exist before any tenant is activated for an outside party [24a].
-- **Chapters stopped being read and kept.** The share of session checkpoints and plans that cite a chapter fell from 20.7% in May to 0.4% in October [29a]. Commits touching a chapter fell from 107 in September to none in November [29b]. The project instruction file has never held a general step to read the governing chapter; until 2026-09-25 it told a session to read the procedure chapter for the procedure it was about to run [29d].
-- **DevHub does not tell the truth today.** Its anchor still names the parked drive [31]. Its start-of-session text reports figures from tables last written on 2026-07-07 [32b, 32c]. Its index of documents reads a copy of bc-docs that is 141 commits behind [29e, 33]. Of its 2,006 open tasks, 992 are review tasks it created itself [8a, 8b].
+- **The code is unstable.** Of 2,610 engine files DevHub scanned, 731 pass every code rule and 542 share duplicated blocks; the most-changed file in thirty days is the service that resolves business meaning [13].
+- **Small breaks block the obvious route.** The route that prepares a tenant's tables for a source matches none of the 19 records it should [9]. DevHub's tool for a metric's lifecycle calls a retired route [10a, 10c]. The served route for creating a tenant refuses by design, and four bc-docs documents and the project instruction file still name it [11a, 11c].
+- **Metric work stopped advancing.** Of 463 metric contract versions, 430 date from June and July and none has become active since 2026-09-30 [2a, 2b, 2c]. Four proof records exist, for three metrics [3]. Proof was built by hand for each contract version [4c, 6].
+- **bc-docs holds a list of functions and the approved words, and neither was in use** [22, 23a]. No chapter outside Foundation is locked [21a]. Of 13 procedure chapters, two name only, or nearly only, routes and tables that exist today [28].
+- **Delivery to a tenant is designed and not built.** The Subscription is defined, every point of enforcement is marked "Not yet wired", and no table exists [25a, 25b, 16d]. The rule in force is decision DEC-c220e4: every active tenant sees every active metric [24a].
+- **Chapters stopped being read and kept.** The share of session records citing a chapter fell from 20.7% in May to 0.4% in October, and commits to chapters fell from 107 in September to none in November [29a, 29b].
+- **DevHub does not tell the truth today.** Its anchor names the parked drive, its start-of-session text reports figures last written on 2026-07-07, and its index reads a copy of bc-docs 141 commits behind [31, 32c, 33].
 
 ## What is parked and what is held
 
@@ -170,7 +151,7 @@ Each item was re-established at its source on 2026-11-13 unless it says otherwis
 
 ## The functional map
 
-The map is assembled from three things bc-docs holds.
+A **function** is one thing the platform does that has inputs, outputs and acts of its own. The **functional map** is the list of all of them. It is assembled from three things bc-docs holds.
 - **The list of functions** in `docs/implementation/platform-readiness-program.md`: five shared services (S1 to S5), ten lanes of authoring (L1 to L10, fixed by decisions DEC-ce4314 and DEC-a67bae), and runtime, evidence, tenant self-service and action [22]. That chapter belongs to an earlier program and is marked closed; no current chapter holds a list.
 - **The approved words** of the vocabulary page.
 - **The coverage rule** of decision DEC-a67bae: every surface has exactly one owner.
@@ -214,7 +195,7 @@ Nine functions are added because the dossiers found the platform performs them a
 | OP | Operations (added) | Environments, serving the engine, secrets, schema change, backup |
 | DV | Development (added) | DevHub, bc-docs, review, and the rules for working |
 
-**The coverage rule.** Every surface belongs to exactly one function. A surface deliberately outside every function is entered in a register with one line saying why. A dead surface is entered in a retirement list and deleted in its function's Modify step. A surface that seems to serve two functions means responsibility must be split. The assignment, the register and the retirement list do not exist yet; DevHub will hold them, and that is part of phase 1's exit.
+**The coverage rule.** A **surface** is anything a person or a program can act through or read: a route, a service, a script, a command, a table, a screen, a document. Every surface belongs to exactly one function. A surface deliberately outside every function is entered in a register with one line saying why. A dead surface is entered in a retirement list and deleted in its function's Modify step. A surface that seems to serve two functions means responsibility must be split. The assignment, the register and the retirement list do not exist yet; DevHub will hold them, and that is part of phase 1's exit.
 
 **Who owns a function.** For the length of the program the Chief owns every function, and the operator decides. Naming a standing owner for each function is ruling G34.
 
@@ -222,7 +203,7 @@ The annex "The Functions in Brief" gives each function's state today, its main d
 
 ## The hand-offs between functions
 
-The dossiers list, for each function, what it receives and hands on, and mark many hand-offs as named in bc-docs and never defined. They reduce to twelve stitch contracts. Each states: which functions meet; what passes across, in which record; who acts; what starts the act; and what each side may assume. The Chief writes them in phase 2 and the operator approves each. The functions that meet at a stitch point are not modified before its contract is approved.
+The dossiers list, for each function, what it receives and hands on, and mark many hand-offs as named in bc-docs and never defined. A place where one function hands to another is a **stitch point**, and the written agreement for it is a **stitch contract**. The undefined hand-offs reduce to twelve stitch contracts. Each states: which functions meet; what passes across, in which record; who acts; what starts the act; which version is used; what happens when the act fails; and what each side may assume. A stitch contract is changed only by a new ruling, made before the functions it joins are locked. The Chief writes them in phase 2 and the operator approves each. The functions that meet at a stitch point are not modified before its contract is approved.
 
 | # | Stitch point | Between | What is undecided |
 |---|---|---|---|
@@ -254,7 +235,7 @@ Each function passes five steps in order. The Chief judges each exit and reports
 | Step | What is done | The exit |
 |---|---|---|
 | **Define** | The governing chapters of bc-docs are read first. The function's logic, acts and states are written in plain terms, consistent with the stitch contracts. Open questions go to the operator. | The operator has approved the definition. |
-| **Audit** | Every surface that touches the function is listed in DevHub and marked: the one path, a duplicate, or dead. The code-rule findings for its files are sorted into defects and noise. | Every route, table and script that DevHub's scans attribute to the function has an owner and a mark, and none is unassigned. |
+| **Audit** | Every surface that touches the function is listed in DevHub and marked: the one path, a duplicate, or dead. The code-rule findings for its files are sorted into defects and noise. | The list names the commit of each repository it was taken from. Every route, table and script that DevHub's scans attribute to the function at that commit has an owner and a mark, and each surface left deliberately unassigned is named with its reason. |
 | **Modify** | Breaks are repaired. Duplicates and dead code are deleted. Values written into code move into declarations. The function's commands are built. | Automatic checks pass, and the reference run gives the same values as before. |
 | **Prove** | A worker that took no part in the work, started with memory files switched off, is given only the chapter and the commands. It performs the function's acts and its part of the thread. | It succeeds with no ruling and no change to code; its transcript is kept. |
 | **Lock** | The four parts of the lock are put in place: a guard that fails when a second way to perform an act appears; a guard that the function's files pass the code rules; a test of its commands against a real database; and its chapter merged and marked locked, with the texts it replaces retired in the same change. | All four exist, and the replaced texts are deleted or marked as history. |
@@ -264,6 +245,8 @@ Rules that hold throughout: read the governing chapters before designing; one pa
 **Commands.** A function's commands are part of the engine's own code. Each has four verbs: **status** (where this stands and what is required next), **check** (would the act be refused, and why), **do** (the act), **verify** (did it take effect, and what shows it). A session, the operator console and DevHub all use the same commands, and the other ways in are deleted.
 
 **The reference run.** Before the engine is changed, one command must exist that evaluates a fixed set of metrics on a fixed copy of the databases and fails on any difference from recorded values. The proposed set is thirteen metrics (not re-checked; proposed in the annex "How the Work Is Done"). Phase 3 builds it. Its first run shows whether today's engine reproduces the recorded values; that is not known.
+
+**The hold on the engine is enforced, not only stated.** From phase 1, an automatic check on the engine's repository refuses any change to the files that produce values (the services of admission, canonical evaluation and metric evaluation, and the migrations they depend on) unless the operator has recorded an exception for that change. From the end of phase 3, the same check instead requires that the reference run has passed on the exact commit proposed. A passing reference run shows that values have not moved; it does not show that they are correct. Correctness is tested only by comparison with a value worked out independently, which is part of "done" and of the finish test.
 
 **The first three phases are preparation,** and the method applies to them in part. Phase 1 changes DevHub and bc-docs, not the engine, so the reference run and the thread do not apply to it; its exit is the list in "The order of work", and Development is locked only in phase 12. Phase 2 produces rulings and contracts, not code. Phase 3 follows the method except that it builds the reference run it will later be checked by. From phase 4 on the method applies in full.
 
@@ -279,15 +262,15 @@ The order is fixed. A phase begins when the one before it has met its exit.
 
 | Phase | Functions | The exit |
 |---|---|---|
-| 1 | DV: DevHub and bc-docs | DevHub's start-of-session text states only what is true. The anchor is pinned to this program. DevHub holds the program's plan, its rulings, and the assignment of surfaces with the register and the retirement list. The backlog is swept (ruling G2). DevHub records the chapters consulted when a plan is saved and when a session is closed. The code-rule baseline for the engine is enforced automatically. DevHub's dead tools are stopped (ruling G3). |
+| 1 | DV: DevHub and bc-docs | DevHub's start-of-session text states only what is true. The anchor is pinned to this program. DevHub holds the program's plan, its rulings, and the assignment of surfaces with the register and the retirement list. The backlog is swept (ruling G2). DevHub records the chapters consulted when a plan is saved and when a session is closed. The code-rule baseline for the engine is enforced automatically. The check that holds changes to the engine's value-producing files is in force. DevHub's dead tools are stopped (ruling G3). |
 | 2 | The frame | The operator has approved: the statement of what the product is (F1); the definition of "done" (F2); the map (F3); the twelve stitch contracts; the thread's metric and steps; and rulings F4 to F9, T6, B6 and B7. |
-| 3 | OP: Operations | One list of environment names is approved and in use. One written procedure serves the engine and has been followed once. Secrets are loaded one way. The schema-change path is written as practised. The reference run exists and has passed once. Rulings G12 to G15 are made. |
+| 3 | OP: Operations | One list of environment names is approved and in use. One written procedure serves the engine and has been followed once. Secrets are loaded one way. The schema-change path is written as practised. The reference run has passed once, and this document records the hash of the database copy, the engine commit, where each expected value came from, and the result. The check on the engine requires the reference run from then on. Rulings G12 to G15 are made. |
 | 4 | S1, S2, S3 | Each function is locked. |
 | 5 | L1, L2, L7 | Each is locked; a source table can be registered and read by commands alone. |
 | 6 | AI, L3, L4 | Each is locked. |
 | 7 | L5, L6, L8, L9 | Each is locked; the resolver reads the version a tenant adopted. |
 | 8 | RT, EV, PV | Each is locked; an expected value is compared by a declared procedure, with no code written for one contract version. |
-| 9 | L10, DL, S4 | Each is locked; every step of the thread listed in phase 2 can be performed by commands. |
+| 9 | L10, DL, S4 | Each is locked; every step of the thread listed in phase 2 can be performed by commands; and the thread is walked with the same choice of adopted version that was used to meet phase 7's exit, so that the resolver and delivery are shown to agree. |
 | 10 | TS, S5, NT | Each is locked; a user of the tenant sees the thread's value; the console performs every act through commands. |
 | 11 | PR, MD, SU, A1 | Each is locked, or is listed in the guide as designed and not built. |
 | 12 | DV: the rules for working | The rules for sessions, review and approvals are one locked chapter. No decision record or memory file remains unchecked. |
@@ -309,12 +292,12 @@ A ruling is a decision that belongs to the operator. It is recorded in this docu
 | # | The operator's words (2026-11-13) | The ruling | What the Chief added, to be confirmed |
 |---|---|---|---|
 | F1 | "I do not want to position 'metrics' as product." | Metrics are not positioned as the product. | The statement of what the product is; written in phase 2. |
-| T1 | "There will be subscription 'packages' and metrics will be bound to them. One to many." Asked whether a metric may belong to more than one package: "Yes." | A tenant subscribes to a package. A package holds many metrics. A metric may be in more than one package. | Two decided records describe four tiers (DEC-324d9e) and one interim package (DEC-cf6d3b); one of them must be amended to match (ruling T13). |
+| T1 | "There will be subscription 'packages' and metrics will be bound to them. One to many." Asked whether a metric may belong to more than one package: "Yes." | A tenant subscribes to a package. A package holds many metrics. A metric may be in more than one package. | How a package names its metrics is not yet designed (ruling T6). Decision DEC-cf6d3b treats its "Pre Launch Exclusive" package as interim, outside the four tiers of DEC-324d9e, so neither record conflicts with this ruling; a decided record is amended only if the chosen design changes it. |
 | T2 | "Agree", to the recommendation "designing it in full and building the minimum the thread needs". | Subscription and entitlement are designed in full; only what the thread needs is built. | The list of what the thread needs; written in phase 2. |
-| T3 | "I think a change which will affect value (value affecting change?) should be accepted by tenant admin/designated role/user." And "Agree", to "any change able to move a reported number should never be automatic". | A value-affecting change reaches a tenant only when the tenant's admin, or a role or user the tenant designates, accepts it. | Until it accepts, the tenant stays on the version it adopted. A change whose effect is uncertain is treated as value-affecting. Values already reported are never worked out again. A change that cannot affect a value is automatic. These follow bc-docs [27a, 27d] and are not the operator's words. |
+| T3 | "I think a change which will affect value (value affecting change?) should be accepted by tenant admin/designated role/user." And "Agree", to "any change able to move a reported number should never be automatic". | A value-affecting change reaches a tenant only when the tenant's admin, or a role or user the tenant designates, accepts it. | Until it accepts, the tenant stays on the version it adopted. While that version remains compatible with its source and its bindings, it continues to be evaluated. When the adopted version's source or binding becomes incompatible, new evaluation for that tenant is refused, nothing is reported in its place, and the tenant is shown the reason. Values already reported are never altered or worked out again. A change whose effect is uncertain is treated as value-affecting. A change that cannot affect a value is automatic. These additions are the Chief's, not the operator's words. Where they differ from the older policy in `docs/operating-model/source-change-classification.md` [27a, 27d], this ruling takes precedence once confirmed, and that chapter is amended in phase 2. |
 | G2 | "Agree", to the sweep of DevHub's backlog. | The review tasks DevHub created itself are aborted, in-progress tasks with no session are returned to parked, and the stale plans are replaced by one. | Done in phase 1 as one recorded act with the list attached. |
 
-### Open, and needed in phases 1 to 3
+### Open, and needed in phase 1
 
 | # | The question | The Chief's recommendation | Phase |
 |---|---|---|---|
@@ -322,25 +305,15 @@ A ruling is a decision that belongs to the operator. It is recorded in this docu
 | G3 | Are DevHub's unused tools and tables retired? (About 35 tools and 27 tables; not re-checked.) | Stop them in phase 1; remove them after one function is locked without them. | 1 |
 | G30 | Where do the rules for sessions live: a bc-docs chapter with the project instruction file pointing to it, or the instruction file alone? | The chapter. | 1 |
 | G34 | Who is the standing owner of each function after the program? | To be proposed in phase 12; the Chief until then. | 1 |
-| F2 | Is the vocabulary page's definition of "done" adopted as it stands? Which words are added to that page (plane, package, value-affecting change)? | Yes; add the three words. | 2 |
-| F3 | Is the map, with its nine additions, the platform's list of functions? | Yes. | 2 |
-| F4 | bc-docs measures a metric's progress on three scales: three tiers, a ladder of 25 rungs, and the ten lanes. Which is kept? | The vocabulary page's words; the other three become history. | 2 |
-| F5 | When does a chapter become locked? | When its function is locked. | 2 |
-| F6 | What does Integrity Assurance give a customer, in one statement? | Proposed in phase 2. | 2 |
-| F7 | The website states counts and badges the platform does not have. Are they corrected? | Yes; the operator decides the wording. | 2 |
-| F8 | Is the word for proof "validated against (source)", as the vocabulary page has it, or "Demoed"? | The vocabulary page's. | 2 |
-| F9 | "Auditor" names three things in the documents. Which one keeps the word? | Codex; the other two are renamed. | 2 |
-| T6 | Does a package name its metrics by a list, or by function and subfunction? | Proposed in phase 2. | 2 |
-| B6 | Who supplies the period of a scheduled evaluation? | Proposed with stitch contract 1. | 2 |
-| B7 | What starts canonical evaluation: a completed admission, a schedule, or a command only? | Proposed with stitch contract 1. | 2 |
-| B1 | May one copy of the platform and Kaveri databases be kept on the development machine, outside every repository, readable only by the operator's account, until the program ends? It holds demo data and password verifiers. | Yes; it is the fixed input of the reference run. | 3 |
-| B2 | If the first reference run does not reproduce the recorded values, which state of the contracts is the baseline? | Decide on the evidence of that run. | 3 |
-| G12 | Four merged database migrations are not applied (0032, 0034, 0035, 0038). Applied or withdrawn? | Proposed in phase 3. | 3 |
-| G13 | What are the environments called? | Proposed in phase 3. | 3 |
-| G14 | Which is the one procedure for serving the engine? | Proposed in phase 3. | 3 |
-| G15 | Are the cloud resources that are defined and not deployed kept as designed, or removed? | Proposed in phase 3. | 3 |
 
-The rulings needed in later phases, and the questions each dossier raises, are in the annex "The Rulings". Each is put to the operator in the Define step of the function it belongs to.
+### Open, and needed in phases 2 and 3
+
+Each is stated in full, with the Chief's recommendation, in the annex "The Rulings". They are put to the operator when their phase begins.
+
+- **Phase 2:** F2, whether the vocabulary page's definition of "done" is adopted as it stands; F3, the map; F4, which of three scales of a metric's progress is kept; F5, when a chapter becomes locked; F6, what Integrity Assurance gives a customer; F7, the website's claims; F8, the word for proof; F9, which of three things keeps the word "auditor"; T6, how a package names its metrics; B6 and B7, what starts canonical evaluation and who supplies the period.
+- **Phase 3:** B1, keeping one copy of the databases as the reference run's fixed input; B2, the baseline if the first run does not reproduce the recorded values; G12 to G15, the unapplied migrations, the names of environments, the one serving procedure, and the undeployed cloud resources.
+
+The rulings needed in later phases, and the questions each dossier raises, are in the same annex. Each is put to the operator in the Define step of the function it belongs to.
 
 ## What is not yet known
 

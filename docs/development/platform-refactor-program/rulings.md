@@ -26,9 +26,27 @@ diagrams: []
 
 This annex is part of the [Platform Refactor Program](../platform-refactor-program.md).
 
+## The decision, in the operator's words
+
+The operator's words at each step of the decision of 2026-11-13 are given exactly; an ellipsis marks words left out. They are an attributed record, taken from the transcript of the Chief's session of that day (Claude session `49b1f545-76dd-4dcb-bf1f-cf152b36c347`) and from checkpoints 974 to 982 of DevHub session SES-7decb4. The auditor could not authenticate them independently. The operator confirms them by approving the program.
+
+| # | The operator's words | What the program takes from them |
+|---|---|---|
+| 1 | "I think the spine is built but not clear/well defined/published and each time at each junction we either reinvent or go in wrong direction. May be a deep code/services review (and critical refactoring too) and one SINGLE dev guide (in specific chapters) will solve this issue permanently. … Clear memory (MD) line by line, check and fix ADRs one by one. There is no short cut." | A deep review; a refactor of what is critical; one guide; a check of every decision record and memory file. |
+| 2 | "It evolved organically needs an deep audit. We will create chapters for each workflow - define the logic, flow, evaluate-modify-lock the code/service. I think before locking the platform completely we should not have started building metric directory/catalog. IMO there is huge duplication and ambiguity which keeps biting us." | The method. The hold on the metric estate. |
+| 3 | "Yes, park both and start with step zero. we will create a document about this first." | The park of the demo drive and of the controller fleet; this document. |
+| 4 | "Note: Devhub is our spine" … "DevHub is mostly read only we need to make it actually functional." | DevHub carries the program and must be able to act. |
+| 5 | "Study DevHub first - look at the bigger picture 'the platform' (metric is core of it but they are not the only candidate)" | The scope is the whole platform. |
+| 6 | "let us adjust/modify services so that you can use them like an application to finally onboard metric/business concepts" | Each function ends in commands. |
+| 7 | "IMO this is time to stabilize the codebase too." | The rules for stabilising the code. |
+| 8 | "This is mostly operational but the functional side coverage/integrity is missing. … e.g. subscription and tenant management are missing and stitching them later is not considered/designed well enough I guess." | The functional map; hand-offs designed first. |
+| 9 | "Study bc-docs in depth first. IMO last few month we moved away from consulting bc-docs frequently could be a major lap." | bc-docs is read before design. |
+
+## The register
+
 A ruling is a decision that belongs to the operator. This annex is the full register: the rulings already decided, the open rulings of the program as a whole, and the open questions raised by the dossier of each function. The main document carries the decided rulings and the open rulings needed first.
 
-A **ruling** is a decision that belongs to the operator. Each is recorded here when made and is then written into the guide. Rulings are numbered in four series: A for the frame and the product; T for tenants, subscription and delivery; B for the engine, the contracts and proof; G for governance, access, operations and development. "Needed by" names the phase of the order of work that cannot finish without the ruling.
+A **ruling** is a decision that belongs to the operator. Each is recorded here when made and is then written into the guide. Rulings are numbered in four series: F for the frame and the product; T for tenants, subscription and delivery; B for the engine, the contracts and proof; G for governance, access, operations and development. "Needed by" names the phase of the order of work that cannot finish without the ruling.
 
 ### Decided
 
@@ -37,15 +55,17 @@ A **ruling** is a decision that belongs to the operator. Each is recorded here w
 | F1 | What the product is | Metrics are not positioned as the product. bc-docs states that BareCount is "an enterprise data observation platform", and the adopted thesis is Integrity Assurance (DEC-71c027). Metrics are how governed state is consumed. The exact statement is written in phase 2 and confirmed by the operator. Texts that position metrics as the product are corrected. | 2026-11-13 |
 | T1 | What a tenant subscribes to | A tenant subscribes to a package. Metrics are bound to packages: one package holds many metrics, and a metric may be in more than one package. | 2026-11-13 |
 | T2 | How much of subscription is built in the program | It is designed in full. Only the minimum the thread needs is built. | 2026-11-13 |
-| T3 | How a new version reaches a tenant | A change that can affect a reported value reaches a tenant only when the tenant's admin, or a role or user the tenant designates, accepts it. Until then the tenant stays on the version it adopted and continues to report on it. A change that cannot affect a value reaches bound tenants automatically. A change whose effect is uncertain is treated as value-affecting. Values already reported are never worked out again. | 2026-11-13 |
+| T3 | How a new version reaches a tenant | A change that can affect a reported value reaches a tenant only when the tenant's admin, or a role or user the tenant designates, accepts it (the operator's words). Added by the Chief, to be confirmed: until it accepts, the tenant stays on the version it adopted; while that version remains compatible with its source and its bindings it continues to be evaluated; when the adopted version's source or binding becomes incompatible, new evaluation for that tenant is refused, nothing is reported in its place, and the tenant is shown the reason; values already reported are never altered or worked out again; a change whose effect is uncertain is treated as value-affecting; a change that cannot affect a value is automatic. Once confirmed, this ruling takes precedence over the older policy in `docs/operating-model/source-change-classification.md`, which is amended in phase 2. | 2026-11-13 |
 | G2 | The DevHub backlog | Abort the automatically created review tasks, return to "parked" the in-progress tasks that have no session, and replace the stale plans with one. Done in phase 1 as one recorded act in DevHub with the list attached. | 2026-11-13 |
 
 ### Open
 
-Ruling G5 (moving DevHub to Postgres) is open: the operator said there is "no specific pain … just aspiration/fear factor", and the Chief recommends "not now". Ruling F9 (which of three things keeps the word "auditor") and ruling G34 (the standing owner of each function after the program) were added when the main document was revised; both are stated in the main document under "Open, and needed in phases 1 to 3".
 
 | # | Subject | The question | The Chief's recommendation | Needed by |
 |---|---|---|---|---|
+| G5 | Moving DevHub to Postgres | Is DevHub moved to a Postgres database? The operator said there is "no specific pain … just aspiration/fear factor". | Not now. Meet the fear directly: a backup restored once as a test, a record of schema changes, and requests that refuse unknown fields. | Phase 1 |
+| G34 | The standing owner of each function | Who owns each function after the program? | To be proposed in phase 12; the Chief until then. | Phase 1 |
+| F9 | The word "auditor" | "Auditor" names three things in the documents. Which keeps the word? | Codex; the other two are renamed. | Phase 2 |
 | F2 | The definition of "done" | Is section 5 of the vocabulary page adopted as it stands? | Yes. Add the missing words through that page: plane, package, value-affecting change. | Phase 2 |
 | F3 | The functional map | Is the functional map of the main document, with its nine additions, the platform's list of functions? | Yes; amend the chapter in bc-docs to match. | Phase 2 |
 | F4 | The scale of a metric's progress | Three scales exist (three tiers, a ladder of 25 rungs, the lanes). Which is kept? | The vocabulary's status words; the others become history. | Phase 2 |
@@ -67,7 +87,7 @@ Ruling G5 (moving DevHub to Postgres) is open: the operator said there is "no sp
 
 ### Open: raised by the function dossiers
 
-Each dossier ends with "Open questions for the operator". The questions that are real decisions and are not already in the tables above are listed here, numbered on in the same four series: A for the frame and the product; T for tenants, subscription and delivery; B for the engine, the contracts and proof; G for governance, access, operations and development. The function named is the one whose dossier raises the question. Where the recommendation says "Define step", it is to be proposed in the function's Define step, because the dossier does not support one.
+Each dossier ends with "Open questions for the operator". The questions that are real decisions and are not already in the tables above are listed here, numbered on in the same four series: F for the frame and the product; T for tenants, subscription and delivery; B for the engine, the contracts and proof; G for governance, access, operations and development. The function named is the one whose dossier raises the question. Where the recommendation says "Define step", it is to be proposed in the function's Define step, because the dossier does not support one.
 
 Some dossier questions are already covered above: the one route for creating a tenant (T4), the tenant class column (T5), how a package names its metrics (T6), how proof is produced and from what the expected value is worked out (B4, B5), and the approvals, the fixed input, the binding chapter and the single operator surface (G1, B1, A5, G4).
 
@@ -80,7 +100,7 @@ Some dossier questions are already covered above: the one route for creating a t
 | T10 | S3 | The tenant infrastructure record | Is `tenant.tenant_infrastructure` kept true by the creation act, or retired? | Define step | Phase 4 |
 | T11 | S4, DL | The package record | Is `pricing.package` reshaped to hold metrics, or kept for readers while a new table carries the offer? | Define step | Phase 9 |
 | T12 | S4 | The interim package | Is it the existing `Free` row or a new `pre_launch_exclusive` row? | Define step | Phase 9 |
-| T13 | S4 | Four tiers and external billing | Does DEC-324d9e remain the decided commercial model? | Ruling T1 needs DEC-324d9e or DEC-cf6d3b amended. | Phase 9 |
+| T13 | S4 | Four tiers and external billing | Does DEC-324d9e remain the decided commercial model? DEC-cf6d3b treats its interim package as outside those four tiers, so ruling T1 conflicts with neither record. | Amend a decided record only if the design chosen under ruling T6 changes it. | Phase 9 |
 | T14 | DL | The record of "released" | Is it kept for each metric, or implied by membership of a package? | Define step | Phase 9 |
 | T15 | DL | A metric in two packages | Does it stay enabled for a tenant that leaves one of them? | Define step | Phase 9 |
 | T16 | DL | Classifying a change | Who decides that a change is value-affecting: its author, the certification panel or a rule in the database? | Define step | Phase 7 |
