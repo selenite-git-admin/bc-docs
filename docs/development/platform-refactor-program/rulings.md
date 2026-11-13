@@ -34,23 +34,24 @@ A **ruling** is a decision that belongs to the operator. Each is recorded here w
 
 | # | Subject | The ruling | Date |
 |---|---|---|---|
-| A1 | What the product is | Metrics are not positioned as the product. bc-docs states that BareCount is "an enterprise data observation platform", and the adopted thesis is Integrity Assurance (DEC-71c027). Metrics are how governed state is consumed. The exact statement is written in phase 2 and confirmed by the operator. Texts that position metrics as the product are corrected. | 2026-11-13 |
+| F1 | What the product is | Metrics are not positioned as the product. bc-docs states that BareCount is "an enterprise data observation platform", and the adopted thesis is Integrity Assurance (DEC-71c027). Metrics are how governed state is consumed. The exact statement is written in phase 2 and confirmed by the operator. Texts that position metrics as the product are corrected. | 2026-11-13 |
 | T1 | What a tenant subscribes to | A tenant subscribes to a package. Metrics are bound to packages: one package holds many metrics, and a metric may be in more than one package. | 2026-11-13 |
 | T2 | How much of subscription is built in the program | It is designed in full. Only the minimum the thread needs is built. | 2026-11-13 |
 | T3 | How a new version reaches a tenant | A change that can affect a reported value reaches a tenant only when the tenant's admin, or a role or user the tenant designates, accepts it. Until then the tenant stays on the version it adopted and continues to report on it. A change that cannot affect a value reaches bound tenants automatically. A change whose effect is uncertain is treated as value-affecting. Values already reported are never worked out again. | 2026-11-13 |
 | G2 | The DevHub backlog | Abort the automatically created review tasks, return to "parked" the in-progress tasks that have no session, and replace the stale plans with one. Done in phase 1 as one recorded act in DevHub with the list attached. | 2026-11-13 |
-| G5 | Moving DevHub to Postgres | Not now. It is reconsidered if contention for the database is measured or DevHub must be reached from another machine. | 2026-11-13 |
 
 ### Open
 
+Ruling G5 (moving DevHub to Postgres) is open: the operator said there is "no specific pain … just aspiration/fear factor", and the Chief recommends "not now". Ruling F9 (which of three things keeps the word "auditor") and ruling G34 (the standing owner of each function after the program) were added when the main document was revised; both are stated in the main document under "Open, and needed in phases 1 to 3".
+
 | # | Subject | The question | The Chief's recommendation | Needed by |
 |---|---|---|---|---|
-| A2 | The definition of "done" | Is section 5 of the vocabulary page adopted as it stands? | Yes. Add the missing words through that page: plane, package, value-affecting change. | Phase 2 |
-| A3 | The functional map | Is the map above, with its nine additions, the platform's list of functions? | Yes; amend the chapter in bc-docs to match. | Phase 2 |
-| A4 | The scale of a metric's progress | Three scales exist (three tiers, a ladder of 25 rungs, the lanes). Which is kept? | The vocabulary's status words; the others become history. | Phase 2 |
-| A5 | What makes a chapter binding | No chapter is locked today. | A chapter is locked when its function is locked. | Phase 2 |
-| A6 | What Integrity Assurance gives a customer, and who "the auditor" is | Three different things carry the word "auditor". | Proposed in phase 2. | Phase 2 |
-| A7 | Public claims | The website states counts and badges the platform does not have. | Correct them; the operator decides the wording. | Phase 2 |
+| F2 | The definition of "done" | Is section 5 of the vocabulary page adopted as it stands? | Yes. Add the missing words through that page: plane, package, value-affecting change. | Phase 2 |
+| F3 | The functional map | Is the functional map of the main document, with its nine additions, the platform's list of functions? | Yes; amend the chapter in bc-docs to match. | Phase 2 |
+| F4 | The scale of a metric's progress | Three scales exist (three tiers, a ladder of 25 rungs, the lanes). Which is kept? | The vocabulary's status words; the others become history. | Phase 2 |
+| F5 | What makes a chapter binding | No chapter is locked today. | A chapter is locked when its function is locked. | Phase 2 |
+| F6 | What Integrity Assurance gives a customer, and who "the auditor" is | Three different things carry the word "auditor". | Proposed in phase 2. | Phase 2 |
+| F7 | Public claims | The website states counts and badges the platform does not have. | Correct them; the operator decides the wording. | Phase 2 |
 | T4 | Creating a tenant | Which is the one route? | The operator's command, reachable from the console. | Phase 4 |
 | T5 | Tenant class | Does creating a tenant of class "customer" count as activating a tenant for an outside party? Two tenants of that class exist today, both suspended, and the vocabulary page says no tenant kind is recorded. | Yes; and correct the vocabulary page. | Phase 4 |
 | T6 | How a package names its metrics | By a list, or by function and subfunction? The package table that exists today lists readers, not metrics, and has no row for the interim package that DEC-cf6d3b names. | Proposed in phase 2. | Phase 2 |
@@ -72,7 +73,7 @@ Some dossier questions are already covered above: the one route for creating a t
 
 | # | Function | Subject | The question | Recommendation | Needed by |
 |---|---|---|---|---|---|
-| A8 | PV | The word for proof | Is the status word "validated against (source)", as the vocabulary page has it, or "Demoed"? | Define step | Phase 2 |
+| F8 | PV | The word for proof | Is the status word "validated against (source)", as the vocabulary page has it, or "Demoed"? | Define step | Phase 2 |
 | T7 | S2 | A tenant's later users | Who creates them, the operator only or the tenant admin, and is the users screen in the program? | Define step | Phase 4 |
 | T8 | S3 | Resuming a suspended tenant | Is resuming a governed act in the program, and what record does it write? | Define step | Phase 4 |
 | T9 | S3 | The two tenants of class `customer` | Are `kaveridemo` and `kaveridemo2` retired, or kept for the thread? | Define step | Phase 4 |

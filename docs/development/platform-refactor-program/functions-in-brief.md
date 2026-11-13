@@ -45,7 +45,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - The served pool id equals the pool defined in bc-infra, and a check fails when they differ.
   - A CI scan fails on any committed credential in any repository.
-- **Full dossier:** [S1, Authentication](platform-refactor-program/functions-shared-services-operations-development.md#s1-authentication)
+- **Full dossier:** [S1, Authentication](functions-shared-services-operations-development.md#s1-authentication)
 
 ### S2, User and access management
 - **What it is:** This function decides what an authenticated caller may do. It covers creating users, giving them roles, and keeping platform routes and tenant routes apart.
@@ -60,7 +60,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One route creates a user, and it refuses a tenant slug that is not in the registry.
   - A CI test fails when a platform write route has no role marker.
-- **Full dossier:** [S2, User and access management](platform-refactor-program/functions-shared-services-operations-development.md#s2-user-and-access-management)
+- **Full dossier:** [S2, User and access management](functions-shared-services-operations-development.md#s2-user-and-access-management)
 
 ### S3, Tenant lifecycle and management
 - **What it is:** This function creates a tenant, changes its state and retires it. Creating a tenant means writing its row in the registry and creating its own database.
@@ -75,7 +75,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - Tenant creation has exactly one entry point, and the existing CI guard fails if a second creator appears.
   - Each state change (create, suspend, resume, retire) has one governed act that writes a record.
-- **Full dossier:** [S3, Tenant lifecycle and management](platform-refactor-program/functions-shared-services-operations-development.md#s3-tenant-lifecycle-and-management)
+- **Full dossier:** [S3, Tenant lifecycle and management](functions-shared-services-operations-development.md#s3-tenant-lifecycle-and-management)
 
 ### S4, Pricing and subscription
 - **What it is:** This function is meant to define what a tenant buys and to record that it bought it: packages, the Subscription, entitlement and billing. Today only a small package table and its screens exist.
@@ -90,7 +90,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One Subscription record per tenant exists, and tenant creation writes it.
   - Entitlement is checked in exactly one place, with a test that fails when the check is removed.
-- **Full dossier:** [S4, Pricing and subscription](platform-refactor-program/functions-shared-services-operations-development.md#s4-pricing-and-subscription)
+- **Full dossier:** [S4, Pricing and subscription](functions-shared-services-operations-development.md#s4-pricing-and-subscription)
 
 ### S5, Operator console
 - **What it is:** The operator console is the web application bc-admin. An operator uses it to see and administer everything else on the platform; each screen calls bc-core, and the console holds no data of its own.
@@ -105,7 +105,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - A generated table lists every governed act and its screen, command or "none by decision"; CI fails when an act has no entry.
   - No screen calls a route that is retired or always refuses.
-- **Full dossier:** [S5, Operator console](platform-refactor-program/functions-shared-services-operations-development.md#s5-operator-console)
+- **Full dossier:** [S5, Operator console](functions-shared-services-operations-development.md#s5-operator-console)
 
 **Authoring**
 
@@ -122,7 +122,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One route creates catalog rows, and no row can be created `approved`.
   - A contract cannot be written over a table that is not `approved` and `verified`.
-- **Full dossier:** [L1, Source Catalog](platform-refactor-program/functions-authoring-lanes.md#l1-source-catalog)
+- **Full dossier:** [L1, Source Catalog](functions-authoring-lanes.md#l1-source-catalog)
 
 ### L2, Source and Admission Contracts
 - **What it is:** A Source Contract declares the structure of one source table. An Admission Contract declares the rules under which rows observed from that table are admitted or rejected. They are written as a pair over one catalog table.
@@ -137,7 +137,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One command writes a pair, and a CI guard fails on any other writer.
   - At most one version of a contract is in force, enforced in the database.
-- **Full dossier:** [L2, Source and Admission Contracts](platform-refactor-program/functions-authoring-lanes.md#l2-source-and-admission-contracts)
+- **Full dossier:** [L2, Source and Admission Contracts](functions-authoring-lanes.md#l2-source-and-admission-contracts)
 
 ### L3, Vocabulary
 - **What it is:** L3 authors the business concept registry: the one governed list of entities, characteristics and business concepts that every contract refers to by identity. Candidates are shaped by an AI panel and written only after a certification record exists.
@@ -152,7 +152,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One command set creates, publishes, versions, supersedes and withdraws each of the three kinds.
   - A CI guard fails if any file outside the writer service writes `concept_registry`.
-- **Full dossier:** [L3, Vocabulary](platform-refactor-program/functions-authoring-lanes.md#l3-vocabulary)
+- **Full dossier:** [L3, Vocabulary](functions-authoring-lanes.md#l3-vocabulary)
 
 ### L4, Observation Contracts
 - **What it is:** An observation contract declares how one source table is read into business concepts: which fields and rows are selected, which concept each field carries, and the shape of the source object that admission preserves.
@@ -167,7 +167,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One command set creates, versions, brings into force and supersedes an observation contract.
   - At most one version per contract is in state `active`, enforced in the database.
-- **Full dossier:** [L4, Observation Contracts](platform-refactor-program/functions-authoring-lanes.md#l4-observation-contracts)
+- **Full dossier:** [L4, Observation Contracts](functions-authoring-lanes.md#l4-observation-contracts)
 
 ### L5, Canonical Contracts
 - **What it is:** A canonical contract declares the business meaning of one entity, independent of any source system. This lane authors its versions, moves them through their states, has their tables created for each tenant, and fixes which version an evaluation reads.
@@ -182,7 +182,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One route creates a canonical version and can declare the grain pin and the key form.
   - The readiness pass skips or refuses every held version, with a test.
-- **Full dossier:** [L5, Canonical Contracts](platform-refactor-program/functions-authoring-lanes.md#l5-canonical-contracts)
+- **Full dossier:** [L5, Canonical Contracts](functions-authoring-lanes.md#l5-canonical-contracts)
 
 ### L6, Metric Contracts and certification
 - **What it is:** A Metric Contract is the governed declaration of one metric: its formula, the concepts its variables read, its metric grain and its filters. This lane authors a version, carries it through review and approval, and has it certified.
@@ -197,7 +197,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One command takes a directory entry to a certified version.
   - A CI guard fails on any new write to `governance_state_code` outside `McfCertWriterService`.
-- **Full dossier:** [L6, Metric Contracts and certification](platform-refactor-program/functions-authoring-lanes.md#l6-metric-contracts-and-certification)
+- **Full dossier:** [L6, Metric Contracts and certification](functions-authoring-lanes.md#l6-metric-contracts-and-certification)
 
 ### L7, Readers and connections
 - **What it is:** This lane authors the definitions that let the platform read a source system: connectors, connections, readers, reader flavors, and the two bindings that pin the admission contract version and the observation contract version a run uses.
@@ -212,7 +212,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - Each act has exactly one mounted write route.
   - `reader_binding` names an admission contract in a column with that name and a foreign key.
-- **Full dossier:** [L7, Readers and connections](platform-refactor-program/functions-authoring-lanes.md#l7-readers-and-connections)
+- **Full dossier:** [L7, Readers and connections](functions-authoring-lanes.md#l7-readers-and-connections)
 
 ### L8, Metric Directory
 - **What it is:** The Metric Directory is the governed list of the metrics that should exist. An entry is registered when it has a row, and realized when a governed act asserts that a specific metric contract version fulfils it.
@@ -227,7 +227,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One route registers a member, one creates an intake, and the intake refuses a missing member.
   - Every version in `mcf.mcv_live` has an operative realization.
-- **Full dossier:** [L8, Metric Directory](platform-refactor-program/functions-authoring-lanes.md#l8-metric-directory)
+- **Full dossier:** [L8, Metric Directory](functions-authoring-lanes.md#l8-metric-directory)
 
 ### L9, Chain integrity
 - **What it is:** Chain integrity answers, for each metric contract version, whether the contracts and vocabulary it depends on line up today. The answer is the chain verdict: green, amber or red. It says nothing about values.
@@ -242,7 +242,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One list of checks, generated from the code, appears in the chapter, the vocabulary page and the DevHub tool.
   - The vocabulary page and the guide state the same rule on what the verdict gates.
-- **Full dossier:** [L9, Chain integrity](platform-refactor-program/functions-authoring-lanes.md#l9-chain-integrity)
+- **Full dossier:** [L9, Chain integrity](functions-authoring-lanes.md#l9-chain-integrity)
 
 ### L10, Tenant onboarding
 - **What it is:** L10 is the hand-off from the platform to one tenant. It records which contract versions a tenant has adopted, issues a provisioning command for each table the tenant needs, and runs the worker that creates those tables in the tenant's database.
@@ -257,7 +257,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One command creates a tenant, and every document and screen names it.
   - One act enables a metric for a tenant, from one origin of provisioning commands.
-- **Full dossier:** [L10, Tenant onboarding](platform-refactor-program/functions-authoring-lanes.md#l10-tenant-onboarding)
+- **Full dossier:** [L10, Tenant onboarding](functions-authoring-lanes.md#l10-tenant-onboarding)
 
 **Runtime and proof**
 
@@ -274,7 +274,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - Each of the three acts has exactly one entry point, and a CI guard fails on a second.
   - Each act reads the contract version from the tenant's adoption record, proven by a test.
-- **Full dossier:** [RT, Runtime](platform-refactor-program/functions-runtime-delivery-support.md#rt-runtime)
+- **Full dossier:** [RT, Runtime](functions-runtime-delivery-support.md#rt-runtime)
 
 ### EV, Evidence and lineage
 - **What it is:** Evidence is the record that a boundary act happened, with its outcome. Lineage is the record of what that act referenced. Both are written by the act itself and are never rebuilt afterwards.
@@ -289,7 +289,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - Every boundary act writes its evidence and lineage in the same transaction as its object, and a test fails when evidence is missing.
   - No route creates evidence or lineage outside a boundary act; a CI guard fails on a new one.
-- **Full dossier:** [EV, Evidence and lineage](platform-refactor-program/functions-runtime-delivery-support.md#ev-evidence-and-lineage)
+- **Full dossier:** [EV, Evidence and lineage](functions-runtime-delivery-support.md#ev-evidence-and-lineage)
 
 ### PV, Proof against the source
 - **What it is:** Proof against the source asks whether the value the platform produced agrees with a value worked out independently from the same source data for the same period. Today it is done on the demo plane.
@@ -304,7 +304,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One chapter defines the proof, its record and its words, and the vocabulary names the record for condition 4 of "done".
   - A new contract version can be proven with no new migration and no hand-written table.
-- **Full dossier:** [PV, Proof against the source](platform-refactor-program/functions-runtime-delivery-support.md#pv-proof-against-the-source)
+- **Full dossier:** [PV, Proof against the source](functions-runtime-delivery-support.md#pv-proof-against-the-source)
 
 **Delivery**
 
@@ -321,7 +321,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One resolver answers "may this tenant run this metric, at which version", and evaluation and the tenant's list both call it.
   - A value-affecting version change does not reach a tenant without an acceptance record, proven by a test.
-- **Full dossier:** [DL, Delivery to a tenant](platform-refactor-program/functions-runtime-delivery-support.md#dl-delivery-to-a-tenant)
+- **Full dossier:** [DL, Delivery to a tenant](functions-runtime-delivery-support.md#dl-delivery-to-a-tenant)
 
 ### TS, Tenant self-service
 - **What it is:** Tenant self-service is the customer portal, the application a tenant's own users sign in to. They see their metrics and values, declare legal entities and fiscal calendars, and register connections. The portal is the repository bc-portal.
@@ -336,7 +336,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - Every page shows either governed data or nothing; no page mixes sample facts with a tenant's values.
   - The portal calls only tenant-scoped routes, checked by a test over its API clients.
-- **Full dossier:** [TS, Tenant self-service](platform-refactor-program/functions-runtime-delivery-support.md#ts-tenant-self-service)
+- **Full dossier:** [TS, Tenant self-service](functions-runtime-delivery-support.md#ts-tenant-self-service)
 
 ### A1, Action and intervention
 - **What it is:** An Action Object is a declared intent bound to one or more Metric Snapshots, with its outcome recorded. An intervention contract says when an action is created and how its outcome is resolved. This boundary is designed in Foundation and is not built.
@@ -351,7 +351,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - The guide lists the function as designed, not built, with the Foundation text as its definition.
   - No screen presents an action as real.
-- **Full dossier:** [A1, Action and intervention](platform-refactor-program/functions-runtime-delivery-support.md#a1-action-and-intervention)
+- **Full dossier:** [A1, Action and intervention](functions-runtime-delivery-support.md#a1-action-and-intervention)
 
 ### NT, Notifications and webhooks
 - **What it is:** Notifications and webhooks are how the platform tells someone outside an act that the act happened. As built, it records a completion event for each runtime act, raises a support ticket from some events, and can deliver signed webhooks. It sends no email.
@@ -366,7 +366,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - The chapter matches the code, and an ADR authorizes each channel that exists.
   - The notice ruling T3 requires has a defined record and channel, or is listed as designed, not built.
-- **Full dossier:** [NT, Notifications and webhooks](platform-refactor-program/functions-runtime-delivery-support.md#nt-notifications-and-webhooks)
+- **Full dossier:** [NT, Notifications and webhooks](functions-runtime-delivery-support.md#nt-notifications-and-webhooks)
 
 **Support**
 
@@ -383,7 +383,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One erasure has been run end to end on a test subject, with action rows and evidence, by the written procedure.
   - Every table that holds personal data is in the registry, checked by a CI guard over the schema.
-- **Full dossier:** [PR, Privacy and retention](platform-refactor-program/functions-runtime-delivery-support.md#pr-privacy-and-retention)
+- **Full dossier:** [PR, Privacy and retention](functions-runtime-delivery-support.md#pr-privacy-and-retention)
 
 ### MD, Master data
 - **What it is:** Master data is the reference data that other functions look up and do not author: countries, currencies, dates, fiscal calendars, business functions and subfunctions, industries and lists of allowed values. It also includes the legal entities a tenant declares.
@@ -398,7 +398,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One chapter lists every master table with its owner and the one act that changes it.
   - No evaluation setting names a legal entity or calendar outside its record.
-- **Full dossier:** [MD, Master data](platform-refactor-program/functions-runtime-delivery-support.md#md-master-data)
+- **Full dossier:** [MD, Master data](functions-runtime-delivery-support.md#md-master-data)
 
 ### AI, AI services
 - **What it is:** AI services are the AI panels the platform uses to draft and to judge governed content, the vendors those panels call, and the record of what each call cost. There are four panels, and all run inside bc-core.
@@ -413,7 +413,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One chapter describes the panels as they run; the bc-ai chapters are marked as history.
   - One module calls vendors; a CI guard fails on a vendor address outside it.
-- **Full dossier:** [AI, AI services](platform-refactor-program/functions-runtime-delivery-support.md#ai-ai-services)
+- **Full dossier:** [AI, AI services](functions-runtime-delivery-support.md#ai-ai-services)
 
 ### SU, Support
 - **What it is:** Support is how a problem with the platform or a tenant's data becomes a tracked ticket and is resolved. As built, the platform raises tickets automatically when a runtime act fails or a contract is violated, and operators work them. A tenant cannot open a ticket.
@@ -428,7 +428,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - The chapter describes the ticket store, its automatic triggers and who works it.
   - The portal's support page either calls a tenant-scoped route or is removed.
-- **Full dossier:** [SU, Support](platform-refactor-program/functions-runtime-delivery-support.md#su-support)
+- **Full dossier:** [SU, Support](functions-runtime-delivery-support.md#su-support)
 
 **Running the platform**
 
@@ -445,7 +445,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One written serve procedure has one committed script.
   - The reference run exists, runs from a fixed input, and its result is required before engine code merges.
-- **Full dossier:** [OP, Operations](platform-refactor-program/functions-shared-services-operations-development.md#op-operations)
+- **Full dossier:** [OP, Operations](functions-shared-services-operations-development.md#op-operations)
 
 ### DV, Development
 - **What it is:** Development is the set of tools and rules by which the platform is changed: DevHub, bc-docs, ADRs, the auditor exchange with the approval desk, and memory files with change records.
@@ -460,4 +460,4 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - The anchor is the current program, and a check fails when the pinned document is not on `main`.
   - The document index is built from bc-docs `main` and states its age.
-- **Full dossier:** [DV, Development](platform-refactor-program/functions-shared-services-operations-development.md#dv-development)
+- **Full dossier:** [DV, Development](functions-shared-services-operations-development.md#dv-development)
