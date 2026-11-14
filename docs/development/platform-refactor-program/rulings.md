@@ -58,13 +58,14 @@ A **ruling** is a decision that belongs to the operator. Each is recorded here w
 | T3 | How a new version reaches a tenant | A change that can affect a reported value reaches a tenant only when the tenant's admin, or a role or user the tenant designates, accepts it (the operator's words). Added by the Chief, to be confirmed: until it accepts, the tenant stays on the version it adopted; while that version remains compatible with its source and its bindings it continues to be evaluated; when the adopted version's source or binding becomes incompatible, new evaluation for that tenant is refused, nothing is reported in its place, and the tenant is shown the reason; values already reported are never altered or worked out again; a change whose effect is uncertain is treated as value-affecting; a change that cannot affect a value is automatic. Once confirmed, this ruling takes precedence over the older policy in `docs/operating-model/source-change-classification.md`, which is amended in phase 2. | 2026-11-13 |
 | G2 | The DevHub backlog | Abort the automatically created review tasks, return to "parked" the in-progress tasks that have no session, and replace the stale plans with one. Done in phase 1 as one recorded act in DevHub with the list attached. | 2026-11-13 |
 
+
+On 2026-11-14 the operator confirmed the rulings above, with what the Chief had added to each, and decided four more with the words "All approved.": G5 (DevHub stays on its present database for the length of the program), G3 (DevHub's unused tools and tables are stopped in phase 1 and removed after one function has been locked without them), G30 (the rules for sessions live in a bc-docs chapter, and the project instruction file points to it), and G34 (the Chief owns every function until phase 12, when a standing owner for each is proposed). The decision is recorded as decision record DEC-71f15e.
+
 ### Open
 
 
 | # | Subject | The question | The Chief's recommendation | Needed by |
 |---|---|---|---|---|
-| G5 | Moving DevHub to Postgres | Is DevHub moved to a Postgres database? The operator said there is "no specific pain … just aspiration/fear factor". | Not now. Meet the fear directly: a backup restored once as a test, a record of schema changes, and requests that refuse unknown fields. | Phase 1 |
-| G34 | The standing owner of each function | Who owns each function after the program? | To be proposed in phase 12; the Chief until then. | Phase 1 |
 | G35 | A platform operations application | Operations has no application: its scripts are in `~/bc-stack`, which is in no repository. Part one: in which repository are the scripts kept, and which function owns each command? Part two: does Operations have a screen of its own? | Part one: bc-infra, which holds the cloud definitions today; the scripts and the unversioned database-reading tool move there as the commands of Operations, after their text and their output have been checked so that no secret value, local secret file or logged value enters the repository. A script there has no authority to change the cloud. Part two: decide with ruling G4; a new screen or a new operating act needs its own ruling. | Part one, phase 3; part two, phase 12 |
 | F9 | The word "auditor" | "Auditor" names three things in the documents. Which keeps the word? | Codex; the other two are renamed. | Phase 2 |
 | F2 | The definition of "done" | Is section 5 of the vocabulary page adopted as it stands? | Yes. Add the missing words through that page: plane, package, value-affecting change. | Phase 2 |
@@ -82,7 +83,6 @@ A **ruling** is a decision that belongs to the operator. Each is recorded here w
 | B4 | How proof against the source is produced | On the separate demo plane, or on a demo tenant through the ordinary path? | Decide after phase 2. | Phase 8 |
 | B5 | The expected value | From what is it worked out? The vocabulary says "worked out independently from the same source data". Every expected value recorded so far was worked out from a synthetic fixture or from the rows the platform had already admitted. | From the source system's own data, read independently of the platform. This is a stricter reading than the vocabulary's words and needs the ruling. | Phase 8 |
 | G1 | Approvals on the development machine | Which acts need the operator's code? | Changes applied to a database and acts on data that cannot be undone. Standing permission for merges the auditor has accepted and for serving a new build. | Phase 12 |
-| G3 | Retiring dead DevHub tools and tables | About 35 of DevHub's 110 tools and about 27 of its 66 tables (the two "about" figures are not re-checked; reported in artifacts/spine-review/DEVHUB-2-as-platform-spine.md). | Stop them first; remove them after one function has been locked without them. | Phase 1 |
 | G4 | One surface for the operator | Should the approval desk and DevHub become one? | Decide after phase 1. | Phase 12 |
 | G6 | Decision records with no file | Three records that code cites have no file on the main branch (not re-checked; no annex verifies the count). DevHub holds 663 decision rows and bc-docs holds 659 ADR files [8f]. | Land them as history, then fold them into the guide. | Phase 12 |
 
@@ -163,7 +163,6 @@ Some dossier questions are already covered above: the one route for creating a t
 | G27 | MD | What belongs in schema `master` | Do the library register and `semantic_family` leave it? | Define step | Phase 11 |
 | G28 | SU | Tickets the platform raises itself | Are they support, or a log of runtime failures? | Define step | Phase 11 |
 | G29 | SU | The open tickets | Who owns them, and are they closed together? | Define step | Phase 11 |
-| G30 | DV | The home of the session rules | A bc-docs chapter with `CLAUDE.md` as a pointer, or `CLAUDE.md` alone? | Define step | Phase 1 |
 | G31 | DV | Memory files | A separate store, or folded into chapters as functions are locked? | Define step | Phase 12 |
 | G32 | DV | Which close gates are kept | All of them, or only the report, the commits, the deliverables and the auditor threads? | Define step | Phase 12 |
 | G33 | DV | A decision record and its chapter | May a decided ADR merge without the change to its chapter? | Define step | Phase 12 |

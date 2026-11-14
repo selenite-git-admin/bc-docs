@@ -17,6 +17,7 @@ governing_adrs:
   - DEC-71c027 (Integrity Assurance as the platform thesis)
   - DEC-c220e4 (the interim rule on which metrics a tenant sees)
   - DEC-cf6d3b (the tenant activation model; tenant-to-package assignment)
+  - DEC-71f15e (this program; the decision record of the operator's decision)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -24,7 +25,7 @@ diagrams: []
 
 # Platform Refactor Program
 
-> **Status of this document.** It is a draft awaiting the operator's approval. By the documentation's rule a chapter binds only when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca). So nothing here binds until it is approved. What approval does is stated under "What the operator is asked to do now".
+> **Status of this document.** The operator approved it on 2026-11-14 with the words "All approved.", said in the Chief's session. The decision is recorded as decision record DEC-71f15e, which stands as `proposed` until the operator approves it at the approval desk; a statement made in a session is not a recorded approval. This document's status becomes `locked` in the same change that marks that record `decided`. By the documentation's rule a chapter binds only when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca).
 
 ## Summary
 
@@ -46,13 +47,15 @@ The program is finished when the eight conditions under "When the program is fin
 
 ## What the operator is asked to do now
 
+On 2026-11-14 the operator approved the program, confirmed the five rulings decided the day before together with what the Chief had added to them, and decided the four rulings needed in phase 1. Three acts remain with the operator.
+
 | # | Act | What it does |
 |---|---|---|
-| 1 | Approve this document, or say what to change. | Its status becomes `locked`. The decision is recorded as a decision record, whose number is then added here. The holds under "What is parked and what is held" begin to bind. |
-| 2 | Approve, at the approval desk, the pin of the program's anchor. | Every session is then shown this program at each turn, in place of the parked drive's goal. |
-| 3 | Confirm or correct the five decided rulings, the parts the Chief added to them, and the record of the operator's words (under "The rulings" and in the annex of that name). | They become final. |
-| 4 | Rule on the four open rulings listed under "Open, and needed in phase 1". | Phase 1 can then start. |
-| 5 | Replace the two credentials that are present in the engine's history on three lines [17a]. | The exposure ends. Deleting the files does not remove them from history. |
+| 1 | Approve, at the approval desk, the request that marks decision record DEC-71f15e `decided`. | The approval becomes a recorded one. This document becomes `locked` and its holds bind. |
+| 2 | Approve, at the approval desk, the pin of the program's anchor, once the anchor is merged. | Every session is then shown this program at each turn, in place of the parked drive's goal. |
+| 3 | Replace the two credentials that are present in the engine's history on three lines [17a]. | The exposure ends. Deleting the files does not remove them from history. |
+
+The rulings needed in phases 2 and 3 are put to the operator when each phase begins.
 
 ## How to read this document
 
@@ -65,7 +68,7 @@ This file is the program. It is meant to be read from start to finish and to sta
 
 ## The decision
 
-**Decided by:** the operator, on 2026-11-13. **Recorded by:** the Chief. **DevHub task:** TSK-e5bf83.
+**Decided by:** the operator, on 2026-11-13, and approved in this form on 2026-11-14. **Recorded by:** the Chief. **Decision record:** DEC-71f15e. **DevHub task:** TSK-e5bf83.
 
 The decision was reached in nine steps during one session. In order, the operator: judged that the platform is built but not defined or published, and asked for a deep review, a refactor of what is critical, one developer guide, and a check of every decision record and memory file; set the method of defining, auditing, modifying and locking one part at a time, and said the metric catalog should not have been started before the platform was locked; parked the demo drive and the controller fleet; named DevHub the spine and required it to act and not only show; widened the scope to the whole platform; asked that the services be usable like an application; asked that the code be stabilised; required functional coverage, naming subscription and tenant management and the design of how parts are joined; and required bc-docs to be studied first.
 
@@ -293,22 +296,19 @@ A ruling is a decision that belongs to the operator. It is recorded in this docu
 
 ### Decided
 
-| # | The operator's words (2026-11-13) | The ruling | What the Chief added, to be confirmed |
+Rulings F1, T1, T2, T3 and G2 were decided on 2026-11-13. On 2026-11-14 the operator confirmed them, with what the Chief had added to each, and decided G5, G3, G30 and G34, with the words "All approved." The words are an attributed record, as explained under "The decision".
+
+| # | The operator's words | The ruling | What the Chief added |
 |---|---|---|---|
 | F1 | "I do not want to position 'metrics' as product." | Metrics are not positioned as the product. | The statement of what the product is; written in phase 2. |
 | T1 | "There will be subscription 'packages' and metrics will be bound to them. One to many." Asked whether a metric may belong to more than one package: "Yes." | A tenant subscribes to a package. A package holds many metrics. A metric may be in more than one package. | How a package names its metrics is not yet designed (ruling T6). Decision DEC-cf6d3b treats its "Pre Launch Exclusive" package as interim, outside the four tiers of DEC-324d9e, so neither record conflicts with this ruling; a decided record is amended only if the chosen design changes it. |
 | T2 | "Agree", to the recommendation "designing it in full and building the minimum the thread needs". | Subscription and entitlement are designed in full; only what the thread needs is built. | The list of what the thread needs; written in phase 2. |
 | T3 | "I think a change which will affect value (value affecting change?) should be accepted by tenant admin/designated role/user." And "Agree", to "any change able to move a reported number should never be automatic". | A value-affecting change reaches a tenant only when the tenant's admin, or a role or user the tenant designates, accepts it. | Until it accepts, the tenant stays on the version it adopted. While that version remains compatible with its source and its bindings, it continues to be evaluated. When the adopted version's source or binding becomes incompatible, new evaluation for that tenant is refused, nothing is reported in its place, and the tenant is shown the reason. Values already reported are never altered or worked out again. A change whose effect is uncertain is treated as value-affecting. A change that cannot affect a value is automatic. These additions are the Chief's, not the operator's words. Where they differ from the older policy in `docs/operating-model/source-change-classification.md` [27a, 27d], this ruling takes precedence once confirmed, and that chapter is amended in phase 2. |
 | G2 | "Agree", to the sweep of DevHub's backlog. | The review tasks DevHub created itself are aborted, in-progress tasks with no session are returned to parked, and the stale plans are replaced by one. | Done in phase 1 as one recorded act with the list attached. |
-
-### Open, and needed in phase 1
-
-| # | The question | The Chief's recommendation | Phase |
-|---|---|---|---|
-| G5 | Is DevHub moved to a Postgres database? The operator said there is "no specific pain … just aspiration/fear factor". | Not now. Meet the fear directly: a backup restored once as a test, a record of schema changes, and requests that refuse unknown fields. | 1 |
-| G3 | Are DevHub's unused tools and tables retired? (About 35 tools and 27 tables; not re-checked.) | Stop them in phase 1; remove them after one function is locked without them. | 1 |
-| G30 | Where do the rules for sessions live: a bc-docs chapter with the project instruction file pointing to it, or the instruction file alone? | The chapter. | 1 |
-| G34 | Who is the standing owner of each function after the program? | To be proposed in phase 12; the Chief until then. | 1 |
+| G5 | "There is a no specific pain behind the Postgres idea, just aspiration/fear factor." Then, to the recommendation "Not now": "All approved." | DevHub stays on its present database for the length of the program. | The fear is met directly: a backup restored once as a test, a record of schema changes, and requests that refuse unknown fields. Reconsidered if contention is measured or DevHub must be reached from another machine. |
+| G3 | "All approved.", to the recommendation. | DevHub's unused tools and tables are stopped in phase 1 and removed after one function has been locked without them. | The count (about 35 tools and 27 tables) is not re-checked; the list is drawn up in phase 1. |
+| G30 | "All approved.", to the recommendation. | The rules for sessions live in a bc-docs chapter; the project instruction file points to it. | None. |
+| G34 | "All approved.", to the recommendation. | The Chief owns every function until phase 12, when a standing owner for each is proposed. | None. |
 
 ### Open, and needed in phases 2 and 3
 
