@@ -207,4 +207,3 @@ All from `bc-docs:docs/reference/vocabulary.md` @ `f4f5edd`.
 
 - Line 217: "| onboarded, bound, set up, enrolled (a metric to a tenant) | Several words for one fact | "enabled for (tenant)" |"
 - Line 230, first two cells: "validated (alone), verified, accurate (as a status)" — "Validation is always against a named source, and its record is not built yet"
-
