@@ -79,17 +79,22 @@ In phase 2 the operator decided the first rulings of the frame, put to him as on
 | T6 | How a package names its metrics | By a list, one record for each metric in each package. Function and subfunction choose the list; they do not name the metrics. The interim package says "all" without a list. |
 | B6 | The period of a scheduled evaluation | The fiscal calendar supplies it: for each legal entity the tenant has declared, the period that contains the date of the run. The operator supplies a period only for a run started by hand. |
 | B7 | What starts canonical resolution | A command only. A completed admission starts nothing. The scheduled cycle issues the command after its admissions and before its metric evaluations. |
+| G12 | Merged migrations that are not applied | 0032, 0034, 0035 and 0038 are withdrawn from bc-db's main branch; each returns under a new number with the engine code that needs it. No database is changed. Every migration file on the main branch then has a ledger row or a line in the register of migrations awaiting apply. DEC-bd6894 is not decided by this. | Phase 3 |
+| G13 | The names of environments | One list: `dev`, `stg`, `prod`. `dev` is the development machine and the cloud resources named `dev` that serve it; the other two are kept and not built. "Live" and "disposable copy" are not environments. | Phase 3 |
+| G14 | The one serve procedure | The single-tree move, performed by one command that verifies from the running server and returns to the previous build. The twin trees and the forced-failure rehearsal are retired. The auditor's separate clearance of a move is retired only if the grant says so in express words, superseding that part of grant `2026-09-29T08-34-38-377Z-ead781aa`. | Phase 3 |
+| G15 | The bc-infra stacks that are not deployed | Kept as designed and not built. | Phase 3 |
+| G35, the first part | Where Operations' commands are kept | In bc-infra, with no authority to change the cloud; the reference run alone in the DevHub repository. The second part stays open (below). | Phase 3 |
+| B1 | The fixed input of the reference run | Yes: one copy, taken once, of the platform database, the Kaveri tenant database and the roles without passwords; kept on the development machine only, identified by committed hashes, and checked for any password, key or token before it is kept. Taking it is a later act of the operator. | Phase 3 |
 
 ### Open
 
 
 | # | Subject | The question | The Chief's recommendation | Needed by |
 |---|---|---|---|---|
-| G35 | A platform operations application | Operations has no application: its scripts are in `~/bc-stack`, which is in no repository. Part one: in which repository are the scripts kept, and which function owns each command? Part two: does Operations have a screen of its own? | Part one: bc-infra, which holds the cloud definitions today; the scripts and the unversioned database-reading tool move there as the commands of Operations, after their text and their output have been checked so that no secret value, local secret file or logged value enters the repository. A script there has no authority to change the cloud. Part two: decide with ruling G4; a new screen or a new operating act needs its own ruling. | Part one, phase 3; part two, phase 12 |
+| G35, the second part | A platform operations application | Does Operations have a screen of its own? (The first part, where its commands are kept, was decided in phase 3.) | Decide with ruling G4; a new screen or a new operating act needs its own ruling. | Phase 12 |
 | T4 | Creating a tenant | Which is the one route? | The operator's command, reachable from the console. | Phase 4 |
 | T5 | Tenant class | Does creating a tenant of class "customer" count as activating a tenant for an outside party? Two tenants of that class exist today, both suspended, and the vocabulary page says no tenant kind is recorded. | Yes; and correct the vocabulary page. | Phase 4 |
-| B1 | The fixed input of the reference run | May one copy of the databases be kept outside the repositories? It holds demo-tenant data and password verifiers. | Yes. | Phase 3 |
-| B2 | The baseline | If the first reference run does not reproduce the recorded values, which state of the contracts is the baseline? | Decide on the evidence of the first run. | Phase 3 |
+| B2 | The baseline | If the first reference run does not reproduce the values the Kaveri tenant holds, which is the baseline: the values the engine gives today with the contracts in force, or the values held, with the contract state that produced them restored in the copy? | Decide on the evidence of the first run; the Chief reports each difference with its cause. | Phase 3 |
 | B3 | A new canonical contract version | When is one warranted? | Only for a changed output field, the meaning of a field, the grain or the key form. | Phase 7 |
 | B4 | How proof against the source is produced | On the separate demo plane, or on a demo tenant through the ordinary path? | Decide after phase 2. | Phase 8 |
 | B5 | The expected value | From what is it worked out? The vocabulary says "worked out independently from the same source data". Every expected value recorded so far was worked out from a synthetic fixture or from the rows the platform had already admitted. | From the source system's own data, read independently of the platform. This is a stricter reading than the vocabulary's words and needs the ruling. | Phase 8 |
@@ -101,7 +106,7 @@ In phase 2 the operator decided the first rulings of the frame, put to him as on
 
 Each dossier ends with "Open questions for the operator". The questions that are real decisions and are not already in the tables above are listed here, numbered on in the same four series: F for the frame and the product; T for tenants, subscription and delivery; B for the engine, the contracts and proof; G for governance, access, operations and development. The function named is the one whose dossier raises the question. Where the recommendation says "Define step", it is to be proposed in the function's Define step, because the dossier does not support one.
 
-Some dossier questions are already covered above: the one route for creating a tenant (T4), the tenant class column (T5), how a package names its metrics (T6, decided in phase 2), how proof is produced and from what the expected value is worked out (B4, B5), and the approvals, the fixed input, the binding chapter and the single operator surface (G1, B1, A5, G4).
+Some dossier questions are already covered above: the one route for creating a tenant (T4), the tenant class column (T5), how a package names its metrics (T6, decided in phase 2), how proof is produced and from what the expected value is worked out (B4, B5), and the approvals, the fixed input, the binding chapter and the single operator surface (G1; B1, decided in phase 3; A5; G4). The four questions of the Operations dossier on unapplied migrations, environment names, the serve procedure and the undeployed cloud units (G12 to G15) were decided in phase 3.
 
 | # | Function | Subject | The question | Recommendation | Needed by |
 |---|---|---|---|---|---|
@@ -153,10 +158,6 @@ Some dossier questions are already covered above: the one route for creating a t
 | G9 | S1 | The second factor | Mandatory for platform-scope users, or optional as DEC-912f4f states? | Define step | Phase 4 |
 | G10 | S2 | Where roles are held | In the Cognito attribute, or in a platform table with history? | Define step | Phase 4 |
 | G11 | S2 | The `admin` override | Does `admin` keep passing every role check, or is `super_admin` the only override? | Define step | Phase 4 |
-| G12 | OP, S3 | Merged migrations that are not applied | Are 0032, 0034, 0035 and 0038 applied or withdrawn? | Define step | Phase 3 |
-| G13 | OP | The names of environments | Is the Mac "dev", and what is a cloud environment called? | Define step | Phase 3 |
-| G14 | OP | The one serve procedure | The documented rehearsal on twin trees, or the single-tree move now practised? | Define step | Phase 3 |
-| G15 | OP | The bc-infra stacks that are not deployed | Kept as designed and not built, or removed? | Define step | Phase 3 |
 | G16 | L7 | Where a connection's secret is held | In the environment of the served application, or as a reference to the secrets service for each connection? | Define step | Phase 5 |
 | G17 | S5 | A screen for each act | Does every governed act get a screen, or only the acts of the thread; and what becomes of the ten placeholder pages? | Define step | Phase 10 |
 | G18 | S5 | How the console is served | From a fixed build, or from a development server as today? | Define step | Phase 10 |
