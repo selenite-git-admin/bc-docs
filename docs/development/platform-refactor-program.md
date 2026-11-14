@@ -42,7 +42,7 @@ The program does five things.
 4. **It leaves each function usable like an application:** a small set of commands that are the only way to perform its acts, one chapter in a single developer guide, and a lock that fails the build if a second way appears.
 5. **It makes the two things every session depends on trustworthy:** DevHub, the tool that coordinates development, and bc-docs, the documentation.
 
-The program is finished when the test stated under "When the program is finished" is met. Until a function is locked, nothing it owns is authored or repaired outside the program.
+The program is finished when the eight conditions under "When the program is finished" hold. Until a function is locked, nothing it owns is authored or repaired outside the program.
 
 ## What the operator is asked to do now
 
@@ -192,10 +192,12 @@ Nine functions are added because the dossiers found the platform performs them a
 | AI | AI services (added) | Runs the AI panels that propose and check authored content |
 | SU | Support (added) | Handles requests for help |
 | | **Running the platform** | |
-| OP | Operations (added) | Environments, serving the engine, secrets, schema change, backup |
+| OP | Operations (added) | Environments, serving the engine, secrets, schema change, backup. It has no application today: its acts are performed with scripts kept in a folder that is in no repository |
 | DV | Development (added) | DevHub, bc-docs, review, and the rules for working |
 
 **The coverage rule.** A **surface** is anything a person or a program can act through or read: a route, a service, a script, a command, a table, a screen, a document. Every surface belongs to exactly one function. A surface deliberately outside every function is entered in a register with one line saying why. A dead surface is entered in a retirement list and deleted in its function's Modify step. A surface that seems to serve two functions means responsibility must be split. The assignment, the register and the retirement list do not exist yet; DevHub will hold them, and that is part of phase 1's exit.
+
+**The applications.** The platform is reached through five applications, each belonging to one function: the engine (bc-core), which every function uses; the operator console (bc-admin), S5; the customer portal (bc-portal), TS; DevHub, DV; and the approval desk (bc-exchange), DV. Operations has none. The scripts that start the services, check their health, serve a new build of the engine and reach the demo source system are kept in the folder `~/bc-stack` on the development machine, which is not a repository (`command: git -C ~/bc-stack rev-parse --is-inside-work-tree -> "fatal: not a git repository"`, 2026-11-14), so they have no history, no review and no test. Whether Operations gets an application of its own is ruling G35.
 
 **Who owns a function.** For the length of the program the Chief owns every function, and the operator decides. Naming a standing owner for each function is ruling G34.
 
@@ -264,7 +266,7 @@ The order is fixed. A phase begins when the one before it has met its exit.
 |---|---|---|
 | 1 | DV: DevHub and bc-docs | DevHub's start-of-session text states only what is true. The anchor is pinned to this program. DevHub holds the program's plan, its rulings, and the assignment of surfaces with the register and the retirement list. The backlog is swept (ruling G2). DevHub records the chapters consulted when a plan is saved and when a session is closed. The code-rule baseline for the engine is enforced automatically. The check that holds changes to the engine's value-producing files is in force. DevHub's dead tools are stopped (ruling G3). |
 | 2 | The frame | The operator has approved: the statement of what the product is (F1); the definition of "done" (F2); the map (F3); the twelve stitch contracts; the thread's metric and steps; and rulings F4 to F9, T6, B6 and B7. |
-| 3 | OP: Operations | One list of environment names is approved and in use. One written procedure serves the engine and has been followed once. Secrets are loaded one way. The schema-change path is written as practised. The reference run has passed once, and this document records the hash of the database copy, the engine commit, where each expected value came from, and the result. The check on the engine requires the reference run from then on. Rulings G12 to G15 are made. |
+| 3 | OP: Operations | One list of environment names is approved and in use. One written procedure serves the engine and has been followed once. Secrets are loaded one way. The schema-change path is written as practised. Operations' scripts are in a repository and its acts are performed by commands. The reference run has passed once, and this document records the hash of the database copy, the engine commit, where each expected value came from, and the result. The check on the engine requires the reference run from then on. Rulings G12 to G15 and G35 are made. |
 | 4 | S1, S2, S3 | Each function is locked. |
 | 5 | L1, L2, L7 | Each is locked; a source table can be registered and read by commands alone. |
 | 6 | AI, L3, L4 | Each is locked. |
@@ -311,7 +313,7 @@ A ruling is a decision that belongs to the operator. It is recorded in this docu
 Each is stated in full, with the Chief's recommendation, in the annex "The Rulings". They are put to the operator when their phase begins.
 
 - **Phase 2:** F2, whether the vocabulary page's definition of "done" is adopted as it stands; F3, the map; F4, which of three scales of a metric's progress is kept; F5, when a chapter becomes locked; F6, what Integrity Assurance gives a customer; F7, the website's claims; F8, the word for proof; F9, which of three things keeps the word "auditor"; T6, how a package names its metrics; B6 and B7, what starts canonical evaluation and who supplies the period.
-- **Phase 3:** B1, keeping one copy of the databases as the reference run's fixed input; B2, the baseline if the first run does not reproduce the recorded values; G12 to G15, the unapplied migrations, the names of environments, the one serving procedure, and the undeployed cloud resources.
+- **Phase 3:** B1, keeping one copy of the databases as the reference run's fixed input; B2, the baseline if the first run does not reproduce the recorded values; G12 to G15, the unapplied migrations, the names of environments, the one serving procedure, and the undeployed cloud resources; G35, whether Operations gets an application of its own, a "platform ops" application, and where it lives. The Chief recommends that its scripts move into a repository as the commands of Operations in phase 3, which is repair and not new capability, and that whether it has a screen of its own is decided together with ruling G4.
 
 The rulings needed in later phases, and the questions each dossier raises, are in the same annex. Each is put to the operator in the Define step of the function it belongs to.
 
@@ -337,12 +339,18 @@ The full list is in the annex "How the Work Is Done".
 
 ## When the program is finished
 
-The vocabulary page states when the way metrics are produced is "proven", on four conditions set by the operator: it used the mandated route alone; it repeats from a clean start by the written procedure alone, in a session that did not build it; each part and each hand-off has tests that can fail, kept and re-run; and a second, different case passes with no change to any part [23b].
+This section is the definition of done for the program. The program is finished when all eight conditions hold. Each can be checked by a third person. The Chief reports each with its evidence, and the operator confirms the whole.
 
-The program is finished when both of these hold, as judged by the Chief and confirmed by the operator:
+1. **Every function is locked.** All 28 functions of the map are locked, except those on a closed list of functions "designed and not built" that the operator has approved by name. Today that list would hold Action and intervention, and the part of Pricing and subscription that the thread does not need.
+2. **Every hand-off is agreed and tested.** All twelve stitch contracts are approved, and each has at least one test that fails when the contract is broken.
+3. **The finish test has passed.** A worker that did not build the platform, using only the guide and the commands, takes one metric from a source table not used before to "done" for a tenant; then a second metric of a different shape; then one business concept; with no change to code and no ruling. The operator names the two metric shapes in phase 2. The transcript of the run is kept.
+4. **The route is proven on the operator's four conditions,** each marked met with its evidence: it used the mandated route alone; it repeats from a clean start by the written procedure alone, in a session that did not build it; each part and each hand-off has tests that can fail, kept and re-run; and a second, different case passes with no change to any part [23b].
+5. **There is one guide.** `docs/guide/` has a locked chapter for each locked function, and each of the 124 chapters that exist today [21a] has been kept, rewritten or retired.
+6. **Every decision record and memory file has been checked.** DevHub's count of those remaining is zero.
+7. **Values are held and the code is clean where it is locked.** The reference run passes on the final commit of the engine, and the files of every locked function have no failure of a code rule.
+8. **DevHub tells the truth.** Its start-of-session text, its anchor and its scans have each been compared with their sources and found to agree.
 
-1. Every function of the map is locked, or is listed in the guide as designed and not built.
-2. A worker that did not build the platform, using only the guide and the commands, takes one metric from a new source table to "done" for a tenant; then a second metric of a different kind; then one business concept; with no change to code and no ruling.
+Condition 3 rests on "done", which requires agreement with an expected value worked out independently. What counts as independent is ruling B5, which must be made before phase 8.
 
 ## Annexes
 
