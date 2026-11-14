@@ -319,7 +319,7 @@ Operations' acts, each a command with status, check, do and verify:
 1. The eight things Operations keeps, and their states (sections 1 to 8).
 2. The one serve procedure of section 3.
 3. The one route for secrets of section 4, with the identity `bc-dev` as the target and `default` as the named exception until the sign-in works.
-4. The schema-change path of section 5, with its rule that every migration file on the main branch has a ledger row.
+4. The schema-change path of section 5, with its rule that every migration file on the main branch has a ledger row or a line in the register of migrations awaiting apply. The ledger remains the only record that a migration was applied.
 5. The reference run of section 9: its fixed input, its two tiers, its ten steps, its limits, and the auditor's attestation by which the hold comes to require it.
 6. The table of acts in section 10.
 
