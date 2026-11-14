@@ -46,7 +46,7 @@ It was read at bc-docs `origin/main` 9dca4a5, bc-core `origin/main` 05cbe79c and
 
 **Addendum: realized, and validated against a proof source.** Approved by the operator on 2026-10-03, desk grant `2026-10-03T03-05-10-581Z-12be0a4c` (text SHA-256 `12be0a4ca479f3ea8960e5b548ae4437f641c378f89e3c2d5998ea6b69655e95`, request 196), as drafted on the Architect page in barecount-devhub pull request 236 at commit `56db94e3e1ac9bdc9cd52bdb5ed16f94372a4d82` (file sha256 `32ede28dcaf891284c75c43ce521af8d33b3168d57e3a06ce45599bf08db5014`). Its rows are carried into group 3 (after "registered") and group 4 (after "certified"), and its not-approved words into section 4, adapted to that table's three columns. Its three defects are owner tasks (TSK-eeb121, TSK-5ac376, and the interim-rule question).
 
-**Seventh slice: the frame's words.** Put to the operator in phase 2 of the Platform Refactor Program (rulings F2, F4 and F9) and approved by his desk grant for the bc-docs pull request that added this slice, at its exact commit; the grant's id is written here by a correction after that pull request merges. It was read at bc-docs `origin/main` 1860bf6 and bc-core `origin/main` df52506d. It is carried below as slice 7 and changes no earlier slice.
+**Seventh slice: the frame's words.** Put to the operator in phase 2 of the Platform Refactor Program (rulings F2, F4, F6, F8 and F9) and approved by his desk grants for the two bc-docs pull requests that added this slice, each at its exact commit; the grants' ids are written here by a correction after those pull requests merge. It was read at bc-docs `origin/main` 1860bf6 and bc-core `origin/main` df52506d. It is carried below as slice 7 and changes no earlier slice.
 
 **This page holds no counts.** Section 6 says where each count is read.
 
@@ -727,7 +727,7 @@ The state-word lifecycle (realized, active, validated, released) and any Foundat
 
 ## Slice 7: the frame's words
 
-Authority: rulings F2, F4 and F9 of the Platform Refactor Program (`docs/development/platform-refactor-program.md`, "The rulings"). This slice adds three words, fixes one, and names the scale. It changes no state word and no earlier slice.
+Authority: rulings F2, F4, F6, F8 and F9 of the Platform Refactor Program (`docs/development/platform-refactor-program.md`, "The rulings"). This slice adds three words, fixes one, and names the scale. It changes no state word and no earlier slice.
 
 ### S7.1 "Done" is section 5, as it stands
 
@@ -760,6 +760,18 @@ The status words of this page are the only scale of a metric's progress (ruling 
 | **the external assessor** | An outside person who performs an ISO 27001 or SOC 2 engagement. No such engagement has taken place. | Ruling F9 |
 | **the metric audit service** | The subsystem, with its own store and signing key, that audits a metric version. The names of its tables and columns are identifiers and are unchanged by this slice. | Ruling F9 |
 
-### S7.5 Not settled in this slice
+### S7.5 The word for proof on the demo plane
 
-What Integrity Assurance gives a customer (ruling F6); the word for proof (ruling F8); how a package names its metrics (ruling T6).
+| Word | Plain meaning | True when | Where it is fixed |
+|---|---|---|---|
+| **Demoed** | A metric version's value agreed with an expected value on the demo world, on the demo plane. It says nothing about any tenant, and it is never "done" for a tenant. Said with its version: "Demoed at (version)" | a proof record on the demo plane whose comparison outcome is a match, for that version (ADR DEC-025bfc) | Ruling F8 |
+
+**"Validated against"** a named source (section 3, group 4) is unchanged: it stays the status word for agreement with an independent computation from a source's own data, and its record is still not built. "VALIDATED" in capitals, returned by the engine as a claim level, is an identifier and not a word of this page.
+
+### S7.6 What Integrity Assurance gives a customer
+
+For each number (ruling F6): the definition and the formula it was produced under, each by its version; the Evidence that the governed acts produced it; the assurance that the platform computed the declared formula as declared and would do so again from the same records; and a number that is never altered afterwards. It does not give assurance that the supplied data is right, and it is not an external audit or a certification. This adds to S6.2 and changes nothing in it.
+
+### S7.7 Not settled in this slice
+
+Whether proof on demonstration data counts toward "done" (ruling B11); the record of a package's metrics (rulings T11 and T12).

@@ -74,6 +74,11 @@ In phase 2 the operator decided the first rulings of the frame, put to him as on
 | F5 | What makes a chapter binding | A chapter is locked when its function is locked, in the pull request that meets the Lock exit. A document of the frame is locked by the operator's recorded approval of it. |
 | F7 | Public claims | No public text states a count, a badge or a certification that the platform's records do not show on the day it is published. The claims found on the website are removed; the operator decides the replacing words. |
 | F9 | The word "auditor" | It names Codex and nothing else. The outside person of an ISO 27001 or SOC 2 engagement is "the external assessor"; the subsystem that audits metric versions is "the metric audit service". |
+| F6 | What Integrity Assurance gives a customer | For each number: the definition and formula it was produced under, by version; the Evidence that the governed acts produced it; the assurance that the declared formula was computed as declared and repeatably; and a number never altered afterwards. Not given: assurance that the supplied data is right, or any external audit or certification. |
+| F8 | The word for proof | Two words. "Validated against" a named source is the status word. "Demoed" names proof on the demo plane and is never "done" for a tenant. |
+| T6 | How a package names its metrics | By a list, one record for each metric in each package. Function and subfunction choose the list; they do not name the metrics. The interim package says "all" without a list. |
+| B6 | The period of a scheduled evaluation | The fiscal calendar supplies it: for each legal entity the tenant has declared, the period that contains the date of the run. The operator supplies a period only for a run started by hand. |
+| B7 | What starts canonical resolution | A command only. A completed admission starts nothing. The scheduled cycle issues the command after its admissions and before its metric evaluations. |
 
 ### Open
 
@@ -81,10 +86,8 @@ In phase 2 the operator decided the first rulings of the frame, put to him as on
 | # | Subject | The question | The Chief's recommendation | Needed by |
 |---|---|---|---|---|
 | G35 | A platform operations application | Operations has no application: its scripts are in `~/bc-stack`, which is in no repository. Part one: in which repository are the scripts kept, and which function owns each command? Part two: does Operations have a screen of its own? | Part one: bc-infra, which holds the cloud definitions today; the scripts and the unversioned database-reading tool move there as the commands of Operations, after their text and their output have been checked so that no secret value, local secret file or logged value enters the repository. A script there has no authority to change the cloud. Part two: decide with ruling G4; a new screen or a new operating act needs its own ruling. | Part one, phase 3; part two, phase 12 |
-| F6 | What Integrity Assurance gives a customer | Decision DEC-71c027 names the thesis and retires "certified" as a product claim; it does not say what a customer receives. (Who "the auditor" is was settled by ruling F9.) | Proposed in phase 2. | Phase 2 |
 | T4 | Creating a tenant | Which is the one route? | The operator's command, reachable from the console. | Phase 4 |
 | T5 | Tenant class | Does creating a tenant of class "customer" count as activating a tenant for an outside party? Two tenants of that class exist today, both suspended, and the vocabulary page says no tenant kind is recorded. | Yes; and correct the vocabulary page. | Phase 4 |
-| T6 | How a package names its metrics | By a list, or by function and subfunction? The package table that exists today lists readers, not metrics, and has no row for the interim package that DEC-cf6d3b names. | Proposed in phase 2. | Phase 2 |
 | B1 | The fixed input of the reference run | May one copy of the databases be kept outside the repositories? It holds demo-tenant data and password verifiers. | Yes. | Phase 3 |
 | B2 | The baseline | If the first reference run does not reproduce the recorded values, which state of the contracts is the baseline? | Decide on the evidence of the first run. | Phase 3 |
 | B3 | A new canonical contract version | When is one warranted? | Only for a changed output field, the meaning of a field, the grain or the key form. | Phase 7 |
@@ -98,11 +101,10 @@ In phase 2 the operator decided the first rulings of the frame, put to him as on
 
 Each dossier ends with "Open questions for the operator". The questions that are real decisions and are not already in the tables above are listed here, numbered on in the same four series: F for the frame and the product; T for tenants, subscription and delivery; B for the engine, the contracts and proof; G for governance, access, operations and development. The function named is the one whose dossier raises the question. Where the recommendation says "Define step", it is to be proposed in the function's Define step, because the dossier does not support one.
 
-Some dossier questions are already covered above: the one route for creating a tenant (T4), the tenant class column (T5), how a package names its metrics (T6), how proof is produced and from what the expected value is worked out (B4, B5), and the approvals, the fixed input, the binding chapter and the single operator surface (G1, B1, A5, G4).
+Some dossier questions are already covered above: the one route for creating a tenant (T4), the tenant class column (T5), how a package names its metrics (T6, decided in phase 2), how proof is produced and from what the expected value is worked out (B4, B5), and the approvals, the fixed input, the binding chapter and the single operator surface (G1, B1, A5, G4).
 
 | # | Function | Subject | The question | Recommendation | Needed by |
 |---|---|---|---|---|---|
-| F8 | PV | The word for proof | Is the status word "validated against (source)", as the vocabulary page has it, or "Demoed"? | Define step | Phase 2 |
 | T7 | S2 | A tenant's later users | Who creates them, the operator only or the tenant admin, and is the users screen in the program? | Define step | Phase 4 |
 | T8 | S3 | Resuming a suspended tenant | Is resuming a governed act in the program, and what record does it write? | Define step | Phase 4 |
 | T9 | S3 | The two tenants of class `customer` | Are `kaveridemo` and `kaveridemo2` retired, or kept for the thread? | Define step | Phase 4 |
@@ -124,8 +126,6 @@ Some dossier questions are already covered above: the one route for creating a t
 | T25 | PR | A data-subject request | May a tenant admin file one in the portal? | Define step | Phase 11 |
 | T26 | PR | A tenant's end | What is retained, for how long, and what is erased? | Define step | Phase 11 |
 | T27 | SU | Tickets from a tenant | Are they raised in the portal, or by email only? | Define step | Phase 11 |
-| B6 | RT | The period of a scheduled evaluation | Who supplies it: the fiscal calendar, a tenant setting or the operator? | Define step | Phase 2 |
-| B7 | RT | What starts canonical resolution | A completed admission, a schedule, or a command only? | Define step | Phase 2 |
 | B8 | RT | Who may start an evaluation | The platform operator only, or the tenant admin too? | Define step | Phase 8 |
 | B9 | EV | Evidence written with the act | Are admission and canonical evaluation brought to the same all-or-nothing write as metric evaluation, or listed as designed and not built? | Define step | Phase 8 |
 | B10 | EV | The HTTP routes for evidence | Removed, or kept for a named caller? | Define step | Phase 8 |
