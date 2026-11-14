@@ -764,7 +764,7 @@ The status words of this page are the only scale of a metric's progress (ruling 
 
 | Word | Plain meaning | True when | Where it is fixed |
 |---|---|---|---|
-| **Demoed** | A metric version's value agreed with an expected value on the demo world, on the demo plane. It says nothing about any tenant, and it is never "done" for a tenant. Said with its version: "Demoed at (version)" | a proof record on the demo plane whose comparison outcome is a match, for that version (ADR DEC-025bfc) | Ruling F8 |
+| **Demoed** | A metric version's value agreed with an expected value on the demo world, on the demo plane. It says nothing about any tenant, and it is never "done" for a tenant. Said with its version: "Demoed at (version)" | never a stored value. It is read each time, from the preserved proof for that exact version: the proof's comparison is a match, **and** every pin the proof names (the metric contract version, the demo world's version, the expected value and where it came from, the engine build) is present and still current. A missing or stale pin gives "not Demoed" or "unknown", even where an earlier comparison matched. A proof for one version is never shown for the next (ADR DEC-025bfc, T2 and T3) | Ruling F8 |
 
 **"Validated against"** a named source (section 3, group 4) is unchanged: it stays the status word for agreement with an independent computation from a source's own data, and its record is still not built. "VALIDATED" in capitals, returned by the engine as a claim level, is an identifier and not a word of this page.
 
