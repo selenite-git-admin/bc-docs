@@ -35,7 +35,7 @@ No contract adds a capability beyond what its hand-off needs. Every contract kee
 
 ## What was checked, and by whom
 
-The facts under "Today" were gathered by readers working from the dossiers, the engine and the platform database. The Chief read at source: the path by which a tenant binding is written when a canonical contract version is activated (contract 3); the order of the scheduled cycle, its use of the run date and of environment variables, the absence of any listener that starts work on a completed admission, and the callers of canonical resolution (contract 1); and the claim levels the proof read returns (contract 8). The other facts carry their citation and were not re-read by the Chief. A fact found wrong is corrected here, and a contract that rested on it is put to the operator again.
+The facts under "Today" were gathered by readers working from the dossiers, the engine and the platform database. The Chief read at source: the path by which a tenant binding is written when a canonical contract version is activated (contract 3); the order of the scheduled cycle, its use of the run date and of environment variables, the absence of any listener that starts work on a completed admission, and the callers of canonical resolution (contract 1); and the claim levels the proof read returns (contract 8). The other facts carry their citation and were not re-read by the Chief. **Every count and state read from the platform database** (the number of bindings, the versions in force or without a certificate, what is provisioned for Kaveri, which chains are judged green) **is a reader's report and is unverified:** it explains why a contract is needed and is never to be used as a gate for a build or an activation. A fact found wrong is corrected here, and a contract that rested on it is put to the operator again.
 
 **Stitch point 3 is settled.** Two dossiers disagreed on the moment a tenant binding is written. The engine writes it at the activate call, when the version moves to `pending_provisioning`, before the version is `active`; the later move to `active` writes none. The write only adds a row and ends no earlier one.
 
@@ -184,7 +184,7 @@ The facts under "Today" were gathered by readers working from the dossiers, the 
 - L6: certification records the declaration in the approval package. Repair. Needed by the thread.
 
 **Left to the operator:**
-- This contract answers the first half of ruling T19: what a metric version requires is declared on the version, not inferred each time. Recommendation: approve it so.
+- **Approving this contract also decides the first half of ruling T19:** what a metric version requires is declared on the version, not inferred each time. The second half of T19, an adoption record for each tenant and metric, is designed in contract 2 and its record is approved when it is made.
 - Whether the chain verdict is a gate on certification is ruling B23, not re-asked.
 
 ## Stitch contract 6: From subscribed to enabled
@@ -201,7 +201,7 @@ The facts under "Today" were gathered by readers working from the dossiers, the 
 1. S4 says what is subscribed. DL owns the one act. L10 carries it out.
 2. The one act is "enable a metric for a tenant". It replaces the three assumed today. Adoption, entitlement and state stop being acts of their own. They become checks inside it.
 3. The contract fixes the act and not the actor. Until ruling T18 is decided and built, a platform admin starts it, as today.
-4. A person calls the act. Evaluation, the sweep and activation no longer start it (reads never start an act; ruling T3).
+4. A person calls the act. It is the only origin of the command that enables a metric for a tenant: an evaluation and the sweep no longer start one (reads never start an act; ruling T3). This rule is about the tenant's metric-enabling command only. The table-building commands that the activation of a canonical contract version issues (contract 3) stay as they are, and so does the rule that a version is refused `active` until that provisioning is complete.
 5. The act uses the current certified version of the metric and the declaration in contract 5. It records that version in the tenant's metric binding, so evaluation and enablement use the same version (ruling T3).
 6. It refuses, with a named reason and writing nothing, if the metric is not offered (contract 4), is not in the tenant's package (ruling T6: a listed metric, or "all" for the interim package), or its declared requirements are not met (contract 5). A failed provisioning command is recorded and its reason is readable by contract 7.
 7. Evaluation may assume that a metric with a binding and tables was enabled by this act alone. It must not assume it is still offered.
@@ -214,7 +214,7 @@ The facts under "Today" were gathered by readers working from the dossiers, the 
 - DL: disable and unbind. Designed, not built in the program.
 
 **Left to the operator:**
-- This contract answers the first half of ruling T20: the enabling act is the only origin of a provisioning command; evaluation, the sweep and activation no longer start one. Recommendation: approve it so.
+- **Approving this contract also decides the first half of ruling T20:** the enabling act is the only origin of the command that enables a metric for a tenant. The second half of T20, whether the readiness pass stays a default of every worker run, stays open.
 - Who starts the act is ruling T18. The package table and the interim row are rulings T11 and T12.
 
 ## Stitch contract 7: From enabled to visible to reporting
@@ -343,16 +343,17 @@ The facts under "Today" were gathered by readers working from the dossiers, the 
 - Retirement is three commands and keeps the registry row (`tenant-retirement.service.ts:1-9`); no retention code is called. `operations.retention_policy` has 0 rows; no schedule runs retention.
 
 **The contract**
-1. S3 creates; S2 and S1 supply the first admin; PR receives the end.
+1. S3 creates; S4 supplies the Subscription; S2 and S1 supply the first admin; PR receives the end.
 2. At creation, one record: the tenant slug and the first admin's email, written in one act. At the end, the `tenant_retired` evidence row (tenant, date, receipt) is the record PR reads. What PR keeps is not defined (ruling T26).
 3. Creation: the operator, by one command. The end: the operator, with the separate recorded grant for the drop. PR: an operator command (G24 open).
 4. The operator's command. Nothing else starts either act.
 5. Creation uses the bc-db commit and release the operator names. The admin carries the tenant slug as a claim.
-6. The tenant is created in a waiting state and becomes `active` only when its first admin is verified, as decision DEC-cf6d3b says. If the admin cannot be created, the tenant stays waiting or the act undoes what it did; it is never `active`. Whether today's creation service can undo a database it made is not established.
-7. S3 may assume a first admin exists once creation reports success. S2 may assume the tenant exists. PR may assume a retirement record exists before it acts.
+6. The tenant is created in a waiting state. It becomes `active` if and only if both hold, as decision DEC-cf6d3b decided: a first admin for this tenant exists, is enabled and has verified the invitation; and the tenant references exactly one Subscription whose own state is active. The move to `active` reads both and is refused, with the missing one named, when either is absent. If the admin or the Subscription cannot be created, the tenant stays waiting or the act undoes what it did; it is never `active`. Whether today's creation service can undo a database it made is not established.
+7. S3 may assume a first admin and a Subscription exist once the tenant is `active`, and not before. S2 may assume the tenant exists. PR may assume a retirement record exists before it acts.
 
 **What must change to meet it**
 - S3: the creation act takes the admin email and calls S2. Repair.
+- S3, S4: the move to `active` checks the verified admin and the one active Subscription, and is refused without either. Repair in S3; the Subscription record itself needs a new record (database change: the operator's approval; contract 6). Needed by the thread.
 - S2: the user route checks the tenant exists. Repair.
 - S3: the waiting state until the admin is verified. Needs a new record (database change: the operator's approval), if migration 0034 is withdrawn (G12).
 - PR: reads `tenant_retired`. Repair.
