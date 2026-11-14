@@ -154,6 +154,8 @@ DevHub stays on its present database, SQLite, for the length of the program (rul
 
 The dossier for DV, Development, sets out what DevHub contains today, its defects and the conditions of its lock. It also records that the DevHub database is outside the nightly backup.
 
+**The program as a record a session can act on.** Today a session is shown the anchor, a short text, and must work out its own position in the program. From phase 1 DevHub holds the program itself: its phases, the function and step in hand, each exit with its conditions, the rulings and the evidence of each completed step. A session reaches it through four verbs. Status returns the current phase, function and step, the conditions of the exit not yet met, the open rulings, the chapters to read and the next act. Check says whether an intended act belongs to the program and whether what it depends on is in place. Do records a completed step with its evidence. Verify compares an exit with its conditions. The anchor then carries only a pointer and the instruction to begin with status.
+
 ## bc-docs: read first, and kept true
 
 bc-docs is the platform's documentation and, by decision DEC-3395bc, its single source of truth. The program found that it had stopped being consulted and stopped being kept current, and that the cause was structural: memory files and the pinned anchor are loaded into every session automatically, a chapter is not, and nothing obliged a session to read a chapter or to correct one. The project instruction file has never contained a step that says to read the governing chapter before working.
