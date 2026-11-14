@@ -76,6 +76,8 @@ compositional evidence and assigns the continuous run to full tenant onboarding.
 
 ## 2. The platform functions — the stable spine
 
+> **History.** By ruling F3 of the Platform Refactor Program, the platform's list of functions is the functional map in `docs/development/platform-refactor-program.md`, which adds nine functions to the list below. This section is kept as the record of the earlier list.
+
 The tracks and lanes churn; the **functions the platform must render do not**. This is the
 north-star list. Each function carries its scope and its governing ADRs *with real status*
 (open / decided / implemented) — a function with thin or no governing ADRs is itself a
