@@ -60,7 +60,7 @@ The rulings needed in phases 2 and 3 are put to the operator when each phase beg
 
 ## How to read this document
 
-This file is the program. It is meant to be read from start to finish and to stand on its own. Ten annexes hold detail that is looked up when needed; they are listed at the end. Where an annex and this file differ, this file governs and the difference is a defect to be corrected in whichever is wrong.
+This file is the program. It is meant to be read from start to finish and to stand on its own. Twelve annexes hold detail that is looked up when needed; they are listed at the end. Where an annex and this file differ, this file governs and the difference is a defect to be corrected in whichever is wrong.
 
 - **Evidence.** A number in square brackets, such as [9], is a row of the annex "Evidence, Verified at Source". The row gives the measured value and the file and line, the query or the command behind it. A statement marked "not re-checked" was reported by a review and was not re-established at its source.
 - **Citations.** A citation written `bc-docs:docs/overview/platform-overview.md:45 @ f4f5edd` names the repository, the file, the line, and the commit that was read.
@@ -228,13 +228,13 @@ The dossiers list, for each function, what it receives and hands on, and mark ma
 | 11 | A tenant's first user, and a tenant's end | S1, S2, S3, PR | Nothing links creating a tenant to creating its admin; what is kept and erased at the end is undesigned |
 | 12 | A change in the platform reaching the guide | DV, all | Nothing connects a merged change to its chapter |
 
-The facts behind each row are in the dossiers of the functions named. One difference between two dossiers is open: for stitch point 3 they disagree on the moment the tenant binding is written. The Chief settles it in phase 2 by reading the code.
+The facts behind each row are in the dossiers of the functions named. The twelve contracts are the annex [The Stitch Contracts](platform-refactor-program/stitch-contracts.md). One difference between two dossiers was open: for stitch point 3 they disagreed on the moment the tenant binding is written. The Chief settled it in phase 2 by reading the engine: the binding is written at the activate call, before the version is active, and the annex records it.
 
 ## The thread
 
 The thread is one tenant and one metric, followed from the metric being available to a user of the tenant seeing its value. It is the program's running test that the parts join. From phase 4 on, a function's Prove step includes walking its own part of the thread.
 
-The tenant is Kaveri. The metric is chosen in phase 2 from the reference set described under "The method". The list of the thread's steps, with the function that owns each and whether it can be performed today, is written in phase 2 and is one of that phase's exits. By ruling T2, what the thread needs and does not exist is built inside the program; nothing else of subscription is.
+The tenant is Kaveri. The metric, chosen in phase 2 from the reference set described under "The method", is `receivable_control_balance`. The list of the thread's steps, with the function that owns each and whether it can be performed today, is the annex [The Thread](platform-refactor-program/the-thread.md), with the list of what the thread needs and the two metric shapes of the finish test. By ruling T2, what the thread needs and does not exist is built inside the program; nothing else of subscription is.
 
 ## The method
 
@@ -343,7 +343,6 @@ The rulings needed in later phases, and the questions each dossier raises, are i
 - Whether today's engine reproduces the values recorded for Kaveri. The first reference run answers it.
 - What a tenant database holds. No tenant database was read.
 - How long a function takes to pass through the method.
-- The thread's metric and steps, and the moment the tenant binding is written (stitch point 3). Phase 2 settles both.
 - Several figures reported by reviews and not re-established at source. Each is marked "not re-checked" where it appears.
 
 ## The chief risks
@@ -364,7 +363,7 @@ This section is the definition of done for the program. The program is finished 
 
 1. **Every function is locked.** All 28 functions of the map are locked, except what is on a closed list, "designed and not built", that the operator has approved by name. An entry on the list is a whole function or a named part of one. Today the list would hold the function Action and intervention, and one named part of Pricing and subscription: billing and the tiers, which the thread does not need.
 2. **Every hand-off is agreed and tested.** All twelve stitch contracts are approved, and each has at least one test that fails when the contract is broken.
-3. **The finish test has passed.** A worker that did not build the platform, using only the guide and the commands, takes one metric from a source table not used before to "done" for a tenant; then a second metric of a different shape; then one business concept; with no change to code and no ruling. The operator names the two metric shapes in phase 2. The transcript of the run is kept.
+3. **The finish test has passed.** A worker that did not build the platform, using only the guide and the commands, takes one metric from a source table not used before to "done" for a tenant; then a second metric of a different shape; then one business concept; with no change to code and no ruling. The operator named the two metric shapes in phase 2; they are in the annex "The Thread". The transcript of the run is kept.
 4. **The route is proven on the operator's four conditions,** each marked met with its evidence: it used the mandated route alone; it repeats from a clean start by the written procedure alone, in a session that did not build it; each part and each hand-off has tests that can fail, kept and re-run; and a second, different case passes with no change to any part [23b].
 5. **There is one guide.** `docs/guide/` has a locked chapter for each locked function, and each of the 124 chapters that exist today [21a] has been kept, rewritten or retired.
 6. **Every decision record and memory file has been checked.** DevHub's count of those remaining is zero.
@@ -385,6 +384,8 @@ The annexes are part of this document. All are in the folder `platform-refactor-
 | [How the Work Is Done](platform-refactor-program/how-the-work-is-done.md) | The method with a worked example, commands, locks, the reference run, DevHub, bc-docs, roles, all risks, what happens to what exists, items outside the program |
 | [The Rulings](platform-refactor-program/rulings.md) | Every ruling: decided, open, and raised by a dossier |
 | [The Functions in Brief](platform-refactor-program/functions-in-brief.md) | A short summary of each of the 28 functions |
+| [The Stitch Contracts](platform-refactor-program/stitch-contracts.md) | The twelve agreements for the hand-offs between functions |
+| [The Thread](platform-refactor-program/the-thread.md) | The metric, the steps, what the thread needs built, and the two metric shapes of the finish test |
 | [Function Dossiers: Shared Services, Operations, Development](platform-refactor-program/functions-shared-services-operations-development.md) | The dossiers of S1 to S5, OP and DV |
 | [Function Dossiers: The Authoring Lanes](platform-refactor-program/functions-authoring-lanes.md) | The dossiers of L1 to L10 |
 | [Function Dossiers: Runtime, Proof, Delivery and Support](platform-refactor-program/functions-runtime-delivery-support.md) | The dossiers of the other eleven functions |
