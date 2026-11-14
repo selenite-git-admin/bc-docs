@@ -2,7 +2,7 @@
 id: platform-refactor-program
 order: 45
 title: "Platform Refactor Program"
-status: drafting
+status: locked
 authority: authoritative
 depends_on: [devhub, documentation-system, decision-and-change-procedure]
 governing_sources:
@@ -25,7 +25,7 @@ diagrams: []
 
 # Platform Refactor Program
 
-> **Status of this document.** The operator approved it on 2026-11-14 with the words "All approved.", said in the Chief's session. The decision is recorded as decision record DEC-71f15e, which stands as `proposed` until the operator approves it at the approval desk; a statement made in a session is not a recorded approval. This document's status becomes `locked` in the same change that marks that record `decided`. By the documentation's rule a chapter binds only when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca).
+> **Status of this document.** It is locked. The operator approved it on 2026-11-14, and the approval is recorded at the approval desk as grant `2026-11-14T01-47-16-746Z-95eacc7e` (text SHA-256 `95eacc7ea28b4a731731b9627bc50be55ba19ca58f0bd9309c78836ee2558044`), given for this document as written at commit `71aa76f0607ab92a8b2fc5f1a0c6d07fdc0cb872`. The decision is decision record DEC-71f15e, which is `decided`. By the documentation's rule a chapter binds when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca).
 
 ## Summary
 
@@ -47,13 +47,12 @@ The program is finished when the eight conditions under "When the program is fin
 
 ## What the operator is asked to do now
 
-On 2026-11-14 the operator approved the program, confirmed the five rulings decided the day before together with what the Chief had added to them, and decided the four rulings needed in phase 1. Three acts remain with the operator.
+On 2026-11-14 the operator approved the program, confirmed the five rulings decided the day before together with what the Chief had added to them, and decided the four rulings needed in phase 1. The approval is recorded at the approval desk as grant `2026-11-14T01-47-16-746Z-95eacc7e`; decision record DEC-71f15e is `decided` and this document is locked. Two acts remain with the operator.
 
 | # | Act | What it does |
 |---|---|---|
-| 1 | Approve, at the approval desk, the request that marks decision record DEC-71f15e `decided`. | The approval becomes a recorded one. This document becomes `locked` and its holds bind. |
-| 2 | Approve, at the approval desk, the pin of the program's anchor, once the anchor is merged. | Every session is then shown this program at each turn, in place of the parked drive's goal. |
-| 3 | Replace the two credentials that are present in the engine's history on three lines [17a]. | The exposure ends. Deleting the files does not remove them from history. |
+| 1 | Approve, at the approval desk, the pin of the program's anchor, once the anchor is merged. | Every session is then shown this program at each turn, in place of the parked drive's goal. |
+| 2 | Replace the two credentials that are present in the engine's history on three lines [17a]. | The exposure ends. Deleting the files does not remove them from history. |
 
 The rulings needed in phases 2 and 3 are put to the operator when each phase begins.
 

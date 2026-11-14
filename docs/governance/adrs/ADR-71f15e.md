@@ -2,7 +2,7 @@
 uid: DEC-71f15e
 title: "Platform Refactor Program: park the Demoed drive and the controller fleet; refactor the platform one function at a time against a functional map"
 description: "The operator's decision of 2026-11-13, approved 2026-11-14: park the Demoed drive and the controller fleet; refactor the whole platform one function at a time (define, audit, modify, prove, lock); the program is bc-docs docs/development/platform-refactor-program.md."
-status: proposed
+status: decided
 date: 2026-11-14T01:33:34.942Z
 project: bc-docs
 domain: development
