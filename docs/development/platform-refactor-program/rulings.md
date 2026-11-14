@@ -61,6 +61,8 @@ A **ruling** is a decision that belongs to the operator. Each is recorded here w
 
 On 2026-11-14 the operator confirmed the rulings above, with what the Chief had added to each, and decided four more with the words "All approved.": G5 (DevHub stays on its present database for the length of the program), G3 (DevHub's unused tools and tables are stopped in phase 1 and removed after one function has been locked without them), G30 (the rules for sessions live in a bc-docs chapter, and the project instruction file points to it), and G34 (the Chief owns every function until phase 12, when a standing owner for each is proposed). The decision is recorded as decision record DEC-71f15e.
 
+Later on 2026-11-14 the operator decided ruling G36: a clean-up, phase 0, comes before phase 1, and three standing rules keep the repositories clean from then on (a shared copy is a read-only mirror of its main branch, and one that a service runs from is brought level only by that service's serving procedure; work is done in worktrees that are removed with their branch when their pull request is merged or closed, after their content is committed and pushed or recorded, and never if they serve the engine or are kept as a frozen build; no pull request stays open without a named owner and a next step). The operator's words were "Shall we add housekeeping/cleaning before program starts and at appropriate positions (mainly PR and branch hygiene -- to avoid bc-docs 141 lagging kind of issues)?" and, to the Chief's proposal, "Go ahead". G36 amended the program after it was locked.
+
 ### Open
 
 

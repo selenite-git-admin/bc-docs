@@ -110,6 +110,36 @@ A **lock** is what keeps a finished function finished. It has four parts, and al
 
 A lock is opened only by a ruling of the operator, recorded as a decision, and closed again by the same four parts.
 
+## Keeping the repositories clean
+
+Ruling G36 (operator, 2026-11-14) adds a clean-up before phase 1 and three standing rules.
+
+**What was measured.** On 2026-11-14 the Chief ran, for each repository under `~/MyProjects`, `git rev-list --count HEAD..origin/main` (commits the shared copy is behind its main branch), `git branch --show-current`, `git status --porcelain | wc -l` (uncommitted and untracked files), `git branch -r | wc -l` (branches on GitHub) and `gh pr list --state open` (open pull requests).
+
+| Repository | Behind main | Current branch | Uncommitted or untracked | Branches on GitHub | Open pull requests |
+|---|---|---|---|---|---|
+| bc-docs | 141 | main | 24 | 35 | 16 |
+| bc-db | 122 | a feature branch | 3 | 61 | 6 |
+| barecount-devhub | 0 | main | 152 | 134 | 26 |
+| bc-core | 3 | main | 2 | 119 | 8 |
+| bc-portal | 36 | main | 0 | 3 | 0 |
+| bc-infra | 23 | main | 1 | 1 | 0 |
+| bc-demo | 5 | a feature branch | 5 | 6 | 0 |
+| bc-admin | 2 | main | 0 | 3 | 0 |
+
+Three services run from a shared copy: DevHub, the operator console (bc-admin) and the customer portal (bc-portal) (`command: grep -n working_dir ~/bc-stack/process-compose.yaml`, 2026-11-14). The engine runs from a frozen worktree of its own. So the customer portal was being served 36 commits behind its main branch. The annex "Every Repository and Where It Belongs" counts 323 worktrees. bc-docs already deletes a branch when its pull request merges (`gh api repos/selenite-git-admin/bc-docs -q .delete_branch_on_merge` returned `true`); the setting was not read for the other repositories.
+
+**Phase 0, in two parts.**
+- *Without loss.* Each shared copy that no service runs from is returned to its main branch and brought level with it. A shared copy that a service runs from is not changed by housekeeping: it is brought level only through that service's own serving procedure, with the operator told beforehand, because changing its files changes what is being served. Before that, every untracked file in the copy is compared with main: a file already on main is left to be replaced by it; a file that is not is committed through a pull request or put on the disposal list. bc-docs needs this care most, because its shared copy holds decision records written by earlier sessions and never committed. Deleting a branch on merge is turned on wherever it is off.
+- *Disposal, on one list the operator approves.* The Chief draws up a list of every open pull request, branch and worktree with a proposed fate: merge, close with a note that says where the work is recorded, keep with a named owner and next step, or remove. A worktree that serves the engine, or is kept as a frozen build to return to, is never on the list. For each worktree proposed for removal the list states whether it holds uncommitted or untracked content; such content is committed and pushed, or recorded, before the worktree is removed. Nothing is closed or removed before the operator approves the list.
+
+**The standing rules.**
+1. A shared copy is a read-only mirror of the main branch. No session commits in it. DevHub shows the lag of every shared copy and offers the act that removes it. It keeps level on a timer only the copies that no service runs from. A copy that a service runs from is brought level by that service's serving procedure and by nothing else, until phase 3 gives each service a copy of its own; from then on every shared copy is kept level by the timer.
+2. All work is done in a worktree. When its pull request is merged or closed, the worktree and its branch are removed, but only after it is confirmed that nothing in it would be lost: uncommitted or untracked content is first committed and pushed, or recorded. A worktree that serves the engine, or is kept as a frozen build to return to, is never removed during the program.
+3. No pull request stays open without a named owner and a next step. DevHub lists any that do.
+
+**Where the rules are checked.** The Lock step refuses a function that still has an open pull request, or a branch or worktree other than one that serves the engine or is kept as a frozen build. The ninth condition of the definition of done requires the same of the whole platform at the end.
+
 ## Stabilising the codebase
 
 The codebase is unstable in two ways. The first is churn: the engine's central file was changed twenty times in thirty days to serve one metric's proof. The park ends that; from now on the engine's code changes only through this program. The second is accumulated debt: duplicated blocks, very long files, queries built by joining text.
@@ -220,10 +250,10 @@ The program changes that by mechanism, not by exhortation:
 
 ## Items outside the program
 
-- **Committed credentials.** Two credentials are present in bc-core's history on three lines: one account password in two files, and one API key. Their files and lines are listed in the evidence annex, row 17a; no value is printed anywhere in this document. Deleting the files does not remove them from history; the operator rotates each.
+- **Committed credentials.** Two credentials are present in bc-core's history on three lines: one account password in two files, and one API key. The account password was replaced by the operator on 2026-11-14; the reset tool reported the change and a sign-in with the stored new value succeeded (seen by the Chief in the terminal output; not re-checked by the auditor). The API key is not confirmed dead: a request the operator made with it was answered with HTTP status 400, and it was not among the keys listed in the operator's provider account. That suggests it is no longer valid and does not establish it. The item stays open until the provider's answer is confirmed to name the key as invalid, or the key is found and deleted. The files are removed in phase 3; deleting them does not remove the values from history.
 - **The provisioning worker** must not be run with its readiness pass until the gap described in the dossiers for L5, Canonical Contracts, and L10, Tenant onboarding, is closed, because the pass could make a contract version active that was authored for the demo plane.
 - **A standing halt in bc-docs.** The chapter on the metric management system still says that no further metric is to be made active and no further vocabulary authored until a sequence completes. This program's hold replaces it; the text is retired in phase 7.
 - **Instructions that are wrong today.** The project instruction file names a demo tenant that does not exist, a tenant route that refuses, a count of schemas that is too low (11 against a measured 22 [16a]), and a naming rule for boolean columns that the data does not follow (not re-checked; reported in artifacts/spine-review/DOCS-3A-implementation.md). They are corrected in phase 1.
 - **The documentation reader** is broken on the build now being served. Its repair is not held and is done with the serving procedure in phase 3.
-- **Open pull requests of the parked drive.** barecount-devhub 325 and 326; bc-core 1053 and 1054; bc-docs 206, 212 and 214.
-- **Leftover worktrees.** 323 linked worktrees are registered across the twelve repositories [20a]. The repositories annex lists where they are. The folder `~/MyProjects/_wt` holds 239 of them and uses 31 GB (reported by one measurement; the evidence check did not reproduce it, row 20c); the rest were measured in part. One is the served build and must not be removed. None is removed before phase 3.
+- **Open pull requests of the parked drive.** barecount-devhub 325 and 326; bc-core 1053 and 1054; bc-docs 206, 212 and 214. They are on the disposal list of phase 0.
+- **Leftover worktrees, branches and open pull requests.** They are dealt with in phase 0, on a list the operator approves; see "Keeping the repositories clean".

@@ -25,7 +25,7 @@ diagrams: []
 
 # Platform Refactor Program
 
-> **Status of this document.** It is locked. The operator approved it on 2026-11-14, and the approval is recorded at the approval desk as grant `2026-11-14T01-47-16-746Z-95eacc7e` (text SHA-256 `95eacc7ea28b4a731731b9627bc50be55ba19ca58f0bd9309c78836ee2558044`), given for this document as written at commit `71aa76f0607ab92a8b2fc5f1a0c6d07fdc0cb872`. The decision is decision record DEC-71f15e, which is `decided`. By the documentation's rule a chapter binds when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca).
+> **Status of this document.** It is locked. The operator approved it on 2026-11-14, and the approval is recorded at the approval desk as grant `2026-11-14T01-47-16-746Z-95eacc7e` (text SHA-256 `95eacc7ea28b4a731731b9627bc50be55ba19ca58f0bd9309c78836ee2558044`), given for this document as written at commit `71aa76f0607ab92a8b2fc5f1a0c6d07fdc0cb872`. The decision is decision record DEC-71f15e, which is `decided`. It was amended once, by ruling G36 (housekeeping), in the way "The rulings" describes. By the documentation's rule a chapter binds when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca).
 
 ## Summary
 
@@ -43,16 +43,18 @@ The program does five things.
 4. **It leaves each function usable like an application:** a small set of commands that are the only way to perform its acts, one chapter in a single developer guide, and a lock that fails the build if a second way appears.
 5. **It makes the two things every session depends on trustworthy:** DevHub, the tool that coordinates development, and bc-docs, the documentation.
 
-The program is finished when the eight conditions under "When the program is finished" hold. Until a function is locked, nothing it owns is authored or repaired outside the program.
+The program is finished when the nine conditions under "When the program is finished" hold. Until a function is locked, nothing it owns is authored or repaired outside the program.
 
 ## What the operator is asked to do now
 
-On 2026-11-14 the operator approved the program, confirmed the five rulings decided the day before together with what the Chief had added to them, and decided the four rulings needed in phase 1. The approval is recorded at the approval desk as grant `2026-11-14T01-47-16-746Z-95eacc7e`; decision record DEC-71f15e is `decided` and this document is locked. Two acts remain with the operator.
+On 2026-11-14 the operator approved the program, confirmed the five rulings decided the day before together with what the Chief had added to them, and decided the four rulings needed in phase 1. The approval is recorded at the approval desk as grant `2026-11-14T01-47-16-746Z-95eacc7e`; decision record DEC-71f15e is `decided` and this document is locked. Two acts remain with the operator, and a third, the approval of the list of what is disposed of in phase 0, comes when that list is drawn up.
 
 | # | Act | What it does |
 |---|---|---|
 | 1 | Approve, at the approval desk, the pin of the program's anchor, once the anchor is merged. | Every session is then shown this program at each turn, in place of the parked drive's goal. |
-| 2 | Replace the two credentials that are present in the engine's history on three lines [17a]. | The exposure ends. Deleting the files does not remove them from history. |
+| 2 | Confirm that the API key found in the engine's history is no longer valid, or delete it. | The exposure ends. Deleting the file does not remove the key from history. |
+
+Of the two credentials found in the engine's history, one is dealt with and one is not yet confirmed. On 2026-11-14 the operator replaced the account password: the reset tool reported the change, and a sign-in with the stored new value succeeded. For the API key, a request the operator made with it was answered with HTTP status 400, and the key was not among those listed in the operator's provider account; that suggests the key is no longer valid but does not establish it. It stays open until the provider's refusal is confirmed to name the key as invalid, or the key is found and deleted. The files that hold both are removed in phase 3.
 
 The rulings needed in phases 2 and 3 are put to the operator when each phase begins.
 
@@ -138,7 +140,7 @@ Each item was re-established at its source on 2026-11-13. The annex "Evidence, V
 ## What is parked and what is held
 
 **Parked** means kept as recorded and not worked on. Parked work resumes only by a new ruling after the program.
-- The Demoed drive, begun 2026-10-26, and the work in flight under it. Its seven open pull requests are listed in the annex "How the Work Is Done".
+- The Demoed drive, begun 2026-10-26, and the work in flight under it. Its seven open pull requests are disposed of in phase 0.
 - The controller fleet: the method, begun 2026-09-30, of thirteen standing sessions each owning an area.
 
 **Held** means: nothing owned by a function is authored, repaired or removed until that function reaches its Modify step. After that, acts on what it owns are performed only through the function's commands.
@@ -242,11 +244,13 @@ Each function passes five steps in order. The Chief judges each exit and reports
 | **Audit** | Every surface that touches the function is listed in DevHub and marked: the one path, a duplicate, or dead. The code-rule findings for its files are sorted into defects and noise. | The list names the commit of each repository it was taken from. Every route, table and script that DevHub's scans attribute to the function at that commit has an owner and a mark, and each surface left deliberately unassigned is named with its reason. |
 | **Modify** | Breaks are repaired. Duplicates and dead code are deleted. Values written into code move into declarations. The function's commands are built. | Automatic checks pass, and the reference run gives the same values as before. |
 | **Prove** | A worker that took no part in the work, started with memory files switched off, is given only the chapter and the commands. It performs the function's acts and its part of the thread. | It succeeds with no ruling and no change to code; its transcript is kept. |
-| **Lock** | The four parts of the lock are put in place: a guard that fails when a second way to perform an act appears; a guard that the function's files pass the code rules; a test of its commands against a real database; and its chapter merged and marked locked, with the texts it replaces retired in the same change. | All four exist, and the replaced texts are deleted or marked as history. |
+| **Lock** | The four parts of the lock are put in place: a guard that fails when a second way to perform an act appears; a guard that the function's files pass the code rules; a test of its commands against a real database; and its chapter merged and marked locked, with the texts it replaces retired in the same change. | All four exist; the replaced texts are deleted or marked as history; and no pull request of the function is left open, and no branch or worktree of the function remains except one that serves the engine or is kept as a frozen build. |
 
 Rules that hold throughout: read the governing chapters before designing; one path for each act; no new capability, except what ruling T2 allows; a rule that matters becomes a guard; what others stand on is locked first.
 
 **How a session runs the program.** Today nothing hands a session the program to run. A session is shown a short text and must work out for itself where the work stands, what comes next and whether an act belongs to the program; when it works that out wrongly, only the operator notices. From phase 1, DevHub holds the program as a record a session can act on, through the same four verbs as any command. **Status** returns the current phase, function and step, the conditions of the exit that are not yet met, the rulings still open, the chapters to read, and the next act. **Check** says whether an intended act belongs to the program and whether what it depends on is in place. **Do** records that a step is complete, with its evidence. **Verify** compares an exit with its conditions. A session begins with status and does not act on what check refuses. Recording a step does not approve anything: it does not meet an exit, settle a ruling or move the program to its next phase. Status shows three things apart: the evidence a session has recorded, the exits the Chief has judged, and the approvals the operator has given. Verify reports the conditions that are not met; it never turns a session's claim into an approval.
+
+**Keeping the repositories clean.** Each repository has one shared copy on the development machine. On 2026-11-14 those copies were behind their main branches by up to 141 commits, two were not on the main branch at all, 56 pull requests were open and 323 worktrees existed; the measurements are in the annex "How the Work Is Done". Three rules hold from phase 0 on. First, a shared copy is a read-only mirror of the main branch: DevHub keeps it level and no session commits in it. Three shared copies are also the place a service runs from (DevHub, the operator console and the customer portal); such a copy is brought level only by that service's own serving procedure, never by a timer, until phase 3 gives each service a copy of its own. Second, all work is done in a worktree. When its pull request is merged or closed, the worktree and its branch are removed, but only after it is confirmed that nothing in it would be lost: any uncommitted or untracked content is first committed and pushed, or recorded. A worktree that serves the engine, or is kept as a frozen build to return to, is never removed during the program. Third, no pull request stays open without a named owner and a next step.
 
 **Commands.** A function's commands are part of the engine's own code. Each has four verbs: **status** (where this stands and what is required next), **check** (would the act be refused, and why), **do** (the act), **verify** (did it take effect, and what shows it). A session, the operator console and DevHub all use the same commands, and the other ways in are deleted.
 
@@ -264,11 +268,12 @@ A worked example, and each of these subjects in full, is in the annex "How the W
 
 ## The order of work
 
-The order is fixed. A phase begins when the one before it has met its exit.
+The order is fixed. A phase begins when the one before it has met its exit. Phase 0 is a clean-up that the method does not apply to: it has only its exit.
 
 | Phase | Functions | The exit |
 |---|---|---|
-| 1 | DV: DevHub and bc-docs | DevHub's start-of-session text states only what is true. The anchor is pinned to this program. DevHub holds the program's plan, its rulings, and the assignment of surfaces with the register and the retirement list, and gives a session the program through status, check, do and verify, shown by tests of four cases: an exit with a condition not met, an act that is refused, a ruling still open, and an attempt to record a step as complete without the decision its exit requires. The backlog is swept (ruling G2). DevHub records the chapters consulted when a plan is saved and when a session is closed. The code-rule baseline for the engine is enforced automatically. The check that holds changes to the engine's value-producing files is in force. DevHub's dead tools are stopped (ruling G3). |
+| 0 | Housekeeping | Every shared copy that no service runs from is on its main branch and level with it; each of the three that a service runs from is brought level through that service's serving procedure, with the operator told beforehand. Each untracked file in a shared copy has been found on main, committed through a pull request, or put on the disposal list. Every repository deletes a branch when its pull request merges. Every open pull request is merged, closed with a note, or kept with a named owner and next step. The operator has approved the disposal list, and the branches and worktrees on it are removed, each only after its uncommitted and untracked content has been committed and pushed, or recorded; a worktree that serves the engine or is kept as a frozen build is never on the list. |
+| 1 | DV: DevHub and bc-docs | DevHub's start-of-session text states only what is true. The anchor is pinned to this program. DevHub holds the program's plan, its rulings, and the assignment of surfaces with the register and the retirement list, and gives a session the program through status, check, do and verify, shown by tests of four cases: an exit with a condition not met, an act that is refused, a ruling still open, and an attempt to record a step as complete without the decision its exit requires. The backlog is swept (ruling G2). DevHub records the chapters consulted when a plan is saved and when a session is closed. The code-rule baseline for the engine is enforced automatically. The check that holds changes to the engine's value-producing files is in force. DevHub keeps each shared copy that no service runs from level with its main branch, and shows the lag of every shared copy together with the act that removes it. DevHub's dead tools are stopped (ruling G3). |
 | 2 | The frame | The operator has approved: the statement of what the product is (F1); the definition of "done" (F2); the map (F3); the twelve stitch contracts; the thread's metric and steps; and rulings F4 to F9, T6, B6 and B7. |
 | 3 | OP: Operations | One list of environment names is approved and in use. One written procedure serves the engine and has been followed once. Secrets are loaded one way. The schema-change path is written as practised. Operations' scripts have been checked for secrets, are in a repository, and its acts are performed by commands that have been run once, including the return to the previous build of the engine. The reference run has passed once, and this document records the hash of the database copy, the engine commit, where each expected value came from, and the result. The check on the engine requires the reference run from then on. Rulings G12 to G15 and G35 are made. |
 | 4 | S1, S2, S3 | Each function is locked. |
@@ -295,7 +300,7 @@ A ruling is a decision that belongs to the operator. It is recorded in this docu
 
 ### Decided
 
-Rulings F1, T1, T2, T3 and G2 were decided on 2026-11-13. On 2026-11-14 the operator confirmed them, with what the Chief had added to each, and decided G5, G3, G30 and G34, with the words "All approved." The words are an attributed record, as explained under "The decision".
+Rulings F1, T1, T2, T3 and G2 were decided on 2026-11-13. On 2026-11-14 the operator confirmed them, with what the Chief had added to each, and decided G5, G3, G30 and G34, with the words "All approved." Ruling G36 was decided later the same day and amended this document after it was locked. The words are an attributed record, as explained under "The decision".
 
 | # | The operator's words | The ruling | What the Chief added |
 |---|---|---|---|
@@ -308,6 +313,7 @@ Rulings F1, T1, T2, T3 and G2 were decided on 2026-11-13. On 2026-11-14 the oper
 | G3 | "All approved.", to the recommendation. | DevHub's unused tools and tables are stopped in phase 1 and removed after one function has been locked without them. | The count (about 35 tools and 27 tables) is not re-checked; the list is drawn up in phase 1. |
 | G30 | "All approved.", to the recommendation. | The rules for sessions live in a bc-docs chapter; the project instruction file points to it. | None. |
 | G34 | "All approved.", to the recommendation. | The Chief owns every function until phase 12, when a standing owner for each is proposed. | None. |
+| G36 | "Shall we add housekeeping/cleaning before program starts and at appropriate positions (mainly PR and branch hygiene -- to avoid bc-docs 141 lagging kind of issues)?" Then, to the Chief's proposal: "Go ahead". | A clean-up, phase 0, comes before phase 1, and the three rules under "Keeping the repositories clean" hold from then on. | The exit of phase 0; the added condition of the Lock step; the ninth condition of the definition of done; DevHub keeping the shared copies level, in phase 1; the exception for a shared copy a service runs from; and the two protections on removal: nothing is removed that is not on a list the operator has approved, and nothing is removed before its content is committed and pushed, or recorded. Serving and frozen worktrees are never removed. |
 
 ### Open, and needed in phases 2 and 3
 
@@ -340,7 +346,7 @@ The full list is in the annex "How the Work Is Done".
 
 ## When the program is finished
 
-This section is the definition of done for the program. The program is finished when all eight conditions hold. Each can be checked by a third person. The Chief reports each with its evidence, and the operator confirms the whole.
+This section is the definition of done for the program. The program is finished when all nine conditions hold. Each can be checked by a third person. The Chief reports each with its evidence, and the operator confirms the whole.
 
 1. **Every function is locked.** All 28 functions of the map are locked, except what is on a closed list, "designed and not built", that the operator has approved by name. An entry on the list is a whole function or a named part of one. Today the list would hold the function Action and intervention, and one named part of Pricing and subscription: billing and the tiers, which the thread does not need.
 2. **Every hand-off is agreed and tested.** All twelve stitch contracts are approved, and each has at least one test that fails when the contract is broken.
@@ -350,6 +356,8 @@ This section is the definition of done for the program. The program is finished 
 6. **Every decision record and memory file has been checked.** DevHub's count of those remaining is zero.
 7. **Values are held and the code is clean where it is locked.** The reference run passes on the final commit of the engine, and the files of every locked function have no failure of a code rule.
 8. **DevHub tells the truth.** Its start-of-session text, its anchor and its scans have each been compared with their sources and found to agree.
+
+9. **The repositories are clean.** Every shared copy is level with its main branch; no pull request is open without a named owner and a next step; and no branch or worktree remains whose pull request is merged or closed, except a worktree that serves the engine or is kept as a frozen build. Nothing was removed whose content had not first been committed and pushed, or recorded.
 
 Condition 3 rests on "done", which requires agreement with an expected value worked out independently. What counts as independent is ruling B5, which must be made before phase 8.
 
