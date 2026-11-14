@@ -6,8 +6,8 @@ status: drafting
 authority: authoritative
 generator: scripts/docs-control/generate_adr_registry.py
 source_repo: bc-docs
-source_commit: 66561c1
-generated_at: 2026-10-02T12:55:59Z
+source_commit: c327c94
+generated_at: 2026-10-23T17:44:06Z
 ---
 
 
@@ -15,7 +15,7 @@ generated_at: 2026-10-02T12:55:59Z
 
 The ADR Registry is the canonical index of platform decisions. Each entry has a structurally unique UID (`DEC-xxxxxx`) used in cross-references throughout the documentation. The ADR files are the source of truth (DEC-a4e550); this registry is generated from their frontmatter and is never edited by hand.
 
-**Counts at generation.** 628 records: accepted 1, decided 210, implemented 270, proposed 12, reversed 7, superseded 128. Quarantined duplicates (not counted): 1 (ADR-DEC-e82f0a.md). Non-canonical filenames: 4 (ADR-DEC-e82f0a.md, ADR-chain-invariants.md, ADR-d315ve.md, ADR-d316mr.md).
+**Counts at generation.** 649 records: accepted 1, decided 231, implemented 270, proposed 10, reversed 9, superseded 128. Quarantined duplicates (not counted): 1 (ADR-DEC-e82f0a.md). Non-canonical filenames: 4 (ADR-DEC-e82f0a.md, ADR-chain-invariants.md, ADR-d315ve.md, ADR-d316mr.md).
 
 **Hygiene.** The supersession pair rule (DEC-623f8f rule 1) is enforced on every push and pull request by `.github/workflows/adr-hygiene.yml` running `scripts/docs-control/audit_adrs.py`. That auditor's report is `docs-control/reports/adr-hygiene.md`. See erratum ADR-ERR-005 for the rules DEC-623f8f names that are not built.
 
@@ -73,7 +73,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-1002c9` | [MCF trust-chain resolution — concept-mediated MC→CC derivation, PE-MC-11 resolvability evidence, honest chain-green semantics](./ADR-1002c9.md) | implemented |  |  |  |
 | `DEC-103528` | [SFDC Source Catalog — Salesforce native cloud grouping, CPQ deferred](./ADR-103528.md) | implemented |  |  |  |
 | `DEC-103acb` | [Tenant onboarding mandatory-field policy + completeness gate (block activation until identity is complete)](./ADR-103acb.md) | decided |  |  |  |
-| `DEC-116641` | [A profile is a parent manifest plus typed children — composition, not one file](./ADR-116641.md) | proposed |  |  |  |
+| `DEC-116641` | [A profile is a parent manifest plus typed children — composition, not one file](./ADR-116641.md) | reversed |  |  |  |
 | `DEC-12558e` | [Odoo 19 EE is a JSON-RPC Connector over http transport with an OdooJsonRpcProtocolReader executor, reusing basic auth](./ADR-12558e.md) | implemented |  |  |  |
 | `DEC-129417` | [Reader consolidation — per-subfunction with system flavors](./ADR-129417.md) | superseded |  | DEC-0d5b39 |  |
 | `DEC-136a23` | [Observation Contract stays reader-scoped, field_affinity is the sharing layer](./ADR-136a23.md) | decided |  |  |  |
@@ -161,6 +161,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-3395bc` | [v3 docs reader: drop book wrapper, drop mkdocs, flat sections under docs/](./ADR-3395bc.md) | decided |  |  |  |
 | `DEC-339c97` | [External standards provenance on Business Objects and Business Fields](./ADR-339c97.md) | superseded |  | DEC-b390ef |  |
 | `DEC-33d436` | [Platform Readiness & Legibility — program mandate, platform/tenant readiness split, and SSOT consolidation](./ADR-33d436.md) | decided |  |  |  |
+| `DEC-346ae7` | [Metric validation is the three-part claim (meaning + formula asserted against the standard; calculation proven by the deterministic gate + a robustness harness); the AI panel is a flagger, not the correctness gate](./ADR-346ae7.md) | decided |  |  |  |
 | `DEC-351108` | [Contract-Typed Payload Tables + Reader Batch Write Model](./ADR-351108.md) | superseded |  |  |  |
 | `DEC-354552` | [Reader Path Robustness + Chain Integrity Gates — fail-fast contracts, locked SOPs, end-to-end smoke gate](./ADR-354552.md) | decided |  |  |  |
 | `DEC-3562a5` | [RDS-portable canonical baseline — the versioned spine applies under a non-superuser cloud principal](./ADR-3562a5.md) | accepted |  |  |  |
@@ -180,6 +181,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-388129` | [Domain Taxonomy as Platform Master](./ADR-388129.md) | superseded |  | DEC-7bbdba |  |
 | `DEC-38b354` | [Housekeeping Agents Migration — bc-ai APScheduler → Claude Code Scheduled Tasks](./ADR-38b354.md) | implemented | DEC-365f51 |  |  |
 | `DEC-38c8bb` | [bc-website v2 Direction — Marketing-First, Separate Voice Register](./ADR-38c8bb.md) | decided |  |  |  |
+| `DEC-3926bf` | [Kaveri Wave-1 invoice-chain unblock: clearing_date as_of derivation on the invoice canonicals (Option A) + AR canonical activation + Supplier/Customer master-BO prerequisite (re-scoped; JE-line sub-ledger premise withdrawn)](./ADR-3926bf.md) | decided |  |  |  |
 | `DEC-39514f` | [Demo world-builder pivots to a model-driven compiler (Foundry): one typed world model, everything else a projection](./ADR-39514f.md) | decided |  |  |  |
 | `DEC-3a6f74` | [Platform/Tenant: Keep single service, formalize with guard decorators](./ADR-3a6f74.md) | implemented |  |  |  |
 | `DEC-3aa336` | [MCF code layout — mcf/ is the consolidated home; two strays move in, five look-alikes deliberately stay out](./ADR-3aa336.md) | implemented |  |  |  |
@@ -232,9 +234,12 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-4a17e0` | [Observation Contract field-level semantic identity (sibling to DEC-a6258b; old Business Field role)](./ADR-4a17e0.md) | decided |  |  |  |
 | `DEC-4a515b` | [All 4 process chains from day one — P2P, O2C, R2R, Plan-to-Produce](./ADR-4a515b.md) | implemented |  |  |  |
 | `DEC-4a8abb` | [MC Constant Value Propagation — End-to-End](./ADR-4a8abb.md) | decided |  |  |  |
+| `DEC-4aa1ff` | [Canonical legal-entity identity: a platform-minted LE id is the partition axis of the object progression; source company keys are confirmed cross-references; identity is declared at tenant onboarding and realized at source onboarding](./ADR-4aa1ff.md) | decided |  |  |  |
 | `DEC-4aa2fd` | [Subscription-plan-driven contract binding automation (metric entitlement is the control surface)](./ADR-4aa2fd.md) | superseded |  | DEC-c220e4 |  |
 | `DEC-4bff1c` | [Reader \"flavors\" are \"Target Sources\](./ADR-4bff1c.md) | decided |  |  |  |
 | `DEC-4c1396` | [bc-db spine is the sole platform schema authoring and apply path](./ADR-4c1396.md) | decided | DEC-b1a286 |  |  |
+| `DEC-4c1f0c` | [Reviewed engine-bytes authority is single-sided in bc-core — RUNTIME_SOURCE_PINS re-hashed at CI plus the auditor's independent exact-head re-hash and App head-pinned attestation; the external C4 dependency-record half is retired](./ADR-4c1f0c.md) | decided |  |  |  |
+| `DEC-4c8bee` | [The certification panel's calibration corpus is a hybrid: a real LC5-validated positive, oracle-proven value defects, and retained meaning defects](./ADR-4c8bee.md) | decided |  |  |  |
 | `DEC-4ca5a5` | [Metric Landscape — single-page UI consolidation of three overlapping metric-lifecycle surfaces](./ADR-4ca5a5.md) | superseded |  | DEC-b049f6 |  |
 | `DEC-5017fe` | [Standard Field Registry — ISO 11179 MDR for observation vocabulary](./ADR-5017fe.md) | superseded |  | DEC-a17d0f |  |
 | `DEC-50995f` | [Source Catalog shows system cards, not provider cards](./ADR-50995f.md) | implemented |  |  |  |
@@ -301,6 +306,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-6cb4f3` | [Source Systems documentation framework (bc-docs-v3)](./ADR-6cb4f3.md) | implemented |  |  |  |
 | `DEC-6cdceb` | [bc-portal surface split — Beyond (viewing) + Settings/Workspace + Settings/Data Infra (plumbing)](./ADR-6cdceb.md) | superseded | DEC-04dade | DEC-c562d5 |  |
 | `DEC-6d8be5` | [D225: Bottom-Up Canonical Chain Generation from Metric Formula Variables](./ADR-6d8be5.md) | superseded |  | DEC-f1dae0 |  |
+| `DEC-6e951e` | [Multi-currency semantics are observed, never converted: currency at the OC, per-currency and source-booked local-currency aggregation, and a fail-closed currency gate](./ADR-6e951e.md) | decided |  |  |  |
 | `DEC-6edbe3` | [D409 catalog factory — four-stage division of labor (Rules shortlist → AI panel → Endpoint gates → Operator approval)](./ADR-6edbe3.md) | decided |  |  |  |
 | `DEC-6ee36c` | [Metric discipline taxonomy — function sub-grouping on metric_definition](./ADR-6ee36c.md) | implemented |  |  |  |
 | `DEC-6f5199` | [D226: bc-docs Restructuring — Essentials/Domains/Tier Documentation Model](./ADR-6f5199.md) | superseded |  | DEC-b80330 |  |
@@ -310,6 +316,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-6fd09d` | [Evaluation-context inputs: metric variables that take governed fiscal-calendar facts (calendar_context), and fiscal-period rolling windows](./ADR-6fd09d.md) | decided |  |  |  |
 | `DEC-70573b` | [Navigation IA v4 — Source Catalog, Source Chain, Canonical Map, Metric Chain](./ADR-70573b.md) | superseded |  |  |  |
 | `DEC-705f76` | [bc-portal Naming Convention](./ADR-705f76.md) | superseded |  | DEC-162de5 |  |
+| `DEC-71c027` | [Adopt \"Integrity Assurance\" as the platform thesis + retire \"certified\" as a product claim (vocabulary-authority, additive only)](./ADR-71c027.md) | decided |  |  |  |
 | `DEC-71c50d` | [Universal Protocol Readers — Connector Reclassification & Onboarding-Embedded Provisioning](./ADR-71c50d.md) | superseded |  |  |  |
 | `DEC-72d723` | [Editorial Amendment of Active Characteristic Definitions — Refinement of DEC-26b6e2](./ADR-72d723.md) | decided |  |  |  |
 | `DEC-731c15` | [Pilot source-infra pre-staging workstream — BC + Odoo on AWS, build-prove-hibernate; parallel to platform, metric-independent](./ADR-731c15.md) | decided |  |  |  |
@@ -383,8 +390,10 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-909e64` | [Tenant DB: single schema per tenant, no sub-schemas](./ADR-909e64.md) | superseded |  | DEC-771baf |  |
 | `DEC-90faff` | [Canonical-Driven Reader Creation Flow — Top-Down Assembly of the BareCount Machine](./ADR-90faff.md) | implemented |  |  |  |
 | `DEC-912f4f` | [Cognito-managed TOTP MFA (optional, admin-enforceable)](./ADR-912f4f.md) | implemented |  |  |  |
+| `DEC-92f709` | [The certification regime is deterministic-gate-primary: the machine-checkable truth is the deterministic gate; the panel judges only residual true-meaning](./ADR-92f709.md) | decided |  |  |  |
 | `DEC-9361cd` | [CC Field Mapping: 1-BF-to-Many-CFs + Filter + Canonical Uniqueness](./ADR-9361cd.md) | superseded |  | DEC-b390ef |  |
 | `DEC-938450` | [Universal Two-Layer Contract Scoping — Platform Master + Tenant Instance](./ADR-938450.md) | superseded |  | DEC-176a8e |  |
+| `DEC-93be49` | [clearing_date is a source-agnostic as_of-close semantic field; its per-source difference is resolved at the binding layer, and members are clean at the platform plane when shaped as_of](./ADR-93be49.md) | decided |  |  |  |
 | `DEC-9428e0` | [BCF code layout — consolidate the bcf-* module family under src/registry/bcf/](./ADR-9428e0.md) | implemented |  |  |  |
 | `DEC-952faa` | [Metric Temporality Class & Inspector — close the semantic gap and lock a first-class trust surface](./ADR-952faa.md) | decided |  |  |  |
 | `DEC-95687d` | [Typed-First Tenant Runtime — Schema Provisioner as declarative reconciler, connector onboarding as primary trigger, S3 WORM as the only opaque-payload store](./ADR-95687d.md) | implemented | DEC-a25931 |  |  |
@@ -412,7 +421,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-9dce29` | [Metric Specification Framework — 5-Dimensional Classification](./ADR-9dce29.md) | implemented | DEC-1e9fd1 |  |  |
 | `DEC-9dd4eb` | [Operator formal acceptance — Platform DB Foundation program CLOSURE (W0/W2 dispositioned)](./ADR-9dd4eb.md) | decided |  |  |  |
 | `DEC-9e0cd0` | [Contract-Typed Payload Tables — known schema gets real columns, not JSONB](./ADR-9e0cd0.md) | superseded |  |  |  |
-| `DEC-9e68e0` | [Period close is an idempotent act on (company, period), not a step inside the backfill driver](./ADR-9e68e0.md) | proposed |  |  |  |
+| `DEC-9e68e0` | [Period close is an idempotent act on (company, period), not a step inside the backfill driver](./ADR-9e68e0.md) | reversed |  |  |  |
 | `DEC-9eb783` | [Pin all dependency versions exactly — no caret/tilde ranges](./ADR-9eb783.md) | decided |  |  |  |
 | `DEC-9ec48f` | [Six customer profiles across industries — configurable company simulation](./ADR-9ec48f.md) | implemented |  |  |  |
 | `DEC-9f7c18` | [D531 authority caps are origin-scoped: not applicable to panel-origin certification payloads, retained for external-evidence origins](./ADR-9f7c18.md) | implemented |  |  |  |
@@ -446,6 +455,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-aa6251` | [Contract Primitives — BO and BF as First-Class Governed Artifacts](./ADR-aa6251.md) | superseded |  | DEC-b390ef |  |
 | `DEC-ab0b7c` | [bc-admin stack: React 18 + Vite + Radix UI + TailwindCSS v4 (same as bc-portal)](./ADR-ab0b7c.md) | implemented |  |  |  |
 | `DEC-ab1546` | [Shared types via @barecount/types npm package](./ADR-ab1546.md) | reversed |  |  |  |
+| `DEC-ab630a` | [OCT-02 is green-field, mechanical-integrity-first: the Metric Directory is a decoupled intent/spec dictionary (base-registry + composition DAG), and integrity is a three-layer discipline (mechanical to compute to value)](./ADR-ab630a.md) | decided |  |  |  |
 | `DEC-ac05fc` | [Three contract chains: Source → Metric → AI (layered, feed-forward)](./ADR-ac05fc.md) | superseded |  | DEC-762336 |  |
 | `DEC-acce2b` | [CC-v2 canonical resolution engine — runtime SO→CO for field_selection contracts (replaces canonical_mapping resolver)](./ADR-acce2b.md) | implemented |  |  |  |
 | `DEC-ace519` | [Tech stack: Node.js + TypeScript + PostgreSQL + Fastify + Drizzle](./ADR-ace519.md) | implemented |  |  |  |
@@ -459,6 +469,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-af8247` | [Cross-domain metric scope and tenant applicability policy](./ADR-af8247.md) | decided |  |  |  |
 | `DEC-afdb59` | [BareCount Component Architecture Diagram — canonical reference](./ADR-afdb59.md) | implemented |  |  |  |
 | `DEC-affb24` | [17 shared services as NestJS modules in bc-core](./ADR-affb24.md) | implemented |  |  |  |
+| `DEC-b01ed4` | [The deterministic gate must predict evaluation: green means the spec assembles against the active grain CC, and every closed-set value is canonical at observation, in filters and at runtime](./ADR-b01ed4.md) | decided |  |  |  |
 | `DEC-b049f6` | [MCF-native readiness projection replaces the legacy metric funnel, dials, and Landscape source — F-021/F-023 disposition](./ADR-b049f6.md) | implemented | DEC-a8b33e, DEC-28b176, DEC-4ca5a5 |  |  |
 | `DEC-b0839a` | [SDG Coherent Snapshots and Multi-Projection Architecture](./ADR-b0839a.md) | superseded |  | DEC-76aea4 |  |
 | `DEC-b10dad` | [Exchange Rate Reader: One reader, flavor-detected, source-specific contracts](./ADR-b10dad.md) | implemented |  |  |  |
@@ -468,11 +479,13 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-b28b13` | [Connector lifecycle: status enum replaces available boolean](./ADR-b28b13.md) | implemented |  |  |  |
 | `DEC-b2da18` | [bc-portal Architecture and Patterns](./ADR-b2da18.md) | superseded |  | DEC-04dade |  |
 | `DEC-b36558` | [Operational config and connections are tenant-scoped, not on reader definition](./ADR-b36558.md) | implemented |  |  |  |
+| `DEC-b36e15` | [Platform-plane pool-readiness binds to the authoritative canonical-contract declaration, not the tenant-provisioned 'active' state](./ADR-b36e15.md) | decided |  |  |  |
 | `DEC-b390ef` | [Legacy-doctrine supersession register — retired-design ADRs formally superseded by family](./ADR-b390ef.md) | decided | DEC-1ce490, DEC-2e4cb3, DEC-339c97, DEC-616e02, DEC-683cf3, DEC-68f2c7, DEC-9361cd, DEC-9bffcd, DEC-aa6251, DEC-b8ec00, DEC-c338b3, DEC-f1dae0, DEC-f66378, DEC-9a5dc0, DEC-b7affa, DEC-637072, DEC-010bf9, DEC-523a5d, DEC-77f4b5, DEC-7e3779, DEC-b51b48, DEC-d2cdb9, DEC-d53320, DEC-d5c352, DEC-e93a19, DEC-fc41a3, DEC-076521, DEC-e9294b, DEC-bebaec, DEC-804874, DEC-253be2, DEC-3b23de, DEC-316f3c |  |  |
 | `DEC-b39a00` | [bc-admin Platform Audit — Menu Restructure, Tenant Group, TopBar+LeftBar Layout](./ADR-b39a00.md) | decided |  |  |  |
 | `DEC-b51b48` | [SAP Landscape Scanner — connector-level discovery + compatibility report](./ADR-b51b48.md) | superseded |  | DEC-b390ef |  |
 | `DEC-b54a43` | [Core chain consolidation: canonical context/onboarding/execution/store path, mark-don't-delete cleanup, core-then-tenant sequencing](./ADR-b54a43.md) | decided |  |  |  |
 | `DEC-b5631b` | [Field Data Type Quality Gate — Mandatory Validation at AI Verify and Registration](./ADR-b5631b.md) | implemented |  |  |  |
+| `DEC-b5978c` | [Certification panel fitness is a declared multi-run standard; a moderator overrules a refutation only by citing the answer](./ADR-b5978c.md) | decided |  |  |  |
 | `DEC-b5bedb` | [Execution run tables for all 4 evaluation boundaries](./ADR-b5bedb.md) | implemented |  |  |  |
 | `DEC-b5c7ff` | [Metric Directory — realized value-organizing subsystem (bc-core)](./ADR-b5c7ff.md) | decided | DEC-f90ba3 |  |  |
 | `DEC-b7349d` | [Reader execution: dev in-process, prod Fargate — no infra planning needed now](./ADR-b7349d.md) | decided |  |  |  |
@@ -510,6 +523,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-c2f499` | [Control Plane / Data Plane Architecture Split](./ADR-c2f499.md) | superseded |  |  |  |
 | `DEC-c318b2` | [Tenant Database Segregation — separate DB per tenant](./ADR-c318b2.md) | superseded |  |  |  |
 | `DEC-c338b3` | [BF/BO versioning model for supersede-active (Model E)](./ADR-c338b3.md) | superseded |  | DEC-b390ef |  |
+| `DEC-c3a47e` | [Governed wholesale fixture re-provision: the Inv-III boundary + the tenant-reset governed act (fixture-only), replacing world-stamp supersession as the Kaveri AP/AR clean-world mechanism](./ADR-c3a47e.md) | decided |  |  |  |
 | `DEC-c3e57f` | [Foundational Metric Context Framework (MCF) — sibling of BCF for metric meaning and metric-context packages](./ADR-c3e57f.md) | decided |  |  |  |
 | `DEC-c3fef3` | [Runner dual-write — operational logs to platform, business data to tenant](./ADR-c3fef3.md) | superseded |  |  |  |
 | `DEC-c40e7a` | [Cloud realization of the DB foundation — RDS PostgreSQL 17 on the versioned spine (W1.6 + the W2/W4 cloud items)](./ADR-c40e7a.md) | proposed |  |  |  |
@@ -520,6 +534,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-c562d5` | [Canonical bc-portal design: Dashboard and Workspace, with the Rooth canvas as its metric view](./ADR-c562d5.md) | decided | DEC-7e76b9, DEC-6cdceb |  |  |
 | `DEC-c566f3` | [D223: KPI Catalog AI Assistant — Structured Retrieval + Grounded LLM](./ADR-c566f3.md) | decided |  |  |  |
 | `DEC-c6180d` | [Business Chain — nav group + onboarding workbench + bulk monitor](./ADR-c6180d.md) | implemented |  |  |  |
+| `DEC-c741a3` | [PE-MC as-of conditional aggregate: the metric evaluator gains a P-aware signed sum over a sub-grain dated schedule](./ADR-c741a3.md) | decided |  |  |  |
 | `DEC-c800d2` | [bc-admin v1.0.0 Lock — Scope & Architecture](./ADR-c800d2.md) | implemented |  |  |  |
 | `DEC-c897cd` | [One approved vocabulary for status words: docs/reference/vocabulary.md is the only authority, and its first slice is the words for a metric's life](./ADR-c897cd.md) | decided |  |  |  |
 | `DEC-c8dd31` | [Reference-to-Source Catalog promotion — governed copy with draft status](./ADR-c8dd31.md) | implemented |  |  |  |
@@ -527,6 +542,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-c9b838` | [From-seed-only authoring + reservoir status ledger as progress SSOT for MCF enrichment](./ADR-c9b838.md) | decided |  |  |  |
 | `DEC-c9e623` | [BareCount Object Life States — framework, state ledger schema, probe-vs-gate separation, cross-boundary code rule](./ADR-c9e623.md) | decided |  |  |  |
 | `DEC-ca4c1e` | [AC Master Shape Locked — DQC-Integrated Admission Contract Body v1](./ADR-ca4c1e.md) | implemented |  |  |  |
+| `DEC-ca8943` | [The metric directory is refactored in place and every member version passes a deterministic definitional entry gate (G1–G5) before it can be realized or certified](./ADR-ca8943.md) | decided |  |  |  |
 | `DEC-cafc1b` | [UinBAT Reader operational shape — schedule, retries, backfill, failure policy](./ADR-cafc1b.md) | implemented |  |  |  |
 | `DEC-cb906b` | [master_system_type reference table for software system categories](./ADR-cb906b.md) | implemented |  |  |  |
 | `DEC-cbc07b` | [Type Conformance Enforcement — Source Object through Metric Snapshot](./ADR-cbc07b.md) | reversed |  |  |  |
@@ -540,7 +556,9 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-ce6e2b` | [Section rename: The Runtime → The Operating Model](./ADR-ce6e2b.md) | decided |  |  |  |
 | `DEC-ced5dc` | [BCF Enrichment Program-2 — non-finance vocabulary buildout to max coverage](./ADR-ced5dc.md) | implemented |  |  |  |
 | `DEC-cf2cbc` | [Foundation naming compliance + schema integrity for boundary tables](./ADR-cf2cbc.md) | superseded |  | DEC-f02230 |  |
+| `DEC-cf6d3b` | [Tenant Activation model: active = verified admin + assigned subscription; Activation/Onboarding plane split](./ADR-cf6d3b.md) | decided |  |  |  |
 | `DEC-cff0cf` | [ABC = Autonomous Business Chain — deterministic orchestrator over governed factories + bounded retrieval-first reasoning panel](./ADR-cff0cf.md) | decided |  |  |  |
+| `DEC-d0b66a` | [point_in_time has no gate-level date basis and no runtime period selection; its temporal predicate is pending declaration, anchor_role is a row-read variable, and aggregating members carry a wrong-data risk until re-shaped or the predicate is built](./ADR-d0b66a.md) | decided |  |  |  |
 | `DEC-d214ed` | [BO-CO Enrichment Engine — Claude Code Generation + Gemini Verification + Audit Trail](./ADR-d214ed.md) | superseded |  | DEC-e9294b |  |
 | `DEC-d2cdb9` | [SAP data admission stance under SAP API Policy v.4/2026](./ADR-d2cdb9.md) | superseded |  | DEC-b390ef |  |
 | `DEC-d2eeb8` | [Schema namespace reorganization + table pluralization — sequence with tenant isolation](./ADR-d2eeb8.md) | superseded |  |  |  |
@@ -603,6 +621,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-ebb3cd` | [Evidence and Lineage Write Semantics — Best-Effort + Degraded Marker, Per-Evaluation Lineage with Snapshot Fan-Out](./ADR-ebb3cd.md) | decided |  |  |  |
 | `DEC-ebf0b4` | [Session Discipline & Data Integrity Rules (NOT-TO-DO)](./ADR-ebf0b4.md) | implemented |  |  |  |
 | `DEC-ec00f2` | [Dual-model execution for judgment-bearing audit acts](./ADR-ec00f2.md) | decided |  |  |  |
+| `DEC-ec1434` | [Validation against a proof source is a tenant-plane evidence act: a deterministic comparator records in the bench tenant whether governed values match an outside-platform oracle](./ADR-ec1434.md) | decided |  |  |  |
 | `DEC-ec1991` | [Demo documentation split: the estate's authority lives in bc-demo; bc-docs holds the platform's view of the demo and the rules on shared assets](./ADR-ec1991.md) | decided |  |  |  |
 | `DEC-ec341c` | [Admission scope as primary policy axis (cross_function / function_scoped / industry_scoped)](./ADR-ec341c.md) | implemented |  |  |  |
 | `DEC-ec9e89` | [Contract Governance Model — Master Shape, Platform Instance, Tenant Override](./ADR-ec9e89.md) | implemented | DEC-03db11 |  |  |
@@ -620,6 +639,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-f0eb14` | [System Documentation Framework — 4-Stream, Module-Component Architecture](./ADR-f0eb14.md) | implemented |  |  |  |
 | `DEC-f1565d` | [Multi-Table Executor — Backward-Compatible Interface Extension](./ADR-f1565d.md) | implemented |  |  |  |
 | `DEC-f1dae0` | [Standards-First BF/BO Creation — OAGIS Primary, Metrics Validate](./ADR-f1dae0.md) | superseded | DEC-6d8be5 | DEC-b390ef |  |
+| `DEC-f21388` | [Reduced-panel fitness is a single capped measurement — never an iterative tuning loop](./ADR-f21388.md) | decided |  |  |  |
 | `DEC-f26528` | [Governance lifecycle uses 'in_review' not 'submitted](./ADR-f26528.md) | implemented |  |  |  |
 | `DEC-f275d7` | [Ghost Data Infra routes — add placeholder pages](./ADR-f275d7.md) | superseded |  |  |  |
 | `DEC-f28021` | [Reference Landscape vs Source Catalog — separation of concerns](./ADR-f28021.md) | superseded |  | DEC-05140c |  |
@@ -649,6 +669,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-fbe2c2` | [bc-core-dashboard retirement — superseded by bc-admin (backfill)](./ADR-fbe2c2.md) | decided |  |  |  |
 | `DEC-fbf6ab` | [Platform DB Foundation program CLOSED — foundation objectives met](./ADR-fbf6ab.md) | decided |  |  |  |
 | `DEC-fc41a3` | [Source Chain Contract Generation — SAP ECC Finance](./ADR-fc41a3.md) | superseded |  | DEC-b390ef |  |
+| `DEC-ffbc24` | [Legal Entity is a system/runtime evaluation axis — no contract declares an LE axis; universal admission-context CO stamp on the opaque legal_entity_id (D9 successor; amends DEC-7a8cbc, realizes DEC-4aa1ff §D5)](./ADR-ffbc24.md) | decided |  |  |  |
 | `DEC-ffee4e` | [Retire bc-ai — port the BCF registry-authoring panel in-process into bc-core, roster preserved](./ADR-ffee4e.md) | implemented | DEC-14fb98 |  |  |
 
-*Generated by `scripts/docs-control/generate_adr_registry.py` at 2026-10-02T12:55:59Z from the ADR files as they stood at bc-docs `66561c1`, the commit checked out when the generator ran; the regenerated registry lands in that commit's successor.*
+*Generated by `scripts/docs-control/generate_adr_registry.py` at 2026-10-23T17:44:06Z from the ADR files as they stood at bc-docs `c327c94`, the commit checked out when the generator ran; the regenerated registry lands in that commit's successor.*

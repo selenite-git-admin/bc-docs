@@ -13,7 +13,7 @@ focus: lifecycle
 
 # Period close is an idempotent act on (company, period), not a step inside the backfill driver
 
-> **REVERSED 2026-10-23 (operator-directed, Chief SES-1e49e0).** This ADR belongs to `bc-synth`, an archived project — the Odoo world-build / pilot program was retired and replaced by the bc-demo Foundry model. The period-close concern has no active consumer under the current model. Reversed as part of the ADR-hygiene sweep (stuck `proposed` 77 days); the body is preserved as history.
+> **REVERSED 2026-10-23 — Chief ADR-hygiene sweep (SES-1e49e0); reversal directed by the operator in session 2026-10-23 (chat directive, not a recorded desk grant — a reversal needs none).** This ADR belongs to `bc-synth`, an archived project — the Odoo world-build / pilot program was retired and replaced by the bc-demo Foundry model. The period-close concern has no active consumer under the current model. Reversed as part of the ADR-hygiene sweep (stuck `proposed` 77 days); the body is preserved as history.
 
 ## Context
 
