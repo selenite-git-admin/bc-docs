@@ -46,6 +46,8 @@ It was read at bc-docs `origin/main` 9dca4a5, bc-core `origin/main` 05cbe79c and
 
 **Addendum: realized, and validated against a proof source.** Approved by the operator on 2026-10-03, desk grant `2026-10-03T03-05-10-581Z-12be0a4c` (text SHA-256 `12be0a4ca479f3ea8960e5b548ae4437f641c378f89e3c2d5998ea6b69655e95`, request 196), as drafted on the Architect page in barecount-devhub pull request 236 at commit `56db94e3e1ac9bdc9cd52bdb5ed16f94372a4d82` (file sha256 `32ede28dcaf891284c75c43ce521af8d33b3168d57e3a06ce45599bf08db5014`). Its rows are carried into group 3 (after "registered") and group 4 (after "certified"), and its not-approved words into section 4, adapted to that table's three columns. Its three defects are owner tasks (TSK-eeb121, TSK-5ac376, and the interim-rule question).
 
+**Seventh slice: the frame's words.** Put to the operator in phase 2 of the Platform Refactor Program (rulings F2, F4 and F9) and approved by his desk grant for the bc-docs pull request that added this slice, at its exact commit; the grant's id is written here by a correction after that pull request merges. It was read at bc-docs `origin/main` 1860bf6 and bc-core `origin/main` df52506d. It is carried below as slice 7 and changes no earlier slice.
+
 **This page holds no counts.** Section 6 says where each count is read.
 
 ## 1. Why the words became a trap
@@ -722,3 +724,42 @@ This is not a rename of any state. The internal lifecycle state whose field valu
 ### S6.3 Reserved, not decided here
 
 The state-word lifecycle (realized, active, validated, released) and any Foundation state rename are reserved to the operator and the Architect (section 8; section 2 rule 3). "Validated" is additionally a Phase-C, tenant-zone word. ADR DEC-71c027 walls these off explicitly; this page does not set them.
+
+## Slice 7: the frame's words
+
+Authority: rulings F2, F4 and F9 of the Platform Refactor Program (`docs/development/platform-refactor-program.md`, "The rulings"). This slice adds three words, fixes one, and names the scale. It changes no state word and no earlier slice.
+
+### S7.1 "Done" is section 5, as it stands
+
+Section 5 of this page is the definition of "done", for one metric on one tenant, and of "proven", for the route (ruling F2). The program's finish test rests on it.
+
+### S7.2 Three words added
+
+| Word | Plain meaning | Where it is fixed |
+|---|---|---|
+| **plane** | A separated area in which one kind of data is evaluated and kept. **Never said alone.** Two uses are approved: the **tenant plane**, a tenant's own database; and the **demo plane**, the tables of schema `demo` inside the platform database, shaped like a tenant's, where metrics are evaluated on demonstration data (ADR DEC-89db41). | Ruling F2 |
+| **package** | A named set of metrics offered to tenants. A tenant subscribes to a package; a package holds many metrics; a metric may be in more than one package (ruling T1). **No record holds a package of metrics today.** How a package names its metrics is ruling T6. | Rulings T1 and F2 |
+| **value-affecting change** | A change that is able to move a number already reported, or one that would be reported, for a tenant. It reaches a tenant only when the tenant's admin, or a role or user the tenant designates, accepts it. A change whose effect is uncertain is treated as value-affecting; a change that cannot move a number is not (ruling T3). **No record classifies a change today,** and who classifies it is ruling T16. | Rulings T3 and F2 |
+
+| Not approved | Say instead |
+|---|---|
+| "control plane", "data plane" | "the platform database", "a tenant database" |
+| "design plane", "execution plane", "activation plane", "onboarding plane", "platform plane", and "plane" with any other qualifier | what is meant: declaring a thing or running it; an act of the platform or an act of the tenant |
+
+Older decision records keep the words they were written with; a new text does not use them.
+
+### S7.3 The one scale of a metric's progress
+
+The status words of this page are the only scale of a metric's progress (ruling F4). The three tiers (ADR DEC-542722), the ladder of 25 rungs (ADR DEC-c9e623, also written MLS and OLS) and the ladder R1 to R5 of the parked drive are history: a new text does not place a metric on them. The lanes L1 to L10 are the names of ten functions, not a scale.
+
+### S7.4 "The auditor"
+
+| Word | Plain meaning | Where it is fixed |
+|---|---|---|
+| **the auditor** | Codex: the independent reviewer of changes, which runs under a separate account. Nothing else carries the word. | Ruling F9 |
+| **the external assessor** | An outside person who performs an ISO 27001 or SOC 2 engagement. No such engagement has taken place. | Ruling F9 |
+| **the metric audit service** | The subsystem, with its own store and signing key, that audits a metric version. The names of its tables and columns are identifiers and are unchanged by this slice. | Ruling F9 |
+
+### S7.5 Not settled in this slice
+
+What Integrity Assurance gives a customer (ruling F6); the word for proof (ruling F8); how a package names its metrics (ruling T6).

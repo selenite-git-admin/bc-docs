@@ -37,6 +37,17 @@ This chapter does not redefine the contract grammar (The Contract Grammar), the 
 
 **Governing source.** v2 cc-creation-sop (CC Versioning policy table); ADR-0002, ADR-0003, ADR-09b8e6, ADR-05140c.
 
+## Ruling T3 takes precedence
+
+Ruling T3 of the Platform Refactor Program (`docs/development/platform-refactor-program.md`, "The rulings", decided 2026-11-13) governs how a new contract version reaches a tenant, and takes precedence over this chapter wherever the two differ.
+
+- A value-affecting change reaches a tenant only when the tenant's admin, or a role or user the tenant designates, accepts it. Until then the tenant stays on the version it adopted.
+- While the adopted version remains compatible with its source and its bindings, it continues to be evaluated. When it becomes incompatible, new evaluation for that tenant is refused, nothing is reported in its place, and the tenant is shown the reason.
+- Values already reported are never altered or worked out again.
+- A change whose effect is uncertain is treated as value-affecting. A change that cannot affect a value is automatic.
+
+So where a table below says that a new version supersedes the prior one once activated, or that it is carried to bound tenants, read it as true only for a change that cannot affect a value. For every other change the tables give the version bump and not the moment the tenant receives it. The classes below (additive, destructive, semantic) say what kind of change was made to a source; they do not say whether it is value-affecting, and who decides that is ruling T16. The record of a tenant's acceptance is not built. This chapter is rewritten in the Define step of the function Delivery to a tenant.
+
 ## The Three Change Kinds
 
 Source-side changes are classified into three kinds. Each kind has a deterministic cascade (additive, destructive) or requires human review (semantic).

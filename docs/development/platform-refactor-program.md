@@ -25,7 +25,7 @@ diagrams: []
 
 # Platform Refactor Program
 
-> **Status of this document.** It is locked. The operator approved it on 2026-11-14, and the approval is recorded at the approval desk as grant `2026-11-14T01-47-16-746Z-95eacc7e` (text SHA-256 `95eacc7ea28b4a731731b9627bc50be55ba19ca58f0bd9309c78836ee2558044`), given for this document as written at commit `71aa76f0607ab92a8b2fc5f1a0c6d07fdc0cb872`. The decision is decision record DEC-71f15e, which is `decided`. It was amended once, by ruling G36 (housekeeping), in the way "The rulings" describes. By the documentation's rule a chapter binds when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca).
+> **Status of this document.** It is locked. The operator approved it on 2026-11-14, and the approval is recorded at the approval desk as grant `2026-11-14T01-47-16-746Z-95eacc7e` (text SHA-256 `95eacc7ea28b4a731731b9627bc50be55ba19ca58f0bd9309c78836ee2558044`), given for this document as written at commit `71aa76f0607ab92a8b2fc5f1a0c6d07fdc0cb872`. The decision is decision record DEC-71f15e, which is `decided`. It was amended by ruling G36 (housekeeping) and by the first rulings of phase 2 (F1's statement, F2, F3, F4, F5, F7 and F9), in the way "The rulings" describes. By the documentation's rule a chapter binds when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca).
 
 ## Summary
 
@@ -87,6 +87,8 @@ A **tenant** is one organization on the platform, with its own database. What al
 
 The platform's thesis is **Integrity Assurance** (decision record DEC-71c027): it guarantees the method by which a number is produced and recorded, and states that the result is only as good as the data supplied. By the operator's ruling F1, metrics are how this recorded state is consumed; they are not positioned as the product.
 
+**What the product is (ruling F1, the statement).** BareCount is an enterprise data observation platform. Its product is governed, provable state: a permanent record of what was read from a company's business systems, what that data means in business terms, and what was worked out from it, each written once, at one place, with Evidence of the act. BareCount assures the method by which each record is produced and kept; the result is only as good as the data supplied. Metrics are how that state is consumed. They are not the product.
+
 ## Words this document uses
 
 | Word | Meaning here |
@@ -95,7 +97,7 @@ The platform's thesis is **Integrity Assurance** (decision record DEC-71c027): i
 | Session | One working conversation of the AI assistant that develops the platform. A session keeps nothing from an earlier one except what is written down. |
 | The Chief | The one session at a time that coordinates the work and edits this document. |
 | Worker | A session opened for one unit of work and closed when it is done. |
-| The auditor | Codex, an independent AI reviewer that runs under a separate account. (The documents also use "auditor" for two other things; ruling F9.) |
+| The auditor | Codex, an independent AI reviewer that runs under a separate account. By ruling F9 the word names nothing else. |
 | DevHub | The tool that coordinates development: it records sessions, tasks, plans and decisions, and shows the state of the repositories. |
 | bc-docs | The platform's documentation and, by decision DEC-3395bc, its single source of truth. A unit of it is a chapter. |
 | Decision record | A file in bc-docs that records one decision, named DEC- and six characters. Also called an ADR. |
@@ -104,7 +106,7 @@ The platform's thesis is **Integrity Assurance** (decision record DEC-71c027): i
 | The engine | bc-core, the repository that holds the platform's services. |
 | Governed | Done only through an act the platform defines, checks and records. |
 | Package; Subscription; entitlement | A package is a named set of metrics offered to tenants. A Subscription is the record that a tenant has a package. Entitlement is what the Subscription allows. None of the three is built [16c, 16d]. |
-| The demo plane | A separate area of the platform database where, from 2026-10-26, metrics were compared with expected values on demo data. A metric that matched was called "Demoed". "Plane" has other meanings in the documents; ruling F2. |
+| The demo plane | A separate area of the platform database where, from 2026-10-26, metrics were compared with expected values on demo data. A metric that matched was called "Demoed". "Plane" is never used alone; the vocabulary page fixes its approved uses (ruling F2). |
 | Proof record | The record that a metric's value matched an expected value. It is distinct from Evidence. |
 | Guard | A test, run automatically on every proposed change, that fails when a rule is broken. |
 | Code rules | The checks DevHub's "hotspots" page runs on each file, such as length, duplication and unsafe queries. |
@@ -160,7 +162,7 @@ A **function** is one thing the platform does that has inputs, outputs and acts 
 - **The approved words** of the vocabulary page.
 - **The coverage rule** of decision DEC-a67bae: every surface has exactly one owner.
 
-Nine functions are added because the dossiers found the platform performs them and the list lacks them. They are marked "added", and join the list in bc-docs if the operator approves (ruling F3).
+Nine functions are added because the dossiers found the platform performs them and the list lacks them. They are marked "added". By ruling F3 this map, with the nine, is the platform's list of functions. It is held in this document until `docs/guide/` exists, and then becomes that guide's index.
 
 | Code | Function | What it does |
 |---|---|---|
@@ -300,7 +302,7 @@ A ruling is a decision that belongs to the operator. It is recorded in this docu
 
 ### Decided
 
-Rulings F1, T1, T2, T3 and G2 were decided on 2026-11-13. On 2026-11-14 the operator confirmed them, with what the Chief had added to each, and decided G5, G3, G30 and G34, with the words "All approved." Ruling G36 was decided later the same day and amended this document after it was locked. The words are an attributed record, as explained under "The decision".
+Rulings F1, T1, T2, T3 and G2 were decided on 2026-11-13. On 2026-11-14 the operator confirmed them, with what the Chief had added to each, and decided G5, G3, G30 and G34, with the words "All approved." Ruling G36 was decided later the same day and amended this document after it was locked. The words are an attributed record, as explained under "The decision". The first rulings of phase 2 (F1's statement, F2, F3, F4, F5, F7 and F9) were put to the operator as one pull request to bc-docs; each is decided by the operator's grant, recorded at the approval desk, for that pull request at its exact commit, and the grant is this table's record of the operator's words for them.
 
 | # | The operator's words | The ruling | What the Chief added |
 |---|---|---|---|
@@ -314,12 +316,19 @@ Rulings F1, T1, T2, T3 and G2 were decided on 2026-11-13. On 2026-11-14 the oper
 | G30 | "All approved.", to the recommendation. | The rules for sessions live in a bc-docs chapter; the project instruction file points to it. | None. |
 | G34 | "All approved.", to the recommendation. | The Chief owns every function until phase 12, when a standing owner for each is proposed. | None. |
 | G36 | "Shall we add housekeeping/cleaning before program starts and at appropriate positions (mainly PR and branch hygiene -- to avoid bc-docs 141 lagging kind of issues)?" Then, to the Chief's proposal: "Go ahead". | A clean-up, phase 0, comes before phase 1, and the three rules under "Keeping the repositories clean" hold from then on. | The exit of phase 0; the added condition of the Lock step; the ninth condition of the definition of done; DevHub keeping the shared copies level, in phase 1; the exception for a shared copy a service runs from; and the two protections on removal: nothing is removed that is not on a list the operator has approved, and nothing is removed before its content is committed and pushed, or recorded. Serving and frozen worktrees are never removed. |
+| F1, the statement | The desk grant for the pull request that added this row. | The statement of what the product is, as written under "The platform in brief". | The chapters and the website that position metrics as the product are corrected: each chapter in the Modify step of the function that owns it, the website under ruling F7. |
+| F2 | The same grant. | Section 5 of the vocabulary page is adopted as it stands: "done", for one metric on one tenant, and "proven", for the route. | Three words are added to the vocabulary page as its seventh slice: plane, package and value-affecting change. |
+| F3 | The same grant. | The functional map of this document, with its nine additions, is the platform's list of functions. | It is held here until `docs/guide/` exists and then becomes that guide's index. The earlier list, in `docs/implementation/platform-readiness-program.md`, is history: that chapter is closed, gains one line that points here, and is not otherwise amended. |
+| F4 | The same grant. | The status words of the vocabulary page are the only scale of a metric's progress. | The three tiers (decision DEC-542722), the ladder of 25 rungs (decision DEC-c9e623) and the parked drive's ladder R1 to R5 become history. The lanes L1 to L10 remain as the names of ten functions; they are not a scale of progress. Code and records that carry a retired scale are dealt with in the Audit and Modify steps of the function that owns them, and each of those decision records is marked when that function is locked. |
+| F5 | The same grant. | A chapter is locked when its function is locked. | The Chief sets the chapter's status to locked in the pull request that meets the function's Lock exit, and the operator's approval of that exit is the authority for it. A document of the frame (this program; the vocabulary page) is locked by the operator's recorded approval of that document. Foundation continues to bind through the Authority Model. Until its function is locked, a chapter is the best description available and is checked against the code before it is relied on. |
+| F7 | The same grant. | No public text states a count, a badge or a certification that the platform's records do not show on the day it is published. | Read on 2026-11-14 at the website repository's default branch `v2/develop`, commit `db90a4a`, the home page states "over 60 source systems", "2,500+ KPIs", "50+ more source systems", "20+ ERP Systems", "35+ SaaS Platforms", "10+ Public Data Sources" and "ISO & SOX lineage" (`src/pages/index.astro`, lines 24, 25, 46, 52 to 54 and 205). The platform's records do not show these. They are removed, and no certification or compliance badge is shown, by a pull request to the website repository; the operator decides the replacing words in that pull request. Not established: whether that branch is the one published. |
+| F9 | The same grant. | "The auditor" names Codex and nothing else. | Four things carry the word in the documents, not three. The outside person who performs an ISO 27001 or SOC 2 engagement becomes "the external assessor". The subsystem that audits metric versions becomes "the metric audit service"; the names of its tables and columns are identifiers and are dealt with by the function that owns them. The session reviewer of the retired AI service is history. The chapters are corrected as each function is locked. What Integrity Assurance gives a customer remains ruling F6. |
 
 ### Open, and needed in phases 2 and 3
 
 Each is stated in full, with the Chief's recommendation, in the annex "The Rulings". They are put to the operator when their phase begins.
 
-- **Phase 2:** F2, whether the vocabulary page's definition of "done" is adopted as it stands; F3, the map; F4, which of three scales of a metric's progress is kept; F5, when a chapter becomes locked; F6, what Integrity Assurance gives a customer; F7, the website's claims; F8, the word for proof; F9, which of three things keeps the word "auditor"; T6, how a package names its metrics; B6 and B7, what starts canonical evaluation and who supplies the period.
+- **Phase 2:** F6, what Integrity Assurance gives a customer; F8, the word for proof; T6, how a package names its metrics; B6 and B7, what starts canonical evaluation and who supplies the period. (F2, F3, F4, F5, F7 and F9 are decided; see the table above.)
 - **Phase 3:** B1, keeping one copy of the databases as the reference run's fixed input; B2, the baseline if the first run does not reproduce the recorded values; G12 to G15, the unapplied migrations, the names of environments, the one serving procedure, and the undeployed cloud resources; G35, which has two parts. The first is decided in phase 3: in which repository Operations' scripts are kept, and which function owns each command. The Chief recommends bc-infra: the 21 scripts of `~/bc-stack` and the unversioned database-reading tool move there, beside the cloud definitions it already holds, as the commands of Operations. That is repair and not new capability. The second part, whether Operations has a screen of its own (a "platform ops" application), is decided with ruling G4 in phase 12; a new screen or a new operating act needs its own ruling.
 
 The rulings needed in later phases, and the questions each dossier raises, are in the same annex. Each is put to the operator in the Define step of the function it belongs to.
