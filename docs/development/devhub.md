@@ -42,7 +42,7 @@ DevHub is a single Node service plus a single SQLite database plus a stdio MCP s
 | Deployable shape | One Node service on a reserved port; one SQLite database file in `data/devhub.db`; one stdio MCP server spawned by the Claude Code agent. Reserved-port detail is owned by Infrastructure |
 | Storage substrate | better-sqlite3, WAL journal mode, FK constraints enabled (`src/db.js`) |
 | Registry tables | The DevHub schema declares thirty-six tables covering session, task, plan, decision, change-record, document, screen, screen-children, API, MCP-tool, risk, QA-audit-run, QA-NC, ADR-orphan-triage, ADR-audit-snapshot, `process_audit`, plan-approval, plan-version, plan-reference, audit-finding, parking-item, todo, server, and project domains |
-| MCP server | `src/mcp-server.js` registers sixty `devhub_*` tools across eighteen domains; the server speaks stdio to the Claude Code harness |
+| MCP server | `src/mcp-server.js` registers the `devhub_*` tools, grouped by domain below; the server speaks stdio to the Claude Code harness |
 | Activity log | Every governed action writes a row in `activity` with `session_id`, `project_id`, `activity_type`, and `message_text`; reads do not log |
 
 DevHub is deliberately a coordination registry, not a runtime. It does not run contract evaluation, does not write tenant-database authoritative state, does not host tenant-facing surfaces. It records what engineering intends, what engineering did, and what governance bodies authored, and it surfaces that record back to the Claude session at session boot.
@@ -51,7 +51,7 @@ DevHub is deliberately a coordination registry, not a runtime. It does not run c
 
 ## The MCP Tool Surface
 
-The DevHub MCP server exposes sixty tools to a Claude Code session. The tool families are a stable surface; tool counts inside a family change as registries evolve.
+The DevHub MCP server exposes its registered tools to a Claude Code session; tools stopped on 2026-11-14 (ruling G3) are no longer registered and are not listed. The tool families are a stable surface; tool counts inside a family change as registries evolve.
 
 | Family | Count | Representative tools |
 |---|---|---|
@@ -63,13 +63,12 @@ The DevHub MCP server exposes sixty tools to a Claude Code session. The tool fam
 | Document | 6 | `devhub_doc_scan`, `devhub_doc_list`, `devhub_doc_get`, `devhub_doc_update`, `devhub_doc_link_ref`, `devhub_doc_validate` |
 | Screen | 5 | `devhub_screen_list`, `devhub_screen_get`, `devhub_screen_update`, `devhub_screen_stats`, `devhub_screen_children_list` |
 | API | 3 | `devhub_api_list`, `devhub_api_blast`, `devhub_api_scan` |
-| MCP tool | 3 | `devhub_mcp_list`, `devhub_mcp_get`, `devhub_mcp_scan` |
+| MCP tool | — | `devhub_mcp_get`, `devhub_mcp_scan` |
 | Risk | 3 | `devhub_risk_add`, `devhub_risk_list`, `devhub_risk_update` |
 | QA NC | 5 | `devhub_qa_audit`, `devhub_qa_nc_list`, `devhub_qa_nc_raise`, `devhub_qa_nc_update`, `devhub_qa_nc_stats` |
 | L-node | 3 | `devhub_l_node_verify`, `devhub_l_node_audit`, `devhub_l_node_refresh` |
 | Chain status | 1 | `devhub_chain_status` |
-| Audit harness | 3 | `devhub_process_audit_run`, `devhub_process_audit_get`, `devhub_process_audit_list` |
-| ADR orphan triage | 2 | `devhub_adr_orphan_triage_list`, `devhub_adr_orphan_triage_save` |
+| Audit harness | — | `devhub_process_audit_run` |
 | ADR audit | 2 | `devhub_adr_audit_history`, `devhub_adr_audit_save` |
 | Activity log | 1 | `devhub_activity_log` |
 | Auth | 1 | `devhub_get_cognito_token` |
