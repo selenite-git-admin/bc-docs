@@ -18,7 +18,7 @@ Operator procedures for the runtime spine built under DEC-9c0da7 (D481), gates R
 
 All `/api/t/*` calls need `Authorization: Bearer <admin JWT>` + `x-tenant-id: <slug>`. Platform calls need only the JWT. Get a token via the DevHub MCP tool `devhub_get_cognito_token` (app: admin).
 
-Environment names: the list is `dev`, `stg`, `prod`, and `dev` is the only one that exists ([The Definition of Operations](../development/platform-refactor-program/definition-operations.md), section 1; ruling G13). The `environment` and `environmentCode` fields in the requests below carry one of those names; the engine still gives some of them a different default or accepts other spellings, which ruling B17 (phase 5) is to settle. `NODE_ENV` and a Vite mode are settings of a build tool and are not environment names (bc-core `src/main.ts` line 75; bc-admin `src/config/env.ts` lines 25-27).
+Environment names: the list is `dev`, `stg`, `prod`, and `dev` is the only one that exists ([The Definition of Operations](../development/platform-refactor-program/definition-operations.md), section 1; ruling G13). The `environment` and `environmentCode` fields in the requests below carry one of those names; the engine still gives some of them a different default or accepts other spellings, which ruling B17 (phase 5) is to settle. `NODE_ENV` is a Node.js convention that bc-core reads at run time (`src/main.ts` line 75), and a Vite mode is a setting of bc-admin's build tool (`src/config/env.ts` lines 25-27); neither is an environment name.
 
 ## 1. Services
 

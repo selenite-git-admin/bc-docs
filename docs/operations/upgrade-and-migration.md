@@ -13,7 +13,6 @@ governing_adrs:
   - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-3b86ea (Section renames; clean slate migration absorbed into this chapter)
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules)
-  - DEC-4c1396 (bc-db spine is the sole platform schema authoring and apply path)
   - DEC-bebaec (Chain Completeness SSOT; version-aware tracing)
   - DEC-da4c51 (Contract trust chain; upward trust propagation across the contract chain)
 errata_referenced: []
@@ -23,6 +22,8 @@ diagrams: []
 ---
 
 # Upgrade and Migration
+
+**A dated record (2026-11-15).** The program's chapter list classes this chapter as history: a dated record, not guidance. Since ADR DEC-4c1396 the schema-change path is the bc-db forward migration, written in [Data Model and Schema](../implementation/data-model-and-schema.md) and in bc-db's `README.md`. The procedures below, which use the `bc-core/docker/redesign` folder, the paired revert files, the golden snapshot and `03-tenant-db.sql`, describe the earlier practice, and that folder is frozen.
 
 ## Scope
 
@@ -38,13 +39,13 @@ A complete upgrade-or-migration cycle produces:
 
 | Artifact | Persistent store | Created by |
 |---|---|---|
-| Migration SQL file | `bc-db/migrations/NNNN_<name>.sql` plus the rollback file `bc-db/rollback/NNNN_<name>.rollback.sql` | The migration author per the migration discipline |
-| Ledger row for the applied migration | `infrastructure.schema_migration_event` in the live database | The governed runner (`bc-db/tools/runner/`), in the same transaction as the change |
+| Migration SQL file | `bc-core/docker/redesign/migrations/{date}-{ticket}.sql` plus paired `.revert.sql` | The migration author per the migration discipline |
+| Updated DDL canonical files | `bc-core/docker/redesign/01-platform-schemas.sql`, `02-platform-tables.sql`, `03-tenant-db.sql` after the migration is folded in | The migration author at fold-in time |
 | Updated golden snapshot files | `bc-core/docker/redesign/golden-snapshot-{schema}.sql.gz` | `bc-core/scripts/golden-snapshot.mjs` after material schema change |
 | Per-tenant migration application record | `tenant.tenant_migrations` (queued; not yet wired in every per-tenant migration path) | The tenant migration runner |
 | Change record (ISO 27001 plan and report) | DevHub `change_record_save` per session UID | The migration session per CLAUDE.md session protocol |
 
-The procedure produces no automatic rollback artifact at runtime; the rollback file is the rollback path, applied by hand under the operator's grant: the runner never runs a rollback (bc-db `README.md`, "Where things are"). The runtime does not auto-revert a migration on failure.
+The procedure produces no automatic rollback artifact at runtime; the `.revert.sql` paired file is the rollback path the operator runs manually if needed. The runtime does not auto-revert a migration on failure.
 
 **Governing source.** Data Model and Schema; Infrastructure.
 
@@ -54,7 +55,7 @@ The chapter records six migration types. Each has its own discipline.
 
 | # | Type | Form | Authority |
 |---|---|---|---|
-| 1 | DDL migration (additive) | New table, new column, new index; recorded as a bc-db forward migration plus its rollback file | Pattern: D162 normalization rules per DEC-1918d0 |
+| 1 | DDL migration (additive) | New table, new column, new index; recorded as a migration SQL plus paired `.revert.sql`; folded into the canonical DDL files at the next deploy cycle | Pattern: D162 normalization rules per DEC-1918d0 |
 | 2 | DDL migration (breaking) | Column type change, column drop, table drop, FK constraint addition that affects existing rows; same shape as additive plus an explicit data-correctness step | Same authority |
 | 3 | Contract migration | Existing contract version superseded by a new active version; runs through `McOnboardingService.createVersion` (or the equivalent service per family) | Per DEC-bebaec; chain status SSOT records the version-aware trace |
 | 4 | Contract chain rebuild | The full chain is reseeded after a clean slate; runs through Data Seeding and Build Order (Onboarding) | Per DEC-da4c51 trust chain |
@@ -67,24 +68,30 @@ A migration that does not fit one of these six types is outside this chapter's g
 
 ## DDL Migration Discipline
 
-Every platform schema change is authored once as a bc-db forward migration, `bc-db/migrations/NNNN_<name>.sql` (tenant databases: `bc-db/migrations/tenant/`), reviewed at an exact head, and applied only through the governed runner, which records it in `infrastructure.schema_migration_event` (DEC-4c1396). `bc-core/docker/redesign/` is frozen: a bc-core CI guard refuses adding or modifying a file there. Drizzle definitions are a type surface only.
+The migration directory `bc-core/docker/redesign/migrations/` holds dated migration SQL files. The naming convention:
 
-The discipline, as practised and written in bc-db `README.md` ("The schema-change path as practised"):
+```
+{YYYYMMDD}-{ticket-or-decision}-{summary}.sql
+{YYYYMMDD}-{ticket-or-decision}-{summary}.revert.sql
+```
+
+Recent examples in the directory: `20260421-d366-d368-schema-reorg.sql`; `20260421-d366-l-node-semantic-tables.sql`; `d299-bf-alias-table.sql`; `d369-m4-progression.sql`. Each migration is paired with a `.revert.sql` where reversibility is meaningful; some migrations (data corrections, irreversible drops) carry no `.revert.sql`.
+
+The migration discipline:
 
 | Step | Form |
 |---|---|
-| 1. Claim a number | `bc-db/docs/migration-number-gaps.md` and the open pull requests show which numbers are held |
-| 2. Write one forward migration | The file with its header and its own check of the state it expects, and a rollback file `bc-db/rollback/NNNN_<name>.rollback.sql`; a merged migration is never edited |
-| 3. Approval | The operator approves the database change at the desk |
-| 4. Review and merge | The auditor reviews at an exact commit and merges at that head under the operator's recorded grant, together with or after the engine code that needs the migration |
-| 5. Prove on a restored copy | The migration is applied to a restored copy of the live platform database through the real runner, and the served login's permissions are tested; the proofs are not part of CI |
-| 6. Apply in a window | The window script committed with the migration checks the server, takes and restores a backup, repeats the proof, applies the migration through the runner and checks the result; the apply is the operator's act under its own recorded grant |
-| 7. Record | The runner writes the migration and its ledger row in one transaction; the evidence of the apply is kept under `bc-db/docs/dbcp/` |
-| 8. Change record | The migration session writes a DevHub change record (plan and report per CLAUDE.md session protocol) |
+| 1. Author | Migration SQL plus paired `.revert.sql` are written and reviewed |
+| 2. Apply locally | The author runs the migration against the local Postgres container; verifies the schema state matches expectations |
+| 3. Verify Drizzle alignment | The Drizzle schema definitions in `bc-core/src/database/schema/` are updated to mirror the new DDL state; type compilation must succeed |
+| 4. Apply to dev tenant DBs | The migration runs against the local tenant DB (`tbc_sandbox1_dev`) where applicable |
+| 5. Fold into canonical DDL | At the next deploy cycle, the migration is folded into the canonical DDL files (`01-platform-schemas.sql`, `02-platform-tables.sql`, `03-tenant-db.sql`); the migration file remains in the `migrations/` directory as a historical record |
+| 6. Update golden snapshot | If the schema change is material, the author runs `bc-core/scripts/golden-snapshot.mjs` to produce updated `.sql.gz` files |
+| 7. Change record | The migration session writes a DevHub change record (plan and report per CLAUDE.md session protocol) |
 
-A merged migration that is not yet applied has one line in `bc-db/docs/migrations-awaiting-apply.md`. The command `ops/schema-compare` in bc-infra compares the migration files, the ledger and that register, read-only.
+A migration that violates step 5 (the canonical DDL is not folded in) leaves the platform with a drift between the migration history and the canonical DDL; the next first-run container initialization replays the canonical DDL but skips the un-folded migration. The fold-in is the discipline that prevents replay drift.
 
-**Governing source.** DEC-4c1396; bc-db `README.md`; bc-db `tools/runner/README.md`; bc-infra `ops/schema-compare/README.md`; CLAUDE.md (Database Change Protocol section).
+**Governing source.** `bc-core/docker/redesign/migrations/`; `bc-core/scripts/golden-snapshot.mjs`; CLAUDE.md (Database Change Protocol section).
 
 ## Contract Migration Discipline
 
@@ -147,7 +154,7 @@ The snapshot is regenerated after material enrichment of the platform vocabulary
 
 ## Per-Tenant Migration Application
 
-Tenant-database migrations are authored in `bc-db/migrations/tenant/` (bc-db `README.md`, "Where things are"). When a platform DDL migration affects the tenant schema (`03-tenant-db.sql` changes), every existing tenant database needs the same migration applied. The procedure below predates that location and is not re-verified here:
+When a platform DDL migration affects the tenant schema (`03-tenant-db.sql` changes), every existing tenant database needs the same migration applied. The current procedure:
 
 | Step | Form |
 |---|---|
@@ -165,9 +172,10 @@ A migration that the runner applies to some tenants but not others leaves the pl
 
 | Cause | System response |
 |---|---|
-| Migration SQL fails partway | Postgres rolls back the transaction (when the migration is in a transaction); the runner's transaction rolls the ledger row back with it (bc-db `tools/runner/README.md`, scope); a migration that was applied and must be undone uses its rollback file, applied by hand under the operator's grant |
+| Migration SQL fails partway | Postgres rolls back the transaction (when the migration is in a transaction); operator runs the paired `.revert.sql` to restore the prior state |
 | Migration not in transaction (e.g., `CREATE INDEX CONCURRENTLY`) | Failure leaves a partial index; operator runs `DROP INDEX IF EXISTS` and re-runs the migration with the failure cause addressed |
 | Drizzle schema not updated to match new DDL | TypeScript compilation fails on next bc-core build; CI catches before the change ships |
+| Canonical DDL not folded in after migration | First-run container initialization replays the canonical DDL only; the un-folded migration is missing from new local environments and from the next clean-slate restart; the fold-in discipline catches this |
 | Golden snapshot stale after material enrichment | The next clean-slate reset starts from an outdated baseline; the SOP-driven re-entry has more work to do; not a correctness failure but an efficiency one |
 | Per-tenant migration applied to some tenants but not others | Per-tenant schema drift; queries that depend on the new schema fail on the un-migrated tenants; current single-tenant posture makes this rare but the risk is real at scale |
 | Clean-slate reset run without prior approval | Per CLAUDE.md Database Change Protocol, the reset is a destructive operation requiring explicit user approval; running without approval is a session-discipline violation recorded in the change record |
@@ -181,6 +189,7 @@ A migration that the runner applies to some tenants but not others leaves the pl
 | Per-tenant migration runner is script-only | Readiness-baseline local-dev posture uses `sandbox1`; runner is a script per migration; formalization queued |
 | Golden snapshot regeneration is manual | Project judgment when to regenerate; no automation; CLAUDE.md memory file `golden_snapshot.md` records when last regenerated |
 | Clean-slate reset has no automated trigger | Operator-initiated only; the discipline is to confirm with the founder per CLAUDE.md before running |
+| Migration history vs canonical DDL drift | A migration not folded into the canonical DDL is missed by first-run initialization; the fold-in is the discipline that prevents this; no automated check in the readiness baseline |
 | `tenant.tenant_migrations` table not yet wired | A planned audit row per tenant per migration applied; not implemented in the readiness baseline; per-tenant migration is recorded in the migration script's run log only |
 | Aurora automated backups not provisioned | The dormant `PlatformInfraStack` `aurora-postgres.ts` construct configures environment-specific backup retention but the stack is not deployed; no automated production backup posture exists in the readiness baseline |
 | `04-tbc-selenite-missing-tables.sql` is a one-off correction | A historical correction file in `bc-core/docker/redesign/` that fixed a specific tenant's missing tables; not part of the canonical first-run initialization; recorded here as a known historical artifact |
