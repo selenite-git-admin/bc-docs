@@ -43,7 +43,7 @@ diagrams: []
 
 ## Scope
 
-This chapter records the database design rationale: the two-database split, the authoritative DDL discipline, the ten database rules that govern every table, the ISO 11179 naming convention, the schema-grouping shape at the family level, the Drizzle ORM mirroring discipline, the schema evolution methodology, and the current drift inventory. It is the design-and-discipline authority for the data model.
+This chapter records the database design rationale: the two-database split, the schema authority (the bc-db forward migration; the frozen DDL is history), the ten database rules that govern every table, the ISO 11179 naming convention, the schema-grouping shape at the family level, the Drizzle ORM mirroring discipline, the schema evolution methodology, and the current drift inventory. It is the design-and-discipline authority for the data model.
 
 This chapter does not enumerate every table or every column. The per-schema, per-table, per-column inventory is the role of the **Data Dictionary** reference ([`docs/reference/data-dictionary/`](../reference/data-dictionary/README.md), generated from `bc-core/src/database/schema` at bc-core commit `44767f0` on 2026-07-06, per its README); a reader who needs per-table detail consults it, and the live database for current state. This chapter records the structural shape and the rules; the Data Dictionary records the structural inventory as of its generation date.
 
@@ -60,7 +60,7 @@ Per DEC-1918d0 and DEC-771baf, the platform splits its data into two databases:
 | Platform DB | `bc_platform_dev` (one per environment) | All contract definitions, the Source Catalog, master and reference data, governance records, tenant identity records | Platform side; written through governed control-plane acts inside bc-core |
 | Tenant DB | `tbc_{slug}_dev` (one per tenant) | Per-tenant runtime state: boundary objects, evidence and lineage, run records, connections, contract bindings, tenant-scoped extension content | Tenant scope; written through governed runtime acts and governed tenant-scoped authoring acts inside bc-core |
 
-The two-database split is the architectural commitment recorded in Architecture and Infrastructure. The asymmetric ownership rule is one-directional: platform contracts feed into tenant runtime acts; tenant runtime acts do not feed back into platform contracts. Discovery acts read tenant state read-only without writing. Tenant DBs are physically separate Postgres databases created by the governed operator-plane command `npm run tenant:lifecycle -- create`; `seed-tenant-dbs.ts` is a harness for integration tests only (bc-core `src/registry/seed/seed-tenant-dbs.ts`, header).
+The two-database split is the architectural commitment recorded in Architecture and Infrastructure. The asymmetric ownership rule is one-directional: platform contracts feed into tenant runtime acts; tenant runtime acts do not feed back into platform contracts. Discovery acts read tenant state read-only without writing. Tenant DBs are physically separate Postgres databases created by the governed operator-plane command `npm run tenant:lifecycle -- create`; `seed-tenant-dbs.ts` is a harness for integration tests only (bc-core `src/registry/seed/seed-tenant-dbs.ts`, header). The onboarding chapter (`docs/onboarding/tenant-onboarding.md`, line 124) and the platform workflow catalog (`docs/reference/platform-workflow-catalog.md`, lines 45 and 59) still describe the served `POST /tenants` as the entry point and are not corrected by this change; DEC-4aa1ff says "the served `POST /tenants` stays refused by design".
 
 **Governing source.** Architecture; Infrastructure; DEC-1918d0; DEC-771baf.
 
@@ -138,7 +138,7 @@ A note on table naming: the repository historically uses `tenants` (plural) in `
 
 ## Schema Groupings
 
-The Platform DB carries fifteen schemas (twelve original plus `concept_registry`, `bcf`, and `ai_telemetry` added via migrations). The Tenant DB carries seven schemas, separating governed boundary state, dynamic typed projections, proof, per-tenant operational state, and per-tenant dimensions. The schemas below are listed at the family level only; per-table and per-column inventory will live in the Data Dictionary reference.
+The Platform DB carries fifteen schemas (twelve original plus `concept_registry`, `bcf`, and `ai_telemetry` added via migrations). The Tenant DB carries seven schemas, separating governed boundary state, dynamic typed projections, proof, per-tenant operational state, and per-tenant dimensions. The schemas below are listed at the family level only; per-table and per-column inventory is in the Data Dictionary reference (generated on 2026-07-06; the live database is current).
 
 ### Platform DB schemas
 
@@ -191,7 +191,7 @@ The chapter does not enumerate the dynamic fact tables; they vary per tenant and
 
 ## Indexes and Constraints Discipline
 
-Per rule 7, indexes ship in the same migration as the list endpoint they support. The most common pattern is a multi-column index on `(tenant_id, {time_column})` for tenant-DB boundary tables and `(contract_id, {time_column})` for canonical-evaluation tables. Per-table index and constraint detail will live in the Data Dictionary reference; this chapter records the discipline.
+Per rule 7, indexes ship in the same migration as the list endpoint they support. The most common pattern is a multi-column index on `(tenant_id, {time_column})` for tenant-DB boundary tables and `(contract_id, {time_column})` for canonical-evaluation tables. Per-table index and constraint detail is in the Data Dictionary reference (generated on 2026-07-06; the live database is current); this chapter records the discipline.
 
 | Discipline | Realization |
 |---|---|
@@ -241,7 +241,7 @@ Per pattern 69 (Foundation-invariant claims require code verification), the gaps
 | `metric.metric_knowledge` defined in DDL but no Drizzle TS file found | Low | The DDL declares the table; no `*.ts` file exists in `src/database/schema/metric/` for it. Either the table is unused at runtime (vestigial in DDL) or a Drizzle definition is missing. Closing the gap requires identifying which |
 | `master.dim_fiscal_calendar` referenced in tenant DDL as cross-DB soft-ref but no Drizzle TS file found | Low | Cross-DB references are not enforced as FKs (cross-DB FKs are not supported in Postgres); the reference is documentary. The Drizzle absence is consistent with it being a soft-ref, but a Drizzle definition would aid type-safe reads |
 | Drizzle `source/` consolidates 6 DDL source tables into 3 TS files | Intentional | `source_catalog.ts` and `source_reference.ts` aggregate the six-tier hierarchy for ergonomic consumption; the underlying tables remain six in the DDL |
-| Index naming drift: DDL uses `idx_*` prefix; Drizzle internal naming uses `ix_*` | Cosmetic | Both prefixes are valid Postgres identifier names; no functional impact. The DDL prefix is the canonical declaration; the Drizzle internal name is its representation of the same index |
+| Index naming drift: DDL uses `idx_*` prefix; Drizzle internal naming uses `ix_*` | Cosmetic | Both prefixes are valid Postgres identifier names; no functional impact. The DDL prefix is the canonical declaration in the frozen files; the Drizzle internal name is its representation of the same index |
 | `execution.boundary_progression` Drizzle definition in `execution/run-summary.ts` | Cosmetic | The two are the same table; the rename disambiguates from the retired `contract.chain_status`. The Drizzle export is `boundaryProgression` |
 | `01-platform-schemas.sql` still says "Platform DB schemas (12)" | Low | The file creates the original 12; `concept_registry`, `bcf`, and `ai_telemetry` are added by migrations. The comment count is stale but harmless — the schemas exist. The file is frozen and is not updated |
 | `contract.l_node_semantic_trace` DDL present but table is historical-only | Low | The trace table was never dropped (only the verdict table was); it remains as a reference artifact with no active writers. Drizzle definitions reference it for read-only historical queries |

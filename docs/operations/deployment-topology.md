@@ -54,8 +54,8 @@ The procedure produces no tenant-side artifacts. Tenant database creation, Conne
 
 | Precondition | Why it is required |
 |---|---|
-| GitHub OIDC trust to AWS account `546549546538` | The deploy procedure assumes role `arn:aws:iam::<ACCOUNT>:role/GitHubCICDInfraRole` via OIDC; absence of trust blocks GitHub Actions execution at the assume-role step |
-| Approved branch and Environment gate in GitHub | `cd-prepare.yml` and `cd-execute.yml` each run in the GitHub Environment named by their `stage` input (`dev` or `prod`); the control is the two-step gate: prepare creates change sets only, a person reviews them, then execute applies the same change sets (`cd-prepare.yml` lines 1-8) |
+| GitHub OIDC trust to AWS account `546549546538` | The deploy procedure assumes role `arn:aws:iam::546549546538:role/GitHub-OIDC` via OIDC (`cd-prepare.yml` line 36), and `cd-execute.yml` then chains into the CDK deploy role (lines 29 and 49-51); absence of trust blocks GitHub Actions execution at the assume-role step |
+| Two-step deploy gate | Both workflows set `environment:` to their `stage` input (`dev` or `prod`; `cd-prepare.yml` line 41, `cd-execute.yml` line 34) and the file states that required reviewers are not used (`cd-prepare.yml` lines 3-9). The control is the two-step gate: prepare creates change sets only, a person reviews them, then execute applies the same change sets |
 | `cdk synth` passes locally and in CI | `ci-validate.yml` runs `cdk synth` against the dev environment and `cdk diff` with replacement guard; a failure here blocks merge |
 | Target environment context | `cdk.json` defines `dev` and `stg` under its `stages` key and has no `prod` entry; the deploy definitions `cd-prepare.yml` and `cd-execute.yml` offer `dev` and `prod` as the choice of environment (bc-infra `cdk/cdk.json`; `.github/workflows/cd-prepare.yml` lines 14-18; `cd-execute.yml` lines 12-16) |
 
@@ -65,9 +65,9 @@ A precondition that fails is not bypassed. The OIDC role and the two-step gate (
 
 ## The GitHub Actions Surface
 
-> **Residual risk (audit GAP-009).** The deployment-surface, AuthStack-deployed-footprint, and PlatformInfraStack-dormancy claims in this chapter (and in "Readiness-Baseline Deployment: AuthStack Only" and "Defined But Not Deployed: PlatformInfraStack" below) depend on `platform-infra-stack/` files that were not readable in the platform code/docs gap audit. They rest on prior grounding, not on this-pass verification. Treat as unverified until a dedicated readable infra-stack audit confirms the workflow shapes, the deployed stack list, and the README-vs-entry-point drift. Source: `bc-docs/reports/platform-code-doc-gap-report.md` GAP-009.
+> **Residual risk (audit GAP-009).** The deployment-surface, AuthStack-deployed-footprint, and PlatformInfraStack-dormancy claims in this chapter (and in "Readiness-Baseline Deployment: AuthStack Only" and "Defined But Not Deployed: PlatformInfraStack" below) depend on `platform-infra-stack/` files that were not readable in the platform code/docs gap audit (the GitHub Actions workflow files were re-read from bc-infra on 2026-11-15 and no longer depend on prior grounding). They rest on prior grounding, not on this-pass verification. Treat as unverified until a dedicated readable infra-stack audit confirms the workflow shapes, the deployed stack list, and the README-vs-entry-point drift. Source: `bc-docs/reports/platform-code-doc-gap-report.md` GAP-009.
 
-The platform deployment surface is described by prior grounding as two GitHub Actions files under `platform-infra-stack/.github/workflows/`; that repository was not readable in this review.
+The platform deployment surface is three GitHub Actions files under bc-infra `.github/workflows/`, read at bc-infra origin/main on 2026-11-15.
 
 | File | Trigger | Effect |
 |---|---|---|
@@ -79,7 +79,7 @@ bc-infra at origin/main holds three workflow files: `ci-validate.yml`, `cd-prepa
 
 The deployment is gated three ways: CI validation must pass on the branch (replacement guard), the change sets must be prepared and reviewed before `cd-execute.yml` applies them, and OIDC trust must be in place for the infrastructure-owned AWS account.
 
-**Governing source.** Infrastructure; prior-grounded `platform-infra-stack` GitHub Actions files (repo not readable in this review).
+**Governing source.** Infrastructure; bc-infra `.github/workflows/`.
 
 ## Readiness-Baseline Deployment: AuthStack Only
 
@@ -107,10 +107,10 @@ The development machine of the `dev` environment is fully formalized. Every engi
 
 | Service | Container | Host port | Initialization |
 |---|---|---|---|
-| PostgreSQL | `postgres:17.11-alpine` | 5435 | No init scripts are mounted; the container starts with an empty `bc_platform_dev`, and the platform schema is restored with `npm run db:restore:s3` (bc-core `docker-compose.yml`, comment lines 8-11 and volume comment) |
+| PostgreSQL | `postgres:17.11-alpine` | 5435 | No init scripts are mounted; the container starts with an empty `bc_platform_dev`, and the platform schema is restored with `npm run db:restore:s3` (bc-core `docker-compose.yml`, comment lines 9-11 and volume comment) |
 | Redis | `redis:7.4.7-alpine` | 6379 | None |
 
-The active stack on the development machine is `docker-compose.yml` (container `bc-postgres`, port 5435). The former `docker-compose.redesign.yml` / `bc-postgres-redesign` instance is retired.
+The active stack is `docker-compose.yml` (container `bc-postgres`, port 5435). On the development machine the containers are started through `~/bc-stack/up.sh`, which adds `mac-ports.yml` (127.0.0.1-only ports; compose project `bc-core`); see the workstation runbook ([Development Workstation: Mac Mini and Laptop](../development/dev-workstation-mac-mini.md)). The compose file alone publishes both ports on every interface. The former `docker-compose.redesign.yml` / `bc-postgres-redesign` instance is retired.
 
 Services running on the engineer's host:
 
@@ -135,7 +135,7 @@ There is one list of environment names: `dev`, `stg`, `prod` ([The Definition of
 
 | Environment | Status | Form |
 |---|---|---|
-| `dev` | The only environment that exists | The development machine (every engineer runs the substrate above; primary platform runtime in the readiness baseline) and the cloud resources named `dev` that serve it. In the cloud today that is partial: one Cognito user pool exists in account `546549546538`, region `ap-south-1`, and no other deployed AWS infrastructure is recorded in this chapter |
+| `dev` | The only environment that exists | The development machine (every engineer runs the substrate above; primary platform runtime in the readiness baseline) and the cloud resources named `dev` that serve it. In the cloud, this chapter records one Cognito user pool in account `546549546538`, region `ap-south-1`; the definition of Operations (section 1) says: "Three deployed units carry `dev` in their names, and all three serve the development machine: sign-in, secrets, and the machines that run CI." |
 | `stg` | A name kept for a platform hosted in the cloud; not built | `cdk.json` defines `stg` under its `stages` key; it is not built (definition of Operations, section 1; ruling G13) |
 | `prod` | A name kept for a platform hosted in the cloud; not built | `cdk.json` has no `prod` entry; the deploy definitions offer `prod` as an input named `stage`; it is not built (definition of Operations, section 1; ruling G13) |
 
@@ -153,13 +153,15 @@ Tenant database provisioning runs from bc-core application code, not from `platf
 2. Applies the ratified tenant skeleton, a digest-pinned copy under `src/registry/seed/tenant-skeleton/`, verbatim under `SET ROLE bc_tenant_owner`. It refuses to apply it to a database that is not named `tbc_*`.
 3. Counts the tables in the six schemas `progression`, `fact`, `evidence`, `admin`, `organization` and `tenant_dim`.
 
+The onboarding chapter (`docs/onboarding/tenant-onboarding.md`, line 124) and the platform workflow catalog (`docs/reference/platform-workflow-catalog.md`, lines 45 and 59) still describe the served `POST /tenants` as the entry point. They are not corrected by this change; DEC-4aa1ff says "the served `POST /tenants` stays refused by design".
+
 Dynamic `fact.*` tables are created per activated contract by `SchemaProvisionerModule`. The implementation honors DEC-1918d0 and DEC-771baf: one Tenant DB per tenant, named `tbc_{slug}_dev` for the `dev` environment.
 
 The runtime nature of tenant onboarding is the reason the path lives in application code rather than CDK. A new tenant arrives at runtime; CDK runs at deploy time; the two cadences are different. Recording the gap is the chapter's discipline; closing it (e.g., wrapping the provisioning in a Lambda invoked by an admin API) is queued.
 
-**`TenantProvisioningService` is legacy and is not part of the active path.** A reader inspecting `bc-core/src/tenant-management/tenant-provisioning.service.ts` will see file-header comments and per-method comments (lines 7-16 and 38-64 at the time of writing) describing it as the provisioning entry point that is "called during tenant creation" and as the surface that "creates per-tenant schemas." Those comments are stale relative to the current architecture: the active path is `seed-tenant-dbs.ts` (above), which creates per-tenant **databases** (one DB per tenant per DEC-1918d0 + DEC-771baf), not per-tenant schemas. The legacy service's schema-provisioning shape predates the per-tenant-DB model and is no longer invoked by the tenant-creation flow. The discrepancy is a code-comment-vs-architecture drift, not a runtime divergence — the legacy service has no callers in the active flow. Closing the discrepancy is a code-comment cleanup followup that is out of scope for this chapter; the active reading anchored to `seed-tenant-dbs.ts` and `03-tenant-db.sql` is canonical.
+**`TenantProvisioningService` is legacy and is not part of the active path.** A reader inspecting `bc-core/src/tenant-management/tenant-provisioning.service.ts` will see file-header comments and per-method comments (lines 7-16 and 38-64 at the time of writing) describing it as the provisioning entry point that is "called during tenant creation" and as the surface that "creates per-tenant schemas." Those comments are stale relative to the current architecture: the active path is the `tenant:lifecycle` command (above), which creates per-tenant **databases** (one DB per tenant per DEC-1918d0 + DEC-771baf), not per-tenant schemas. The legacy service's schema-provisioning shape predates the per-tenant-DB model and is no longer invoked by tenant creation. The discrepancy is a code-comment-vs-architecture drift, not a runtime divergence — the legacy service has no callers in the active path. Closing the discrepancy is a code-comment cleanup followup that is out of scope for this chapter; the active reading anchored to `src/tenant-management/lifecycle/` is canonical.
 
-**Governing source.** `bc-core/src/registry/seed/seed-tenant-dbs.ts`; DEC-1918d0; DEC-771baf. Legacy reference: `bc-core/src/tenant-management/tenant-provisioning.service.ts` (no active callers; comment cleanup is queued).
+**Governing source.** `bc-core/src/tenant-management/lifecycle/`; `bc-core/src/registry/seed/seed-tenant-dbs.ts`; DEC-1918d0; DEC-771baf. Legacy reference: `bc-core/src/tenant-management/tenant-provisioning.service.ts` (no active callers; comment cleanup is queued).
 
 ## Per-Hosting-Variant Realization Status
 
@@ -180,12 +182,12 @@ The chapter records this honestly per pattern 81. The hosting-variant inventory 
 
 | Cause | System response |
 |---|---|
-| `cdk diff` detects a destructive replacement during CI | `ci-validate.yml` fails; the PR cannot merge until the replacement is intentional and `allow_replacements=Y` is supplied at deploy time |
+| `cdk diff` detects a destructive replacement during CI | `ci-validate.yml` fails; the PR cannot merge until the replacement is intentional and `allow_replacements` is set to `true` when `cd-prepare.yml` is run |
 | Change set stale or missing at execute | `cd-execute.yml` fails rather than deploying something else (`cd-execute.yml` lines 3-7) |
 | Cognito user pool deletion attempted | Removal policy `RETAIN` for prod prevents accidental deletion; for dev the policy is `DESTROY`; deletion of a dev user pool is reversible only by reseeding the pool and rebinding the application clients |
 | `aws codeartifact login` token expires (twelve-hour TTL) | `npm ci` rejects with HTTP 401 or 403 in CI and locally; renewal is a manual operation per the CodeArtifact runbook owned by Build and Release (queued chapter) |
 | The `dev` Postgres container fails to start | bc-core, DevHub document scans, and bc-pg-mcp reject database connections; no platform request can complete until the container is healthy |
-| `dev` Postgres data volume corruption | The `redesign_data` volume must be removed and the container restarted; the container then starts with an empty `bc_platform_dev`, and the platform schema is restored with `npm run db:restore:s3` (bc-core `docker-compose.yml`) |
+| `dev` Postgres data volume corruption | The data volume (`redesign_data` in the compose file) must be removed and the container restarted; the container then starts with an empty `bc_platform_dev`, and the platform schema is restored with `npm run db:restore:s3` (bc-core `docker-compose.yml`) |
 | `PlatformInfraStack` re-instantiation drifts from dormant code | The stack would deploy with the configuration as-coded in the readiness baseline (Aurora `t3.micro`, Lambda demo, single VPC); a deployment without a pre-deploy review of the dormant code may produce a configuration that no longer matches the current architectural intent |
 
 **Governing source.** Infrastructure; `platform-infra-stack/`; `bc-core/docker-compose.yml`.
@@ -197,10 +199,10 @@ The chapter records this honestly per pattern 81. The hosting-variant inventory 
 | README aspirational against the deployed state | `platform-infra-stack/README.md` describes `PlatformInfraStack` resources as deployed; the dormant entry point makes the description aspirational. README reconciliation is queued |
 | `prod` and `stg` environments not built | `cdk.json` defines `dev` and `stg` and no `prod`; the deploy definitions offer `dev` and `prod`; neither `stg` nor `prod` is built (definition of Operations, section 1) |
 | Historical Cognito local callback | Prior-grounded AuthStack callback drift; exact values are Infrastructure-owned and queued for the next AuthStack change-set |
-| Tenant provisioning is application-code, not IaC | `seed-tenant-dbs.ts` runs from bc-core; no Lambda or admin-API wrapper; the runtime cadence of tenant onboarding makes pure-IaC awkward, so the gap is intentional but recorded |
+| Tenant provisioning is application-code, not IaC | `tenant:lifecycle` runs from bc-core (`seed-tenant-dbs.ts` is a test harness); no Lambda or admin-API wrapper; the runtime cadence of tenant onboarding makes pure-IaC awkward, so the gap is intentional but recorded |
 | BC-Agent and BYO-DB realization absent | The two non-AWS hosting variants have no platform-side deployment artifacts; both are aspirational against the current AWS-only posture |
 | `bc-ai` has no cloud deployment | Local FastAPI service; no Dockerfile, no Lambda handler, no ECS task found in the readable repo; production AI surface depends on replacing the local-service posture |
-| GitHub OIDC trust assumed | The trust policy on `GitHubCICDInfraRole` is configured at the AWS account level; if the role's trust drifts, all CI validation and deployment fails closed |
+| GitHub OIDC trust assumed | The trust policy on `GitHub-OIDC` is configured at the AWS account level; if the role's trust drifts, all CI validation and deployment fails closed |
 
 **Governing source.** `platform-infra-stack/`; `bc-core/`; `bc-ai/`; Infrastructure.
 
@@ -255,9 +257,10 @@ The chapter records this honestly per pattern 81. The hosting-variant inventory 
 - DEC-e50b83: Master port reservation
 - DEC-324d9e: Stripe billing; four hosting variants
 - DEC-f02230: Tenant DB schema organization
-- `platform-infra-stack/.github/workflows/ci-validate.yml` (prior-grounded; repo not readable in this review)
+- bc-infra `.github/workflows/ci-validate.yml`
 - bc-infra `.github/workflows/cd-prepare.yml` and `cd-execute.yml`
 - `platform-infra-stack/cdk/lib/stacks/auth-stack.ts`
+- `bc-core/src/tenant-management/lifecycle/`
 - `bc-core/src/registry/seed/seed-tenant-dbs.ts`
 - DEC-3395bc: Operations
 
