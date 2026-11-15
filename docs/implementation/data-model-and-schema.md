@@ -19,6 +19,7 @@ governing_sources:
 governing_adrs:
   - DEC-3395bc (bc-docs SSOT cutover: the documentation layout, chapter list, voice discipline and editorial gates)
   - DEC-1918d0 (Deployment and database architecture; ten normalization rules)
+  - DEC-4c1396 (bc-db spine is the sole platform schema authoring and apply path)
   - DEC-771baf (Tenant database topology; platform-tenant one-way dependency)
   - DEC-69f09e (ISO 11179 naming convention)
   - DEC-bebaec (Chain completeness SSOT — retired; replaced by mcf.mcv_chain_status per DEC-9c0da7)
@@ -42,9 +43,9 @@ diagrams: []
 
 ## Scope
 
-This chapter records the database design rationale: the two-database split, the authoritative DDL discipline, the ten database rules that govern every table, the ISO 11179 naming convention, the schema-grouping shape at the family level, the Drizzle ORM mirroring discipline, the schema evolution methodology, and the current drift inventory. It is the design-and-discipline authority for the data model.
+This chapter records the database design rationale: the two-database split, the schema authority (the bc-db forward migration; the frozen DDL is history), the ten database rules that govern every table, the ISO 11179 naming convention, the schema-grouping shape at the family level, the Drizzle ORM mirroring discipline, the schema evolution methodology, and the current drift inventory. It is the design-and-discipline authority for the data model.
 
-This chapter does not enumerate every table or every column. The per-schema, per-table, per-column inventory is the role of the **Data Dictionary** reference (`docs/data-dictionary/`, queued; auto-generated from `bc-core/docker/redesign/*.sql`); when the Data Dictionary lands, a reader who needs per-table detail consults it. This chapter records the structural shape and the rules; the Data Dictionary will record the structural inventory.
+This chapter does not enumerate every table or every column. The per-schema, per-table, per-column inventory is the role of the **Data Dictionary** reference ([`docs/reference/data-dictionary/`](../reference/data-dictionary/README.md), generated from `bc-core/src/database/schema` at bc-core commit `44767f0` on 2026-07-06, per its README); a reader who needs per-table detail consults it, and the live database for current state. This chapter records the structural shape and the rules; the Data Dictionary records the structural inventory as of its generation date.
 
 This chapter sits between Infrastructure and API Surface. Infrastructure records where the databases run and how they are provisioned; API Surface records the endpoints that read and write them; this chapter records the structural shape of what is stored. It does not redefine boundary semantics (deferred to Operating Model), the contract grammar (deferred to The Contract Grammar), per-endpoint shapes (deferred to API Surface), per-module catalog (deferred to Internal Modules), or the operational procedures that maintain the schema (deferred to Operations).
 
@@ -59,22 +60,26 @@ Per DEC-1918d0 and DEC-771baf, the platform splits its data into two databases:
 | Platform DB | `bc_platform_dev` (one per environment) | All contract definitions, the Source Catalog, master and reference data, governance records, tenant identity records | Platform side; written through governed control-plane acts inside bc-core |
 | Tenant DB | `tbc_{slug}_dev` (one per tenant) | Per-tenant runtime state: boundary objects, evidence and lineage, run records, connections, contract bindings, tenant-scoped extension content | Tenant scope; written through governed runtime acts and governed tenant-scoped authoring acts inside bc-core |
 
-The two-database split is the architectural commitment recorded in Architecture and Infrastructure. The asymmetric ownership rule is one-directional: platform contracts feed into tenant runtime acts; tenant runtime acts do not feed back into platform contracts. Discovery acts read tenant state read-only without writing. Tenant DBs are physically separate Postgres databases provisioned at tenant onboarding via `seed-tenant-dbs.ts`.
+The two-database split is the architectural commitment recorded in Architecture and Infrastructure. The asymmetric ownership rule is one-directional: platform contracts feed into tenant runtime acts; tenant runtime acts do not feed back into platform contracts. Discovery acts read tenant state read-only without writing. Tenant DBs are physically separate Postgres databases created by the governed operator-plane command `npm run tenant:lifecycle -- create`; `seed-tenant-dbs.ts` is a harness for integration tests only (bc-core `src/registry/seed/seed-tenant-dbs.ts`, header). The onboarding chapter (`docs/onboarding/tenant-onboarding.md`, line 124) and the platform workflow catalog (`docs/reference/platform-workflow-catalog.md`, lines 45 and 59) still describe the served `POST /tenants` as the entry point and are not corrected by this change; DEC-4aa1ff says "the served `POST /tenants` stays refused by design".
 
 **Governing source.** Architecture; Infrastructure; DEC-1918d0; DEC-771baf.
 
-## Authoritative DDL
+## Schema Authority and the Frozen DDL
 
-The schema-change mechanism is the set of platform schema files under `bc-core/docker/redesign/` (base `01/02/03` + numbered files + `migrations/`, ~200 in total), applied in order and recorded in `infrastructure.schema_migration_event`; the live database is the authority on current state (see DEC-b1a286). The Drizzle ORM definitions in `bc-core/src/database/schema/` are the app-facing type surface, not a schema-change mechanism; when they diverge, the DDL and live database win.
+The schema-change mechanism is the bc-db forward migration (DEC-4c1396). Every platform schema change is authored once as a file `bc-db/migrations/NNNN_*.sql` (tenant-database changes under `bc-db/migrations/tenant/`) and, where the protocol requires one, a rollback file under `bc-db/rollback/`, reviewed at an exact head, and applied through the governed runner (`bc-db/tools/runner/`), which writes the migration and its row in `infrastructure.schema_migration_event` in one transaction (bc-db `README.md`, "The schema-change path as practised"; `tools/runner/README.md`). The live database is the authority on current state, and that ledger is the only record of what was applied. A migration that is merged and not yet applied has one line in the register `bc-db/docs/migrations-awaiting-apply.md`; bc-infra `ops/schema-compare` compares the migration files, the ledger and that register.
+
+`bc-core/docker/redesign/` is frozen: a bc-core CI guard refuses adding or modifying a file there (`src/database/schema/__tests__/docker-redesign-freeze.spec.ts`). The Drizzle ORM definitions in `bc-core/src/database/schema/` are the app-facing type surface, not a schema-change mechanism; when they diverge, the applied schema and the live database win (DEC-4c1396).
+
+The frozen files, kept as history, are:
 
 | File | Role |
 |---|---|
 | `01-platform-schemas.sql` | Creates the twelve platform schemas; enables `pgcrypto` |
 | `02-platform-tables.sql` | Creates all platform tables, indexes, and foreign keys; assembled from `02-platform-tables/00-master.sql` through `_all.sql` |
-| `03-tenant-db.sql` | Creates the seven tenant schemas and the fixed tenant tables; applied to each tenant database after `CREATE DATABASE` |
+| `03-tenant-db.sql` | Frozen. It created seven tenant schemas and the fixed tenant tables, and was applied to each tenant database after `CREATE DATABASE`; it is retired as the tenant-DDL source in favour of the ratified tenant skeleton of six schemas (bc-core `src/registry/seed/seed-tenant-dbs.ts`) |
 | `migrations/` | Per-decision migration files that add, alter, or rename objects after the initial DDL was set |
 
-Migrations are date-prefixed (`YYYYMMDD-*`) or decision-prefixed (`dec-*`, `tsk-*`, `bcf-*`). Notable recent migrations beyond the initial `20260421-d366-d368-schema-reorg.sql`:
+The frozen `migrations/` folder holds files that are date-prefixed (`YYYYMMDD-*`) or decision-prefixed (`dec-*`, `tsk-*`, `bcf-*`). Notable files in it beyond the initial `20260421-d366-d368-schema-reorg.sql`:
 
 - `20260521-f2-concept-registry-schema.sql` — BCF schema (DEC-02f5a9): 9 tables in `concept_registry`
 - `bcf-oagis-seed-v0-substrate.sql` — `bcf.oagis_seed` table
@@ -86,9 +91,9 @@ Migrations are date-prefixed (`YYYYMMDD-*`) or decision-prefixed (`dec-*`, `tsk-
 - `20260707-d496-measure-context.sql` — measure_class + context_concept_id on business_concept_version (DEC-14f5b6)
 - `dec-9c0da7-mcv-chain-status.sql` — `mcf.mcv_chain_status` (replaces retired `contract.chain_status` / `contract.l_node_semantic_verdict`)
 
-A reader who needs the full migration list runs `ls bc-core/docker/redesign/migrations/`.
+A reader who needs the full list of frozen files runs `ls bc-core/docker/redesign/migrations/`; a reader who needs the migrations applied since runs the comparison command above.
 
-**Governing source.** `bc-core/docker/redesign/01-platform-schemas.sql`; `bc-core/docker/redesign/02-platform-tables.sql`; `bc-core/docker/redesign/03-tenant-db.sql`; `bc-core/docker/redesign/migrations/`.
+**Governing source.** DEC-4c1396; bc-db `README.md`; bc-db `tools/runner/README.md`; bc-core `src/database/schema/__tests__/docker-redesign-freeze.spec.ts`; `bc-core/docker/redesign/` (frozen).
 
 ## The Ten Database Rules
 
@@ -133,7 +138,7 @@ A note on table naming: the repository historically uses `tenants` (plural) in `
 
 ## Schema Groupings
 
-The Platform DB carries fifteen schemas (twelve original plus `concept_registry`, `bcf`, and `ai_telemetry` added via migrations). The Tenant DB carries seven schemas, separating governed boundary state, dynamic typed projections, proof, per-tenant operational state, and per-tenant dimensions. The schemas below are listed at the family level only; per-table and per-column inventory will live in the Data Dictionary reference.
+The Platform DB carries fifteen schemas (twelve original plus `concept_registry`, `bcf`, and `ai_telemetry` added via migrations). The frozen `03-tenant-db.sql` describes a Tenant DB of seven schemas (DEC-f02230: envelope, progression, fact, evidence, admin, organization, tenant_dim), separating governed boundary state, dynamic typed projections, proof, per-tenant operational state, and per-tenant dimensions. The tenant skeleton applied today has six: the bc-core tenant seed harness names `progression`, `fact`, `evidence`, `admin`, `organization` and `tenant_dim` (`src/registry/seed/seed-tenant-dbs.ts`, read at bc-core `df52506d`); no tenant database was read for this chapter. The schemas below are listed at the family level only; per-table and per-column inventory is in the Data Dictionary reference (generated on 2026-07-06; the live database is current).
 
 ### Platform DB schemas
 
@@ -170,9 +175,9 @@ The Platform DB carries fifteen schemas (twelve original plus `concept_registry`
 
 The envelope-to-progression migration per D369 is in progress at the time of writing. Envelope and progression coexist; the read migration (D369 M4.2e and subsequent phases) is moving consumers onto progression plus typed `fact.*` tables; M4.4 is the planned envelope drop after the migration completes.
 
-Per-table, per-column, per-index, and per-constraint detail will live in the Data Dictionary reference (`docs/data-dictionary/`, queued; auto-generated from the DDL files in `bc-core/docker/redesign/`). Until the Data Dictionary lands, a reader who needs that detail reads the DDL files directly: `01-platform-schemas.sql` for schema declarations, `02-platform-tables.sql` for platform tables, `03-tenant-db.sql` for tenant tables, `migrations/` for the per-decision migration files.
+Per-table, per-column, per-index, and per-constraint detail is in the Data Dictionary reference ([`docs/reference/data-dictionary/`](../reference/data-dictionary/README.md)), which is generated from `bc-core/src/database/schema` as of 2026-07-06 and so lags the live database. A reader who needs current detail reads the live database, which is the authority on current state (DEC-4c1396). The frozen DDL files are a historical corpus and can differ from it: `01-platform-schemas.sql` for schema declarations, `02-platform-tables.sql` for platform tables, `03-tenant-db.sql` for tenant tables, `migrations/` for the per-decision files.
 
-**Governing source.** `bc-core/docker/redesign/01-platform-schemas.sql`; `bc-core/docker/redesign/02-platform-tables.sql`; `bc-core/docker/redesign/03-tenant-db.sql`.
+**Governing source.** DEC-4c1396; bc-db `README.md`; `bc-core/docker/redesign/01-platform-schemas.sql`, `02-platform-tables.sql` and `03-tenant-db.sql` (frozen).
 
 ## Dynamic fact.* Tables
 
@@ -186,7 +191,7 @@ The chapter does not enumerate the dynamic fact tables; they vary per tenant and
 
 ## Indexes and Constraints Discipline
 
-Per rule 7, indexes ship in the same migration as the list endpoint they support. The most common pattern is a multi-column index on `(tenant_id, {time_column})` for tenant-DB boundary tables and `(contract_id, {time_column})` for canonical-evaluation tables. Per-table index and constraint detail will live in the Data Dictionary reference; this chapter records the discipline.
+Per rule 7, indexes ship in the same migration as the list endpoint they support. The most common pattern is a multi-column index on `(tenant_id, {time_column})` for tenant-DB boundary tables and `(contract_id, {time_column})` for canonical-evaluation tables. Per-table index and constraint detail is in the Data Dictionary reference (generated on 2026-07-06; the live database is current); this chapter records the discipline.
 
 | Discipline | Realization |
 |---|---|
@@ -197,26 +202,31 @@ Per rule 7, indexes ship in the same migration as the list endpoint they support
 | Denormalized counters | None present. Aggregate-table counters (in tables whose purpose is aggregation, like `rejection_summary`) are not denormalized counters per rule 2; that rule forbids denormalization on transactional tables |
 | Indexes on master tables | Reference tables in `master` are accessed primarily by primary key; many have no secondary indexes. This is a deliberate exception to rule 7 because the dominant query pattern is PK lookup |
 
-**Governing source.** `bc-core/docker/redesign/`; DEC-1918d0.
+**Governing source.** DEC-4c1396; bc-db `README.md`; DEC-1918d0; `bc-core/docker/redesign/` (frozen).
 
 ## Schema Evolution and Migrations
 
-The `bc-core/docker/redesign/migrations/` directory holds the per-decision migration files that add, alter, or rename objects after the initial DDL was set. Each migration is a single SQL file named for its governing decision: D-code prefix (`d{N}-...`) for migrations before 20260421, date prefix (`YYYYMMDD-...`) for migrations from 20260421 onward (the date prefix supports reorderable application). Reverts ship as paired `.revert.sql` files alongside the forward migration.
+A schema change is a bc-db forward migration (DEC-4c1396). The path as practised, from bc-db `README.md` ("The schema-change path as practised"):
 
-The migrations directory is the SSOT for schema evolution. When a migration lands:
+1. **Claim a number.** Check `docs/migration-number-gaps.md` and the open pull requests first: in-flight branches hold numbers. Update `docs/migration-number-gaps.md` whenever a number is claimed, abandoned or renumbered.
+2. **Write one forward migration.** It is a file `migrations/NNNN_<name>.sql` with its header (`-- migration:`, `-- transactional:`, `-- plane:`, and the authority and purpose), its own check of the state it expects, and a rollback file `rollback/NNNN_<name>.rollback.sql` where the protocol requires one (DEC-4c1396). A merged migration is never edited: the runner refuses a file whose text differs from the one it recorded.
+3. **The operator approves the database change at the desk.** No change to a table, column, type, constraint, index or other database object is made without that approval.
+4. **The auditor reviews at an exact commit, and it merges.** The auditor merges it at the exact head it accepts, under the operator's recorded grant. A migration is merged only together with, or after, the engine code that needs it.
+5. **Prove it on a restored copy.** The change is applied to a restored copy of the live platform database through the real runner, and the served login's permissions are tested on the result. The proofs need the development machine and are not part of CI.
+6. **Apply it in a window.** A window script committed with the migration (for example `docs/dbcp/apply-0070-0071/window-0070-0071.sh`) checks that it is on the right database server, takes and restores a backup, runs the proof again, applies the migration through the runner, and checks the result.
+7. **Record.** The runner writes the migration and its ledger row in one transaction (`tools/runner/README.md`). A ledger row never exists before its apply, and none is written to stand for one. The evidence of the apply is kept under `docs/dbcp/`.
 
-1. The migration file is added to `migrations/` and committed.
-2. The cumulative DDL files (`01-platform-schemas.sql`, `02-platform-tables.sql`, `03-tenant-db.sql`) are updated so a fresh installation gets the post-migration schema in one pass.
-3. The Drizzle definitions in `bc-core/src/database/schema/` are updated to match.
-4. The Data Dictionary reference (when built) regenerates from the updated DDL.
+(Paths in the seven steps are relative to the bc-db repository.) Every apply is the operator's act, under its own recorded grant. A migration that is merged is not thereby applied.
 
-Each migration's governing decision is recorded in the migration's filename (D-code or date prefix) and in the corresponding ADR under `docs/governance/adrs/`. The migration list itself is not enumerated here; a reader who needs the full migration list runs `ls bc-core/docker/redesign/migrations/`.
+How the `dev` databases pick up a new migration after a restore is left open by DEC-4c1396 (its Decision, "Deliberately left open").
 
-**Governing source.** `bc-core/docker/redesign/migrations/`.
+Between its merge and its apply a migration has no ledger row and has one line in `bc-db/docs/migrations-awaiting-apply.md` (bc-db `README.md`, "The states of a migration"). The Drizzle definitions in `bc-core/src/database/schema/` are a type surface regenerated from the applied schema, never the authority (DEC-4c1396).
+
+**Governing source.** DEC-4c1396; bc-db `README.md`; bc-db `tools/runner/README.md`.
 
 ## Drizzle ORM Mirroring
 
-`bc-core/src/database/schema/` holds Drizzle schema definitions that mirror the DDL. The Drizzle definitions are the runtime-side type surface used by repositories. When DDL and Drizzle disagree, the DDL is authoritative; the Drizzle definitions are realigned.
+`bc-core/src/database/schema/` holds Drizzle schema definitions that mirror the applied schema. The Drizzle definitions are the runtime-side type surface used by repositories. When the applied schema and Drizzle disagree, the applied schema and the live database are authoritative (DEC-4c1396); the Drizzle definitions are regenerated from it.
 
 The Drizzle directory is organized by schema. Top-level subdirectories under `src/database/schema/` correspond to platform-side schemas (`master/`, `contract/`, `metric/`, `operations/`, `infrastructure/`, `execution/`, `runtime/`, `source/`, `tenant/`, `support/`, `pricing/`, `users/`, `test-bench/`); a `tenant-db/` subdirectory holds Drizzle definitions for selected tenant-DB schemas (`organization/`, `tenant_dim/`). Other tenant-DB schemas (envelope, progression, fact, evidence, admin) live elsewhere in the tree as the tenant-DB Drizzle layout has evolved. The `concept_registry` schema Drizzle definitions live under `src/database/schema/concept-registry/`. The `bcf` schema Drizzle definitions live under `src/database/schema/bcf/`. Per-schema TS file counts vary as the schema evolves; this chapter does not assert exact counts because the count drifts faster than the chapter can be re-edited. A reader who needs a current count runs `find src/database/schema -name '*.ts' | wc -l` against the live tree.
 
@@ -231,14 +241,14 @@ Per pattern 69 (Foundation-invariant claims require code verification), the gaps
 | `metric.metric_knowledge` defined in DDL but no Drizzle TS file found | Low | The DDL declares the table; no `*.ts` file exists in `src/database/schema/metric/` for it. Either the table is unused at runtime (vestigial in DDL) or a Drizzle definition is missing. Closing the gap requires identifying which |
 | `master.dim_fiscal_calendar` referenced in tenant DDL as cross-DB soft-ref but no Drizzle TS file found | Low | Cross-DB references are not enforced as FKs (cross-DB FKs are not supported in Postgres); the reference is documentary. The Drizzle absence is consistent with it being a soft-ref, but a Drizzle definition would aid type-safe reads |
 | Drizzle `source/` consolidates 6 DDL source tables into 3 TS files | Intentional | `source_catalog.ts` and `source_reference.ts` aggregate the six-tier hierarchy for ergonomic consumption; the underlying tables remain six in the DDL |
-| Index naming drift: DDL uses `idx_*` prefix; Drizzle internal naming uses `ix_*` | Cosmetic | Both prefixes are valid Postgres identifier names; no functional impact. The DDL prefix is the canonical declaration; the Drizzle internal name is its representation of the same index |
+| Index naming drift: DDL uses `idx_*` prefix; Drizzle internal naming uses `ix_*` | Cosmetic | Both prefixes are valid Postgres identifier names; no functional impact. The DDL prefix is the canonical declaration in the frozen files; the Drizzle internal name is its representation of the same index |
 | `execution.boundary_progression` Drizzle definition in `execution/run-summary.ts` | Cosmetic | The two are the same table; the rename disambiguates from the retired `contract.chain_status`. The Drizzle export is `boundaryProgression` |
-| `01-platform-schemas.sql` still says "Platform DB schemas (12)" | Low | The file creates the original 12; `concept_registry`, `bcf`, and `ai_telemetry` are added by migrations. The comment count is stale but harmless — the schemas exist. Updating the base DDL file is queued |
+| `01-platform-schemas.sql` still says "Platform DB schemas (12)" | Low | The file creates the original 12; `concept_registry`, `bcf`, and `ai_telemetry` are added by migrations. The comment count is stale but harmless — the schemas exist. The file is frozen and is not updated |
 | `contract.l_node_semantic_trace` DDL present but table is historical-only | Low | The trace table was never dropped (only the verdict table was); it remains as a reference artifact with no active writers. Drizzle definitions reference it for read-only historical queries |
 
 The drift inventory is stable as of the survey date; future migrations will either close gaps or surface new ones.
 
-**Governing source.** `bc-core/docker/redesign/`; `bc-core/src/database/schema/`.
+**Governing source.** DEC-4c1396; `bc-core/src/database/schema/`; `bc-core/docker/redesign/` (frozen).
 
 ## Failure Modes
 
@@ -258,6 +268,7 @@ The drift inventory is stable as of the survey date; future migrations will eith
 | Decision | Title | Schema impact |
 |---|---|---|
 | DEC-1918d0 | Deployment and database architecture; ten normalization rules | The two-database split, the ten DB rules that govern every table |
+| DEC-4c1396 | bc-db spine is the sole platform schema authoring and apply path | Where a schema change is authored and applied; `bc-core/docker/redesign/` is frozen |
 | DEC-771baf | Tenant database topology; platform-tenant one-way dependency | The one-directional ownership rule that constrains where each table lives |
 | DEC-69f09e | ISO 11179 naming convention | Every column, table, index, and constraint name follows the convention |
 | DEC-bebaec | Chain completeness SSOT — **retired** | `contract.chain_status` dropped (R3/R6); replaced by `mcf.mcv_chain_status` per DEC-9c0da7. The `execution.boundary_progression` table (renamed from `execution.chain_status` per 2026-05-09 errata) carries per-tenant runtime boundary counts |

@@ -23,6 +23,8 @@ diagrams: []
 
 # Upgrade and Migration
 
+**A dated record (2026-11-15).** The program's chapter list classes this chapter as history: a dated record, not guidance. Since ADR DEC-4c1396 the schema-change path is the bc-db forward migration, written in [Data Model and Schema](../implementation/data-model-and-schema.md) and in bc-db's `README.md`. The procedures below, which use the `bc-core/docker/redesign` folder, the paired revert files, the golden snapshot and `03-tenant-db.sql`, describe the earlier practice, and that folder is frozen.
+
 ## Scope
 
 This chapter records the operational procedures for moving the platform between schema versions, between contract versions, between major architectural decisions, and through the clean-slate reset path that DEC-3b86ea moved into this chapter. It states the per-migration types (DDL migration, contract migration, contract chain rebuild, golden-snapshot reseed, clean-slate reset, source catalog export), the dependency direction between platform schema migrations and tenant schema migrations, the per-migration evidence the procedure produces, the rollback paths per migration type, and the source catalog export procedure that moves unverified bulk data out of the platform database into MongoDB for SOP-driven re-admission. It records the boundary between Upgrade and Migration and the build-time DDL application (Deployment Topology). It records the as-built drift between the procedure and the platform's current upgrade-and-migration state.

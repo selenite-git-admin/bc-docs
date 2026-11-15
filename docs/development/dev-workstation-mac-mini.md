@@ -17,9 +17,11 @@ errata_referenced: []
 
 # Development Workstation: Mac Mini and Laptop
 
-How BareCount's local development environment is split between the **Mac Mini** and the **Windows laptop**: what runs where, how to use it every day, how to maintain it, and what to do when something breaks.
+How BareCount's `dev` environment, its development machine, is split between the **Mac Mini** and the **Windows laptop**: what runs where, how to use it every day, how to maintain it, and what to do when something breaks.
 
 Set up on 2026-09-25 (DevHub session SES-f3d537). Read this before changing anything on either machine.
+
+**Environment names.** The list is `dev`, `stg`, `prod` ([The Definition of Operations](platform-refactor-program/definition-operations.md), section 1; ruling G13). `dev` is the only one that exists: these two machines and the cloud resources named `dev` that serve them. The databases carry the suffix `_dev`: `bc_platform_dev` and `tbc_{slug}_dev`. These are resource names; the environment list does not change them. (bc-core holds the platform name as the constant `PLATFORM_DATABASE`, `src/database/served-identity/platform-session-identity.ts` line 25; the tenant connection keeps the `_dev` suffix of the database name in the tenant runtime URL, `src/database/tenant-connection.service.ts` lines 202-210.) **Live** is not an environment: it is the served platform inside `dev`, on its fixed ports. A **disposable copy** is a restored copy of the databases on other ports, made for one check and then destroyed (see Serve Moves and Live Windows). `NODE_ENV` is a Node.js convention that bc-core reads at run time (`src/main.ts` lines 75 and 103; `src/database/served-identity/platform-session-identity.ts` line 52), and a Vite mode is a setting of bc-admin's build tool (`src/config/env.ts` lines 25-27); neither is an environment name.
 
 ---
 
@@ -162,7 +164,7 @@ BareCount runs entirely on the Mac, so nothing on the laptop needs changing.
 
 ## 5. Secrets and AWS access
 
-- **App secrets:** bc-core's dev secrets live in **AWS Secrets Manager**, not in `.env` files. The secret is `bcp-dev-aps1-sct-secret` (bc-infra stack `bcp-dev-aps1-sct`, merged bc-infra#30), and it holds 9 names: the AI provider API keys and the service/test passwords.
+- **App secrets:** bc-core's secrets for the `dev` environment live in **AWS Secrets Manager**, not in `.env` files. The secret is `bcp-dev-aps1-sct-secret` (bc-infra stack `bcp-dev-aps1-sct`, merged bc-infra#30), and it holds 9 names: the AI provider API keys and the service/test passwords.
   - **Loading:** `npm run start:dev:aws` (bc-core#819) loads them at startup. A variable that's already set in the environment wins. Values are never printed.
   - **Adding or changing a secret:** operator-run, on the laptop:
     - dry run: `npm run dev-secrets:fill -- --profile default`

@@ -4,7 +4,7 @@ description: "Operator procedures for the runtime spine: services, nightly cycle
 authority: authoritative
 domain: operations
 status: active
-date: 2026-07-03
+date: 2026-11-15
 refs:
   - type: decision
     label: "DEC-9c0da7 (D481) — Runtime Doctrine (authority)"
@@ -17,6 +17,8 @@ refs:
 Operator procedures for the runtime spine built under DEC-9c0da7 (D481), gates R0–R8. Doctrine (what the pieces mean) lives in `runtime-operations.md`; this chapter is *how to run it*.
 
 All `/api/t/*` calls need `Authorization: Bearer <admin JWT>` + `x-tenant-id: <slug>`. Platform calls need only the JWT. Get a token via the DevHub MCP tool `devhub_get_cognito_token` (app: admin).
+
+Environment names: the list is `dev`, `stg`, `prod`, and `dev` is the only one that exists ([The Definition of Operations](../development/platform-refactor-program/definition-operations.md), section 1; ruling G13). The `environment` and `environmentCode` fields in the requests below carry one of those names; the engine still gives some of them a different default or accepts other spellings, which ruling B17 (phase 5) is to settle. `NODE_ENV` is a Node.js convention that bc-core reads at run time (`src/main.ts` line 75), and a Vite mode is a setting of bc-admin's build tool (`src/config/env.ts` lines 25-27); neither is an environment name.
 
 ## 1. Services
 
@@ -40,7 +42,7 @@ Off by default. Enable with env `BC_SCHEDULER_ENABLED=1` on bc-core; runs at 02:
 POST /api/t/readers/{readerId}/execute
 { "flavorId": "...", "environment": "dev", "tenantId": "<slug>", "dryRun": false }
 ```
-- 422 "No active admission contract binding … in environment 'production'" → pass `environment: 'dev'`.
+- 422 "No active admission contract binding … in environment 'production'" → pass `environment: 'dev'`. When `environment` is omitted this endpoint's engine code uses `production`, which is not on the list of names (`src/boundary/reader-runtime/dto/execute-reader.dto.ts` line 20; `src/boundary/reader-runtime/reader-runtime.service.ts` line 283).
 - A completed run emits `admission_run_completed` to the outbox; watermarks advance only on success.
 
 > **As-built (reader-keyed).** Manual admission is invoked reader-keyed at `/readers/{readerId}/execute`; the executor is the **Runner** executing that Reader definition for the given `(flavor, environment)` (DEC-0d5b39 — the Reader is the definition, the Runner is the machine). Under the source-axis doctrine this becomes a source-cycle-scoped command (register C8); the endpoint name is retained as the current operative surface.
@@ -86,22 +88,22 @@ Measured runtime envelopes are preserved in [Runtime Retirement Register Evidenc
 
 ## 7b. WORM evidence archive
 
-Every evidence object is also archived to `s3://barecount-evidence-worm-dev/evidence/{tenant}/{type}/{evidenceId}.json` (Object Lock, COMPLIANCE-mode 30-day default retention — objects are undeletable until retention expires, verified by a denied delete). Env-gated on bc-core: `BC_EVIDENCE_S3_BUCKET` (unset = off) + `BC_EVIDENCE_AWS_PROFILE` (pins SDK creds on dev machines where a machine-level AWS_PROFILE points at another account; unset in production — instance roles). The RDS rows remain authoritative; the S3 copy carries contentHash/prevContentHash so the chain verifies independently. Archive failures warn-log and never block a boundary act.
+Every evidence object is also archived to `s3://barecount-evidence-worm-dev/evidence/{tenant}/{type}/{evidenceId}.json` (Object Lock, COMPLIANCE-mode 30-day default retention — objects are undeletable until retention expires, verified by a denied delete). Env-gated on bc-core: `BC_EVIDENCE_S3_BUCKET` (unset = off) + `BC_EVIDENCE_AWS_PROFILE` (pins SDK creds on the development machine, where a machine-level AWS_PROFILE points at another account; unset where instance roles supply them). The RDS rows remain authoritative; the S3 copy carries contentHash/prevContentHash so the chain verifies independently. Archive failures warn-log and never block a boundary act.
 
-## 8. SDG datasets (dev source)
+## 8. SDG datasets (simulated source)
 
 - Current dataset: `GET http://localhost:6100/admin/dataset` (datasetId = `sap-ecc-s{seed}-m{months}-v{version}`, per-table coverage + posting-date ranges). History: `/admin/datasets`.
 - Regenerate (explicit act): `POST http://localhost:6100/admin/regenerate {"seed":42,"months":12}`.
 - **Regenerating a sim that live readers point at changes source reality.** Admitted history is immutable (fine), but subsequent delta fetches will diverge. For load/what-if datasets, start a second instance: `--port 6198 --months 48` — never regen the instance bound to pilot1 mid-cycle.
 
-## 9. Backup and recovery (local dev)
+## 9. Backup and recovery (`dev`)
 
 Backup both DBs (run from bc-core, uses `.env` creds):
 ```
 docker exec -t $(docker ps -qf name=postgres) pg_dump -U barecount -d bc_platform_dev -Fc > backup/bc_platform_dev_$(date +%Y%m%d).dump
 docker exec -t $(docker ps -qf name=postgres) pg_dump -U barecount -d tbc_pilot1_dev -Fc > backup/tbc_pilot1_dev_$(date +%Y%m%d).dump
 ```
-Restore with `pg_restore -d <db> <dump>`. Production backup/DR (RDS snapshots, PITR) is an R8 operator item — see the decision list in the program report.
+Restore with `pg_restore -d <db> <dump>`. Backup and recovery for a platform hosted in the cloud (`stg`, `prod`; neither is built), with RDS snapshots and PITR, is an R8 operator item — see the decision list in the program report.
 
 ## 9b. Admission load test (harness + evidence pointer)
 
@@ -114,4 +116,4 @@ Crash recovery (sessions): `devhub_session_boot` surfaces orphans → read plan 
 - Dry-run refuses composites and filter/grouping metrics (`unsupported`) — real campaigns evaluate them.
 - Cross-entity runtime read (CB-008 credit-limit family) still deferred.
 - The legacy metric-readiness funnel (DataReadinessPage) is frozen-broken pending TSK-937981.
-- Rate limiting is not implemented in bc-core — production ingress must front it (ALB/WAF or an approved throttler dependency).
+- Rate limiting is not implemented in bc-core — a platform hosted in the cloud (`prod`) must have an ingress in front of it (ALB/WAF or an approved throttler dependency).
