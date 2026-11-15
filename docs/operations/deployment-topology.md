@@ -28,7 +28,7 @@ diagrams: []
 
 ## Scope
 
-This chapter records the operational view of where the platform deploys, how the deployment procedure runs, what is deployed in the readiness baseline, and what is queued behind future formalization. It states the AWS account scope, the GitHub OIDC deployment role, the CI validate and CD deploy procedure shape, the AuthStack and dormant PlatformInfraStack split, the local development substrate every engineer runs, the local plus AWS dev plus aspirational prod environment posture, and the per-hosting-variant deployment realization status. It records the boundary between Deployment Topology and the Infrastructure chapter that catalogs the deployable resources themselves. It records the as-built drift between the procedure and the platform's current deployment state.
+This chapter records the operational view of where the platform deploys, how the deployment procedure runs, what is deployed in the readiness baseline, and what is queued behind future formalization. It states the AWS account scope, the GitHub OIDC deployment role, the CI validate and CD deploy procedure shape, the AuthStack and dormant PlatformInfraStack split, the development substrate every engineer runs, the environment names (`dev`, `stg`, `prod`) and what each is today, and the per-hosting-variant deployment realization status. It records the boundary between Deployment Topology and the Infrastructure chapter that catalogs the deployable resources themselves. It records the as-built drift between the procedure and the platform's current deployment state.
 
 This chapter does not redefine the AWS account, region, or resource inventory (Infrastructure), the per-service deployable shape (Backend Services, Auxiliary Services), the hosting-variant commercial categorization (Tenant Lifecycle and Subscription), or the upgrade and migration procedures that move the platform between schema versions (Upgrade and Migration).
 
@@ -57,7 +57,7 @@ The procedure produces no tenant-side artifacts. Tenant database creation, Conne
 | GitHub OIDC trust to AWS account `546549546538` | The deploy procedure assumes role `arn:aws:iam::<ACCOUNT>:role/GitHubCICDInfraRole` via OIDC; absence of trust blocks GitHub Actions execution at the assume-role step |
 | Approved branch and Environment gate in GitHub | `cd-deploy.yml` requires GitHub Environment approval (the `dev` or `prod` environment) before change-set execution |
 | `cdk synth` passes locally and in CI | `ci-validate.yml` runs `cdk synth` against the dev environment and `cdk diff` with replacement guard; a failure here blocks merge |
-| Target environment context | `cdk.json` defines `dev` only; `prod` is referenced by code paths and CI inputs but has no committed configuration in the readiness baseline |
+| Target environment context | `cdk.json` defines `dev` and `stg` under its `stages` key and has no `prod` entry; the deploy definitions `cd-prepare.yml` and `cd-execute.yml` offer `dev` and `prod` as the choice of environment (bc-infra `cdk/cdk.json`; `.github/workflows/cd-prepare.yml` lines 14-18; `cd-execute.yml` lines 12-16) |
 
 A precondition that fails is not bypassed. The OIDC role and the GitHub Environment approval are the deploy boundary; manual `aws cloudformation create-change-set` from a developer laptop is not the platform's deployment surface.
 
@@ -100,16 +100,16 @@ The README in `platform-infra-stack` continues to describe `PlatformInfraStack` 
 
 **Governing source.** `platform-infra-stack/cdk/lib/platform-infra-stack.ts`; `cdk/bin/platform-infra.ts`; `platform-infra-stack/README.md`.
 
-## Local Development Topology
+## Development Machine Topology
 
-The local development environment is fully formalized. Every engineer brings up the same substrate via `bc-core/docker-compose.yml`:
+The development machine of the `dev` environment is fully formalized. Every engineer brings up the same substrate via `bc-core/docker-compose.yml`:
 
 | Service | Container | Host port | Initialization |
 |---|---|---|---|
 | PostgreSQL | `postgres:17.8-alpine` | 5434 | Three DDL files in `bc-core/docker/redesign/` mount into `/docker-entrypoint-initdb.d/` and run on first start |
 | Redis | `redis:7.4.7-alpine` | 6379 | None |
 
-The active local stack is `docker-compose.yml` (container `bc-postgres`, port 5435). The former `docker-compose.redesign.yml` / `bc-postgres-redesign` instance is retired.
+The active stack on the development machine is `docker-compose.yml` (container `bc-postgres`, port 5435). The former `docker-compose.redesign.yml` / `bc-postgres-redesign` instance is retired.
 
 Services running on the engineer's host:
 
@@ -124,21 +124,21 @@ Services running on the engineer's host:
 
 These ports are reserved by DEC-e50b83. No project changes its port without updating the reservation. The current per-port assignment is recorded in CLAUDE.md and in Infrastructure.
 
-The local-development discipline (per CLAUDE.md): start DevHub first, keep it running for the entire dev session; start application services on demand only; pm2 was removed (DEC supersedes a prior pm2-based service management decision) and each service starts independently in its own repo.
+The development-machine discipline (per CLAUDE.md): start DevHub first, keep it running for the entire dev session; start application services on demand only; pm2 was removed (DEC supersedes a prior pm2-based service management decision) and each service starts independently in its own repo.
 
 **Governing source.** `bc-core/docker-compose.yml`; `bc-core/docker/redesign/`; CLAUDE.md operational sections; DEC-e50b83.
 
-## Environment Posture: Local plus dev plus Aspirational prod
+## Environment Names
 
-The platform operates against three environment postures.
+There is one list of environment names: `dev`, `stg`, `prod` ([The Definition of Operations](../development/platform-refactor-program/definition-operations.md), section 1; ruling G13). Three further words are not environment names. "Live" describes the served platform inside an environment (see Serve Moves and Live Windows). A "disposable copy" is a restored copy of the databases on other ports, with a build served against it, made for one check and then destroyed; older texts call it a rehearsal, a clone or a kit. `test` is not an environment: it is a suffix that automatic checks give to databases they create and destroy. `NODE_ENV` and a Vite mode are settings of a build tool and are not environment names (bc-core `src/main.ts` line 75 and `src/config/app.config.ts` line 4 read `NODE_ENV` to switch guards; bc-admin `src/config/env.ts` lines 25-27 read the Vite `MODE`, `DEV` and `PROD`).
 
-| Posture | Status | Form |
+| Environment | Status | Form |
 |---|---|---|
-| Local | Fully formalized | Every engineer runs the substrate above; primary platform runtime in the readiness baseline |
-| AWS `dev` | Partial; AuthStack only | One Cognito user pool exists in account `546549546538`, region `ap-south-1`; no other deployed AWS infrastructure |
-| AWS `prod` | Aspirational | `cdk.json` defines `dev` only; `prod` is referenced as a context value at deploy time and the GitHub `prod` Environment exists for approval gates; no `prod` deployment has occurred |
+| `dev` | The only environment that exists | The development machine (every engineer runs the substrate above; primary platform runtime in the readiness baseline) and the cloud resources named `dev` that serve it. In the cloud today that is partial: one Cognito user pool exists in account `546549546538`, region `ap-south-1`, and no other deployed AWS infrastructure is recorded in this chapter |
+| `stg` | A name kept for a platform hosted in the cloud; not built | `cdk.json` defines `stg` under its `stages` key; it is not built |
+| `prod` | A name kept for a platform hosted in the cloud; not built | `cdk.json` has no `prod` entry; the deploy definitions offer `prod` as a stage input and the GitHub `prod` Environment exists for approval gates |
 
-The intent stated in `platform-infra-stack/README.md` (stack policies that restrict destructive prod changes; rollback configuration with CloudWatch alarms requiring a 15-minute monitoring window; GitHub `prod` Environment for approval) is the queued shape for prod once the readiness-to-onboard milestone for the first paying tenant lands.
+The intent stated in `platform-infra-stack/README.md` (stack policies that restrict destructive prod changes; rollback configuration with CloudWatch alarms requiring a 15-minute monitoring window; GitHub `prod` Environment for approval) is the queued shape for `prod` once the readiness-to-onboard milestone for the first paying tenant lands.
 
 The current posture is intentional during platform development; the cost of maintaining unused prod infrastructure has not been justified. Per DEC-005ea7, when prod arrives, every tenant operates against one production environment; there are no per-tenant dev or pre-production tiers, and a trial tenant on purchase is deleted and recreated rather than promoted in place.
 
@@ -166,7 +166,7 @@ Per DEC-324d9e, the platform recognizes four hosting variants. The deployment-pr
 
 | Variant | Realization status |
 |---|---|
-| AWS Shared | Closest to the dev posture; the deployed AuthStack supports the auth boundary; tenant DB lives in shared PostgreSQL infrastructure (local Docker Postgres in the readiness baseline; Aurora cluster in a future prod-AWS posture); no per-variant deployment procedure exists yet |
+| AWS Shared | Closest to the `dev` environment; the deployed AuthStack supports the auth boundary; tenant DB lives in shared PostgreSQL infrastructure (Docker Postgres on the development machine in the readiness baseline; an Aurora cluster once a platform is hosted in the cloud under `stg` or `prod`); no per-variant deployment procedure exists yet |
 | AWS Separate | Per-tenant dedicated database under platform AWS account; no IaC; no realization |
 | BYO-DB | Tenant-managed database in customer infrastructure; no platform-side IaC needed for the database, but the connection-secrets surface, network reachability, and Onboarding Record gate (per DEC-a67518) all need realization beyond their current spec form |
 | BC-Agent | Local agent runtime in customer environment; no agent runtime built; no agent-to-platform protocol implemented |
@@ -183,8 +183,8 @@ The chapter records this honestly per pattern 81. The hosting-variant inventory 
 | GitHub Environment approval not granted on deploy | `cd-deploy.yml` blocks at the change-set execution step; the change set remains uncreated until approval lands |
 | Cognito user pool deletion attempted | Removal policy `RETAIN` for prod prevents accidental deletion; for dev the policy is `DESTROY`; deletion of a dev user pool is reversible only by reseeding the pool and rebinding the application clients |
 | `aws codeartifact login` token expires (twelve-hour TTL) | `npm ci` rejects with HTTP 401 or 403 in CI and locally; renewal is a manual operation per the CodeArtifact runbook owned by Build and Release (queued chapter) |
-| Local Postgres container fails to start | bc-core, DevHub document scans, and bc-pg-mcp reject database connections; no platform request can complete until the container is healthy |
-| Local Postgres data volume corruption | The `postgres_data` named volume must be removed and the container restarted; the three DDL files re-initialize the database on first start |
+| The `dev` Postgres container fails to start | bc-core, DevHub document scans, and bc-pg-mcp reject database connections; no platform request can complete until the container is healthy |
+| `dev` Postgres data volume corruption | The `postgres_data` named volume must be removed and the container restarted; the three DDL files re-initialize the database on first start |
 | `PlatformInfraStack` re-instantiation drifts from dormant code | The stack would deploy with the configuration as-coded in the readiness baseline (Aurora `t3.micro`, Lambda demo, single VPC); a deployment without a pre-deploy review of the dormant code may produce a configuration that no longer matches the current architectural intent |
 
 **Governing source.** Infrastructure; `platform-infra-stack/`; `bc-core/docker-compose.yml`.
@@ -194,7 +194,7 @@ The chapter records this honestly per pattern 81. The hosting-variant inventory 
 | Drift item | Form |
 |---|---|
 | README aspirational against the deployed state | `platform-infra-stack/README.md` describes `PlatformInfraStack` resources as deployed; the dormant entry point makes the description aspirational. README reconciliation is queued |
-| `prod` environment never formalized | `cdk.json` defines `dev` only; the `prod` Environment exists in GitHub for approval gates; no committed `prod` CDK config; no `prod` deployment |
+| `prod` and `stg` environments not built | `cdk.json` defines `dev` and `stg` and no `prod`; the deploy definitions offer `dev` and `prod`; the `prod` Environment exists in GitHub for approval gates; neither `stg` nor `prod` is built (definition of Operations, section 1) |
 | Historical Cognito local callback | Prior-grounded AuthStack callback drift; exact values are Infrastructure-owned and queued for the next AuthStack change-set |
 | Tenant provisioning is application-code, not IaC | `seed-tenant-dbs.ts` runs from bc-core; no Lambda or admin-API wrapper; the runtime cadence of tenant onboarding makes pure-IaC awkward, so the gap is intentional but recorded |
 | BC-Agent and BYO-DB realization absent | The two non-AWS hosting variants have no platform-side deployment artifacts; both are aspirational against the current AWS-only posture |

@@ -8,7 +8,7 @@ depends_on: [the-invariants, upgrade-and-migration, dev-workstation-mac-mini, de
 governing_sources:
   - The Invariants (Invariant III, Invariant VI)
   - barecount-devhub serve-move tooling (branches claude/serve-move-7, -8, -9; artifacts/serve-move, artifacts/combined-rehearsal, artifacts/w9-serve-move-4 on main)
-  - The rehearsal kit (~/.bc-serve-kit) and the Mac stack (~/bc-stack)
+  - The kit for disposable copies (~/.bc-serve-kit) and the Mac stack (~/bc-stack)
   - bc-exchange recorded operator grants
   - Mac Auditor Operations (who authorizes what)
 governing_adrs:
@@ -25,7 +25,7 @@ diagrams: []
 
 # Serve Moves and Live Windows
 
-How BareCount changes its **live** platform: the bc-core build that serves port 3100, the platform and tenant databases, and the metrics a tenant reads. It describes the procedure as practised in serve moves 7, 8 and 9 (2026-09-29/30) and cites the tooling that enforces each step. Where the tooling and the written practice differ, the chapter says so under Open points.
+How BareCount changes its **live** platform in the `dev` environment: the bc-core build that serves port 3100, the platform and tenant databases, and the metrics a tenant reads. It describes the procedure as practised in serve moves 7, 8 and 9 (2026-09-29/30) and cites the tooling that enforces each step. Where the tooling and the written practice differ, the chapter says so under Open points.
 
 **Domain owner:** the Platform Controller session (TSK-94f365). The DB Controller schedules migration applies with it, and the Metric Controller runs metric go-lives inside the slots it orders (Platform Controller state capture, 2026-09-30, §B).
 
@@ -43,6 +43,8 @@ The "state capture" is the Platform Controller's own state capture of 2026-09-30
 ---
 
 ## Purpose and scope
+
+**Words used here.** The list of environment names is `dev`, `stg`, `prod`, and `dev` is the only one that exists ([The Definition of Operations](../development/platform-refactor-program/definition-operations.md), section 1; ruling G13). **Live** is not an environment: it is the served platform inside one, here the services on their fixed ports and the databases they use. A **disposable copy** is a restored copy of the databases on other ports, with a build served against it, made for one check and then destroyed. This chapter's older words "rehearsal", "clone" and "kit" mean a run on a disposable copy, or the tooling that makes one; the names of scripts, files and modes (`rehearse-sm9.zsh`, `fresh-clone.zsh`, `rehearsal` mode, `~/.bc-serve-kit`, `kit.owner`) are kept as they are.
 
 **A live act** is any act that changes live state. There are three kinds:
 - **a serve move:** switching the running bc-core on port 3100 to a new build;
@@ -88,7 +90,7 @@ These transcripts are operational records, not Evidence Objects. The invariants 
 | **Serve move** | Switching port 3100 from one pinned bc-core build (a clean detached worktree at one commit) to another. Only the `bc-core` block of `~/bc-stack/process-compose.yaml` changes: `working_dir`, `D623_CORE_REF`, the launcher's commit and manifest arguments, the description, and the leading comment. | `devhub main` `artifacts/serve-move/live/make-candidate-2.zsh` l.2–6, l.31–40; any other diff line refuses (l.49–54) |
 | **Freeze tree / twin trees** (`freeze-<letter>`, `freeze-<letter>-b`) | Two detached bc-core worktrees under `~/MyProjects/_wt/`, built from the same main commit (for example `freeze-q` and `freeze-q-b` at `802fdee3`). Their dist manifests must be byte-identical. The letters so far run n, o, p, q (serve moves 6 to 9). | `devhub SM9` `build-freeze.zsh` l.4, l.28–39 |
 | **Dist manifest** | One line per file under `dist/` (sha256 and relative path, source maps excluded), sorted. The sha256 of that listing is the build's identity. | `devhub main` `artifacts/serve-move/dist-manifest.js` l.2–6 |
-| **The kit** | The rehearsal kit. It has two parts: `~/.bc-serve-kit/` (the clone maker `fresh-clone.zsh`, per-rehearsal state directories `state-<name>-<n>`, run directories) and the combined rehearsal harness in devhub (`artifacts/combined-rehearsal/run-combined.sh`, `slots/`). | `~/.bc-serve-kit/fresh-clone.zsh` l.2–5; `devhub SM9` `rehearse-sm9.zsh` l.28, l.56–75 |
+| **The kit** | The tooling that makes and serves a disposable copy (the rehearsal kit). It has two parts: `~/.bc-serve-kit/` (the maker of the copy, `fresh-clone.zsh`, per-rehearsal state directories `state-<name>-<n>`, run directories) and the combined rehearsal harness in devhub (`artifacts/combined-rehearsal/run-combined.sh`, `slots/`). | `~/.bc-serve-kit/fresh-clone.zsh` l.2–5; `devhub SM9` `rehearse-sm9.zsh` l.28, l.56–75 |
 | **kit.owner claim** | The file `~/bc-stack/watch/kit.owner`. A rehearsal writes it with noclobber and refuses when another session holds it; teardown deletes it only if it holds the rehearsal's own session id. One kit user at a time. | `devhub SM9` `rehearse-sm9.zsh` l.30, l.36, l.38–40 |
 | **Live window** | See Purpose and scope. | Runner scripts `run-live-*.zsh` |
 | **EXECUTION CLEARED** | Codex's disposition on a `gen-` thread for "one … window at the exact bytes below": the runner commit and hash, the build commit, the manifest and the inputs. The runner looks the committed response up by its raw sha256 and requires the line `Disposition: EXECUTION CLEARED`. | `audit main` `docs/RESPONSE-Codex-gen-0d0726-01-serve-move-8-execution-cleared-2026-09-30.md`; `devhub SM9` `run-live-sm9.zsh` l.62–67 |
@@ -157,32 +159,32 @@ Two written checks precede the rehearsal. Both are read-only.
 
 **Governing source.** `devhub SM9` `evidence/NO-UNAPPLIED-DDL-CHECK.md`; `devhub SM8` `evidence/PR896-RESOLVER-CHECK.md`; state capture §C, §D.
 
-### The kit clone rehearsal, with the forced-failure rollback proof
+### The rehearsal on a disposable copy, with the forced-failure rollback proof
 
-`rehearse-sm9.zsh <out-dir>` (`devhub SM9`) runs the same live drivers on a throwaway clone of a fresh dump of live.
+`rehearse-sm9.zsh <out-dir>` (`devhub SM9`) runs the same live drivers on a disposable copy made from a fresh dump of live.
 
 1. **Snapshot first.** It copies itself and every devhub artifact directory it uses into the run directory, then re-executes from that copy, "so a working-tree edit can never reach a running execution" (l.20–27).
 2. **Claim the kit** with `kit.owner` (l.38–40).
 3. **Check the builds.** It requires the old twin, the new tree and the new twin each to be clean at their head with their pinned manifest (l.45–48), and the new `.env` to pass the env check (l.49).
 4. **Fresh dump.** `take-fresh-dumps-2.zsh` takes a read-only dump of live: `pg_dump` / `pg_dumpall --roles-only` only. It is bound to the live cluster's system identifier and refuses on any other. It reads the tenant databases from the cluster instead of a fixed list, and fails on any empty dump (`devhub main` `artifacts/w9-serve-move-4/tools/take-fresh-dumps-2.zsh` l.2–26).
-5. **Fresh clone.** `fresh-clone.zsh` makes a new Postgres container and volume and a new Redis on non-live loopback ports. It refuses:
+5. **Fresh disposable copy.** `fresh-clone.zsh` makes a new Postgres container and volume and a new Redis on non-live loopback ports. It refuses:
   - the live name or ports;
   - an existing container or volume (a reused volume keeps its old password);
   - a remaining :3199 listener;
-  - a clone that reports the live system identifier.
+  - a copy that reports the live system identifier.
 
   It seeds a Secrets Manager stand-in from one read-only read of the served secret's pre-activation version, never printing values (`~/.bc-serve-kit/fresh-clone.zsh` l.8–33).
 6. **Restore and serve the old build.** The dump is restored, and the combined kit serves **live's current build from its `-b` twin** (never the live path) on :3199 under the runtime logins (l.51–80; `REHEARSAL-GREEN-FAILPATH-802fdee3.txt` l.8).
 7. **Run the move.** `make-candidate-2.zsh` and `window-serve-2.sh` run in `rehearsal` mode, byte-unchanged from live (l.82–88). The same files refuse a rehearsal target that names the live stack (`make-candidate-2.zsh` l.17–18; `serve-move-live.sh` l.30–32).
 8. **Check the result.**
-   - The clone serves the new tree under the runtime logins.
+   - The disposable copy serves the new tree under the runtime logins.
    - `/api/health` reports `numericProfile` `scaled-decimal-int-v1`, the exact-arithmetic mode (l.90–94).
    - A platform-group token reads a platform route (l.96–100).
    - A Kaveri user reads the Receivable Control Balance detail and sees FY2026-27/P05 = 1997244184.68 with 5 snapshots (l.102–104; `post-check-portal.zsh`).
 9. **Forced-failure rollback proof (`FAILPATH=1`).** The rehearsal runs the rollback twice.
-   - With an invalid backup, the rollback must **HALT with exit 40** while the clone still serves the new tree, and report "core FAILED".
-   - With the real backup, it must end **ROLLED BACK with exit 12**, the clone on the old tree and health 200 (l.105–120).
-10. **Teardown.** It removes the clone's containers and volume and releases the claim (l.31–36, l.122).
+   - With an invalid backup, the rollback must **HALT with exit 40** while the disposable copy still serves the new tree, and report "core FAILED".
+   - With the real backup, it must end **ROLLED BACK with exit 12**, the disposable copy on the old tree and health 200 (l.105–120).
+10. **Teardown.** It removes the disposable copy's containers and volume and releases the claim (l.31–36, l.122).
 
 Serve move 9's rehearsal ran GREEN on 2026-09-30, 08:50–08:56Z, including both failure-path proofs (`devhub SM9` `REHEARSAL-GREEN-FAILPATH-802fdee3.txt` l.22–28).
 
@@ -321,7 +323,7 @@ Read-only database checks run inside `BEGIN READ ONLY` (`devhub SM9` `run-live-s
 - 0004–0007, 0009–0019, 0021–0024, 0026 and 0027 applied;
 - no event for 0001, 0002, 0003 or 0008.
 
-0020 and 0025 do not exist on bc-db main, so those are numbering gaps, not holes. 0001, 0002, 0003 and 0008 are on main but were never applied on live. The state capture records the consequence: CI and clones have objects that live lacks (state capture §A; the DB Controller's finding).
+0020 and 0025 do not exist on bc-db main, so those are numbering gaps, not holes. 0001, 0002, 0003 and 0008 are on main but were never applied on live. The state capture records the consequence: CI and disposable copies have objects that live lacks (state capture §A; the DB Controller's finding).
 
 **Merge order is not number order.** On bc-db main, 0029 is merged (`0d1fb97`) while 0028 is still an open PR (bc-db #95). An apply that followed merge order would put 0029 on live before 0028. The state capture records that "the runner has no ordering gate" (§C). This chapter could not confirm that from the runner's code (see Open points).
 
@@ -339,7 +341,7 @@ So neither half can go alone, and the grant names both.
 ## Metric go-live windows
 
 A metric go-live is a live window in the same frame:
-- rehearsal on a clone;
+- rehearsal on a disposable copy;
 - an operator grant;
 - an announced window;
 - a runner that stops at the first red step;
@@ -367,7 +369,7 @@ Each rule comes from an incident.
 | Run scripts from a snapshot, never from a working tree. | Executors edited scripts mid-run twice (state capture §D); rehearsal lesson "2026-09-29, r22" (`rehearse-sm9.zsh` l.20–21). | Rehearsal re-executes from a copy (l.22–27); live runner uses `git archive` of the cleared commit (`run-live-sm9.zsh` l.42) |
 | Never serve code that needs DDL not yet applied on live. | Code needing unapplied DDL nearly reached a serve build (30 Sep; state capture §D). | Pin the build sha (`build-freeze.zsh` l.20–22); the written grep check (`NO-UNAPPLIED-DDL-CHECK.md`) |
 | Never dump live while a live window runs; never overlap kit use. | A coverage rehearsal dump (r9) started at the U9.6 window start, 2026-09-30 01:12Z (state capture §D). | `kit.owner` noclobber claim (`rehearse-sm9.zsh` l.38–40); a live-quiet `pgrep` guard exists in the coverage and U9.6 drivers only (see Open points) |
-| Never reuse a rehearsal volume. | A reused named volume kept its old password and five rehearsals failed like a flake (Lessons: Platform Readiness umbrella, lesson 8). | `fresh-clone.zsh` refuses an existing container or volume (l.13–16) |
+| Never reuse the volume of a disposable copy. | A reused named volume kept its old password and five rehearsals failed like a flake (Lessons: Platform Readiness umbrella, lesson 8). | `fresh-clone.zsh` refuses an existing container or volume (l.13–16) |
 | Only a recorded bc-exchange grant is authority, and it is re-hashed. | A grant approved by mistake (`bed807b6`) was withdrawn by counter-grant `1df55ae8`. | `run-live-sm9.zsh` l.45–47 re-hashes the grant from `/api/grants-list`; DEC-081931 point 8 |
 | A stop stands; continuing needs a new grant. | U9.6 window 1 stopped when a reviewer passed a malformed uuid, postgres log 01:17:43Z (state capture §D). | Runner exit messages (`run-live-sm9.zsh` l.28, l.37); grant texts `70963140`, `0cd4fa75` |
 | Never re-roll a semantic REJECT; never take a pass after a fail on identical bytes. | A DSO rehearsal was REJECTED (cr2) and then VERIFIED (cr3) on identical bytes; cr3 was not used (state capture §C). | Operator rule "keep gates, re-run only structural parks" (state capture §C); no tooling cited |
@@ -394,7 +396,7 @@ These are places where the sources are silent or disagree. They are recorded her
 4. **Grant text characters.** The no-underscore rule is guidance in the desk's placeholder text and in the lessons chapter. `addRequest` and `recordGrant` do not check the characters (bc-exchange `src/grants.mjs` l.17–53).
 5. **Conditional grants have no generic check.** Grant `0cd4fa75`'s conditions (serve move 9 green; the approved continuation rehearsal on that build green) must be checked by that window's own runner. No shared tool verifies a grant's conditions, and this chapter did not read the U9.6 continuation runner.
 6. **Which twin a rehearsal uses.** The written practice says one twin is served and the other is used by rehearsals. In the tooling:
-   - the clone starts on the **currently served** build's `-b` twin (`freeze-p-b`);
+   - the disposable copy starts on the **currently served** build's `-b` twin (`freeze-p-b`);
    - it moves to the **new** build's primary tree (`freeze-q`), the same path the live runner will serve (`rehearse-sm9.zsh` l.6, l.41, l.80; `REHEARSAL-GREEN-FAILPATH-802fdee3.txt` l.14);
    - the new `-b` twin is checked (clean, head, manifest) but not served.
 
