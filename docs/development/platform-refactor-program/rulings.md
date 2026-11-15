@@ -84,7 +84,7 @@ In phase 2 the operator decided the first rulings of the frame, put to him as on
 | G14 | The one serve procedure | The single-tree move, performed by one command that verifies from the running server and returns to the previous build. The twin trees and the forced-failure rehearsal are retired. The auditor's separate clearance of a move is retired only if the grant says so in express words, superseding that part of grant `2026-09-29T08-34-38-377Z-ead781aa`. | Phase 3 |
 | G15 | The bc-infra stacks that are not deployed | Kept as designed and not built. | Phase 3 |
 | G35, the first part | Where Operations' commands are kept | In bc-infra, with no authority to change the cloud; the reference run alone in the DevHub repository. The second part stays open (below). | Phase 3 |
-| B1 | The fixed input of the reference run | Yes: one copy, taken once, of the platform database, the Kaveri tenant database and the roles without passwords; kept on the development machine only, identified by committed hashes, and checked for any password, key or token before it is kept. Taking it is a later act of the operator. | Phase 3 |
+| B1 | The fixed input of the reference run | Yes: one copy, taken once, of the platform database, the roles without passwords, and the database of every tenant the engine's start-up check requires (Kaveri and the two suspended tenants on 2026-11-15); kept on the development machine only, identified by committed hashes, and checked for any password, key or token before it is kept. Taking it is a later act of the operator. | Phase 3 |
 
 ### Open
 
