@@ -158,7 +158,7 @@ The counts on the hotspots page guide the work; they are not a target. Each func
 The **reference run** is one command that evaluates a fixed set of metrics through the real engine on fixed input, compares each result with a recorded expected value, and fails on any difference. Nothing like it exists today. Without it, a change to the engine could alter a number and nobody would know for weeks.
 
 - **Fixed input.** One copy of the platform database, the Kaveri tenant database and the database roles, taken once, identified by its hash, and restored to a disposable database for each run.
-- **Reference set.** Thirteen metrics whose expected values are recorded, covering sums, balances, a trailing window, a ratio and counts; and every value the Kaveri tenant holds today, as a baseline. (The set is a proposal. It is not re-checked, and no annex verifies it; the scouting behind it is in artifacts/spine-review/STEP-0-reference-harness-scouting.md. Tenant databases were not read for this document.)
+- **Reference set.** The Kaveri tenant's metrics in two tiers: every value the tenant holds, as a baseline that shows a value has not moved; and the values worked out from the source system apart from the platform, each with its source. The set, the steps of a run and its limits are defined in the annex "The Definition of Operations", section 9, which replaces the earlier proposal of thirteen metrics.
 - **Where it lives.** In the DevHub repository, outside the engine's repository, so that a change to the engine cannot change the thing that checks it.
 - **The first run is a qualification.** The contracts have moved since the expected values were recorded. Whether today's engine reproduces them is unknown until the first run.
 
