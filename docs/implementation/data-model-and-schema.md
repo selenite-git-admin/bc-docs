@@ -76,7 +76,7 @@ The frozen files, kept as history, are:
 |---|---|
 | `01-platform-schemas.sql` | Creates the twelve platform schemas; enables `pgcrypto` |
 | `02-platform-tables.sql` | Creates all platform tables, indexes, and foreign keys; assembled from `02-platform-tables/00-master.sql` through `_all.sql` |
-| `03-tenant-db.sql` | Creates the seven tenant schemas and the fixed tenant tables; applied to each tenant database after `CREATE DATABASE` |
+| `03-tenant-db.sql` | Frozen. It created seven tenant schemas and the fixed tenant tables, and was applied to each tenant database after `CREATE DATABASE`; it is retired as the tenant-DDL source in favour of the ratified tenant skeleton of six schemas (bc-core `src/registry/seed/seed-tenant-dbs.ts`) |
 | `migrations/` | Per-decision migration files that add, alter, or rename objects after the initial DDL was set |
 
 The frozen `migrations/` folder holds files that are date-prefixed (`YYYYMMDD-*`) or decision-prefixed (`dec-*`, `tsk-*`, `bcf-*`). Notable files in it beyond the initial `20260421-d366-d368-schema-reorg.sql`:
@@ -138,7 +138,7 @@ A note on table naming: the repository historically uses `tenants` (plural) in `
 
 ## Schema Groupings
 
-The Platform DB carries fifteen schemas (twelve original plus `concept_registry`, `bcf`, and `ai_telemetry` added via migrations). The Tenant DB carries seven schemas, separating governed boundary state, dynamic typed projections, proof, per-tenant operational state, and per-tenant dimensions. The schemas below are listed at the family level only; per-table and per-column inventory is in the Data Dictionary reference (generated on 2026-07-06; the live database is current).
+The Platform DB carries fifteen schemas (twelve original plus `concept_registry`, `bcf`, and `ai_telemetry` added via migrations). The frozen `03-tenant-db.sql` describes a Tenant DB of seven schemas (DEC-f02230: envelope, progression, fact, evidence, admin, organization, tenant_dim), separating governed boundary state, dynamic typed projections, proof, per-tenant operational state, and per-tenant dimensions. The tenant skeleton applied today has six: the bc-core tenant seed harness names `progression`, `fact`, `evidence`, `admin`, `organization` and `tenant_dim` (`src/registry/seed/seed-tenant-dbs.ts`, read at bc-core `df52506d`); no tenant database was read for this chapter. The schemas below are listed at the family level only; per-table and per-column inventory is in the Data Dictionary reference (generated on 2026-07-06; the live database is current).
 
 ### Platform DB schemas
 
