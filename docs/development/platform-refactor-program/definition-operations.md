@@ -255,7 +255,7 @@ The program requires one command that evaluates a fixed set of metrics through t
 9. destroys the restored copy and the containers, whatever the verdict. The kept files of the fixed copy are never written or removed;
 10. writes one record, after the destruction so that it carries the result of the cleanup: the hashes of the copy, the commit of the candidate, the state of the contracts used, each value with its tier, expected value and source, the five cases, and the verdict.
 
-*Its states.* For a commit of the engine the reference run is **not run**, **passed** or **failed**. A pass belongs to one commit and one copy.
+*Its states.* For a commit of the engine the reference run is **not run**, **passed**, **failed** or **unresolved**. A pass belongs to one commit and one copy. A run is **unresolved** when every condition of a pass is met except that, for at least one pair of metric and period, the new evaluation wrote more than one row and the baseline holds no grain key to compare those rows by. An unresolved run is not a pass: it does not meet the phase's exit, it does not clear the hold on the engine, and it decides nothing of ruling B2, of which the grain of such a pair can be part. Any failed condition makes the run failed, never unresolved; held values that disagree with each other are failed, not unresolved. (The fourth state was added by the operator's grant `2026-11-16T16-56-43-872Z-91bad149`, after the auditor accepted it as a design in answer 5 of gen-8d1bcb-01.)
 
 *Where it lives.* In the DevHub repository, as the program states, so that a change to the engine cannot change the thing that checks it. It runs on the development machine.
 
