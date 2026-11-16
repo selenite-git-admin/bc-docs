@@ -18,10 +18,10 @@ The operator withdrew this ADR on 2026-11-16 while it was still `proposed`. It w
 
 What becomes of the four parts of the Decision below:
 
-1. **Number order: not a rule of the platform.** The live ledger already departs from it, and no rule replaces it.
-2. **Joint windows.** Not carried as written (DDL first, then the build, one grant naming both). The Operations definition (`docs/development/platform-refactor-program/definition-operations.md`, section 5) carries one related sentence: "A migration is merged only together with, or after, the engine code that needs it, and is applied in the same window in which that code is served."
-3. **No code ahead of its DDL.** Carried for a serve move by section 3, step 1 of the same definition: "The build needs no schema change that is not applied."
-4. **Merge discipline.** Not carried as written. Part 4 has code merge only after its migration is live (or with a joint window’s build); the section 5 sentence above has the migration merge together with or after its code.
+1. **Part 1 (number order): not a rule of the platform.** The ledger already departs from it, and no rule replaces it.
+2. **Part 2 (one window).** It stands in section 5 of the Operations definition (`docs/development/platform-refactor-program/definition-operations.md`) only as far as its words go: a migration "is applied in the same window in which that code is served". The ADR’s further words (schema first, then the build; one grant naming both; both roll back on a failure) are not carried anywhere and end with this ADR.
+3. **Part 3 (no served build carries code for schema that is not applied).** It stands as step 1 of a serve move in section 3 of the same definition: "The build needs no schema change that is not applied."
+4. **Part 4 (code that needs a migration merges only after that migration is live): not carried.** Section 5 states a different rule, "A migration is merged only together with, or after, the engine code that needs it", and that is the rule that stands.
 
 The original text below is unchanged and kept as history.
 

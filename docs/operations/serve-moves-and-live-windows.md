@@ -326,12 +326,12 @@ Read-only database checks run inside `BEGIN READ ONLY` (`devhub SM9` `run-live-s
 
 **Merge order is not number order.** On bc-db main, 0029 is merged (`0d1fb97`) while 0028 is still an open PR (bc-db #95). An apply that followed merge order would put 0029 on live before 0028. The state capture records that "the runner has no ordering gate" (§C). This chapter could not confirm that from the runner's code (see Open points).
 
-**Joint windows.** When a migration and a code change each break something without the other, they go live in one window. The rule that applies is section 5 of the Operations definition (`docs/development/platform-refactor-program/definition-operations.md`). The ADR DEC-bd6894 that first proposed joint windows was withdrawn on 2026-11-16. The example is bc-db 0030 (metric output declaration, ADR DEC-b1e9eb, proposed).
+**Joint windows.** When a migration and a code change each break something without the other, the practice has been to go live in one window. The rule in force is section 5 of the Operations definition (`docs/development/platform-refactor-program/definition-operations.md`), as far as its words go: a migration is "applied in the same window in which that code is served", and "merged only together with, or after, the engine code that needs it". The ADR DEC-bd6894 also proposed that the schema goes first and then the build, that one grant names both, and that both roll back on a failure; those were that ADR's words, not rules in force, and the ADR was withdrawn on 2026-11-16. The example is bc-db 0030 (metric output declaration, ADR DEC-b1e9eb, proposed).
 - **Why the DDL can't go first.** Once 0030 is applied, a new metric version needs a declaration. Only the new authoring slice writes one. Applied alone, 0030 would block new-metric authoring (state capture §C).
 - **What the DBCP says.** bc-db #98: "apply only in the same window as the bc-core build whose `mcf-cert-writer` writes declarations. The DB yes comes after that build is accepted."
 - **Why the code can't go first.** The pre-check above keeps such code out of a serve build until its DDL is applied (`devhub SM9` `evidence/NO-UNAPPLIED-DDL-CHECK.md`).
 
-So neither half can go alone, and the grant names both.
+So neither half can go alone. In that window the grant named both; that is what happened there, not a rule.
 
 **Governing source.** DEC-4c1396; bc-db main `docs/dbcp/DBCP-platform-0027-mcf-served-execute-2026-09-29.md`; bc-db #95, #98; live ledger read-only query (2026-09-30); state capture §A, §C; DEC-b1e9eb.
 
