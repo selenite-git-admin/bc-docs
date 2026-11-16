@@ -2,7 +2,7 @@
 uid: DEC-bd6894
 title: "Order of live changes on the platform: number-order migration applies, joint DDL + code windows, no code ahead of its DDL"
 description: "Live platform migrations apply in number order (dispositions for skipped ones); coupled DDL and code go live in one window; no serve build contains code for unapplied DDL; such code merges only after its migration is live."
-status: proposed
+status: reversed
 date: 2026-09-30T12:40:38.656Z
 project: platform
 domain: platform
@@ -11,6 +11,21 @@ focus: live change order
 ---
 
 # Order of live changes on the platform: number-order migration applies, joint DDL + code windows, no code ahead of its DDL
+
+## Withdrawn (2026-11-16)
+
+The operator withdrew this ADR on 2026-11-16 while it was still `proposed`. It was never decided and never in force. The status value `reversed` is used only because the ADR status vocabulary (`proposed`, `decided`, `implemented`, `superseded`, `reversed`) has no value for a withdrawal. The recorded desk grant is `GRANT-ID-PENDING` (grant id and text SHA-256, to be filled in by the Chief).
+
+What becomes of the four parts of the Decision below:
+
+1. **Number order: not a rule of the platform.** The live ledger already departs from it, and no rule replaces it.
+2. **Joint windows.** Not carried as written (DDL first, then the build, one grant naming both). The Operations definition (`docs/development/platform-refactor-program/definition-operations.md`, section 5) carries one related sentence: "A migration is merged only together with, or after, the engine code that needs it, and is applied in the same window in which that code is served."
+3. **No code ahead of its DDL.** Carried for a serve move by section 3, step 1 of the same definition: "The build needs no schema change that is not applied."
+4. **Merge discipline.** Not carried as written. Part 4 has code merge only after its migration is live (or with a joint window’s build); the section 5 sentence above has the migration merge together with or after its code.
+
+The original text below is unchanged and kept as history.
+
+---
 
 ## Context
 

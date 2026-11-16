@@ -616,7 +616,7 @@ Not built: a restore of a nightly backup; an application deployment to the cloud
 2. The serve procedure in use is not the documented one and has no committed script (State today).
 3. The bc-db README still says "scaffold only ... No schema, migration, seed or content lives here yet" (bc-db:README.md:3 @ c6de1c4).
 4. Four merged migrations are not applied, and code comments already assume one of them (see S3, migration 0034).
-5. The number-order rule for applies rests on an ADR that is still `proposed` (DEC-bd6894).
+5. The number-order rule for applies rested on an ADR that was only `proposed` (DEC-bd6894). The operator withdrew that ADR on 2026-11-16; number order is not a rule of the platform.
 6. A long-lived administrator profile is the working credential on the Mac (State today).
 7. Sessions read the live database as a superuser (State today).
 8. Three operations chapters describe retired or absent things (How bc-docs defines it).
@@ -629,7 +629,7 @@ Not built: a restore of a nightly backup; an application deployment to the cloud
 |---|---|---|
 | DEC-4c1396 | bc-db is the only place schema changes are written and applied | decided |
 | DEC-b1a286 | The earlier database source-of-truth model | superseded |
-| DEC-bd6894 | Apply migrations in number order; schema and code that need each other go together | proposed |
+| DEC-bd6894 | Apply migrations in number order; schema and code that need each other go together | proposed when read; withdrawn by the operator on 2026-11-16 (now `reversed`) |
 | DEC-1918d0 | Database separation, naming and the ten database rules | implemented |
 | DEC-e50b83 | The port table | implemented |
 | DEC-ecd55c | Credentials live in AWS Secrets Manager | implemented |
@@ -779,7 +779,7 @@ Not built: a restore of a nightly backup; an application deployment to the cloud
 | DEC-a67bae | The ten lanes and the rule that every surface has one owner | decided |
 | DEC-804874 | The earlier chain check at session close | superseded |
 
-**Conflicts.** The DevHub chapter cites DEC-804874 as governing (bc-docs:docs/development/devhub.md:17 @ f4f5edd); it is superseded. DEC-623f8f forbids leaving an ADR proposed past 30 days, and 11 ADR files are `proposed` (count above), among them DEC-bd6894, DEC-e39ed3 and DEC-c40e7a, which Operations follows in practice.
+**Conflicts.** The DevHub chapter cites DEC-804874 as governing (bc-docs:docs/development/devhub.md:17 @ f4f5edd); it is superseded. DEC-623f8f forbids leaving an ADR proposed past 30 days, and 11 ADR files are `proposed` (count above), among them DEC-bd6894, DEC-e39ed3 and DEC-c40e7a, which Operations follows in practice (DEC-bd6894 was withdrawn on 2026-11-16 and is now `reversed`).
 
 **Chapters to fold in, rewrite or retire.**
 
