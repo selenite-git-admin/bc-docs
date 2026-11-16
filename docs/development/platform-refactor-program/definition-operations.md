@@ -166,14 +166,14 @@ Operations does not decide what a tenant is or who may sign in (S1, S2, S3), wha
 - **Every migration file on the main branch has a ledger row or a line in that register.** A file with neither is a defect. A file that is not going to be applied does not stay on the main branch: its text is kept with its design record, and it returns under a new number when the function that needs it reaches its Modify step.
 - The comparison of files, ledger and register needs the live ledger, which the checks on the hosting service cannot read. It is a command of Operations, run on the development machine with a read-only login; DevHub shows its result and the age of each register line. The checks on the hosting service verify only that the register is well formed and names files that exist.
 - A migration is merged only together with, or after, the engine code that needs it, and is applied in the same window in which that code is served.
-- Applies are not required to follow number order. DEC-bd6894, which proposed that they must, was withdrawn by the operator on 2026-11-16 while still proposed (recorded desk grant `GRANT-ID-PENDING`). The ledger shows that practice has already departed from number order, and no rule is drawn from that here.
+- Applies are not required to follow number order. DEC-bd6894, which proposed that they must, was withdrawn by the operator on 2026-11-16 while still proposed (recorded desk grant `2026-11-16T10-15-16-479Z-539245b2`). The ledger shows that practice has already departed from number order, and no rule is drawn from that here.
 - Every apply is a live act and the operator's, under its own recorded grant.
 
 **What must change.**
 1. Migrations 0032, 0034, 0035 and 0038 are withdrawn from bc-db's main branch (ruling G12). This changes files under bc-db's hold and needs the operator's exception; it changes no database. Before it is done, the Audit step establishes whether any automatic check builds a database from those files.
 2. The two chapters, bc-db's README and its roles document are rewritten to the practice. The engine comment that describes a refusal which does not exist is corrected when S3 reaches its Modify step.
 3. The register is created and the comparison command is written; it is run once.
-4. DEC-bd6894 was withdrawn by the operator on 2026-11-16 while still proposed (recorded desk grant `GRANT-ID-PENDING`). It was not decided by this definition or by ruling G12.
+4. DEC-bd6894 was withdrawn by the operator on 2026-11-16 while still proposed (recorded desk grant `2026-11-16T10-15-16-479Z-539245b2`). It was not decided by this definition or by ruling G12.
 5. Decisions DEC-cf6d3b and DEC-103acb, both decided, state the condition for a tenant to be active differently: the first a verified admin and one active Subscription, the second the identity fields, a legal entity and a fiscal calendar. DEC-cf6d3b cites DEC-103acb and does not amend that condition. The conflict is settled in the Define step of S3, in phase 4, before any successor to migration 0034 is written.
 
 **If ruling G12 goes the other way** (the four are applied): each needs its own approval and window, 0032 and 0034 cannot be applied before the engine code that satisfies them is built, and until then each has a line in the register of migrations awaiting apply.

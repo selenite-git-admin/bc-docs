@@ -14,7 +14,7 @@ focus: live change order
 
 ## Withdrawn (2026-11-16)
 
-The operator withdrew this ADR on 2026-11-16 while it was still `proposed`. It was never decided and never in force. The status value `reversed` is used only because the ADR status vocabulary (`proposed`, `decided`, `implemented`, `superseded`, `reversed`) has no value for a withdrawal. The recorded desk grant is `GRANT-ID-PENDING` (grant id and text SHA-256, to be filled in by the Chief).
+The operator withdrew this ADR on 2026-11-16 while it was still `proposed`. It was never decided and never in force. The status value `reversed` is used only because the ADR status vocabulary (`proposed`, `decided`, `implemented`, `superseded`, `reversed`) has no value for a withdrawal. The recorded desk grant is `2026-11-16T10-15-16-479Z-539245b2` (text SHA-256 `539245b2042a2cf28d65304fdc4d6ea75fe92e72c56480c9077c75d50f5cc555`).
 
 What becomes of the four parts of the Decision below:
 
