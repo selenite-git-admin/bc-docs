@@ -2,7 +2,7 @@
 uid: DEC-bd6894
 title: "Order of live changes on the platform: number-order migration applies, joint DDL + code windows, no code ahead of its DDL"
 description: "Live platform migrations apply in number order (dispositions for skipped ones); coupled DDL and code go live in one window; no serve build contains code for unapplied DDL; such code merges only after its migration is live."
-status: proposed
+status: reversed
 date: 2026-09-30T12:40:38.656Z
 project: platform
 domain: platform
@@ -11,6 +11,21 @@ focus: live change order
 ---
 
 # Order of live changes on the platform: number-order migration applies, joint DDL + code windows, no code ahead of its DDL
+
+## Withdrawn (2026-11-16)
+
+The operator withdrew this ADR on 2026-11-16 while it was still `proposed`. It was never decided and never in force. The status value `reversed` is used only because the ADR status vocabulary (`proposed`, `decided`, `implemented`, `superseded`, `reversed`) has no value for a withdrawal. The recorded desk grant is `2026-11-16T10-15-16-479Z-539245b2` (text SHA-256 `539245b2042a2cf28d65304fdc4d6ea75fe92e72c56480c9077c75d50f5cc555`).
+
+What becomes of the four parts of the Decision below:
+
+1. **Part 1 (number order): not a rule of the platform.** The ledger already departs from it, and no rule replaces it.
+2. **Part 2 (one window).** It stands in section 5 of the Operations definition (`docs/development/platform-refactor-program/definition-operations.md`) only as far as its words go: a migration "is applied in the same window in which that code is served". The ADR’s further words (schema first, then the build; one grant naming both; both roll back on a failure) are not carried anywhere and end with this ADR.
+3. **Part 3 (no served build carries code for schema that is not applied).** It stands as step 1 of a serve move in section 3 of the same definition: "The build needs no schema change that is not applied."
+4. **Part 4 (code that needs a migration merges only after that migration is live): not carried.** Section 5 states a different rule, "A migration is merged only together with, or after, the engine code that needs it", and that is the rule that stands.
+
+The original text below is unchanged and kept as history.
+
+---
 
 ## Context
 

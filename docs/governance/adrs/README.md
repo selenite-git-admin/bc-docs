@@ -490,7 +490,7 @@ The ADR Registry is the canonical index of platform decisions. Each entry has a 
 | `DEC-bc7281` | [Connections reversed from tenant DB to platform runtime schema](./ADR-bc7281.md) | reversed |  |  |  |
 | `DEC-bd5492` | [GDPR/DPDP/CCPA Nullification Object — Privacy Erasure for Immutable-Fact Architecture](./ADR-bd5492.md) | decided |  |  |  |
 | `DEC-bd5fed` | [Orphaned routes — remove from router](./ADR-bd5fed.md) | implemented |  |  |  |
-| `DEC-bd6894` | [Order of live changes on the platform: number-order migration applies, joint DDL + code windows, no code ahead of its DDL](./ADR-bd6894.md) | proposed |  |  |  |
+| `DEC-bd6894` | [Order of live changes on the platform: number-order migration applies, joint DDL + code windows, no code ahead of its DDL](./ADR-bd6894.md) | reversed |  |  |  |
 | `DEC-bd6ceb` | [Platform M14 activation does not gate on PE-MC-8 default-mode (Model A)](./ADR-bd6ceb.md) | decided |  |  |  |
 | `DEC-be4ff9` | [Serverless deployment: Lambda + Fargate split](./ADR-be4ff9.md) | superseded |  |  |  |
 | `DEC-bebaec` | [Chain Completeness SSOT — Definition of Complete + Persisted Chain Status](./ADR-bebaec.md) | superseded |  | DEC-b390ef |  |

@@ -12,7 +12,6 @@ governing_sources:
   - bc-exchange recorded operator grants
   - Mac Auditor Operations (who authorizes what)
 governing_adrs:
-  - DEC-bd6894
   - DEC-4c1396 (bc-db spine is the sole platform schema authoring and apply path)
   - DEC-081931 (the permanent gen- exchange)
   - DEC-44456d (the auditor's home and the Mac auditor service; grants recorded in bc-exchange)
@@ -318,7 +317,7 @@ Read-only database checks run inside `BEGIN READ ONLY` (`devhub SM9` `run-live-s
 
 **Where DDL comes from.** "Every platform schema change is authored once as a bc-db forward migration … and applied to every environment only by the spine runner with one infrastructure.schema_migration_event row per apply"; bc-core `docker/redesign` is frozen (DEC-4c1396, Decision). A migration apply is a live act. It needs the operator's database "yes" (the Database Change Protocol) and its own apply grant. Example: bc-db 0027's DBCP lists the recorded "yes" grants and, separately, "Operator's direct grant for the apply (the first step of the one W9 U9.5 window)" (bc-db main `docs/dbcp/DBCP-platform-0027-mcf-served-execute-2026-09-29.md`, table rows 1 and 5). The same DBCP records the clone proof: the runner applied the migration "from a staged directory holding only 0027"; a second run was skipped; the governed rollback and re-apply were checked (same file, "the clone" and the proof table).
 
-**Number order.** Migrations are applied to live in number order. This is ADR DEC-bd6894 (proposed; Platform Controller and DB Controller), and the reason is visible in the live ledger. A read-only query of `infrastructure.schema_migration_event` on 2026-09-30 shows:
+**Number order is not a rule.** ADR DEC-bd6894 proposed that migrations be applied to live in number order. The operator withdrew it on 2026-11-16 while it was still proposed; it was never decided, and no rule replaces it. The live ledger already departs from number order. A read-only query of `infrastructure.schema_migration_event` on 2026-09-30 shows:
 - `0000_baseline` adopted;
 - 0004–0007, 0009–0019, 0021–0024, 0026 and 0027 applied;
 - no event for 0001, 0002, 0003 or 0008.
@@ -327,14 +326,14 @@ Read-only database checks run inside `BEGIN READ ONLY` (`devhub SM9` `run-live-s
 
 **Merge order is not number order.** On bc-db main, 0029 is merged (`0d1fb97`) while 0028 is still an open PR (bc-db #95). An apply that followed merge order would put 0029 on live before 0028. The state capture records that "the runner has no ordering gate" (§C). This chapter could not confirm that from the runner's code (see Open points).
 
-**Joint windows (ADR DEC-bd6894 rule 2).** When a migration and a code change each break something without the other, they go live in one window. The example is bc-db 0030 (metric output declaration, ADR DEC-b1e9eb, proposed).
+**Joint windows.** When a migration and a code change each break something without the other, the practice has been to go live in one window. The rule in force is section 5 of the Operations definition (`docs/development/platform-refactor-program/definition-operations.md`), as far as its words go: a migration is "applied in the same window in which that code is served", and "merged only together with, or after, the engine code that needs it". The ADR DEC-bd6894 also proposed that the schema goes first and then the build, that one grant names both, and that both roll back on a failure; those were that ADR's words, not rules in force, and the ADR was withdrawn on 2026-11-16. The example is bc-db 0030 (metric output declaration, ADR DEC-b1e9eb, proposed).
 - **Why the DDL can't go first.** Once 0030 is applied, a new metric version needs a declaration. Only the new authoring slice writes one. Applied alone, 0030 would block new-metric authoring (state capture §C).
 - **What the DBCP says.** bc-db #98: "apply only in the same window as the bc-core build whose `mcf-cert-writer` writes declarations. The DB yes comes after that build is accepted."
 - **Why the code can't go first.** The pre-check above keeps such code out of a serve build until its DDL is applied (`devhub SM9` `evidence/NO-UNAPPLIED-DDL-CHECK.md`).
 
-So neither half can go alone, and the grant names both.
+So neither half can go alone. In that window the grant named both; that is what happened there, not a rule.
 
-**Governing source.** DEC-4c1396; bc-db main `docs/dbcp/DBCP-platform-0027-mcf-served-execute-2026-09-29.md`; bc-db #95, #98; live ledger read-only query (2026-09-30); state capture §A, §C; DEC-b1e9eb; DEC-bd6894.
+**Governing source.** DEC-4c1396; bc-db main `docs/dbcp/DBCP-platform-0027-mcf-served-execute-2026-09-29.md`; bc-db #95, #98; live ledger read-only query (2026-09-30); state capture §A, §C; DEC-b1e9eb.
 
 ---
 
@@ -375,7 +374,6 @@ Each rule comes from an incident.
 | Never re-roll a semantic REJECT; never take a pass after a fail on identical bytes. | A DSO rehearsal was REJECTED (cr2) and then VERIFIED (cr3) on identical bytes; cr3 was not used (state capture §C). | Operator rule "keep gates, re-run only structural parks" (state capture §C); no tooling cited |
 | Do not merge DevHub during an announced live window. | (Standing operator rule.) | Grant `ce08a39b`; DevHub bc-core controls guard (`server-control.js`) |
 | Do not push to a PR while Codex is in its approve-then-merge step; update stacked branches before approval. | A push dismissed Codex's approval; bc-docs #105 approvals were dismissed on a merge-base change (state capture §D). | No tooling cited |
-| Apply migrations in number order. | 0001, 0002, 0003, 0008 were never applied on live (live ledger, 2026-09-30). | ADR DEC-bd6894 (proposed); the window pre-check enforces it until the DB Controller's M3 gate exists |
 
 **Governing source.** The files, grants and responses named in the table; state capture §C, §D; Lessons: Platform Readiness umbrella.
 
@@ -392,7 +390,7 @@ These are places where the sources are silent or disagree. They are recorded her
 
    The serve-move rehearsal (`rehearse-sm9.zsh`) and the shared dump tool (`take-fresh-dumps-2.zsh` on devhub main) have no such guard. They rely on the `kit.owner` claim, which only serializes kit users and does not detect a live window.
 2. **DevHub's live-window detector misses serve moves.** `openLiveWindow` treats a grant as a window only if its text matches `/live window/i`. The "window ended" marker is a committed file matching `docs/MSG-Claude-*live-window-ended*` (`devhub main` `src/lib/server-control.js` l.41; `src/index.js` l.711). The serve-move grants (`038ea90f`, `eb2b8c1a`, `c8632c8e`) and the U9.6 continuation grant (`0cd4fa75`, "U9.6 window") do not contain "live window". The serve-move end messages are named `…-window-ended-…`, not `…live-window-ended…`. So the bc-core control guard does not see a serve-move window. The DevHub merge pause itself rests on the announcement and grant `ce08a39b`, not on this code.
-3. **The migration runner's ordering.** The state capture says the spine runner has no ordering gate and that the DB Controller's "M3 gate" will enforce number order (§C). This chapter did not find the runner's source in bc-db main (`scripts/` holds only `check-layout.sh`), so the claim is not verified against code here.
+3. **The migration runner's ordering.** The state capture says the spine runner has no ordering gate and that the DB Controller's "M3 gate" will enforce number order (§C); DEC-bd6894, which proposed that rule, was withdrawn on 2026-11-16, so the gate no longer has that rule to enforce. This chapter did not find the runner's source in bc-db main (`scripts/` holds only `check-layout.sh`), so the claim is not verified against code here.
 4. **Grant text characters.** The no-underscore rule is guidance in the desk's placeholder text and in the lessons chapter. `addRequest` and `recordGrant` do not check the characters (bc-exchange `src/grants.mjs` l.17–53).
 5. **Conditional grants have no generic check.** Grant `0cd4fa75`'s conditions (serve move 9 green; the approved continuation rehearsal on that build green) must be checked by that window's own runner. No shared tool verifies a grant's conditions, and this chapter did not read the U9.6 continuation runner.
 6. **Which twin a rehearsal uses.** The written practice says one twin is served and the other is used by rehearsals. In the tooling:
@@ -404,7 +402,7 @@ These are places where the sources are silent or disagree. They are recorded her
 7. **Portal steps.** bc-portal is not a pinned build. Serve move 7 fast-forwarded the shared checkout and restarted it inside the window (`devhub SM7` `live-closure/LIVE.txt` l.16). Serve moves 8 and 9 left it unchanged. No written rule yet says when a portal change needs its own rehearsal.
 8. **Stale runbook.** `~/bc-stack/README.md` ("bc-core :3100 is a PINNED build") still describes the v1 launcher, `_wt/core-ref-9d0dc5aa` as served, and a manual move procedure. The live yaml runs `serve-core-ref-v2.sh` from `_wt/freeze-p` (the bc-core block of `~/bc-stack/process-compose.yaml`).
 9. **Tooling is on draft branches.** The serve-move 7–9 runners, rollbacks and evidence are on draft PRs #137, #142 and #151, not on devhub main. Each move has a copied, renamed runner (`run-live-sm7/8/9.zsh`). The shared drivers they call are on main.
-10. **The state capture is not committed.** The number-order and joint-window rulings are now durable as ADR DEC-bd6894 (proposed). The incident list and the controller ownership still come from an uncommitted working-tree file.
+10. **The state capture is not committed.** The number-order and joint-window rulings were made durable as ADR DEC-bd6894, which was withdrawn on 2026-11-16 while still proposed. The incident list and the controller ownership still come from an uncommitted working-tree file.
 11. **Missing voice checklist.** Documentation System cites `bc-docs/scripts/reference/aws-rewrite-checklist.md` for voice and forbidden vocabulary. That file is not on bc-docs main.
 
 **Governing source.** The files named in each point.
