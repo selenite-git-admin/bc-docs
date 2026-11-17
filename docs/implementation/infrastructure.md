@@ -96,7 +96,7 @@ Several resources the platform depends on are not provisioned by `platform-infra
 | Resource | Where it lives | Gap |
 |---|---|---|
 | Bedrock model access | AWS account-level enablement; bc-ai uses inference profile IDs (`apac.*` and `global.*` prefixes) via boto3 | No CDK construct provisions Bedrock model access policies, inference profile bindings, or per-model IAM grants |
-| Redis (cloud) | Local-only via `docker-compose.yml` on port 6379; no cloud Redis provisioned | No ElastiCache or self-managed Redis in IaC; bc-core's `REDIS_URL` for non-local environments is undefined |
+| Redis (cloud) | Local-only via `docker-compose.yml` on port 6379; no cloud Redis provisioned | No ElastiCache or self-managed Redis in IaC; bc-core's `REDIS_URL` for a platform hosted in the cloud (`stg`, `prod`) is undefined |
 | S3 buckets the platform uses | The `SecureBucket` construct exists but instantiates no buckets; bc-core's S3 archiver targets bucket names supplied via env vars | No CDK creates the evidence-archive bucket, the SAP scraper bucket, or the typed-fact archive bucket |
 | Tenant DB provisioning | bc-core application code (`src/registry/seed/seed-tenant-dbs.ts`); not in IaC | Provisioning honors the two-database architecture per DEC-1918d0: each tenant gets a separate `tbc_{slug}_dev` database created via `CREATE DATABASE` with `docker/redesign/03-tenant-db.sql` applied. The gap recorded here is only that provisioning runs from application code rather than IaC, which is intentional given the runtime nature of tenant onboarding |
 | bc-ai cloud deployment | Local-only via uvicorn under pm2 on port 4300; no Dockerfile, no Lambda handler, no ECS task | bc-ai has no cloud deployment posture; production AI surface depends on the local-pm2 model not being the long-term posture |
@@ -105,7 +105,7 @@ Several resources the platform depends on are not provisioned by `platform-infra
 
 ## Local Development Infrastructure
 
-The local development environment is fully formalized and serves as the primary platform runtime in the readiness baseline. `bc-core/docker-compose.yml` brings up two containerized services that bc-core, DevHub, bc-pg-mcp, and bc-ai consume.
+The `dev` environment on the development machine is fully formalized and serves as the primary platform runtime in the readiness baseline. `bc-core/docker-compose.yml` brings up two containerized services that bc-core, DevHub, bc-pg-mcp, and bc-ai consume.
 
 | Service | Image | Port | Volume | Initialization |
 |---|---|---|---|---|
@@ -179,11 +179,11 @@ At the time of writing, no hosting variant has committed IaC. The AWS Shared var
 
 **Governing source.** Architecture; DEC-324d9e.
 
-## Staging and Production Environments
+## The `stg` and `prod` Environments
 
-Staging and production environments were never formalized. `cdk/cdk.json` defines `dev` only. The `prod` environment value is referenced in code paths and CI workflow inputs but exists only as a runtime CDK context value supplied at deploy time, with no committed configuration. The README documents prod guardrails (stack policies that restrict destructive changes; rollback configuration with CloudWatch alarms requiring a minimum 15-minute monitoring window) and the GitHub `prod` environment exists for approval gates, but no prod CDK deployment has occurred.
+Neither `stg` nor `prod` is built (ruling G13; [The Definition of Operations](../development/platform-refactor-program/definition-operations.md), section 1). `cdk/cdk.json` defines `dev` and `stg` under its `stages` key and has no `prod` entry. The `prod` environment value is referenced in code paths and CI workflow inputs but exists only as a runtime CDK context value supplied at deploy time, with no committed configuration. The README documents `prod` guardrails (stack policies that restrict destructive changes; rollback configuration with CloudWatch alarms requiring a minimum 15-minute monitoring window) and the GitHub `prod` environment exists for approval gates, but no `prod` CDK deployment has occurred.
 
-The current state is intentional during platform development; no production tenant has been onboarded, and the cost of maintaining unused prod infrastructure has not been justified. Formalization of staging and production environments is queued behind the readiness-to-onboard milestone for the first paying tenant; until then, the deployment posture is dev-only.
+The current state is intentional during platform development; no production tenant has been onboarded, and the cost of maintaining unused `prod` infrastructure has not been justified. Building `stg` and `prod` is queued behind the readiness-to-onboard milestone for the first paying tenant; until then, `dev` is the only environment that exists.
 
 **Governing source.** `platform-infra-stack/cdk/cdk.json`; `platform-infra-stack/README.md`.
 

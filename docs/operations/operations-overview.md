@@ -59,7 +59,7 @@ Operations has nine chapters: this overview plus the eight chapters that follow.
 | Group | Chapters | What the group covers |
 |---|---|---|
 | Tenant lifecycle | Tenant Lifecycle and Subscription | Navigation entry for the Subscription artifact, the tier model, the hosting variants, and the lifecycle state machine |
-| Deployment substrate | Deployment Topology | Navigation entry for the deployment procedure, the AuthStack and dormant PlatformInfraStack, the local plus dev plus aspirational prod posture, and the per-hosting-variant realization status |
+| Deployment substrate | Deployment Topology | Navigation entry for the deployment procedure, the AuthStack and dormant PlatformInfraStack, the environment names (`dev`, `stg`, `prod`) and what each is today, and the per-hosting-variant realization status |
 | Security and compliance posture | Security Operations | Navigation entry for the JWT authentication boundary, the secrets surface, the supply-chain governance via CodeArtifact, the PII classification trail, and the bc-qa pre-commit hook surface |
 | Change management | Upgrade and Migration; Incident and Change Management | Navigation entry for the migration discipline (DDL, contract, chain rebuild, golden snapshot, clean-slate reset) and the change-record substrate (DevHub plan-and-report pair; D268 self-audit; L-node semantic gate) |
 | Operational read substrate | Observability and Telemetry; Performance and Scale | Navigation entry for the emission surfaces (structured logs, health endpoints, document JSONL trail, AI evidence table, chain status SSOT, DevHub activity log) and the performance posture (per-tenant isolation, metric engine cost, AI rate limits) |

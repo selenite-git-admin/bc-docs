@@ -165,7 +165,7 @@ The Metric Registration chapter records that the platform applies a concurrency 
 | No per-tenant performance budget | The runtime does not enforce per-tenant latency or throughput; no SLA defined |
 | Per-tenant AI cost attribution queued | bc-ai records supported provider cost in `budget_log`; per-tenant aggregation is queued in AI Usage Visibility's drift inventory |
 | Index inventory discipline ad-hoc | Per the D162 rule, indexes follow query patterns; the platform has audit data showing the indexes-vs-queries alignment but the audit is not run on a cadence |
-| Production hardware not specified | The dormant Aurora construct configures a dev-sized instance; prod sizing is not specified; capacity-to-tenant ratio is not modeled |
+| `prod` hardware not specified | The dormant Aurora construct configures a `dev`-sized instance; `prod` sizing is not specified; capacity-to-tenant ratio is not modeled |
 | Connection pool tuning not surfaced | Defaults across bc-core and bc-ai; per-tenant or per-environment tuning is not accessible to operators in the readiness baseline |
 | AWS-side cost telemetry partial | bc-ai per-call cost is recorded; AWS-side per-service or per-tenant cost aggregation is not built |
 

@@ -55,7 +55,7 @@ The platform composes from three deployable backend services. Each is independen
 |---|---|---|---|---|---|
 | bc-core | NestJS on Node.js | 3100 | Platform DB and Tenant DB (one connection per scope) | Cognito JWT with `custom:tenant_id` claim; `@PlatformOnly()` and `@TenantScoped()` route annotations | Single execution authority for the contract-execution spine; hosts the contract registry, the four boundary acts, and the documentation read-surface |
 | DevHub | Node.js with Express | 4000 | Local SQLite via better-sqlite3 (`data/devhub.db`) | Local-trust development service; no remote authentication boundary | Governance backbone: sessions, plans, tasks, decisions, change records, activity log, MCP tool surface |
-| bc-pg-mcp | Node.js with TypeScript | Standard input and output transport (no HTTP port) | Read-only connections to Platform DB and Tenant DB | Connection-string trust scoped to the local environment | Development tooling surface that exposes PostgreSQL state to MCP clients without authoring rights |
+| bc-pg-mcp | Node.js with TypeScript | Standard input and output transport (no HTTP port) | Read-only connections to Platform DB and Tenant DB | Connection-string trust scoped to the development machine | Development tooling surface that exposes PostgreSQL state to MCP clients without authoring rights |
 
 The three services do not depend on each other for runtime correctness. bc-core runs independently of DevHub (the platform executes contracts whether or not a developer has DevHub running). DevHub runs independently of bc-core (governance records persist whether or not the platform is up). bc-pg-mcp runs independently of both (it observes whatever a connection string can reach). Per DEC-9b23a7, no central supervisor coordinates the three; each starts in its own repository under its own watch.
 
@@ -246,7 +246,7 @@ The three backend services compose at three points: a shared package registry, a
 
 The three services do not share a runtime database. bc-core uses PostgreSQL (Platform DB and Tenant DB). DevHub uses local better-sqlite3. bc-pg-mcp reads the PostgreSQL instances bc-core uses but through its own read-only connections, not through bc-core's connection pool.
 
-The three services do not share an authentication boundary. bc-core enforces Cognito JWT at every request boundary. DevHub is local-trust on the developer's machine. bc-pg-mcp is connection-string trust scoped to the local environment. A request authenticated to bc-core does not carry authority on DevHub or bc-pg-mcp; a developer authenticated to DevHub or bc-pg-mcp does not carry authority on bc-core.
+The three services do not share an authentication boundary. bc-core enforces Cognito JWT at every request boundary. DevHub is local-trust on the developer's machine. bc-pg-mcp is connection-string trust scoped to the development machine. A request authenticated to bc-core does not carry authority on DevHub or bc-pg-mcp; a developer authenticated to DevHub or bc-pg-mcp does not carry authority on bc-core.
 
 The three services do not share a supervisor. Per DEC-9b23a7, pm2 was removed because pm2 on Windows spawned a visible cmd.exe window for each supervised service, broke memory monitoring, and treated bc-core's MCP backbone as restartable alongside application services. Each service starts independently in its own repository under its own watch.
 
@@ -254,7 +254,7 @@ The three services do not share a supervisor. Per DEC-9b23a7, pm2 was removed be
 
 ## Local Development Topology
 
-The three services are designed to be started independently in the developer's local environment. The startup pattern is:
+The three services are designed to be started independently on the development machine. The startup pattern is:
 
 | Service | Working directory | Start command | Watch behavior |
 |---|---|---|---|
