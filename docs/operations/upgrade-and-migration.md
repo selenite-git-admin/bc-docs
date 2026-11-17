@@ -146,7 +146,7 @@ The procedure honors the D268 (session discipline) rule that data without verifi
 
 `bc-core/scripts/golden-snapshot.mjs` produces dump files for the four major schemas (`contract`, `master`, `metric`, `source`) at `bc-core/docker/redesign/golden-snapshot-{schema}.sql.gz`. The snapshot is the project's reference state for re-seeding after a clean-slate reset or for restoring a known-good state during development.
 
-The snapshot is not a backup. It is a project-managed reference state captured at a specific point in time after material enrichment (per CLAUDE.md golden_snapshot memory). Production backups are governed by the database-substrate procedure (Aurora automated backups when the prod posture exists) recorded in Infrastructure when the prod posture lands.
+The snapshot is not a backup. It is a project-managed reference state captured at a specific point in time after material enrichment (per CLAUDE.md golden_snapshot memory). Backups for `prod` are governed by the database-substrate procedure (Aurora automated backups once `prod` is built) recorded in Infrastructure when `prod` is built.
 
 The snapshot is regenerated after material enrichment of the platform vocabulary (BFs, BOs, CFs, contracts) so the next clean-slate reset starts from a richer baseline rather than from empty schemas. The cadence of regeneration is project judgment, not automatic.
 
@@ -162,7 +162,7 @@ When a platform DDL migration affects the tenant schema (`03-tenant-db.sql` chan
 | 2. Apply the tenant migration to each existing tenant DB | The migration script iterates `tenant.tenants` and runs the tenant DDL against each `tbc_{slug}_dev` database |
 | 3. Update `seed-tenant-dbs.ts` and `03-tenant-db.sql` | New tenants provisioned after the migration get the new DDL state at provisioning time |
 
-The per-tenant migration runner is not yet a formalized service; it runs as a script per migration. The readiness-baseline local-dev posture uses `sandbox1`, which makes the iteration trivial; at scale (many tenants, prod), the runner needs to be a governed service with concurrency control, per-tenant verification, and an audit trail.
+The per-tenant migration runner is not yet a formalized service; it runs as a script per migration. The readiness-baseline local-dev posture uses `sandbox1`, which makes the iteration trivial; at scale (many tenants, `prod`), the runner needs to be a governed service with concurrency control, per-tenant verification, and an audit trail.
 
 A migration that the runner applies to some tenants but not others leaves the platform with per-tenant schema drift; the chain status SSOT does not catch tenant-DB drift in the readiness baseline. The drift is a queued risk in the per-tenant migration runner formalization.
 
@@ -191,7 +191,7 @@ A migration that the runner applies to some tenants but not others leaves the pl
 | Clean-slate reset has no automated trigger | Operator-initiated only; the discipline is to confirm with the founder per CLAUDE.md before running |
 | Migration history vs canonical DDL drift | A migration not folded into the canonical DDL is missed by first-run initialization; the fold-in is the discipline that prevents this; no automated check in the readiness baseline |
 | `tenant.tenant_migrations` table not yet wired | A planned audit row per tenant per migration applied; not implemented in the readiness baseline; per-tenant migration is recorded in the migration script's run log only |
-| Aurora automated backups not provisioned | The dormant `PlatformInfraStack` `aurora-postgres.ts` construct configures environment-specific backup retention but the stack is not deployed; no automated production backup posture exists in the readiness baseline |
+| Aurora automated backups not provisioned | The dormant `PlatformInfraStack` `aurora-postgres.ts` construct configures environment-specific backup retention but the stack is not deployed; no automated backup posture for `prod` exists in the readiness baseline |
 | `04-tbc-selenite-missing-tables.sql` is a one-off correction | A historical correction file in `bc-core/docker/redesign/` that fixed a specific tenant's missing tables; not part of the canonical first-run initialization; recorded here as a known historical artifact |
 
 **Governing source.** `bc-core/docker/redesign/`; Audit and Activity Logging.
