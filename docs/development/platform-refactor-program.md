@@ -25,7 +25,7 @@ diagrams: []
 
 # Platform Refactor Program
 
-> **Status of this document.** It is locked. The operator approved it on 2026-11-14, and the approval is recorded at the approval desk as grant `2026-11-14T01-47-16-746Z-95eacc7e` (text SHA-256 `95eacc7ea28b4a731731b9627bc50be55ba19ca58f0bd9309c78836ee2558044`), given for this document as written at commit `71aa76f0607ab92a8b2fc5f1a0c6d07fdc0cb872`. The decision is decision record DEC-71f15e, which is `decided`. It was amended by ruling G36 (housekeeping) by the rulings of phase 2 (F1's statement, F2 to F9, T6, B6 and B7) and by the rulings of phase 3 (G12 to G15, the first part of G35, and B1), in the way "The rulings" describes. By the documentation's rule a chapter binds when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca).
+> **Status of this document.** It is locked. The operator approved it on 2026-11-14, and the approval is recorded at the approval desk as grant `2026-11-14T01-47-16-746Z-95eacc7e` (text SHA-256 `95eacc7ea28b4a731731b9627bc50be55ba19ca58f0bd9309c78836ee2558044`), given for this document as written at commit `71aa76f0607ab92a8b2fc5f1a0c6d07fdc0cb872`. The decision is decision record DEC-71f15e, which is `decided`. It was amended by ruling G36 (housekeeping) by the rulings of phase 2 (F1's statement, F2 to F9, T6, B6 and B7) and by the rulings of phase 3 (G12 to G15, the first part of G35, B1 and B2), in the way "The rulings" describes. By the documentation's rule a chapter binds when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca).
 
 ## Summary
 
