@@ -110,6 +110,8 @@ A **lock** is what keeps a finished function finished. It has four parts, and al
 
 A lock is opened only by a ruling of the operator, recorded as a decision, and closed again by the same four parts.
 
+By ruling G37 (the operator, 2026-11-18) Operations is not locked in phase 3: its Lock step stays open by name after that phase exits and is done when condition P3-C7 of phase 3 is met, as the main document states under "The method".
+
 ## Keeping the repositories clean
 
 Ruling G36 (operator, 2026-11-14) adds a clean-up before phase 1 and three standing rules.
