@@ -349,7 +349,7 @@ The rulings needed in later phases, and the questions each dossier raises, are i
 
 ## What is not yet known
 
-- Whether today's engine reproduces the values recorded for Kaveri. The first reference run answers it.
+- Whether today's engine reproduces the values recorded for Kaveri was not known when this document was written. The first reference run, on 2026-11-18, answered it: the engine produced no value for 15 of the 17 metrics, for two causes, and no recorded value was shown to have moved (see "The method", and section 9 of the annex "The Definition of Operations"). What is not known now: whether the live Kaveri tenant fails the canonical resolution of `cc-x13pb` version 3.0.0 as the run's copy did, since no evaluation or resolution was made on the live platform to show it; and whether the engine reproduces the recorded values once the two defects are repaired.
 - What a tenant database holds. No tenant database was read.
 - How long a function takes to pass through the method.
 - Several figures reported by reviews and not re-established at source. Each is marked "not re-checked" where it appears.
