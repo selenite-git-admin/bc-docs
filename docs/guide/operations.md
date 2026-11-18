@@ -24,7 +24,7 @@ diagrams: []
 
 # Operations
 
-> **Status of this chapter.** It is a draft. Operations (function OP of the [Platform Refactor Program](../development/platform-refactor-program.md), decision DEC-71f15e) is not locked, so this chapter binds nothing yet. By ruling F5 a chapter is locked when its function is locked. By ruling G37 (the operator's grant `2026-11-18T15-40-34-728Z-0914e87d`) Operations is not locked in phase 3: its Lock step stays open by name and is done when condition P3-C7 is met. The same ruling says this chapter is reviewed by the auditor before the Prove run, and that the operator's approval of it is asked separately. Until Operations is locked this chapter is the best description available, and each statement is checked against the commands before it is relied on.
+> **Status of this chapter.** It is a draft. It was merged as a draft by bc-docs pull request 241 (merge commit `22357686b8c3010a0e76b228002e1c4fe4fbca0b`). The auditor reviewed that draft: the reply on exchange thread gen-f7124c is ACCEPTED WITH BOUNDARY. The operator's separate approval of this chapter is not yet given. Operations (function OP of the [Platform Refactor Program](../development/platform-refactor-program.md), decision DEC-71f15e) is not locked, so this chapter binds nothing yet. By ruling F5 a chapter is locked when its function is locked. By ruling G37 (the operator's grant `2026-11-18T15-40-34-728Z-0914e87d`) Operations is not locked in phase 3: its Lock step stays open by name and is done when condition P3-C7 is met. The same ruling says this chapter is reviewed by the auditor before the Prove run, and that the operator's approval of it is asked separately. Until Operations is locked this chapter is the best description available, and each statement is checked against the commands before it is relied on.
 
 ## How to read this chapter
 
@@ -32,8 +32,8 @@ This chapter is written for a person or a session that did not build Operations'
 
 - **The design** is the annex [The Definition of Operations](../development/platform-refactor-program/definition-operations.md). Where this chapter and that annex differ, the difference is a defect to be reported, not resolved by the reader.
 - **The commands** are in the repository bc-infra, folder `ops/`. Each has a README of its own. This chapter gives what is needed to run each command and read its result. The README holds the full account. Three acts are performed by commands kept in two other repositories, barecount-devhub and bc-db; their sections say so.
-- **"Today"** means 2026-11-18. Unless a line says otherwise, the results printed below were read that day between 16:54 and 16:57 UTC, with the read-only verbs only, from the shared copy of bc-infra at commit `18cd69e0e4c4778942c47c4981ab543809057776`, which was level with its main branch. A result of today is a reading, not a promise: run the verb and compare.
-- **What to do on a non-clean result** is the same for every command and is given once, under "Before any act". A section adds to it only where its command needs more.
+- **"Today"** means 2026-11-18. Unless a line says otherwise, the results printed below were read that day between 17:12 and 17:16 UTC, with the read-only verbs only, from the shared copy of bc-infra at commit `18cd69e0e4c4778942c47c4981ab543809057776`, which was level with its main branch. That is a second reading: the draft that was merged gave the readings of 16:54 to 16:57 UTC, and one act was performed between the two, the retire of 17:10 UTC (see "Host-file custody"). A result of today is a reading, not a promise: run the verb and compare.
+- **What to do on a non-clean result** is one rule for every command and is given once, under "Before any act". A section adds to it only the lines that are known for its command today.
 - **A source outside bc-docs** is cited by repository, path and commit. The commits are listed under "Sources".
 - **A line that starts `OPEN:`** would mark a point that needs the operator's or the auditor's decision. The chapter holds no such line today. A thing that is simply not established is said in a plain sentence. Nothing is guessed.
 
@@ -135,24 +135,44 @@ The commands that act under a grant do the same reading themselves. `ops/serve-m
 
 A worker does not post a request to the desk and does not hold a grant. The Chief posts the request. The operator approves it.
 
-The read is a plain request to an address on the development machine itself. On 2026-11-18 at 16:55 UTC the list was read, and for each of the sixteen grants this chapter cites by id the hash was worked out again and found equal to the desk's, with `method` `totp`. If the desk does not answer, stop and report. Never act on a grant you could not read.
+The read is a plain request to an address on the development machine itself. On 2026-11-18 at 17:19 UTC the list was read, and for each of the eighteen grants this chapter cites by id the hash was worked out again and found equal to the desk's, with `method` `totp`. If the desk does not answer, stop and report. Never act on a grant you could not read.
 
 ## Before any act
 
 - **Where the commands are.** `~/MyProjects/bc-infra`, the shared copy, which is a mirror of the main branch. Run every command of bc-infra from that folder, the repository root. Do not edit it. The two commands kept elsewhere, `run.js` and `servers.sh`, say in their sections where they are run from.
 - **The shell.** A login shell. From a session: `zsh -l -c 'cd ~/MyProjects/bc-infra && node ops/<command>/cli.mjs <verb> ...'`.
-- **Check the copy first.** Fetch (`git -C ~/MyProjects/bc-infra fetch origin`), then `git -C ~/MyProjects/bc-infra rev-parse HEAD origin/main` must print the same commit twice. The main branch moves within a day: on 2026-11-18 it was at `1e7b87d9` at 16:10 UTC (the custody record of that minute) and at `18cd69e0` at 16:54 UTC. If the two commits differ from each other, or from the commit this chapter names, the results below may not be the results you get; report the commits.
-- **The copy is not clean today, and that is known.** `git -C ~/MyProjects/bc-infra status --porcelain` prints one line, `?? _wt/`. The folder holds the worktrees of the builders' branches (`git worktree list` names twenty-four beside the checkout itself). By the standing rule a worktree is removed when its pull request is merged or closed, after it is confirmed that nothing in it would be lost (the annex "How the Work Is Done", the standing rules, rule 2). That is not an act of this chapter. Its one effect here: `ops/host-files status` says in its preview that a retire would refuse at this checkout because the checkout is not clean.
+- **Check the copy first.** Fetch (`git -C ~/MyProjects/bc-infra fetch origin`), then `git -C ~/MyProjects/bc-infra rev-parse HEAD origin/main` must print the same commit twice. The main branch moves within a day: on 2026-11-18 it was at `1e7b87d9` at 16:10 UTC (the custody record of that minute) and at `18cd69e0` at 16:54 UTC and still at 17:12 UTC. If the two commits differ from each other, or from the commit this chapter names, the results below may not be the results you get; report the commits.
+- **The copy is not clean today, and that is known.** `git -C ~/MyProjects/bc-infra status --porcelain` prints one line, `?? _wt/`. The folder holds the worktrees of the builders' branches (`git worktree list` names twenty-four beside the checkout itself). By the standing rule a worktree is removed when its pull request is merged or closed, after it is confirmed that nothing in it would be lost (the annex "How the Work Is Done", the standing rules, rule 2). That is not an act of this chapter. Its one effect here: `ops/host-files status` says in its preview that a retire would refuse at this checkout because the checkout is not clean. The retire of 17:10 UTC was run from a clean checkout of the main branch, not from the shared copy (DevHub's program record, row PRG-fec959).
 - **The result words.** The commands print one line for each thing they looked at. `OK` means it is as specified. `WRONG` means it is not. `COULDNOT` means the command could not look. `NOTE` and `INFO` are information and do not change the exit code. Some commands add words of their own, given in their sections.
 - **The exit code is part of the result.** Always print it: `; echo "exit $?"`.
 
 ### What to do on WRONG or COULDNOT
 
-1. Stop. Do not run the next act.
-2. Compare the line with the lines this chapter lists as known and expected today. A line listed here, for the reason given here, is not a new failure.
-3. Any other `WRONG` or `COULDNOT` line is reported to the Chief as printed, with the command line and the exit code.
-4. Never repair by hand. Do not edit a host file, a settings file, `~/bc-stack/process-compose.yaml`, a lock or a record folder. Do not restart a service to "see if it clears". A session prepares and reads. The operator decides and repairs (bc-infra `ops/README.md`, the runbook, "Rules of the window").
-5. Never run a `do` verb to cure a `check`.
+One rule holds for every command of this chapter. It separates a line this chapter lists from every other line.
+
+**A listed line: report it and continue.** A `WRONG` or `COULDNOT` line is listed when all of the following hold.
+
+- The section of that command names the line as known today.
+- The line is unchanged in its rule and in its place (the file, the line number or the folder the section gives).
+- The number of such lines is not above the counts the section gives.
+- The exit code is the one the section gives as today's for that verb.
+
+Report a listed line as listed, with the command line and the exit code, and go on to the next act. Today two commands print listed lines and exit 1: `ops/secrets-route check` and `ops/script-scan check`. A result with fewer listed lines than the section gives, or a cleaner exit code because listed lines have gone, is reported as a shrinking and is not a reason to stop.
+
+**Any other line: the sequence halts.** Each of these halts it:
+
+- a `WRONG` or `COULDNOT` line that the section does not list;
+- a count above the counts the section gives;
+- a line whose exception the section gives as closed, printed again;
+- an exit code that this chapter does not give for that command and verb, or a `do` that ends other than as its section says a good run ends.
+
+On a halt, nothing further is run: not the next act, and not the same verb a second time. The Chief is told at once, with the line as printed, the command line and the exit code. The Chief decides whether the sequence is taken up again.
+
+**In both cases:**
+
+1. Never repair by hand. Do not edit a host file, a settings file, `~/bc-stack/process-compose.yaml`, a lock or a record folder. Do not restart a service to "see if it clears". A session prepares and reads. The operator decides and repairs (bc-infra `ops/README.md`, the runbook, "Rules of the window").
+2. Never run a `do` verb to cure a `check`.
+3. A `NOTE`, `INFO`, `HELD`, `NOTJUDGED`, `UNKNOWN`, `EXCEPTION` or `ACCEPTED` line does not halt the sequence. Where a section gives a count for such lines, a different count is reported.
 
 ---
 
@@ -169,21 +189,27 @@ The Prove step of Operations is run in phase 3 under ruling G37. Everything else
 | Start, stop or restart a service | Reads state only: `~/bc-stack/servers.sh ps` and `~/bc-stack/servers.sh info <name>`. It starts, stops and restarts nothing; see "Whose grant" in that act's section. |
 | Serve a build; return to the previous build | `ops/serve-move status` and `verify`. |
 | Show what a service was given | `ops/secrets-route status` and `check`; `ops/secrets-identity status`, `check` and `verify`. This act needs no grant and both of its verbs are performed. |
-| Prove a migration on a restored copy | Not run; see the Chief's instruction below. `ops/schema-compare status`, `check` and `do` without `--record` are run; that `do` is read-only. |
+| Prove a migration on a restored copy | The act has no instance today, because no migration awaits apply. The worker performs what exists of it: it reads the register and reports that it holds no line, and it runs `ops/schema-compare status`, `check` and `do` without `--record`; that `do` is read-only. If the register holds a line, the worker stops and tells the Chief. See the Chief's statement below. |
 | Apply a migration | Not performed. |
 | Take a backup | `ops/backup do take`, for real, once. The Chief reports it to the operator. |
 | Restore a backup to a disposable copy | `ops/backup do restore-proof <file>`, for real, once, on the dump just taken. The Chief reports it. |
 | Take the fixed copy | `run.js --take-copy status` and `verify`, and `ops/reference-host status`, `check` and `verify`. Never `do`. |
-| Run the reference run | Not made. `ops/reference-runtime status`, `check` and `verify` are run. |
+| Run the reference run | Not made, and its preflight is not run; see the Chief's statement below. `ops/reference-runtime status`, `check` and `verify` are run. |
 | Deploy a cloud unit | Not performed. |
 | Commands that are not rows of the table | `status` and `check` of `ops/script-scan` and `ops/environments`; `status`, `check` and `verify` of `ops/host-files`. Never `do`, `put-back`, `retire` or `undo`. |
 
-The worker reports each result to the Chief as printed, with the command line and the exit code, and says for each non-clean line whether this chapter lists it.
+The worker reports each result to the Chief as printed, with the command line and the exit code, and says for each non-clean line whether this chapter lists it. A listed line does not stop the run: the worker reports it and performs the remaining acts. Any other non-clean result halts the run, by the one rule under "What to do on WRONG or COULDNOT".
 
-**Two instructions of the Chief for the Prove run.** They are the Chief's instructions to the Prove worker. They are not rules of the program text, and ruling G37 does not state them.
+**The Chief's statement on two points of the Prove run.** Ruling G37 says the worker performs for real every act that needs no grant of the operator. Two things are not run in the Prove run, and ruling G37 does not name either. What follows is the Chief's reasoning, stated as the Chief's. It is not a ruling of the operator.
 
-1. The worker does not run the reference run's preflight (`run.js --preflight`). The preflight is not a reference run, but it creates and removes one network and two containers of its own.
-2. The worker does not run a proof of a migration on a restored copy (a proof script of bc-db, or the `scratch` mode of a window script). The register of migrations awaiting apply holds no line today, so nothing awaits a proof.
+1. **Proving a migration on a restored copy.** The act is performed on a migration that is merged and awaits apply. The register of migrations awaiting apply is bc-db `docs/migrations-awaiting-apply.md`. Read at bc-db's main branch, commit `ca1aabd18b1d93f6578c12e1aea66a1c7dbea523`, on 2026-11-18 at 17:13 UTC after a fetch, its table holds no line. So the act has no instance to perform. The worker performs what exists of it:
+   - it reads the register (`git -C ~/MyProjects/bc-db fetch origin`, then `git -C ~/MyProjects/bc-db show origin/main:docs/migrations-awaiting-apply.md`) and reports the commit and that the table holds no line;
+   - it runs the comparison, `ops/schema-compare do` without `--record`, which is read-only.
+
+   If the register holds a line when the Prove run is made, the worker stops and tells the Chief, who decides with the operator. The worker does not run a proof script of bc-db or the `scratch` mode of a window script on its own judgement.
+2. **The preflight of the reference run.** The preflight (`run.js --preflight`) is a form of the reference-run command. It is not a row of the table of acts. Ruling G37 says that no reference run is made in the Prove step. The preflight creates one network and two containers, and removes them. The Chief holds it to be part of the reference run's own procedure, and so outside the Prove run. The worker does not run it.
+
+Both points are put to the operator when his approval of this chapter is asked, and his word governs.
 
 ---
 
@@ -227,7 +253,7 @@ So the act is the Chief's, for those three services, and the Chief tells the ope
 
 **A clean result today.** For the engine the reading of record is `ops/serve-move status`; see "Serve a build; return to the previous build". For the other services no text states a clean result, and `servers.sh` was not run for this chapter.
 
-**On a failure.** If a verb of `servers.sh` exits with a code other than 0, or `ps` shows a service that is not running, report the output and the exit code to the Chief. Do not start or restart the service.
+**On a failure.** No non-clean result of `servers.sh` is listed. If a verb of `servers.sh` exits with a code other than 0, or `ps` shows a service that is not running, the sequence halts: report the output and the exit code to the Chief. Do not start or restart the service.
 
 **Older texts on this act are stale.** The host file `~/bc-stack/README.md` (lines 34 and 35) and `docs/development/dev-workstation-mac-mini.md` (section 3, "Start / stop BareCount on the Mac") both describe this script. Both say the operator console and the customer portal start switched off; `~/bc-stack/process-compose.yaml` today has `disabled: false` for both. The host file also names, as "served now", a serve move of 2026-09-30 (line 52). Read the supervisor, not those texts.
 
@@ -285,7 +311,7 @@ No line of `status` or `verify` is known to be non-clean today.
 
 **What to trust.** The line `running build` is the only truth about what serves: it is read from the running server. The supervisor's memory is what a restart of the service alone would serve. The supervisor's file is what a restart of the supervisor would serve (bc-infra `ops/README.md`, runbook, part F).
 
-**On any other result.** If `status` exits 10 or prints `WRONG`, stop and report its three lines. Every repair after a run that did not end with 0 is the operator's act, by the exact commands of part F of the runbook.
+**On any other result.** No non-clean line of this command is listed. If `status` exits other than 0 or prints `WRONG`, or `verify` exits other than 0, the sequence halts: report the lines as printed. Every repair after a run that did not end with 0 is the operator's act, by the exact commands of part F of the runbook.
 
 ---
 
@@ -312,11 +338,11 @@ There is no `do` and no `verify`. Both verbs only look.
 
 **The record.** None is written. The result is the printed output.
 
-**The result today is not clean, and the operator has ruled on it.** `status` exits 0. `check` exits 1 and ends `check: not as specified (6 wrong)`. It prints 54 `OK`, 6 `WRONG`, 2 `COULDNOT`, 3 `UNKNOWN`, 16 `HELD` and 1 `NOTJUDGED`, and `NOTE` lines, which are information.
+**The result today is not clean, and the operator has ruled on it.** `status` exits 0. `check` exits 1. Read at 17:13 UTC on 2026-11-18 it ended `check: not as specified (7 wrong)` and printed 54 `OK`, 7 `WRONG`, 2 `COULDNOT`, 3 `UNKNOWN`, 16 `HELD` and 1 `NOTJUDGED`, and `NOTE` lines, which are information. Six of the seven `WRONG` lines and both `COULDNOT` lines belong to the exceptions below. The seventh was raised by this chapter's own draft; see "The line this chapter's draft raised" below. With that line gone the check ends `check: not as specified (6 wrong)`, as the draft's reading of 16:54 to 16:57 UTC gave it, before the draft was merged.
 
 **The ruling.** The operator ruled that phase 3's condition "secrets are loaded one way" is met in this form: the check, run from the main branch, reads no line as wrong or unreadable other than four named exceptions (grant `2026-11-18T08-00-10-163Z-96f0254f`, text SHA-256 `96f0254f438606493edcb9c4990e08e4704d90aa770c942932b6526b5bb347af`, read at the desk today; DevHub's program record, row PRG-2e0ba9, with the evidence row PRG-087bea). The exceptions stay as they are and may only shrink. The ruling authorises no write to a secret, a credential, a settings file, a host script or a database, and no serve move.
 
-**One exception is closed; three remain.** When the ruling was made the check printed 7 `WRONG` and 2 `COULDNOT` (row PRG-087bea). Today it prints 6 and 2. Every one of today's eight lines belongs to a remaining exception:
+**One exception is closed; three remain.** When the ruling was made the check printed 7 `WRONG` and 2 `COULDNOT` (row PRG-087bea). Today 6 `WRONG` and 2 `COULDNOT` lines belong to the exceptions. Every one of those eight lines belongs to a remaining exception:
 
 | Exception, in the ruling's order | State today | Lines today |
 |---|---|---|
@@ -337,12 +363,16 @@ There is no `do` and no `verify`. Both verbs only look.
 | `NOTJUDGED` | 1 | The message documents of the exchange mirror (bc-external-audit), by the operator's grant `2026-11-16T14-29-25-560Z-ac1a63f3`. |
 | `UNKNOWN` | 3 | Two files whose names are withheld (`~/bc-stack/process-compose.yaml` and `~/.zprofile`), and one tool whose database login cannot be told from names. |
 
-**How to tell an accepted line from a new one.**
+**The line this chapter's draft raised.** At 17:13 UTC the check also printed `WRONG  unlisted reader bc-docs:docs/guide/operations.md line 452`. The check searches every tracked file of each repository for the names by which an identity is chosen. A file that holds one and is not in bc-infra's inventory of readers is reported as an unlisted reader (bc-infra `ops/secrets-route/README.md`). The draft merged by bc-docs pull request 241 named the identity's variable once, in the section "Take a backup". The line appeared when that draft reached the shared copy of bc-docs. The draft's own readings were taken before its merge and did not show it. The line is not one of the four exceptions, so while it is printed the check does not read in the form in which the operator ruled the condition met. This text no longer names the variable. When the shared copy of bc-docs holds this text, the line is expected to go and the count of `WRONG` lines to return to 6. That has not been observed: it can be read only after this text is merged and the shared copy is level.
 
-1. A `WRONG` or `COULDNOT` line that is one of the eight above, word for word in its rule and its place, is an accepted exception. Report it as listed.
-2. Any other `WRONG` or `COULDNOT` line is new and is reported as new. So is a count above 6 `WRONG` or above 2 `COULDNOT`. The line `to-change bc-stack:bc-core-signin.sh`, if it is printed again, is new: its exception is closed.
-3. A count below 6 or below 2 is a shrinking exception and is reported as such.
-4. One line is known that is not an exception: `COULDNOT  repository bc-infra: bc-infra content changed since the inventory was drawn`. The inventory of readers is pinned to bc-infra's content, so the line appears whenever bc-infra's content changes without the pin being drawn again. It is not printed at `18cd69e0`. If it is printed, report it by name.
+**How to tell a listed line from any other.** This applies the one rule of "What to do on WRONG or COULDNOT".
+
+1. A `WRONG` or `COULDNOT` line that is one of the eight in the table above, word for word in its rule and its place, is a listed line. With only listed lines the exit code is 1. Report each as listed and continue with the next act.
+2. A count below 6 `WRONG` or below 2 `COULDNOT`, with every line still one of the eight, is a shrinking exception. It is reported as such, and the worker continues.
+3. Any other `WRONG` or `COULDNOT` line halts the sequence. So does a count above 6 `WRONG` or above 2 `COULDNOT`. So does an exit code other than 1 while a listed line is printed.
+4. The line `to-change bc-stack:bc-core-signin.sh`, if it is printed again, halts the sequence: its exception is closed.
+5. The line `unlisted reader bc-docs:docs/guide/operations.md`, at any line number, halts the sequence. It means that the shared copy of bc-docs is older than this text, or that the chapter names an identity again.
+6. One further line is known and is not an exception: `COULDNOT  repository bc-infra: bc-infra content changed since the inventory was drawn`. The inventory of readers is pinned to bc-infra's content, so the line appears whenever bc-infra's content changes without the pin being drawn again. It is not printed at `18cd69e0`, so it is not a listed line today. If it is printed, the sequence halts and the Chief is told by that name.
 
 The last `NOTE` line of the output today reads `point of use: 4 children of 1 supervisor(s): equal 4, differs 0, absent 0, not readable or not comparable 0`. That part is clean: each running child received the identity the one place names.
 
@@ -364,7 +394,7 @@ The last `NOTE` line of the output today reads `point of use: 4 children of 1 su
 
 **The record.** `do` writes no record folder. Before it changes the profile it keeps a copy of the whole old profile beside it, named `<profile>.bak-<UTC stamp>`, mode 600, and puts that copy back if its own check fails (bc-infra `ops/secrets-identity/README.md`, "do"). One such copy exists today, `~/.zprofile.bak-20261116T095412Z`. It may hold other secrets and is not to be opened or printed.
 
-**A clean result today.** `check` exits 0 and ends `check: the hook is as specified`. `verify` exits 0 and ends `verify: the hook is in place and the reader answers`. One `NOTE` line says the login profile file's mode is 644. It is information and does not change the exit code. No line of the three verbs is known to be non-clean today; an exit of 1 or 2 is reported, and the profile is not edited.
+**A clean result today.** `check` exits 0 and ends `check: the hook is as specified`. `verify` exits 0 and ends `verify: the hook is in place and the reader answers`. One `NOTE` line says the login profile file's mode is 644. It is information and does not change the exit code. No line of the three verbs is known to be non-clean today, so none is listed: an exit of 1 or 2 halts the sequence and is reported, and the profile is not edited.
 
 ---
 
@@ -374,7 +404,7 @@ The last `NOTE` line of the output today reads `point of use: 4 children of 1 su
 
 **Proving a migration on a restored copy** has no command of Operations today. As practised, each migration is merged with a proof script of its own, `tools/tests/platform-<number>-restore-proof.sh` in bc-db. The script takes a read-only dump of the live platform database, restores it into a disposable container of its own, applies the migration there through the real runner, and prints a line that starts `== RESULT: GREEN` when every check passed. The window script of an apply has a second mode, `scratch`, that runs the whole window against a restored copy and never against the live database, and a further script tests the served logins' permissions on the result (bc-db `docs/dbcp/apply-0070-0071/RUNBOOK-apply-0070-0071.md`, "Evidence in this packet"). The act changes no live state and needs no grant (Definition, section 10). It reads the live database and starts containers.
 
-There is no one command line for this act: each migration has its own proof script and each window its own script. **Nothing awaits a proof today.** The register at bc-db `ca1aabd18b1d93f6578c12e1aea66a1c7dbea523` holds no line.
+There is no one command line for this act: each migration has its own proof script and each window its own script. **Nothing awaits a proof today.** The register at bc-db `ca1aabd18b1d93f6578c12e1aea66a1c7dbea523`, read again at 17:13 UTC on 2026-11-18 after a fetch, holds no line.
 
 **The comparison** is a command of Operations. It compares the platform migration files on bc-db's main branch with the live ledger and with the register.
 
@@ -408,7 +438,7 @@ Here `do` is itself read-only: it changes no database, service, cloud resource o
 
 **The verdict of `do`.** `do` was not run for this chapter. The newest recorded run is sequence 2, of 2026-11-17: its `.txt` ends `SUMMARY platform files 63, defects 0, info 14, bc-db commit c5bb3264175e7f9b929e4435230f283eb07417a6, ... verdict PASS`. bc-db's main branch has moved four commits since, to `ca1aabd1`; none of them changes a file under `migrations/` or the register. A run today without `--record` is read-only and may be made by any session.
 
-**On FAIL.** A FAIL is a defect of the repository or of the register, not of the machine. Report the DEFECT lines as printed. Do not add or remove a register line, and do not touch the ledger.
+**On FAIL.** A FAIL is a defect of the repository or of the register, not of the machine. No DEFECT line is listed today, so a verdict of FAIL, or an exit of `do` other than 0, halts the sequence. Report the DEFECT lines as printed. Do not add or remove a register line, and do not touch the ledger.
 
 ---
 
@@ -449,7 +479,7 @@ It is run in a login shell, from a clean checkout of bc-db of its own, never fro
 
 Two effects to know before taking one. It uploads two files. And because seven dumps are kept, each take pushes the oldest dump out of the local folder.
 
-**What it needs.** `BC_DEV_SECRETS_PROFILE` set, not empty and a plain name (a login shell provides it); the two backup folders real, of this account and closed to others; the lock free; the live container answering. It takes no argument.
+**What it needs.** The variable that names the secrets identity set, not empty and a plain name (a login shell provides it; `status` prints the variable's name as the setting `upload_identity_variable`); the two backup folders real, of this account and closed to others; the lock free; the live container answering. It takes no argument.
 
 **Exit codes** (bc-infra `ops/backup/README.md`, "The verbs"):
 
@@ -468,16 +498,16 @@ Two effects to know before taking one. It uploads two files. And because seven d
 
 **A clean result today.**
 
-Read at 16:55 UTC on 2026-11-18:
+Read at 17:12 UTC on 2026-11-18, before the nightly script's run of that day:
 
 - `status` exits 0. It lists the settings, seven dumps, `lock: free`, and `last take: take-20261118T152305157Z-533d5515.json, outcome taken, finished 2026-11-18T15:23:05.157Z`. The newest dump is `pg_dumpall-20261118T152216Z.sql.gz`.
-- `check` exits 0 and ends `check: clean`. Its fifteen `OK` lines: both folders real and closed to others; each of the seven dumps hashes to its `.sha256`; `age: the newest backup pg_dumpall-20261118T152216Z.sql.gz is 1.5 h old, within the bound of 20 h`; the newest take record names the newest backup; the proof is within 7 days; `last-run: ... ended as taken`; `lock: free`; `script: the installed pg-backup.sh equals its custody bytes`.
+- `check` exits 0 and ends `check: clean`. Its fifteen `OK` lines: both folders real and closed to others; each of the seven dumps hashes to its `.sha256`; `age: the newest backup pg_dumpall-20261118T152216Z.sql.gz is 1.8 h old, within the bound of 20 h`; the newest take record names the newest backup; the proof is within 7 days; `last-run: ... ended as taken`; `lock: free`; `script: the installed pg-backup.sh equals its custody bytes`.
 
 These names and ages hold only for that minute. The age grows with the clock, and every take changes the newest dump, the newest record and the oldest dump kept. The nightly script is due next at 20:30 UTC (see below); after it, expect a newer dump and a newer take record than the ones named here. No line of `check` is known to be non-clean today. `status` prints four settings with the words "today's value, not yet the operator's decision": the age bound, how often a restore is proven, whether a dump keeps the roles' stored password forms, and the upload identity. These are information.
 
 **The nightly backup is still taken by the host script,** `pg-backup.sh`, which the launch agent `com.barecount.pg-backup` runs. The agent's calendar entry is 02:00 in the machine's time zone, which is 20:30 UTC (`plutil -p` of the agent's file, today); two of the seven dumps carry the stamps `20261116T203005Z` and `20261117T203003Z`. The script writes a record to the same folder and takes the same lock. bc-db holds a further backup tool, `tools/backup/`. The Definition asks for one tool; there is not one yet (bc-infra `ops/backup/README.md`, "One tool").
 
-**On WRONG.** `check` printing `WRONG  last-run: ... the last backup run took no backup` means the newest attempt failed or was refused. Report the line with its two code words. Do not delete a `.part` file, a lock or a record.
+**On WRONG.** No `WRONG` or `COULDNOT` line of this command is listed today, so any such line, or an exit of `do take` other than 0, halts the sequence. `check` printing `WRONG  last-run: ... the last backup run took no backup` means the newest attempt failed or was refused. Report the line with its two code words. Do not delete a `.part` file, a lock or a record.
 
 ---
 
@@ -503,9 +533,9 @@ The file is named by its name only, a dump of the dump folder. A path, or any ot
 
 **What has been done.** Three real proofs on 2026-11-18. The first two ended WRONG; the second named a leftover test database that could not be restored. Two leftover test databases were then dropped from the live server under the operator's grant `2026-11-18T15-21-45-938Z-b5dcc2ce`, a second take was made, and the third proof ended PROVEN: 11 databases and 1177 tables hold the rows the file holds (bc-infra `ops/backup/README.md`, "The real runs of 2026-11-18").
 
-**A clean result today.** Read at 16:55 UTC on 2026-11-18: `status` prints `last proof: proof-20261118T152340837Z-ecf63aad.json, outcome proven, finished 2026-11-18T15:23:40.837Z`. `check` prints `OK  proof: proof-20261118T152340837Z-ecf63aad.json proved pg_dumpall-20261118T152216Z.sql.gz, 0.1 days ago, within 7 days`. `verify` exits 0, names that record with the SHA-256 of the record, says that the proved dump still hashes to the recorded SHA-256 and that its take record is unchanged, and ends `verify: still true`. The proof stays the newest proof until another is made; a later take does not change it. The proved dump leaves the dump folder when seven newer dumps exist; what `verify` prints for its record after that was not observed.
+**A clean result today.** Read at 17:12 UTC on 2026-11-18: `status` prints `last proof: proof-20261118T152340837Z-ecf63aad.json, outcome proven, finished 2026-11-18T15:23:40.837Z`. `check` prints `OK  proof: proof-20261118T152340837Z-ecf63aad.json proved pg_dumpall-20261118T152216Z.sql.gz, 0.1 days ago, within 7 days`. `verify` exits 0, names that record with the SHA-256 of the record, says that the proved dump still hashes to the recorded SHA-256 and that its take record is unchanged, and ends `verify: still true`. The proof stays the newest proof until another is made; a later take does not change it. The proved dump leaves the dump folder when seven newer dumps exist; what `verify` prints for its record after that was not observed.
 
-**A proof that ends WRONG is a result, not a fault of the worker.** A dump is a faithful copy of the server; if the server holds a database that cannot be restored, the proof says so. Report the record's name and its reason. Do not drop a database, and do not repeat the proof on the same file to see whether it passes.
+**A proof that ends WRONG is a result, not a fault of the worker.** A dump is a faithful copy of the server; if the server holds a database that cannot be restored, the proof says so. It is not a listed line, so the sequence halts. Report the record's name and its reason. Do not drop a database, and do not repeat the proof on the same file to see whether it passes.
 
 **If a container is left behind.** The container is named `bc-backup-proof-<16 hex>`. The command removes a container only when an inspection of that name shows this run's own label; anything else it refuses and leaves alone, with its name printed so that a person can look. It reports "removed" only when it has seen the name absent from the list of containers; otherwise it records that the removal is not known and fails the step (bc-infra `ops/backup/README.md`, "The disposable container"). No text says who removes a container that remains. A session reports the container's name and removes nothing.
 
@@ -545,7 +575,7 @@ The file is named by its name only, a dump of the dump folder. A path, or any ot
 
 **The record.** The README of `ops/reference-host` names no record that `do` writes. `do` prints each step before it runs and reads it back after; on a failure it stops and prints what was done so far. Its printed output is its only record.
 
-**A clean result today.** `check` exits 0 and ends `check: as specified (group bcreference: anant, bcauditor; bcauditor reads /Users/Shared/bc-reference)`. It prints eight lines that start `ACCEPTED`, one for the folder and one for each of seven files: each carries the one permitted extended attribute. Those lines are expected. `verify` exits 0, says the current account can list the folder (7 entries), and prints a command for the operator to run from the auditor's account. The auditor's own listing is the proof of record; this command cannot produce it.
+**A clean result today.** `check` exits 0 and ends `check: as specified (group bcreference: anant, bcauditor; bcauditor reads /Users/Shared/bc-reference)`. It prints eight lines that start `ACCEPTED`, one for the folder and one for each of seven files: each carries the one permitted extended attribute. Those lines are expected. `verify` exits 0, says the current account can list the folder (7 entries), and prints a command for the operator to run from the auditor's account. The auditor's own listing is the proof of record; this command cannot produce it. No `MISSING`, `WRONG` or could-not-look result of this command is listed today: an exit of 1 or 2 halts the sequence.
 
 ---
 
@@ -618,7 +648,7 @@ No option of `--run` names a committed input: the expected set, the manifest of 
 
 - **Nothing of the reference run is changed:** not its command, not its inputs, not its expected set.
 - Until P3-C7 is met, no reference run stands behind a change to the engine, and the Modify step of a function cannot show that values did not move (Program, "The method"; ruling B2).
-- A worker makes a reference run only when the Chief has told it to. The Prove worker makes none, and by the Chief's instruction it does not run the preflight either; see "What is special to a Prove run".
+- A worker makes a reference run only when the Chief has told it to. The Prove worker makes none, and it does not run the preflight either, for the reason the Chief states under "What is special to a Prove run".
 
 ### The runtime guard
 
@@ -646,7 +676,7 @@ No option of `--run` names a committed input: the expected set, the manifest of 
 
 **A clean result today.** `check` exits 0, prints twelve `OK` lines (each of the four rules present exactly once; the guard rules first in each family; the two files equal to the fixed text with the fixed owner and mode; the unit enabled and active), one `INFO` line that lists the listeners on port 22, and ends `check: as specified`. `verify` exits 0 and ends with a reminder to run the reference run's preflight. The `INFO` line is expected: the guard does not stop the listener, it rejects the bridges.
 
-The guard does not survive a deletion of the container machine, only a stop and a start. `check` shows only that the rules and the unit are in place. The preflight is the proof. No line of the three verbs is known to be non-clean today; an exit of 12 means the guard is missing or wrong, and it is reported, since `do` is not a worker's.
+The guard does not survive a deletion of the container machine, only a stop and a start. `check` shows only that the rules and the unit are in place. The preflight is the proof. No line of the three verbs is known to be non-clean today, so none is listed. An exit of 12 means the guard is missing or wrong; it halts the sequence and is reported, since `do` is not a worker's. So does an exit of 10 or 11.
 
 ---
 
@@ -697,7 +727,13 @@ The default folder is `~/bc-stack`. Both verbs only look. There is no `do`.
 
 **The Chief's scope call on `odoo-move` and `laptop`.** On 2026-11-18 the Chief made this scope call (DevHub, checkpoint 1520 of session SES-7decb4, recorded at 11:51 UTC): the folders `~/bc-stack/odoo-move` and `~/bc-stack/laptop` are not Operations' scripts. The first is the record and the data of a finished move of the source system; the second holds one script written for one past act. The scan's findings in those two folders are therefore reported by rule id and file name, and are neither accepted nor repaired by Operations. The scope call is a session's record in DevHub. It is not written in bc-docs, and bc-infra does not state it; bc-infra's list of known entries describes both folders only as data folders, `odoo-move` as "the Odoo move records, the licence scripts and the package copy of odoo.sh" and `laptop` as holding a script of "a past act of 2026-09-30" (bc-infra `ops/host-files/known-entries.json`). DevHub's program record adds that the scan of the two folders was completed for scripts folder by folder (row PRG-a770dc). Condition P3-C5, which asks that Operations' scripts have been checked for secrets, is not judged.
 
-**How to tell a known line from a new one.** A `FOUND` line below `odoo-move` or `laptop` is reported by rule id and file name, with the words "outside Operations' scripts by the Chief's scope call". A `FOUND` line anywhere else under `~/bc-stack` is new: report it at once, by rule id, file name and line number. A `CREDENTIAL` line that says a file is open to others is new. Do not open a file the scan names.
+**How to tell a listed line from any other.** This applies the one rule of "What to do on WRONG or COULDNOT". The listed result today is exit 1 with the outcome `findings` and a PARTIAL scan.
+
+1. Listed, reported and no reason to stop: the one `WRONG` line on the walk that was not complete; a `FOUND` line below `odoo-move` or `laptop`, up to eight such lines in all, each reported by rule id and file name with the words "outside Operations' scripts by the Chief's scope call"; a `CREDENTIAL` line for a file of mode 600 that was not opened, up to ten; the `NOTSEARCHED` lines.
+2. Halts the sequence: a `FOUND` line anywhere else under `~/bc-stack`, reported at once by rule id, file name and line number; more than eight `FOUND` lines; a `CREDENTIAL` line that says a file is open to others; any other `WRONG` line; an exit of 2.
+3. Fewer lines than these counts is a shrinking and is reported as such.
+
+Do not open a file the scan names.
 
 **What a clean result means.** Only that no listed rule matched in the files that were scanned. It does not mean there is no secret.
 
@@ -727,13 +763,14 @@ The default folder is `~/bc-stack`. Both verbs only look. There is no `do`.
 
 **Exit codes.** `status`, `check` and `verify`: 0 clean, 1 on any WRONG, 2 on a COULDNOT with no WRONG. For `do`: 0 installed; 2 refused or stopped with no host file changed; 3 changed and restored; 4 not restored; 5 installed but the record could not be written. For `put-back`: 0; 2; 3 restored; 4 not restored; 5. For `retire`: 0 retired; 2 unchanged; 3 put back; 4 not put back (bc-infra `ops/host-files/README.md`).
 
-**The record.** `~/bc-stack/state/host-files/`. Three records exist from real runs:
+**The record.** `~/bc-stack/state/host-files/`. Four records exist from real runs:
 
 | Record | Act |
 |---|---|
 | `20261117T092337697Z-f8f420785401-retire.json` | The retire of 2026-11-17: twenty scripts moved to the archive folder (grant `2026-11-17T09-20-51-660Z-ee76a3a5`, as `verify` prints it). |
 | `20261118T022203060Z-f9d0274d00e4.json` | The install of 2026-11-18, 02:22 UTC: `pg-backup.sh`. |
 | `20261118T161007397Z-1e7b87d928da.json` | The install of 2026-11-18, 16:10 UTC: `bc-core-signin.sh` (mode 0700), `odoo.sh` (the script itself, no longer five lines that start another file) and `serve-core-ref-v2.sh`, from bc-infra `1e7b87d928daa67aae6760bc4703a3578c7838bc`, under the operator's grant `2026-11-18T16-09-22-055Z-9533e033`. |
+| `20261118T171044670Z-18cd69e0e4c4-retire.json` | The retire of 2026-11-18, 17:10 UTC: `serve-core-ref.sh` moved to the archive folder, from bc-infra `18cd69e0e4c4778942c47c4981ab543809057776`, under the operator's grant `2026-11-18T17-09-57-991Z-407d6e2d` (desk request 514). |
 
 The folder also holds the claim files of each grant used, named `install-claim-...` and `retire-claim-...`. `put-back` has not been run on the real host. `verify` is how a record is read: it compares the host with the last custody record, the manifest and the last retire record, and prints the record's result, source commit, time and grant.
 
@@ -741,24 +778,23 @@ The grant of 16:09 UTC also authorised one edit by hand: line 79 of `~/bc-stack/
 
 **A clean result today.**
 
-- `status` exits 0. It prints `20 of 20 present with bytes and mode equal to the manifest`, then the preview of a retire.
-- `check` exits 0. Its summary: `63 OK; 7 NOTE; 0 WRONG; 0 COULDNOT`, and it ends `check: clean`, followed by one line that starts `check: limit`.
-- `verify` exits 0 and ends `verify: the host matches the last custody record and the manifest (bytes and modes re-read now), and the last retire record`.
+- `status` exits 0. It prints `20 of 20 present with bytes and mode equal to the manifest`, then the preview of a retire. The preview names each of the twenty-one retired scripts as `not in the act: ... it is in the archive only, with the recorded bytes`, and says `nothing would move: no retired entry that is not held is at its active path`.
+- `check` exits 0. Its summary: `64 OK; 6 NOTE; 0 WRONG; 0 COULDNOT`, and it ends `check: clean`, followed by one line that starts `check: limit`.
+- `verify` exits 0. It names the last custody record (the install of 16:10 UTC) and the last retire record (the retire of 17:10 UTC, with its grant), says of `serve-core-ref.sh` that it is `absent at its active path, as the record says` and that the archive copy `holds the recorded bytes, mode 0600`, and ends `verify: the host matches the last custody record and the manifest (bytes and modes re-read now), and the last retire record`.
 
 No line of the three verbs is `WRONG` or `COULDNOT` today. The lines that are not `OK` are known, and none changes the exit code:
 
 | Line today | Reason |
 |---|---|
 | `NOTE  ~/bc-stack/<name>.kept-<stamp>  the kept copy of an earlier do`, four lines | The previous bytes kept by the two installs: `pg-backup.sh.kept-20261118T022203060Z`, and `bc-core-signin.sh`, `odoo.sh` and `serve-core-ref-v2.sh` each with `.kept-20261118T161007397Z`. `put-back` would read them. |
-| `NOTE  ~/bc-stack/serve-core-ref.sh  judged retire, still at its active path: the move ... awaits the operator's grant` | The older launcher of the engine. It is judged retired and nothing holds it back any longer; see below. |
-| `NOTE  retired list: 21 judged (18 retire, 3 replace); 1 still at their active path ...; 20 moved` | The count behind the line above. |
+| `NOTE  retired list: 21 judged (18 retire, 3 replace); 0 still at their active path ...; 21 moved to ~/bc-stack/archive/retired-host-files; 0 in neither honest state` | Every judged script is in the archive folder. Until 17:10 UTC this line read 1 and 20. |
 | `NOTE  19 listed folders ... are not walked` | A stated limit: what is inside them is the script scan's to read. |
-| `check: limit: 1 retired script is still at its active path and still runnable` | The same script. "Clean" does not mean it was moved. |
-| `retire-preview: retire would refuse at this checkout: this checkout is not clean` (in `status`) | The untracked folder `_wt/` in the shared copy of bc-infra; see "Before any act". A retire is run from a clean checkout of the main branch. |
+| `check: limit: 0 retired scripts are still at their active path and still runnable` | The same count. The line is printed on every run and adds that "clean" does not mean a retired script was moved. |
+| `retire-preview: retire would refuse at this checkout: this checkout is not clean` (in `status`) | The untracked folder `_wt/` in the shared copy of bc-infra; see "Before any act". A retire is run from a clean checkout of the main branch. Nothing awaits a retire today. |
 
-**The one retired script still at its active path.** `serve-core-ref.sh` was held back from the retire of 2026-11-17 because two host texts named it as needed for a rollback: line 3 of the host copy of `serve-core-ref-v2.sh` and line 79 of `~/bc-stack/README.md`. Both were corrected on 2026-11-18 under grant `2026-11-18T16-09-22-055Z-9533e033`, the first by the install and the second by the edit. bc-infra pull request 86, merged as `18cd69e0`, removed the hold from the script's entry (bc-infra `ops/host-files/README.md`). Its move to `~/bc-stack/archive/retired-host-files` is `ops/host-files retire`, and it awaits the operator's grant: the request was at the desk, not yet granted, at 16:58 UTC today. `status` prints the exact grant line a retire needs and the line `would move: ~/bc-stack/serve-core-ref.sh -> ~/bc-stack/archive/retired-host-files/serve-core-ref.sh`. Until the move, the script is still runnable; no session runs it.
+**The retire of `serve-core-ref.sh`, 2026-11-18.** `serve-core-ref.sh`, the older launcher of the engine, was held back from the retire of 2026-11-17 because two host texts named it as needed for a rollback: line 3 of the host copy of `serve-core-ref-v2.sh` and line 79 of `~/bc-stack/README.md`. Both were corrected on 2026-11-18 under grant `2026-11-18T16-09-22-055Z-9533e033`, the first by the install and the second by the edit. bc-infra pull request 86, merged as `18cd69e0`, removed the hold from the script's entry (bc-infra `ops/host-files/README.md`). At 17:10 UTC the same day `ops/host-files retire` moved the script to `~/bc-stack/archive/retired-host-files`, from a clean checkout of bc-infra at `18cd69e0e4c4778942c47c4981ab543809057776`, under the operator's desk grant `2026-11-18T17-09-57-991Z-407d6e2d` (desk request 514; text SHA-256 `407d6e2dbce632604724fe06c0b3ca589b6bdae6cea76a088302841caa13df13`, read at the desk today). The custody record is `~/bc-stack/state/host-files/20261118T171044670Z-18cd69e0e4c4-retire.json`. `check` then read clean, with `0 still at their active path` and `21 moved`. The engine was not restarted (DevHub's program record, row PRG-fec959). No retired script is at its active path today. A retire is a move, not disposal: the script's bytes are kept in the archive folder, mode 0600.
 
-**On any WRONG.** A host file that differs from its manifest entry is reported with its line. So is an entry at the top level of `~/bc-stack` that is in none of the four lists. Neither is put right by copying, moving or deleting a file by hand: `do` is the only way to install and `retire` the only way to move, and both are the operator's to grant.
+**On any WRONG.** No `WRONG` or `COULDNOT` line of this command is listed today, so one halts the sequence. A host file that differs from its manifest entry is reported with its line. So is an entry at the top level of `~/bc-stack` that is in none of the four lists. Neither is put right by copying, moving or deleting a file by hand: `do` is the only way to install and `retire` the only way to move, and both are the operator's to grant.
 
 ### The environment names check
 
@@ -777,7 +813,7 @@ Both verbs only look, through read-only git at `origin/main` of each repository 
 
 **The 17 `EXCEPTION` lines are known and expected.** Every one is in the engine (bc-core) or in the operator console's copy of the engine's codes (bc-admin): the words `staging`, `production` and `development`. How the engine's code and requests spell an environment is ruling B17, due in phase 5, and several of the files are under the hold on the engine. The list of exceptions only shrinks (bc-infra `ops/environments/README.md`).
 
-It is a list of known places, not a search of every text. A new place that declares an environment is added to the list by hand. A `WRONG` line names a place whose environment name is off the list and is not a listed exception; it is reported with its repository and path.
+It is a list of known places, not a search of every text. A new place that declares an environment is added to the list by hand. A `WRONG` line names a place whose environment name is off the list and is not a listed exception. No `WRONG` or `COULDNOT` line of this command is listed today: one halts the sequence and is reported with its repository and path. A count of `EXCEPTION` lines other than 17 is reported.
 
 ---
 
@@ -785,9 +821,9 @@ It is a list of known places, not a search of every text. A new place that decla
 
 **Operations is not locked in phase 3.** By ruling G37 its Lock step stays open by name, as conditions P3-C6 and P3-C7 do under ruling B2, and is done when P3-C7 is met; phase 3 exits without it. The cost the operator accepted: Operations enters phase 4 unlocked, with no guard yet against a second way to perform an act and no code-rule baseline for its files, until P3-C7 is met. This chapter is `drafting` until then.
 
-**DevHub says the same.** DevHub's definition of the program is level with bc-docs `852b3b5c` since barecount-devhub pull request 398 was merged as `6f8498b7` and DevHub was restarted (row PRG-41c880). Read today at 16:56 UTC, `GET http://127.0.0.1:4000/api/program/status` gives the definition's state as `current` at that commit, and lists the Lock step of OP under `carried_lock_steps`: carried by ruling G37, done when condition P3-C7 is met, with two things missing, that the Chief has not judged P3-C7 met and has not judged the Lock step complete. The same answer gives P3-C5, P3-C6 and P3-C7 as not met, the last two carried by ruling B2, and the other six conditions of phase 3 as met.
+**DevHub says the same.** DevHub's definition of the program is level with bc-docs `852b3b5c` since barecount-devhub pull request 398 was merged as `6f8498b7` and DevHub was restarted (row PRG-41c880). Read today at 17:15 UTC, `GET http://127.0.0.1:4000/api/program/status` gives the definition's state as `current` at that commit (bc-docs' main branch is one merge further, at `22357686`, the merge of this chapter's draft), and lists the Lock step of OP under `carried_lock_steps`: carried by ruling G37, done when condition P3-C7 is met, with two things missing, that the Chief has not judged P3-C7 met and has not judged the Lock step complete. The same answer gives P3-C5, P3-C6 and P3-C7 as not met, the last two carried by ruling B2, and the other six conditions of phase 3 as met.
 
-**This section is not the carried list.** Ruling G37 says that every item of the Definition's lists "What must change" that is not done when condition P3-C5 is met is carried by name in the Definition, with its owner and when it is taken, and that the list is written when P3-C5 is met, not before. DevHub's program record holds no judgement of P3-C5 at that read. What follows is what this chapter could ground today, item by item. A statement without a "not established" is something read at a main branch or seen through a read-only look.
+**This section is not the carried list.** Ruling G37 says that every item of the Definition's lists "What must change" that is not done when condition P3-C5 is met is carried by name in the Definition, with its owner and when it is taken. That list is in the Definition, in the section "What is carried past phase 3". It was drawn on 2026-11-18 and is merged by the same change as this text. Where this section and that list differ, the list is the one to follow and the difference is a defect to be reported. DevHub's program record holds no judgement of P3-C5 at the read of 17:15 UTC. What follows is what this chapter could ground today, item by item. A statement without a "not established" is something read at a main branch or seen through a read-only look.
 
 **Of the function as a whole.**
 
@@ -845,7 +881,7 @@ It is a list of known places, not a search of every text. A new place that decla
 - Whether the live Kaveri tenant fails the canonical resolution of `cc-x13pb` version 3.0.0 as the run's copy did is not known (Program, "What is not yet known").
 - The README of the command, barecount-devhub `scripts/reference-run/README.md`, still says in its title that no real run has been made.
 
-**Section 10, where the commands are kept.** Host scripts are in custody and not yet commands. All twenty host files of the manifest equal their committed bytes today; no install is awaited. One retired script, `serve-core-ref.sh`, is still at its active path, and its move awaits the operator's grant. The previous bytes that the two installs kept, the package copy of `odoo.sh` below `~/bc-stack/odoo-move`, and the twenty archived scripts stay on the host: their disposal is a later act that bc-infra `ops/host-files/README.md` names as not done.
+**Section 10, where the commands are kept.** Host scripts are in custody and not yet commands. All twenty host files of the manifest equal their committed bytes today; no install is awaited. All twenty-one retired scripts are in the archive folder since the retire of 17:10 UTC on 2026-11-18; none is at its active path. The previous bytes that the two installs kept, the package copy of `odoo.sh` below `~/bc-stack/odoo-move`, and the twenty-one archived scripts stay on the host: their disposal is a later act that bc-infra `ops/host-files/README.md` names as not done.
 
 ---
 
@@ -889,13 +925,13 @@ Outside bc-docs, and so outside this list's reach: the local runbook `~/bc-stack
 
 ## Sources
 
-- bc-docs at `origin/main`, commit `852b3b5cc96da7fef5a0e3419dc30d5ee7988cf2`: `docs/development/platform-refactor-program.md`; the annexes `definition-operations.md` (read whole), `how-the-work-is-done.md`, `rulings.md` and `chapters.md`; `docs/operations/serve-moves-and-live-windows.md`; `docs/development/dev-workstation-mac-mini.md` (sections 3, 4, 5, 7 and 11); the section headings of `docs/implementation/data-model-and-schema.md`, `docs/implementation/infrastructure.md`, `docs/operations/runtime-runbook.md`, `docs/operations/operations-overview.md` and `docs/operations/deployment-topology.md`, and the sections of each that the table above names.
+- bc-docs at commit `852b3b5cc96da7fef5a0e3419dc30d5ee7988cf2`, which was its main branch when the draft was written. The main branch is now `22357686b8c3010a0e76b228002e1c4fe4fbca0b`, the merge of bc-docs pull request 241; the one file that differs between the two commits is this chapter. Read at `852b3b5c`: `docs/development/platform-refactor-program.md`; the annexes `definition-operations.md` (read whole), `how-the-work-is-done.md`, `rulings.md` and `chapters.md`; `docs/operations/serve-moves-and-live-windows.md`; `docs/development/dev-workstation-mac-mini.md` (sections 3, 4, 5, 7 and 11); the section headings of `docs/implementation/data-model-and-schema.md`, `docs/implementation/infrastructure.md`, `docs/operations/runtime-runbook.md`, `docs/operations/operations-overview.md` and `docs/operations/deployment-topology.md`, and the sections of each that the table above names.
 - bc-infra at `origin/main`, commit `18cd69e0e4c4778942c47c4981ab543809057776`: `ops/README.md` (part F of the runbook not read line by line); the head and the verb, exit-code and record sections of each `ops/<command>/README.md`; `ops/host-files/manifest.json`, `ops/host-files/known-entries.json` and `ops/host-files/files/servers.sh`; `README.md`; the file names under `.github/workflows/`.
 - barecount-devhub at `origin/main`, commit `6f8498b7b82126d8a8286bd5f903d0a522c70ad0`: `scripts/reference-run/README.md`, the head, "Ports, home and paths", "Work directory", the preflight's lines, "The executor, slice 5" (the command, the exit codes, the record, the dry form) and "The take-copy command"; the file names under `artifacts/serve-move/` and `artifacts/w9-serve-move-4/tools/`.
 - bc-db at `origin/main`, commit `ca1aabd18b1d93f6578c12e1aea66a1c7dbea523`: `README.md`; `tools/runner/README.md` and the head of `tools/runner/ROLES.md`; `docs/migrations-awaiting-apply.md`; `docs/dbcp/apply-0070-0071/RUNBOOK-apply-0070-0071.md` and the head of `window-0070-0071.sh`; the file names under `migrations/`, `docs/withdrawn-migrations/` and `tools/backup/`.
 - bc-core at `origin/main`, commit `fd4b55ca8090b6ba7b4fb9d992f83fe46fb78bbc`, and at the served commit `ec72438baa2e84a9814f4e39f3f79324e5edf96a`: the file names under `scripts/` only.
-- The desk, read 2026-11-18 at 16:55 UTC, `GET http://127.0.0.1:3040/api/grants-list`: the sixteen grants this chapter cites by id, each with its hash worked out again and its `method` read. The texts of three were read whole at that read: the ruling on the secrets condition (`...96f0254f`), the standing grant (`...e925518f`) and the grant of the three installs (`...9533e033`). What this chapter says of the other grants is taken from the program text and the Definition, which quote them. `GET http://127.0.0.1:3040/api/requests`, read at 16:58 UTC: one request pending, for the retire of `serve-core-ref.sh`.
-- DevHub's program record, `GET http://127.0.0.1:4000/api/program/status`, read 2026-11-18 at 16:56 UTC: the state of the definition, the conditions of phase 3 with their judgements, the carried conditions and the carried Lock step, and the rows PRG-2e0ba9, PRG-087bea, PRG-4a6fb6, PRG-a770dc and PRG-41c880. A row is what a session recorded; it is not a judgement of the operator.
+- The desk, read 2026-11-18 at 17:19 UTC, `GET http://127.0.0.1:3040/api/grants-list`: the eighteen grants this chapter cites by id, each with its hash worked out again and its `method` read. The texts of four were read whole: the ruling on the secrets condition (`...96f0254f`), the standing grant (`...e925518f`) and the grant of the three installs (`...9533e033`) at the draft's read of 16:55 UTC, and the grant of the retire (`...407d6e2d`) at 17:15 UTC. What this chapter says of the other grants is taken from the program text and the Definition, which quote them. `GET http://127.0.0.1:3040/api/requests`, read at 17:15 UTC, listed no request.
+- DevHub's program record, `GET http://127.0.0.1:4000/api/program/status`, read 2026-11-18 at 17:15 UTC: the state of the definition, the conditions of phase 3 with their judgements, the carried conditions and the carried Lock step, and the rows PRG-2e0ba9, PRG-087bea, PRG-4a6fb6, PRG-a770dc, PRG-41c880 and PRG-fec959. A row is what a session recorded; it is not a judgement of the operator.
 - DevHub's session record, read the same day from DevHub's own database, read-only: checkpoint 1520 of session SES-7decb4, the Chief's scope call on two folders. It is in no repository.
-- Read-only command output of 2026-11-18, 16:54 to 16:57 UTC, on the development machine, from bc-infra at `18cd69e0`: `status`, `check` and `verify` of `ops/backup`, `ops/host-files`, `ops/secrets-identity`, `ops/reference-host` and `ops/reference-runtime`; `status` and `check` of `ops/environments`, `ops/secrets-route`, `ops/script-scan` and `ops/schema-compare`; `status` and `verify` of `ops/serve-move`. No `do`, `retire`, `put-back` or `undo` was run. `ops/serve-move check`, `ops/schema-compare do`, `servers.sh` and every form of `run.js` were not run.
-- Read-only looks at the development machine, the same day: the text of `~/bc-stack/README.md` (the text of `servers.sh` was read from its committed bytes, which `ops/host-files check` reads as equal to the host's); the service names and the `working_dir` and `disabled` lines of `~/bc-stack/process-compose.yaml`; the names and modes of the files in `~/bc-stack/secrets`, `~/bc-stack/state/schema-compare`, `~/bc-stack/state/host-files`, `~/bc-stack/state/backup`, `~/bc-stack/serve-moves` and `~/.bc-reference-run-disposable/records`; the names of `~/bc-stack/README.md` and its dated copies; `launchctl list`; the calendar entry of the launch agent `com.barecount.pg-backup` (`plutil -p`); `git worktree list` in the shared copy of bc-infra; and the repository variable `CI_RUNNER_MODE` of bc-core and bc-db (`gh variable list`). No file under `~/bc-stack/secrets` and no settings file was opened.
+- Read-only command output of 2026-11-18, on the development machine, from bc-infra at `18cd69e0`, in two readings. The draft's reading, 16:54 to 16:57 UTC, and the second reading, 17:12 to 17:13 UTC, after the retire of 17:10 UTC: `status`, `check` and `verify` of `ops/backup`, `ops/host-files`, `ops/secrets-identity`, `ops/reference-host` and `ops/reference-runtime`; `status` and `check` of `ops/environments`, `ops/secrets-route`, `ops/script-scan` and `ops/schema-compare`; `status` and `verify` of `ops/serve-move`. The results printed in this chapter are those of the second reading. Between the two readings three results changed: those of `ops/host-files` (the retire), the age that `ops/backup check` prints, and the seventh `WRONG` line of `ops/secrets-route check`. No `do`, `retire`, `put-back` or `undo` was run by either reading. `ops/serve-move check`, `ops/schema-compare do`, `servers.sh` and every form of `run.js` were not run.
+- Read-only looks at the development machine, the same day. All were made again at the second reading except the calendar entry of the launch agent; of `~/bc-stack/README.md` the second reading read lines 34, 35, 52, 70 and 79 and made a word search. The looks: the text of `~/bc-stack/README.md` (the text of `servers.sh` was read from its committed bytes, which `ops/host-files check` reads as equal to the host's); the service names and the `working_dir` and `disabled` lines of `~/bc-stack/process-compose.yaml`; the names and modes of the files in `~/bc-stack/secrets`, `~/bc-stack/state/schema-compare`, `~/bc-stack/state/host-files`, `~/bc-stack/state/backup`, `~/bc-stack/serve-moves` and `~/.bc-reference-run-disposable/records`; the names of `~/bc-stack/README.md` and its dated copies; `launchctl list`; the calendar entry of the launch agent `com.barecount.pg-backup` (`plutil -p`); `git worktree list` in the shared copy of bc-infra; and the repository variable `CI_RUNNER_MODE` of bc-core and bc-db (`gh variable list`). No file under `~/bc-stack/secrets` and no settings file was opened.
