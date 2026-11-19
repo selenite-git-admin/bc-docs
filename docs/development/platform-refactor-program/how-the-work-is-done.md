@@ -101,9 +101,7 @@ enable-metric verify  --reference 7f3a…
 
 ### The command shape of the engine
 
-This section fixes the shape that every command of bc-core takes. It describes the code as built. Each statement says where the code stands:
-- **Merged** means on bc-core `main` (checked at `f7322337`). This covers the shared code of pull request 1064 (merge commit `37f9f035`, folder `src/common/command/`), the roster declaration and check of pull request 1066 (`src/registry/ai-panel-roster/`) and the registry panel step of pull request 1069.
-- **Open** means in a draft pull request that is not merged: 1068, 1070 (stacked on 1068) and 1071 (stacked on 1068 and 1070). Their heads move with each rebase, so none is cited here. Until they merge, a statement about them describes a branch, not the engine.
+This section fixes the shape that every command of bc-core takes. It describes the code as built, on bc-core `main` at commit `7d735a84`. Every pull request it names is merged there: the shared code of pull request 1064 (merge commit `37f9f035`, folder `src/common/command/`), the roster declaration and check of pull request 1066 (merge commit `0001515e`, `src/registry/ai-panel-roster/`), the registry panel step of pull request 1069 (merge commit `f7322337`), the commands of A4 and A5 and the shared changes of pull request 1068 (merge commit `d1ac544c`), the command of A2 of pull request 1070 (merge commit `d14e02d9`) and the certification panel step and the flag of pull request 1071 (merge commit `7d735a84`). **Corrected on 2026-11-19, at the Prove step of AI:** the earlier text of this section, checked at `f7322337`, called 1068, 1070 and 1071 open.
 
 The function AI builds the first commands in phase 4. The functions L3, L4 and L6 build theirs on the same code.
 
@@ -130,55 +128,56 @@ Check is a POST only because it carries a body. It writes nothing.
 
 - **status.** Reads in a read-only transaction. Says where the thing stands and what is required next, in words. Calls no vendor and triggers no evaluation.
 - **check.** Reads in a read-only transaction, so the database itself refuses a write. Calls no vendor and triggers no evaluation. Takes exactly the body `do` takes. Returns every refusal the act would meet now, not the first. The answer is HTTP 200 whether the act is allowed or not, because a refusal is an answer.
-- **do.** Runs check first. If check refuses, `do` answers HTTP 409 with the same refusals and performs nothing. Otherwise it performs the act once and answers HTTP 201 with a reference: the uid of the record that proves the act. All three commands built so far answer 201 on success (open: 1068, 1070).
+- **do.** Runs check first. If check refuses, `do` answers HTTP 409 with the same refusals and performs nothing. Otherwise it performs the act once and answers HTTP 201 with a reference to the record that proves the act: for `register-certification-roster` and `run-metric-authoring-panel` the uid of that record, and for `calibrate-certification-roster` the evidence reference of the transcript, `<path>=sha256:<64 hex>`, the form a registration cites (`audit-panel-calibration.command.ts:11-15`). All three commands built so far answer 201 on success.
 - **verify.** Takes the reference `do` returned. Reads the records that prove the act. It is verified only when nothing is missing and at least one proof was found. A reference that proves nothing, or an unknown one, is answered as not verified, with a named refusal in `missing`. It is never a crash.
 
 A body that is malformed, or that carries a field the command does not declare, is refused by the engine's own validation with HTTP 400. The guards answer 401 and 403.
 
-The shared code gives each verb one answer object (merged, `src/common/command/command-answer.ts`):
+The shared code gives each verb one answer object (`src/common/command/command-answer.ts`):
 - status: `command`, `verb`, `subject`, `state`, `next`.
 - check: `command`, `verb`, `allowed`, `refusals`, `notes`.
 - do: `command`, `verb`, `outcome` (`done`, `refused` or `failed`), `reference`, `refusals`, `failure`, `flags`, `result`.
 - verify: `command`, `verb`, `reference`, `verified`, `proof`, `missing`.
 
-**The answer is the whole body.** The served engine wraps every returned value in `{ data, timestamp }`. A command answer is not wrapped. A command controller sends its answer through the raw response with `sendAnswer` (`src/common/command/command-http.ts`), which the wrapper leaves alone. Open: 1068 adds this file, and the controllers of all three commands use it. Refusals and failures still go through the engine's exception filter.
+**The answer is the whole body.** The served engine wraps every returned value in `{ data, timestamp }`. A command answer is not wrapped. A command controller sends its answer through the raw response with `sendAnswer` (`src/common/command/command-http.ts`), which the wrapper leaves alone. The controllers of all three commands use it. Refusals and failures still go through the engine's exception filter.
 
 #### How the read verbs are held read-only
 
-The read verbs (status, check, verify) run in one read-only transaction on one dedicated connection. The code is `runReadOnlyOnDedicatedConnection` in `src/common/command/dedicated-connection.ts` (open: 1068).
+The read verbs (status, check, verify) run in one read-only transaction on one dedicated connection. The code is `runReadOnlyOnDedicatedConnection` in `src/common/command/dedicated-connection.ts`.
 - It uses the driver's own transaction scope, `$client.begin('read only', …)`, on the engine's postgres.js pool. The driver takes one connection, sends `BEGIN READ ONLY`, hands the body that connection alone and sends `ROLLBACK` when the scope throws.
 - The wrapper throws a private marker at the end of the scope, so the transaction is rolled back in every case, and the body's value still comes out.
 - It does not reserve a connection, because the tenant seam gate (`src/__architecture__/d575-tenant-tx-seam.spec.ts`) forbids `.reserve(` anywhere in `src`.
 - A write made by a read verb is refused by the database itself (SQLSTATE 25006), not by this code.
-- The earlier wrapper, `read-only-tx.ts` (merged in 1064, sent `BEGIN`, the body and `ROLLBACK` through one executor), is deleted in 1068, so one wrapper remains. Until 1068 merges, the merged file is still on `main`, and no merged command uses either.
+- The earlier wrapper, `read-only-tx.ts` (added in 1064, sent `BEGIN`, the body and `ROLLBACK` through one executor), was deleted in 1068, so one wrapper remains.
+- **A carried point: the status verb of `run-metric-authoring-panel` does not read only through this wrapper.** It reads the run, its transcripts and the intake row through `McfReadService`, the engine's shared read service, outside the dedicated read-only connection; only its re-run rule is read inside it (`metric-panel-run.command.ts:265-298`). Its check and verify use the wrapper. Carried by name as DevHub task TSK-77981c.
 
 #### The refusal and the HTTP answers
 
-A refusal has four members, all non-empty text: `code`, `reason`, `cure` and `rule_owner` (merged: `command-answer.ts`; the builder `refusal` in `command-refusal.ts` throws on an empty member). The `rule_owner` names the function that owns the rule, for example AI, L3 or L6. One command can then report another function's refusals next to its own, each with its owner named.
+A refusal has four members, all non-empty text: `code`, `reason`, `cure` and `rule_owner` (`command-answer.ts`; the builder `refusal` in `command-refusal.ts` throws on an empty member). The `rule_owner` names the function that owns the rule, for example AI, L3 or L6. One command can then report another function's refusals next to its own, each with its owner named.
 
 - **409, refused.** `do` was refused by check. The answer carries the same refusals check reported (`runCommandDo` in `command-do.ts`).
 - **502, a vendor seat failed.** The answer names the seat, the vendor and the model, with the message and a plain statement of what the platform left recorded (`VendorFailure` in `command-answer.ts`). An act signals this by throwing `VendorSeatError`. Any other error is not caught by the helper.
 
-Both answers use the engine's existing error envelope, `application/problem+json`. The exceptions carry the answer in an `extensions` object. The engine's `ProblemDetailFilter` copies those members onto the top level of the problem body, so the members `command`, `verb`, `outcome`, `refusals` and `failure` sit beside the standard problem members (merged: `command-refusal.ts`, `problem-detail.filter.ts`).
+Both answers use the engine's existing error envelope, `application/problem+json`. The exceptions carry the answer in an `extensions` object. The engine's `ProblemDetailFilter` copies those members onto the top level of the problem body, so the members `command`, `verb`, `outcome`, `refusals` and `failure` sit beside the standard problem members (`command-refusal.ts`, `problem-detail.filter.ts`).
 
-**502 has its own type and title.** Open: 1068 adds to the filter the type `https://barecount.dev/problems/bad-gateway` and the title `Bad Gateway`. On `main` today a 502 still carries the internal-error type and title.
+**502 has its own type and title.** The filter gives it the type `https://barecount.dev/problems/bad-gateway` and the title `Bad Gateway` (added in 1068).
 
 #### Declared arguments, and the actor
 
 - Every argument is a declared field of the body, validated by the engine's `ValidationPipe` with `whitelist` and `forbidNonWhitelisted`. An unknown field is refused. The body of check and the body of `do` are the same.
 - The identifier of the thing acted on is a body field for check and `do`. For status and verify it is a query field: status of the metric panel run takes `intake_queue_uid` or `panel_run_uid`, and verify takes `reference`. It is never a path parameter, so a command has exactly four routes.
-- The actor is never a body field. It is taken from the signed-in identity as the email, or the user id when there is no email (`actorFrom` in `command-contract.ts`). An identity with neither cannot act. Open: 1068 adds the signed-in user id to the actor as an optional member, `userId`, for an act that records the id and not the email.
+- The actor is never a body field. It is taken from the signed-in identity as the email, or the user id when there is no email (`actorFrom` in `command-contract.ts`). An identity with neither cannot act. The actor also carries the signed-in user id as an optional member, `userId`, for an act that records the id and not the email (added in 1068).
 - Authentication stays the engine's: real sign-in, the global guards, and a declared role on every route. A command copies today's roles and changes none. Roles are ruled in phase 9.
 
 #### Where the code lives
 
-- **The shared code is `src/common/command/`.** It is owned by no function, as the register of shared code in the annex "Every Repository and Where It Belongs" has it. Merged files: `command-answer.ts` (the answers), `command-refusal.ts` (the refusal and the two exceptions), `command-contract.ts` (the `Command` contract and the actor), `command-do.ts` (the helper that makes `do` run check first), `read-only-tx.ts` (the earlier read-only wrapper) and `command-conformance.ts` (the test helper), each with a spec. Open (1068): `dedicated-connection.ts` replaces `read-only-tx.ts`; `command-http.ts` is new; `command-spec-support.fixtures.ts` holds the recording pool and the small HTTP application the controller specs use. There is no `index.ts`: a command imports the file it needs.
+- **The shared code is `src/common/command/`.** It is owned by no function, as the register of shared code in the annex "Every Repository and Where It Belongs" has it. Its files: `command-answer.ts` (the answers), `command-refusal.ts` (the refusal and the two exceptions), `command-contract.ts` (the `Command` contract and the actor), `command-do.ts` (the helper that makes `do` run check first), `dedicated-connection.ts` (the read-only wrapper, which replaced `read-only-tx.ts` in 1068), `command-http.ts` (`sendAnswer`) and `command-conformance.ts` (the test helper), each with a spec; and `command-spec-support.fixtures.ts`, which holds the recording pool and the small HTTP application the controller specs use. There is no `index.ts`: a command imports the file it needs.
 - **Each command lives in its function's folder** with its own controller. The command class has the four methods and no HTTP types. The controller parses the request, asserts the role and calls the method. There is no one controller that dispatches for all commands, because every function would then edit one file.
-- **The roster declaration is AI's** (merged, `src/registry/ai-panel-roster/`): one committed file of the three panels' seats and a check that the seats the code would run equal the declared seats (ruling B18). Every `check` of a panel command includes it.
+- **The roster declaration is AI's** (`src/registry/ai-panel-roster/`): one committed file of the three panels' seats and a check that the seats the code would run equal the declared seats (ruling B18). Every `check` of a panel command includes it.
 
 #### How a command is proven
 
-Each command has a spec that calls the shared helper `assertCommandConformance` (merged, `command-conformance.ts`) over its own fixtures. The helper asserts that:
+Each command has a spec that calls the shared helper `assertCommandConformance` (`command-conformance.ts`) over its own fixtures. The helper asserts that:
 - check refuses the refusing input with complete refusals and no write and no vendor call;
 - `do` on that input answers 409 with exactly the refusals check gave, and writes and calls nothing;
 - a failing seat gives 502 that names the seat, the vendor and the model;
@@ -188,7 +187,7 @@ Each command has a spec that calls the shared helper `assertCommandConformance` 
 
 Only the vendor seats are stubbed. The helper does not watch the database or the vendors itself: it reads two counters, writes seen and vendor calls seen, that the fixture's own stubs advance. A fixture whose stubs do not advance them proves nothing.
 
-Proven as built (open: 1068, and in the stack of 1070 and 1071):
+Proven as built (1068, 1070 and 1071):
 - **The read-only transaction on one connection.** A recording-pool spec shows `BEGIN READ ONLY`, the body and `ROLLBACK` all run on the same connection and never on the pool, that two concurrent reads get two connections, and that the transaction is rolled back and never committed. An integration spec against real PostgreSQL (`dedicated-connection.integration.spec.ts`, added to the `e6b-db-integration` check of CI) shows the statements of one read run on one backend, that a write inside a read verb is refused by the database with SQLSTATE 25006 and writes nothing, and that the connection returns to the pool idle. On the head of 1068 the `e6b-db-integration` check passed.
 - **A controller on the wire.** Each command controller has a spec that boots only that controller on a real HTTP port, with the global validation, the problem filter, the response wrapper and the roles guard around it. It shows the route set, the role, an unknown field refused (including an actor in the body), the actor taken from the signed-in identity, 200 on check, 409 with the refusals at the top level on a refused `do`, 201 on `do`, and that the answer is the body itself.
 
@@ -197,6 +196,7 @@ Still not proven:
 2. **A command on the served engine.** No command has been called through the running engine with a real sign-in, and the three commands have not run a vendor seat for real. Nothing real was run for any of them.
 3. **The 502 on the wire from a real seat failure.** The type and title are covered by a filter spec; no seat has failed for real under a command.
 4. **The long act.** See "The long act".
+5. **A calibration through the command.** The `do` verb of `calibrate-certification-roster` can succeed on no engine today. Its check refuses the platform database by name (`audit-panel-calibration.command.ts:220-225`), and the engine's guard on every platform session refuses every database of another name (`src/database/served-identity/platform-session-identity.ts:101`, in `platformIdentityViolations`). The repair is carried by ruling G53 to the next change of the certification roster, no later than phase 11 (the Definition of AI services, A5, Carried).
 
 The real-database test of the commands belongs to the lock (part 3 of "How a lock works"). Until it exists, the command specs run on fixtures.
 
@@ -206,11 +206,11 @@ Three commands and two steps. Each wraps the existing service; none re-implement
 
 | Name | Act | Routes | Role | Wraps | State |
 |---|---|---|---|---|---|
-| `register-certification-roster` | A4 | the four routes | `mcf_publisher` | `AuditPanelRosterService` | open, 1068 |
-| `calibrate-certification-roster` | A5 | the four routes | `mcf_publisher` | `AuditPanelCalibrationService` | open, 1068 |
-| `run-metric-authoring-panel` | A2 | the four routes | `mcf_author` | `MetricAuthoringPanelService` | open, 1070 |
+| `register-certification-roster` | A4 | the four routes | `mcf_publisher` | `AuditPanelRosterService` | merged, 1068 |
+| `calibrate-certification-roster` | A5 | the four routes | `mcf_publisher` | `AuditPanelCalibrationService` | merged, 1068 |
+| `run-metric-authoring-panel` | A2 | the four routes | `mcf_author` | `MetricAuthoringPanelService` | merged, 1070 |
 | registry panel step | A1 | no route | none | the registry panel client | merged, 1069 |
-| certification panel step | A3 | no route | none | the certification panel run | open, 1071 |
+| certification panel step | A3 | no route | none | the certification panel run | merged, 1071 |
 
 **register-certification-roster** (A4, ruling G45). Registers the certification panel's roster as the gate authority, citing the calibration transcript.
 - Check returns every refusal the registration would meet: the shape of the calibration reference, the authorizer, the target database (a scratch database, or the production interlock with its block), the seats the engine is wired to run, their equality with the committed declaration (ruling B18) and a duplicate live registration.
@@ -219,14 +219,14 @@ Three commands and two steps. Each wraps the existing service; none re-implement
 
 **calibrate-certification-roster** (A5, ruling G45). Runs the certification panel's seats over the calibration corpus on a scratch copy of the database and keeps the transcript that a registration must cite.
 - Check refuses before any vendor call: the source provenance, the platform database, the scratch-proof capability and allowlist, a scratch-guard claim that disagrees with the environment, a roster that does not build, and seats that differ from the declaration.
-- `do` calibrates once with the real, paid vendors and returns the evidence reference that the registration requires. If a seat cannot be reached, the service records that in the transcript and the command answers 502 naming the first unreachable seat.
+- `do` calibrates once with the real, paid vendors and returns the evidence reference that the registration requires: `<path>=sha256:<64 hex>`, the path and hash of the transcript, not a record uid. If a seat cannot be reached, the service records that in the transcript and the command answers 502 naming the first unreachable seat.
 - Verify reads the transcript back from its reference and checks the hash again.
 - No other route into the calibration service was found in `src` or `scripts`.
 
 **run-metric-authoring-panel** (A2, ruling G44). Runs the metric authoring panel on an intake row.
 - `maker_source` is a declared argument: `paid` (the panel's own maker seat runs) or `supplied` (the caller supplies the maker's output, and only the checker and the judge are paid).
 - A supplied maker records itself as supplied: its stored identity says `supplied`, names who supplied it and when, carries a fingerprint of the transcript as received, and holds null for vendor, endpoint, times, latency, tokens and request ids. No schema changes. The service is not edited.
-- Check reads only: the roster difference (B18), seats that cannot be built, the intake row's state, the re-run rule and a run in flight.
+- Check reads only: the roster difference (B18), seats that cannot be built, the intake row's state, and then one of two rules: the re-run rule when `allow_retry` is set, or a run in flight when it is not (`metric-panel-run.prechecks.ts:88`). It never reports both.
 - A seat that fails while it runs is recorded by the service as operator review. `do` then answers `done`, not 502, and adds a `panel_flag` when the park reason is partial transcripts. A configuration error before any seat runs is a 502 naming the seat, vendor and model. A rejection with no defect code (ruling B40) is a named refusal.
 - Verify re-reads the run, its three transcripts and its anchor row and says whether they agree.
 - The existing routes `POST /mcf/panel-runs` and `POST /mcf/panel-runs/with-maker` stay for now. Their callers are bc-admin, DevHub's metric drive and `scripts/mcf/offpool-maker.mjs`.
@@ -238,7 +238,7 @@ Three commands and two steps. Each wraps the existing service; none re-implement
 - Behaviour change: an unknown word in `BCF_PANEL_MAKER_PROVIDER` or `BCF_PANEL_MODERATOR_PROVIDER` used to resolve silently to the default. The roster check now refuses it by name, and the panel code stops a run with a 503 before any vendor call. A failed seat now raises `PanelSeatFailedException` (in `in-process/panel-seat-failed.exception.ts`), a subclass of the same 503 exception with the same message, that names seat, vendor and model.
 - Today's registry run service is not rewired to the step.
 
-**The certification panel step** (A3, open: 1071, `certification-panel-step.ts`). It has no route. The decision command is L6's, in phase 6, and it will call the step. It offers four functions:
+**The certification panel step** (A3, merged in 1071, `certification-panel-step.ts`). It has no route. The decision command is L6's, in phase 6, and it will call the step. It offers four functions:
 - `checkPanel`: every refusal before the first vendor call: the wired seats against the declaration (B18), seats that cannot be built (a missing key or region is named, its value is not), the wired seats against a live registration, the panel substrate and, when a subject is given, whether its frozen package can be put to the panel. It writes nothing and calls no vendor.
 - `runPanel`: the panel run for one metric contract version. A seat that fails after its retries is reported with seat and vendor named and what the platform left recorded.
 - `statusPanel` and `verifyPanelRun`: where a case stands, the stored rows that prove the panel ran, and the flag when it is due.
@@ -267,10 +267,10 @@ The commands as built answer when the act has ended: `do` returns once the seats
 
 #### Ruling B31's flag
 
-Ruling B31 keeps the certification panel as a flagger: where its ruling disagrees with a passing decision, the decision is flagged. The flag is advisory and decides nothing. As built (open: 1071):
+Ruling B31 keeps the certification panel as a flagger: where its ruling disagrees with a passing decision, the decision is flagged. The flag is advisory and decides nothing. As built (1071):
 - **The collector.** `CertificationPanelDecisionService.decideWithFlags` supplies the lane's `onPanelFlag` hook. The hook is an in-memory collector that cannot throw: its body is wrapped, and a failure of the collector itself is kept as a named problem (`flag_collection_failed` or `flag_not_collected`) and can never change the decision.
 - **The condition** is the lane's own: the decision code is `PASS` and the panel's ruling is not `PANEL_VERIFIED`.
-- **The existing decision route** returns its outcome as before and now returns `flags` and `flag_problems` beside it. No caller of that route was found in bc-admin, DevHub or bc-core scripts. A due flag is a `panel_flag` with the subject and the two uids. DevHub records it as a panel-flag task when it drives the call. This follows the pattern of ruling G43, which has the command report a vendor failure and DevHub record it.
+- **The existing decision route** returns its outcome as before and now returns `flags` and `flag_problems` beside it. When a panel run fails after the first write, its refusal body also carries `failedSeat`: the seat, model and family that was running, or null when no seat act threw (`mcf-certification-panel-decision.controller.ts:97`; `audit-panel-failed-seat.ts`). No caller of that route was found in bc-admin, DevHub or bc-core scripts. A due flag is a `panel_flag` with the subject and the two uids. DevHub records it as a panel-flag task when it drives the call. This follows the pattern of ruling G43, which has the command report a vendor failure and DevHub record it.
 - **The step re-derives a due flag** from the stored decision and panel rows: a passing decision whose cited panel run did not end as verified. A flag raised through a caller that recorded nothing is therefore still shown by `statusPanel` and `verifyPanelRun`.
 - No platform table is changed.
 - **The lane file of L6 is not edited** (`certification-panel-decision.lane.ts`). Two points are carried to L6's Modify step in phase 6 by name: its comment near lines 95 to 97, which still says the production wiring emits a task and that a failure is swallowed, and the `.catch` near line 329, where its call swallows an error.
