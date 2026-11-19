@@ -82,9 +82,9 @@ AI owns the calling of vendors, the rosters, the seats' prompts and the run reco
 
 | # | Act | Where |
 |---|---|---|
-| A1 | Run the registry authoring panel | the part (phase 4) |
+| A1 | Run the registry authoring panel | the part (phase 4); a step with no route of its own, proven inside the Prove step of L3 in phase 4 (ruling G50) |
 | A2 | Run the metric authoring panel (paid maker, or supplied maker) | the part (phase 4) |
-| A3 | Run the certification panel, inside the certification decision | the part (phase 4) |
+| A3 | Run the certification panel, inside the certification decision | the part (phase 4); a step with no route of its own, proven inside the Prove step of L6 in phase 6 (ruling G50) |
 | A4 | Register a certification roster | the part (phase 4) |
 | A5 | Calibrate a certification roster | the part (phase 4) |
 | R1 | Report vendor spend | carried to phase 11 |
@@ -92,6 +92,8 @@ AI owns the calling of vendors, the rosters, the seats' prompts and the run reco
 | R3 | Replay the ABC reasoning panel | carried to phase 11 |
 
 The expected list named "the certification panel decision" as one act. This definition splits that route: the panel run is AI's (A3) and the decision it feeds is L6's (section 5), because the decision's code is written from the deterministic gate alone (`certification-decision-writer.ts:190`), not from the panel. Acts A1 to A5 are the acts a metric of the spine passes through: a concept it binds is authored by A1, the metric by A2, its certification calls A3, and A3 refuses without a registered roster (`lane.ts:159-161`), which A4 writes from the evidence A5 produces. The rest serves cost and an unused panel, which no step of phases 4 to 8 reads.
+
+**Where each act is proven (ruling G50).** The Prove step of the part covers A2, A4 and A5, by their three commands. A1 and A3 stay in the part and are locked with it, without a Prove of their own in AI: each is proven inside the Prove step of the function whose command calls it, A1 in L3's (phase 4) and A3 in L6's (phase 6), and each is carried by name with that phase. AI owns no step of the thread, so its Prove walks none.
 
 ## 3. The acts of the part
 
@@ -176,6 +178,8 @@ Each act gets one command with the four verbs: **status** (where the case stands
 
 **What must change.** The command is built. The seats are read from the roster declaration of question 1, not from settings, if question 1 takes the declaration now. A stale comment that names a prior moderator beside the current constant is corrected (`audit-seat-factory.ts:72-81`).
 
+**Carried.** The first real registration through the command `register-certification-roster` is carried by name to the next change of the certification roster, which is the operator's act, and no later than phase 11 (ruling G53, point (d)). Until then its `do` refuses with the code `roster_already_registered` wherever a live registration names the wired seats, which is so on the platform database (`bc-core:src/registry/mcf/audit-panel/audit-panel-roster.command.ts:181 @ 7d735a84`). The Prove step performs A4 by its status, check and verify verbs and by that named refusal.
+
 ### A5. Calibrate a certification roster
 
 **Today.** `AuditPanelCalibrationService` runs the real seats over a fixture set on a scratch copy and writes the transcript a registration must cite; it refuses `bc_platform_dev` (`bc-core:src/registry/mcf/audit-panel/audit-panel-calibration.service.ts:9-19, 359-366 @ fd4b55ca`). It is a provider of the MCF module (`mcf.module.ts:343`) and has no route; no caller was found in bc-core `src` or `scripts`.
@@ -183,6 +187,8 @@ Each act gets one command with the four verbs: **status** (where the case stands
 **The definition.** One command that runs only on a scratch copy and refuses the platform database, as today; its `verify` gives the transcript's path and hash in the form A4 requires.
 
 **Why it is in the part.** A4 cannot be performed without its evidence, and any roster change in phases 4 to 8 needs it. A calibration calls the real, paid vendors, on a scratch copy of the database; each run is asked for when it is to be done, and approving this definition approves none. Whether it stays in the part is question 6 (section 9).
+
+**Carried.** A defect left by the Modify step: the `do` verb of `calibrate-certification-roster` cannot succeed on any engine today. Its check refuses the platform database by name (`bc-core:src/registry/mcf/audit-panel/audit-panel-calibration.command.ts:220-225 @ 7d735a84`), and the engine's served-identity guard, applied to every platform session, refuses every database of another name (`bc-core:src/database/served-identity/platform-session-identity.ts:101 @ 7d735a84`, in the function `platformIdentityViolations`, `:87-103`). So no engine can reach the scratch copy the command needs. The repair, and the first real calibration through the command, are carried by name to the next change of the certification roster, no later than phase 11, and no calibration is run before then (ruling G53, point (c); DevHub task TSK-766e7b). The Prove step performs A5 by its status, check and verify verbs and by the named refusal of its `do` verb.
 
 ## 4. The rest, carried by name to phase 11
 
@@ -253,7 +259,7 @@ The reads of a run's record (`GET /bcf/registry-panel-runs/:panelRunUid`, `GET /
 
 ## 8. What the part's lock will mean
 
-1. Each of A1 to A5 is performed by its command alone; a guard fails when a second route, script or host performs one of them.
+1. Each of A2, A4 and A5 is performed by its command alone. A1 and A3 are steps with no route of their own, performed only through the commands that call them (L3's authoring command and L6's decision command); they are locked with the part and proven inside the Prove steps of L3 (phase 4) and L6 (phase 6) (ruling G50). A guard fails when a second route, script or host performs one of the five.
 2. The panel host has no setting and no client that reaches bc-ai.
 3. A vendor failure is reported by the command, with the seat and vendor named, in each of the three panels, and is recorded as question 4 rules.
 4. The part's files pass the code rules; its commands are tested against a real database.
@@ -292,6 +298,7 @@ Each is put as a proposed ruling. They were recorded on 2026-11-19 as rulings B1
 - Options: (a) A5 is in the part: its command is built and proven in phase 4. (b) A5 is carried to phase 11; whatever registration is in force when the Audit step reads it stays the roster of the spine, and no roster changes before phase 11.
 - Recommendation: (a), because a registration cannot be made or replaced without calibration evidence, and the Audit step may find that the registration in force does not equal the wired seats, which is not established today.
 - What follows: under (a), the Prove step of the part includes one calibration run on a scratch copy, which calls paid vendors and is asked for then; under (b), a mismatch found at Audit cannot be repaired by a new registration until phase 11.
+- **Corrected at the Prove step (ruling G53, point (c)):** the Prove step of the part includes no calibration run. The command's `do` verb cannot succeed on any engine today (A5, Carried); A5 is performed by its status, check and verify verbs and by the named refusal of its `do` verb, and the first real calibration is carried to the next change of the certification roster, no later than phase 11. A5 stays in the part.
 
 ## 10. What this definition asks the operator to approve
 
@@ -341,3 +348,13 @@ The Modify step of function AI put its questions to the operator in one desk req
 - A2, What must change, item 4: the second schema change is not made, because all 553 judge rows already store `moderator` (B41).
 - Section 8, the approval paragraph: one schema change is named, not two.
 - A2, Today and item 3: `cost_ceiling_exceeded` and its error class are in four files, at six places, not five places.
+
+## Corrected at the Prove step (2026-11-19)
+
+The Prove step of function AI put its questions to the operator in one desk request, answered by grant `2026-11-19T16-52-07-670Z-e3fca09d` (text SHA-256 `e3fca09d4d42162ac35545de77190c3eb867d961d66b2b16acc0e5f6ad8bf36f`, desk request 537), recorded as rulings G50, G51, G52 and G53 in the annex "The Rulings". The text of this definition is corrected in these places only. The five acts of the part, the rest and the answers to the questions are unchanged, except as ruling G50 says where A1 and A3 are proven and ruling G53 says what the Prove step performs for real.
+
+- Section 2, the table and the paragraph under it: A1 and A3 stay in the part; A1 is proven inside the Prove step of L3 in phase 4 and A3 inside the Prove step of L6 in phase 6 (G50).
+- Section 8, item 1: A2, A4 and A5 are each performed by their command alone; A1 and A3 only through the commands that call them (G50).
+- A4, Carried (new): the first real registration through the command, carried to the next change of the certification roster, no later than phase 11 (G53, point (d)).
+- A5, Carried (new): the defect that the `do` verb of the calibrate command can succeed on no engine today, and its carry, with the first real calibration, to the next change of the certification roster, no later than phase 11 (G53, point (c)).
+- Section 9, question 6, What follows: the Prove step includes no calibration run (G53, point (c)).
