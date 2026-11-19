@@ -25,7 +25,7 @@ diagrams: []
 
 # Platform Refactor Program
 
-> **Status of this document.** It is locked. The operator approved it on 2026-11-14, and the approval is recorded at the approval desk as grant `2026-11-14T01-47-16-746Z-95eacc7e` (text SHA-256 `95eacc7ea28b4a731731b9627bc50be55ba19ca58f0bd9309c78836ee2558044`), given for this document as written at commit `71aa76f0607ab92a8b2fc5f1a0c6d07fdc0cb872`. The decision is decision record DEC-71f15e, which is `decided`. It was amended by ruling G36 (housekeeping) by the rulings of phase 2 (F1's statement, F2 to F9, T6, B6 and B7) and by the rulings of phase 3 (G12 to G15, the first part of G35, B1, B2, G37 and G38), in the way "The rulings" describes. By the documentation's rule a chapter binds when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca).
+> **Status of this document.** It is locked. The operator approved it on 2026-11-14, and the approval is recorded at the approval desk as grant `2026-11-14T01-47-16-746Z-95eacc7e` (text SHA-256 `95eacc7ea28b4a731731b9627bc50be55ba19ca58f0bd9309c78836ee2558044`), given for this document as written at commit `71aa76f0607ab92a8b2fc5f1a0c6d07fdc0cb872`. The decision is decision record DEC-71f15e, which is `decided`. It was amended by ruling G36 (housekeeping) by the rulings of phase 2 (F1's statement, F2 to F9, T6, B6 and B7) and by the rulings of phase 3 (G12 to G15, the first part of G35, B1, B2, G37 and G38), in the way "The rulings" describes. By the documentation's rule a chapter binds when it is both authoritative and locked [21b]; the Foundation chapters are the one exception, and bind through the Authority Model (decision DEC-e0a8ca). **Phase 3 exited on 2026-11-19.** The operator approved its exit at 03:22 UTC that day; the approval is recorded at the approval desk as grant `2026-11-19T03-22-16-792Z-81a27dc3` (text SHA-256 `81a27dc35ec312eee83a0667a849d7a6f0192f6a626ba5e11ad8335bfef40399`; desk request 519) and in DevHub's program record as row PRG-6fff93. Four things stay open by name after that exit: conditions P3-C6 and P3-C7 (ruling B2); the Lock step of Operations (ruling G37); the commands of Operations and the convergence to one backup tool that ruling G38 carries; and the carried items of the annex "The Definition of Operations", under "What is carried past phase 3". The program's position, recorded the same minute (row PRG-5a6fd1), is phase 4, function S1, step Define. No work of phase 4 has started. On 2026-11-19 the Chief also added the measured durations under "The order of work"; that paragraph is a record of facts and no ruling.
 
 ## Summary
 
@@ -56,7 +56,9 @@ On 2026-11-14 the operator approved the program, confirmed the five rulings deci
 
 Of the two credentials found in the engine's history, one is dealt with and one is not yet confirmed. On 2026-11-14 the operator replaced the account password: the reset tool reported the change, and a sign-in with the stored new value succeeded. For the API key, a request the operator made with it was answered with HTTP status 400, and the key was not among those listed in the operator's provider account; that suggests the key is no longer valid but does not establish it. It stays open until the provider's refusal is confirmed to name the key as invalid, or the key is found and deleted. The files that hold both are removed in phase 3.
 
-The rulings needed in phases 2 and 3 are put to the operator when each phase begins.
+The rulings needed in phases 2 and 3 were put to the operator when each phase began, and all are decided; see "The rulings". The rulings needed in later phases are put to the operator in the Define step of the function each belongs to.
+
+**Since 2026-11-19.** The operator approved the exit of phase 3 on 2026-11-19 at 03:22 UTC (grant `2026-11-19T03-22-16-792Z-81a27dc3`). What stays open by name after it is listed in the status note at the head of this document. The table and the paragraph on the two credentials above were not read again for that change: they stand as written on 2026-11-14.
 
 ## How to read this document
 
@@ -291,6 +293,35 @@ The order is fixed. A phase begins when the one before it has met its exit. Phas
 | 12 | DV: the rules for working | The rules for sessions, review and approvals are one locked chapter. No decision record or memory file remains unchecked. |
 
 Durations are not given, because none can be estimated honestly before one function has passed through the method. After phase 3 the Chief amends this document with measured durations.
+
+**Measured durations (the amendment, dated 2026-11-19).** This paragraph is that amendment. It is a record of facts, not a ruling, and it gives no estimate for any later phase. Every time is UTC and is taken from DevHub's program record, as the Chief read it on 2026-11-19; a row of that record is named PRG and six characters. The program was approved on 2026-11-14 at 01:47 (grant `2026-11-14T01-47-16-746Z-95eacc7e`). Phase 0 is not in the table: its times were not read for this paragraph.
+
+| Phase | Function | Start: the position recorded | Exit: the operator's approval | Wall clock |
+|---|---|---|---|---|
+| 1 | DV: DevHub and bc-docs | 2026-11-14 07:54 | 2026-11-14 14:41 (PRG-bbbb61) | about 6 h 47 min |
+| 2 | The frame | 2026-11-14 14:50 | 2026-11-14 17:06 (PRG-002df4) | about 2 h 16 min |
+| 3 | OP: Operations | 2026-11-14 17:06 (PRG-eabffa) | 2026-11-19 03:22 (PRG-6fff93; grant `2026-11-19T03-22-16-792Z-81a27dc3`, desk request 519, text SHA-256 `81a27dc35ec312eee83a0667a849d7a6f0192f6a626ba5e11ad8335bfef40399`) | about 4 days 10 h 16 min |
+
+The steps of phase 3, for its one function:
+
+| Step | From | To | Wall clock |
+|---|---|---|---|
+| Define | 2026-11-14 17:06 (PRG-eabffa) | 2026-11-15 01:38, approved and judged complete (PRG-254f94, PRG-07f3ff) | about 8 h 32 min |
+| Audit | 2026-11-15 01:38 | 2026-11-15 03:13, judged complete (PRG-8f4217) | about 1 h 35 min |
+| Modify | 2026-11-15 03:13 | 2026-11-19 02:37, judged complete (PRG-226147) | about 3 days 23 h 24 min |
+| Prove | 2026-11-19 02:37 | 2026-11-19 03:20, judged complete (PRG-d6537b) | about 43 min, two runs |
+| Lock | not done | carried by ruling G37 | none |
+
+Condition P3-C5 was judged met on 2026-11-19 at 02:36 (PRG-02fd79), read as ruling G38 reads it. The Modify step was judged complete on the exit that rulings B2 and G37 give it; it does not show that values did not move. The first Prove run, from 02:40 to 02:42, stopped at its first act on gaps of the Operations chapter, and nothing was changed (PRG-28a5a6). The chapter was corrected (bc-docs pull request 245, merge commit `84b229f64fec0723812747e9e32db46e0ff75940`) and approved by the operator (grant `2026-11-19T03-08-50-587Z-eb13d8f6`, desk request 518). The second run, from 03:11 to 03:17, ran 56 commands with no halt.
+
+Phase 3 in counts. The program record holds, for phase 3, 95 evidence rows, 8 judgements of conditions and 4 judgements of steps. Pull requests merged between 2026-11-15 and 2026-11-19: bc-infra 52, barecount-devhub 42, bc-docs 20, bc-db 6 and bc-core 2, which is 122 in all. That count is the Chief's, from GitHub; the auditor has not checked it, and not every one of those pull requests belongs to the function of phase 3.
+
+What these durations show, and what they do not:
+
+- One function has passed through the method, so there is one measurement.
+- Operations had no application. Its commands were built from nothing, and the executor of the reference run with them.
+- The wall clock includes the waits for the auditor's reviews and for the operator's grants.
+- Phase 3 exited with its Lock step and two conditions carried (rulings G37 and B2). It is not a measurement of a full pass through all five steps.
 
 **Reporting.** At each exit, and at least weekly, the Chief reports to the operator the count of functions at each step and the count of open rulings.
 

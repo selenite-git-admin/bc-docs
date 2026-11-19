@@ -539,6 +539,8 @@ The sign-in screen belongs to S1. The tenant screens belong to S3. The package s
 
 ### OP, Operations
 
+**Dated note, 2026-11-19.** This dossier is the reading of 2026-11-13 and is kept as that. Phase 3 of the program, whose function is Operations, exited on 2026-11-19 with the operator's approval (grant `2026-11-19T03-22-16-792Z-81a27dc3`); Operations is not locked (ruling G37). What changed in phase 3, what is done and what is carried is in the annex [The Definition of Operations](definition-operations.md), under "What is carried past phase 3". Where this dossier and that annex differ on the state of Operations, the annex is the later reading.
+
 **What it is.** Operations is how the platform is run and changed. It covers where the platform runs and what each environment is called; how a new build of bc-core is put into service; how settings and secrets reach a running server; how the database schema changes; which database logins exist and what each may do; backup and restore; the automated checks on every change (continuous integration, CI); and the cloud infrastructure. It serves the operator and every development session.
 
 **How bc-docs defines it.**
