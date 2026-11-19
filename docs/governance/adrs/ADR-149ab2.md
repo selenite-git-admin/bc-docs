@@ -126,3 +126,15 @@ This ADR is the D6 foundational ADR named in Requirements Deferral D6. It supers
 ### Status
 
 Filed at `decided` after operator review on 2026-05-19. Implementation follows in the gap-pass document and subsequent build sessions. ADR amendments will be filed when (a) Scope 2/3 activate, (b) legacy reconciliation method is chosen, (c) Phase 2 thresholds tighten, (d) REJECT defect-code list extends, (e) operator-confirm grammar extends.
+
+## Amendment 1 — the REJECT defect-code list is extended (2026-11-19)
+
+**Clause amended.** Question 7, "REJECT-eligible defect-code closed list", says the list is "ADR-governed and extensible" and that additions require an ADR amendment. This is that amendment, the one the Status section names as (d).
+
+**What is added.** The list of defect codes that the database accepts on a row of `bcf.panel_output_record` whose verdict is `REJECT` is extended with the 11 codes of `MCF_DEFECT_REGISTRY_V1` (bc-core `src/registry/mcf/mcf-defect-registry-v1.ts`, as at commit `fd4b55ca`, unchanged at `0001515e`): `MC_DEFECT_GRAIN_INCOHERENT`, `MC_DEFECT_VARIABLE_UNBINDABLE`, `MC_DEFECT_FORMULA_TYPE_MISMATCH`, `MC_DEFECT_UNIT_PROMOTION`, `MC_DEFECT_CROSS_GRAIN_AGGREGATION`, `MC_DEFECT_IDENTITY_COLLISION`, `MC_DEFECT_TEMPORAL_GATE_INCOHERENT`, `MC_DEFECT_COMPUTED_DIMENSION_UNRESOLVED`, `MC_DEFECT_BC_SUPERSEDED`, `MC_DEFECT_PE_MC_1_UNGROUNDED` and `MC_DEFECT_TRANSCRIPT_FABRICATION`. DEC-c3e57f governs those 11 codes; the registry file names it as its authority.
+
+**What stands.** The 9 codes in the table above are unchanged. The registry authoring panel's own list in code stays the 9 codes. The extra 11 are written only by the metric authoring panel. Everything else in this ADR stands, and its status stays `decided`.
+
+**When it takes effect.** In the database, only when bc-db migration 0072 is applied. It is written and not yet applied. Until then the database accepts the 9 original codes only.
+
+**Authority.** Ruling B39 of the Platform Refactor Program (`docs/development/platform-refactor-program/rulings.md`), which makes `REJECT` the one rejection value of the verdict field and names this note as asked separately. The operator's recorded grant for this note is desk grant `2026-11-19T11-33-40-933Z-32b7681a` (text SHA-256 `32b7681a72be8fb804b49583f848176ee6c6ef3f52c3a8bbc8088a6ac54286e2`), given on 2026-11-19 on desk request 533.

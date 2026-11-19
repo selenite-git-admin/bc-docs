@@ -9,6 +9,8 @@ domain: platform
 subdomain: bcf-panel
 focus: runtime
 supersedes: DEC-14fb98
+errata:
+  - ADR-ERR-015 (point 3 names REJECT_DEFECT; the registry panel's rejection value is REJECT, 2026-11-19)
 ---
 
 # Retire bc-ai — port the BCF registry-authoring panel in-process into bc-core, roster preserved
