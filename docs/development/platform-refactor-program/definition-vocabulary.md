@@ -36,10 +36,10 @@ This is the first of five steps for the vocabulary list. You are asked to approv
 - **What the list is.** One governed list of the things the business talks about: entities (Customer, Invoice), characteristics (the meaning part of a name, such as "credit limit") and business concepts (one property of one entity, such as `invoice.bill_to`). A metric can use a concept only once it is live.
 - **The five acts taken now.** Add a new entity or concept through the AI group (V1); give your yes to a risky addition (V2); put a new characteristic live (V3); deal with new cases the AI group could not decide (V4); hide a concept that never went live, without deleting it (V5). Changing what already exists waits for phase 11.
 - **Question 1: who puts a concept live.** Today, when the AI group approves a new entity or concept, it goes live at once and nobody signs it off. A rule in the registry's settings table could ask for your yes; the Chief read the table on 2026-11-19 and it holds no such rule for the registry, so that is how it works today. The recommended answer keeps that. Under it you can **no longer put a draft entity or concept live by hand**, and, because nothing in this part can change the settings table, you have no way to make these additions wait for you until phase 11.
-- **Question 2: the 602 old waiting cases.** The recommendation: this part handles only cases from the day you approve; the old ones wait, untouched, until phase 11.
+- **Question 2: the 602 old cases sent to review.** The recommendation: this part handles only cases from the day you approve; the old ones wait, untouched, until phase 11. A live read of 2026-11-19 shows 602 records with the verdict `OPERATOR_REVIEW`, of which 97 have no disposition; the Audit of L3 reads them again.
 - **Question 3: adding a concept with no AI.** You can already do this yourself. The recommendation keeps it as an option of the same single command rather than a second door.
 - **Question 4: a decided ADR the code contradicts.** DEC-45c01b says a new characteristic needs no yes from you to be admitted; the code asks for one. The recommendation keeps the code's stricter way, which **amends a decided record** (asked of you separately). Each new characteristic then costs you two acts: your yes to admit it (V2) and your yes to put it live (V3).
-- **The roster of AI models** is decided by desk request 523, already put to you; this part follows whichever answer you give.
+- **The roster of AI models** was decided on 2026-11-19 by desk request 523, as ruling B18; this part follows it.
 - **Cost.** Proving the part means adding one real concept, which calls the paid AI group twice; that run is asked for when it is to be done. Even when the part is locked, the vocabulary function still counts as unfinished until the rest is done.
 
 ## How to read this definition
@@ -249,7 +249,7 @@ Moving a value is not a change of rule when the declared value is the value that
 
 Each is put as a proposed ruling. They were recorded on 2026-11-19 as rulings B32, B33, B34 and B35, on the operator's desk grant `2026-11-19T07-05-41-031Z-945d99c6` (text SHA-256 `945d99c65dcbf531a64e097619ce8caaed6fbc4f59cafc0d4898a30efa295c52`, desk request 525); the amendment of DEC-45c01b that ruling B35 calls for was directed by desk grant `2026-11-19T07-06-27-510Z-b4893712` (request 526).
 
-**Ruling B18, the roster, is not asked here.** The Definition of AI services recommends deciding it now for all three panels (its question 1, answer (b)), and the operator has been asked on desk request 523 (pending). It is decided by that request if granted. If granted, the registry panel's roster becomes a committed declaration that AI builds in phase 4, and L3's part does one thing: V1's command reads the seats from it (V1, item 5), which meets the dossier's lock item 2 (`functions-authoring-lanes.md:431`). If declined, the roster stays in code, and L3's lock names it as a known exception carried to phase 11.
+**Ruling B18, the roster, is not asked here.** The Definition of AI services recommends deciding it now for all three panels (its question 1, answer (b)), and the operator granted it on desk request 523 on 2026-11-19 (grant `2026-11-19T07-04-50-111Z-60d74091`), recorded as ruling B18. The registry panel's roster becomes a committed declaration that AI builds in phase 4, and L3's part does one thing: V1's command reads the seats from it (V1, item 5), which meets the dossier's lock item 2 (`functions-authoring-lanes.md:431`).
 
 **1. One way for an entity or concept to reach `active`.** When the active policy carries no operator-confirm rule, the code makes a panel-approved entity or concept active in the same request; the program's texts say a concept waits for the operator (V1). The policy in force carries no such rule (the Chief's read of 2026-11-19, "What was checked"), so this is what happens today.
 - Options: (A) keep the code's way. Activation is the last step of V1 and V2, by the panel's actor, under the policy as it stands; the publication route serves characteristics only; a failed activation is resumed by V1 or withdrawn by V5. (B) Authoring ends at `draft`; the publication command, performed by the operator, is the only way for all three kinds; the fast lane is deleted.
@@ -258,8 +258,8 @@ Each is put as a proposed ruling. They were recorded on 2026-11-19 as rulings B3
 
 **2. Runs sent to operator review: the scope of V4 (needed by phase 4).** The question is about an act of the part, so by the rulings annex its phase is the spine phase (`bc-docs:docs/development/platform-refactor-program/rulings.md:49`); ruling B19 itself, how the backlog is closed, stays needed by phase 11 (`rulings.md:151`). The queue has no date filter, so the part's runs and the backlog are one list.
 - Options: (a) the part handles runs created from the date the operator approves this definition; older runs are carried by name to phase 11 under B19, and `status` shows the two counts apart; (b) rule B19 now and take the backlog into phase 4.
-- Recommendation: (a). The part needs only that no new run strands; the backlog is a judgement of 602 cases that no step of phases 4 to 8 reads.
-- What follows: under (a), V4's command gains the cut-off (V4, item 2), and no historical run is adopted or disposed in phase 4; the 602 stay waiting until phase 11. Under (b), the Prove step of the part waits for the backlog.
+- Recommendation: (a). The part needs only that no new run strands; the backlog is a judgement of 602 cases (97 of them with no disposition, on the live read of 2026-11-19) that no step of phases 4 to 8 reads.
+- What follows: under (a), V4's command gains the cut-off (V4, item 2), and no historical run is adopted or disposed in phase 4; the 602 stay as they are until phase 11, the 97 undisposed among them. Under (b), the Prove step of the part waits for the backlog.
 
 **3. The operator-direct door.** Beside the panel, `POST /api/bcf/registry/concepts/authoring-recommendations` and `POST /api/bcf/registry/characteristics/admission-recommendations` let the operator be the maker, with no model (`bcf-business-concept-authoring-recommendation.service.ts:8-21`; `routes.snapshot.json:397, 405`); both decorated `platform_admin`. One path for each act is the method's rule (`platform-refactor-program.md:253`).
 - Options: (a) one authoring command with the maker as a declared argument, panel or operator, ending in the same confirm; the two routes become that argument; (b) the panel only, and the two routes deleted; (c) both kept as separate acts.
@@ -285,7 +285,7 @@ Said plainly, for the recommended answers: you can no longer put a draft entity 
 - It changes no data and no setting, and adds no table or column; this worker found no schema change the part needs.
 - It changes no one's role or permissions.
 - It does not change the registry policy, and nothing in this part can.
-- It makes no ruling on the 602 waiting runs, and adopts or closes none.
+- It makes no ruling on the 602 records sent to operator review (97 of them with no disposition, on the live read of 2026-11-19), and adopts or closes none.
 - It amends no ADR; the DEC-45c01b amendment is asked for separately.
 - It runs no AI panel and makes no paid vendor call.
 - It puts no entity, concept or characteristic live, and leaves the one unfinished concept untouched.
