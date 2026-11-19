@@ -160,7 +160,7 @@ The list is taken from the operator's ruling on the table of acts, given above, 
 
 **Who may make such a run.** The ruling names the Chief. Ruling G37 names one more: a backup take and a restore proof in a disposable container made by the Prove worker "are within point three of grant `2026-11-18T14-11-21-285Z-ca66e1ef`", and the Chief reports each (Program, "The rulings", G37; Definition, "The steps of Operations in phase 3"). No text names any other session. The commands themselves read no grant, so this rule is kept by the people and sessions that run them, not by the code.
 
-**The read-only verbs need no grant.** `status`, `check` and `verify` of every command of bc-infra `ops/` change nothing. One exception in cost, not in kind: `ops/serve-move check` makes one read of the cloud secret store (key names only), so it is run only when a move is being prepared.
+**The read-only verbs need no grant.** `status`, `check` and `verify` of every command of bc-infra `ops/` change nothing. One exception in cost, not in kind: `ops/serve-move check` makes one read of the cloud secret store (key names only) and one read of the live ledger of schema changes (through the read-only login and the one fixed statement of `ops/schema-compare`), so it is run only when a move is being prepared.
 
 ### How a grant is read
 
@@ -419,7 +419,7 @@ The second line is written with today's values. `--commit` is the commit and `--
 
 **A session without a grant runs `status` and `verify` only.** The full procedure for a real move, with every option, is the runbook in bc-infra `ops/README.md`, "Runbook: one real move of the engine, and the return", parts A to G. It is not repeated here.
 
-**What it reads.** `status` and `verify` read the supervisor through its socket, the listener on the port, the tree the listener runs from, and the engine's readiness answer. `check` also reads the desk, the auditor's clearance file in a local checkout of bc-external-audit, the key names of the two trees' settings files, and, once, the key names of the served secret in the cloud secret store.
+**What it reads.** `status` and `verify` read the supervisor through its socket, the listener on the port, the tree the listener runs from, and the engine's readiness answer. `check` also reads the desk, the auditor's clearance file in a local checkout of bc-external-audit, the key names of the two trees' settings files, the objects of the engine repository's two commits (to work out the files under the hold), the platform migration files of the bc-db checkout named by `--schema-repo` at the commit its local `origin/main` names, the live ledger of schema changes (read only, through the read-only login of `ops/schema-compare`), and, once, the key names of the served secret in the cloud secret store. It never fetches: the engine repository, bc-db and bc-external-audit are read as they stand on the machine.
 
 **What `do` writes.** The supervisor's definition of the one service; the engine is stopped and started from the new tree; a lock file for the length of the run; one new evidence folder; and, only after the move is verified, the lines of `~/bc-stack/process-compose.yaml` that name the build.
 
@@ -440,7 +440,19 @@ The second line is written with today's values. `--commit` is the commit and `--
 
 **The auditor's clearance stays required.** Ruling G14 retires the separate clearance only if a grant says so in express words. bc-infra `ops/README.md` states that no recorded desk grant holds the line that retires it (the desk grant list, read 2026-11-18).
 
-**A build that changes engine source cannot be moved by this command today.** The command works out whether engine source differs between the served commit and the new one. If it does, the move is refused. A passed reference run on the exact commit would lift that refusal, and none exists (bc-infra `ops/README.md`, "Whether engine source differs is computed, not asserted"; see "The reference run" below).
+**The two checks of the build.** The Definition (section 3, step 1) has two sentences about the build, and the command computes one check for each. The caller states neither. Both are as built at bc-infra `5122f40c` (`ops/README.md`, "The two checks of the build are computed, not asserted").
+
+- **A build that changes a file under the hold on the engine cannot be moved by this command today.** The command asks git for the paths that differ between the commit the supervisor pins now and the new commit, in either direction, and works out the files under the hold at both commits by the engine repository's own rule (the surface file `governance/engine-value-surface.json` and the guard's code, read from git objects). A path held at either commit counts. If one differs, the move is refused by name: the command has no reader of a reference-run record, so it cannot see a passed run on the exact commit, and a reader is added only by a reviewed change. No reference run that would lift the refusal exists (see "The reference run" below). A read of the surface file that fails refuses; a file absent at both commits refuses; a file absent at one commit is given the definition of the other.
+- **A build that changes a file the hold does not name is not refused for that reason.** A change to `src/` files outside the hold, to `scripts/`, to `package.json` or to `package-lock.json` passes this check. Those changes are listed for the auditor, who judges them; the loader among them is proven by the served-secret line of `check`.
+- **Every platform migration merged in bc-db must be applied.** With `--schema-repo` the command reads the platform migration files at the commit of the local `origin/main` of the bc-db checkout, and the live ledger. Each migration must be applied, adopted or excepted on the ledger with the hash of its file. A migration that is merged and not applied, rolled back, not understood or applied from other bytes refuses the move by name, even one the build does not need. A migration is applied by the governed runner, in the window before the move. The register `docs/migrations-awaiting-apply.md` in bc-db is not read. The check cannot see a schema change that nobody wrote as a merged migration; the review of the engine change and the auditor's clearance cover that.
+
+**What the window's operator has ready before `check`.** The command reads local copies and never fetches, so each of these is done first (bc-infra `ops/README.md`, runbook, part B, steps 1 to 3):
+
+- the engine repository is fetched, and the new commit is a commit of its `origin/main`;
+- bc-db is fetched (`git -C <bc-db checkout> fetch origin`), so that its local `origin/main` is current;
+- every merged platform migration of bc-db is already applied by the governed runner, in the same window and before `check`; a migration that waits for apply makes `check` refuse;
+- the new tree is built with `npm ci` (then `npm run build`), so that it holds the pinned TypeScript version: the command loads the parser from `node_modules/typescript` of the new tree and refuses it unless its SHA-256 is the pinned one;
+- `--schema-repo` is given the absolute path of the bc-db checkout, whose `origin` must be `selenite-git-admin/bc-db` on github.com.
 
 **The record.** One folder for each move under `~/bc-stack/serve-moves/`, named by the command with a UTC timestamp and eight hex digits. It holds twelve files and `SHA256SUMS`. To read one: `(cd <folder> && shasum -a 256 -c SHA256SUMS)` must print `OK` for every file; `result.json` gives the result; `move.json` gives the mode, the grant id and the auditor file read. The folder holds names of settings, never their values. Two folders exist from the first real move and its return, both of 2026-11-18: `20261118T021826Z-14c68601` and `20261118T021927Z-40d3a09c`.
 
@@ -1262,7 +1274,7 @@ It is a list of known places, not a search of every text. A new place that decla
 - Item 2 is done: one real move and one return, 2026-11-18. A failed live move, and a live return after a failure, have not happened.
 - Item 3, the chapter rewritten: not done. `docs/operations/serve-moves-and-live-windows.md` still describes the twin trees and the rehearsal with a forced failure, which ruling G14 retired. The committed tools for the older procedure removed: not done. They are still on barecount-devhub's main branch at `5614f134`, in `artifacts/serve-move/toolkit/` and `artifacts/w9-serve-move-4/tools/`. Pull request 400 did not remove them: it removed the host installer and the host sources, which are another thing.
 - The auditor's separate clearance of each serve move is still required.
-- A move that changes engine source cannot be made by the command until a reference run has passed on its commit.
+- A move that changes a file under the hold on the engine cannot be made by the command until a reference run has passed on its commit and the command has a reader of that record. A move that changes no file under the hold is not refused for source changes; it is refused while any merged platform migration of bc-db is not applied.
 - The Definition gives one procedure for every service. Only a move of `bc-core` has been made.
 
 **Section 4, settings and secrets.**
