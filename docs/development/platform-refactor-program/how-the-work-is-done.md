@@ -211,6 +211,12 @@ The program changes that by mechanism, not by exhortation:
 | A worker | A session opened for one unit of work | Nothing beyond its unit | Performs one step for one function and closes |
 | The auditor | Codex, an independent reviewer running under a separate account | Whether a change to engine or migration code may merge | Reviews those changes; its findings are answered before merge |
 
+**The model a worker runs on** (the operator's direction of 2026-11-19). A worker is started on the model its task needs, and the Chief names that model each time it starts one, because a worker otherwise runs on the Chief's own model. The default is Sonnet. Opus is used where the task is judgement: a steward, a check of a design, a hard review. No worker runs on the Chief's own model, whose weekly allowance is the limit of the program's bandwidth: from 17 to 19 November 2026 every worker ran on it unnamed, and by the Chief's count from the session transcripts those workers wrote about 3.9 million tokens on it in three days. The Chief keeps its own context short for the same reason: it gives a worker any task of more than a few reads, and resets at the exit of a step.
+
+**What a step asks of the operator is asked together.** The acts of one step that need the operator's recorded approval go to the approval desk as one request where they can be decided together, and work that does not depend on the answer continues. In phases 1 to 3, by the Chief's count, at least one request was open for 41 of 115 hours.
+
+**Before a step that ends in a real run,** the Chief checks, by reading only, that the run can pass on the data and contracts as they stand. **Before the operator is asked to approve a chapter,** a worker that took no part and has no memory files reads it against the commands, without performing an act that needs a grant.
+
 **The hard line** is the set of acts that are never performed without a recorded approval from the operator: a change applied to a database; an act on data that cannot be undone; a change to cloud resources; and the writing of any credential. During the program the present approval rules stay in force for every other act as well, until ruling G1 is made.
 
 ## Risks
