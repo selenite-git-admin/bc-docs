@@ -40,7 +40,7 @@ Three metrics of the reference set pass the first four tests: this one, `receiva
 
 **What is not established about the metric.**
 - The file records where its values came from: a recompute on the posting basis, run read-only against the demo source system on 2026-10-02, apart from the platform. That is documented provenance; it has not been checked by an independent read of the source system for this program. Ruling B5 decides what an expected value must be worked out from.
-- Whether today's engine reproduces them. The first reference run, in phase 3, answers that.
+- Whether the engine reproduces them. The first reference run, made in phase 3 on 2026-11-18, failed: the engine gave no value for `receivable_control_balance`, and no recorded value was shown to have moved (main document, "The method"; the annex "The Definition of Operations", section 9). Whether the engine reproduces them once the two defects that run found are repaired is not known.
 - **The enabling step cannot be walked afresh on this metric,** because it is already enabled for Kaveri, and nothing disables a metric today. On the thread, that step is shown by the enabling command's own check and verify on the existing state. A fresh enabling is shown by the finish test, which takes a new metric through it.
 - Whether a user of Kaveri can sign in and sees the value. No service was started for this annex.
 

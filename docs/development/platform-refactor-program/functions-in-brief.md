@@ -445,6 +445,7 @@ One summary for each of the 28 functions follows, in the order of the table abov
 - **Locked means:**
   - One written serve procedure has one committed script.
   - The reference run exists, runs from a fixed input, and its result is required before engine code merges.
+- **Since this summary (one dated line, 2026-11-19):** the summary above is the dossier's reading of 2026-11-13. Phase 3, whose function is Operations, exited on 2026-11-19 with the operator's approval (grant `2026-11-19T03-22-16-792Z-81a27dc3`), and Operations is not locked (ruling G37). Three statements above are no longer true as written: the four migrations were withdrawn from bc-db's main branch (ruling G12); the one serve procedure has a committed command, bc-infra `ops/serve-move`, run once for a move and once for a return on 2026-11-18; and the reference run exists and made its first run on 2026-11-18, which failed (ruling B2). One still holds: no dump taken by the nightly script has been restored and compared, though dumps taken by the command have. The record of each is the annex [The Definition of Operations](definition-operations.md), "What is carried past phase 3".
 - **Full dossier:** [OP, Operations](functions-shared-services-operations-development.md#op-operations)
 
 ### DV, Development
