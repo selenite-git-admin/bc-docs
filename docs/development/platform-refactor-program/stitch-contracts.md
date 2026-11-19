@@ -299,7 +299,7 @@ The facts under "Today" were gathered by readers working from the dossiers, the 
 **What must change to meet it**
 - RT, lock condition: a Metric Snapshot is immutable, carries the six identifiers in item 2, and has Evidence. Repair, by writing it into RT's chapter and its lock test. Not established whether today's records already hold all six.
 - RT: keep the completion event `metric_run_completed`. Repair (nothing to add).
-- A1: nothing is built. The function goes on the "designed and not built" list at phase 11.
+- A1: nothing is built. The function goes on the "designed and not built" list at phase 16 (phase 11 before ruling G39).
 
 **Left to the operator:**
 - Nothing now. What starts an action is decided in the Define step of Action and intervention. Rulings B29 and T23 are not re-asked.

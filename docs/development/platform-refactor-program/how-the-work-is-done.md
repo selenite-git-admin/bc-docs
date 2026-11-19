@@ -211,6 +211,12 @@ The program changes that by mechanism, not by exhortation:
 | A worker | A session opened for one unit of work | Nothing beyond its unit | Performs one step for one function and closes |
 | The auditor | Codex, an independent reviewer running under a separate account | Whether a change to engine or migration code may merge | Reviews those changes; its findings are answered before merge |
 
+**The model a worker runs on** (the operator's direction of 2026-11-19). A worker is started on the model its task needs, and the Chief names that model each time it starts one, because a worker otherwise runs on the Chief's own model. The default is Sonnet. Opus is used where the task is judgement: a steward, a check of a design, a hard review. No worker runs on the Chief's own model, whose weekly allowance is the limit of the program's bandwidth: by one worker's count from the local session transcripts, not recounted, workers ran on that model from 17 to 19 November 2026 and wrote about 3.9 million tokens on it; the transcripts record the model used, not whether it was inherited. The Chief keeps its own context short for the same reason: it gives a worker any task of more than a few reads, and resets at the exit of a step.
+
+**What a step asks of the operator is asked together.** The acts of one step that need the operator's recorded approval go to the approval desk as one request where they can be decided together, and work that does not depend on the answer continues. In phases 1 to 3, by the Chief's count, at least one request was open for 41 of 115 hours.
+
+**Before a step that ends in a real run,** the Chief checks, by reading only, that the run can pass on the data and contracts as they stand. **Before the operator is asked to approve a chapter,** a worker that took no part and has no memory files reads it against the commands, without performing an act that needs a grant.
+
 **The hard line** is the set of acts that are never performed without a recorded approval from the operator: a change applied to a database; an act on data that cannot be undone; a change to cloud resources; and the writing of any credential. During the program the present approval rules stay in force for every other act as well, until ruling G1 is made.
 
 ## Risks
@@ -221,9 +227,9 @@ The program changes that by mechanism, not by exhortation:
 | 2 | Scope grows through "while we are here". | Work that belongs to no function and step. | The anchor requires each act to name its function and step. Anything else is listed for later. |
 | 3 | A change to the engine alters a number unnoticed. | The reference run fails. | No engine change before the reference run exists; it runs at every Modify exit. |
 | 4 | The guide becomes one more text beside the others. | A merged chapter with no retirement list. | A chapter merges only with its retirement list; the lock requires the replaced texts to be gone. |
-| 5 | Delivery to a tenant is again left for later. | Phase 5 begins with stitch contract 2 or 6 unapproved. | The contracts are a phase 2 exit; phase 7 cannot begin without them. |
+| 5 | Delivery to a tenant is again left for later. | Phase 4 begins with stitch contract 2 or 6 unapproved. | The contracts are a phase 2 exit; phase 4 cannot begin without them. |
 | 6 | The first reference run does not reproduce the recorded values. | The qualification run fails. | Ruling B2; the baseline is then set from evidence before any change. |
-| 7 | DevHub work expands and delays everything. | Phase 1 without its exit after its Define step. | Phase 1 is limited to the items in its exit; the rest of DevHub is phase 12. |
+| 7 | DevHub work expands and delays everything. | Phase 1 without its exit after its Define step. | Phase 1 is limited to the items in its exit; the rest of DevHub is phase 17. |
 | 8 | Context is lost between sessions, as before. | A session acts against this document. | The pinned anchor points here; the Chief's brief points here; DevHub holds the state. |
 | 9 | Approvals for many small acts slow the work. | Waiting time at the approval desk. | Ruling G1; until it is made the present rules stand. |
 | 10 | A committed credential is used by someone else. | Unexpected sign-ins or usage. | The operator rotates the two credentials, which sit on three lines [17a]; the files are removed in phase 3. |
@@ -235,7 +241,7 @@ The program changes that by mechanism, not by exhortation:
 | The pinned anchor of the Demoed drive | Replaced by this program's anchor when the operator approves the pin at the approval desk. |
 | `blueprints/goal.md` and `blueprints/demoed-terminal.md` | Kept as history. |
 | The Chief's brief | Carries a first block pointing to this document. |
-| The other controllers' briefs and the memory files | Unchanged until phase 12, except that each is checked against a chapter when its function is locked. No new program state is written to memory. |
+| The other controllers' briefs and the memory files | Unchanged until phase 17, except that each is checked against a chapter when its function is locked. No new program state is written to memory. |
 | DevHub's plans and open tasks | Swept under ruling G2 in phase 1. The tasks of the parked drive are already parked with a dated reason. |
 | The decision records | Unchanged until their function is locked; then folded in, marked as history, or deleted. |
 | Open pull requests of the parked drive | Each is closed or completed in the phase of the function it belongs to. They are listed in "Items outside the program". |
@@ -254,7 +260,7 @@ The program changes that by mechanism, not by exhortation:
 
 - **Committed credentials.** Two credentials are present in bc-core's history on three lines: one account password in two files, and one API key. The account password was replaced by the operator on 2026-11-14; the reset tool reported the change and a sign-in with the stored new value succeeded (seen by the Chief in the terminal output; not re-checked by the auditor). The API key is not confirmed dead: a request the operator made with it was answered with HTTP status 400, and it was not among the keys listed in the operator's provider account. That suggests it is no longer valid and does not establish it. The item stays open until the provider's answer is confirmed to name the key as invalid, or the key is found and deleted. The files are removed in phase 3; deleting them does not remove the values from history.
 - **The provisioning worker** must not be run with its readiness pass until the gap described in the dossiers for L5, Canonical Contracts, and L10, Tenant onboarding, is closed, because the pass could make a contract version active that was authored for the demo plane.
-- **A standing halt in bc-docs.** The chapter on the metric management system still says that no further metric is to be made active and no further vocabulary authored until a sequence completes. This program's hold replaces it; the text is retired in phase 7.
+- **A standing halt in bc-docs.** The chapter on the metric management system still says that no further metric is to be made active and no further vocabulary authored until a sequence completes. This program's hold replaces it; the text is retired in phase 6.
 - **Instructions that are wrong today.** The project instruction file names a demo tenant that does not exist, a tenant route that refuses, a count of schemas that is too low (11 against a measured 22 [16a]), and a naming rule for boolean columns that the data does not follow (not re-checked; reported in artifacts/spine-review/DOCS-3A-implementation.md). They are corrected in phase 1.
 - **The documentation reader** is broken on the build now being served. Its repair is not held and is done with the serving procedure in phase 3.
 - **Open pull requests of the parked drive.** barecount-devhub 325 and 326; bc-core 1053 and 1054; bc-docs 206, 212 and 214. They are on the disposal list of phase 0.
