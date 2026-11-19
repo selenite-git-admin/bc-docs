@@ -207,9 +207,11 @@ Also carried by name: the 602-run backlog (B19, question 2); an `archived` state
 | Neighbour | L3 receives | L3 hands on | Record |
 |---|---|---|---|
 | AI | The panel record, read by uid (`registry-authoring-run.service.ts:75-76`) | The candidate and the active policy version, from which AI's packet is built (`:68-74`) | `bcf.panel_output_record` |
-| L4 | Nothing | A concept at `active`, found by id | `concept_registry.business_concept` |
+| L4 | Nothing as an act; L3's concept supersession reads L4's active versions and refuses while one maps the concept (`registry-authoring.service.ts:1817-1849`, reached from the supersession at `:1090` through `:1763-1782`) | A concept at `active`, found by id. L4's resolver reads and checks `lifecycle_state`, `entity_id`, `kind`, `representation_term`, `data_type`, `unit`, `reference_role` and `target_entity_id`, and the closed value set held on the concept's active version | `concept_registry.business_concept`, and `concept_registry.business_concept_version` for the value set (`observation-concept-resolver.service.ts:116-135, 531-545, 584-625, 706-720`) |
 | L5, L6 | Nothing | Concepts and the grain entity, by id (`functions-authoring-lanes.md:370-371`) | the same |
 | The operator | Confirms, publications, adoptions, dispositions, the policy row | Outcome kinds and the queue | `bcf.certification_record`; `bcf.panel_output_record` |
+
+A change to any of the fields L4's resolver reads makes the resolver refuse an observation body whose frozen copy differs. These two hand-offs with L4 were added to this definition on 2026-11-19, from `definition-observation-contracts.md`, section "Where this definition differs from the Definitions of AI services and of Vocabulary".
 
 No stitch contract names L3. This definition proposes **no new stitch contract**, for the reasons the AI Definition gives (section 6 there): each hand-off is inside one engine through a named record, and "usable" for L4 is a single rule the resolver already enforces **(inferred)**. The Chief checks that the AI, L3 and L4 Definitions state the same records before any is approved.
 
@@ -245,7 +247,7 @@ Moving a value is not a change of rule when the declared value is the value that
 
 ## 9. Questions for the operator
 
-Each is put as a proposed ruling; the Chief numbers them when they are recorded.
+Each is put as a proposed ruling. They were recorded on 2026-11-19 as rulings B32, B33, B34 and B35, on the operator's desk grant `2026-11-19T07-05-41-031Z-945d99c6` (text SHA-256 `945d99c65dcbf531a64e097619ce8caaed6fbc4f59cafc0d4898a30efa295c52`, desk request 525); the amendment of DEC-45c01b that ruling B35 calls for was directed by desk grant `2026-11-19T07-06-27-510Z-b4893712` (request 526).
 
 **Ruling B18, the roster, is not asked here.** The Definition of AI services recommends deciding it now for all three panels (its question 1, answer (b)), and the operator has been asked on desk request 523 (pending). It is decided by that request if granted. If granted, the registry panel's roster becomes a committed declaration that AI builds in phase 4, and L3's part does one thing: V1's command reads the seats from it (V1, item 5), which meets the dossier's lock item 2 (`functions-authoring-lanes.md:431`). If declined, the roster stays in code, and L3's lock names it as a known exception carried to phase 11.
 

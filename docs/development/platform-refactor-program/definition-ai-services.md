@@ -110,13 +110,13 @@ Each act gets one command with the four verbs: **status** (where the case stands
 **The definition.**
 - AI's act ends when the panel record is written, or when the run is refused or fails. What the orchestrator does with the record is L3's (section 5).
 - One host: the panel runs inside bc-core. There is no setting that selects another host.
-- `check` reports the duplicate and policy refusals before any vendor is called. `do` returns the run uid and the panel verdict. `verify` reads the panel record and its calibration event.
+- `check` reports the duplicate and policy refusals before any vendor is called. The rules behind those refusals are L3's, reported by the one command that L3 builds (V1 of the Definition of Vocabulary). `do` returns the run uid and the panel verdict. `verify` reads the panel record and its calibration event.
 - A vendor failure is always reported by the command: `do` names the seat and vendor that failed. Where the failure is recorded is what question 4 (section 9) decides.
 
 **What must change.**
 1. The HTTP client, `BC_AI_URL`, `BC_AI_TIMEOUT_MS` and the `BCF_PANEL_MODE` switch are deleted, in the function and step that question 3 names.
 2. The DevHub scripts that post to the route are retired, or rewritten to call the command.
-3. The command is built, with its four verbs.
+3. The command is built, with its four verbs, as the first step of L3's authoring command (V1 of the Definition of Vocabulary), which L3 builds, so that one call performs both, as A3's is shared with L6.
 4. The verdict field gets a value rule, and one rejection spelling is chosen: the registry code writes `REJECT` (`registry-authoring-verdict.logic.ts:22`), the metric panel writes `REJECT_DEFECT` (`metric-authoring-panel.service.ts:453`), DEC-ffee4e names `REJECT_DEFECT` (`ADR-ffee4e.md:27`), and there is no CHECK on `verdict_code` (`panel-output-record.ts:47`). **The operator's act**: a schema change, under the Database Change Protocol.
 
 **Carried.** Separating operator-direct entries from panel verdicts in `bcf.panel_output_record` (vocabulary S5.6 defect 2) is a schema change on a table at its 20-column ceiling (`panel-output-record.ts:67`); it is L3's, with AI, in phase 11. The 602 runs awaiting operator review are ruling B19 (L3, phase 11).
@@ -203,7 +203,7 @@ Each surface below writes from, or into, AI's records. It is named here so that 
 | Act | Route | Owner |
 |---|---|---|
 | What follows a registry panel record: certification record, registry write, the outcome kinds | inside `POST /bcf/registry-authoring-runs`, after the panel (`registry-authoring-run.service.ts:76`) | L3 |
-| Confirm a high-risk registry act | `POST /bcf/registry-shape-certifications/confirm`, `operator` (`registry-shape-certification-confirm.controller.ts:39-40`) | L3 (`functions-authoring-lanes.md:357`) |
+| Confirm a high-risk registry act | `POST /bcf/registry-shape-certifications/confirm`, `operator` (`registry-shape-certification-confirm.controller.ts:39-40`) | L3 (`functions-authoring-lanes.md:356`) |
 | Adjudicate or dispose a run sent to operator review | `GET /bcf/review-queue`; `POST /bcf/registry-panel-operator-adjudications`; `POST /bcf/registry-panel-runs/:panelRunUid/disposition` (`routes.snapshot.json:57, 386, 387`) | L3 (`functions-authoring-lanes.md:360`) |
 | The eleven operator-direct `*-recommendations` routes | `routes.snapshot.json:392-409` | L3 (`functions-authoring-lanes.md:355`) |
 | Write a panel record directly | `POST /bcf/panel-output-records`, `platform_admin` or `operator` (`panel-output-record.controller.ts:28`) | L3, proposed: today it is the operator-direct writer's door (**(inferred)**; no dossier places it) |
@@ -259,7 +259,7 @@ The reads of a run's record (`GET /bcf/registry-panel-runs/:panelRunUid`, `GET /
 
 ## 9. Questions for the operator
 
-Each is put as a proposed ruling. The register assigns them no number yet; the Chief numbers them when they are recorded.
+Each is put as a proposed ruling. They were recorded on 2026-11-19 as rulings B18, B31, G42, G43, G44 and G45, on the operator's desk grant `2026-11-19T07-04-50-111Z-60d74091` (text SHA-256 `60d740912f88101600f84a3375f3310102c091a9e32ce4139762084c6a78e075`, desk request 523).
 
 **1. Rulings G20 and B18, now or in phase 11.** G20 (AI: one vendor client and roster for all panels, or one each) and B18 (L3: the roster as data or code) are due in phase 11 (`rulings.md:150, 171`), but the Modify step of the part, in phase 4, moves values written into code into declarations, and the rosters are such values.
 - Options: (a) decide both now; the part declares one roster record and one vendor client for A1 to A3. (b) Decide B18 now (each panel's roster as a declaration in data) and leave G20 (one client) to phase 11. (c) Carry both by name: in phase 4 the rosters stay in code, named on the lock list as a known exception, and phase 11 moves them.
