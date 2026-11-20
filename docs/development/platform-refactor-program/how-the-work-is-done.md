@@ -126,7 +126,7 @@ Check is a POST only because it carries a body. It writes nothing.
 
 #### What each verb does and returns
 
-- **status.** Reads in a read-only transaction. Says where the thing stands and what is required next, in words. Calls no vendor and triggers no evaluation.
+- **status.** Reads in a read-only transaction (one carried exception is named under "How the read verbs are held read-only"). Says where the thing stands and what is required next, in words. Calls no vendor and triggers no evaluation.
 - **check.** Reads in a read-only transaction, so the database itself refuses a write. Calls no vendor and triggers no evaluation. Takes exactly the body `do` takes. Returns every refusal the act would meet now, not the first. The answer is HTTP 200 whether the act is allowed or not, because a refusal is an answer.
 - **do.** Runs check first. If check refuses, `do` answers HTTP 409 with the same refusals and performs nothing. Otherwise it performs the act once and answers HTTP 201 with a reference to the record that proves the act: for `register-certification-roster` and `run-metric-authoring-panel` the uid of that record, and for `calibrate-certification-roster` the evidence reference of the transcript, `<path>=sha256:<64 hex>`, the form a registration cites (`audit-panel-calibration.command.ts:11-15`). All three commands built so far answer 201 on success.
 - **verify.** Takes the reference `do` returned. Reads the records that prove the act. It is verified only when nothing is missing and at least one proof was found. A reference that proves nothing, or an unknown one, is answered as not verified, with a named refusal in `missing`. It is never a crash.
@@ -143,7 +143,7 @@ The shared code gives each verb one answer object (`src/common/command/command-a
 
 #### How the read verbs are held read-only
 
-The read verbs (status, check, verify) run in one read-only transaction on one dedicated connection. The code is `runReadOnlyOnDedicatedConnection` in `src/common/command/dedicated-connection.ts`.
+The read verbs (status, check, verify) run in one read-only transaction on one dedicated connection, with one exception: the status verb of `run-metric-authoring-panel`, which is carried (the last point below). The code is `runReadOnlyOnDedicatedConnection` in `src/common/command/dedicated-connection.ts`.
 - It uses the driver's own transaction scope, `$client.begin('read only', …)`, on the engine's postgres.js pool. The driver takes one connection, sends `BEGIN READ ONLY`, hands the body that connection alone and sends `ROLLBACK` when the scope throws.
 - The wrapper throws a private marker at the end of the scope, so the transaction is rolled back in every case, and the body's value still comes out.
 - It does not reserve a connection, because the tenant seam gate (`src/__architecture__/d575-tenant-tx-seam.spec.ts`) forbids `.reserve(` anywhere in `src`.
@@ -282,8 +282,8 @@ Whether extending G43's pattern to B31 needs the operator is for the Chief to na
 
 A **lock** is what keeps a finished function finished. It has four parts, and all four must be in place.
 
-1. **A guard on doors.** A test in continuous integration lists the entry points that may perform the function's acts. It fails when another appears. bc-core already has this kind of test for retired modules, with a baseline that may only shrink.
-2. **A guard on quality.** The function's files pass the code rules shown on DevHub's hotspots page, and the baseline for those files is set to zero failures.
+1. **A guard on doors.** A test in continuous integration lists the entry points that may perform the function's acts. It fails when another appears. bc-core already has this kind of test for retired modules, with a baseline that may only shrink. A register of named exceptions on the guard, which may only shrink, is allowed only where a ruling allows it, each entry naming the function and phase that removes it; a new entry needs a ruling (for AI, ruling G55).
+2. **A guard on quality.** The function's files pass the code rules shown on DevHub's hotspots page, and the baseline for those files is set to zero failures, except a list of exceptions by file that a ruling allows, which may only shrink (for AI, ruling G56).
 3. **A contract test.** The function's commands are exercised against a real database in continuous integration, so a change that alters their behaviour fails.
 4. **A locked chapter.** The chapter's status in bc-docs becomes `locked`. By the documentation's own rule, a chapter binds only when it is both authoritative and locked. A locked chapter changes only together with the code it describes, in the same pull request.
 
