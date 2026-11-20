@@ -121,6 +121,24 @@ By ruling G51 (2026-11-19), a function writes its own chapter of the guide, unde
 | `docs/guide/operations.md` | OP, Operations | the Prove step of Operations, in phase 3 (ruling G37) |
 | `docs/guide/ai-services.md` | AI, AI services | the Prove step of AI, in phase 4 (ruling G51) |
 
+### What a function may change at its Lock step
+
+By ruling G54 (2026-11-20), standing for every function, at its Lock step a function may add and change, though the folder is assigned to another function:
+
+- (a) its own guard on doors and that guard's register, in the architecture guard folder of bc-core (`src/__architecture__`);
+- (b) its own contract test and the fixture that test loads, which is no held fixture;
+- (c) the lines of bc-core's CI workflows that run that guard and that test, outside every held block;
+- (d) its own code-rule baseline;
+- (e) the status of the bc-docs chapters that its own chapter replaces, as the chapter register names them;
+- (f) the files that its Audit list gives it inside a folder marked split needed;
+- (g) the corrections to its own Definition that its rulings require.
+
+At a Lock step it may also change the files a ruling of that Lock names by path, and nothing wider. The assignment of every folder in the tables of this annex is unchanged.
+
+For AI's Lock (ruling G54) those files are: the lines of the route snapshot in the architecture guard folder (`src/__architecture__/routes.snapshot.json`) for the routes that ruling G55 deletes; bc-admin `src/api/metricAuthoring.ts`; DevHub `src/lib/metric-drive.js` and `src/lib/metric-workflow.js`; and bc-core `scripts/oc-sc-pairing-review.mjs`, which is Operations' file, deleted here because it names the retired host.
+
+Where AI's Audit list and the later assignment by rulings B32 and B34 differ, the later assignment governs: the five registry authoring run files and the context builder are L3's.
+
 ### Directories that are not project repositories
 
 A worktree, used below, is an extra working copy of a repository in its own folder, checked out on its own branch. Git keeps a register of them in the parent repository. "Dirty" means the working copy has changes that are not committed; the count is `command: git -C <dir> status --porcelain | wc -l`. Disk sizes are from `command: du -sh <dir>`.
