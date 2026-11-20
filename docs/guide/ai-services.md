@@ -26,7 +26,7 @@ diagrams: []
 
 # AI Services, in Part
 
-> **Status of this chapter.** It is a draft. The auditor has not reviewed it. What it says the Prove worker does is decided: the operator's rulings G50 to G53 (grant `2026-11-19T16-52-07-670Z-e3fca09d`, text SHA-256 `e3fca09d4d42162ac35545de77190c3eb867d961d66b2b16acc0e5f6ad8bf36f`, desk request 537), recorded in the annex [The Rulings](../development/platform-refactor-program/rulings.md) by bc-docs pull request 258. The operator's approval of this chapter's exact bytes for the Prove worker is asked separately (ruling G51) and is **not yet given**. AI services (function AI of the [Platform Refactor Program](../development/platform-refactor-program.md), decision DEC-71f15e) is taken in part in phase 4 and is not locked, so this chapter binds nothing yet.
+> **Status of this chapter.** It is a draft. The auditor has not reviewed it. What it says the Prove worker does is decided: the operator's rulings G50 to G53 (grant `2026-11-19T16-52-07-670Z-e3fca09d`, text SHA-256 `e3fca09d4d42162ac35545de77190c3eb867d961d66b2b16acc0e5f6ad8bf36f`, desk request 537), recorded in the annex [The Rulings](../development/platform-refactor-program/rulings.md) by bc-docs pull request 258. The operator approved the chapter as merged at commit `2f1a3ec830fbe514c51ef467ebad595994018408` (file SHA-256 `1adc7cae2516f5d34ddaa73d15f120753c25169e960cdcc2781d9fd6c3f7f361`) for the Prove worker, by grant `2026-11-19T18-03-32-549Z-25445b98`. This text was corrected after the first Prove run (see "The first Prove run" below); the operator's approval of these corrected bytes is asked separately (ruling G51) and is **not yet given**. AI services (function AI of the [Platform Refactor Program](../development/platform-refactor-program.md), decision DEC-71f15e) is taken in part in phase 4 and is not locked, so this chapter binds nothing yet.
 
 ## How to read this chapter
 
@@ -34,7 +34,8 @@ It is written for a worker that did not build the commands of AI services and is
 
 - **The design** is the annex [The Definition of AI Services, in Part](../development/platform-refactor-program/definition-ai-services.md), and the shape of every command is in the annex [How the Work Is Done](../development/platform-refactor-program/how-the-work-is-done.md), section "The command shape of the engine". Where this chapter and either annex differ, the difference is a defect to report, not to resolve.
 - **The code** is bc-core at commit `7d735a8417209270e661addbfe716ef370db943f`, cited as `bc-core:<path>:<line> @ 7d735a84`; a bare `<file>:<line>` refers to the file the section names. It was read from git objects only.
-- **"Derived from the code, not yet observed"** marks every expected answer of a route. Nobody has seen the engine send it. If the engine sends something else, the worker stops; it never decides that the chapter was wrong and the engine right.
+- **"Derived from the code, not yet observed"** marked every expected answer of a route when this chapter was written. Since the first Prove run, the 14 answers of steps 1 to 3 of "The order of the Prove run" have been observed and matched; that mark now holds only for step 5, the one real panel run, and for what follows it. If the engine sends something else than the chapter says, the worker stops; it never decides that the chapter was wrong and the engine right.
+- **The first Prove run.** It was made on 2026-11-20, from about 00:47 to 00:49 UTC, on the chapter as merged at `2f1a3ec8`. Steps 0 to 3 ended as the chapter says: the 14 calls to the engine answered as listed, the two refused `do` calls answered 409 with the refusals `check` gave, and no call answered 401 or 403. The run stopped at step 5.1: the desk did not answer one read of the panel-run grant within ten seconds, the line still printed `exit 0` because its last command was `jq`, and the chapter did not say what to do. The stop was correct: the fault was the chapter's. No `do` of `run-metric-authoring-panel` was sent and no panel run was recorded. This text corrects the grant lines and says what to do when a desk read fails; nothing else of the run's order is changed.
 
 ## What AI services is
 
@@ -138,17 +139,19 @@ Each line is run in a login shell, one at a time, and prints the answer's body, 
 
 Used for the approval of these bytes and, for the one panel run, for its grant. `<grant id>` is a grant's id; `<64 hex>` a SHA-256. These are the lines of [Operations](operations.md), "How a grant is read".
 
-    zsh -l -c 'curl -sS -m 10 -o /dev/null -w "%{http_code}\n" http://127.0.0.1:3040/api/grants-list; echo "exit $?"'
-    zsh -l -c 'curl -sS -m 10 http://127.0.0.1:3040/api/grants-list | ID=<grant id> jq -r ".grants[] | select(.grant_id == env.ID) | .grant_id, .method, .text_sha256"; echo "exit $?"'
-    zsh -l -c 'curl -sS -m 10 http://127.0.0.1:3040/api/grants-list | ID=<grant id> jq -j ".grants[] | select(.grant_id == env.ID) | .text" | shasum -a 256; echo "exit $?"'
-    zsh -l -c 'curl -sS -m 10 http://127.0.0.1:3040/api/grants-list | ID=<grant id> jq -r ".grants[] | select(.grant_id == env.ID) | .text"; echo "exit $?"'
-    zsh -l -c 'curl -sS -m 10 http://127.0.0.1:3040/api/grants-list | H=<64 hex> jq -r ".grants[] | select(.text | contains(env.H)) | .grant_id, .method, .text_sha256"; echo "exit $?"'
+    zsh -l -c 'curl -sS -m 20 -o /dev/null -w "%{http_code}\n" http://127.0.0.1:3040/api/grants-list; echo "exit $?"'
+    zsh -l -c 'set -o pipefail; curl -sS -m 20 http://127.0.0.1:3040/api/grants-list | ID=<grant id> jq -r ".grants[] | select(.grant_id == env.ID) | .grant_id, .method, .text_sha256"; echo "exit $?"'
+    zsh -l -c 'set -o pipefail; curl -sS -m 20 http://127.0.0.1:3040/api/grants-list | ID=<grant id> jq -j ".grants[] | select(.grant_id == env.ID) | .text" | shasum -a 256; echo "exit $?"'
+    zsh -l -c 'set -o pipefail; curl -sS -m 20 http://127.0.0.1:3040/api/grants-list | ID=<grant id> jq -r ".grants[] | select(.grant_id == env.ID) | .text"; echo "exit $?"'
+    zsh -l -c 'set -o pipefail; curl -sS -m 20 http://127.0.0.1:3040/api/grants-list | H=<64 hex> jq -r ".grants[] | select(.text | contains(env.H)) | .grant_id, .method, .text_sha256"; echo "exit $?"'
 
 1. Prints `200`. Anything else: the desk did not answer; stop.
 2. Prints the grant's id, `method` and `text_sha256`, or nothing when there is no such grant.
 3. Prints the SHA-256 of the text as the worker works it out. It must equal the `text_sha256` of line 2, and `method` must be `totp`; otherwise stop. `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` means an empty text: no grant of that id.
 4. Prints the text, to be read. The worker cites a grant by its id and text SHA-256.
 5. Finds every grant whose text names a given SHA-256, three lines each.
+
+Lines 2 to 5 begin with `set -o pipefail`, so the exit code printed is `curl`'s when `curl` fails, not `jq`'s. **A desk read that fails may be read again, once.** A grant line fails when it prints an exit code other than 0, when line 1 prints anything but `200`, or when line 2, 3 or 4 prints nothing for an id that an earlier line of the same run has shown to exist. The desk is only read by these lines, so reading it again changes nothing. Wait ten seconds, run the same line once more, and write both results down. If the second read fails too, stop. This holds for the desk only: a call to the engine is never repeated.
 
 ## The command `run-metric-authoring-panel` (act A2)
 
@@ -339,11 +342,11 @@ The `paid` probe expects no roster, seat or vendor refusal, which assumes the se
 
 ## What to do on an unexpected answer
 
-**Any answer this chapter does not list stops the run:** an HTTP status the section does not give for that call; a refusal code not listed for that call, or listed codes in another order or with one missing; a member absent, unnamed or with a different compared value; a line whose exit code is not 0; a `do` answer not in its table.
+**Any answer this chapter does not list stops the run:** an HTTP status the section does not give for that call; a refusal code not listed for that call, or listed codes in another order or with one missing; a member absent, unnamed or with a different compared value; a line whose exit code is not 0 (except a desk read, which "How a grant is read" lets the worker read again once); a `do` answer not in its table.
 
 **On a stop:** run nothing more, not the next call and not the same call again. Write the question down: what was called, the body as sent, what came back, and what this chapter said would come back. Give it to whoever gave the brief.
 
-**Always:** never call a `do` to cure a `check`; never repeat a call; never change anything to make an answer clean; never copy into the report a value that looks like a key or a token (say where it was, and stop). Report each call with its method, route, body, HTTP status, answer and exit code, and say whether this chapter lists it.
+**Always:** never call a `do` to cure a `check`; never repeat a call to the engine; never change anything to make an answer clean; never copy into the report a value that looks like a key or a token (say where it was, and stop). Report each call with its method, route, body, HTTP status, answer and exit code, and say whether this chapter lists it.
 
 ## What is carried
 
@@ -358,10 +361,10 @@ Each item is carried by name; none is dropped.
 
 ## What is not established
 
-- **The real answers of every route.** None of the three commands has been called on the served engine with a real sign-in. Every expected answer of a route above is derived from the code: 27 in all (five for A4, four for A5, five probes of A2, and for the panel run two before `do`, eight outcome rows and three reads after it).
-- **The sign-in.** Whether the demo user holds `mcf_publisher` and `mcf_author` (or `admin`), and the platform scope. If not, the first call answers 403 and the run stops.
+- **The real answers of the one panel run.** The 14 answers of steps 1 to 3 were observed in the first Prove run and matched (five for A4, four for A5, five probes of A2). The 13 of step 5 are still derived from the code: two before `do`, eight outcome rows and three reads after it.
+- **The sign-in** is established: in the first Prove run no call answered 401 or 403, so the demo user holds the roles and the platform scope the routes need.
 - **The text of a 403 for a missing role.** Only the scope guard's text was read.
-- **The served settings.** Whether the metric seats' vendor keys are present and equal the declaration, and how the scratch-proof capability is set, were not read. The first changes the `paid` probe; the second only the `reason` of `scratch_target_refused`.
+- **The served settings**, as the first Prove run showed them: the `paid` probe met no roster, seat or vendor refusal, so the metric seats build and equal the declaration; the scratch-proof capability is not enabled, which is the `reason` `scratch_target_refused` gave.
 - **How long a real panel run lasts.** About 35 to 180 seconds as reported; by the code up to about three times 180 seconds for `paid`.
 - **Other writes of the panel service** to the intake row besides the rejected state were not traced.
 - **The certification seats' authority.** The declaration names `DEC-05815d; DEC-d3b916` for the certification seats (`panel-rosters.json:22`), while the registration row binds to `DEC-c48b0f` (`audit-panel-roster.service.ts:39`); whether they should agree was not established.
