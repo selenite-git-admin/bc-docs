@@ -2,7 +2,7 @@
 uid: DEC-cecdfc
 title: "Every act has a door: nothing is done without a screen or a command, and one act has one implementation"
 description: "An act a person makes on the platform is Built only when a screen or a command reaches it; request-only is Partly built; one act has one implementation behind its doors."
-status: proposed
+status: decided
 date: 2026-11-21T02:26:21.842Z
 project: platform
 domain: governance
