@@ -30,6 +30,6 @@ Decided by the owner on 2026-11-21 during the workflow review, after the code-fi
 
 5. Nothing new is accepted as done without its screen or command. An existing act with no door gets a command, gets a screen, or is retired; the list of such acts is the work list of the command-line program.
 
-6. PROPOSED IN THE SAME CONVERSATION, NOT YET CONFIRMED BY THE OWNER (his words, as a question: "any FEATURE should not be implemented in more than ONE way/door??"): one act has one implementation. A screen and a command may both exist for an act, and both call the same single implementation; two separate code paths that perform the same act are not allowed. Where two exist today (for example the older metric catalog and definition routes beside the governed catalog), one is retired.
+6. One act has one implementation. The owner raised it as a question in the same conversation ("any FEATURE should not be implemented in more than ONE way/door??") and confirmed this wording ("Yes, confirmed"): a screen and a command may both exist for an act, and both call the same single implementation, holding no logic of their own; two separate code paths that perform the same act are not allowed. Where two exist today (for example the older metric catalog and definition routes beside the governed catalog), one is retired.
 
 No enforcement mechanism is built by this decision. The Workflows page shows which acts lack a door.
