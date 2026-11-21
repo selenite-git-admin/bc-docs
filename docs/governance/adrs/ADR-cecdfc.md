@@ -33,3 +33,30 @@ Decided by the owner on 2026-11-21 during the workflow review, after the code-fi
 6. One act has one implementation. The owner raised it as a question in the same conversation ("any FEATURE should not be implemented in more than ONE way/door??") and confirmed this wording ("Yes, confirmed"): a screen and a command may both exist for an act, and both call the same single implementation, holding no logic of their own; two separate code paths that perform the same act are not allowed. Where two exist today (for example the older metric catalog and definition routes beside the governed catalog), one is retired.
 
 No enforcement mechanism is built by this decision. The Workflows page shows which acts lack a door.
+
+## Amendment 1 (2026-11-21): the words, the layers, and point 3 replaced
+
+The original text above stays as decided and is not rewritten. This amendment says three things.
+
+AUTHORITY: recorded operator grant `2026-11-21T15-01-48-960Z-a0f7000f`, text sha256 `a0f7000f76998a96c2330519d6f4a0dcaebbda44127fa95965539219abf28c4b`, method totp.
+
+**1. The words.**
+
+| The record says | It means |
+|---|---|
+| a door | a declared interface |
+| a screen or a command | a declared interface of kind screen or command |
+| a request | an endpoint: one operation of the API, a method and a path |
+| a feature of type functional | an act |
+| Built | Done |
+| Partly built | WIP |
+
+**2. The layers.** A service does the act. The API stands in front of the service, and one operation of it is an endpoint. The interfaces stand in front of the API: the UI, the CLI and the Public API. A schedule and an event start the service directly and skip the endpoint's checks.
+
+**3. Point 3 of the record is replaced.**
+
+- Data is admitted only through readers. No customer system hands the platform data by calling it.
+- Webhooks are dropped from the product. Their features stay listed as to be retired until their code is gone.
+- The Public API is read only.
+
+Points 1, 2, 4, 5 and 6 hold as decided.
