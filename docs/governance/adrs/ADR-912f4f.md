@@ -30,3 +30,11 @@ N/A
 ## Consequences
 
 N/A
+
+## Amendment 1 (2026-11-21): a second factor is required for platform users
+
+The original text above stays as decided and is not rewritten.
+
+AUTHORITY: recorded operator grant `2026-11-21T16-27-02-562Z-6ba51faa`, text sha256 `6ba51faa0230f663925d34f4d859039f79bba81cddd249be92563f47895a2eb4`, method totp.
+
+A second factor at sign-in is required for platform users. The sentence that makes it optional and an administrator's choice per user no longer holds.
