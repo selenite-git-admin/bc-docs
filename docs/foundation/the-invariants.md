@@ -90,7 +90,7 @@ Cardinality. N Source Objects may feed one Canonical Object evaluation (FND-ERR-
 
 **Consequence.** Historical state is preserved indefinitely. Any reference to a past version resolves to the value the object had at production time. Disputes about past state are settled by reading preserved state, not by recomputation.
 
-Version coexistence is a first-class property (Foundation). No version is considered overwritten, invalidated, or erased within the execution model. Supersession is a governance act described in The Authority Model. It changes future use. It does not modify the retired version or remove its history.
+Version coexistence is a first-class property (Foundation). No version is considered overwritten, invalidated, or erased within the execution model. Supersession is a governance act described in The Authority Model. It changes future use. It does not modify the superseded version or remove its history.
 
 **Disallowed behaviors.**
 - A service updates a Canonical Object in place to correct an admission-time error.
