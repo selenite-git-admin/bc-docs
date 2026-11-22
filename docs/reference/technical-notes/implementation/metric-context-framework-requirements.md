@@ -234,7 +234,7 @@ The same discipline applies to MCF. Without it, MCF will re-create the contamina
 
 ### 4.2 MC structural identity tuple
 
-The active Metric Contract identity is the tuple:
+A metric's identity is its Metric Directory Member, its name and intent (The Contract Grammar). The tuple below describes a version; its parts may change from one version to the next:
 
 ```
 MC identity = (
@@ -286,16 +286,16 @@ where `operator ∈ {=, !=, <, <=, >, >=, IN, NOT_IN, LIKE, IS_NULL, IS_NOT_NULL
 
 The canonicalization rule for identity: sort filter clauses by `(business_concept_id, operator, hash(value))`; concatenate; hash. Two `filter_set`s with the same clauses in different orders hash to the same identity tuple component.
 
-### 4.6 What identity changes are supersession vs. revision
+### 4.6 Every change is a new version of the same MC
 
 Analogue of BCF's identity-bearing vs. descriptive distinction:
 
 | Change | Type | Mechanism |
 |---|---|---|
-| Change any field of the identity tuple (grain / formula intent / variable bindings / temporal gate shape / filter set) | **Supersession** | New MC under new identity tuple; old MC moves to `superseded`; `metric_supersession` row recorded |
-| Add a descriptive attribute (display name, owner, narrative description, prose business intent, dashboard tagging) | **Revision** | Active MC body updated; descriptive fields only; identity tuple unchanged; recorded as a versioned revision row, not as supersession |
-| Change a threshold value (target, alert level) | **Revision** | Threshold is descriptive metadata, not part of identity (per §4.7) |
-| Change runtime-readiness intent (PE-MC-8 declaration; see §13) | **Revision** | Intent is a forward declaration, not part of identity |
+| Change any field of the identity tuple (grain / formula intent / variable bindings / temporal gate shape / filter set) | **Supersession** | a new version of the same MC; the prior version moves to `superseded` when the new one enters `active` |
+| Add a descriptive attribute (display name, owner, narrative description, prose business intent, dashboard tagging) | **New version** | a new version of the same MC |
+| Change a threshold value (target, alert level) | **New version** | a new version of the same MC |
+| Change runtime-readiness intent (PE-MC-8 declaration; see §13) | **New version** | a new version of the same MC |
 
 The full rule per field is recorded in §10 (lifecycle).
 
@@ -308,7 +308,7 @@ Explicit non-membership prevents accidental inclusion at substrate design time:
 - **Owner** — operational metadata.
 - **Threshold values** — operational metadata; thresholds may shift without changing what the metric *is*.
 - **Dashboard tags / categorization** — read-side metadata.
-- **MC version code** — versioning is orthogonal to identity (a successor MC has a new identity tuple; revisions of a descriptive field bump the version code without changing identity).
+- **MC version code** — versioning is orthogonal to identity (every change is a new version of the same MC).
 
 ### 4.8 Composite-grain edge case
 
@@ -483,7 +483,7 @@ Adding a node type to the taxonomy is an ADR-governed MCF Grammar change.
 
 ### 7.4 Formula immutability
 
-Per Foundation Invariant III applied to MCs: an active MC's formula AST is immutable. Changing the AST is supersession to a new MC (per §4.6). Whether MCF additionally adopts a publication-time semantic-finality affirmation analogous to ADR DEC-26b6e2 for Characteristics is an open question (§19.5 Q14). This document's working position is that the identity tuple already carries the immutability force, but a per-publication operator affirmation may be added as a high-risk gate (analogous to BCF's C5-HR) if formula authority is judged downstream-load-bearing for action contracts.
+Per Foundation Invariant III applied to MCs: an active MC's formula AST is immutable. Changing the AST is a new version of the same MC (per §4.6). Whether MCF additionally adopts a publication-time semantic-finality affirmation analogous to ADR DEC-26b6e2 for Characteristics is an open question (§19.5 Q14). This document's working position is that the identity tuple already carries the immutability force, but a per-publication operator affirmation may be added as a high-risk gate (analogous to BCF's C5-HR) if formula authority is judged downstream-load-bearing for action contracts.
 
 ### 7.5 Type promotion rules
 
@@ -753,21 +753,21 @@ Activation (`approved → active`) is the moment the MC becomes the read authori
 
 ### 10.4 Immutable-active discipline
 
-Active MCs are immutable. Operator override of an active MC = operator authors a superseding new MC (per §4.6 — supersession discipline rooted in the identity tuple).
+Active MCs are immutable. Operator override of an active MC = operator authors a new version of the same MC (per §4.6 — supersession discipline rooted in the identity tuple).
 
 There is no `UPDATE` on an active MC body that changes identity-tuple fields. The substrate enforces this via a `BEFORE UPDATE` trigger that rejects mutation of identity-bearing columns when the row's `lifecycle_state = 'active'` (the BCF analogue is the `business_concept` meaning-immutability trigger).
 
-Descriptive-only updates (per §4.6) are permitted on active MCs as versioned revisions and recorded in an `mc_revision` ledger (substrate detail in §17).
+No update is made to an active version; every change is a new version.
 
 ### 10.5 Supersession with explicit successor pointer
 
 `active → superseded` requires:
 
-- The successor MC exists in `lifecycle_state = active` at the moment of supersession (no orphan supersession).
+- The successor, a new version of the same MC, exists in `lifecycle_state = active` at the moment of supersession (no orphan supersession).
 - An `mc_supersession` row is created with:
-  - `predecessor_mc_id`
-  - `successor_mc_id`
-  - `correction_class` (editorial vs meaning-bearing — analogue of `characteristic_supersession` per DEC-26b6e2)
+  - `predecessor_mc_id` (the prior version of the same MC)
+  - `successor_mc_id` (the new version of the same MC)
+  - `correction_class` (the kind of change that sets the notice: a change of meaning, another change that alters values, or a wording-only change)
   - `operator_sub` (Cognito sub from authenticated JWT)
   - `rationale_text` (≥40-char floor for high-risk supersession)
   - `panel_run_uid` (the panel run that proposed the supersession, if AI-proposed)
@@ -792,7 +792,7 @@ Candidates:
 | Temporal gate shape | Moderate. Changes may sometimes be additive (extending a trailing window). |
 | Filter set | Weakest. Filter additions are often legitimate refinements. |
 
-**Working position**: the identity tuple (§4.2) already carries the immutability force — any change to grain / formula intent / variable bindings / temporal gate shape / filter set is supersession to a new MC. **Whether MCF additionally adopts a publication-time semantic-finality affirmation analogous to ADR DEC-26b6e2 is an open question for an implementation DBCP** (§19.5 Q14). The case for adoption is strongest when the MC is the source of an action (an Intervention Contract trigger) — at that point the metric's interpretation is downstream-load-bearing in a way analogous to a characteristic's term being immutable.
+**Working position**: the identity tuple (§4.2) already carries the immutability force — any change to grain / formula intent / variable bindings / temporal gate shape / filter set is a new version of the same MC. **Whether MCF additionally adopts a publication-time semantic-finality affirmation analogous to ADR DEC-26b6e2 is an open question for an implementation DBCP** (§19.5 Q14). The case for adoption is strongest when the MC is the source of an action (an Intervention Contract trigger) — at that point the metric's interpretation is downstream-load-bearing in a way analogous to a characteristic's term being immutable.
 
 ### 10.7 Definition of "active MCF metric"
 

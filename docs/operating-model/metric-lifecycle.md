@@ -24,8 +24,9 @@ single document said what the states mean. This is that document.
 A metric begins as **intent** in the Metric Directory (a Member: what should exist, and why),
 takes **meaning** through the Business Concept Registry (concepts its contract will bind — never
 raw source vocabulary), becomes a **contract** in MCF (a draft MCV authored by the admission
-panel from a seed candidate), and earns **`active`** only through certification (a second panel
-judging the frozen package, then the C8-gated admission). Runtime consumers select `active`;
+panel from a seed candidate), and earns **`active`** only through certification (the mechanical
+checks, the version being Demoed, and the panel's run, which flags; then the C8-gated admission).
+`active` ends the platform side; each tenant's own life with the metric begins there. Runtime consumers select `active`;
 tenants see what runtime computes. Every arrow between families is a reference, never shared
 state — the families are decoupled by design.
 
@@ -37,9 +38,9 @@ state — the families are decoupled by design.
 | `review` | Under governed review. Same correctness claim as draft: none. |
 | `approved` | Review complete; the package may be frozen and certification requested. Realization may point here (the directory may reference approved MCVs) — approval is NOT a correctness certificate. |
 | `audit_pending` | **Awaiting certification — the honest raw-material state** (DEC-21ca17). Holds both never-certified feedstock and withdrawn subjects re-entering the lane. Nothing in this state reaches runtime. |
-| `active` | **Panel-certified and calculator-grade** (DEC-793e13 as restated by DEC-c48b0f), runtime-computed, tenant-visible. The full assertion holds only for `certified_active` (live `audit_admit` cert); see §3 for the labelled exceptions. |
+| `active` | **Certified**, as The Contract Grammar states it: meaning asserted in the contract, formula, calculation proven by the mechanical checks; Demoed; the panel ran and flagged; runtime-computed, tenant-visible. The full assertion holds only for `certified_active` (live `audit_admit` cert); see §3 for the labelled exceptions. |
 | `audit_blocked` | Certification-plane invalidation (C6: revocation, blocking NC, signer compromise). **Currently a dead-end by substrate**: reachable, exit hard-closed — a standing open design item (ledger E-2), deliberately not papered over here. |
-| `superseded` | Replaced by an activated successor; preserved, addressable history (Invariant III). Re-enterable to `audit_pending` through governed reintake — "superseded" is terminal for identity, not for the audit lane. |
+| `superseded` | Replaced by a later active version of the same metric contract; preserved, readable, out of use (Invariant III). Re-enterable to `audit_pending` through governed reintake. |
 
 ## 3. The meaning-history of `active` — read this before trusting old records
 
@@ -61,6 +62,8 @@ state — the families are decoupled by design.
    minting — hard deadline: before the first real tenant). **The residue's current count is
    read from the readiness projection's `residue_legacy_active` line, never from this
    document** — it shrinks as its disposition completes.
+6. **(date of merge, record id):** The Contract Grammar states what `active` asserts and requires
+   every version to be Demoed; the panel flags.
 
 Consequently the readiness projection (DEC-b049f6) renders `active` as a three-way split —
 `certified_active` / `residue_legacy_active` / `unattributed_active` (an anomaly bucket, exposed
@@ -73,13 +76,15 @@ Two panels, two questions, two moments (DEC-c48b0f):
 
 - **Admission (M12: maker/checker/judge)** judges a PROPOSAL — should this metric exist, is it
   well-formed. Output: a draft MCV. The judge's holding is the consensus verdict.
-- **Certification (assessor/adversary/moderator)** judges the FROZEN PACKAGE of a governed MCV —
-  is the definition faithful to formula, bindings, grain, declared semantics. Output: a
-  certification record, which the C8 gate requires for activation.
+- **Certification (assessor/adversary/moderator)** reviews the FROZEN PACKAGE of a governed MCV
+  and flags: is the definition faithful to formula, bindings, grain, declared semantics. It runs
+  on every certification and never blocks. The certification record rests on the mechanical
+  checks, and the C8 gate admits only a Demoed version.
 
 The sentence that reconciles "the panel is advisory" (DEC-3300f3) with "the holding is the
-verdict" (DEC-09f86b): **verdicts gate what governed services may write, and only governed
-services write.** Agents and panels recommend; substrate-guarded writers act.
+verdict" (DEC-09f86b): for the certification panel there is no gating verdict: it flags (The
+Contract Grammar, MCF Metric Contract family). For the other panels, **verdicts gate what governed
+services may write, and only governed services write.** Agents and panels recommend; substrate-guarded writers act.
 
 **Rules before judgement** (DEC-c48b0f §4): anything machine-checkable — binding resolution,
 grain agreement, currency policy, vocabulary conformance — belongs to deterministic surfaces
@@ -88,8 +93,9 @@ rule; the remedy is the rule, not another panel run.
 
 ## 5. Plane separation — certification is not chain
 
-Two questions, two homes (DEC-a6cdae): **certification** asks "is the definition correct" and
-lives in the panel + certification records + C8. **Chain-readiness** asks "can it evaluate" and
+Two questions, two homes (DEC-a6cdae): **certification** asks "is this version correct", is
+decided by the mechanical checks and the version being Demoed, with the panel's flags beside them,
+and lives in the certification records and C8. **Chain-readiness** asks "can it evaluate" and
 lives in `mcv_chain_status` plus the preflight runtime-projection leg. A panel objection about
 groundedness of chain facts is out of scope by design — answer with a scope statement, never a
 prompt patch. The chain-health overlay on the readiness projection is display-only and must
@@ -105,11 +111,12 @@ never become a hidden gate (DEC-b049f6 boundary).
   members → operator-authorized batch → per-member cert + evidence + guarded flip. Identity is
   member-keyed: **no directory identity, no reintake** (the D546 residue exists precisely
   because of this).
-- **Supersession** (M15; `active → superseded` paired with a successor's activation): built,
-  never yet fired — its first real exercise is the pending D545 cohort supersession, which is
-  therefore its commissioning test.
+- **A new version**: a change to a metric is a new version of the same metric contract. When it
+  enters `active` the prior version moves to `superseded`, the platform moves each tenant by a
+  recorded act with the notice its kind of change sets, and values already produced are never
+  rewritten. A different measure is a new metric.
 - **Abandon**: draft/review only, via the governed abandon surface; active metrics are never
-  abandoned (identity immutability past draft).
+  abandoned (a version is immutable past draft; a change is a new version).
 - **Invalidation** (C6; `→ audit_blocked`): the certification-plane kill switch. Its missing
   exit is a known open item — do not design around it silently.
 
