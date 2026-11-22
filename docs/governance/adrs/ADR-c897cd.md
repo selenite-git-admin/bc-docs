@@ -64,6 +64,6 @@ No change to Foundation, to the seven state names, or to any enforced transition
 
 The original text above stays as decided and is not rewritten.
 
-Approval: pending; the grant id is inserted in a final commit that changes nothing else.
+Approval: pending. A final commit replaces "2026-11-22, pending the operator's recorded approval" in this section's heading with the date of the operator's recorded grant, and this line with its AUTHORITY line (grant id, text sha256, method totp); it changes nothing else.
 
 Item 2(4) is read without "released". Item 3 is replaced: available means certified; a certified metric is taken out of use by retiring it. "Released" may be said in speech to mean active; it is no state and no record, and the release record under Consequences is no longer a follow-up. Item 4: "certified only through the panel" reads "certified only with a certification record".

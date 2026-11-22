@@ -120,7 +120,7 @@ Two header fields govern relationships between this contract and other artifacts
 
 `bindings[].relation` uses the enum `extracts_from`, `structured_by`, `validates`, `consumed_by`, `maps_from`, `measures`, `responds_to`, or `references`.
 
-`governance.state` uses the DDL-enforced lifecycle `draft`, `review`, `approved`, `active`, or `superseded`. The MCF Metric Contract family has seven states, stated under Lifecycle and deprecation policy. Legacy states such as `deprecated` and `retired` do not appear at the version level. Section 4.11 maps those legacy terms to the governing lifecycle.
+`governance.state` uses the DDL-enforced lifecycle. Five states are common to every family: `draft`, `review`, `approved`, `active`, `superseded`. The metric contract family adds `audit_pending` and `audit_blocked`. Legacy states such as `deprecated` and `retired` do not appear at the version level. Section 4.11 maps those legacy terms to the governing lifecycle.
 
 ## Active contract families
 
@@ -383,7 +383,7 @@ no new evaluation on the demo plane. The record of the agreement is preserved an
 match, the metric version, the demo world's version, a fingerprint of the inputs, a fingerprint
 of the expected values, and the engine build.
 
-**The end of the platform side.** No platform state follows `active`. A metric's life on the
+**The end of the platform side.** `active` is the end of the platform side: no state stands between `active` and a tenant's use. A metric's life on the
 platform side ends at `active`; each tenant's own life with the metric begins there and is held
 on the tenant side. A certified metric is taken out of use by retiring it, which archives the
 whole metric; its versions and their values are preserved.

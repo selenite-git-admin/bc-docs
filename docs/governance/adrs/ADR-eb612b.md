@@ -35,6 +35,6 @@ Foundation: location B plus E consumed at D; design act (DEC-c48b0f); Invariants
 
 The original text above stays as decided and is not rewritten.
 
-Approval: pending; the grant id is inserted in a final commit that changes nothing else.
+Approval: pending. A final commit replaces "2026-11-22, pending the operator's recorded approval" in this section's heading with the date of the operator's recorded grant, and this line with its AUTHORITY line (grant id, text sha256, method totp); it changes nothing else.
 
 BR3: the demo arm is no longer an alternative pass; no version reaches active unless it is Demoed. BR4: the VALIDATED claim level and its read projection are dropped; there is one claim, certified. BR4b is closed: the certification panel runs at every certification. BR5: "meaning against the standard" is dropped; cross-version carry-forward never transfers, because each version is Demoed on its own. BR1, BR1a, BR2 and BR6 stand.

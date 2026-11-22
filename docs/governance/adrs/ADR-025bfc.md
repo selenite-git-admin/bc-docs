@@ -48,6 +48,6 @@ First build (separately gated, AFTER this DEC): (i) the demo-plane proof act emi
 
 The original text above stays as decided and is not rewritten.
 
-Approval: pending; the grant id is inserted in a final commit that changes nothing else.
+Approval: pending. A final commit replaces "2026-11-22, pending the operator's recorded approval" in this section's heading with the date of the operator's recorded grant, and this line with its AUTHORITY line (grant id, text sha256, method totp); it changes nothing else.
 
-T1 is replaced: Demoed is not a state and not a terminal; it is the condition a version meets before it reaches active, and no platform state follows active. T3 is replaced: each version is Demoed on its own, and no equivalence record carries Demoed from one version to another. T2, T4, T5 and T6 stand.
+T1 is replaced: Demoed is not a state and not a terminal; it is the condition a version meets before it reaches active, and active is the end of the platform side: no state stands between active and a tenant's use. T3 is replaced: each version is Demoed on its own, and no equivalence record carries Demoed from one version to another. T2, T4, T5 and T6 stand.

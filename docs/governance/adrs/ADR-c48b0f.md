@@ -35,6 +35,6 @@ Five weeks of the external-audit arc produced governance machinery (courier D535
 
 The original text above stays as decided and is not rewritten.
 
-Approval: pending; the grant id is inserted in a final commit that changes nothing else.
+Approval: pending. A final commit replaces "2026-11-22, pending the operator's recorded approval" in this section's heading with the date of the operator's recorded grant, and this line with its AUTHORITY line (grant id, text sha256, method totp); it changes nothing else.
 
 The title's "second panel certifies before activation", the description's "panel 2 certifies the frozen package" and item 2's "output is a certification record" are replaced: the certification panel reviews the frozen package and its output is its recorded flags; it never blocks. The certification record rests on the mechanical checks, and no version reaches active unless it is Demoed. Item 3 stands, the panel's cost still bounding throughput because the panel runs on every certification. Items 1, 4, 5 and 6 stand.

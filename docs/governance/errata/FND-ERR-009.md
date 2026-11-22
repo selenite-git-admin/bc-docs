@@ -44,6 +44,13 @@ Foundation text stays as amended.
 - **No notice is sent.** The engine records two classes of change, `editorial` and
   `meaning_bearing`, not the three kinds the Foundation names. No service sends a notice to a
   tenant.
+- **Contextual scores still gate a decision fed by the signed exchange.** The activation
+  predicate `metric_audit.fn_intrinsic_decision_refusal` refuses a version whose decision arrived
+  on the signed exchange feed (`feed_event_uid` present) when any contextual score is below 4 or
+  the contextual decision is not `HIGH_CONFIDENCE` or `VERIFIED` (bc-db
+  `migrations/0063_c8_rebase_intrinsic_decision_refusal.sql`, lines 127-136; applied to the live
+  database on 2026-11-09). A decision of the certification panel running inside the platform gates nothing there
+  (the same file, lines 123-126). No task carries this respect yet.
 
 ## Temporary governance
 
@@ -62,7 +69,7 @@ design first, and no engine change is made without his go:
   version.
 - TSK-e2cf8b — the notice to each tenant by the kind of change, for contracts and metrics alike.
 
-The entry is closed when the three are built and the engine's behaviour matches the text.
+The entry is closed when the three are built, the respect that no task carries yet is resolved, and the engine's behaviour matches the text.
 
 ## References
 

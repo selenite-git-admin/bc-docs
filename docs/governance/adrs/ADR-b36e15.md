@@ -92,6 +92,6 @@ ADR-09fb2f (D575 platform prerequisite: tenant evidence-chain immutability + run
 
 The original text above stays as decided and is not rewritten.
 
-Approval: pending; the grant id is inserted in a final commit that changes nothing else.
+Approval: pending. A final commit replaces "2026-11-22, pending the operator's recorded approval" in this section's heading with the date of the operator's recorded grant, and this line with its AUTHORITY line (grant id, text sha256, method totp); it changes nothing else.
 
 'Released' and 'release' are not a state or an act; the platform side ends at certified (active).

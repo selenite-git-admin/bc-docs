@@ -108,6 +108,6 @@ This runs in parallel with the certification-reliability track. Certification st
 
 The original text above stays as decided and is not rewritten.
 
-Approval: pending; the grant id is inserted in a final commit that changes nothing else.
+Approval: pending. A final commit replaces "2026-11-22, pending the operator's recorded approval" in this section's heading with the date of the operator's recorded grant, and this line with its AUTHORITY line (grant id, text sha256, method totp); it changes nothing else.
 
 D3 is replaced: the platform defines and certifies; it never produces a value for a tenant; it evaluates on the demo plane, where a version is Demoed before it is certified; tenants produce and report. "Certification never requires a produced value" and "Validation against a source is evaluation-plane evidence, after release" no longer govern: a tenant checking its values against its own source is outside the platform's life cycle. In G5 and under Invariant I, "judged by the panel" and "judged by the certification panel" read "flagged by the certification panel".
