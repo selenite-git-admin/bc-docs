@@ -19,6 +19,8 @@ governing_adrs:
   - DEC-f02230 (Tenant DB schema organization)
   - DEC-3b86ea (Section renames; Operations as the section name; clean slate migration moved into Upgrade and Migration)
   - DEC-a67518 (Tenant Onboarding Gate; checklist-based readiness for BYO-DB and BC-Agent tiers)
+  - DEC-4c1396 (bc-db forward migrations through the governed runner are the only platform schema change path)
+  - DEC-b1a286 (Database bootstrap source-of-truth model; the golden dump is an accelerator and recovery artifact)
 errata_referenced: []
 v2_sources: []
 diagrams: []
@@ -107,7 +109,7 @@ The development machine of the `dev` environment is fully formalized. Every engi
 
 | Service | Container | Host port | Initialization |
 |---|---|---|---|
-| PostgreSQL | `postgres:17.11-alpine` | 5435 | No init scripts are mounted; the container starts with an empty `bc_platform_dev`, and the platform schema is restored with `npm run db:restore:s3` (bc-core `docker-compose.yml`, comment lines 9-11 and volume comment) |
+| PostgreSQL | `postgres:17.11-alpine` | 5435 | No init scripts are mounted; the container starts with an empty `bc_platform_dev` (bc-core `docker-compose.yml`, the header comment and the volume comment). The platform database's structure changes only through bc-db forward migrations applied by the bc-db runner, each apply recorded in `infrastructure.schema_migration_event` (DEC-4c1396); a golden dump is never restored over the live `bc_platform_dev`. The golden dump (kept in S3 and as the local file `docker/snapshots/golden-platform.dump`) is an accelerator and recovery artifact (DEC-b1a286 clause 6), restored only into a fresh scratch database with `npm run db:restore:exact -- --target scratch_<name>`, which reads the local dump file and refuses `bc_platform_dev` and every `tbc_*` database (bc-core `scripts/db-restore-exact.mjs`). How a fresh local `bc_platform_dev` is brought to the current structure is left open by DEC-4c1396 and is not stated here |
 | Redis | `redis:7.4.7-alpine` | 6379 | None |
 
 The active stack is `docker-compose.yml` (container `bc-postgres`, port 5435). On the development machine the containers are started through `~/bc-stack/up.sh`, which adds `mac-ports.yml` (127.0.0.1-only ports; compose project `bc-core`); see the workstation runbook ([Development Workstation: Mac Mini and Laptop](../development/dev-workstation-mac-mini.md)). The compose file alone publishes both ports on every interface. The former `docker-compose.redesign.yml` / `bc-postgres-redesign` instance is retired.
@@ -127,7 +129,7 @@ These ports are reserved by DEC-e50b83. No project changes its port without upda
 
 The development-machine discipline (per CLAUDE.md): start DevHub first, keep it running for the entire dev session; start application services on demand only; pm2 was removed (DEC supersedes a prior pm2-based service management decision) and each service starts independently in its own repo.
 
-**Governing source.** `bc-core/docker-compose.yml`; CLAUDE.md operational sections; DEC-e50b83.
+**Governing source.** `bc-core/docker-compose.yml`; `bc-core/scripts/db-restore-exact.mjs`; CLAUDE.md operational sections; DEC-e50b83; DEC-4c1396; DEC-b1a286.
 
 ## Environment Names
 
@@ -187,7 +189,7 @@ The chapter records this honestly per pattern 81. The hosting-variant inventory 
 | Cognito user pool deletion attempted | Removal policy `RETAIN` for prod prevents accidental deletion; for dev the policy is `DESTROY`; deletion of a dev user pool is reversible only by reseeding the pool and rebinding the application clients |
 | `aws codeartifact login` token expires (twelve-hour TTL) | `npm ci` rejects with HTTP 401 or 403 in CI and locally; renewal is a manual operation per the CodeArtifact runbook owned by Build and Release (queued chapter) |
 | The `dev` Postgres container fails to start | bc-core, DevHub document scans, and bc-pg-mcp reject database connections; no platform request can complete until the container is healthy |
-| `dev` Postgres data volume corruption | Stop and assess; do not remove the volume. The one data volume (`redesign_data` in the compose file) holds `bc_platform_dev`, every `tbc_*_dev` tenant database and `bc_sdg` (bc-core `docker-compose.yml`, the comment above the volume mount), while `npm run db:restore:s3` restores `bc_platform_dev` only (bc-core `package.json`). Removing the volume would discard the tenant databases, and the platform restore does not bring them back. Preserve the volume where possible. Any destructive removal needs a verified recoverable copy of every affected database and a governed recovery procedure first, and is the operator's act under its own recorded grant |
+| `dev` Postgres data volume corruption | Stop and assess; do not remove the volume. The one data volume (`redesign_data` in the compose file) holds `bc_platform_dev`, every `tbc_*_dev` tenant database and `bc_sdg` (bc-core `docker-compose.yml`, the comment above the volume mount), while the golden dump covers `bc_platform_dev` only and is restored only into a fresh scratch database (`npm run db:restore:exact`, bc-core `package.json`), never over the live platform database. Removing the volume would discard the tenant databases, and the golden dump does not bring them back. Preserve the volume where possible. Any destructive removal needs a verified recoverable copy of every affected database and a governed recovery procedure first, and is the operator's act under its own recorded grant |
 | `PlatformInfraStack` re-instantiation drifts from dormant code | The stack would deploy with the configuration as-coded in the readiness baseline (Aurora `t3.micro`, Lambda demo, single VPC); a deployment without a pre-deploy review of the dormant code may produce a configuration that no longer matches the current architectural intent |
 
 **Governing source.** Infrastructure; `platform-infra-stack/`; `bc-core/docker-compose.yml`.
