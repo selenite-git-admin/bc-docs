@@ -59,3 +59,11 @@ No change to Foundation, to the seven state names, or to any enforced transition
 - barecount-devhub `artifacts/architect/VOCABULARY-first-slice-metric-words-2026-10-01.md` at commit 141b1af35366c92bf0468fdb074c112ca82b15a4 (pull request 187), the approved text
 - DEC-c220e4, DEC-21ca17, DEC-fa9424, DEC-c48b0f, DEC-79b62f; `docs/foundation/the-contract-grammar.md`; `docs/operating-model/metric-lifecycle.md`; `docs/reference/lifecycle-map.md`
 - DevHub TSK-c1d9ba, TSK-77b055, TSK-fa743d
+
+## Amendment 1 (2026-11-22, pending the operator's recorded approval): the metric life cycle in the Foundation
+
+The original text above stays as decided and is not rewritten.
+
+Approval: pending; the grant id is inserted in a final commit that changes nothing else.
+
+Item 2(4) is read without "released". Item 3 is replaced: available means certified; a certified metric is taken out of use by retiring it. "Released" may be said in speech to mean active; it is no state and no record, and the release record under Consequences is no longer a follow-up. Item 4: "certified only through the panel" reads "certified only with a certification record".

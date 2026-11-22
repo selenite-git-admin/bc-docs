@@ -119,3 +119,11 @@ The certification panel (panel 2 under DEC-c48b0f: assessor, adversary, moderato
   - D1's confidence bound was unsupported. It is removed. "Fit" is now an observed statement about the fixed corpus, with the completed-observation denominator recorded, and N counts attempts.
   - D2 overstated what structural validation proves. It now names the exact structural checks, leaves semantic correctness to measurement, and requires a plausible cited non-answer negative case.
   - The implementation boundaries Codex named are folded in: D4 records attempts durably even when every retry fails; D6's verdict is recomputed from the manifest plus the hash-verified transcripts; D7 records the acknowledgement as a desk grant written into the manifest; and phase 1 records the prompt version in the transcript.
+
+## Amendment 1 (2026-11-22, pending the operator's recorded approval): the metric life cycle in the Foundation
+
+The original text above stays as decided and is not rewritten.
+
+Approval: pending; the grant id is inserted in a final commit that changes nothing else.
+
+A panel outcome of PANEL_REJECTED is a flag; it never refuses a certification. The interim pause of new certifications does not govern.

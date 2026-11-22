@@ -25,3 +25,11 @@ The CHECK pinning governing_decision_uid = 'DEC-05815d' was discovered during th
 3. Registration content under D541: calibration_evidence_ref MUST cite real calibration evidence for the seats being registered (the r22/r23 corpus reports for the qwen/deepseek/kimi roster). The fitness question those runs left open (fit_for_registration=false on a corpus later found structurally broken) is acknowledged, not laundered: the registration's evidence ref points at what was actually measured, and the operator's registration act — authorized_by — is the explicit acceptance of that evidence basis. Registering is an operator judgement recorded with its evidence, not a computed clearance.
 
 4. Implementation is one DBCP: drop the old CHECK, add the new literal CHECK, companion rollback guarded against existing D541-governed rows; rehearse on clone (new literal inserts, old literal refuses, malformed refuses); operator-run production apply per §0 act 1.
+
+## Amendment 1 (2026-11-22, pending the operator's recorded approval): the metric life cycle in the Foundation
+
+The original text above stays as decided and is not rewritten.
+
+Approval: pending; the grant id is inserted in a final commit that changes nothing else.
+
+In item 1, the panel certifies nothing and gates nothing: it flags. The roster registration binds to the certification decision, which rests on the mechanical checks and the version being Demoed.

@@ -43,3 +43,11 @@ DEC-f21388 ("reduced-panel fitness is a single capped measurement — never a tu
 
 - **STANDS and is reinforced** — its discipline (items 1, 2, 4): the deterministic gate reduces the panel's scope by construction; any panel fitness exercise is ONE capped measurement of the current panel with no prompt/scope/mechanics change; a weak/fail result is a stop-and-report to the operator + Architect, never a tuning or re-measurement loop. The panel is not a gate to tune or declare fit.
 - **CEASES to govern** — DEC-f21388 item (3) "A PASS proceeds to certification-unpause" and its closing sentence "the per-metric residual FIT verdict required by DEC-92f709 is unchanged." Under DEC-346ae7 the panel is an advisory flagger, cert-unpause is the 3-part claim (not panel fitness), and the panel's residual FIT verdict is no longer a required pass. Consequently a panel-fitness measurement that returns not-fit is **no longer a cert blocker** (it remains an honest data point and a stop-and-report, per the standing discipline). A matching Amendment 1 note is recorded on ADR-f21388.
+
+## Amendment 1 (2026-11-22, pending the operator's recorded approval): the metric life cycle in the Foundation
+
+The original text above stays as decided and is not rewritten.
+
+Approval: pending; the grant id is inserted in a final commit that changes nothing else.
+
+The title and description, where they say 'asserted against the standard' and 'a robustness harness', read as amended here. Part (1) MEANING is replaced: the metric's meaning is the definition written in its own contract; it is asserted, not cited, and a choice between accepted variants is a convention, recorded as part of that definition. Part (2) stands. Part (3) CALCULATION: the mechanical checks pass; this is the part that is proven. No version reaches active unless it is Demoed (The Contract Grammar, MCF Metric Contract family). The two claim levels CERTIFIED and VALIDATED, the harness run scheduled per metric, and the certified-not-yet-validated set no longer govern: there is one claim, certified, and every active version is Demoed. The certification panel runs at every certification; it flags and never blocks.

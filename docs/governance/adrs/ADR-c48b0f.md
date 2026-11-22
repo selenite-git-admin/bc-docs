@@ -30,3 +30,11 @@ Five weeks of the external-audit arc produced governance machinery (courier D535
 5. PLANE DISCIPLINE (CLAUDE.md Foundation gate extension). Before any fix, name the plane: a DESIGN act (a contract/declaration is incomplete) or an EXECUTION act (a runtime behaves wrongly). If the defect is a missing declaration in a contract, an execution-plane detector is a net, not a fix — the design act must be named before the net is built. This question joins the three pre-action questions in the Foundation Invariant Check.
 
 6. RECONCILIATION CRITERION. Every open artifact of the audit arc (tasks, docs, memory, branches, the bc-external-audit repo, ~494 ramp5-exchange files) is dispositioned by one test: does it exist because judgement needed to TRAVEL between independent authorities? Then close/archive it. Is it a correctness check on a definition? Then it survives under the certification name. The exchange residue is archived-and-indexed, never edited.
+
+## Amendment 1 (2026-11-22, pending the operator's recorded approval): the metric life cycle in the Foundation
+
+The original text above stays as decided and is not rewritten.
+
+Approval: pending; the grant id is inserted in a final commit that changes nothing else.
+
+The title's "second panel certifies before activation", the description's "panel 2 certifies the frozen package" and item 2's "output is a certification record" are replaced: the certification panel reviews the frozen package and its output is its recorded flags; it never blocks. The certification record rests on the mechanical checks, and no version reaches active unless it is Demoed. Item 3 stands, the panel's cost still bounding throughput because the panel runs on every certification. Items 1, 4, 5 and 6 stand.
