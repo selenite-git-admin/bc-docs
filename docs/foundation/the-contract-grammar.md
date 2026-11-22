@@ -349,7 +349,7 @@ is frozen and the text is errata-noted rather than rewritten.)
 | `draft` | Authoring in progress | Initial state on creation |
 | `review` | Authoring complete and under review | Promoted from `draft` |
 | `approved` | Review complete but not yet active | Promoted from `review` |
-| `active` | In production use at the governed boundary | Promoted from `approved` at release time |
+| `active` | In production use at the governed boundary | Promoted from `approved` when put in force |
 | `superseded` | Replaced by a later version of the same contract | Promoted from `active` when a newer version enters `active` |
 
 Legacy terms such as `deprecated` and `retired` do not apply at the version level. Version-level replacement is represented by `superseded`. Family-level status is represented in the taxonomy in the Artifact classification section.
@@ -367,16 +367,15 @@ rendered by the generated enforcement-surface map.
 
 **What `active` asserts.** A version reaches `active` only with a certification record, and
 `active` is the certified state. It asserts three parts. *Meaning:* the metric's meaning is the
-definition written in its own contract; it is asserted, not cited. A choice between accepted
-variants of a metric is a convention, recorded as part of that definition. *Formula:* the
+definition written in its own contract; it is asserted, not cited. *Formula:* the
 formula expresses that definition. *Calculation:* the mechanical checks pass; this is the part
 that is proven. The certification panel runs at every certification. It flags and never blocks.
 
 **Demoed.** The demo plane is the area inside the platform database, apart from every tenant,
 where the platform evaluates a metric on the data of a demo world, which keeps its own expected
 values. A version reaches `active` only when it is Demoed: its value, evaluated on the demo
-plane, agrees with the demo world's expected value, and every item the record of that agreement
-names is present and still current. Each version is Demoed on its own; being Demoed at one
+plane, agrees with the demo world's expected value. A later change of the demo world does not
+undo it. Each version is Demoed on its own; being Demoed at one
 version says nothing of another. Being Demoed concerns the metric, not a tenant and not a
 tenant's source: no tenant's values are read for it, and a change of a tenant's source asks for
 no new evaluation on the demo plane. The record of the agreement is preserved and names the
@@ -408,7 +407,7 @@ narrow path and meaning-bearing change requires supersession (DEC-26b6e2, DEC-fb
 A governed intent/directory family — not a contract family, and never realized metric
 authority. A Member owns its intent state (`planned` | `blocked` + reason) and its versioned
 spec; realized state is DERIVED from the MCF substrate through the realization relation, never
-cached (DEC-b5c7ff). A metric is its Member: its name and intent. Its formula, grain and
+cached (DEC-b5c7ff). A metric is its Member: its name and intent. The entry remains when its metric is retired. Its formula, grain and
 bindings belong to the versions of the MCF Metric Contract that realizes it and may change from
 one version to the next. Directory identity is load-bearing for lifecycle acts: governed
 reintake requires the member identity tuple (DEC-21ca17 records the operative proof).
