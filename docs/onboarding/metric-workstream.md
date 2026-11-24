@@ -2,7 +2,7 @@
 id: metric-workstream
 order: 62
 title: "Metric Workstream Playbook"
-status: drafting
+status: superseded
 authority: reference
 depends_on: [the-invariants, the-evaluation-boundaries, the-contract-grammar, metric-contract-creation, metric-registration, mc-chain-integrity]
 governing_sources:
@@ -21,6 +21,17 @@ diagrams: []
 ---
 
 # Metric Workstream Playbook
+
+> **Superseded (2026-11-24).** The onboarding chapters below replace this playbook. Read them instead; this file stays for its history and for links that still point here.
+>
+> - [Onboard one metric to the Metric Catalog](onboard-one-metric-to-the-metric-catalog.md): the order, from the seed to an active version.
+> - [Onboard a business concept](business-field-and-business-object-onboarding.md)
+> - [Add a directory family and group](add-a-directory-family-and-group.md)
+> - [Add a directory member](add-a-directory-member.md)
+> - [Author and approve a metric contract](author-and-approve-a-metric-contract.md)
+> - [Link a directory member to its contract](link-a-directory-member-to-its-contract.md)
+> - [Prove a metric version on the demo world](prove-a-metric-version-on-the-demo-world.md)
+> - [Certify and activate a metric version](certify-and-activate-a-metric-version.md)
 
 > **Bridging note.** Where this chapter refers to Business Field, Business Object, or Canonical Field, the semantic-identity role those primitives served is superseded by the **Business Concept Framework (BCF)** — the `concept_registry` schema (Entity / Characteristic / Business Concept), authored through governed ceremonies (AI panel + C5 operator-confirm + F3 write). The legacy `contract.business_field` / `contract.business_object` / canonical-field tables remain in use for OC/CC `field_selection` binding, so the mechanics described here stay valid for that purpose; for semantic identity — "what does this field mean?" — consult the BCF registry. Governing ADRs: DEC-02f5a9 (greenfield), DEC-61850f (adoption). See The Contract Grammar and The Object Model for the Registry model.
 
