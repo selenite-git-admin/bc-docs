@@ -14,11 +14,11 @@ governing_adr: DEC-79b62f
 
 # Repeatable tests of a metric version on the demo world
 
-*Design note · proposed 2026-11-24, revision 4 · nothing in this note has been built or run. Its database changes are a proposal: they need the owner's explicit yes under the Database Change Protocol before any migration is written.*
+*Design note · proposed 2026-11-24, revision 5 · nothing in this note has been built or run. Its database changes are a proposal: they need the owner's explicit yes under the Database Change Protocol before any migration is written.*
 
 Evidence base, read at these heads on 2026-11-24: bc-db `origin/main` 18d6884, bc-core `origin/main` df47ce00 (the served engine), bc-demo `origin/main` 428ab310, bc-admin `origin/main` 6267a64, bc-docs `origin/main` 96487a5. Live rows were read read-only on `bc_platform_dev` on 2026-11-24 with the read-only database tool. Paths in bc-core are under `src/` unless shown otherwise.
 
-Revision 2 follows two later rulings of the owner (section 2). Revision 1 let each test choose its own months; that is withdrawn. Revision 3 folds in the auditor's boundary as design rules (section 3.5). Revision 4 records the owner's settlement of the seven open questions as rules S1 to S7 (section 14) and lists the database changes for his yes (section 16). The auditor's answer is ACCEPTED WITH BOUNDARY: bc-external-audit `docs/RESPONSE-Codex-gen-3a7aae-01-open-repeatable-demo-tests-design-2026-11-24.md`, commit 504b5bd0, reviewed at head 88b0c35d. It accepts the design direction only; no database change, landing or onboarding follows from it.
+Revision 2 follows two later rulings of the owner (section 2). Revision 1 let each test choose its own months; that is withdrawn. Revision 3 folds in the auditor's boundary as design rules (section 3.5). Revision 4 records the owner's settlement of the seven open questions as rules S1 to S7 (section 14) and lists the database changes for his yes (section 16). Revision 5 adds the owner's ruling that a test uses what customers use: the same arithmetic and the same versions (section 3.6). The auditor's answer is ACCEPTED WITH BOUNDARY: bc-external-audit `docs/RESPONSE-Codex-gen-3a7aae-01-open-repeatable-demo-tests-design-2026-11-24.md`, commit 504b5bd0, reviewed at head 88b0c35d. It accepts the design direction only; no database change, landing or onboarding follows from it.
 
 ## 1. The problem in plain words
 
@@ -35,13 +35,14 @@ The owner's answer: no one chooses months. Every test covers every month the wor
 
 ## 2. The owner's rulings
 
-Recorded in barecount-devhub branch `claude/operator-review-content`, `artifacts/operator-review/DECISIONS-workflow-review.md`, the entries of commits 98190a23, afbe5758, dd311fe2 and 32202aea.
+Recorded in barecount-devhub branch `claude/operator-review-content`, `artifacts/operator-review/DECISIONS-workflow-review.md`, the entries of commits 98190a23, afbe5758, dd311fe2, 32202aea and fc92dd64.
 
 1. **Tests are open, repeatable and all kept** (20:05 IST). Every test is kept, pass or fail. Approval names the test it relies on. A re-check is allowed at any time, also after approval. Before approval, at least one passing test must exercise every rule of the definition. A failed test flags the metric: a person decides, and nothing switches off by itself. It also opens a ticket and applies a lock. The metric list gains a Tests column.
 2. **Every test covers every month the demo world holds data for** (afbe5758). The owner: "Instead of adding functions/actions let us make it mandatory to select all months available in demo world. Simple." Asked whether he means the months the world holds data for or the months it has handed over: "every month the world holds data for". So there is no choosing of months, no test on part of them, and 0076's rule of one declaration per version stays.
 3. **In a disagreement the documents decide** (dd311fe2): "agree, documents decide. update the design". On a mismatch, each side lists the documents it counted. A person opens the differing documents in Odoo and judges them against the owner's plain-language definition. The judgement is recorded, and either side, the engine or the world, may be the one fixed.
 
 4. **The seven open questions, settled as recommended** (32202aea, recorded 2026-11-24 20:40 IST: "Yes, as recommended"). They are rules S1 to S7 in section 14.
+5. **A test uses what customers use: the same arithmetic and the same versions** (fc92dd64, recorded 2026-11-24 20:50 IST). The owner: "add the arithmetic fix to the design. Also demo must switch to latest version (like customers forced to) otherwise they will differ". These are rules A1 to A4 and V1 to V6 in section 3.6. The Chief's reading of the ruling is recorded there "to be confirmed with the owner".
 
 ## 3. The model
 
@@ -126,6 +127,41 @@ These rules bind the implementation. Each restates a boundary in the auditor's r
 - **B9. Ticket recoverable; records decide.** A ticket is created, recoverably, for each failed result. The immutable result and resolution decide the flag and the lock, never the ticket's status.
 - **B10. L1 and an active version.** As L1 stood in revision 3, it did not constrain a version that was already active when a re-check failed. The owner settled this: L1 applies to an active version too (rule S2).
 
+### 3.6 A test uses what customers use
+
+**Grounding: the arithmetic.** The demo proof and a tenant evaluation share one engine call, `runEngine` (bc-core `boundary/governed-metric-evaluation.service.ts`; the dry evaluation at :332-341, the tenant act at :386-388). The arithmetic is chosen by each running program:
+
+- `selectEngine` (:324-325) runs `FormulaExecutionEngineV3` when the program's numeric profile is `scaled-decimal-int-v1`, and the legacy `FormulaExecutionEngine` otherwise.
+- The profile is read once when each program starts, from the environment variable `BCCORE_NUMERIC_PROFILE` (`config/metric-runtime.config.ts:26, 45-53`), through the single fail-closed getter `numericProfileOf` (:41-43). An absent value means scaled; only the literal `binary64-v1` selects the rollback (:32-38).
+- The demo proof command and the served bc-core are separate running programs, so they can differ.
+- Today nothing records which arithmetic a proof ran with. The pin records only `engine_build_id` (`demo.metric_proof_pin`, 14 columns, read live).
+- A tenant evaluation adds its profile report to the run's lineage only under the scaled profile (`boundary/governed-metric-persistence.adapter.ts:475-487`; "Absent under binary64-v1"), so tenant history cannot show which setting the served runtime uses.
+
+**Rules: the arithmetic.**
+
+- **A1. Recorded on the run.** The proof pin is extended, not paralleled: `demo.metric_proof_pin` gains `numeric_profile_code`, written by the emit from the value the proving program's own `numericProfileOf` returned for that evaluation. Each test result copies it from the pin, never from the caller, together with `engine_class_code`. A CHECK pairs the two: `scaled-decimal-int-v1` with `formula_engine_v3`, `binary64-v1` with `formula_engine_v2`, as `selectEngine` pairs them.
+- **A2. The served setting is recorded, never assumed.** The served bc-core records its own setting when it starts: one append-only row in `metric_audit.served_numeric_profile_event`, with the profile, the engine class, the engine build and the time, written by its own login from `numericProfileOf`. The latest row is "the setting the served customer runtime uses".
+- **A3. Approval refuses a different arithmetic.** The admit act runs inside the served bc-core (`registry/mcf/mcf-admit.controller.ts:62`). It compares the named test's profile with its own `numericProfileOf` and records what it saw in a new `metric_audit.transition_evidence.served_numeric_profile_code` column (15 to 16 columns). A new database condition, **c18** `c18_test_arithmetic_not_served`, sits beside c17 and refuses the flip when that value differs from the named test result's profile.
+- **A4. The Demoed record refuses a different arithmetic.** The writer routine adds check **w11** `w11_arithmetic_not_served`: no Demoed record is written when the pin's profile differs from the latest served-profile event. The test result is still recorded, as a pass that cannot be cited.
+
+**Grounding: the versions.** The demo and the tenant read different versions today:
+
+- **Metric version.** On a demo plane, `MetricSpecLoader.load` takes the world's **pinned** version (`boundary/metric-spec-loader.ts:110`; the manifest `PLANE_METRIC_VERSION_BINDINGS`, `database/plane/plane-metric-version-binding.ts:60-75`). A tenant reads the **current active** version (`metric-spec-loader.ts:111-119`).
+- **Canonical contract version.** A demo plane resolves only the pairs pinned for its world label (`PLANE_CC_VERSION_BINDINGS`, `database/plane/plane-cc-version-binding.ts:26-38`, append-only code; read at `boundary/co-candidate-reader.ts:340-343`). A tenant reads the global active declarations and takes the newest active version for the grain (`co-candidate-reader.ts:339`; `pickGrainCc` :137-155).
+- **Each proof already records its canonical version**: `demo.metric_proof_input.canonical_contract_version_code` and `co_store_code` (read live; one row today, `5.1.0` / `co_cc_das36_v5_1_0`).
+- **Live state.** cc-das36 has two `active` versions, 3.0.0 and 4.0.0, so a tenant resolves 4.0.0 (the newest). The demo world label pins 5.1.0, which is `pending_provisioning` (`contract.canonical_contract_version`, read live). **Customer invoice volume's only proof therefore ran on a canonical version no customer uses.** The demo store for 4.0.0 (`demo.co_cc_das36_v4_0_0`) holds 9 rows, none of them the Kaveri world (read live).
+
+**Rules: the versions.**
+
+- **V1. A re-check of an active metric runs as customers run.** It uses the current active metric version and the canonical contract versions customers currently resolve: the global active declarations, newest per grain (the tenant route of `co-candidate-reader.ts:339`). It never uses an older pin.
+- **V2. A candidate is tested as it will be served.** Before approval, the candidate version itself is tested, with the canonical versions customers will use once it is current. Making the metric current changes no canonical version, so these are the ones customers resolve at the test.
+- **V3. Current only on a matching pass.** A version may become current only with a passing test, with complete coverage, of that same metric version **and** of the same canonical contract versions customers will use once it is current. The check is made at the admit act. A new database condition, **c19** `c19_test_versions_not_served`, refuses the flip unless every canonical version the named test used is still the newest `active` version of its contract.
+- **V4. A superseded canonical version stops counting.** When a canonical contract the metric reads gets a newer active version, or its version is superseded, tests on the old version stop counting for current status. The Tests column shows **"re-check due"**: a flag, not an automatic switch-off. The flag is computed when read, from the test's recorded versions and the live canonical states. c19 refuses a new approval until a test on the served versions passes. Customers keep seeing values.
+- **V5. The world label no longer chooses versions for a test.** The world-month manifest (3.2) and the coordinates still come from the world. The metric version is named by the test (current or candidate), and the canonical versions come from the global active resolution. The two code manifests (`PLANE_METRIC_VERSION_BINDINGS`, `PLANE_CC_VERSION_BINDINGS`) stay as history for proofs already made; a test refuses if the demo world holds no canonical records under the served canonical version.
+- **V6. What the test records.** Each test result records its canonical versions in a child table, `mcf.metric_version_demo_test_cc_version` (4 columns: uid; result FK; `canonical_contract_version_id` FK to `contract.canonical_contract_version`; `proof_input_role_code`). The writer routine copies them from `demo.metric_proof_input`, which is extended, not paralleled. The copy lets c19 read only the `mcf` and `contract` planes, never `demo.*` (the c15 plane rule, 0076:34-35).
+
+**Cost.** Every canonical version customers use must exist in the demo world: its demo canonical store, the world's records resolved into it under the current binding, and a proof routine for its grid. That is the same chain the 5.1.0 store needed. When a canonical version is superseded, every metric that reads it needs a re-check after the world is resolved under the new version.
+
 ## 4. What exists today
 
 Read at bc-db 18d6884 and bc-core df47ce00.
@@ -150,7 +186,7 @@ Read at bc-db 18d6884 and bc-core df47ce00.
 ### 5.1 The 0082 changes (platform side)
 
 1. **The world-months check** (3.2): the commit check and w3 also require the declared cells to equal the world's declared months for the declared legal entity. A new read-only definer function `mcf.fn_demoed_declaration_covers_world_months(uuid)` is called as its owner, like the 0075 predicates.
-2. **`mcf.metric_version_demo_test_result`**: one immutable row per test, 12 columns.
+2. **`mcf.metric_version_demo_test_result`**: one immutable row per test, 14 columns.
 
    | Column | Type | Rule |
    |---|---|---|
@@ -166,6 +202,8 @@ Read at bc-db 18d6884 and bc-core df47ce00.
    | `writer_routine_version` | text NOT NULL | `fn_record_demo_test_result-v1` |
    | `recorded_by_name` | text NOT NULL | the actor |
    | `recorded_at` | timestamptz NOT NULL | set by the database |
+   | `numeric_profile_code` | text NOT NULL | copied from the pin by the routine (rule A1) |
+   | `engine_class_code` | text NOT NULL | paired with the profile by a CHECK (rule A1) |
 
    CHECKs tie the columns to the verdict. The version is reached through the declaration, so it is not stored twice. The table is immutable (update, delete and truncate are refused by the 0065 trigger function). No login holds INSERT; only the routine in item 5 writes it. SELECT goes to `bc_platform_runtime`.
 3. **`mcf.metric_version_demo_test_result_element`** (7 columns: uid, result FK, `element_kind_code`, `element_ref_text`, `covered_flag`, `witness_count`, `witness_digest`; UNIQUE on result, kind and ref): the coverage elements of a passed test with **partial** coverage, which are lost today when w10 refuses. A complete test keeps its elements in `mcf.demoed_bridge_coverage_element`, as today. Same immutability and grants.
@@ -220,6 +258,10 @@ What is left of the revision-1 0082: items 2 to 7, minus the `void` verdict; plu
 | E10 | Resolve a failure (new command) | Writes the resolution (5.1 item 4) after the documents are judged (section 7), with its written reason; comments on the ticket and closes it. Held by the owner or whoever approves metrics (rule S3): the admit route's role, `mcf_publisher` (`registry/mcf/mcf-admit.controller.ts:62-63`). |
 | E11 | Reads: `registry/mcf/mcf-read.service.ts:512-530` (the list behind `GET /api/mcf/metric-contracts`, `mcf-publication-eligibility.controller.ts:30,70`) and `GET /api/mcf/metric-contract-versions/:mcvUid/demoed-claim` (`demoed-evidence-bridge.controller.ts:83`) | One set-based read of each current version's test counts and open failure with its ticket id; the claim read lists every test. Reads never evaluate. |
 | E12 | **Coverage checker v3** (`demoed-coverage-checker.ts:125-134, 294-308`; rule B5) | Needed before any `period_aggregate` metric can pass w10 under the all-months rule. The time-gate element is witnessed **per cell**. A row from another declared month is that cell's outside witness only if it is in the same partition, passes the other eligibility rules, and was actually excluded by that cell's time gate in the evaluation (read from the evaluation's own member record, 5.2 item 4). The element records the cell and the identities of both witnesses. A paired negative test shows the element uncovered when no such exclusion is recorded. w10 keeps requiring `demoed-coverage-v2` or later (0076:499-502) and complete coverage for a Demoed record, so v3 is accepted without a database change. This changes how one element is witnessed, not the w10 rule; the owner's rule 5 stands. |
+| E14 | `boundary/governed-metric-evaluation.service.ts:324-341` (the demo dry evaluation) and the proof command | Hand the emit the profile `numericProfileOf` returned for this evaluation (rule A1). |
+| E15 | The served bc-core's start | Write one `metric_audit.served_numeric_profile_event` row from `numericProfileOf` (rule A2). |
+| E16 | `registry/mcf/mcf-cert-writer.service.ts` (admit, :2973-2988) | Compare the named test's profile with its own; write `served_numeric_profile_code` into the admit's transition evidence; name c18 and c19 before the database does (rules A3, V3). |
+| E17 | `boundary/metric-spec-loader.ts:109-119` and `boundary/co-candidate-reader.ts:333-343` on the demo plane | A test resolves the metric version it names and the canonical versions by the tenant route (global active, newest per grain), not the world label's pins; it refuses when the demo world has no canonical records under that version (rules V1, V2, V5). |
 | E13 | The proof's member list | The evaluation hands the emit the canonical records each cell counted (5.2 item 4). Whether the dry evaluation exposes them today was **not grounded** (section 15). |
 
 `demoed-at-version.ts` and `demoed-activation-record.ts` read Demoed records through `mcf.fn_demoed_record_qualifies` (0076:544-562) and need no change. Request certification does not read the Demoed gate (no reference in `registry/mcf/request-audit-outcome.ts`).
@@ -301,6 +343,7 @@ The flag and the lock are read only from the immutable result and resolution, ne
 | only passed | "3 passed", with a small mark "covers every rule" when one passed test had complete coverage |
 | an open failure | "4 passed, 1 failed" with a flag that links to the ticket (`/platform/tickets/:ticketId`) |
 | failures, all resolved | "4 passed, 1 failed (resolved)", with no flag |
+| the passing tests used a canonical version customers no longer use | "3 passed, re-check due", with a flag (rule V4) |
 
 A count-pill filter "Flagged" sits beside the State and Declaration chain filters. The detail page (`src/pages/MetricDetailPage.tsx`, route `catalog/metrics/governed/:metricContractUid`, `AppRouter.tsx:204`) lists every test: time, verdict, coverage, the Demoed record it wrote, the ticket and the resolution. The new list fields go on `McfMetricContract` (`src/api/mcf-catalog.ts:14`). Verdict labels come from a master hook, not a hard-coded list (coding standard 14).
 
@@ -364,6 +407,11 @@ Read live for `b9357731`: `audit_pending`, `is_current` false, the parent's only
 6. Declare the 41 cells, then evaluate, prove and record the verdict.
 7. Request certification, run the panel, and approve, naming the test.
 
+**The versions (rule V3).** Customers resolve cc-das36 **4.0.0**, the newest `active` version. The proof of `b9357731` ran on **5.1.0**, which is `pending_provisioning`, and the demo world holds no Kaveri records under 4.0.0 (section 3.6). Before the fresh version can become current, one of two things must happen, and the owner chooses which:
+
+- cc-das36 5.1.0 is activated for customers, under its own governed act;
+- the Kaveri world is resolved under 4.0.0 and the test runs there.
+
 **What the test then exercises.** The document-type rule can pass and exclude rows: 30 of the 2,714 invoices are not customer invoices, all in FY2023-24 to FY2025-26 (read live). **But under coverage v2 the time-gate element is uncovered when every month is declared (section 4), so w10 refuses this test until checker v3 (E12) is served.** E12 is therefore on the first use's critical path.
 
 ## 13. Foundation gate
@@ -402,7 +450,10 @@ The owner settled the seven open questions as recommended (barecount-devhub `cla
 - **S6. Approval names one passing test: the one that exercised every rule.** That is the test whose passed result carries complete coverage and the Demoed record the approval names (3.4).
 - **S7. One company per test.** A world with several companies gets no full-world claim until its route is designed (rule B7; section 15).
 
-Nothing in this design is open for the owner, except his yes to the database changes (section 16).
+Two things are open for the owner besides his yes to the database changes (section 16):
+
+- confirming the Chief's reading of the 20:50 ruling (rules A1 to A4 and V1 to V6, fc92dd64);
+- for customer invoice volume, whether cc-das36 5.1.0 is activated for customers or the world is resolved under 4.0.0 (section 12).
 
 ## 15. Out of scope, known limits, and what was not grounded
 
@@ -444,14 +495,17 @@ The existing rows stay as they are, apart from the rows these changes add.
 
 | Table or routine | Change | Reason |
 |---|---|---|
-| `mcf.metric_version_demo_test_result` (12 columns) | add | Keep every test's verdict, pass or fail, one row per proof run. |
+| `mcf.metric_version_demo_test_result` (14 columns) | add | Keep every test's verdict, pass or fail, one row per proof run, with the arithmetic it ran with. |
+| `mcf.metric_version_demo_test_cc_version` (4 columns) | add | Keep the canonical contract versions each test used, so approval can match them to what customers use. |
+| `metric_audit.served_numeric_profile_event` (5 columns) | add | Record the arithmetic the served customer runtime uses, written by it at start, never assumed. |
+| `metric_audit.transition_evidence` (15 to 16 columns) | alter (add `served_numeric_profile_code`) | The approval records the arithmetic it saw in the served runtime. |
 | `mcf.metric_version_demo_test_result_element` (7 columns) | add | Keep the coverage elements of a pass that did not exercise every rule. |
 | `mcf.metric_version_demo_test_failure_resolution` (9 columns) | add | Record the person's judgement of a failure from the documents, which releases the lock. |
 | `mcf.fn_demoed_declaration_covers_world_months(uuid)` | add | Check that the declared cells equal every month the world holds data for. |
 | `mcf.fn_metric_version_demoed_declaration_has_cells()` (0076 commit check) | alter | Also require the world-month set, beside the kept answer-sheet equality. |
-| `mcf.fn_record_demo_test_result(…)` | add | One writer for every outcome: keeps w0-w8, records failures and partial passes, writes the Demoed record on a complete pass. |
+| `mcf.fn_record_demo_test_result(…)` | add | One writer for every outcome: keeps w0-w8, records failures and partial passes, the arithmetic and the canonical versions; writes the Demoed record only on a complete pass with the served arithmetic (w11). |
 | `mcf.fn_record_demoed_bridge(…)` (0076 writer) | revoke EXECUTE | One writer only; revoked in the same transaction as the new one is installed. |
-| `metric_audit.fn_intrinsic_decision_refusal(uuid)` | alter (add c17) | No approval while a failed test is unresolved. |
+| `metric_audit.fn_intrinsic_decision_refusal(uuid)` | alter (add c17, c18, c19) | No approval while a failed test is unresolved (c17), when the test's arithmetic differs from the served runtime's (c18), or when the test's canonical versions are not the ones customers use (c19). |
 | `mcf.fn_mcv_state_transition_check()` | alter (one rule) | No change of state, also of an active version, while a failed test is unresolved. |
 | Grants to `bc_platform_runtime` and `bc_demoed_bridge_writer` | add / revoke | SELECT on the new tables, INSERT on the resolution only, EXECUTE on the new writer only. |
 
@@ -465,3 +519,5 @@ The existing rows stay as they are, apart from the rows these changes add.
 | `demo.uq_demo_metric_run__act` and the emits' per-act guard | alter | Key a run by a caller-given act uid so a re-check can run at any time. |
 | `demo.ms_snapshot_member` (6 columns) | add | Keep the documents each cell counted, from the evaluation act itself. |
 | `demo.fn_pin_handed_over_expected_cells_refusal(uuid)` | add | Prove a mismatched pin's expected values are the world's own hand-over. |
+| `demo.metric_proof_pin` (14 to 15 columns) | alter (add `numeric_profile_code`) | Record the arithmetic each proof ran with, beside the engine build it already records. |
+| `demo.fn_emit_demo_proof_period_v5` and `demo.fn_emit_demo_proof_v5` | alter (same replacement as above) | Also write the pin's numeric profile from the caller's evaluation. |
