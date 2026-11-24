@@ -58,7 +58,7 @@ Recorded exclusions under the admission test (DEC-5a9dee §6): the seed-metric r
 | Observation Contract | Contract family | Active | DEC-0e3c64, DEC-136a23, DEC-1edaaa | Yes |
 | Canonical Contract | Contract family | Active | Canonical family schema | Yes |
 | Metric Contract (legacy) | Contract family | Superseded / Frozen (DEC-7bdd03, DEC-d9fa49) | DEC-29c324 | No |
-| MCF Metric Contract | Contract family | Active | DEC-c3e57f, DEC-c48b0f | Yes |
+| MCF Metric Contract | Contract family | Active | DEC-c3e57f, DEC-c48b0f, DEC-(platform-version record) | Yes |
 | Business Concept Registry | Vocabulary family | Active | DEC-02f5a9, DEC-149ab2 | Yes |
 | Metric Directory Member | Intent/directory family | Active | DEC-b5c7ff, DEC-5842d4 | Yes (governance identity; references realized MCF authority) |
 | Intervention Contract | Contract family | Active | Intervention family schema | Yes |
@@ -120,7 +120,7 @@ Two header fields govern relationships between this contract and other artifacts
 
 `bindings[].relation` uses the enum `extracts_from`, `structured_by`, `validates`, `consumed_by`, `maps_from`, `measures`, `responds_to`, or `references`.
 
-`governance.state` uses the DDL-enforced lifecycle `draft`, `review`, `approved`, `active`, or `superseded`. Legacy states such as `deprecated` and `retired` do not appear at the version level. Section 4.11 maps those legacy terms to the governing lifecycle.
+`governance.state` uses the DDL-enforced lifecycle. Five states are common to every family: `draft`, `review`, `approved`, `active`, `superseded`. The metric contract family adds `audit_pending` and `audit_blocked`. Legacy states such as `deprecated` and `retired` do not appear at the version level. Section 4.11 maps those legacy terms to the governing lifecycle.
 
 ## Active contract families
 
@@ -207,7 +207,7 @@ The body may declare `semantic_preconditions[]` (DEC-8849c8) with the same entry
 
 **Purpose.** A Metric Contract declares a numeric assertion over one or more Canonical Object versions: referenced Canonical Contracts, formula, grain, temporal gate, thresholds, and unit semantics.
 
-**Body elements.** The body declares metric identity, formula expression, referenced Canonical Contract versions through `metric_binding`, grain alignment, required parameters, evaluation timing, result shape and units, and admissible comparison operations. Under DEC-02f5a9, Metric Contract inputs reference Business Concepts and the grain is a typed reference to a Registry entity.
+**Body elements.** The body declares the formula expression, referenced Canonical Contract versions through `metric_binding`, grain alignment, required parameters, evaluation timing, result shape and units, and admissible comparison operations. Under DEC-02f5a9, Metric Contract inputs reference Business Concepts and the grain is a typed reference to a Registry entity.
 
 **Governs.** The metric evaluation boundary (The Evaluation Boundaries). Each Metric Snapshot emission applies one Metric Contract at the boundary.
 
@@ -309,6 +309,8 @@ Every contract family instance is identified by `contract_id` plus `version`. Th
 | New versions for changes | Any change is expressed as a new version. The prior version remains preserved. |
 | Version coexistence | Multiple versions may coexist. Authoritative objects remain bound to the version under which they were produced. |
 | Semantic versioning | `MAJOR` indicates incompatible change, `MINOR` backward-compatible addition, `PATCH` backward-compatible correction. |
+| Tenants move by a recorded act | When a new version enters `active`, the platform moves each tenant using the contract to it by a recorded act at the moment of the notice, with no consent step. Each evaluation names the version it applies. |
+| Notice by kind of change | A change of meaning sends each tenant using the contract a critical notice. Any other change that alters values sends a plain notice. A wording-only change sends no notice and appears only in the release notes. |
 
 Contract version changes do not alter previously produced Canonical Objects, Metric Snapshots, or Action Objects. This is Invariant III applied to contract-governed evaluation.
 
@@ -347,7 +349,7 @@ is frozen and the text is errata-noted rather than rewritten.)
 | `draft` | Authoring in progress | Initial state on creation |
 | `review` | Authoring complete and under review | Promoted from `draft` |
 | `approved` | Review complete but not yet active | Promoted from `review` |
-| `active` | In production use at the governed boundary | Promoted from `approved` at release time |
+| `active` | In production use at the governed boundary | Promoted from `approved` when put in force |
 | `superseded` | Replaced by a later version of the same contract | Promoted from `active` when a newer version enters `active` |
 
 Legacy terms such as `deprecated` and `retired` do not apply at the version level. Version-level replacement is represented by `superseded`. Family-level status is represented in the taxonomy in the Artifact classification section.
@@ -359,12 +361,36 @@ Family-level retirement occurs only through a governance act recorded as an ADR.
 ### MCF Metric Contract family
 
 Seven states: `draft`, `review`, `approved`, `audit_pending`, `active`, `audit_blocked`,
-`superseded`. Certification gates activation: an MCV reaches `active` only with a certification
-record (DEC-c48b0f). The ten-transition matrix — including the C6 invalidation cascade, the C7
+`superseded`. The ten-transition matrix — including the C6 invalidation cascade, the C7
 reintake gate, and the C8 activation gate — is enforced by substrate triggers and canonically
-rendered by the generated enforcement-surface map. `active` asserts panel certification
-(DEC-793e13, as restated by DEC-c48b0f); the historical `metric_transition`-era population is
-separately dispositioned (DEC-21ca17).
+rendered by the generated enforcement-surface map.
+
+**What `active` asserts.** A version reaches `active` only with a certification record, and
+`active` is the certified state. It asserts three parts. *Meaning:* the metric's meaning is the
+definition written in its own contract; it is asserted, not cited. *Formula:* the
+formula expresses that definition. *Calculation:* the mechanical checks pass; this is the part
+that is proven. The certification panel runs at every certification. It flags and never blocks.
+
+**Demoed.** The demo plane is the area inside the platform database, apart from every tenant,
+where the platform evaluates a metric on the data of a demo world, which keeps its own expected
+values. A version reaches `active` only when it is Demoed: its value, evaluated on the demo
+plane, agrees with the demo world's expected value. A later change of the demo world does not
+undo it. Each version is Demoed on its own; being Demoed at one
+version says nothing of another. Being Demoed concerns the metric, not a tenant and not a
+tenant's source: no tenant's values are read for it, and a change of a tenant's source asks for
+no new evaluation on the demo plane. The record of the agreement is preserved and names the
+match, the metric version, the demo world's version, a fingerprint of the inputs, a fingerprint
+of the expected values, and the engine build.
+
+**The end of the platform side.** `active` is the end of the platform side: no state stands between `active` and a tenant's use. A metric's life on the
+platform side ends at `active`; each tenant's own life with the metric begins there and is held
+on the tenant side. A certified metric is taken out of use by retiring it, which archives the
+whole metric; its versions and their values are preserved.
+
+**Change.** The rules of Versioning and immutability on publish apply to this family. A change
+to a metric is a new version of the same metric contract; a different measure is a new metric.
+When the new version enters `active`, the prior version moves to `superseded`, where it is
+preserved and readable and out of use.
 
 ### Business Concept Registry family
 
@@ -381,7 +407,9 @@ narrow path and meaning-bearing change requires supersession (DEC-26b6e2, DEC-fb
 A governed intent/directory family — not a contract family, and never realized metric
 authority. A Member owns its intent state (`planned` | `blocked` + reason) and its versioned
 spec; realized state is DERIVED from the MCF substrate through the realization relation, never
-cached (DEC-b5c7ff). Directory identity is load-bearing for lifecycle acts: governed
+cached (DEC-b5c7ff). A metric is its Member: its name and intent. The entry remains when its metric is retired. Its formula, grain and
+bindings belong to the versions of the MCF Metric Contract that realizes it and may change from
+one version to the next. Directory identity is load-bearing for lifecycle acts: governed
 reintake requires the member identity tuple (DEC-21ca17 records the operative proof).
 
 ## Chapter boundaries

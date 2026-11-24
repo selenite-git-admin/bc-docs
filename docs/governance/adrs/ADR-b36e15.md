@@ -87,3 +87,11 @@ Authority: operator GO relayed by the Chief Controller, 2026-10-06 (substance/pr
 ## References
 
 ADR-09fb2f (D575 platform prerequisite: tenant evidence-chain immutability + runtime identity separation); the D575 Unit-3 F1 provisioning-readiness mechanism in bc-core `contract.service.ts` / `provisioning-readiness.service.ts`; DEC-7b15c7/D429 (`contract.fn_cv_immutable_gov_check` content-immutability; this ADR's B1 precondition extends it to freeze from `approved`); DEC-d9fa49 (`transitionState` as the single governed state-write path / `governanceMachine`) — note its single-path claim is corrected by a pending erratum because `ContractAnalyticsRepository.bulkTransition` also writes state directly; the dual-plane shared reader `mcf-chain-declaration-reader.readActiveCcDeclarations` and its tenant caller `co-candidate-reader.ts:257`; TSK-dea6f4 (unresolved-pin fail-closed + binding the selected version/content to the G4 result; Invariant II/IV); live grounding 2026-10-05 (read-only: `contract.canonical_contract_approval` 0 rows; `contract.canonical_contract_version_transition` sparse — 3 versions with `to_state='approved'`; 4 foundational 1.0.0 Kaveri CCs direct-inserted at `active`; zero `draft→`/`review→` transitions into active/pending); DEC-ca8943 (entry gate G1–G5); DEC-c220e4; DEC-793e13; DEC-c48b0f; `foundation/the-evaluation-boundaries.md`; `foundation/the-invariants.md`.
+
+## Amendment 1 (2026-11-22, pending the operator's recorded approval): the metric life cycle in the Foundation
+
+The original text above stays as decided and is not rewritten.
+
+Approval: pending. A final commit replaces "2026-11-22, pending the operator's recorded approval" in this section's heading with the date of the operator's recorded grant, and this line with its AUTHORITY line (grant id, text sha256, method totp); it changes nothing else.
+
+'Released' and 'release' are not a state or an act; the platform side ends at certified (active).

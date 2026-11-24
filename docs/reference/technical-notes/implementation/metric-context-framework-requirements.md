@@ -234,7 +234,7 @@ The same discipline applies to MCF. Without it, MCF will re-create the contamina
 
 ### 4.2 MC structural identity tuple
 
-The active Metric Contract identity is the tuple:
+A metric's identity is its Metric Directory Member, its name and intent (The Contract Grammar). The tuple below describes a version; its parts may change from one version to the next:
 
 ```
 MC identity = (
@@ -286,16 +286,16 @@ where `operator ∈ {=, !=, <, <=, >, >=, IN, NOT_IN, LIKE, IS_NULL, IS_NOT_NULL
 
 The canonicalization rule for identity: sort filter clauses by `(business_concept_id, operator, hash(value))`; concatenate; hash. Two `filter_set`s with the same clauses in different orders hash to the same identity tuple component.
 
-### 4.6 What identity changes are supersession vs. revision
+### 4.6 Every change is a new version of the same MC
 
 Analogue of BCF's identity-bearing vs. descriptive distinction:
 
 | Change | Type | Mechanism |
 |---|---|---|
-| Change any field of the identity tuple (grain / formula intent / variable bindings / temporal gate shape / filter set) | **Supersession** | New MC under new identity tuple; old MC moves to `superseded`; `metric_supersession` row recorded |
-| Add a descriptive attribute (display name, owner, narrative description, prose business intent, dashboard tagging) | **Revision** | Active MC body updated; descriptive fields only; identity tuple unchanged; recorded as a versioned revision row, not as supersession |
-| Change a threshold value (target, alert level) | **Revision** | Threshold is descriptive metadata, not part of identity (per §4.7) |
-| Change runtime-readiness intent (PE-MC-8 declaration; see §13) | **Revision** | Intent is a forward declaration, not part of identity |
+| Change any field of the identity tuple (grain / formula intent / variable bindings / temporal gate shape / filter set) | **Supersession** | a new version of the same MC; the prior version moves to `superseded` when the new one enters `active` |
+| Add a descriptive attribute (display name, owner, narrative description, prose business intent, dashboard tagging) | **New version** | a new version of the same MC |
+| Change a threshold value (target, alert level) | **New version** | a new version of the same MC |
+| Change runtime-readiness intent (PE-MC-8 declaration; see §13) | **New version** | a new version of the same MC |
 
 The full rule per field is recorded in §10 (lifecycle).
 
@@ -308,7 +308,7 @@ Explicit non-membership prevents accidental inclusion at substrate design time:
 - **Owner** — operational metadata.
 - **Threshold values** — operational metadata; thresholds may shift without changing what the metric *is*.
 - **Dashboard tags / categorization** — read-side metadata.
-- **MC version code** — versioning is orthogonal to identity (a successor MC has a new identity tuple; revisions of a descriptive field bump the version code without changing identity).
+- **MC version code** — versioning is orthogonal to identity (every change is a new version of the same MC).
 
 ### 4.8 Composite-grain edge case
 
@@ -344,7 +344,7 @@ The KPI catalog's metric intent can be read by the MCF panel and by operators du
 What does NOT flow from the KPI catalog row:
 
 - **Binding** — the MC's BCF variable bindings are authored fresh against the BCF Registry; no binding is inherited from the legacy substrate (which is gone anyway).
-- **Authority** — the MC's PE-MC-1 grounding citation points at the authoritative source (recognized standard, bc-seed entry, operator-authored bounded-domain definition, source-system observation), never at the KPI catalog row. The KPI row is not auditable as evidence.
+- **Authority** — the MC's meaning is the definition written in its own contract, asserted, not cited (The Contract Grammar, MCF Metric Contract family). The PE-MC-1 grounding citation is the authoring panel's drafting evidence (recognized standard, bc-seed entry, operator-authored bounded-domain definition, source-system observation), never the KPI catalog row. The KPI row is not auditable as evidence.
 - **Identity** — the MC's identity tuple (§4.2) is constructed from the freshly-authored grain, formula AST, bindings, temporal gate, and filters; the KPI row does not contribute to identity.
 
 The distinction:
@@ -478,12 +478,12 @@ Adding a node type to the taxonomy is an ADR-governed MCF Grammar change.
 - **Side effects** — no AST node may write state.
 - **Free-text reference resolution** — no `"resolve('unit_price')"` operators; references are by BCF id only.
 - **Implicit unit conversion** — type/unit must match at bind time, or the bind is rejected (per §6.3 check 4).
-- **Aggregation outside grain** — every aggregate operates within the metric's grain; cross-grain aggregation is supersession to a new MC (`MC_DEFECT_CROSS_GRAIN_AGGREGATION`).
+- **Aggregation outside grain** — every aggregate operates within the metric's grain; cross-grain aggregation is a defect; correcting it is a new version of the same MC (`MC_DEFECT_CROSS_GRAIN_AGGREGATION`).
 - **Recursion / self-reference** — an MC's formula cannot reference the MC itself (no `variable_ref` to the MC's own output).
 
 ### 7.4 Formula immutability
 
-Per Foundation Invariant III applied to MCs: an active MC's formula AST is immutable. Changing the AST is supersession to a new MC (per §4.6). Whether MCF additionally adopts a publication-time semantic-finality affirmation analogous to ADR DEC-26b6e2 for Characteristics is an open question (§19.5 Q14). This document's working position is that the identity tuple already carries the immutability force, but a per-publication operator affirmation may be added as a high-risk gate (analogous to BCF's C5-HR) if formula authority is judged downstream-load-bearing for action contracts.
+Per Foundation Invariant III applied to MCs: an active MC's formula AST is immutable. Changing the AST is a new version of the same MC (per §4.6). Whether MCF additionally adopts a publication-time semantic-finality affirmation analogous to ADR DEC-26b6e2 for Characteristics is an open question (§19.5 Q14). This document's working position is that the identity tuple already carries the immutability force, but a per-publication operator affirmation may be added as a high-risk gate (analogous to BCF's C5-HR) if formula authority is load-bearing for the action contracts that reference it.
 
 ### 7.5 Type promotion rules
 
@@ -753,28 +753,28 @@ Activation (`approved → active`) is the moment the MC becomes the read authori
 
 ### 10.4 Immutable-active discipline
 
-Active MCs are immutable. Operator override of an active MC = operator authors a superseding new MC (per §4.6 — supersession discipline rooted in the identity tuple).
+Active MCs are immutable. Operator override of an active MC = operator authors a new version of the same MC (per §4.6 — supersession discipline rooted in the identity tuple).
 
 There is no `UPDATE` on an active MC body that changes identity-tuple fields. The substrate enforces this via a `BEFORE UPDATE` trigger that rejects mutation of identity-bearing columns when the row's `lifecycle_state = 'active'` (the BCF analogue is the `business_concept` meaning-immutability trigger).
 
-Descriptive-only updates (per §4.6) are permitted on active MCs as versioned revisions and recorded in an `mc_revision` ledger (substrate detail in §17).
+No update is made to an active version; every change is a new version.
 
 ### 10.5 Supersession with explicit successor pointer
 
 `active → superseded` requires:
 
-- The successor MC exists in `lifecycle_state = active` at the moment of supersession (no orphan supersession).
+- The successor, a new version of the same MC, exists in `lifecycle_state = active` at the moment of supersession (no orphan supersession).
 - An `mc_supersession` row is created with:
-  - `predecessor_mc_id`
-  - `successor_mc_id`
-  - `correction_class` (editorial vs meaning-bearing — analogue of `characteristic_supersession` per DEC-26b6e2)
+  - `predecessor_mc_id` (the prior version of the same MC)
+  - `successor_mc_id` (the new version of the same MC)
+  - `correction_class` (the kind of change that sets the notice: a change of meaning, another change that alters values, or a wording-only change)
   - `operator_sub` (Cognito sub from authenticated JWT)
   - `rationale_text` (≥40-char floor for high-risk supersession)
   - `panel_run_uid` (the panel run that proposed the supersession, if AI-proposed)
   - `superseded_at` timestamp
 - The predecessor's `lifecycle_state` flips to `superseded` atomically with the supersession-row insert.
 
-The `mc_supersession` table is the safety net for the immutable-atom model. Substrate detail in §17.
+The `mc_supersession` table is the safety net for immutable versions. Substrate detail in §17.
 
 ### 10.6 Possible MCF analogue of ADR DEC-26b6e2 (Characteristic atoms)
 
@@ -786,13 +786,13 @@ Candidates:
 
 | Candidate | Strength |
 |---|---|
-| Formula AST | Strongest. The formula is the meaning-bearing core. "Editing the formula" is semantically equivalent to "minting a new metric." |
+| Formula AST | Strongest. The formula is the meaning-bearing core. Editing the formula is the strongest change of meaning; it is a new version of the same MC and sends a critical notice. |
 | Variable binding set | Strong. Re-binding a variable changes what the MC computes over. |
 | Grain | Strong. Changing grain redefines the metric entirely. |
 | Temporal gate shape | Moderate. Changes may sometimes be additive (extending a trailing window). |
 | Filter set | Weakest. Filter additions are often legitimate refinements. |
 
-**Working position**: the identity tuple (§4.2) already carries the immutability force — any change to grain / formula intent / variable bindings / temporal gate shape / filter set is supersession to a new MC. **Whether MCF additionally adopts a publication-time semantic-finality affirmation analogous to ADR DEC-26b6e2 is an open question for an implementation DBCP** (§19.5 Q14). The case for adoption is strongest when the MC is the source of an action (an Intervention Contract trigger) — at that point the metric's interpretation is downstream-load-bearing in a way analogous to a characteristic's term being immutable.
+**Working position**: the identity tuple (§4.2) already carries the immutability force — any change to grain / formula intent / variable bindings / temporal gate shape / filter set is a new version of the same MC. **Whether MCF additionally adopts a publication-time semantic-finality affirmation analogous to ADR DEC-26b6e2 is an open question for an implementation DBCP** (§19.5 Q14). The case for adoption is strongest when the MC is the source of an action (an Intervention Contract trigger) — at that point the metric's interpretation is load-bearing for the action it triggers, in a way analogous to a characteristic's term being immutable.
 
 ### 10.7 Definition of "active MCF metric"
 
@@ -1169,6 +1169,8 @@ Analogue of BCF's PE1-PE6 publication eligibility, adapted for metric semantics.
 
 ### PE-MC-1. Provenance (no-fabrication)
 
+A PE-MC-1 source is evidence the authoring panel drafts from; it is not the authority of the metric's meaning, which is the definition written in the MC, asserted, not cited (The Contract Grammar, MCF Metric Contract family).
+
 Every claim in the MC traces to a recognized evidence source:
 
 - (a) a **recognized external standard** with verifiable citation (e.g. GAAP, IFRS, XBRL, an industry methodology like Toyota's lean operations, an academic source);
@@ -1407,13 +1409,13 @@ The operational workflow:
 2. **Background read.** The MCF panel reads the KPI catalog row's intent fields (display name, prose definition, owner, threshold, formula prose). This is *reading*, not *citing*.
 3. **PE-MC-1 evidence sourcing.** The panel seeks **authoritative** evidence for the MC — a recognized standard (e.g. "DSO per the AICPA accounting practice"), a bc-seed entry (e.g. `bc-seed/metrics/dso.yaml` if present), an operator-authored bounded-domain definition, or a source-system observation with verifiable alias.
 4. **MCF MC drafted.** The panel proposes an MC under the new identity discipline (§4): grain = a Registry Entity (e.g. `Customer Invoice`); variables bound to Registry BCs (e.g. `Customer Invoice · outstanding amount`, `Customer Invoice · invoice date`); formula AST authored; temporal gate selected; filters specified.
-5. **PE-MC-1..PE-MC-9 evaluated.** The panel runs all nine checks. The grounding citation traces to the PE-MC-1 source from step 3 — NOT to the KPI catalog row. The KPI catalog row remains as background reading; the cert's grounding URL is the authoritative source.
+5. **PE-MC-1..PE-MC-9 evaluated.** The panel runs all nine checks. The grounding citation traces to the PE-MC-1 source from step 3 — NOT to the KPI catalog row. The KPI catalog row remains as background reading; the grounding citation is the authoring panel's evidence, and the meaning is the definition in the MC.
 6. **Publication.** If all PE-MC checks pass and the panel returns `APPROVE`, the MC progresses through `draft → review → approved → active` per §10.2. Operator-confirm fires at `approved → active` per §11.4.
 7. **Tenant binding.** Operators bind tenants to the new MC; MLS 15-25 advances per §14.
 
 The KPI catalog row is the *seed* of the operator's intent; the MCF MC is the *governed re-authoring*. **No binding or authority flows from the KPI catalog row to the MC.** Intent fields (display name, prose definition, owner, threshold default, formula prose) may seed draft suggestions in the authoring panel; every suggestion must be re-authored under MCF discipline (PE-MC-1..PE-MC-9) and independently grounded against a PE-MC-1 evidence source. The KPI row never appears in the MC's authority chain — not in its identity tuple, not in its variable bindings, not in its formula AST, not in its certification record's grounding citations.
 
-The MC's bindings, formula AST, and identity tuple are authored fresh. The MC's PE-MC-1 grounding cites the authoritative source (recognized external standard, bc-seed entry, operator-authored bounded-domain definition, source-system observation), not the KPI row that seeded the draft.
+The MC's bindings, formula AST, and identity tuple are authored fresh. The MC's PE-MC-1 grounding cites the authoring panel's evidence (recognized external standard, bc-seed entry, operator-authored bounded-domain definition, source-system observation), not the KPI row that seeded the draft; the MC's meaning is its own definition, asserted, not cited.
 
 ### 16.4 What KPI catalog data is permitted to read
 
@@ -1451,10 +1453,10 @@ This section describes the substrate MCF requires at the **conceptual** level. E
 
 | Table | Purpose | Notes |
 |---|---|---|
-| `mcf.metric_contract` | The MC's identity-bearing row | Identity tuple from §4.2 enforced as partial UNIQUE; immutable on identity-bearing columns when `lifecycle_state = 'active'` via `BEFORE UPDATE` trigger |
+| `mcf.metric_contract` | The MC's row | The tuple describes a version (§4.2) and is held on `mcf.metric_contract_version`; the MC's identity is its Directory Member. |
 | `mcf.metric_contract_version` | Per-version MC body (formula AST, variable binding set, temporal gate spec, filter set, descriptive metadata) | Versions are append-only; one `active` version per MC |
-| `mcf.metric_contract_revision` | Descriptive-only revisions to active MCs (display name, owner, threshold, etc.) | Per §4.6; versioned but does not bump identity |
-| `mcf.metric_supersession` | Predecessor → successor edges; correction class; operator sub; rationale; panel run uid | Per §10.5; safety net for the immutable-atom model |
+| `mcf.metric_contract_revision` | Not used | Not used: every change, descriptive or not, is a new version of the same MC (§4.6, §10.4) |
+| `mcf.metric_supersession` | Predecessor → successor edges; correction class; operator sub; rationale; panel run uid | Per §10.5; safety net for immutable versions |
 | `mcf.metric_variable_binding` | Per-MC-per-variable binding to BCF (Entity or BC by id, role, bind-time check results) | Per §6; bind-time checks materialized as columns for audit |
 | `mcf.metric_formula_ast` | The AST itself (serialized canonical form) plus the formula identity hash | Per §7 / §8 |
 | `mcf.metric_filter_clause` | Per-filter row, set-semantic for identity | Per §4.5 |
@@ -1629,7 +1631,7 @@ Items the requirements surface but defer. Each becomes an implementation DBCP to
 
 ### 19.5 Lifecycle and immutability
 
-- **Q12 — Revision vs supersession boundary per identity-tuple field.** §4.6 declares the principle; implementation DBCP enumerates per-field detail.
+- **Q12 — Revision vs supersession boundary per identity-tuple field.** Closed by §4.6 (every change is a new version).
 - **Q13 — Threshold change and downstream action consequence.** §11.4 flags threshold changes on MCs bound to active Intervention Contracts as high-risk. Implementation DBCP specifies the substrate trigger that detects the consequence.
 - **Q14 — MCF analogue of ADR DEC-26b6e2 (Characteristic atoms).** Whether MCF adopts publication-time semantic-finality affirmation for some MC sub-element (formula AST? grain commitment?). Implementation DBCP decides.
 

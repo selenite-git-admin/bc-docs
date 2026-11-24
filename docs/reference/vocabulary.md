@@ -14,7 +14,7 @@ governing_adrs:
 
 **The only authority for status words** (ADR DEC-c897cd). Where another document, screen, memory or tool output disagrees with this page, this page wins and the other is corrected. A new status word enters here first, in the same change that first uses it.
 
-**First slice: the words for a metric's life.** Approved by the operator on 2026-10-01, desk grant `2026-10-01T06-36-21-158Z-648f1a32` (text SHA-256 `648f1a32faeea25c5c2639d91617b00a6582ead9c8ccc7d3826db8d9c117d498`), as written on the Architect page in barecount-devhub pull request 187 at commit `141b1af35366c92bf0468fdb074c112ca82b15a4`. This page carries that text with three changes only: this header replaces the page's draft status line, and the two questions the operator answered in that grant (what "available" means; what happens when a release is reversed) now state his answers. Everything marked "not built", "no record yet" or "a design act" below is still so.
+**First slice: the words for a metric's life.** Approved by the operator on 2026-10-01, desk grant `2026-10-01T06-36-21-158Z-648f1a32` (text SHA-256 `648f1a32faeea25c5c2639d91617b00a6582ead9c8ccc7d3826db8d9c117d498`), as written on the Architect page in barecount-devhub pull request 187 at commit `141b1af35366c92bf0468fdb074c112ca82b15a4`. This page carries that text with three changes only: this header replaces the page's draft status line, and the two questions the operator answered in that grant (what "available" means; what happens when a release is reversed) now state his answers. Everything marked "not built", "no record yet" or "a design act" below is still so. Changed by the Foundation amendment of the metric life cycle (The Contract Grammar, MCF Metric Contract family): "available" now means certified, not released, and the answer on a reversed release is removed, because released is no longer a state.
 
 **The operator's direction (2026-10-01, to the Chief):** "there is too much noise about number of metric and overlapping terms (active/avilable/active certified -- a huge trap) ... Numbers should never go in memory. Define what is done for metric and its life (not lifecycle)" and "Let us build and maintain approved vocabulary / taxonomy and end this mess?"
 
@@ -44,7 +44,7 @@ It was read at bc-docs `origin/main` 9dca4a5, bc-core `origin/main` 05cbe79c and
 
 It was read at bc-docs `origin/main` 9dca4a5, bc-core `origin/main` 05cbe79c and the live platform database, read-only.
 
-**Addendum: realized, and validated against a proof source.** Approved by the operator on 2026-10-03, desk grant `2026-10-03T03-05-10-581Z-12be0a4c` (text SHA-256 `12be0a4ca479f3ea8960e5b548ae4437f641c378f89e3c2d5998ea6b69655e95`, request 196), as drafted on the Architect page in barecount-devhub pull request 236 at commit `56db94e3e1ac9bdc9cd52bdb5ed16f94372a4d82` (file sha256 `32ede28dcaf891284c75c43ce521af8d33b3168d57e3a06ce45599bf08db5014`). Its rows are carried into group 3 (after "registered") and group 4 (after "certified"), and its not-approved words into section 4, adapted to that table's three columns. Its three defects are owner tasks (TSK-eeb121, TSK-5ac376, and the interim-rule question).
+**Addendum: realized, and validated against a proof source.** Approved by the operator on 2026-10-03, desk grant `2026-10-03T03-05-10-581Z-12be0a4c` (text SHA-256 `12be0a4ca479f3ea8960e5b548ae4437f641c378f89e3c2d5998ea6b69655e95`, request 196), as drafted on the Architect page in barecount-devhub pull request 236 at commit `56db94e3e1ac9bdc9cd52bdb5ed16f94372a4d82` (file sha256 `32ede28dcaf891284c75c43ce521af8d33b3168d57e3a06ce45599bf08db5014`). Its rows are carried into group 3 (after "registered") and group 4 (after "certified"), and its not-approved words into section 4, adapted to that table's three columns. Its three defects are owner tasks (TSK-eeb121, TSK-5ac376, and the interim-rule question). Changed by the Foundation amendment of the metric life cycle (The Contract Grammar, MCF Metric Contract family): the "validated against" row is removed from group 4, and the reason and say-instead for "validated" in section 4 are changed, because a tenant's check against its own source is not in the platform's life cycle.
 
 **Seventh slice: the frame's words.** Put to the operator in phase 2 of the Platform Refactor Program (rulings F2, F4, F6, F8 and F9) and approved in two parts. Rulings F2, F4 and F9: desk grant `2026-11-14T15-51-32-251Z-7ff5151d` (text SHA-256 `7ff5151da8069327858ca9c46fa17eba6e918fcfee476f9aa48b3833f1b06115`), for bc-docs pull request 222 at commit `4bcb8a5b1b458dc13ddb65cb19dff95b6fcc5975`. Rulings F6 and F8 (sections S7.5 and S7.6): desk grant `2026-11-14T16-09-37-208Z-5de70196` (text SHA-256 `5de70196c65beed857325a8fd8836c15f5792e3e69be4ad703d828ed9227a961`), for bc-docs pull request 223 at commit `566b50e67af53af72b53ece42ac03c1a87aa82fa`. It was read at bc-docs `origin/main` 1860bf6 and bc-core `origin/main` df52506d. It is carried below as slice 7 and changes no earlier slice.
 
@@ -118,35 +118,31 @@ A tenant sees nothing.
 
 The record is the version row, `mcf.metric_contract_version`, field `governance_state_code`, with `is_current`, and the parent row `mcf.metric_contract`. The transitions are enforced in the database (`docs/reference/lifecycle-map.md`, section 1) and each is written by a governed service, never by hand.
 
-**The rule, in the operator's words:** "before certification a metric can not be active", and "certified (is deployable to tenant so in a way "active" for platform)". So the status people say is **certified**, and it means deployable to a tenant. "Active" is not said as a status. It is the value the state field carries for a certified version, and Foundation gives that value the same meaning: "`active` asserts panel certification" (`the-contract-grammar.md`, "MCF Metric Contract family").
+**The rule, in the operator's words:** "before certification a metric can not be active", and "certified (is deployable to tenant so in a way "active" for platform)". So the status people say is **certified**, and it means deployable to a tenant. "Active" is not said as a status. It is the value the state field carries for a certified version, and Foundation gives that value the same meaning: `active` is the certified state, and it is the end of the platform side: no state stands between `active` and a tenant's use (The Contract Grammar, MCF Metric Contract family).
 
 | Word | Plain meaning | True when | Made true by |
 |---|---|---|---|
 | **draft** | Written down as a contract. Nothing is claimed about whether it is right | state is `draft` | The admission panel approves a proposal and the governed writer creates the version |
 | **in review** | Being reviewed. Still no claim that it is right | state is `review` | The governed transition from draft |
 | **approved** | Review is complete and it may be sent for certification. **Approval is not a certificate** | state is `approved` | The governed approve act |
-| **awaiting certification** | Waiting to be judged by the certification panel. Nothing in this state is evaluated for any tenant | state is `audit_pending` | The request for certification, or the withdrawal of an earlier certificate |
-| **certified** | Passed by the certification panel and **deployable to a tenant** | state field `active`, `is_current`, parent not archived, **and** a standing certification record whose action is `audit_admit` (the `certified_active` line of the readiness projection) | The certification panel's pass, then the governed admit act, which the database allows only with that record |
-| **validated against** *source* (for example "validated against Odoo LC5") | A certified metric is proven to compute correctly against one of our named proof sources: its governed produced value matched an independent computation made outside the platform from that source's data, for a stated period | **No record yet.** It will be the append-only validation evidence record: the certified version, the proof source, the governed evaluation and snapshot identities it compared, the oracle artifact (path@commit and sha256), and when. That record is a design act of the metric catalog drive (DRIVE-2OCT §13a.1), not yet built | The governed validate act, **not yet built** |
-| **released** | The platform has chosen to offer this certified metric in its portfolio. Reversing a release returns it to certified, with nothing else changed | **no record yet. This is new.** Proposed: a separate portfolio record on the platform side (metric, released from, released until, who, why), not an eighth state. Until it is built, every certified metric is treated as released | The platform's own choice, by a governed act that does not exist yet |
+| **awaiting certification** | Waiting for certification. Nothing in this state is evaluated for any tenant | state is `audit_pending` | The request for certification, or the withdrawal of an earlier certificate |
+| **certified** | Certified: meaning, formula and calculation hold, it is Demoed, and the panel ran. **Deployable to a tenant.** The end of the platform side | state field `active`, `is_current`, parent not archived, **and** a standing certification record whose action is `audit_admit` (the `certified_active` line of the readiness projection) | The certification decision, then the governed admit act, which the database allows only with that record |
 | **certification blocked** | Its certification was invalidated. It is not evaluated | state is `audit_blocked` | The invalidation act |
 
-- **"Awaiting certification (need this?)" Yes. The enforced transitions need it**, for three reasons. (1) An approved version cannot become certified directly: the database allows only `approved` to `audit_pending`, and `audit_pending` to `active`; the direct door was closed on 2026-07-15. (2) It is where a certified version returns when its certificate is withdrawn (`active` to `audit_pending`). (3) It is where the defect versions of section 3a go. Folding it into "approved" would change the enforced state machine and would mix "reviewed, not yet sent to the panel" with "certificate withdrawn". Not proposed.
-- **Blocked has no way out today.** The database lists the exit from `audit_blocked` and then refuses it. bc-db migration 0029 is **not** that exit: 0029 is the recorded exit for a version awaiting certification that the panel **rejected**, which otherwise waits forever and holds its name. 0029 is on bc-db `main` and was not applied to the live database when read on 2026-10-01. No version was blocked on that date. The way out of blocked is an open design item (section 8).
+- **"Awaiting certification (need this?)" Yes. The enforced transitions need it**, for three reasons. (1) An approved version cannot become certified directly: the database allows only `approved` to `audit_pending`, and `audit_pending` to `active`; the direct door was closed on 2026-07-15. (2) It is where a certified version returns when its certificate is withdrawn (`active` to `audit_pending`). (3) It is where the defect versions of section 3a go. Folding it into "approved" would change the enforced state machine and would mix "reviewed, not yet sent for certification" with "certificate withdrawn". Not proposed.
+- **Blocked has no way out today.** The database lists the exit from `audit_blocked` and then refuses it. bc-db migration 0029 is **not** that exit: 0029 is the recorded exit for a version awaiting certification **whose certification was rejected**, which otherwise waits forever and holds its name. 0029 is on bc-db `main` and was not applied to the live database when read on 2026-10-01. No version was blocked on that date. The way out of blocked is an open design item (section 8).
 - **The chain verdict is a separate question.** `mcf.mcv_chain_status.verdict_code` is green, amber or red. It says whether the contracts a metric depends on line up. It says nothing about values, it is not a certificate, and it gates nothing. Say "chain verdict green", never "ready" or "chain complete".
 - **"Active" is not a second status.** Nobody reports "active metrics"; they report certified metrics, read from the certified line.
-- **Why "released" is a separate record and not a new state.** The seven states are Foundation's, and they say how far a version has come through governance; release is the platform's choice about its portfolio, and the operator wants its reversal to "simply go back as certified". A record beside the metric does exactly that and leaves the certificate and the state machine untouched. An eighth state would change Foundation and the enforced transitions for a choice that is not about correctness. Release is proposed for the metric as a whole, so a new certified version of a released metric stays released.
-- **When a release is reversed** (the operator's answer, grant `2026-10-01T06-36-21-158Z-648f1a32`): the metric goes back to certified, and tenants that already have it enabled keep it. Taking a metric away from tenants that rely on it is what "retired" is for.
 
-A tenant sees nothing until the metric is released (today: certified, since every certified metric is treated as released).
+A tenant sees nothing until the metric is certified.
 
 ### Group 5. General management
 
 | Word | Plain meaning | True when | Made true by |
 |---|---|---|---|
-| **superseded** | Replaced by a newer certified version. Values already produced stay as they were and are never rewritten | state is `superseded` | The governed supersede act, paired with the new version being certified |
-| **retired** | A certified metric withdrawn from the portfolio, with its history kept | parent `archived_at` is set, and the version's state field was `active` | The governed retire act (see the gap below) |
-| **abandoned** | Dropped without ever being certified: a draft, or a version in review; and, once 0029 is applied, a version the panel rejected | parent `archived_at` is set, and the version was draft or in review (for a rejected version: also a row in `mcf.rejected_version_retirement`, once 0029 is applied) | The governed abandon act; the rejected exit of 0029 |
+| **superseded** | Replaced by a newer certified version of the same metric; preserved and readable, out of use. Values already produced stay as they were and are never rewritten | state is `superseded` | The new version of the same metric becoming certified (not built) |
+| **retired** | A certified metric taken out of use; the whole metric is archived, its versions and values kept | parent `archived_at` is set, and the version's state field was `active` | The governed retire act (see the gap below) |
+| **abandoned** | Dropped without ever being certified: a draft, or a version in review; and, once 0029 is applied, a version whose certification was rejected | parent `archived_at` is set, and the version was draft or in review (for a rejected version: also a row in `mcf.rejected_version_retirement`, once 0029 is applied) | The governed abandon act; the rejected exit of 0029 |
 | archived | **Not a spoken status.** It is the field, `archived_at` on `mcf.metric_contract`, that both retired and abandoned set | (the field) | (the acts above) |
 
 - **"Abandoned (need this?)" Yes.** A draft or a version in review can only move forward in the state machine, and the version table has no abandoned state: the governed abandon act archives the parent. Without this word, every dropped draft would be called retired or archived, which is the mixing the operator wants to end. It is the word that keeps mistakes out of "retired".
@@ -157,13 +153,13 @@ A tenant stops seeing a retired metric. A superseded version's values remain as 
 
 ### Group 6. Tenant
 
-**Which word "available" equals** (the operator's answer, grant `2026-10-01T06-36-21-158Z-648f1a32`): **metric available means released.** A tenant is offered what the platform has released, not everything it has certified. Until the release record is built, the two are the same set.
+**Which word "available" equals** (the operator's answer of 2026-10-01 said released; released is no longer a state, The Contract Grammar, MCF Metric Contract family): **metric available means certified.**
 
 The operator's ladder, with his answer of the same day: "enabled/disabled is producing state. We need one more - Visible/hidden". So there are **two separate switches**: one says whether the metric is produced for the tenant, the other says whether the tenant's users see it. Each step needs the ones before it.
 
 | Word | Plain meaning | True when | Made true by | What the tenant sees |
 |---|---|---|---|---|
-| **metric available** | In the platform's portfolio: any tenant could have it. It is the tenant-side word for a released metric | the same record as **released** (group 4); until that record exists, the same as **certified** | The platform's release | The metric exists in the catalog |
+| **metric available** | In the platform's portfolio: any tenant could have it. It is the tenant-side word for a certified metric | the same record as **certified** (group 4) | Certification (the version entering `active`) | The metric exists in the catalog |
 | **subscribed** | The tenant's package includes the metric | **no record yet.** It will be the metric entitlement on the tenant's Subscription record, which is not built (ADR DEC-c220e4 sets the latest moment). Until then, by that ADR's rule and not by any record, every active tenant is treated as subscribed to every available metric | A platform-side governed act on the tenant's Subscription. The tenant does not write it | The metric is in the tenant's own list |
 | **enabled / disabled** | Whether the metric is **produced** for that tenant: its tables and contract bindings exist there, so it can be evaluated on the tenant's data | **Enabled:** the **current** provisioning command for the metric's current version is `provisioned`, and so are the current commands for the canonical and source tables it depends on, with their bindings recorded (`schema_provisioner.provisioning_command` and its transitions; `tenant.contract_binding`; `tenant.tenant_binding`). An accepted request, or an obsolete or historical command, does not count. **Disabled: not built.** Nothing switches production off for one tenant today: there is no governed unbind (`docs/onboarding/tenant-metric-binding.md`, "Rollback / unbind"), and evaluation reads no binding. Until it is built, a metric is either enabled or "not enabled" | **The tenant's admin** (the operator, 2026-10-01). **That route is not built:** today only a platform operator can start the governed onboarding act, and the provisioning worker then creates the tables. An admin's choice would have to be recorded and then start that same act and worker | While the tables are being created: "being enabled". Then: enabled. If it fails: not enabled, with the failure shown |
 | **visible / hidden** | The tenant's admin chooses whether an enabled metric is shown to the tenant's users. It never stops production | **no record today, and no such choice exists today. This is new.** It needs a record the tenant owns (tenant, metric, visible or hidden, who chose, when) and a route for the tenant's admin. Until it is built, every metric is treated as visible | The tenant's admin (the operator, 2026-10-01) | Visible: shown to the tenant's users. Hidden: not shown; it is still produced, and its values are kept |
@@ -173,7 +169,7 @@ The operator's ladder, with his answer of the same day: "enabled/disabled is pro
 - **"Enabled" replaces "set up for (tenant)"**, the operator-side word of earlier revisions. The records are the same.
 - **"Reporting" replaces "working".** "Working" suggests the number is right, and that is what "done" is for (section 5). "Reporting" says only that a value exists and was accepted.
 - **Both switches belong to the tenant's admin** (the operator's answer). Neither route exists today: "enabled" is started by a platform operator, "disabled" is not built, and "visible / hidden" has no record.
-- **Today, as built:** evaluation does not check that a metric is released, enabled, subscribed or visible before it runs (ADR DEC-c220e4 records the rule in force). A metric that is not enabled cannot report, because its table does not exist.
+- **Today, as built:** evaluation does not check that a metric is enabled, subscribed or visible before it runs (ADR DEC-c220e4 records the rule in force). A metric that is not enabled cannot report, because its table does not exist.
 
 **Subscribed, enabled and visible, but the tenant's data cannot support it.** The tenant sees the metric in its list, **not reporting**, with no value. That is true to the records. Today the screen gives no reason. The reasons exist as separate facts (no source data for it; evaluated, and the result deferred or rejected), and the words a tenant is shown for each are a later slice (section 8).
 
@@ -200,7 +196,7 @@ Until the records for "subscribed" and "visible" exist, a tenant-facing screen d
 
 | Option | What is done | What a tenant sees | Cost and limits |
 |---|---|---|---|
-| **1. Finish the decided route (recommended)** | Mint the missing directory identity for each, then a second manifest moves each to awaiting certification through the governed reintake act. Each is certified only through the certification panel (DEC-21ca17 items 3 and 5) | They leave the list until certified. Nothing changes for Kaveri's set-up metrics | Directory work per metric, then one operator-authorized batch. It is already decided; it needs to be scheduled with the Metric Controller |
+| **1. Finish the decided route (recommended)** | Mint the missing directory identity for each, then a second manifest moves each to awaiting certification through the governed reintake act. Each is certified only through the governed certification (DEC-21ca17 items 3 and 5) | They leave the list until certified. Nothing changes for Kaveri's set-up metrics | Directory work per metric, then one operator-authorized batch. It is already decided; it needs to be scheduled with the Metric Controller |
 | **2. Retire each** | The governed retire act archives the whole metric | They leave the list and do not return unless restored or written again | Quick, and it needs no directory identity. But the retire act is for a metric authored in error, and these are candidates for certification, not errors. Using it here would need the operator's decision to widen what that act is for |
 | **3. Leave them until the deadline** | Nothing now; clear them before the moment DEC-c220e4 sets | They stay listed with no value, and can be evaluated without a certificate | No work now. It keeps the state the operator has just called a problem |
 
@@ -229,26 +225,25 @@ Until the records for "subscribed" and "visible" exist, a tenant-facing screen d
 | second tenant, first customer, customer tenant | Ordinals and "customer" miscount the demo tenant | "Kaveri" or "demo tenant"; for another tenant, name it |
 | realized (to mean certified) | The realize guard also accepts an approved version (addendum, 2026-10-03) | "realized and certified", each read from its own record |
 | un-realized, de-realized | One act has one name | "realization revoked" |
-| validated (alone), verified, accurate (as a status) | Validation is always against a named source, and its record is not built yet | "validated against" *source*, said with its interim proof named until the record exists ("validated against Odoo LC5 (manual tally, *artifact@sha*)"); otherwise "certified, not yet validated against" *source*. Validation never certifies, and a failed validation never rejects |
+| validated (alone), verified, accurate (as a status) | Validation against a source is not in the platform's life cycle; agreement on the demo plane is said as Demoed | for the demo plane, "Demoed at (version)"; a tenant's own check against its source is not a platform word |
 
 ## 5. What "done" means
 
 Two words, for two different things.
 
-**Done, for one metric on one tenant.** A metric is done for a tenant when all six hold, and each is read from its record on the day it is claimed:
+**Done, for one metric on one tenant.** A metric is done for a tenant when all five hold, and each is read from its record on the day it is claimed:
 
-1. It is **certified** and **released**.
+1. It is **certified**.
 2. It is **enabled** for that tenant, by the governed onboarding act alone.
 3. It is **reporting** for a stated period, by the governed evaluation act alone, with the proof that act writes.
-4. That value **agrees with the expected value** worked out independently from the same source data for the same period, and the agreement is written down where it can be read again.
-5. A tenant user **sees that value** in the portal, checked in the running application.
-6. **No workaround was used at any step.** A direct edit, a bypass, an override, a hand fix or a one-off script at any step means the metric is not done, and the step's owner has a defect to fix.
+4. A tenant user **sees that value** in the portal, checked in the running application.
+5. **No workaround was used at any step.** A direct edit, a bypass, an override, a hand fix or a one-off script at any step means the metric is not done, and the step's owner has a defect to fix.
 
 **Proven, for the route.** The way metrics are produced is proven when, in the operator's four conditions: (a) it used the mandated route alone; (b) it repeats from a clean start by the written procedure alone, in a session that did not build it; (c) each stage and each handoff has its own tests that can go red, kept and re-run; (d) a second, different case passes with no change to any stage.
 
 So "a Kaveri-proven metric" means: a metric that is **done for Kaveri**, through a route that is **proven**. One metric going green does not prove the route, and a proven route does not make any one metric done.
 
-**No record holds "done" today.** Until one does, "done" is written only together with its six reads and their date. Section 8 names this as the first thing to build.
+**No record holds "done" today.** Until one does, "done" is written only together with its five reads and their date. Section 8 names this as the first thing to build.
 
 ## 6. The tenant kinds, and where counts are read
 
@@ -261,7 +256,7 @@ So "a Kaveri-proven metric" means: a metric that is **done for Kaveri**, through
 |---|---|
 | in each platform state; certified (the `certified_active` line); marked active without a certificate (the `residue_legacy_active` line, a defect) and with no record at all (`unattributed_active`, which must be empty); at each chain verdict | `GET /api/registry/mcf/readiness-projection` (a read model over the records above) |
 | enabled for a tenant | `GET /api/schema-provisioner/tenants/<slug>/provisioning` |
-| released; subscribed; visible or hidden; disabled | no record exists yet (section 3, groups 4 and 6) |
+| subscribed; visible or hidden; disabled | no record exists yet (section 3, groups 4 and 6) |
 | reporting for a tenant | **for one metric:** the tenant's own `GET /api/t/beyond/metrics/<metric id>`, which returns every accepted snapshot with its value, fiscal period and period end date (bc-core `src/tenant-views/beyond-metrics.service.ts`, `governedSnapshots` and `metricDetail`; `src/tenant-views/governed-snapshot-reads.ts`). **Across metrics for a period: no single read exists yet** (section 8). The list's `snapshotBacked` flag is weaker: it is true when the tenant has any accepted evaluation of the metric, for any period, and it does not check the snapshot row. It is never reported as "reporting" |
 | done for a tenant | no single read exists yet (section 8) |
 
@@ -277,7 +272,7 @@ So "a Kaveri-proven metric" means: a metric that is **done for Kaveri**, through
 
 | # | Open point | Whose |
 |---|---|---|
-| 1 | **Where "done" is recorded.** One named list of metrics done for the demo tenant, with the six reads and their dates, and an owner. Without it, "done" stays a claim | Metric Controller with the Demo Controller; the operator approves the shape |
+| 1 | **Where "done" is recorded.** One named list of metrics done for the demo tenant, with the five reads and their dates, and an owner. Without it, "done" stays a claim | Metric Controller with the Demo Controller; the operator approves the shape |
 | 2 | **Reads 3 and 4 of "done" need their records named exactly:** the proof record the evaluation act writes, and where the agreement with the expected value is written | Metric and Platform Controllers |
 | 3 | **The acts in section 3 are named by what they do.** The exact governed endpoint for each belongs in the metric procedure, which the Metric Controller checks against practice | Metric Controller |
 | 4 | **The live metric procedure still names retired tables** (`docs/onboarding/metric-workstream.md`, section 3, lists `contract.metric_contract` and related legacy tables as places to search) | Docs and Metric Controllers, in the clean-up |
@@ -291,8 +286,7 @@ So "a Kaveri-proven metric" means: a metric that is **done for Kaveri**, through
 | 12 | **"Retired" for legitimate withdrawals only.** Today every act that archives a metric is written for a mistake or a rejection. Deciding that a certified metric found wrong is withdrawn and abandoned, never retired, and changing the retire act's purpose and record to match, is a design act | The operator decides; Architect designs; Platform and Metric Controllers build |
 | 13 | **Registered before drafted is not fully enforced:** the direct-submission intake accepts a proposal with no directory entry | Platform Controller |
 | 14 | **Certification blocked has no way out.** The exit is listed and refused in the database | Architect with the Metric Controller |
-| 15 | **bc-db migration 0029** (the exit for a version the panel rejected) is on `main` and not applied; "abandoned" covers rejected versions only once it is | DB Controller, on the operator's grant |
-| 16 | **"Released" is new.** The portfolio record and its governed act are not built. ADR DEC-c220e4 says tenants see every certified metric; once release exists it would say every released metric, which is a change to that ADR for the operator | The operator decides; Architect designs; Platform and DB Controllers build |
+| 15 | **bc-db migration 0029** (the exit for a version whose certification was rejected) is on `main` and not applied; "abandoned" covers rejected versions only once it is | DB Controller, on the operator's grant |
 
 ## 9. Sources read in this unit
 
@@ -622,7 +616,7 @@ An **AI panel** is a fixed set of AI models, each in a named seat, that answers 
 |---|---|---|---|
 | **registry authoring panel** | May this act on the business concept registry be drafted: a new concept, characteristic, version or supersession? | maker, checker, moderator | `bcf.panel_output_record` |
 | **metric authoring panel** | Is this metric contract draft admissible as written? | maker, checker, judge (DEC-09f86b) | `mcf.metric_authoring_panel_run`, with one transcript per seat; its verdict is also written to `bcf.panel_output_record` |
-| **certification panel** | Does the frozen metric package pass certification, which gates the metric's activation (DEC-c48b0f)? | assessor, adversary, moderator | `mcf.audit_contextual_panel_run`; its decision is in `metric_audit.decision` |
+| **certification panel** | Is anything in the frozen metric package to be flagged? It runs on every certification and never blocks it (The Contract Grammar, MCF Metric Contract family). | assessor, adversary, moderator | `mcf.audit_contextual_panel_run`; its decision is in `metric_audit.decision` |
 | **ABC reasoning panel** | Bounded reasoning inside the Autonomous Business Chain orchestrator (DEC-cff0cf) | maker, checker, judge | no record of its runs found (S5.6 defect 7) |
 
 "AI panel" in `the-dual-layer-interaction-model.md` names the advisory conversation surface of the user interface. That is a screen, not a panel in this sense. Say "conversation panel" for it.
@@ -633,7 +627,7 @@ An **AI panel** is a fixed set of AI models, each in a named seat, that answers 
 |---|---|---|
 | **panel run** | One call of one panel on one case | the run's `panel_run_uid` in the record named in S5.1 |
 | **roster** | Which model sits in each seat of one panel. It is **calibration-locked**: it changes only with the operator's recorded sign-off | registry panel: ADR DEC-ffee4e, amended by DEC-53629b; certification panel: one row in `mcf.audit_panel_roster_registration`, authorized by the operator with its calibration evidence (DEC-d3b916); metric authoring panel: the model defaults in code (DEC-e87701) |
-| **seat** | One position on a panel, with its job: the maker drafts, the checker challenges, the moderator or judge decides; the assessor, adversary and moderator certify | the seat columns of the roster, or `model_role_code` on a transcript |
+| **seat** | One position on a panel, with its task: the maker drafts, the checker challenges, the moderator or judge decides; the assessor, adversary and moderator review the frozen package and flag | the seat columns of the roster, or `model_role_code` on a transcript |
 | **panel verdict** | The panel's answer for one run (S5.2a) | `verdict_code` on the run's record |
 | **defect code** | Why a draft was rejected, from a fixed list | `defect_code` (registry panel: nine values; metric panel: `MC_DEFECT_*`) |
 | **sent to operator review** | The panel did not decide and hands the case to the operator, with a reason | verdict `OPERATOR_REVIEW`, with `operator_review_reason` where recorded |
@@ -653,7 +647,7 @@ Each verdict is said with its panel, for example "registry panel: approved for d
 | `APPROVE_FOR_DRAFT` | **approved for draft.** The draft may be written as a draft; nothing is in force yet |
 | `OPERATOR_REVIEW` | **sent to operator review** |
 | `REJECT` / `REJECT_DEFECT` | **rejected, with a defect code.** Two spellings of one result (S5.6 defect 1) |
-| `PASS`, `REJECT`, `REVOKE` (certification panel) | **certification passed, rejected, or revoked** |
+| `PASS`, `REJECT`, `REVOKE` (certification decision) | **certification passed, rejected, or revoked**; the decision rests on the mechanical checks and the version being Demoed, not on the panel's flags |
 
 **"Verdict" is never said alone.** Six records use a field called `verdict_code`, each with different values. These include the chain verdict (green, amber, red), self-verification (pass, fail) and publication eligibility. Say "panel verdict", "chain verdict" and so on.
 
@@ -661,7 +655,7 @@ Each verdict is said with its panel, for example "registry panel: approved for d
 
 1. **The third seat keeps each panel's decided word,** always said with the panel: "moderator" for the registry and certification panels, "judge" for the metric authoring panel (DEC-09f86b). The metric panel's record is to be corrected to say judge (S5.6 defect 4).
 2. **"Park" is retired for panel outcomes.** Say "sent to operator review" or "waiting for operator confirm", whichever is meant. "Parked" stays a DevHub task state only.
-3. **"Certification" alone means metric certification** by the certification panel. The registry's records are said as **"registry certification record"**.
+3. **"Certification" alone means metric certification** with its certification record. The registry's records are said as **"registry certification record"**.
 4. **"Consensus", "quorum" and "dissent" are retired as panel words.** Say "the judge's holding" or "the moderator's verdict".
 
 ### S5.4 Words not approved, and what to say instead
@@ -723,7 +717,7 @@ This is not a rename of any state. The internal lifecycle state whose field valu
 
 ### S6.3 Reserved, not decided here
 
-The state-word lifecycle (realized, active, validated, released) and any Foundation state rename are reserved to the operator and the Architect (section 8; section 2 rule 3). "Validated" is additionally a Phase-C, tenant-zone word. ADR DEC-71c027 walls these off explicitly; this page does not set them.
+The word realized, and any Foundation state rename, are reserved to the operator and the Architect (section 8; section 2 rule 3); active and released are settled by the Foundation (MCF Metric Contract family), and validated has left the platform's life cycle. Realized stays walled off by ADR DEC-71c027; this page does not set it.
 
 ## Slice 7: the frame's words
 
@@ -733,13 +727,15 @@ Authority: rulings F2, F4, F6, F8 and F9 of the Platform Refactor Program (`docs
 
 Section 5 of this page is the definition of "done", for one metric on one tenant, and of "proven", for the route (ruling F2). The program's finish test rests on it.
 
-### S7.2 Three words added
+### S7.2 Five words added (three by rulings F2; two by the Foundation amendment of the metric life cycle)
 
 | Word | Plain meaning | Where it is fixed |
 |---|---|---|
 | **plane** | A separated area in which one kind of data is evaluated and kept. **Never said alone.** Two uses are approved: the **tenant plane**, a tenant's own database; and the **demo plane**, the tables of schema `demo` inside the platform database, shaped like a tenant's, where metrics are evaluated on demonstration data (ADR DEC-89db41). | Ruling F2 |
 | **package** | A named set of metrics offered to tenants. A tenant subscribes to a package; a package holds many metrics; a metric may be in more than one package (ruling T1). **No record holds a package of metrics today.** How a package names its metrics is ruling T6. | Rulings T1 and F2 |
-| **value-affecting change** | A change that is able to move a number already reported, or one that would be reported, for a tenant. It reaches a tenant only when the tenant's admin, or a role or user the tenant designates, accepts it. A change whose effect is uncertain is treated as value-affecting; a change that cannot move a number is not (ruling T3). **No record classifies a change today,** and who classifies it is ruling T16. | Rulings T3 and F2 |
+| **value-affecting change** | A change that is able to move a number already reported, or one that would be reported, for a tenant. It reaches every tenant using the changed thing when the platform moves the tenant by a recorded act at the moment of the notice, with no consent step; it sends a plain notice, or a critical notice when it changes meaning (The Contract Grammar, Versioning and immutability on publish). A change whose effect is uncertain is treated as value-affecting; a change that cannot move a number is not (ruling T3). **No record classifies a change today,** and who classifies it is ruling T16. | Rulings T3 and F2 |
+| **platform side** | A metric's life held by the platform, from registration to `active`; one life per metric. | The Contract Grammar, MCF Metric Contract family |
+| **tenant side** | Each tenant's own life with a certified metric, from available to reporting; one per tenant per metric. | The Contract Grammar, MCF Metric Contract family |
 
 | Not approved | Say instead |
 |---|---|
@@ -764,9 +760,7 @@ The status words of this page are the only scale of a metric's progress (ruling 
 
 | Word | Plain meaning | True when | Where it is fixed |
 |---|---|---|---|
-| **Demoed** | A metric version's value agreed with an expected value on the demo world, on the demo plane. It says nothing about any tenant, and it is never "done" for a tenant. Said with its version: "Demoed at (version)" | never a stored value. It is read each time, from the preserved proof for that exact version: the proof's comparison is a match, **and** every pin the proof names (the metric contract version, the demo world's version, the expected value and where it came from, the engine build) is present and still current. A missing or stale pin gives "not Demoed" or "unknown", even where an earlier comparison matched. A proof for one version is never shown for the next (ADR DEC-025bfc, T2 and T3) | Ruling F8 |
-
-**"Validated against"** a named source (section 3, group 4) is unchanged: it stays the status word for agreement with an independent computation from a source's own data, and its record is still not built. "VALIDATED" in capitals, returned by the engine as a claim level, is an identifier and not a word of this page.
+| **Demoed** | A metric version's value agreed with an expected value on the demo world, on the demo plane. It says nothing about any tenant, and it is never "done" for a tenant. Said with its version: "Demoed at (version)" | never a stored value. It is read each time, from the preserved proof for that exact version: the proof's comparison is a match. The proof names the metric contract version, the demo world's version, the expected value and where it came from, and the engine build. A later change of the demo world does not undo it: a later demo world does not make earlier values incorrect. A proof for one version is never shown for the next (ADR DEC-025bfc, T2 and T3, as amended). A version reaches `active` only when Demoed (The Contract Grammar) | Ruling F8 |
 
 ### S7.6 What Integrity Assurance gives a customer
 
@@ -774,4 +768,4 @@ For each number (ruling F6): the definition and the formula it was produced unde
 
 ### S7.7 Not settled in this slice
 
-Whether proof on demonstration data counts toward "done" (ruling B11); the record of a package's metrics (rulings T11 and T12).
+The record of a package's metrics (rulings T11 and T12).

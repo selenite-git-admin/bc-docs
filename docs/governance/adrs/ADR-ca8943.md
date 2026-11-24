@@ -103,3 +103,11 @@ This runs in parallel with the certification-reliability track. Certification st
   - **Blocking:** the gate claimed to decide prose fidelity and completeness deterministically. It is narrowed to **structured declarations**; prose fidelity and ambiguity stay with the panel (DEC-c48b0f item 4, DEC-4c8bee point 3); prose yields advisory flags only. G2 and G5 are reworded accordingly.
   - **Added D4a:** each result is bound to the exact inputs it checked, so a PASS cannot be replayed.
   - **Implementation dependency noted:** the package projection must carry `anchor_field` (TSK-694aba) before G2's shared statement or any anchored package is relied on.
+
+## Amendment 1 (2026-11-22, pending the operator's recorded approval): the metric life cycle in the Foundation
+
+The original text above stays as decided and is not rewritten.
+
+Approval: pending. A final commit replaces "2026-11-22, pending the operator's recorded approval" in this section's heading with the date of the operator's recorded grant, and this line with its AUTHORITY line (grant id, text sha256, method totp); it changes nothing else.
+
+D3 is replaced: the platform defines and certifies; it never produces a value for a tenant; it evaluates on the demo plane, where a version is Demoed before it is certified; tenants produce and report. "Certification never requires a produced value" and "Validation against a source is evaluation-plane evidence, after release" no longer govern: a tenant checking its values against its own source is outside the platform's life cycle. In G5 and under Invariant I, "judged by the panel" and "judged by the certification panel" read "flagged by the certification panel".

@@ -21,8 +21,9 @@ errata_referenced: []
 # Audited Metrics Differentiator
 
 > **CORRECTION — 2026-07-31, DEC-793e13 (D540).** The external metric-audit exchange is retired. BareCount
-> does **not** externally audit its own metrics; it **panel-certifies** them in-process. Anywhere this draft
-> implies independent or external audit of a metric, read *panel-certified*. The distinction is not
+> does **not** externally audit its own metrics; it **certifies** them inside the platform: meaning asserted in the contract, the calculation proven by the
+> mechanical checks, and each version Demoed; the certification panel flags. Anywhere this draft
+> implies independent or external audit of a metric, read *certified*. The distinction is not
 > cosmetic: an external audit is performed by a party that cannot be overruled by the audited, and no such
 > party is in the loop today. Do not carry the phrase "externally audited" into any narrative, deck,
 > website, sales material or product surface derived from this document.
@@ -297,7 +298,7 @@ operational.
 
 ## Promotion condition
 
-After Track C lands, this draft should be reconciled against the exact implemented migrations, services, tests, apply receipts, panel certification records, and final bc-docs authority revision. Only then should its accepted content be folded into the canonical product overview, structural differentiators, website, sales material, and product UI.
+After Track C lands, this draft should be reconciled against the exact implemented migrations, services, tests, apply receipts, certification records, and final bc-docs authority revision. Only then should its accepted content be folded into the canonical product overview, structural differentiators, website, sales material, and product UI.
 
 **Additional promotion gate (DEC-793e13):** before any of this reaches a customer-facing surface, every
 audit claim must be restated in self-certification terms. "External-auditor acceptances" was a promotion

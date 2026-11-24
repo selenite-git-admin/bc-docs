@@ -43,3 +43,11 @@ Design act (DEC-c48b0f). §I meaning-once; §III immutable/versioned demo world 
 ## Consequences
 
 First build (separately gated, AFTER this DEC): (i) the demo-plane proof act emitting immutable version-pinned evidence (depends on TSK-f4e038); (ii) the read-time `Demoed` projection over it, with the positive AR Balance read AND the known-hollow negative acceptance test (a known-hollow item MUST project `not-Demoed`). No terminal-state code lands before this DEC.
+
+## Amendment 1 (2026-11-22, pending the operator's recorded approval): the metric life cycle in the Foundation
+
+The original text above stays as decided and is not rewritten.
+
+Approval: pending. A final commit replaces "2026-11-22, pending the operator's recorded approval" in this section's heading with the date of the operator's recorded grant, and this line with its AUTHORITY line (grant id, text sha256, method totp); it changes nothing else.
+
+T1 is replaced: Demoed is not a state and not a terminal; it is the condition a version meets before it reaches active, and active is the end of the platform side: no state stands between active and a tenant's use. T3 is replaced: each version is Demoed on its own, and no equivalence record carries Demoed from one version to another. In T2, the check of currency (all pins present and current, proof not stale, and not-Demoed or unknown for a missing or stale pin) no longer governs: a later change of the demo world does not undo Demoed. The rest of T2, and T4, T5 and T6, stand.

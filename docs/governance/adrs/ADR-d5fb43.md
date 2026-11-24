@@ -142,3 +142,11 @@ SC/AC/OC/IC have no instances yet — they will be seeded with `1.0.0` from the 
 - D233 — Three-level governance (version is per-instance)
 - D164 — Platform-only (tenant notifications go to bound tenants only)
 - D018 (DEC-24b4ec) — Contract Registry (6 contract families)
+
+## Amendment 1 (2026-11-22, pending the operator's recorded approval): the metric life cycle in the Foundation
+
+The original text above is not rewritten.
+
+Approval: pending. A final commit replaces "2026-11-22, pending the operator's recorded approval" in this section's heading with the date of the operator's recorded grant, and this line with its AUTHORITY line (grant id, text sha256, method totp); it changes nothing else.
+
+§4 no longer governs which change sends which notice. The rule is The Contract Grammar's, for contracts and metrics alike: a change of meaning sends a critical notice; any other change that alters values sends a plain notice; a wording-only change sends none and appears only in the release notes. MAJOR, MINOR and PATCH keep their meaning as version numbers (§2) and do not set the notice. The platform moves each tenant using the contract to the new version by a recorded act at the moment of the notice; no tenant action is required. Read on 2026-11-22: no constraint enforces the version format and every metric contract version carries `v1` (§1); the table `infrastructure.notification` does not exist and no service sends a notice (§4); the legacy table `contract.contract_release_note` exists (§3).
