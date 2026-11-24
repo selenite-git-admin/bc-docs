@@ -467,6 +467,7 @@ Two things are open for the owner besides his yes to the database changes (secti
 
 - A corrected world answer (a superseding hand-over): its custody, current-answer selection and proof-currency rules need a separate design and the owner's own database yes (rule B8).
 - A route for worlds with several legal entities: the writer covers one legal entity, and no full-world coverage is claimed through one entity's pin (rule B7; rule S7).
+- A new source system with no demo world, for example SAP. The owner ruled it out of scope: it is a commercial matter, and the first customer of each new source type helps prove it (barecount-devhub `claude/operator-review-content`, DECISIONS commit cd335caa, recorded 2026-11-24 21:05 IST). A known consequence is recorded for later: the canonical contract cc-das36 references Odoo observation contracts. So rule V3 as written would not count an Odoo test for a customer on another source.
 
 **Not grounded in this design:**
 
