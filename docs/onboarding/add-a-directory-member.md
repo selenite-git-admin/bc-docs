@@ -70,6 +70,20 @@ This section lists what must exist first and the read that shows it.
 - The group, with a current group version (task guide B, step 2).
 - The grain entity and each concept named, active with an active version: `devhub_bcf_read_entity`, `devhub_bcf_read_concept`, or the registry reads of task guide A, step 1.
 
+### How to write the definition
+
+This section states the writing rule for the two text fields of a member version (owner ruling, 2026-11-24, DECISIONS content ca0514a1).
+
+- **`definition_text`** is plain business language, two or three sentences, for a reader who knows the business and not the platform. Say what is counted or measured, what is left out, and which date places it in a period. Use no codes, concept ids, function names or operators.
+- **`formula_intent_text`** holds the exact technical rule: the operation and its operand, the grain, every filter with its concept and governed value, the counting basis (for example row count, not count distinct), and the temporal shape and anchor.
+- Every rule in the definition must also be in the formula intent, and the two must not disagree. The definition says the rule in words; the formula intent says it exactly.
+- Both fields are frozen into the member version. A changed definition is a new member version, never an edit (gap G19: today no door writes it).
+
+Example, customer invoice volume:
+
+- *definition_text:* "The number of customer invoices posted in the period. Each invoice counts once. Customer payments and credit notes are not counted. The period is taken from the invoice's posting date."
+- *formula_intent_text:* "count(temporal_anchor) over Customer Invoice where document type code = customer_invoice; one row per invoice document (row count, not count distinct); period_aggregate by fiscal period of the posting date".
+
 **Next:** Chapter 3, Add a directory member.
 
 ## Chapter 3. Add a directory member
@@ -105,6 +119,7 @@ Register the member and its first member version from its specification.
 - **API (today):** `POST /api/metric-directory/members/from-spec` (`metric-directory.controller.ts:386`, HTTP 201), the door the Workflows board names. Body: `group_id`, `member_code`, `display_name`, `definition_text`, `formula_intent_text`, `temporal_intent` (object), `output_intent` (object), `decision_evidence_refs` (non-empty list) required; `measure_concept_id`, `representation_code` (default `amount`), `discriminator_predicates` (list of `concept_id`, `values`, `operator_code` `eq` only) optional. The class and grain come from the group.
 - **Writes:** `metric_directory.member` (with its feasibility state), `metric_directory.member_version` and its child tables (direct inputs, constants, discriminators, dependencies) (`member-versioning.service.ts:225-270`), in one transaction.
 - **Failure modes:** 400 for each missing or malformed field (for example "definition_text and formula_intent_text are required non-empty strings", "temporal_intent must be a JSON object").; 400 "group … has no current Group Version — author one before creating members" (`metric-directory.service.ts:1052`); 400 the family has no current version (`:1053`).; 400 "group …'s grain entity … has no ACTIVE, non-archived version — it is not authoring-ready"; 400 "concept(s) absent or not active (no version to reference)".; 400 "operator_code '…' is not permitted — Directory §6 discriminators are select-only".; 409 "an active member already exists for (group, member_code)".; A failure of the commit-time checks of the version rolls everything back and is not mapped to a status.
+- **Note:** Write `definition_text` and `formula_intent_text` by the rule in Chapter 2, How to write the definition.
 - **Note:** The lower door `POST /api/metric-directory/members` (`metric-directory.controller.ts:356`) takes the whole member version written by hand (direct inputs, constants, dependencies). It refuses `realized_metric_contract_uid` ("no longer accepted at member creation"); `from-spec` ignores that field. A member is linked to its contract later (task guide E (Link a directory member to its contract)).
 - **Note:** Important: a member whose concepts are not ready is not refused: it is recorded as blocked (`bcf_gap`) and the door answers 201. Read the answer's feasibility state; a blocked member cannot go on until the concept is onboarded and the member re-checked (`POST /api/metric-directory/members/:memberUid/feasibility-reeval`, `metric-directory.controller.ts:798`).
 - **Next:** step 3

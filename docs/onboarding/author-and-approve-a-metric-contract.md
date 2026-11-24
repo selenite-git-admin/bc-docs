@@ -97,6 +97,7 @@ Record the metric proposal from the directory member.
 - **API (today):** `POST /api/mcf/intakes` (`mcf-intake.controller.ts:45`, HTTP 201). Body: `candidate_name`, `candidate_description_text`, `normalized_candidate_json` (no `co_bindings`), `directory_member_uid`; optional `reservoir_confidence_band`, `reservoir_provenance_source_json`. Answer: `intake_queue_uid`.
 - **Writes:** `mcf.metric_authoring_intake_queue` (the member uid is kept with the proposal and stamped on the contract at step 5).
 - **Failure modes:** 422 "intake rejected by reservoir filters" with the summary.; 400 body validation; 403 role.; 410 Gone on `POST /api/mcf/intakes/from-seed`: starting from a seed alone is retired (DEC-fa9424).
+- **Note:** Write `candidate_description_text` by the rule for the member's definition (task guide C (Add a directory member), Chapter 2, How to write the definition): plain business language in two or three sentences, consistent with the member's `definition_text`. The exact technical rule belongs in the member's formula intent and the normalized candidate, never only in the description.
 - **Note:** Important: the door does not reuse a proposal: every request makes a new one (`operator-direct-adapter.ts:40`), and it does not check that the member exists (gap G22). Read `GET /api/mcf/intakes` first; turn an extra one away with `PATCH /api/mcf/intakes/:intakeQueueUid/reject` (a reason of 20 or more characters).
 - **Next:** step 2
 
@@ -169,6 +170,7 @@ Approve the version: the publication checks run and, when all pass, the version 
 - **API (today):** `POST /api/mcf/metric-contracts/:metricContractUid/evaluate-publication-eligibility` (alias `evaluate-pe-mc`) (`mcf-publication-eligibility.controller.ts:119`), no body. Results: `GET /api/mcf/metric-contracts/:metricContractUid/publication-eligibility-status` (`:108`).
 - **Writes:** `mcf.metric_publication_eligibility_result`, the certification records and the version's state, the contract's hash seal, `mcf.mcv_package_snapshot`.
 - **Failure modes:** 404 "no active metric_contract_version for metric_contract …" (the message says active; the door looks at draft, review, approved and active).; Failing checks leave the version at review, the failing checks named in the answer (not an error status); fix by a new draft, never in place.; Not mapped to a status: a wrong-state or precondition error of the evaluator.
+- **Note:** The knowledge profile's `definition_summary` (`mcf.metric_knowledge_profile`, written at step 5 from the panel run) follows the same plain-language rule. Today a maker supplied from the directory envelope carries no summary (`metric-directory.service.ts:360-364`), so the summary is empty.
 - **Next:** Back to guide 1, step 6
 
 **Next:** Chapter 4, Troubleshooting, if a step refused.
