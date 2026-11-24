@@ -14,11 +14,19 @@ governing_adr: DEC-79b62f
 
 # Repeatable tests of a metric version on the demo world
 
-*Design note · proposed 2026-11-24, revision 7 · nothing in this note has been built or run. Its database changes are a proposal: they need the owner's explicit yes under the Database Change Protocol before any migration is written.*
+*Design note · proposed 2026-11-24, revision 7, amendment 1 (2026-11-24, after landing at bc-docs c948683c) · nothing in this note has been built or run. Its database changes are a proposal: they need the owner's explicit yes under the Database Change Protocol before any migration is written.*
 
 Evidence base, read at these heads on 2026-11-24: bc-db `origin/main` 18d6884, bc-core `origin/main` df47ce00 (the served engine), bc-demo `origin/main` 428ab310, bc-admin `origin/main` 6267a64, bc-docs `origin/main` 96487a5. Live rows were read read-only on `bc_platform_dev` on 2026-11-24 with the read-only database tool. Paths in bc-core are under `src/` unless shown otherwise.
 
 Revision 2 follows two later rulings of the owner (section 2). Revision 1 let each test choose its own months; that is withdrawn. Revision 3 folds in the auditor's boundary as design rules (section 3.5). Revision 4 records the owner's settlement of the seven open questions as rules S1 to S7 (section 14) and lists the database changes for his yes (section 16). Revision 5 adds the owner's ruling that a test uses what customers use: the same arithmetic and the same versions (section 3.6). Revision 6 fixes the four blocking findings of the auditor's second reply (bc-external-audit `docs/RESPONSE-Codex-gen-3a7aae-02-open-repeatable-demo-tests-design-rev-2026-11-24.md`, commit 331d0fb7, CHANGES REQUIRED, reviewed at head c71519c5) under the owner's "Yes, fix all four". It also adds the owner's principle of one demo world per source type (DECISIONS b13068d5; section 3.7). Revision 7 answers the auditor's third reply (bc-external-audit `docs/RESPONSE-Codex-gen-3a7aae-03-open-repeatable-demo-tests-round3-2026-11-24.md`, commit ce0facd0). That reply closes findings 1, 2 and 4 and keeps finding 3 blocking. Revision 7 changes only the time-gate evidence (5.2 item 4, E12, E13) and adds the reply's implementation notes as boundaries (section 3.8). The auditor's answer is ACCEPTED WITH BOUNDARY: bc-external-audit `docs/RESPONSE-Codex-gen-3a7aae-01-open-repeatable-demo-tests-design-2026-11-24.md`, commit 504b5bd0, reviewed at head 88b0c35d. It accepts the design direction only; no database change, landing or onboarding follows from it.
+
+**Amendment 1** follows the owner's ruling that the platform is system-agnostic (DECISIONS bf0101cf, 22:21 IST; bc-docs `docs/overview/structural-differentiators.md:54-58`). A metric is proven once, on any demo world; a source mapping is proven per source type in a separate design (section 3.7). It:
+
+- removes canonical-version equality and every source-type dimension from the metric's approval gate;
+- keeps the canonical versions a test read as evidence only;
+- folds in fixes 1, 2, 3, 6 and 8 of the independent Foundation check;
+- names four separate design acts (section 15);
+- restates section 16 with the builder's grounded shapes and marks what differs from the owner's two database yeses (8558dc9f, 0bfc5aa4).
 
 ## 1. The problem in plain words
 
@@ -43,7 +51,8 @@ Recorded in barecount-devhub branch `claude/operator-review-content`, `artifacts
 
 4. **The seven open questions, settled as recommended** (32202aea, recorded 2026-11-24 20:40 IST: "Yes, as recommended"). They are rules S1 to S7 in section 14.
 5. **A test uses what customers use: the same arithmetic and the same versions** (fc92dd64, recorded 2026-11-24 20:50 IST). The owner: "add the arithmetic fix to the design. Also demo must switch to latest version (like customers forced to) otherwise they will differ". These are rules A1 to A4 and V1 to V6 in section 3.6. The owner confirmed the Chief's reading (752c345c, recorded 20:52 IST): "yes, that's what I meant".
-6. **One demo world per type of source system** (b13068d5, recorded 21:18 IST). The owner: "fundamentally we should WILL be doing one demo world or similer for each type of source system once." The design holds for several worlds, one per source type (section 3.7). Only building a world for a new type is out of scope (section 15).
+6. **One demo world per type of source system** (b13068d5, recorded 21:18 IST). The owner: "fundamentally we should WILL be doing one demo world or similer for each type of source system once." Amendment 1 places this principle in the mapping proof, not in the metric test (section 3.7).
+7. **The platform is system-agnostic: a metric is proven once; a source mapping is proven per source type** (bf0101cf, recorded 22:21 IST). The owner: "I think something is slightly off. You are missing subtle foundation limit (and our core differentiator) that platform is system agnostic." On the Chief's correction (two proofs), the owner: "agree, amend the design." Fixes 1, 2, 3, 6 and 8 of the independent Foundation check are folded in. Fix 7 and the builder's item 6 (the source-type table) fall away. Fixes 4 and 5, the observation-to-source-contract declaration gap and the mapping proof are separate design acts. The amended database shapes need the owner's database yes again before the builder restarts.
 
 ## 3. The model
 
@@ -99,7 +108,9 @@ The activation act already names the Demoed record it relied on (`metric_audit.t
 
 - a Demoed record of this exact version whose proof still reads current (unchanged: `mcf-cert-writer.service.ts:1047-1058`; c16 at 0076:845);
 - under lock L1 (section 8, rule S2), no failed test of this version that a person has not yet resolved;
-- the arithmetic (A3) and the complete canonical input set (V3) of the cited test match what the serving runtime uses at the act.
+- the arithmetic of the cited test matches what the serving runtime uses at the act (A2).
+
+The canonical contract versions the test read are recorded as evidence (V6). They do not gate approval: the metric reads only canonical vocabulary, so a pass holds for every source (section 3.7).
 
 All of these sit in **one shared gate** that the database applies on every route to active or current (rule G1, section 3.6).
 
@@ -149,7 +160,7 @@ This option is the simplest sound one. The profile is fixed for the life of a ru
 
 - **A1. Recorded on the run.** The proof pin is extended, not paralleled: `demo.metric_proof_pin` gains `numeric_profile_code`, written by the emit from the value the proving program's own `numericProfileOf` returned for that evaluation. Each test result copies it from the pin, never from the caller, together with `engine_class_code`. A CHECK pairs the two (`scaled-decimal-int-v1` with `formula_engine_v3`, `binary64-v1` with `formula_engine_v2`), as `selectEngine` pairs them.
 - **A2. The approval compares with its own value.** The admit acts run inside the served bc-core (`registry/mcf/mcf-admit.controller.ts:62-63, 123-124`). Each compares the cited test's profile with its own `numericProfileOf`, then records what it saw in a new `metric_audit.transition_evidence.served_numeric_profile_code` column. The database's shared gate (G1) refuses when the two differ: condition `c18_test_arithmetic_not_served`.
-- **A3. Serving compares with its own value.** Every tenant evaluation act (`GovernedMetricEvaluationService.evaluate`, :343, before `runEngine` at :388) reads, without evaluating, whether the version it serves has a passed, complete test with **its own** profile and the served canonical input set. If not, the act records a refusal `arithmetic_not_tested` and writes no new snapshot, through the existing recorded-refusal path (`refuseDefect`, as at :362). Snapshots already written stay readable. So a profile change stops changed arithmetic from serving new values until a fresh test under it passes. The Tests column shows "re-check due (arithmetic)".
+- **A3. Serving compares with its own value.** Every tenant evaluation act (`GovernedMetricEvaluationService.evaluate`, :343, before `runEngine` at :388) reads, without evaluating, whether the version it serves has a passed, complete test with **its own** profile. If not, the act records a refusal `arithmetic_not_tested` and writes no new snapshot, through the existing recorded-refusal path (`refuseDefect`, as at :362). Snapshots already written stay readable. So a profile change stops changed arithmetic from serving new values until a fresh test under it passes. The Tests column shows "re-check due (arithmetic)".
 - **A4. The Demoed record records the arithmetic.** It does not judge the serving setting: the writer runs in the proof command's program, which is not the serving program. The pin's profile reaches the test result (A1). Approval (A2) and serving (A3), which run in the serving program, decide.
 
 Required tests (fixtures):
@@ -160,29 +171,20 @@ Required tests (fixtures):
 
 Consequence, stated plainly: `binary64-v1` is the explicit rollback (`metric-runtime.config.ts:5-13`). Under A3, a rollback holds back new values of every metric until each one is re-checked under it.
 
-**Grounding: the versions.** The demo and the tenant read different versions today:
+**The versions, amended** (bf0101cf). A metric reads only canonical vocabulary (`docs/overview/structural-differentiators.md:54-58`). So which canonical contract version produced the records is a property of the **source mapping**, not of the metric, and it is proven by the mapping proof (section 3.7), not by the metric's approval. Revision 6's rules V3 (two-way canonical equality at approval), V4 ("re-check due" on a canonical supersession) and V5 (the tenant route for canonical inputs in a test), and condition c19, are **removed** from the metric's gate.
 
-- **Metric version.** On a demo plane, `MetricSpecLoader.load` takes the world's **pinned** version (`boundary/metric-spec-loader.ts:110`; the manifest `PLANE_METRIC_VERSION_BINDINGS`, `database/plane/plane-metric-version-binding.ts:60-75`). A tenant reads the **current active** version (`metric-spec-loader.ts:111-119`).
-- **Canonical inputs are more than the grain.** An evaluation reads up to three canonical inputs:
-  - the **grain** contract, resolved by `resolveGrainCcOnPlane` (`boundary/co-candidate-reader.ts:337-346`). On a tenant plane that is `pickGrainCc` over the global active declarations (:339; :137-151: no candidate, refused; two different contracts, ambiguous and refused; otherwise the newest active version). On a demo plane it is the label's pins (:340-343; `PLANE_CC_VERSION_BINDINGS`, `database/plane/plane-cc-version-binding.ts:26-38`);
-  - the **schedule-event** contract of a schedule metric, resolved through the same reader (`boundary/metric-evaluation-orchestrator.service.ts:340-360`) and carried as `scheduleSource` (:425-428);
-  - the **field declarations** of the active canonical contracts for the grain, which map filter concepts to columns (`boundary/metric-spec-loader.ts:266-268`).
-- **Each proof records only part of this**: `demo.metric_proof_input.canonical_contract_version_code`, `co_store_code` and `proof_input_role_code` (`grain` or `schedule_event` only, by `ck_metric_proof_input_role`, read live; `boundary/demo-proof-projection.service.ts:126, 210`; one row today, `5.1.0` / `co_cc_das36_v5_1_0`). The field-declaration source is not recorded, and nothing proves that the recorded rows are the complete set.
-- **Live state.** cc-das36 has two `active` versions, 3.0.0 and 4.0.0, so a tenant resolves 4.0.0 (the newest). The demo world label pins 5.1.0, which is `pending_provisioning` (`contract.canonical_contract_version`, read live). **Customer invoice volume's only proof therefore ran on a canonical version no customer uses.** The demo store for 4.0.0 (`demo.co_cc_das36_v4_0_0`) holds 9 rows, none of them the Kaveri world (read live).
+What stays:
 
-**Rules: the versions.**
+- **V1. A re-check runs on the current metric version.** A re-check of an active metric names its current active version, never an older pin (`boundary/metric-spec-loader.ts:110` takes the world label's pinned version today; the test names the version instead, E17).
+- **V2. A candidate is tested itself.** Before approval, the candidate version itself is tested.
+- **V6. The canonical inputs are recorded as evidence only** (Foundation VI, evidence of context):
+  - The evaluation act emits the role-keyed set of canonical inputs it read: `grain` (`boundary/co-candidate-reader.ts:337-346`), `schedule_event` (`boundary/metric-evaluation-orchestrator.service.ts:340-360`) and `field_declarations` (`boundary/metric-spec-loader.ts:266-268`).
+  - Each entry names the canonical contract by `canonical_contract_id` and `version_code`, the key of `contract.canonical_contract_version` (primary key `(canonical_contract_id, version_code)`, read live).
+  - The demo side records it in `demo.metric_proof_input`, which gains `canonical_contract_id` (5.2 item 7). The platform side copies it into `mcf.metric_version_demo_test_cc_version` (5.1 item 2b), so the record can be read without `demo.*`.
+  - The writer refuses a set with a missing role or a duplicate role. A test whose set omits the `schedule_event` input of a schedule metric is refused as malformed evidence (a fixture).
+  - **The record does not gate approval.** It shows which canonical versions the passing test read.
 
-- **V1. A re-check of an active metric runs as customers run.** It uses the current active metric version and the canonical inputs customers currently resolve, by the tenant route for every role. It never uses an older pin.
-- **V2. A candidate is tested as it will be served.** Before approval, the candidate version itself is tested, with the canonical inputs customers will resolve once it is current. Making the metric current changes no canonical version.
-- **V3. Two-way, complete equality** (finding 1):
-  - **The evaluation act emits the set.** It emits a **role-keyed, complete set** of the canonical inputs it read: one entry per role it used (`grain`, `schedule_event`, `field_declarations`), each naming the canonical contract and version, with a fingerprint (sha256 over the sorted role, contract and version triples).
-  - **The approval resolves the tenant's set.** In its own transaction, the admit act resolves the exact tenant set for the candidate by the tenant route of each role, and locks each resolved canonical version row `FOR SHARE`. A concurrent supersession of any of them therefore waits for the approval or fails it, and cannot pass between the comparison and the flip. The fingerprint is written into the admit's transition evidence (`canonical_input_set_sha256`).
-  - **The comparison runs in both directions.** Every tenant role must be in the test's set with the same version; every test entry must be in the tenant's set; no role may appear twice. An absence is refused, an ambiguity is refused (as `pickGrainCc` refuses, :146-148), and so is any duplicate.
-  - **The database checks it too.** The shared gate (G1) compares the test's recorded fingerprint with the evidence's, and checks that every recorded version is still the newest `active` version of its contract: condition `c19_test_versions_not_served`.
-  - **Fixtures:** a test whose set omits the `schedule_event` input of a schedule metric, while the tenant resolution has it, is refused; a grain with two active contracts is refused as ambiguous; a canonical supersession committed by another session while the admit runs leaves the admit refused, never accepted on the old set.
-- **V4. A superseded canonical version stops counting.** When a canonical input the metric reads gets a newer active version, or is superseded, tests on the old set stop counting for current status. The Tests column shows **"re-check due"**: a flag, not an automatic switch-off. Customers keep seeing values; G1 refuses any new approval until a test on the served set passes.
-- **V5. The world label no longer chooses versions for a test.** The world-month manifest (3.2) and the coordinates still come from the world. The metric version is named by the test (current or candidate), and the canonical inputs come from the tenant route. The two code manifests stay as history for proofs already made. A test refuses when the demo world holds no canonical records under a served version.
-- **V6. What the test records.** Each test result records its set as rows of `mcf.metric_version_demo_test_cc_version` (4 columns: uid; result FK; `proof_input_role_code`; `canonical_contract_version_id`, FK to `contract.canonical_contract_version`; UNIQUE on result and role), plus the fingerprint on the result row. The writer routine copies them from `demo.metric_proof_input`, which is extended to carry every role, not paralleled. The copy lets the gate read only the `mcf` and `contract` planes, never `demo.*` (the c15 plane rule, 0076:34-35).
+**Grounding kept for the separate design act on canonical selection** (section 15): cc-das36 has two `active` versions, 3.0.0 and 4.0.0 (`contract.canonical_contract_version`, read live). A tenant takes the newest by a rule that lives only in code (`pickGrainCc` with `newestVersion`, `boundary/co-candidate-reader.ts:137-155`). The demo world label pins 5.1.0 (`pending_provisioning`). Customer invoice volume's only proof ran on 5.1.0.
 
 **Rule G1: one shared gate at every route to active or current** (finding 4). Every route that can make a version `active` or current, read at bc-core df47ce00 and on the live trigger:
 
@@ -199,23 +201,22 @@ The gate is one new function, `mcf.fn_customer_current_gate_refusal(uuid)`. It r
 
 - c16: Demoed and current;
 - c17: an unresolved failed test;
-- c18: the arithmetic;
-- c19: the complete canonical input set;
-- per source type, a test for each source type that has a demo world (3.7).
+- c18: the arithmetic.
+
+Revision 6's c19 (the canonical input set) and its per-source-type rule are removed by amendment 1.
 
 `mcf.fn_mcv_state_transition_check` calls it on **every** transition whose new state is `active` and on every change of `is_current` from false to true, and refuses when the list is not empty. `metric_audit.fn_intrinsic_decision_refusal` keeps c1 to c15 and appends the same function's list, so one body serves both. A route that writes neither the state nor the pointer cannot make a version current, so no route escapes the gate.
 
-**Cost.** Every canonical version customers use must exist in the demo world of its source type: its demo canonical store, the world's records resolved into it under the current binding, and a proof routine for its grid. That is the same chain the 5.1.0 store needed. When a canonical input is superseded, every metric that reads it needs a re-check after the world is resolved under the new version.
+**Placement in the trigger.** The live body returns early when the state does not change (`IF OLD.governance_state_code = NEW.governance_state_code THEN RETURN NEW;`, read live). The shared gate sits before that return (3.8).
 
-### 3.7 One demo world per source type
+### 3.7 System-agnostic: two proofs
 
-The owner's principle (b13068d5): one demo world, or similar, per **type** of source system, built once per type. Today the type is recorded on the world binding's connections: `demo.foundry_world_binding_connection.source_system` (read live: `odoo` on all four connections of binding `e32071a8`). The mapping side also carries it (`contract.canonical_mapping.source_system`, read live).
+The owner's ruling (bf0101cf) separates two proofs:
 
-- **Tests per source type.** Each test result records the source type of its world, copied by the writer from the world binding's connections. A world binding whose connections name more than one source type is refused.
-- **V rules per source type.** An Odoo test counts for customers whose canonical inputs resolve to the versions the Odoo test used: those that reference the Odoo observation contracts (for example cc-das36, per DECISIONS cd335caa). The tenant route of V3 is taken for the customers of that source type.
-- **Approval per source type.** G1 requires a passed, complete test, under V3 for each source type, from every source type that has a demo world and whose canonical inputs the version reads. A source type with no demo world has no such test. Its customers see "not tested" (section 9); building that world is out of scope.
-- **The Tests column per source type**, for example "Odoo: 3 passed · SAP: not tested" (section 9).
-- **Not grounded:** where a tenant's source type is read at approval, and how a canonical version is tied to one source type when its observation contracts are shared. Both are fixed at implementation from the mapping and connection records.
+1. **The metric is right.** A metric binds Business Concepts, never source fields, and reads only canonical vocabulary (`docs/overview/structural-differentiators.md:54-58`). So it is proven **once, on any demo world**. A passing, complete test holds for every customer on every source system while that metric version is unchanged. This design is that proof. It has no source-type dimension: one Tests count per version, one approval rule, no per-source row.
+2. **The source mapping is right.** For each source type, does the source's canonical contract version produce correct canonical records from that source's documents? This is proven per source type, on that type's demo world, under the owner's principle of one demo world per source type, built once per type (b13068d5). It is a **separate check in a separate design**, out of scope here (section 15).
+
+Fix 7 of the Foundation check and the builder's item 6 fall away with this. The planned platform table of source type to demo world would have duplicated `demo.foundry_world_binding_connection.source_system` (read live: `odoo` on every connection of binding `e32071a8`), and its seeded row would have been a write outside a governed act.
 
 ### 3.8 Implementation boundaries from the auditor's third reply
 
@@ -223,10 +224,10 @@ The third reply (gen-3a7aae-03, commit ce0facd0) closes findings 1, 2 and 4 at t
 
 - **Canonical inputs (finding 1).** Two fixtures are required at implementation:
   - a test whose set omits the `schedule_event` dependency of a schedule metric is refused;
-  - a concurrent canonical activation is refused. A canonical activation updates the old active version's `supersede_after` inside its own transaction before it activates the successor, so that update conflicts with the admit's `FOR SHARE` row lock.
+  - (amendment 1: the concurrent canonical activation fixture belonged to c19, which is removed; it moves to the canonical-selection design act, section 15.)
 - **Serving arithmetic (finding 2).** A rollback to `binary64-v1` holds back new values of every metric until each is re-checked under it (rule A3). This is an explicit implementation boundary, not an accident.
 - **The shared gate (finding 4).** The live trigger body returns early when the state does not change: `IF OLD.governance_state_code = NEW.governance_state_code THEN RETURN NEW;` (`mcf.fn_mcv_state_transition_check`, read live). An update of `is_current` alone takes that path. So the shared gate (G1) is placed **before** any same-state early return, and a direct pointer update is checked.
-- **Source types (3.7).** Two cases are ungrounded: the tenant-to-source-type mapping, and a canonical version whose observation contracts are shared by several source types. Both fail closed. No test counts for a source type, and no source type is shown as tested, until its mapping is grounded and proven. Building its world remains a separate unit.
+- **Source types (amended).** The metric test has no source-type dimension (3.7). The tenant-to-source-type mapping and shared observation contracts belong to the mapping proof's design, which must fail closed on them before any source type is claimed as mapped correctly.
 
 ## 4. What exists today
 
@@ -249,10 +250,10 @@ Read at bc-db 18d6884 and bc-core df47ce00.
 
 **Removed from revision 1:** choosing cells per test, the record-before-run check (w6b), tests on part of the months, the change of the answer-sheet match to inclusion, dropping `uq_metric_version_demoed_declaration_mcv`, the `void` verdict, and accepting `active` in the declaration guard.
 
-### 5.1 The 0082 changes (platform side)
+### 5.1 The platform-side changes (migration 0083, applied second)
 
 1. **The world-months check** (3.2): the commit check and w3 also require the declared cells to equal the world's declared months for the declared legal entity. A new read-only definer function `mcf.fn_demoed_declaration_covers_world_months(uuid)` is called as its owner, like the 0075 predicates.
-2. **`mcf.metric_version_demo_test_result`**: one immutable row per test, 16 columns.
+2. **`mcf.metric_version_demo_test_result`**: one immutable row per test, 14 columns.
 
    | Column | Type | Rule |
    |---|---|---|
@@ -270,17 +271,22 @@ Read at bc-db 18d6884 and bc-core df47ce00.
    | `recorded_at` | timestamptz NOT NULL | set by the database |
    | `numeric_profile_code` | text NOT NULL | copied from the pin by the routine (rule A1) |
    | `engine_class_code` | text NOT NULL | paired with the profile by a CHECK (rule A1) |
-   | `canonical_input_set_sha256` | text NOT NULL | the fingerprint of the complete role-keyed set (rule V3) |
-   | `source_system_code` | text NOT NULL | the world's source type (3.7) |
+
+
+   **Same act as the pin** (Foundation fix 3). The result is written by the same proof command act that emits the pin, before the command returns, never by a later act:
+   - the emit runs as `bc_demo_prover` (0078:79) and the writer as `bc_demoed_bridge_writer` (0076:365), two logins, so the two cannot share one database transaction;
+   - the command reports success only when both exist;
+   - a read lists every pin without a result (E18). Such a pin is completed by the same command, given that pin: the routine records the verdict from the preserved pin and never evaluates again.
 
    CHECKs tie the columns to the verdict. The version is reached through the declaration, so it is not stored twice. The table is immutable (update, delete and truncate are refused by the 0065 trigger function). No login holds INSERT; only the routine in item 5 writes it. SELECT goes to `bc_platform_runtime`.
+2b. **`mcf.metric_version_demo_test_cc_version`** (5 columns: uid; result FK; `proof_input_role_code`; `canonical_contract_id`; `version_code`; a composite FK to `contract.canonical_contract_version (canonical_contract_id, version_code)`, cross-schema; UNIQUE on result and role). The role-keyed canonical inputs the test read, as **evidence only** (V6). Nothing gates on it.
 3. **`mcf.metric_version_demo_test_result_element`** (7 columns: uid, result FK, `element_kind_code`, `element_ref_text`, `covered_flag`, `witness_count`, `witness_digest`; UNIQUE on result, kind and ref): the coverage elements of a passed test with **partial** coverage, which are lost today when w10 refuses. A complete test keeps its elements in `mcf.demoed_bridge_coverage_element`, as today. Same immutability and grants.
 4. **`mcf.metric_version_demo_test_failure_resolution`**: the person's judgement of one failed test (section 7), 9 columns:
    - uid;
    - result FK, **UNIQUE**;
    - `corrected_side_code`: `engine`, `world` or `both`;
    - `engine_document_list_sha256` and `world_document_list_sha256`: the two lists the judgement compared;
-   - `directory_member_uid`: FK to `metric_directory.member`, whose definition was the yardstick;
+   - `directory_member_uid_text`: the directory member whose definition was the yardstick, as text (the builder's grounded shape);
    - `judgement_text`: at least 40 characters, naming the differing documents and why;
    - `resolved_by_name`;
    - `resolved_at`, set by the database.
@@ -295,25 +301,28 @@ Read at bc-db 18d6884 and bc-core df47ce00.
 
    EXECUTE on `mcf.fn_record_demoed_bridge` (v1) is revoked from `bc_demoed_bridge_writer` in the same transaction that installs the new routine, so that one routine alone writes Demoed records and the two are never callable together (rule B4).
 6. **The lock, L1, and the shared gate G1** (rules S2, G1):
-   - A new function `mcf.fn_customer_current_gate_refusal(uuid)` returns c16 to c19 and the per-source-type rule (3.6, 3.7).
+   - A new function `mcf.fn_customer_current_gate_refusal(uuid)` returns c16 to c18 (3.6). The gate is called before the trigger's same-state early return.
    - `metric_audit.fn_intrinsic_decision_refusal` keeps c1 to c15 byte for byte and appends that list. c16 moves into the shared function. The live body is pinned by its md5 in the precondition, the way 0076 pinned it (0076:69-72).
    - `mcf.fn_mcv_state_transition_check` is replaced with two added rules, its other edges and gates copied byte for byte and pinned by md5:
      - any transition whose new state is `active`, and any change of `is_current` from false to true, is refused while the shared gate's list is not empty;
      - any change of state of a version with an unresolved failed test is refused (section 8).
    - The trigger `trg_mcf_mcv_state_transition` is recreated as `BEFORE INSERT OR UPDATE OF governance_state_code, is_current`.
+6b. **Demoed only while no failure is open and the engine was never found wrong** (Foundation fix 2). `mcf.fn_demoed_record_qualifies` (0076:544-562) is replaced: it also returns false while the version has a `failed` result with no resolution, and after any resolution with `corrected_side_code` `engine` or `both`.
 7. **Grants**: SELECT on the new tables to `bc_platform_runtime`; INSERT on the resolution table only. bc-core `tools/grant-drift/bc-platform-runtime-grants.tsv` (lines 124-134 record the 0076 grants) is updated in the same landing. The rollback is refused while any result, element or resolution row exists.
 
-What is left of the revision-1 0082: items 2 to 7, minus the `void` verdict; plus item 1, which is new.
+Amendment 1 removes from this side: c19, the canonical input fingerprint on the result and on the transition evidence, the source type on the result, and the source-type table.
 
-### 5.2 The 0083 changes (demo side)
+### 5.2 The demo-side changes (migration 0082, applied first)
 
-1. **The world's declared months**: `demo.world_binding_data_period` (5 columns: uid; `world_binding_id` FK; `legal_entity_id` FK; `period_label`; `declared_at`), UNIQUE on binding, legal entity and period, and immutable. Its writer is a definer routine for the world's hand-over login (`bc_demo_world_handover`, 0075), taking a committed file's bytes, as `demo.fn_hand_over_answer_sheet` does.
+1. **The world's declared months**: `demo.world_binding_data_period` (6 columns: uid; `world_binding_id` FK; `legal_entity_id` FK; `period_label`; `answer_sheet_handover_id` FK to `demo.answer_sheet_handover`; `declared_at`), UNIQUE on binding, legal entity and period, and immutable. The months come in through the existing hand-over, `demo.fn_hand_over_answer_sheet` (0075:223), in a **v2** answer-sheet format that adds a months section. Format v1 is unchanged. The months are written **once per binding**: a second hand-over that carries months for a binding that already has them is refused. The file bytes, hash, locator, who and when stay on the hand-over row and are not copied.
 2. **A mismatch is recorded.** The two emit routines (0078) are replaced so that, when every structural check holds, a value difference records the run, the evaluation, one snapshot row per cell (its value beside its custody reference), its Evidence and Lineage, and a pin with `comparison_outcome = 'mismatch'`. The structural checks are: a declared legal entity, custody for every cell, the cells equal to the scope, one current world binding, and lineage present. A cell with no custody row still raises. The evaluation status and the Evidence outcome for a mismatch are to be fixed at authoring. The matched path is unchanged.
-3. **A re-check on unchanged records: R2** (rule B1; the auditor: R1 "would silently narrow" the owner's ruling). The per-act key becomes a caller-given act uid, unique per run. `uq_demo_metric_run__act` and the guard at 0078:224-229 and 445-450 change accordingly. A re-check on the same engine and the same records is a distinct act that gives a new run, a new pin and a new result (Invariant V allows this; it never reconstructs an earlier act). The former option R1 (re-check only after the engine build changed) is dropped.
-4. **Each cell's candidates and why each was counted or rejected** (rules B5, B6; findings 3 of rounds 2 and 3): `demo.ms_snapshot_candidate`, which replaces revision 5's `demo.ms_snapshot_member`. It has 9 columns, within the limit of 20:
+3. **A re-check on unchanged records: R2** (rule B1; the auditor: R1 "would silently narrow" the owner's ruling). The per-act key becomes the caller-given `run_id` of `demo.metric_run`, unique per run. `uq_demo_metric_run__act` and the guard at 0078:224-229 and 445-450 change accordingly. A re-check on the same engine and the same records is a distinct act that gives a new run, a new pin and a new result (Invariant V allows this; it never reconstructs an earlier act). The former option R1 (re-check only after the engine build changed) is dropped.
+4. **Each cell's candidates and why each was counted or rejected** (rules B5, B6; findings 3 of rounds 2 and 3; Foundation fix 6): `demo.ms_snapshot_candidate`, which replaces revision 5's `demo.ms_snapshot_member`. It has 14 columns, within the limit of 20:
    - uid;
-   - `metric_snapshot_id` FK, which fixes the cell, the evaluation, the run and, through the proof input, the world binding;
-   - the canonical record id;
+   - `metric_snapshot_id` FK to `demo.ms_snapshot`, or `metric_snapshot_ccy_id` FK to `demo.ms_snapshot_ccy`: exactly one of the two, by a CHECK. It fixes the cell, the evaluation, the run and, through the proof input, the world binding;
+   - `canonical_contract_id` and `version_code`: the canonical contract version that produced the record, named **explicitly**;
+   - `co_store_code`: a locator only, never the source of the contract's identity;
+   - the canonical record id and its content hash. No FK is possible across the per-version stores;
    - the source-document identity;
    - `candidate_disposition_code`: `counted`, `rejected_time_gate`, `rejected_filter` or `rejected_missing_input`;
    - `rejecting_rule_ref_text`: the gate shape for `rejected_time_gate`; the first failing clause for `rejected_filter`; NULL when counted;
@@ -321,9 +330,10 @@ What is left of the revision-1 0082: items 2 to 7, minus the `void` verdict; plu
    - `other_rule_failed_ref_text`: when that flag is false, the first clause the engine reports failing; NULL otherwise;
    - `contribution_amount`, set for a sum.
 
-   UNIQUE on (`metric_snapshot_id`, canonical record id): one row per candidate and cell, so a record of month B appears as `counted` under its own cell and as `rejected_time_gate` under the cell of month A. The rows are written by the emit in the same transaction, from the evaluation act's own record of each candidate (E13), never from a later read. The set's hash goes into the cell's Evidence.
+   UNIQUE on (cell reference, store code, canonical record id): one row per candidate and cell. So a record of month B appears as `counted` under its own cell and as `rejected_time_gate` under the cell of month A. The rows are written by the emit in the same transaction, from the evaluation act's own record of each candidate (E13), never from a later read. The set's hash goes into the cell's Evidence.
 5. **A corrected world answer: out of scope** (rule B8). It needs its own design and the owner's own database yes (section 15).
 6. **The mismatch-safe hand-over predicate** (rule B3): a new read-only definer function, `demo.fn_pin_handed_over_expected_cells_refusal(uuid)`. For a pin of either outcome it proves each expected cell, its value, its metric and version, and its world binding came from the world's own hand-over. It uses the membership, world-binding and custody-set-hash checks of `demo.fn_pin_answer_sheet_refusal` (0075:413-476), without that function's first `match` gate. It does not judge the engine's values; the routine compares those separately.
+7. **`demo.metric_proof_input` gains `canonical_contract_id`** (10 to 11 columns; Foundation fix 6, V6). The existing row of pin `00f5f597` keeps it NULL: an immutable row is never rewritten. The emits refuse NULL on every new row. The role and store checks widen as in section 16.
 
 ## 6. What changes in the engine (bc-core), at every enforcement point
 
@@ -342,10 +352,12 @@ What is left of the revision-1 0082: items 2 to 7, minus the `void` verdict; plu
 | E11 | Reads: `registry/mcf/mcf-read.service.ts:512-530` (the list behind `GET /api/mcf/metric-contracts`, `mcf-publication-eligibility.controller.ts:30,70`) and `GET /api/mcf/metric-contract-versions/:mcvUid/demoed-claim` (`demoed-evidence-bridge.controller.ts:83`) | One set-based read of each current version's test counts and open failure with its ticket id; the claim read lists every test. Reads never evaluate. |
 | E12 | **Coverage checker v3** (`demoed-coverage-checker.ts:125-134, 294-308`; rule B5) | Needed before any `period_aggregate` metric can pass w10 under the all-months rule. v3 consumes **only** the evaluation's emitted evidence (`demo.ms_snapshot_candidate`, 5.2 item 4), never an inferred outside row and never its own filter test. A cell's time-gate element is covered only when that cell has: at least one `counted` candidate (inside); and at least one `rejected_time_gate` candidate in the same partition whose emitted `other_rules_passed_flag` is **true** (outside). That flag is the emitted "other rules passed" fact tied to that candidate and cell. The element records the cell and the identities of both. **Negative fixtures:** (a) two declared months, an evaluation in which no candidate was rejected by the time gate, refused as complete; (b) **the dual rejection**: for cell P01, the only outside candidate is a credit memo of P02. It is rejected by the month gate **and** by the document-type rule (`other_rules_passed_flag` false, `other_rule_failed_ref_text` the customer-invoice clause), so it is not a witness and the element is uncovered. A customer invoice of P02 with the flag true then covers it (the paired positive). w10 keeps requiring `demoed-coverage-v2` or later (0076:499-502) and complete coverage for a Demoed record, so v3 needs no database change. The owner's rule 5 stands. |
 | E13 | The evaluation's candidate record (finding 3) | See "How the act judges the other rules on a time-rejected candidate" below the table. |
-| E14 | `boundary/governed-metric-evaluation.service.ts:324-341` (the demo dry evaluation) and the proof command | Hand the emit the profile `numericProfileOf` returned for this evaluation (rule A1), and the complete role-keyed canonical input set (rule V3). |
-| E15 | `boundary/governed-metric-evaluation.service.ts:343-388` (tenant evaluation) | Before `runEngine`, read whether the version has a passed, complete test with this program's profile and the served canonical set; if not, record `arithmetic_not_tested` through the recorded-refusal path and write no snapshot (rule A3). |
-| E16 | `registry/mcf/mcf-cert-writer.service.ts`, admit (:2945-2993) and readmit (:3062-3141) | In the act's transaction: resolve the tenant's role-keyed set and lock its canonical version rows `FOR SHARE`; compare both ways with the cited test's set; compare the profile with its own; write `served_numeric_profile_code` and `canonical_input_set_sha256` into the transition evidence; name c18 and c19 before the database does (rules A2, V3). |
-| E17 | `boundary/metric-spec-loader.ts:109-119` and `boundary/co-candidate-reader.ts:337-346` on the demo plane | A test resolves the metric version it names and every canonical input by the tenant route, not the world label's pins; it refuses when the demo world has no canonical records under a served version (rules V1, V2, V5). |
+| E14 | `boundary/governed-metric-evaluation.service.ts:324-341` (the demo dry evaluation) and the proof command | Hand the emit the profile `numericProfileOf` returned for this evaluation (rule A1), and the role-keyed canonical input set it read, as evidence (V6). |
+| E15 | `boundary/governed-metric-evaluation.service.ts:343-388` (tenant evaluation) | Before `runEngine`, read whether the version has a passed, complete test with this program's profile; if not, record `arithmetic_not_tested` through the recorded-refusal path and write no snapshot (rule A3). |
+| E16 | `registry/mcf/mcf-cert-writer.service.ts`, admit (:2945-2993) and readmit (:3062-3141) | Compare the cited test's profile with its own and write `served_numeric_profile_code` into the transition evidence; name c17 and c18 before the database does (rule A2). No canonical-set comparison (amendment 1). |
+| E17 | `boundary/metric-spec-loader.ts:109-119` on the demo plane | A test names the metric version it proves (the current active one for a re-check, the candidate before approval) instead of taking the world label's pin (V1, V2). The canonical inputs are those of the demo world's binding, recorded as evidence (V6). |
+| E18 | A read of pins without a result (Foundation fix 3) | Lists every proof pin with no test result, so the proof command can complete it from the preserved pin. Reads never evaluate. |
+| E19 | Flag after an engine-wrong resolution (Foundation fix 1) | The list read (E11) keeps the version flagged "engine wrong, withdrawal due" from a resolution with `corrected_side_code` `engine` or `both` until the version leaves `active`. |
 
 **How the act judges the other rules on a time-rejected candidate (E13).** At bc-core df47ce00:
 
@@ -408,7 +420,7 @@ The coherent route is a superseding hand-over that keeps the old answer and reco
 
 ## 8. The flag, the ticket and the lock
 
-**The flag.** A version is flagged while it has a failed test with no resolution. The flag is computed from the records when they are read; nothing stores it.
+**The flag.** A version is flagged while it has a failed test with no resolution. After a resolution that says the engine was wrong (`corrected_side_code` `engine` or `both`), the flag **stays** until the version leaves `active`, shown as "engine wrong, withdrawal due" (Foundation fix 1). From that resolution on, the version is no longer Demoed (5.1 item 6b), so it cannot be approved again. The flag is computed from the records when they are read; nothing stores it.
 
 **The ticket.** One per failed test, in the platform's support tickets (bc-admin `/platform/tickets/:ticketId`, `components/AppRouter.tsx:297-298`). It names the metric, version and test, and the differing cells with both values, and later holds the two document lists. The ticket's status never releases the lock.
 
@@ -429,17 +441,16 @@ The flag and the lock are read only from the immutable result and resolution, ne
 
 **Screen.** The bc-admin **Metric Catalog** page, `src/pages/MetricCatalogPage.tsx`, route `catalog/metrics` (`components/AppRouter.tsx:203`). It reads `GET /api/mcf/metric-contracts` (`src/api/mcf-catalog.ts:67-70`). Its columns today (header comment and lines 193-249) are Metric ID, Metric Name, Function, Sub-function, Type, Description, Declaration chain and State. **Tests** goes between Declaration chain and State.
 
-**What it shows**, for the metric's current version, **per source type** (3.7), for example "Odoo: 3 passed · SAP: not tested". For each source type:
+**What it shows**, for the metric's current version. There is one count per version, with no source-type dimension (3.7):
 
 | Records | Cell shows |
 |---|---|
 | no test | "No tests" |
 | only passed | "3 passed", with a small mark "covers every rule" when one passed test had complete coverage |
 | an open failure | "4 passed, 1 failed" with a flag that links to the ticket (`/platform/tickets/:ticketId`) |
-| failures, all resolved | "4 passed, 1 failed (resolved)", with no flag |
-| the passing tests used a canonical version customers no longer use | "3 passed, re-check due", with a flag (rule V4) |
+| failures, all resolved, the world found wrong | "4 passed, 1 failed (resolved)", with no flag |
+| a resolution found the engine wrong, version still active | "engine wrong, withdrawal due", with a flag (Foundation fix 1) |
 | no passed test under the serving arithmetic | "3 passed, re-check due (arithmetic)", with a flag (rule A3) |
-| the source type has no demo world | "not tested" (3.7) |
 
 A count-pill filter "Flagged" sits beside the State and Declaration chain filters. The detail page (`src/pages/MetricDetailPage.tsx`, route `catalog/metrics/governed/:metricContractUid`, `AppRouter.tsx:204`) lists every test: time, verdict, coverage, the Demoed record it wrote, the ticket and the resolution. The new list fields go on `McfMetricContract` (`src/api/mcf-catalog.ts:14`). Verdict labels come from a master hook, not a hard-coded list (coding standard 14).
 
@@ -503,36 +514,31 @@ Read live for `b9357731`: `audit_pending`, `is_current` false, the parent's only
 6. Declare the 41 cells, then evaluate, prove and record the verdict.
 7. Request certification, run the panel, and approve, naming the test.
 
-**The versions (rule V3).** Customers resolve cc-das36 **4.0.0**, the newest `active` version. The proof of `b9357731` ran on **5.1.0**, which is `pending_provisioning`, and the demo world holds no Kaveri records under 4.0.0 (section 3.6). Before the fresh version can become current, one of two things must happen, and the owner chooses which:
-
-- cc-das36 5.1.0 is activated for customers, under its own governed act;
-- the Kaveri world is resolved under 4.0.0 and the test runs there.
+**The versions (amended).** The test proves the metric on whatever canonical contract version the Kaveri world's binding provides (cc-das36 5.1.0 today) and records it as evidence (V6). Whether 5.1.0 or 4.0.0 is the version customers resolve, and whether the Odoo mapping produces correct records under it, is not a question for the metric's approval. It belongs to the canonical-selection and mapping-proof designs (section 15). The owner's earlier open choice for this use is withdrawn.
 
 **What the test then exercises.** The document-type rule can pass and exclude rows: 30 of the 2,714 invoices are not customer invoices, all in FY2023-24 to FY2025-26 (read live). **But under coverage v2 the time-gate element is uncovered when every month is declared (section 4), so w10 refuses this test until checker v3 (E12) is served.** E12 is therefore on the first use's critical path.
 
 ## 13. Foundation gate
 
-**1. Why this location.** **B, contract semantics, enforced at E.** The defect is in what the Demoed declaration means, which today is a hand-chosen scope. The repair defines it as the world's full months, checked where 0076 checks the declaration. The test record, the mismatch record and the judgement are evidence the act emits (E). The Tests column (F) only surfaces records.
+Rewritten by amendment 1 (Foundation fix 8) for everything added since revision 4. The four answers are given per repair. The locations are DEC-79b62f's: A source and admission boundary, B contract semantics, C mapping and binding, D evaluation implementation, E storage and projection, F read model and diagnostics.
 
-**2. Why not an upper layer.** At A, the world's records, its admission and its hand-over (0075) are sound. The one addition at the source, the world declaring its own months, is the world stating a fact about itself; it compensates for nothing.
+| Repair | Location | Why here, not above | Why not below | Design or execution act (DEC-c48b0f) |
+|---|---|---|---|---|
+| The declaration covers every month the world holds data for; the world declares its months (3.1, 3.2) | B, enforced at E | A is sound: the world's records and hand-over are correct; the defect is what the platform declares about the proof | A label or a reader that hides months would compensate | Design act: the declaration's scope |
+| Every test result kept, a mismatch recorded, the result in the same act as the pin (3.3, 5.1 item 2, 5.2 item 2) | E | The evaluation (D) is correct; it is its record that is missing | A detector reading logs would infer, not emit (VI) | Design act: a missing record |
+| The same arithmetic (A1 to A4) | D, with its evidence at E | The contract (B) does not choose arithmetic; the evaluation does, per program | A read-side comparison alone could not stop serving | Design act: the arithmetic was never recorded or compared |
+| Per-cell candidate evidence with the engine's own other-rules verdict (E12, E13) | D, emitted at E | The rule (B) is stated; the evaluation did not emit what it rejected | A checker re-applying clauses would be a second implementation (VI) | Design act: a missing emission |
+| The shared gate on every route to active or current (G1) | E | Admission (A) and the contract (B) do not decide currency | Each route checking for itself would leave gaps | Design act: one gate declared once |
+| Not Demoed while a failure is open or after an engine-wrong resolution; the flag kept until withdrawal (5.1 item 6b, section 8) | B, enforced at E and surfaced at F | Demoed is a semantic claim about the version (B) | Hiding the version in a read model only would leave the claim standing | Design act: the claim's conditions |
+| Canonical inputs recorded as evidence, not a gate (V6, 3.7) | E | The metric reads canonical vocabulary only (B); which source produced the records is a C question | Gating the metric on canonical versions would be lower-layer compensation for an unproven mapping (C) | Design act at C, named separately (section 15) |
+| The documents decide a disagreement (section 7) | F for the lists, B for the judgement's yardstick | The yardstick is the owner's definition (B), not either calculation | Neither calculation may overrule the other | Design act: who settles |
 
-**3. Why not a lower layer.** A fix below would be compensation: a new version only to change months, a label that hides months, or a reader that ignores w10. This design keeps the routine, its checks, the Demoed record, the attestation and c16, and keeps 0076's one-declaration rule.
+**Invariants kept.**
 
-**4. Design act or execution act (DEC-c48b0f).** **Design acts**:
-
-- the declaration's scope ("every month the world holds data for");
-- the missing record of a failed test;
-- the missing record of which documents were counted;
-- the missing rule for who settles a disagreement (the documents).
-
-The flag, the ticket and the Tests column are a net, not the fix. Checker v3 (E12) is an execution-plane correction of how one coverage element is witnessed, needed because the new declaration removes the old witness population.
-
-**Invariants kept, and how.**
-
-- **III, all state is immutable.** Every new record is append-only. A re-check is a new run, and a resolution is a new row. The one-declaration rule is unchanged. A world-side fix would be a superseding row, never an overwrite (7.4).
-- **IV, all references are explicit.** The approval names the Demoed record; the test result names its pin and its record; the resolution names its failure, its two document lists and the directory member used.
-- **V, evaluation is non-replayable.** Each test is its own evaluation with its own pin. A re-check is a distinct act, never a reconstruction of an earlier one (5.2 item 3). The world's values are compared, never used in a calculation.
-- **VI, evidence is emitted, not inferred.** Today a failed or partial test leaves no record, and no side keeps the documents it counted. Under this design the verdict, the elements, the mismatch and the per-cell documents are written by the acts themselves, and the world's months are declared by the world rather than inferred from the platform's records.
+- **III, all state is immutable.** Every new record is append-only. A re-check is a new run, a resolution a new row. The one-declaration rule and the existing proof input row (left NULL) are unchanged.
+- **IV, all references are explicit.** The approval names the Demoed record; the result names its pin and record; candidate rows name the canonical contract and version explicitly, and the store code is only a locator.
+- **V, evaluation is non-replayable.** Each test is its own evaluation with its own pin. Completing a pin without a result records a verdict from the preserved pin and never evaluates again.
+- **VI, evidence is emitted, not inferred.** The verdict, the mismatch, the candidates with their dispositions, the arithmetic and the canonical inputs are emitted by the acts that produced them.
 
 ## 14. Settled questions
 
@@ -548,10 +554,10 @@ The owner settled the seven open questions as recommended (barecount-devhub `cla
 
 Also settled:
 
-- **Rules A1 to A4 and V1 to V6 are owner-confirmed.** The ruling is fc92dd64, and the owner confirmed the reading in 752c345c: "yes, that's what I meant". Revision 6 completes them under the owner's "Yes, fix all four" (b13068d5).
-- **The principle of one demo world per source type** (b13068d5; 3.7).
+- **Rules A1 to A4 are owner-confirmed** (fc92dd64, confirmed in 752c345c). Of V1 to V6, amendment 1 keeps V1, V2 and V6 (as evidence only) and removes V3 to V5 from the metric's gate (bf0101cf).
+- **The principle of one demo world per source type** (b13068d5) governs the mapping proof, not the metric test (3.7).
 
-One thing is open for the owner besides his yes to the database changes (section 16): for customer invoice volume, whether cc-das36 5.1.0 is activated for customers or the world is resolved under 4.0.0 (section 12). The auditor holds this as a separate owner and implementation gate, not a blocker of the design (gen-3a7aae-02).
+Open for the owner: his database yes again for the amended shapes (section 16), before the builder restarts (bf0101cf).
 
 ## 15. Out of scope, known limits, and what was not grounded
 
@@ -565,7 +571,14 @@ One thing is open for the owner besides his yes to the database changes (section
 
 - A corrected world answer (a superseding hand-over): its custody, current-answer selection and proof-currency rules need a separate design and the owner's own database yes (rule B8).
 - A route for worlds with several legal entities: the writer covers one legal entity, and no full-world coverage is claimed through one entity's pin (rule B7; rule S7).
-- **Building the demo world for a new source type**, for example SAP. The design holds for several worlds, one per source type (3.7; owner principle, DECISIONS b13068d5). Only building a world for a type that has none is out of scope. It is done once per type, and the first customer of a new type may help, as a commercial matter (DECISIONS cd335caa). Until then, that type's customers see "not tested". An Odoo test counts only for customers whose canonical inputs resolve to the versions it used, such as cc-das36, which references the Odoo observation contracts.
+- **The mapping proof, per source type.** It asks whether a source's canonical contract version produces correct canonical records, on that source type's demo world. The owner's principle is one demo world per source type, built once per type (b13068d5), and the first customer of a new type may help, as a commercial matter (cd335caa). It is a separate check in a separate design (bf0101cf). Building a world for a new type belongs to it.
+
+**Separate design acts, named here and not designed** (bf0101cf):
+
+- **Canonical selection (Foundation fix 4).** Which canonical contract version customers resolve is chosen by a rule that lives only in code. cc-das36 has two `active` versions, 3.0.0 and 4.0.0 (read live), and the tenant reader takes the newest (`boundary/co-candidate-reader.ts:137-155`). Why separate: it is a C-layer declaration (a governed selection, or tenant bindings that name the version), and it affects every metric, not only tests. Its concurrency fixture moves there from 3.8.
+- **Tenant arithmetic recorded (Foundation fix 5).** A tenant evaluation adds its profile report to the lineage only under the scaled profile (`boundary/governed-metric-persistence.adapter.ts:475-487`, "Absent under binary64-v1"). Every tenant evaluation should record its `numeric_profile_code`. Why separate: it changes the tenant evaluation record, not the test.
+- **Observation contracts name their source contract.** `contract.observation_contract.source_contract_id` exists but is NULL on all 17 rows (12 live; read live). Why separate: it is a declaration gap at A/C that the mapping proof needs, not the metric test.
+- **The mapping proof itself**, above.
 
 **Not grounded in this design:**
 
@@ -578,7 +591,7 @@ One thing is open for the owner besides his yes to the database changes (section
 
 ## 16. Database changes for the owner's yes
 
-Two bc-db forward migrations. The numbers are **to be confirmed** at authoring against bc-db `main` and the open pull requests. On 2026-11-24 the highest merged migration is 0081, the only open pull request that claims a number is #177 (0073), and no bc-db branch carries a file numbered 0082 or higher.
+Two bc-db forward migrations. The numbers are **to be confirmed** at authoring against bc-db `main` and the open pull requests. The demo side is **0082** and applies first; the platform side is **0083** and applies second. On 2026-11-24 the highest merged migration is 0081, the only open pull request that claims a number is #177 (0073), and no bc-db branch carries a file numbered 0082 or higher.
 
 Each follows the Database Change Protocol and the bc-db conventions:
 
@@ -586,39 +599,51 @@ Each follows the Database Change Protocol and the bc-db conventions:
 - proven on an owner- and grant-faithful restore of a fresh read-only dump, including the served-login vectors;
 - applied only through the governed runner under a separate recorded desk grant;
 - ISO 11179 names (DEC-69f09e);
-- at most 20 columns per table, foreign keys on every in-plane reference, no JSONB for queryable data, and indexes in the same migration (DEC-1918d0).
+- at most 20 columns per table, foreign keys on every in-plane reference (a cross-schema FK to `contract.canonical_contract_version` is allowed), no JSONB for queryable data, and indexes in the same migration (DEC-1918d0).
 
-The existing rows stay as they are, apart from the rows these changes add.
+The existing rows stay as they are, apart from the rows these changes add. The last column compares each row with the owner's two database yeses:
 
-**0082, platform side (`mcf`, `metric_audit`)**
+- **8558dc9f**, "Yes to both": PR 271 section 16 at head 100d4e55;
+- **0bfc5aa4**, "yes to all five shape changes".
 
-| Table or routine | Change | Reason |
-|---|---|---|
-| `mcf.metric_version_demo_test_result` (16 columns) | add | Keep every test's verdict, pass or fail, one row per proof run, with its arithmetic, its canonical input fingerprint and its source type. |
-| `mcf.metric_version_demo_test_cc_version` (4 columns, UNIQUE result and role) | add | Keep the complete role-keyed canonical input set each test used, for the two-way comparison. |
-| `metric_audit.transition_evidence` (15 to 17 columns) | alter (add `served_numeric_profile_code`, `canonical_input_set_sha256`) | The approval records the arithmetic and the tenant's canonical input set it saw at the act. |
-| `mcf.metric_version_demo_test_result_element` (7 columns) | add | Keep the coverage elements of a pass that did not exercise every rule. |
-| `mcf.metric_version_demo_test_failure_resolution` (9 columns) | add | Record the person's judgement of a failure from the documents, which releases the lock. |
-| `mcf.fn_demoed_declaration_covers_world_months(uuid)` | add | Check that the declared cells equal every month the world holds data for. |
-| `mcf.fn_metric_version_demoed_declaration_has_cells()` (0076 commit check) | alter | Also require the world-month set, beside the kept answer-sheet equality. |
-| `mcf.fn_record_demo_test_result(…)` | add | One writer for every outcome: keeps w0-w8, records failures and partial passes, the arithmetic, the canonical input set and the source type; writes the Demoed record only on a complete pass. |
-| `mcf.fn_record_demoed_bridge(…)` (0076 writer) | revoke EXECUTE | One writer only; revoked in the same transaction as the new one is installed. |
-| `mcf.fn_customer_current_gate_refusal(uuid)` | add | The one shared gate: Demoed and current, no unresolved failure, served arithmetic, two-way canonical set, a test per source type with a world. |
-| `metric_audit.fn_intrinsic_decision_refusal(uuid)` | alter | Keep c1 to c15 and append the shared gate's list, so admit and the trigger apply one body. |
-| `mcf.fn_mcv_state_transition_check()` | alter | Apply the shared gate on every transition to active and every `is_current` change to true; refuse any change of state while a failure is unresolved. |
-| `mcf.trg_mcf_mcv_state_transition` | alter (recreate) | Fire also on `UPDATE OF is_current`, so a direct pointer write cannot bypass the gate. |
-| Grants to `bc_platform_runtime` and `bc_demoed_bridge_writer` | add / revoke | SELECT on the new tables, INSERT on the resolution only, EXECUTE on the new writer only. |
+**Amendment 1 needs his yes again** for every row not marked "as said yes" (bf0101cf).
 
-**0083, demo side (`demo`)**
+**0082, demo side (`demo`), applies first**
 
-| Table or routine | Change | Reason |
-|---|---|---|
-| `demo.world_binding_data_period` (5 columns) | add | The world declares, sealed from the frozen bench, every month in which it has posted accounting entries. |
-| Its writer routine for `bc_demo_world_handover` | add | Only the world's own login, from committed file bytes, writes the months. |
-| `demo.fn_emit_demo_proof_period_v5` and `demo.fn_emit_demo_proof_v5` (0078) | alter | Record a value mismatch as a run with a `mismatch` pin instead of raising; record each cell's candidates with their disposition and, for time-rejected ones, the other-rules verdict. |
-| `demo.uq_demo_metric_run__act` and the emits' per-act guard | alter | Key a run by a caller-given act uid so a re-check can run at any time. |
-| `demo.ms_snapshot_candidate` (9 columns; replaces revision 5's `demo.ms_snapshot_member`) | add | Keep each cell's candidates and why each was counted or rejected, and, for a time-rejected candidate, the engine's own verdict on every other rule, from the same evaluation act. |
-| `demo.fn_pin_handed_over_expected_cells_refusal(uuid)` | add | Prove a mismatched pin's expected values are the world's own hand-over. |
-| `demo.metric_proof_pin` (14 to 15 columns) | alter (add `numeric_profile_code`) | Record the arithmetic each proof ran with, beside the engine build it already records. |
-| `demo.fn_emit_demo_proof_period_v5` and `demo.fn_emit_demo_proof_v5` | alter (same replacement as above) | Also write the pin's numeric profile and one `demo.metric_proof_input` row per canonical role. |
-| `demo.metric_proof_input` (10 columns, unchanged shape) | alter (`ck_metric_proof_input_role`, `_rows`, `_store`) | Allow the `field_declarations` role beside `grain` and `schedule_event`, and the stores of every served canonical version. Today the store check admits only the cc-das36 5.x and cc-apl 1.0.0 stores (read live), and `uq_metric_proof_input_pin_role` already keeps one row per role. |
+| Table or routine | Change | Reason | Versus the yes |
+|---|---|---|---|
+| `demo.world_binding_data_period` (6 columns, FK to `demo.answer_sheet_handover`) | add | The world declares, through its own hand-over, every month in which it has posted accounting entries. | as said yes (shape 3); "once per binding" added in amendment 1 |
+| `demo.fn_hand_over_answer_sheet` (0075) | alter | Accept a v2 answer-sheet format with a months section; v1 unchanged; months written once per binding. | as said yes (shape 3: through the existing hand-over); the v2 format is named in amendment 1 |
+| `demo.fn_emit_demo_proof_period_v5` and `demo.fn_emit_demo_proof_v5` (0078) | alter | Record a mismatch as a run with a `mismatch` pin instead of raising; write each cell's candidates with their disposition, explicit canonical contract and version, and the other-rules verdict; write the pin's numeric profile and one proof-input row per canonical role, refusing a NULL canonical contract on new rows. | changed in amendment 1 (fix 6: explicit canonical contract and version on candidates; NULL refused on new inputs) |
+| `demo.uq_demo_metric_run__act` and the emits' per-act guard | alter | Key a run by the caller-given `run_id`, so a re-check can run at any time. | as said yes (0bfc5aa4, smaller fix) |
+| `demo.ms_snapshot_candidate` (14 columns) | add | Each cell's candidates and why each was counted or rejected; exactly one of `demo.ms_snapshot` / `demo.ms_snapshot_ccy`; canonical contract and version explicit, store code a locator only; record id and content hash; the engine's own other-rules verdict on a time-rejected candidate. | changed in amendment 1 (fix 6 adds `canonical_contract_id` and `version_code`; shape 4 otherwise as said yes) |
+| `demo.fn_pin_handed_over_expected_cells_refusal(uuid)` | add | Prove a mismatched pin's expected values are the world's own hand-over. | as said yes |
+| `demo.metric_proof_pin` (14 to 15 columns) | alter (add `numeric_profile_code`) | Record the arithmetic each proof ran with, beside the engine build it already records. | as said yes |
+| `demo.metric_proof_input` (10 to 11 columns) | alter (add `canonical_contract_id`; widen `ck_metric_proof_input_role`, `_rows`, `_store`) | Name the canonical contract explicitly (the pin `00f5f597` row stays NULL; new rows refuse NULL); allow the `field_declarations` role and the stores of every canonical version a world binding provides. | as said yes (shape 2 and the widened checks); the NULL rule is detail added in amendment 1 |
+
+**0083, platform side (`mcf`, `metric_audit`), applies second**
+
+| Table or routine | Change | Reason | Versus the yes |
+|---|---|---|---|
+| `mcf.metric_version_demo_test_result` (14 columns) | add | Every test's verdict, pass or fail, one row per proof run, with its arithmetic; written in the same command act as the pin. | changed in amendment 1 (16 to 14: canonical fingerprint and source type removed) |
+| `mcf.metric_version_demo_test_cc_version` (5 columns; composite FK to `contract.canonical_contract_version`) | add | The role-keyed canonical inputs the test read, as evidence only. | changed in amendment 1 (shape 1 as said yes; it no longer gates approval) |
+| `metric_audit.transition_evidence` (15 to 16 columns) | alter (add `served_numeric_profile_code`) | The approval records the arithmetic it saw at the act. | changed in amendment 1 (`canonical_input_set_sha256` removed) |
+| `mcf.metric_version_demo_test_result_element` (7 columns) | add | The coverage elements of a pass that did not exercise every rule. | as said yes |
+| `mcf.metric_version_demo_test_failure_resolution` (9 columns; member reference as text) | add | The person's judgement of a failure from the documents, which releases the lock. | as said yes (member reference as text, 0bfc5aa4) |
+| `mcf.fn_demoed_declaration_covers_world_months(uuid)` | add | The declared cells equal every month the world holds data for. | as said yes |
+| `mcf.fn_metric_version_demoed_declaration_has_cells()` (0076 commit check) | alter | Also require the world-month set, beside the kept answer-sheet equality. | as said yes |
+| `mcf.fn_record_demo_test_result(…)` | add | One writer for every outcome: keeps w0-w8; records failures, partial passes, the arithmetic and the canonical inputs (refusing a missing or duplicate role); writes the Demoed record only on a complete pass. | changed in amendment 1 (no source type; canonical inputs as evidence) |
+| `mcf.fn_record_demoed_bridge(…)` (0076 writer) | revoke EXECUTE | One writer only; revoked in the same transaction as the new one is installed. | as said yes |
+| `mcf.fn_customer_current_gate_refusal(uuid)` | add | The one shared gate: Demoed and current, no unresolved failure, served arithmetic (c16 to c18). | changed in amendment 1 (c19 and the per-source-type rule removed) |
+| `mcf.fn_demoed_record_qualifies(uuid, uuid)` (0076) | alter | Not Demoed while a failure is open, or after a resolution that found the engine wrong. | **new in amendment 1** (Foundation fix 2) |
+| `metric_audit.fn_intrinsic_decision_refusal(uuid)` | alter | Keep c1 to c15 and append the shared gate's list, so admit and the trigger apply one body. | as said yes |
+| `mcf.fn_mcv_state_transition_check()` | alter | Apply the shared gate on every transition to active and every `is_current` change to true, **before** the same-state early return; refuse any change of state while a failure is unresolved. | as said yes (the placement is the auditor's boundary, 3.8) |
+| `mcf.trg_mcf_mcv_state_transition` | alter (recreate) | Fire also on `UPDATE OF is_current`, so a direct pointer write cannot bypass the gate. | as said yes |
+| Grants to `bc_platform_runtime` and `bc_demoed_bridge_writer` | add / revoke | SELECT on the new tables, INSERT on the resolution only, EXECUTE on the new writer only. | as said yes |
+
+**Removed by amendment 1** (said yes to, no longer built):
+
+- the platform table of source type to demo world (shape 6, 0bfc5aa4);
+- condition c19 and the two-way canonical set comparison at approval;
+- `canonical_input_set_sha256` on the test result and on the transition evidence;
+- `source_system_code` on the test result.
