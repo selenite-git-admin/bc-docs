@@ -2,7 +2,8 @@
 uid: metric-demo-tests-open-and-repeatable-design
 title: Repeatable tests of a metric version on the demo world, over every month the world holds data for (design)
 description: "Design for the owner's rulings of 2026-11-24: every test of a metric version covers every month the demo world holds data for; tests can be repeated at any time and every result is kept, pass or fail; approval names a passing test; a failed test flags the metric, opens a ticket and applies a lock; in a disagreement the source documents decide, and either side may be the one fixed. Proposes the bc-db, bc-core, bc-demo and bc-admin changes; nothing is built."
-status: proposed
+status: reviewing
+authority: reference
 date: 2026-11-24
 project: bc-docs
 domain: metrics
@@ -13,11 +14,11 @@ governing_adr: DEC-79b62f
 
 # Repeatable tests of a metric version on the demo world
 
-*Design note · proposed 2026-11-24, revision 2 · nothing in this note has been built or run. Its database changes are a proposal: they need the owner's explicit yes under the Database Change Protocol before any migration is written.*
+*Design note · proposed 2026-11-24, revision 3 · nothing in this note has been built or run. Its database changes are a proposal: they need the owner's explicit yes under the Database Change Protocol before any migration is written.*
 
 Evidence base, read at these heads on 2026-11-24: bc-db `origin/main` 18d6884, bc-core `origin/main` df47ce00 (the served engine), bc-demo `origin/main` 428ab310, bc-admin `origin/main` 6267a64, bc-docs `origin/main` 96487a5. Live rows were read read-only on `bc_platform_dev` on 2026-11-24 with the read-only database tool. Paths in bc-core are under `src/` unless shown otherwise.
 
-Revision 2 follows two later rulings of the owner (section 2). Revision 1 let each test choose its own months; that is withdrawn.
+Revision 2 follows two later rulings of the owner (section 2). Revision 1 let each test choose its own months; that is withdrawn. Revision 3 folds in the auditor's boundary as design rules (section 3.5). The auditor's answer is ACCEPTED WITH BOUNDARY: bc-external-audit `docs/RESPONSE-Codex-gen-3a7aae-01-open-repeatable-demo-tests-design-2026-11-24.md`, commit 504b5bd0, reviewed at head 88b0c35d. It accepts the design direction only; no database change, landing or onboarding follows from it.
 
 ## 1. The problem in plain words
 
@@ -61,12 +62,19 @@ The months can be seen in three places:
 2. **The admitted source records** under the world's current binding (the `demo.so_sc_*` stores; `demo.so_admission_version.world_binding_id`).
 3. **The canonical records** (above: 41 periods for KAVERI-IN). These are an output of the platform, which is under test, so they cannot define the months.
 
-**Proposal.** The world declares its own months, the same way it hands over its answers. One immutable row per (world binding, legal entity, fiscal period) is worked out on the frozen bench by a committed read-only query: the periods in which the company holds at least one posted accounting entry. It is written through the world's own hand-over login and a definer routine that takes the committed file's bytes, like `demo.fn_hand_over_answer_sheet` (0075). The platform then checks against it and never infers the months from its own records. An alternative, reading the months at check time from the admitted source records (place 2), needs no new table, but it infers the months from surrounding state, and each source has its own store.
+**Proposal.** The world declares its own months, the same way it hands over its answers: a **world-month manifest**, derived and sealed from the frozen source (rule B7). One immutable row per (world binding, legal entity, fiscal period) is worked out on the frozen bench by a committed, reviewed, read-only query. Before authoring, the design must define two things:
+
+- **The source population.** Which Odoo records count as "the world holds data" for a month. The auditor warns that "posted accounting entry" may be narrower than "every month the world holds data for" (reply gen-3a7aae-01).
+- **The period and calendar mapping.** How a record's date maps to the legal entity's fiscal period (KAVERI-IN: IN-APR-MAR-MONTHLY).
+
+The manifest includes every month with world data, **including months with zero qualifying documents for a given metric**: for a count, such a month expects 0. It is written through the world's own hand-over login and a definer routine that takes the committed file's bytes, like `demo.fn_hand_over_answer_sheet` (0075). The platform then checks against it and never infers the months from its own records. An alternative, reading the months at check time from the admitted source records (place 2), needs no new table, but it infers the months from surrounding state, and each source has its own store.
 
 **Where the check sits.** In two places, both in 0076's own functions, so that both enforcement points hold the same rule:
 
-- the declaration's commit check, `mcf.fn_metric_version_demoed_declaration_has_cells` (0076:268-292): the cells must equal the answer sheet (kept) **and** the world's declared months for the declared legal entity;
+- the declaration's commit check, `mcf.fn_metric_version_demoed_declaration_has_cells` (0076:268-292): the declared cell set must equal the handed-over answer-sheet set (kept) **and** the world-month set for the same binding and legal entity;
 - check w3 in the writer routine (0076:396-415), where the answer-sheet equality is checked again: the same added condition, named `w3_declaration_world_months`.
+
+Check w8 (0076:468-483) keeps the exact equality of the pin's cells with the declared cells (rule B2).
 
 Because the answer-sheet match stays an equality against the union of every hand-over (0076:239-264 with `demo.fn_answer_sheet_cells`, 0075:487-501), the demo world must hand over every month too. All three sets then equal one another: the world's months, the answer sheet and the declaration.
 
@@ -85,10 +93,38 @@ A test that passed with complete coverage also writes a **Demoed record** (`mcf.
 
 ### 3.4 How approval cites a test
 
-The activation act already names the Demoed record it relied on (`metric_audit.transition_evidence.demoed_evidence_bridge_uid`, 0076:325-331). That record's provenance names the declaration (0076:295-310), and the new test result names the record (5.2). Approval therefore names its test with no new column. The approval act's needs:
+The activation act already names the Demoed record it relied on (`metric_audit.transition_evidence.demoed_evidence_bridge_uid`, 0076:325-331). That record's provenance names the declaration (0076:295-310), and the new test result names the record (5.1 item 2). Approval therefore names its test with no new column. The approval act's needs:
 
 - a Demoed record of this exact version whose proof still reads current (unchanged: `mcf-cert-writer.service.ts:1047-1058`; c16 at 0076:845);
 - under lock option L1 or stronger (section 8), no failed test of this version that a person has not yet resolved.
+
+### 3.5 Design rules from the auditor's boundary
+
+These rules bind the implementation. Each restates a boundary in the auditor's reply gen-3a7aae-01 (bc-external-audit commit 504b5bd0).
+
+- **B1. Re-check at any time (R2).** A re-check is a fresh evaluation act. It emits its own immutable run, pin, result and evidence, also when its inputs are unchanged, and it never reconstructs an earlier act or rewrites its verdict. A failed value comparison is a **test result**. A malformed or unauthorised act stays a **refusal**, with no test result. One immutable declaration per version is kept.
+- **B2. Three sets agree; w8 stays exact.** The declaration's commit check and w3 compare the declared cell set with both the world-month set and the handed-over answer-sheet set. w8 keeps exact pin-to-declaration cell equality.
+- **B3. A mismatch-safe hand-over check.** `demo.fn_pin_answer_sheet_refusal` rejects every non-`match` pin at its first gate (0075:422-424), so it is not used unchanged for a mismatch. A new mismatch-safe hand-over and custody predicate proves that each expected cell, its value, its metric and version, and its world binding came from the world's own hand-over. The engine's differing result is compared separately. Without this, a failed test and its flag could rest on an unverified expected value.
+- **B4. One writer, old path revoked atomically.** The single writer keeps the present w0-w8 structural and identity checks. EXECUTE on the old writer is revoked in the same transaction that installs the new one.
+- **B5. Coverage v3: the time gate is witnessed per cell.** For a particular cell, a row from another declared month may serve as the outside-period witness only if all three hold:
+  - it is in the same partition;
+  - it passes the other eligibility rules;
+  - the evaluation of that cell actually excluded it by its time gate.
+
+  The checker records the cell and the identities of both the inside and the excluded witnesses. A paired negative test shows the element uncovered when no such exclusion occurred. Rows in two different months of the union of declared cells do not prove the gate. w10 keeps requiring complete coverage for a Demoed record. A partial pass is recorded without one. Computed dimensions, conditional branches and some partition cases stay uncovered, so all months alone cannot certify those shapes.
+- **B6. Document custody on both sides.**
+  - The engine's list of counted documents comes from its own evaluation act.
+  - The world's list is derived independently on the frozen bench from reviewed, committed query bytes. Neither its values nor its membership come from the evaluator or its contract-generation path, which keeps it compatible with ADR-025bfc T4.
+  - Both lists and their hashes are bound to the exact cell, run, world binding, source-document identity and, for sums, each document's contribution amount.
+  - The mapping from Odoo documents to canonical documents is proven before any set difference is used.
+- **B7. The world-month manifest.**
+  - It is derived and sealed from the frozen source, including months with world data but zero qualifying documents for the metric.
+  - Its exact source population and its period and calendar mapping are defined before authoring.
+  - The manifest, the hand-over, the declaration, the proof scope and the world evaluation coordinates must agree for the same binding and legal entity.
+  - The writer covers one legal entity, so a world with several legal entities needs a separately designed route. No full-world coverage is claimed through one entity's pin.
+- **B8. A corrected world answer is out of scope here.** It would be a superseding hand-over that keeps the old answer. Its custody, its current-answer selection and its proof-currency rules need their own design and the owner's own database yes (section 15).
+- **B9. Ticket recoverable; records decide.** A ticket is created, recoverably, for each failed result. The immutable result and resolution decide the flag and the lock, never the ticket's status.
+- **B10. L1 and an active version.** L1 does not constrain a version that is already active when a re-check fails. The owner settles that consequence before any lock is built (section 14).
 
 ## 4. What exists today
 
@@ -144,13 +180,13 @@ Read at bc-db 18d6884 and bc-core df47ce00.
    - `resolved_at`, set by the database.
 
    An insert guard requires the result to be `failed`. Immutable. INSERT goes to `bc_platform_runtime` through a command (E10). The lock is released by this row, never by the ticket's status: `support.ticket` is a mutable working table (status and `updated_at`, bc-core `database/schema/support/ticket.ts:22,35`), and a lock must rest on an immutable record (Invariant III).
-5. **One writer for every outcome**: `mcf.fn_record_demo_test_result(p_mcv, p_pin, …)`, SECURITY DEFINER, owned by `bc_schema_owner`, EXECUTE only to the existing producer login `bc_demoed_bridge_writer`. It keeps the inputs and the cross-plane read of `mcf.fn_record_demoed_bridge` (0076:337-353) and its checks w0 to w9 in their order (0076:364-494), with these changes:
-   - w4 no longer requires `match` (0076:433). The outcome is the verdict: `mismatch` is recorded as **failed** (`value_mismatch`, with the count of differing cells) once w5 to w8 hold;
-   - w9 (the hand-over predicate) applies to a matched pin;
+5. **One writer for every outcome**: `mcf.fn_record_demo_test_result(p_mcv, p_pin, …)`, SECURITY DEFINER, owned by `bc_schema_owner`, EXECUTE only to the existing producer login `bc_demoed_bridge_writer`. It keeps the inputs and the cross-plane read of `mcf.fn_record_demoed_bridge` (0076:337-353) and every one of its structural and identity checks w0 to w8 in their order (0076:364-483; rule B4), with these changes:
+   - w4 no longer requires `match` (0076:433); every other w4 condition stays. The outcome is the verdict: `mismatch` is recorded as **failed** (`value_mismatch`, with the count of differing cells) only after w5 to w8 hold **and** the mismatch-safe hand-over predicate (5.2 item 6) holds. If that predicate fails, the act is refused and no result is written (rule B3);
+   - w9 (`demo.fn_pin_answer_sheet_refusal`, unchanged) applies to a matched pin only;
    - w10 (0076:496-508): when partial, the test is recorded as **passed, partial**, with its elements, and no Demoed record is written; when complete, the 0076 write block (0076:510-535) writes the Demoed record, its elements, its provenance (writer version `fn_record_demoed_bridge-v2`, which the provenance check `^fn_record_demoed_bridge-v[0-9]+$` at 0076:309 accepts) and its `current` attestation, and then the result row naming it;
    - every other refusal still writes nothing.
 
-   EXECUTE on `mcf.fn_record_demoed_bridge` (v1) is revoked from `bc_demoed_bridge_writer` in the same migration, so that one routine alone writes Demoed records.
+   EXECUTE on `mcf.fn_record_demoed_bridge` (v1) is revoked from `bc_demoed_bridge_writer` in the same transaction that installs the new routine, so that one routine alone writes Demoed records and the two are never callable together (rule B4).
 6. **The lock** (depends on the owner's choice, section 8). Under L1 or stronger, a new condition **c17** `c17_unresolved_failed_demo_test` goes in `metric_audit.fn_intrinsic_decision_refusal`, added the way 0076 added c16: c1 to c16 copied byte for byte from the live body and pinned by its md5 in the precondition (0076:69-72). The flip trigger already refuses `audit_pending → active` while the list is not empty (0076:38-39).
 7. **Grants**: SELECT on the new tables to `bc_platform_runtime`; INSERT on the resolution table only. bc-core `tools/grant-drift/bc-platform-runtime-grants.tsv` (lines 124-134 record the 0076 grants) is updated in the same landing. The rollback is refused while any result, element or resolution row exists.
 
@@ -160,11 +196,10 @@ What is left of the revision-1 0082: items 2 to 7, minus the `void` verdict; plu
 
 1. **The world's declared months**: `demo.world_binding_data_period` (5 columns: uid; `world_binding_id` FK; `legal_entity_id` FK; `period_label`; `declared_at`), UNIQUE on binding, legal entity and period, and immutable. Its writer is a definer routine for the world's hand-over login (`bc_demo_world_handover`, 0075), taking a committed file's bytes, as `demo.fn_hand_over_answer_sheet` does.
 2. **A mismatch is recorded.** The two emit routines (0078) are replaced so that, when every structural check holds, a value difference records the run, the evaluation, one snapshot row per cell (its value beside its custody reference), its Evidence and Lineage, and a pin with `comparison_outcome = 'mismatch'`. The structural checks are: a declared legal entity, custody for every cell, the cells equal to the scope, one current world binding, and lineage present. A cell with no custody row still raises. The evaluation status and the Evidence outcome for a mismatch are to be fixed at authoring. The matched path is unchanged.
-3. **A re-check on unchanged records** (OPEN, two options):
-   - **R1**: the per-act key gains the engine build (`metric_run` would carry it). A re-check then runs only when the engine changed, the records changed, or the world's answers changed.
-   - **R2** (recommended, to match "re-check at any time"): the key becomes a caller-given act uid, unique per run. `uq_demo_metric_run__act` and the guard at 0078:224-229 and 445-450 change. A re-check on the same engine and the same records is a distinct act that gives a new run and a new pin (Invariant V allows this; it is not a reconstruction of the earlier one).
-4. **The documents each cell counted**: `demo.ms_snapshot_member` (4 columns: uid; `metric_snapshot_id` FK; the canonical record id; `counted_flag`), written by the emit in the same transaction. This is the engine side of section 7; it needs the evaluation to pass its members (E13).
-5. **A corrected world answer** (OPEN): a superseding hand-over, a new custody row that names the row it replaces and the failure resolution that justifies it. Without it, a world-side fix needs a new metric version or a new world code (section 7).
+3. **A re-check on unchanged records: R2** (rule B1; the auditor: R1 "would silently narrow" the owner's ruling). The per-act key becomes a caller-given act uid, unique per run. `uq_demo_metric_run__act` and the guard at 0078:224-229 and 445-450 change accordingly. A re-check on the same engine and the same records is a distinct act that gives a new run, a new pin and a new result (Invariant V allows this; it never reconstructs an earlier act). The former option R1 (re-check only after the engine build changed) is dropped.
+4. **The documents each cell counted** (rule B6): `demo.ms_snapshot_member` (6 columns: uid; `metric_snapshot_id` FK, which fixes the cell, the evaluation, the run and, through the proof input, the world binding; the canonical record id; the source-document identity; `counted_flag`; `contribution_amount`, set for a sum). It is written by the emit in the same transaction, from the evaluation act's own list of members (E13), never from a later read. The set's hash goes into the cell's Evidence.
+5. **A corrected world answer: out of scope** (rule B8). It needs its own design and the owner's own database yes (section 15).
+6. **The mismatch-safe hand-over predicate** (rule B3): a new read-only definer function, `demo.fn_pin_handed_over_expected_cells_refusal(uuid)`. For a pin of either outcome it proves each expected cell, its value, its metric and version, and its world binding came from the world's own hand-over. It uses the membership, world-binding and custody-set-hash checks of `demo.fn_pin_answer_sheet_refusal` (0075:413-476), without that function's first `match` gate. It does not judge the engine's values; the routine compares those separately.
 
 ## 6. What changes in the engine (bc-core), at every enforcement point
 
@@ -178,10 +213,10 @@ What is left of the revision-1 0082: items 2 to 7, minus the `void` verdict; plu
 | E6 | The demo proof command (proof guide step 11) | On a mismatch pin, record the failed result instead of stopping. |
 | E7 | `registry/mcf/mcf-cert-writer.service.ts:1047-1058` (`assertCandidateDemoedInTx`, used by `admitMetric` at :2973-2974) | Under L1 or stronger, a sibling check names an open failure before the database's c17 does. |
 | E8 | `database/plane/plane-world-evaluation-coordinate.ts:40-52`, with `plane-cc-version-binding.ts:37`, `plane-metric-version-binding.ts` and `plane-world-identity.ts` | The world label's dates must be every month the world holds data for: for Kaveri, 41 period-end dates. This is one label per world binding, not one per test. |
-| E9 | Ticket on failure (new) | After a failed result, open a ticket through `SupportService.createTicket` with `entity_type = 'mcf.metric_version_demo_test_result'` and the result uid. The record comes first and the ticket second. An idempotent "open the ticket for this failed test" command can be run again. `boundary/boundary-ticket.service.ts:26-40` is fire-and-forget and never throws, which is not enough for a lock. |
+| E9 | Ticket on failure (new; rule B9) | After a failed result, open a ticket through `SupportService.createTicket` with `entity_type = 'mcf.metric_version_demo_test_result'` and the result uid. The record comes first and the ticket second, and the ticket is recoverable. A read lists every failed result without a ticket, and an idempotent "open the ticket for this failed test" command can be run again until each has one. `boundary/boundary-ticket.service.ts:26-40` is fire-and-forget and never throws, which is not enough. The flag and the lock are read from the result and the resolution only. |
 | E10 | Resolve a failure (new command) | Writes the resolution (5.1 item 4) after the documents are judged (section 7); comments on the ticket and closes it. |
 | E11 | Reads: `registry/mcf/mcf-read.service.ts:512-530` (the list behind `GET /api/mcf/metric-contracts`, `mcf-publication-eligibility.controller.ts:30,70`) and `GET /api/mcf/metric-contract-versions/:mcvUid/demoed-claim` (`demoed-evidence-bridge.controller.ts:83`) | One set-based read of each current version's test counts and open failure with its ticket id; the claim read lists every test. Reads never evaluate. |
-| E12 | **Coverage checker v3** (`demoed-coverage-checker.ts:125-134, 294-308`) | Needed before any `period_aggregate` metric can pass w10 under the all-months rule. Proposal: a row counts as "outside" for a cell when it shares the cell's partition at a different period, **even if that period is another declared cell**. The time gate is then exercised by the neighbouring months. w10 keeps requiring `demoed-coverage-v2` or later (0076:499-502), so v3 is accepted without a database change. This is a change to how one coverage element is witnessed, not to the w10 rule; the owner's rule 5 stands. |
+| E12 | **Coverage checker v3** (`demoed-coverage-checker.ts:125-134, 294-308`; rule B5) | Needed before any `period_aggregate` metric can pass w10 under the all-months rule. The time-gate element is witnessed **per cell**. A row from another declared month is that cell's outside witness only if it is in the same partition, passes the other eligibility rules, and was actually excluded by that cell's time gate in the evaluation (read from the evaluation's own member record, 5.2 item 4). The element records the cell and the identities of both witnesses. A paired negative test shows the element uncovered when no such exclusion is recorded. w10 keeps requiring `demoed-coverage-v2` or later (0076:499-502) and complete coverage for a Demoed record, so v3 is accepted without a database change. This changes how one element is witnessed, not the w10 rule; the owner's rule 5 stands. |
 | E13 | The proof's member list | The evaluation hands the emit the canonical records each cell counted (5.2 item 4). Whether the dry evaluation exposes them today was **not grounded** (section 15). |
 
 `demoed-at-version.ts` and `demoed-activation-record.ts` read Demoed records through `mcf.fn_demoed_record_qualifies` (0076:544-562) and need no change. Request certification does not read the Demoed gate (no reference in `registry/mcf/request-audit-outcome.ts`).
@@ -213,6 +248,8 @@ When a test fails, neither calculation outranks the other. The engine's value an
 - Proposal: beside each working-out, a committed **list query** with the same conditions that returns the documents (Odoo `account_move` id, name, date, type, state), run by a new list mode of the runner on the same frozen bench, inside `BEGIN READ ONLY`, with its output committed with its hashes.
 - Assumption to confirm: the engine's `invoice_number` is Odoo's `account_move.name`, so the two lists can be joined.
 
+**Binding the lists (rule B6).** Both lists, and their hashes, are bound to the exact cell, the run, the world binding, each source document's identity and, for a sum, each document's contribution amount. The engine's list comes from its own evaluation act (5.2 item 4). The world's list comes from reviewed, committed query bytes on the frozen bench, and neither its values nor its membership come from the evaluator or its contract-generation path (ADR-025bfc T4). **The mapping from Odoo documents to canonical documents is proven before any set difference is used.** Until it is proven, the two lists are shown side by side and no document is called "missing" from either.
+
 ### 7.3 The world's guards today, and the gap they leave
 
 The demo world's answers are guarded by:
@@ -224,15 +261,11 @@ The demo world's answers are guarded by:
 
 **The gap.** All of these guard against a wrong copy, a changed query or an invented value. None guards against a **shared misreading of the definition**: two working-outs, and the engine's contract, can all read "customer invoice" the same wrong way and agree. The study itself records one limit: its two working-outs come from two models of one family (study `customer_invoice_volume-fe91c450.md`, "The working-outs (L4)"). Only the documents, read against the owner's own words, settle such a case. That is why section 7.1 asks a person to judge them, and why a test that passes is still open to a later re-check.
 
-### 7.4 A world-side fix cannot be handed over today
+### 7.4 A world-side fix cannot be handed over today (out of scope)
 
-Expected values are one immutable row per (world code, metric, version, legal entity, period) (`uq_demo_oracle_custody_cell`, read live), and a second hand-over of a cell is refused (0075:400). So a corrected world answer for the same version cannot be recorded today. The options, OPEN:
+Expected values are one immutable row per (world code, metric, version, legal entity, period) (`uq_demo_oracle_custody_cell`, read live), and a second hand-over of a cell is refused (0075:400). So a corrected world answer for the same version cannot be recorded today.
 
-- **(a)** a superseding hand-over (5.2 item 5), which keeps the old value and records the new one with the resolution as its reason;
-- **(b)** a new metric version, which brings new custody keys;
-- **(c)** a new world code.
-
-(a) is the only one that does not force an unrelated change.
+The coherent route is a superseding hand-over that keeps the old answer and records the new one, with the resolution as its reason. Its custody, its selection of the current answer and its proof-currency rules need a separate design and the owner's own database yes (rule B8). This design does not cover them. Until then, a world-side fix needs a new metric version or a new world code. The route is an owner question (section 14).
 
 ## 8. The flag, the ticket and the lock
 
@@ -249,7 +282,9 @@ Expected values are one immutable row per (world code, metric, version, legal en
 | L3 | L2, plus the version's values are shown to tenants marked "under review". | Serving the values. |
 | L4 (ruled out) | Stops serving the version. | Listed only to rule it out: the owner ruled out any automatic switch-off. |
 
-For an active version that fails a re-check, L1 holds nothing new, because the version is already approved; the owner may want L2 for that case. Where a tenant binding would be refused under L2 was not located (section 15).
+**L1 and an already active version (OPEN, rule B10).** L1 does not constrain a version that is already active when a re-check fails: it holds nothing new, because the version is already approved. The flag and the ticket still show. The owner settles this consequence before any lock is built: accept it, or choose L2 or L3 for that case. Where a tenant binding would be refused under L2 was not located (section 15).
+
+Whatever the choice, the flag and the lock are read only from the immutable result and resolution, never from the ticket's status (rule B9).
 
 ## 9. The Tests column
 
@@ -354,13 +389,17 @@ The flag, the ticket and the Tests column are a net, not the fix. Checker v3 (E1
 
 ## 14. Open questions
 
+The auditor's reply leaves four owner decisions open: the runner role, the lock extent, the resolution authority and the corrected-answer route.
+
 1. **Who may run a re-check**: the metric publisher (`mcf_publisher`); a separate checking role; any of several roles, always recorded; or a scheduled re-check.
 2. **What the lock holds**: L1, L2 or L3 (section 8).
-3. **A re-check on unchanged records**: R1 (only after something changed) or R2 (at any time) (5.2 item 3).
-4. **How a corrected world answer is recorded**: (a), (b) or (c) (7.4).
-5. **Who judges the documents and records the resolution.**
-6. **How the world's months are fixed**: a world declaration (recommended) or a read of the admitted source records (3.2). Also whether a month with data but no document of the metric's kind is declared; under the owner's words, every month with data is, and such a month expects a value of 0 for a count.
+3. **L1 and an already active version**: L1 does not constrain a version that is already active when a re-check fails. Accept that, or choose L2 or L3 for that case (section 8, rule B10).
+4. **Who judges the documents and records the resolution.**
+5. **The route for a corrected world answer**: a superseding hand-over (its own design and database yes), a new metric version, or a new world code (7.4).
+6. **The world-month manifest's source population**: which records make "the world holds data" for a month (3.2, rule B7). Months with zero qualifying documents for a metric are included either way.
 7. Whether approval names one passing test (this design) or every passing test.
+
+Settled since revision 2: re-check at any time (R2; 5.2 item 3, rule B1).
 
 ## 15. Out of scope, known limits, and what was not grounded
 
@@ -369,6 +408,11 @@ The flag, the ticket and the Tests column are a net, not the fix. Checker v3 (E1
 - `computed_dimension` and `conditional_branch` elements are always uncovered ("not derivable", `demoed-coverage-checker.ts:25, 352-354`), so a metric with a computed dimension or a `case` node can never reach complete coverage.
 - `grain_partition` needs two or more legal entities among the proven cells (:24, :330), while w3 allows one legal entity per declaration (0076:408-411, R3: one proof pin covers one legal entity). A metric scoped by legal entity can never be complete today. For a world with several legal entities, "every month for every legal entity" also meets this one-legal-entity rule. Kaveri has one legal entity.
 - A time gate other than `period_aggregate` or `as_of` is uncovered.
+
+**Out of scope:**
+
+- A corrected world answer (a superseding hand-over): its custody, current-answer selection and proof-currency rules need a separate design and the owner's own database yes (rule B8).
+- A route for worlds with several legal entities: the writer covers one legal entity, and no full-world coverage is claimed through one entity's pin (rule B7).
 
 **Not grounded in this design:**
 
