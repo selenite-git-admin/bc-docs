@@ -160,14 +160,14 @@ This option is the simplest sound one. The profile is fixed for the life of a ru
 
 - **A1. Recorded on the run.** The proof pin is extended, not paralleled: `demo.metric_proof_pin` gains `numeric_profile_code`, written by the emit from the value the proving program's own `numericProfileOf` returned for that evaluation. Each Demoed result copies it from the pin, never from the caller, together with `engine_class_code`. A CHECK pairs the two (`scaled-decimal-int-v1` with `formula_engine_v3`, `binary64-v1` with `formula_engine_v2`), as `selectEngine` pairs them.
 - **A2. The approval compares with its own value.** The admit acts run inside the served bc-core (`registry/mcf/mcf-admit.controller.ts:62-63, 123-124`). Each compares the cited Demoed run's profile with its own `numericProfileOf`, then records what it saw in a new `metric_audit.transition_evidence.served_numeric_profile_code` column. The database's shared gate (G1) refuses when the two differ: condition `c18_demoed_arithmetic_not_served`.
-- **A3. Serving compares with its own value.** Every tenant evaluation act (`GovernedMetricEvaluationService.evaluate`, :343, before `runEngine` at :388) reads, without evaluating, whether the version it serves has a passed, complete Demoed run with **its own** profile. If not, the act records a refusal `arithmetic_not_demoed` and writes no new snapshot, through the existing recorded-refusal path (`refuseDefect`, as at :362). Snapshots already written stay readable. So a profile change stops changed arithmetic from serving new values until a fresh Demoed run under it passes. the Demoed column shows "re-check due (arithmetic)".
+- **A3. Serving compares with its own value.** Every tenant evaluation act (`GovernedMetricEvaluationService.evaluate`, :343, before `runEngine` at :388) reads, without evaluating, whether the version it serves has a passed, complete Demoed run with **its own** profile. If not, the act records a refusal `arithmetic_not_demoed` and writes no new snapshot, through the existing recorded-refusal path (`refuseDefect`, as at :362). Snapshots already written stay readable. So a profile change stops changed arithmetic from serving new values until a fresh Demoed run under it passes. The Demoed column shows "re-check due (arithmetic)".
 - **A4. The Demoed record records the arithmetic.** It does not judge the serving setting: the writer runs in the proof command's program, which is not the serving program. The pin's profile reaches the Demoed result (A1). Approval (A2) and serving (A3), which run in the serving program, decide.
 
 Required tests (fixtures):
 
 - **(a)** The serving program starts before the Demoed run with the scaled profile; a scaled Demoed run passes; the admit is accepted.
 - **(b)** The Demoed run is made first and the serving program starts afterwards, scaled; the admit is accepted. The two orderings give the same answer, because no startup record is read.
-- **(c)** The serving program restarts from scaled to `binary64-v1` after activation. Every tenant evaluation of that version records `arithmetic_not_demoed` and writes no snapshot. The admit of any version Demoed only under scaled is refused with c18. A `binary64-v1` re-check that passes restores evaluation.
+- **(c)** The serving program restarts from scaled to `binary64-v1` after activation. Every tenant evaluation of that version records `arithmetic_not_demoed` and writes no snapshot. The admit of any version whose Demoed runs passed only under scaled is refused with c18. A `binary64-v1` re-check that passes restores evaluation.
 
 Consequence, stated plainly: `binary64-v1` is the explicit rollback (`metric-runtime.config.ts:5-13`). Under A3, a rollback holds back new values of every metric until each one is re-checked under it.
 
@@ -176,7 +176,7 @@ Consequence, stated plainly: `binary64-v1` is the explicit rollback (`metric-run
 What stays:
 
 - **V1. A re-check runs on the current metric version.** A re-check of an active metric names its current active version, never an older pin (`boundary/metric-spec-loader.ts:110` takes the world label's pinned version today; the Demoed run names the version instead, E17).
-- **V2. A candidate is Demoed itself.** Before approval, the candidate version itself is Demoed.
+- **V2. A candidate has its own Demoed run.** Before approval, the candidate version itself is run, not an earlier version.
 - **V6. The canonical inputs are recorded as evidence only** (Foundation VI, evidence of context):
   - The evaluation act emits the role-keyed set of canonical inputs it read: `grain` (`boundary/co-candidate-reader.ts:337-346`), `schedule_event` (`boundary/metric-evaluation-orchestrator.service.ts:340-360`) and `field_declarations` (`boundary/metric-spec-loader.ts:266-268`).
   - Each entry names the canonical contract by `canonical_contract_id` and `version_code`, the key of `contract.canonical_contract_version` (primary key `(canonical_contract_id, version_code)`, read live).
