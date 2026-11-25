@@ -14,7 +14,15 @@ governing_adr: DEC-79b62f
 
 # The metric records design
 
-*Design note · proposed 2026-11-25, revision 3 · nothing in this note has been built or run. Its database rows (section 9) are a proposal and **need the owner's database yes** under the Database Change Protocol before any migration is written.*
+*Design note · proposed 2026-11-25, revision 4 · nothing in this note has been built or run. Its database rows (section 9) are a proposal and **need the owner's database yes** under the Database Change Protocol before any migration is written.*
+
+**Revision 4 (2026-11-25).** This revision folds in the owner's family-and-group rulings of 2026-11-25 (barecount-devhub `artifacts/operator-review/DECISIONS-workflow-review.md`, branch `claude/operator-review-content`, commits 44ebbd53 and dda73851). What changed:
+- **The six family-and-group rules are adopted** (3.8). Masters stop at subfunction; families and groups stay versioned directory records, created only through the directory commands. Their codes become globally unique, follow a slug pattern and are never reused. Every family version states its question as a question. A group has no question. A metric's place is read only through its definition's pinned family and group versions. The 29 groups without a version get one before any metric is placed under them. No new master table.
+- **The database rows** are added to migration 0085 (rows 0085-G to 0085-J, section 9.1), with their rollback.
+- **The structured group is its own design** (TSK-09855b), written right after this one. This design adds one forward-compatible check: a definition must match its group's declared unit and time class, once the group declares them (3.8).
+- **Two missing commands are named** (section 8): a family version successor, and a governed archive of a family and its groups.
+- **Words for readers:** in prose, "definition" is the member version and "calculation" is the metric contract version (section 3). Technical names stay in backticks.
+- The open questions stay five; none is added (section 12).
 
 **Revision 3 (2026-11-25).** This revision applies the auditor's CHANGES REQUIRED (bc-external-audit `docs/RESPONSE-Codex-gen-4fc3c9-01-metric-records-design-2026-11-25.md`, commit a8f9b1e9, on head a6ad5c0f). What changed:
 - **Temporality class (blocker 1).** The definition version declares ADR-952faa's four-valued class in a new column, `temporality_class_code`, inside the content hash. The class is checked against the five-dimension temporality code, against the temporal intent shape and the contract's gate shape, and against every aggregate node of the formula. D-2's class-to-primitive refusal holds at authoring and again at approval and activation. D-2 is not built for MCF today (3.4.1). The interpretation table grows from 12 to 13 columns (0085-B).
@@ -82,6 +90,8 @@ Every record in this design keeps the Foundation:
 - the code-era lists are backfilled as frozen first records, and old and new readers are checked to agree before reads switch.
 
 ## 3. The definition version owns declared metric meaning
+
+**Words used in this note.** The **definition** is the directory member version (`metric_directory.member_version`). The **calculation** is the metric contract version (`mcf.metric_contract_version`). A calculation calculates exactly one definition.
 
 In this note, "meaning" is the **declared metric meaning**: what a definition version says the metric is. It is never evaluated. Foundation meaning in the sense of Invariant I is evaluated once, at canonical evaluation, and nothing here moves or repeats that.
 
@@ -197,11 +207,54 @@ Versions made before it (05d067b2, d49b1b25) have no row; readers show "not decl
 
 Where a metric sits (function, subfunction, family, group) is part of what it means. The directory already owns it: function, then subfunction, then family, then group, then member. `metric_directory.family` carries `(function_slug, subfunction_slug)` with the foreign key `fk_family_subfunction` to `master.master_subfunction(parent_function, slug)` (read live: 49 families, 119 subfunctions).
 
-**The placement is pinned, not looked up.** A family row can change, but a member version pins the exact family version: `member_version.family_version_uid` is NOT NULL, and `metric_directory.family_version` (with `function_slug`, `subfunction_slug` and its own content hash) is immutable (`trg_family_version_immutable`, read live). The family and group version references are inside the member version's content hash (`member-versioning.service.ts:128-138`). So a contract reaches its placement by one exact path: its reference row (section 4), then the member version, then that version's family version. No live row is followed, so a later move of the family or the member cannot change what an old contract version reads.
+**The placement is pinned, not looked up.** A family row can change, but a member version pins the exact family version: `member_version.family_version_uid` is NOT NULL, and `metric_directory.family_version` (with `function_slug`, `subfunction_slug` and its own content hash) is immutable (`trg_family_version_immutable`, read live). The family and group version references are inside the member version's content hash (`member-versioning.service.ts:128-138`). So a calculation reaches its placement by one exact path: its reference row (section 4), then the definition, then that definition's family and group versions. No live row is followed, so a later move of the family or the member cannot change what an old calculation reads.
 
-MDM-11fab0's two versions both pin family version 5ecaa51a: finance, billing, theme `billing_health` (read live).
+MDM-11fab0's two versions both pin family version 5ecaa51a (finance, billing, theme `billing_health`, question "Are we billing completely, and how much?") and group version ec729ddc (`ci_invoice_volume`) (read live).
 
 **Rule:** `mcv.function_code` and `subfunction_code` are a second home of the placement (field #5). Readers move to the pinned path, the values go into evidence, and migration 0088 drops both columns (4.2).
+
+#### 3.8.1 The six family-and-group rules (owner, 2026-11-25)
+
+The owner adopted six rules (dda73851). No new master table is added.
+
+**1. Masters stop at subfunction.** Function and subfunction are masters. A family and a group are versioned directory records. They are created only through the directory commands `POST /api/metric-directory/families` and `POST /api/metric-directory/groups` (`metric-directory.controller.ts:187,269`), each of which writes the record and its first version in one transaction. A master list of families or groups would give placement two homes.
+
+**2. Codes are globally unique, follow a slug pattern, and are never reused.**
+- Today `family.theme_code` is unique only within its subfunction (`uq_family_theme_active` on `(function_slug, subfunction_slug, theme_code) WHERE archived_at IS NULL`), and `group.group_code` only within its family (`uq_group_code_active` on `(family_id, group_code) WHERE archived_at IS NULL`) (read live).
+- The live data already meets the new rule: 49 families with 49 distinct theme codes, 143 groups with 143 distinct group codes, and no archived row in either (read live).
+- **The slug pattern** is `^[a-z][a-z0-9]*(_[a-z0-9]+)*$`. One family and one group fail it: the test fixture `zz_trackA_cefa537` (finance, general ledger; decision "fixture decision"; one group, which has a version; no definition under it) (read live). The CHECK is therefore added `NOT VALID`: every new row is checked, the fixture is not. The fixture is archived by the new archive command (section 8); its code stays reserved.
+- **"Never reused" is not a partial index.** A unique index `WHERE archived_at IS NULL` lets a new row take an archived code. The design uses a **full** unique index on the code alone, so an archived row keeps its code taken for good. A soft delete keeps the row (DEC-1918d0 rule 8), but a hard delete would free the code. `bc_platform_runtime` has no DELETE on either table today; only `bc_schema_owner` has (read live). A delete trigger refuses every DELETE, so no writer can free a code (row 0085-I). A reserved-code record was weighed and not chosen: it would be a second home for the code.
+- The code is already frozen once a version exists: `fn_family_frozen_guard` and `fn_group_frozen_guard` refuse a change of `theme_code` or `group_code` on a record with a current version (read live).
+
+**3. Every family version states the question the family answers, phrased as a question.**
+- `family_version.decision_text` holds it; it is NOT NULL today. Of the 49 family versions, 17 end in "?". Of the other 32, 8 are empty strings and 24 are descriptive notes, among them the fixture (read live).
+- **Where it is enforced.** The family create command and the family version successor command refuse a `decision_text` that does not end in "?" after trimming, naming the field. The database backstop is a CHECK on `family_version` (row 0085-J), added `NOT VALID` because the 32 rows predate it. `family_version` is immutable (`fn_reject_mutation`), so those rows are never checked again; every new version is.
+- **The 32 are reworded as new family versions**, never edited in place and never by migration data. The successor carries the question in `decision_text`; the old note moves into `rationale_text`, after the rationale already there. Function, subfunction and theme code do not change; a move is a new family. This is a metric-directory act through the directory command (`docs/onboarding/add-a-directory-family-and-group.md`). There is no DB row hand-edit. Today there is no family version successor command: `POST families/:familyId/version` authors only an absent v1 (`metric-directory.controller.ts:719`). The successor command is new (section 8). The fixture is archived, not reworded, so 31 are reworded.
+- **The family row stops being read for the question.** `family.decision_text` and `rationale_text` are frozen once a version exists (`fn_family_frozen_guard`), and every family has a version, so `PATCH families/:familyId` can no longer change them on any live family. The row and the version already disagree on 8 families: the row holds NULL where the version holds an empty string (read live). Readers that read the row's text, for example `metric-directory.service.ts:2156`, move to the current family version.
+
+**4. A group has no question of its own.** The group answers part of its family's question. No question field is added to `group` or `group_version`.
+
+**5. A metric's place is read only through its definition's pinned family and group versions.** The coherence check already exists as four foreign keys (read live):
+- `fk_member_version_group`: `member_version (group_id, group_version_uid)` → `group_version (group_id, group_version_uid)`;
+- `fk_member_version_group_family_pair`: `member_version (group_version_uid, family_version_uid)` → `group_version (group_version_uid, family_version_uid)`, so the definition's family version is the one its group version names;
+- `fk_group_version_family`: `group_version (family_id, family_version_uid)` → `family_version (family_id, family_version_uid)`;
+- `fk_family_subfunction`: `family (function_slug, subfunction_slug)` → `master.master_subfunction (parent_function, slug)`.
+
+No new key is added.
+
+**6. The groups without a version get one before any metric is placed under them.** 29 of the 143 groups have no group version; 114 group versions exist (read live). `member_version.group_version_uid` is NOT NULL, so no definition can be placed under a group without one today. Each of the 29 gets its v1 through `POST groups/:groupId/version` (`metric-directory.controller.ts:729`), a metric-directory act. None of the 29 is the fixture's group.
+
+#### 3.8.2 The group's declared unit and time class: one forward-compatible check
+
+The structured group has its own design, written right after this one (TSK-09855b, owner 44ebbd53). This design adds one rule only:
+
+**Rule:** where a group version declares a unit or a time class, the definition version placed under it must declare the same unit (`unit_type_code`, 3.5) and the same temporality class (`temporality_class_code`, 3.4.1). The definition-version command refuses a mismatch, naming the group version, the field and both values.
+
+Today no group version declares either field, so the check is inert: it passes every definition. It becomes active when the group design adds the fields, with no change to this design.
+
+The group is the batch-authoring unit. A fill-a-group command and the structured template belong to TSK-09855b.
+
+`group.template_json` (and `group_version.template_json`) is free-form JSONB today, against DB rule 1 (no JSONB for queryable data): 141 of 143 groups carry a non-empty template, in 24 distinct shapes (read live). Its fix is left to the group design.
 
 ## 4. The contract version owns only evaluation
 
@@ -433,6 +486,11 @@ Every name, definition and interpretation a tenant reads comes from the definiti
 | Author a contract version from an exact definition version, recording the reference, with package v4 | extend the authoring route and the draft-writing service |
 | Realize a new definition: revoke the older contract's operative assert, then assert the new one, in one transaction | change to the realization command (4.1) |
 | The authoring checks: dimension sets, ADR-9dce29 collisions, temporality code against temporality class, temporality class against temporal intent and gate shape, ADR-952faa D-2 class against every aggregate node, unit against currency both ways, output unit snapshot against the definition, unit algebra (ADR-b1e9eb Annex A) | new |
+| The group check: a definition matches its group version's declared unit and time class, inert until the group declares them (3.8.2) | new, in the definition-version command |
+| Create a family or a group: refuse a code outside the slug pattern or already taken by any row, archived or not; for a family, refuse a `decision_text` that is not a question (3.8.1) | extend `POST families` and `POST groups` |
+| Declare a family version successor: the question in `decision_text`, the old note moved to `rationale_text`; function, subfunction and theme code unchanged (3.8.1 rule 3) | new; today only an absent v1 can be authored |
+| Author the absent v1 of a group version, for the 29 groups without one (3.8.1 rule 6) | exists, `POST groups/:groupId/version` |
+| Archive a family and its groups; their codes stay reserved (3.8.1 rule 2, for the fixture) | new; no archive command exists for either today |
 | ADR-952faa D-2 and unit-currency coherence again at approval and at activation, and on every later change to the fields they read (4.3) | new: one database function and the state-transition check |
 | Declare a world label and its evaluation points (owner act) | new routine |
 | Pin a canonical contract version; pin a metric version or a successor pin | new routines |
@@ -443,7 +501,7 @@ Every name, definition and interpretation a tenant reads comes from the definiti
 | The tenant reads of section 7 | extend |
 | Rename the catalog label; edit member knowledge | **retired** |
 
-**Records (values, under governed behaviour):** definition versions and their interpretation; contract versions and their reference; world labels, points and pins; answer sheets and months; Demoed declarations and results; FAQ entries; snapshot marks; the masters (direction, unit, the five dimensions, mark reasons).
+**Records (values, under governed behaviour):** family and group versions; definition versions and their interpretation; contract versions and their reference; world labels, points and pins; answer sheets and months; Demoed declarations and results; FAQ entries; snapshot marks; the masters (direction, unit, the five dimensions, mark reasons).
 
 ## 9. The database proposal — needs the owner's database yes
 
@@ -461,8 +519,14 @@ Every name, definition and interpretation a tenant reads comes from the definiti
 | 0085-D | `metric_directory.fn_member_version_finalize` | compare `children_set_digest` by the row's declared algorithm; refuse a new version that declares `pg-jsonb-set-digest-v1`; refuse a new version with no interpretation row | 3.7 |
 | 0085-E | `metric_directory.member_knowledge` | interim, until 0088-F: replace `fn_member_knowledge_frozen_guard` with a guard that refuses every INSERT and UPDATE ("retired: declared meaning lives on the member version"); the table has 0 rows | 3.2, Invariant III |
 | 0085-F | `metric_directory.member_version_faq_entry` | widen `ck_member_version_faq_entry_intent` (0084:187) from `temporal_intent`, `output_intent` to add `interpretation` | the direction entry cites the interpretation |
+| 0085-G | `metric_directory.family` | drop `uq_family_theme_active`; create `uq_family_theme_code` UNIQUE `(theme_code)`, with no WHERE clause; add `ck_family_theme_code_slug` CHECK (`theme_code ~ '^[a-z][a-z0-9]*(_[a-z0-9]+)*$'`) `NOT VALID` (the fixture `zz_trackA_cefa537` predates it). Precondition, else refuse: the 49 theme codes are distinct across all rows | 3.8.1 rule 2 |
+| 0085-H | `metric_directory."group"` | drop `uq_group_code_active`; create `uq_group_group_code` UNIQUE `(group_code)`, with no WHERE clause; add `ck_group_group_code_slug` CHECK, the same pattern, `NOT VALID` (the fixture's group predates it). Precondition, else refuse: the 143 group codes are distinct across all rows | 3.8.1 rule 2 |
+| 0085-I | `metric_directory.family`, `metric_directory."group"` | new triggers `trg_family_no_delete` and `trg_group_no_delete`, `BEFORE DELETE FOR EACH ROW EXECUTE FUNCTION metric_directory.fn_reject_mutation()`: a row is archived, never deleted, so its code is never freed | 3.8.1 rule 2 |
+| 0085-J | `metric_directory.family_version` | add `ck_family_version_decision_question` CHECK (`btrim(decision_text) ~ '\?$' AND length(btrim(decision_text)) > 1`) `NOT VALID`: the 32 versions that predate it are immutable and never checked again; every new version is | 3.8.1 rule 3 |
 
 **Rollback 0085:** valid only before any member version declares `pg-jsonb-set-digest-v2`; after that it is refused and a forward fix is used (Invariant III). It drops the interpretation table, restores the v1-only digest and finalize, restores the knowledge guard and the FAQ check, deletes `neutral` if no row references it, and restores the old label.
+
+**Rollback 0085-G to J** (may run on its own, at any time before any family or group is archived): drops `ck_family_version_decision_question`, `trg_family_no_delete`, `trg_group_no_delete`, `ck_family_theme_code_slug` and `ck_group_group_code_slug`; drops `uq_family_theme_code` and `uq_group_group_code`; recreates `uq_family_theme_active` ON `(function_slug, subfunction_slug, theme_code) WHERE archived_at IS NULL` and `uq_group_code_active` ON `(family_id, group_code) WHERE archived_at IS NULL`, as they stand today (read live). Once any family or group is archived, it is refused: the partial indexes would let a new row take an archived code. A forward fix is used instead. The rollback deletes no family version, so a reworded family version stays.
 
 ### 9.2 Migration 0086: the contract references its definition version
 
@@ -527,7 +591,7 @@ Every name, definition and interpretation a tenant reads comes from the definiti
 
 The first metric is retired as history and written again; nothing is deleted (Invariant III).
 
-1. **Land the code and the migrations** above (0085 to 0087, then 0088 once the readers have moved; tenant 0008 is not needed for the Demoed run). The canonical-boundary veracity prerequisite (section 6) lands before the mark is written.
+1. **Land the code and the migrations** above (0085 to 0087, then 0088 once the readers have moved; tenant 0008 is not needed for the Demoed run). The directory acts of 3.8.1 (31 family version successors, 29 group v1 versions, the fixture's archive) follow 0085 and the new commands; the first metric does not wait on them. The canonical-boundary veracity prerequisite (section 6) lands before the mark is written.
 2. **Retire 950f3ebd** by the existing withdraw-retire act (as for b9357731, `mcf.withdrawn_version_retirement`), under standing grant ead781aa and the owner's ruling 8e7b0bf6. Its Demoed result 670bda65, declaration de6e03f8 and FAQ entries stay as history. Revoke its realization event f5936579 by the directory's revoke act; the revoke branch checks no contract state, so it is allowed while 950f3ebd is `audit_pending` (section 13). Contract 8e8a6f28 is archived, as fe91c450 was.
 3. **Definition v3 of MDM-11fab0** supersedes d49b1b25, which stays as history (the member keeps its identity):
    - name "Customer Invoice Count";
@@ -535,7 +599,7 @@ The first metric is retired as history and written again; nothing is deleted (In
    - direction `neutral`, with the rationale "The count describes billing activity; more or fewer invoices is neither good nor bad without a target the customer sets.";
    - unit `count`, 0 decimals;
    - temporality class `flow_per_period`: invoices counted in the period of their event. It agrees with the temporality code `period`, the temporal intent `period_aggregate` and the `count` aggregate (3.4.1);
-   - placement through family version 5ecaa51a: finance, billing, theme `billing_health` (3.8).
+   - placement through family version 5ecaa51a (finance, billing, theme `billing_health`) and group version ec729ddc (3.8). The family version already states a question and the group already has a version, so no directory act of 3.8.1 has to come before v3.
 4. **The five dimensions, for the owner's confirmation:**
 
    | Dimension | Proposed | Reason |
@@ -566,7 +630,10 @@ The first metric is retired as history and written again; nothing is deleted (In
    - a v1 hand-over on a binding with months is refused at hand-over (5.4).
 4. **Design act or execution act.** A **design act**, with these declarations named:
    - the interpretation, the five dimensions and the temporality class on the definition version;
-   - the placement (function, subfunction, family) read only through the definition version's pinned family version;
+   - the placement (function, subfunction, family, group) read only through the definition version's pinned family and group versions, with the existing foreign keys of 3.8.1 rule 5 as the coherence check;
+   - the directory's code identity: a family theme code and a group code are globally unique, follow a slug pattern and are never reused (3.8.1 rule 2);
+   - the family's question, declared on every family version (3.8.1 rule 3);
+   - the group's declared unit and time class as an authoring check, inert until TSK-09855b declares them (3.8.2);
    - the definition reference on the contract version and in its package;
    - the storage home of DEC-3f6b1b's per-world binding (left open by that ADR);
    - veracity carried on CO evidence at the canonical boundary;
@@ -579,7 +646,10 @@ The first metric is retired as history and written again; nothing is deleted (In
    - **ADR-b1e9eb (proposed):** move unit and decimals from the contract version to the definition version;
    - **ADR-9dce29:** move the storage home of the five dimensions from `metric.metric_definition` to the member version;
    - **DEC-49b574 G2-B1:** amend rules 1 and 3 for successor pins (5.2);
-   - **ADR-f83b8a:** state that the metric reads veracity from CO evidence.
+   - **ADR-f83b8a:** state that the metric reads veracity from CO evidence;
+   - **DEC-b5c7ff (D506):** families and groups stay versioned directory records, never masters; codes globally unique and never reused; the family question mandatory on every version.
+
+   **The execution acts that follow, named.** Rewording the 31 family versions, authoring v1 for the 29 groups and archiving the fixture are **metric-directory acts** through the directory commands (`docs/onboarding/add-a-directory-family-and-group.md`). They are not migration data edits, and no row is hand-edited. Each act is a successor or a first version, so history is kept (Invariant III).
 
 **Foundation amendment flagged, not bypassed.** Amend `the-contract-grammar.md:208` (drop "thresholds"; "unit semantics" become "unit by reference to the realized definition version") and `:210` ("metric identity" and "result shape and units" become "the exact realized definition version (uid, content_hash)"; add that reference as a body element). Amend the Metric Directory Member section (`:379-384`) to own declared meaning and be referenced by the MCF Metric Contract. The realized state stays derived from the realization relation and is never cached on the member (DEC-b5c7ff). These amendments go through the Foundation's own procedure before the code lands.
 
@@ -591,9 +661,13 @@ The first metric is retired as history and written again; nothing is deleted (In
 4. **A change to the `unverified` rule.** ADR-f83b8a says `unverified` blocks metric production, and this design follows it: once CO evidence carries veracity (section 6), an evaluation that consumed an `unverified` input is refused, with no snapshot and no mark. Marking such a value `preliminary` instead would change that rule and needs an amendment of ADR-f83b8a. Do you want that change? The design assumes no.
 5. **Tags and data classification** (3.6): add them now or later?
 
-**Decided by the owner on 2026-11-25** (former questions 5 and 7):
+**Decided by the owner on 2026-11-25** (former questions 5 and 7, and the family-and-group rulings):
 - the retired columns are dropped, with their values kept as evidence (4.2, 9.4);
-- function and subfunction leave the contract and are read through the definition version's pinned family version (3.8).
+- function and subfunction leave the contract and are read through the definition version's pinned family version (3.8);
+- the six family-and-group rules (dda73851; 3.8.1);
+- the structured group is its own design, right after this one (44ebbd53; TSK-09855b; 3.8.2).
+
+None of these rulings adds an open question.
 
 ## 13. What was not grounded
 
@@ -606,3 +680,7 @@ The first metric is retired as history and written again; nothing is deleted (In
 - **The D-2 checks on real formulas:** only the two live formulas (`count` under `period_aggregate`) were read. The 3.4.1 table is checked against the grammar's node kinds and gate shapes, not against a stock or cumulative metric, since none exists today.
 - **The readers of the dropped columns:** the file counts of 4.2 come from a name search; the true readers are listed by the code change.
 - **Where the snapshot is written:** that the demo and tenant snapshot rows are written in one transaction with their evaluation, so the mark can share it, was not read in the engine code.
+- **The family and group commands that 3.8.1 needs do not exist yet** (read at bc-core 762fb59c): there is no family version successor command and no archive command for a family or a group. `POST families/:familyId/version` and `POST groups/:groupId/version` author only an absent v1. Both new commands are code (section 8).
+- **A test fixture is live in the directory:** family `zz_trackA_cefa537` with one group of the same code. Its codes fail the slug pattern and its decision is not a question. The CHECKs of 0085-G, H and J are `NOT VALID` for this reason, and the fixture is archived, not reworded. Who created it, and whether anything outside the directory reads it, was not checked (its `created_by_name` is NULL; read live).
+- **The delete trigger's message:** `fn_reject_mutation` says the table is "append-only". On `family` and `group`, which allow governed UPDATEs, the message is not exact. Reusing it was weighed against a new function; a dedicated message may be chosen at writing time.
+- **The rewording itself:** the questions for the 31 families are not written in this note. Each is a directory act with its own wording.
