@@ -1,7 +1,7 @@
 ---
 uid: metric-records-design
 title: The metric records design, meaning on the definition version, evaluation on the contract version, and proof facts as governed records (design)
-description: "Design for the owner's rulings of 2026-11-25: behaviour is code, values are records. The directory definition version owns a metric's declared meaning (name, plain definition, interpretation with direction, the five dimensions, unit and decimals, FAQ facts); the catalog contract version owns only evaluation and references the exact definition version it realizes; the per-world proof facts now kept as code lists in bc-core become governed records with a second-proof path; each snapshot value records a preliminary or final mark. Platform side only. Customer Invoice Count is written again through it. Nothing is built."
+description: "Design for the owner's rulings of 2026-11-25: behaviour is code, values are records. The directory definition version owns a metric's declared meaning (name, plain definition, interpretation with direction, unit and decimals, FAQ facts); the catalog contract version owns only evaluation and references the exact definition version it realizes; the per-world proof facts now kept as code lists in bc-core become governed records with a second-proof path; each snapshot value records a preliminary or final mark. Platform side only. Customer Invoice Count is written again through it. Nothing is built."
 status: drafting
 authority: reference
 date: 2026-11-25
@@ -14,7 +14,17 @@ governing_adr: DEC-79b62f
 
 # The metric records design
 
-*Design note · proposed 2026-11-25, revision 4 · nothing in this note has been built or run. Its database rows (section 9) are a proposal and **need the owner's database yes** under the Database Change Protocol before any migration is written.*
+*Design note · proposed 2026-11-25, revision 5 · nothing in this note has been built or run. The owner gave the database yes for migration authoring on 2026-11-25 (section 12). Each migration is proven on an owner- and grant-faithful restore before review, and every live apply needs its own recorded grant.*
+
+**Revision 5 (2026-11-25).** This revision applies the owner's rulings of 2026-11-25 (barecount-devhub `artifacts/operator-review/DECISIONS-workflow-review.md`, branch `claude/operator-review-content`, commit 9336dd8f) and the auditor's acceptance of revision 4 (bc-external-audit `docs/RESPONSE-Codex-gen-4fc3c9-02-metric-records-design-rev4-2026-11-25.md`). What changed:
+- **The five ADR-9dce29 dimensions are dropped from the definition** (purpose, shape, temporality, precision, impact). No code reads them: the Chief checked bc-core, bc-admin and bc-portal. Their five columns, foreign keys, authoring checks and the temporality pair check are removed. `member_version_interpretation` has 8 columns (0085-B). The masters stay untouched. Section 3.4 now says the dimensions are deferred.
+- **The ADR-952faa temporality class stays**, with all of 3.4.1 (the D-2 refusal at authoring, approval and activation) and its check against the temporal intent and gate shapes.
+- **The per-value mark stays** (section 6). `declared_flash` is gone, and the final rule no longer reads a precision. The mark is `final` when the period has ended at the as-of and no consumed input is capped. `unverified` inputs are refused, not marked.
+- **Row 0085-I also refuses TRUNCATE** on family and group (the auditor's one hardening item).
+- **Section 10:** the first metric is declared direction neutral, with the rationale as written, class `flow_per_period`, unit `count`, 0 decimals. The five-dimension table is removed.
+- **Section 12 is now "Owner decisions (2026-11-25)":** all five open questions are answered, and the database yes is recorded.
+- **Section 11:** the new ADR marks ADR-9dce29's metric dimensions deferred.
+- The status stays `drafting`.
 
 **Revision 4 (2026-11-25).** This revision folds in the owner's family-and-group rulings of 2026-11-25 (barecount-devhub `artifacts/operator-review/DECISIONS-workflow-review.md`, branch `claude/operator-review-content`, commits 44ebbd53 and dda73851). What changed:
 - **The six family-and-group rules are adopted** (3.8). Masters stop at subfunction; families and groups stay versioned directory records, created only through the directory commands. Their codes become globally unique, follow a slug pattern and are never reused. Every family version states its question as a question. A group has no question. A metric's place is read only through its definition's pinned family and group versions. The 29 groups without a version get one before any metric is placed under them. No new master table.
@@ -22,12 +32,12 @@ governing_adr: DEC-79b62f
 - **The structured group is its own design** (TSK-09855b), written right after this one. This design adds one forward-compatible check: a definition must match its group's declared unit and time class, once the group declares them (3.8).
 - **Two missing commands are named** (section 8): a family version successor, and a governed archive of a family and its groups.
 - **Words for readers:** in prose, "definition" is the member version and "calculation" is the metric contract version (section 3). Technical names stay in backticks.
-- The open questions stay five; none is added (section 12).
+- The open questions stay five; none is added.
 
 **Revision 3 (2026-11-25).** This revision applies the auditor's CHANGES REQUIRED (bc-external-audit `docs/RESPONSE-Codex-gen-4fc3c9-01-metric-records-design-2026-11-25.md`, commit a8f9b1e9, on head a6ad5c0f). What changed:
-- **Temporality class (blocker 1).** The definition version declares ADR-952faa's four-valued class in a new column, `temporality_class_code`, inside the content hash. The class is checked against the five-dimension temporality code, against the temporal intent shape and the contract's gate shape, and against every aggregate node of the formula. D-2's class-to-primitive refusal holds at authoring and again at approval and activation. D-2 is not built for MCF today (3.4.1). The interpretation table grows from 12 to 13 columns (0085-B).
+- **Temporality class (blocker 1).** The definition version declares ADR-952faa's four-valued class in a new column, `temporality_class_code`, inside the content hash. The class is checked against the temporal intent shape and the contract's gate shape, and against every aggregate node of the formula. D-2's class-to-primitive refusal holds at authoring and again at approval and activation. D-2 is not built for MCF today (3.4.1). (Revision 5 later removed the five-dimension code from this check.)
 - **Unit and currency coherence after insert (blocker 2).** Coherence is one database function, checked when the reference row is written, on every later change to the contract version's currency semantics or formula, on every change to the parent contract's gate shape, and again at approval and activation. The reciprocal rule is added: a `currency` unit refuses `not_applicable`. `mc_name` has no guard today (read live), so it is frozen once a version of the contract has a reference row (4.2; rows 0086-A, 0086-H to 0086-J).
-- **`unverified` inputs.** ADR-f83b8a's rule is followed: such an evaluation is refused. Open question 4 now asks only whether the owner wants that rule changed (section 6, question 4).
+- **`unverified` inputs.** ADR-f83b8a's rule is followed: such an evaluation is refused. The owner later kept that rule (section 12).
 - **The Foundation check is cited by its findings**, not by a path the auditor could not see (revision 2 note below).
 
 It also applies two owner rulings of 2026-11-25:
@@ -53,7 +63,7 @@ What changed:
 
 Re-reading the live rows for this revision found dead pins the check did not name. Three metric pins of `a11a88f4` and `01a19aec` name contracts that bc-db 0079 also deleted, and the canonical pin cc-das36 5.2.0 names a version that does not exist (read live). Section 5.3 records them.
 
-**Rulings it implements** (barecount-devhub `artifacts/operator-review/DECISIONS-workflow-review.md`, branch `claude/operator-review-content`): proof facts out of engine code (7e6abc25); the code-versus-records principle (865747ae); rename to Customer Invoice Count (79fd49b7) by option B (b70e28c0); the catalog references the directory (8c72c819); FAQ upkeep after certification (ee5354f7); open months as is (2af2bb2d); direction on the definition, Customer Invoice Count neutral, certification held (de6d1fd8); platform side only (bd5d3ba0); write the first metric again (8e7b0bf6). The owner also asked, through the Chief on 2026-11-25, that the five-dimension classification (ADR-9dce29) be a first-class part of the definition, not an optional tag.
+**Rulings it implements** (barecount-devhub `artifacts/operator-review/DECISIONS-workflow-review.md`, branch `claude/operator-review-content`): proof facts out of engine code (7e6abc25); the code-versus-records principle (865747ae); rename to Customer Invoice Count (79fd49b7) by option B (b70e28c0); the catalog references the directory (8c72c819); FAQ upkeep after certification (ee5354f7); open months as is (2af2bb2d); direction on the definition, Customer Invoice Count neutral, certification held (de6d1fd8); platform side only (bd5d3ba0); write the first metric again (8e7b0bf6). The owner's earlier request, through the Chief on 2026-11-25, to store the ADR-9dce29 classification on the definition was withdrawn in revision 5 (3.4).
 
 **Evidence base, read on 2026-11-25:**
 - bc-core `origin/main` 762fb59c;
@@ -130,25 +140,19 @@ The definition version declares a **direction** from a governed list and a **rat
 - **ADR-8f09d9 is amended.** ADR-8f09d9 (implemented) places `unit` and `direction_code` "fixed" on the metric contract body (lines 138-139). That is a second placement. The new ADR moves both to the definition version; the contract body carries them only by its exact reference (section 4).
 - **The legacy home retires.** `metric.metric_definition.direction_code` has 0 rows (read live) and is never read again.
 
-### 3.4 The five dimensions (ADR-9dce29), first-class
+### 3.4 The five dimensions: deferred
 
-Each dimension is declared meaning, declared once per definition version, mandatory before approval (`docs/operating-model/metric-catalog.md`, "Five-Dimensional Classification"), from its governed master (read live):
+The five dimensions of ADR-9dce29 (purpose, shape, temporality, precision, impact) are **not stored** on the definition version. The owner ruled this on 2026-11-25 (9336dd8f): no code reads them, as the Chief checked in bc-core, bc-admin and bc-portal.
 
-| Dimension | Governed set (live master) | What today's intents already carry | Placement |
-|---|---|---|---|
-| Purpose | `master_metric_purpose`: performance, efficiency, operational, predictive, diagnostic, reference | nothing | new declared code |
-| Shape | `master_metric_shape`: scalar, distribution, time_series, ratio_pair | `output_intent_json` carries value type and dimension kind (`integer`, `count`), not the shape | new declared code; its parameters (bucket set, granularity) are declared only when the engine evaluates a non-scalar shape |
-| Temporality | `master_metric_temporality`: point_in_time, period, rolling, cumulative | `temporal_intent_json.shape_code` (`period_aggregate`) and its params (`period_type`) carry the evaluation form | new declared code, checked against the declared temporality class and the temporal intent (3.4.1); `window_days` and `reset_boundary` stay in the temporal intent's params, never copied |
-| Precision | `master_metric_precision`: flash, final | nothing | new declared code: the precision the metric is meant to reach (section 6 reconciles it with each value's mark) |
-| Impact | `master_metric_impact`: financial, time, quality, volume, risk, compliance, satisfaction | nothing | new declared code |
-
-- **No duplication with the intents.** The temporal intent is the evaluation form; the temporality code is the reader's dimension; the temporality class (3.4.1) is the declared computational class. They are three different statements, and the checks of 3.4.1 refuse any two that disagree. This follows the compatibility-table approach of ADR-952faa P2.4.
-- **The derived patterns stay code.** The Trust Filter (precision × impact, the "Preliminary" watermark), the Visualization Engine (shape × purpose) and Alerting Logic (temporality × purpose) are behaviour that reads the codes; none is stored per metric (ADR-9dce29: "a rendering rule, not stored per-metric"). Alerting is tenant work, later. ADR-9dce29's collision rules (for example: refuse `reference` with `flash`) become authoring checks.
-- **A doc to correct.** `metric-catalog.md` lists example values (`monetary`, `exact`, `cash` and others) that are not in the live masters. The masters are the governed sets; that chapter's table is corrected with this design.
+- **The rule is the one of 3.6:** no field without a reader. ADR-9dce29's metric dimensions return only with a feature that reads them.
+- **The derived patterns are not built:** the Trust Filter, the Visualization Engine and Alerting. Nothing here prepares for them.
+- **The masters stay as they are.** Nothing is dropped or changed in them.
+- **The ADR-952faa temporality class is not one of the five.** It stays (3.4.1).
+- **A doc to mark.** `metric-catalog.md` requires the five-dimension classification before approval and lists example values that are not in the live masters. The new ADR marks that requirement deferred, and the chapter is marked the same way with this design.
 
 ### 3.4.1 The temporality class (ADR-952faa D-1, D-2), declared
 
-ADR-952faa (decided) D-1 requires a four-valued class next to the temporality code: `instantaneous`, `flow_per_period`, `stock_at_period_end`, `cumulative_to_date`. Its D-2 refuses, at authoring and at activation, a formula primitive that the class does not allow; for example, a stock must not accept a period SUM. This design keeps both.
+ADR-952faa (decided) D-1 requires a four-valued class: `instantaneous`, `flow_per_period`, `stock_at_period_end`, `cumulative_to_date`. Its D-2 refuses, at authoring and at activation, a formula primitive that the class does not allow; for example, a stock must not accept a period SUM. This design keeps both.
 
 **Rule:** the definition version declares the class as `temporality_class_code`, one of the four values, in `member_version_interpretation`, inside the content hash. A change of class is a new definition version.
 
@@ -160,15 +164,14 @@ A class derived from the evaluation form can never disagree with that form, so D
 
 **The checks** (code at authoring; the database function of row 0086-H as a backstop). The aggregate nodes of the MCF formula grammar are `aggregate` (ops `sum`, `avg`, `count`, `count_distinct`, `min`, `max`, `median`, `percentile`; `core:registry/mcf/formula-canonicalization.service.ts:83`) and `aggregate_as_of` (op `sum` only, DEC-45200d; `:584-587`). The gate shapes are the seven of `mcf.metric_contract.temporal_gate_shape_code` (`mc_temporal_gate_shape_chk`, read live). The rule applies to **every** aggregate node of the formula, so a ratio of two aggregates is checked leg by leg.
 
-| Class | Temporality code (live master) | Temporal intent and gate shapes | Aggregate nodes allowed | Refused (D-2) |
-|---|---|---|---|---|
-| `instantaneous` | `point_in_time` | `instantaneous`, `point_in_time` | none bucketed by period | `aggregate_as_of`; any aggregate under a period, window or cumulative gate |
-| `flow_per_period` | `period`, `rolling` | `period_aggregate`, `trailing_window`, `rolling_window` | `aggregate`, any op | `aggregate_as_of`; the `as_of`, `point_in_time`, `instantaneous` and `cumulative_to_date` gates |
-| `stock_at_period_end` | `point_in_time`, `period` | `as_of`, `point_in_time` | `aggregate_as_of`; an `aggregate` under an `as_of` gate (the open-item balance) | any aggregate under `period_aggregate`, `trailing_window`, `rolling_window` or `cumulative_to_date`: the period SUM, COUNT, AVG, MIN or MAX of D-2 |
-| `cumulative_to_date` | `cumulative`, `period` | `cumulative_to_date` | `aggregate` with op `sum` | `aggregate_as_of`; any other op; any other gate |
+| Class | Temporal intent and gate shapes | Aggregate nodes allowed | Refused (D-2) |
+|---|---|---|---|
+| `instantaneous` | `instantaneous`, `point_in_time` | none bucketed by period | `aggregate_as_of`; any aggregate under a period, window or cumulative gate |
+| `flow_per_period` | `period_aggregate`, `trailing_window`, `rolling_window` | `aggregate`, any op | `aggregate_as_of`; the `as_of`, `point_in_time`, `instantaneous` and `cumulative_to_date` gates |
+| `stock_at_period_end` | `as_of`, `point_in_time` | `aggregate_as_of`; an `aggregate` under an `as_of` gate (the open-item balance) | any aggregate under `period_aggregate`, `trailing_window`, `rolling_window` or `cumulative_to_date`: the period SUM, COUNT, AVG, MIN or MAX of D-2 |
+| `cumulative_to_date` | `cumulative_to_date` | `aggregate` with op `sum` | `aggregate_as_of`; any other op; any other gate |
 
-- **The temporality code column** keeps the compatibility table bc-core already holds (`core:admin-inspection/temporality-compatibility.ts:32-37`), with one addition: `rolling` becomes compatible with `flow_per_period`. ADR-952faa P2.4 gives `rolling` no class, so today a `rolling` metric fits no class. P2.4's codes `as_of`, `interval` and `recurring` are not in the live master, so they are dropped from the table.
-- **The temporal intent shape** of the definition and the **gate shape** of the contract are checked against the same column.
+- **The temporal intent shape** of the definition and the **gate shape** of the contract are checked against the class in the table above. A `rolling` window shape is carried by `flow_per_period`.
 - **The MCF forms of D-3's primitives.** D-3 names `BALANCE_AS_OF` and `CUMULATIVE_SUM`. MCF expresses them as an `aggregate_as_of` node or an aggregate under an `as_of` gate, and as a `sum` under a `cumulative_to_date` gate. The new ADR records this mapping.
 - **Two boundaries, as D-2 requires.** At authoring, the definition-version and contract-version commands refuse a mismatch, naming the class, the offending node or gate, and the allowed set. At approval (review to approved, where the approval snapshot seals the package) and at activation (audit pending to active), `fn_mcv_state_transition_check` calls the same function and refuses (row 0086-J). Approval is checked too, because the package is sealed there.
 
@@ -191,11 +194,11 @@ This places on the definition what the proposed ADR-b1e9eb placed on the contrac
 
 ### 3.6 Tags and data classification: not justified now
 
-The seed reservoir's search synonyms and balanced-scorecard perspective (field #19), and a data classification or SOX-critical flag (field #30), have no platform reader and no rule that would use them. Neither is added. Open question 5 asks the owner.
+The seed reservoir's search synonyms and balanced-scorecard perspective (field #19), and a data classification or SOX-critical flag (field #30), have no platform reader and no rule that would use them. Neither is added. The owner decided on 2026-11-25 that they come later (section 12).
 
 ### 3.7 Where the new fields live
 
-`metric_directory.member_version` already has 24 columns (read live), over the 20-column rule (DEC-1918d0 rule 6). The new fields therefore go in one new 1:1 child, `metric_directory.member_version_interpretation` (13 columns), written in the same transaction as its version.
+`metric_directory.member_version` already has 24 columns (read live), over the 20-column rule (DEC-1918d0 rule 6). The new fields therefore go in one new 1:1 child, `metric_directory.member_version_interpretation` (8 columns), written in the same transaction as its version.
 
 - **Content hash:** the hash payload gains the interpretation under a new canonicalization value, `bc-directory-intent-canonicalization-v3` (code, `member-versioning.service.ts:130-160`). Both live versions declare `-v2` (read live).
 - **Children digest:** a new digest algorithm value, `pg-jsonb-set-digest-v2`, adds the interpretation row to the children set. Both live versions declare `pg-jsonb-set-digest-v1` (read live), and their digests stay as they are.
@@ -346,7 +349,7 @@ Four tables in the `demo` schema, each immutable after insert, each written only
 |---|---|---|
 | `demo.world_label` | `world_label_code`; the world (`synthetic_world_id`); its binding (`world_binding_id`, FK to `demo.foundry_world_binding`); `binding_source_code`; `backfilled_flag` | a label resolves to one physical world and one binding, and the binding belongs to that world; a changed identity is a new label. A new label must declare both. **There is no fallback:** a label with no record is refused. Only a backfilled first record may say `binding_source_code = 'from_act'`, which writes today's fallback down as an explicit fact (5.3) |
 | `demo.world_label_evaluation_point` | label, legal entity (`demo.dim_legal_entity`), as-of date | for a new label: each as-of date's fiscal period, on the legal entity's declared calendar, must be a declared month of the label's binding (`demo.world_binding_data_period`), and the label's set must equal the declared months. Points are declared only with their label, in one call. A backfilled label is exempt (5.3) |
-| `demo.world_label_cc_pin` | label, and the exact canonical contract version as a composite FK `(canonical_contract_id, version_code)` to `contract.canonical_contract_version` (its primary key; read live) | exact version; the version must have an immutable declaration (`pending_provisioning`, `active` or `superseded`); one version per canonical contract per label; a pin never changes; a disjoint canonical contract may be added (open question 3) |
+| `demo.world_label_cc_pin` | label, and the exact canonical contract version as a composite FK `(canonical_contract_id, version_code)` to `contract.canonical_contract_version` (its primary key; read live) | exact version; the version must have an immutable declaration (`pending_provisioning`, `active` or `superseded`); one version per canonical contract per label; a pin never changes; a disjoint canonical contract may be added (decision 3, section 12) |
 | `demo.world_label_metric_pin` | label, exact `metric_contract_version_uid` (FK), optional `supersedes_metric_pin_id` | exact version, sealed and usable at the act; the keys and the successor rule are below |
 
 **The metric pin keys, exactly:**
@@ -370,7 +373,7 @@ The new ADR records both amendments (section 11).
 |---|---|---|
 | Declare a world label | `demo.fn_declare_world_label` | **owner act**: it selects the world that counts as truth (865747ae point 3) |
 | Declare its evaluation points | the same routine, in the same call | owner act |
-| Pin a canonical contract version | `demo.fn_pin_world_cc_version` | owner act for a new label; a metric act for a disjoint addition (open question 3) |
+| Pin a canonical contract version | `demo.fn_pin_world_cc_version` | owner act for a new label; a metric act for a disjoint addition (decision 3, section 12) |
 | Pin a metric version, or declare a successor pin | `demo.fn_pin_world_metric_version` | a metric act under standing grant ead781aa |
 
 The routines always write `backfilled_flag = false`. `bc_platform_runtime` has SELECT on the four tables and no INSERT; only the routines and the backfill migration write.
@@ -429,7 +432,7 @@ There is no engine change and no new label.
 
 ## 6. The open-period mark: per-value evidence
 
-The precision on the definition (section 3.4) says what the metric is meant to reach. Each snapshot value records what it **did** reach, as evidence (Invariant VI), never on the definition.
+Each snapshot value records whether it is final or preliminary, as evidence (Invariant VI), never on the definition.
 
 **Grain:** one mark per snapshot value. On the demo plane, a value is a row of `demo.ms_snapshot` or `demo.ms_snapshot_ccy` (legal entity, period label, and currency where it applies; read live). In a tenant, a value is a row of `progression.metric_snapshot_index` (`core:database/schema/progression.ts:172`). `demo.metric_evaluation` has no period column (read live), so the mark cannot be per evaluation.
 
@@ -437,20 +440,19 @@ The precision on the definition (section 3.4) says what the metric is meant to r
 
 **The as-of instant:** an as-of date D means the end of day D, inclusive, on the legal entity's calendar. A period whose last day is E has ended at the as-of when E ≤ D, and the evaluation ran after the end of D. So an evaluation at a period-end date, run after that day, is not marked `open_period`.
 
-- **`final`** when the definition's precision is `final`, the period has ended at the as-of (above), and no Canonical Object version it consumed carries a capped veracity.
+- **`final`** when the period has ended at the as-of (above) and no Canonical Object version it consumed carries a capped veracity. An `unverified` input is refused, not marked (below).
 - **`preliminary`** otherwise, with one or more reason codes:
 
 | Reason code | When |
 |---|---|
 | `open_period` | the as-of falls inside the period, by the rule above. The engine already resolves the period at the as-of (`core:boundary/metric-evaluation-orchestrator.service.ts:205,255`); no closed-period rule exists today (2af2bb2d) |
-| `declared_flash` | the definition's precision is `flash` |
 | `source_veracity_cap` | a Canonical Object version the evaluation consumed carries veracity `approximate` in its evidence (ADR-f83b8a Trust Chain Filter) |
 
 **Veracity is read from the Canonical Object evidence, never from Source Objects.** A metric evaluation reads Canonical Objects only (the-contract-grammar.md, Metric Contract, disallowed behaviours: "A Metric Contract references raw Source Objects"). ADR-f83b8a propagates veracity "source → observation contract trust → canonical evaluation trust → metric.precision" (lines 82-91). So the cap is code that reads the veracity in the evidence of the CO versions the evaluation consumed.
 
 **A named prerequisite.** Today veracity lives on `source.source_object.veracity_code` (305 rows, all `authoritative`, read live), and CO evidence does not carry it. Carrying it is a declaration at the canonical boundary: canonical evaluation records the lowest veracity of the Source Objects it consumed in its CO evidence (repair location A/C). It is part of this design's design act (section 11) and is built before the mark. Until it is built, no mark is written, and readers show "not marked". A guessed `final` is never written. It never gates a metric's definition or its proof, and a second source type brings its own veracity with its own mapping.
 
-**`unverified` is refused, not marked.** ADR-f83b8a says `unverified` blocks metric production, and this design follows it. Once CO evidence carries veracity, an evaluation that consumed a CO version whose evidence carries `unverified` is refused, naming those CO versions. It writes no snapshot and no mark. Only `approximate` leads to a `preliminary` mark (`source_veracity_cap`). Marking an `unverified` value `preliminary` instead would change ADR-f83b8a's rule and need its amendment (open question 4).
+**`unverified` is refused, not marked.** ADR-f83b8a says `unverified` blocks metric production, and this design follows it. Once CO evidence carries veracity, an evaluation that consumed a CO version whose evidence carries `unverified` is refused, naming those CO versions. It writes no snapshot and no mark. Only `approximate` leads to a `preliminary` mark (`source_veracity_cap`). Marking an `unverified` value `preliminary` instead would change ADR-f83b8a's rule and need its amendment (decision 4, section 12).
 
 **Where it is recorded:** `demo.metric_snapshot_mark` with its reasons in `demo.metric_snapshot_mark_reason` (platform), and `progression.metric_snapshot_mark` with `progression.metric_snapshot_mark_reason` (each tenant database). A later accounting close (books closed by the tenant) is a tenant fact and a later design. How a tenant screen shows the mark is also later.
 
@@ -466,7 +468,6 @@ The reads go through `/api/t/beyond/*` (`core:tenant-views/beyond-metrics.servic
 | Name | the contract's `display_name` (`:171,247`) | **changed:** the referenced definition version's name |
 | Plain definition | `mcv.description_text` (`:251`) | **changed:** the referenced `definition_text` |
 | Interpretation (direction and rationale) | none | **new** |
-| The five dimensions | none | **new** |
 | Unit, decimals, value format | none | **new:** unit and decimals as records; the format by code |
 | Governance status | the portal infers it | **new read:** `governance_state_code` |
 | Demoed status | no read | **new:** the `mcf.metric_version_demoed_result` cited by the served version's certification (verdict and coverage, with its id); before certification, every result of that version, each with its id. Never "the latest" |
@@ -482,10 +483,10 @@ Every name, definition and interpretation a tenant reads comes from the definiti
 
 | Command | State |
 |---|---|
-| Author a definition version, taking the name, interpretation, dimensions, temporality class, unit and decimals from the act | extend `POST members/:memberUid/version` and `/version/supersede` |
+| Author a definition version, taking the name, interpretation, temporality class, unit and decimals from the act | extend `POST members/:memberUid/version` and `/version/supersede` |
 | Author a contract version from an exact definition version, recording the reference, with package v4 | extend the authoring route and the draft-writing service |
 | Realize a new definition: revoke the older contract's operative assert, then assert the new one, in one transaction | change to the realization command (4.1) |
-| The authoring checks: dimension sets, ADR-9dce29 collisions, temporality code against temporality class, temporality class against temporal intent and gate shape, ADR-952faa D-2 class against every aggregate node, unit against currency both ways, output unit snapshot against the definition, unit algebra (ADR-b1e9eb Annex A) | new |
+| The authoring checks: temporality class against temporal intent and gate shape, ADR-952faa D-2 class against every aggregate node, unit against currency both ways, output unit snapshot against the definition, unit algebra (ADR-b1e9eb Annex A) | new |
 | The group check: a definition matches its group version's declared unit and time class, inert until the group declares them (3.8.2) | new, in the definition-version command |
 | Create a family or a group: refuse a code outside the slug pattern or already taken by any row, archived or not; for a family, refuse a `decision_text` that is not a question (3.8.1) | extend `POST families` and `POST groups` |
 | Declare a family version successor: the question in `decision_text`, the old note moved to `rationale_text`; function, subfunction and theme code unchanged (3.8.1 rule 3) | new; today only an absent v1 can be authored |
@@ -501,9 +502,9 @@ Every name, definition and interpretation a tenant reads comes from the definiti
 | The tenant reads of section 7 | extend |
 | Rename the catalog label; edit member knowledge | **retired** |
 
-**Records (values, under governed behaviour):** family and group versions; definition versions and their interpretation; contract versions and their reference; world labels, points and pins; answer sheets and months; Demoed declarations and results; FAQ entries; snapshot marks; the masters (direction, unit, the five dimensions, mark reasons).
+**Records (values, under governed behaviour):** family and group versions; definition versions and their interpretation; contract versions and their reference; world labels, points and pins; answer sheets and months; Demoed declarations and results; FAQ entries; snapshot marks; the masters (direction, unit, mark reasons).
 
-## 9. The database proposal — needs the owner's database yes
+## 9. The database proposal — the owner's database yes was given (2026-11-25)
 
 **Numbering:** bc-db migrations 0085 to 0088 and tenant migration 0008, **to be confirmed** at writing time. The highest merged is 0084 and the highest tenant migration is 0007 (bc-db `origin/main` 6d4d703). The open bc-db PRs are 177, 115, 111, 102 and 89. Of these, only 177 (0073) and 111 (0039) carry a migration file.
 
@@ -514,19 +515,19 @@ Every name, definition and interpretation a tenant reads comes from the definiti
 | # | Object | Change | Why |
 |---|---|---|---|
 | 0085-A | `master.master_metric_direction` (`direction_code` PK, `label`, `description`, `sort_order`, `archived_at`) | insert `neutral` ("Neutral"); set the label of `target_is_optimal` to "Within a target band" (code kept) | the ruled list (de6d1fd8) |
-| 0085-B | `metric_directory.member_version_interpretation` (new, 13 columns) | `member_version_uid uuid` PK, FK `member_version`; `direction_code text` FK `master_metric_direction`; `direction_rationale_text text`; `purpose_code`, `shape_code`, `temporality_code`, `precision_code`, `impact_code` (each `text`, FK to its master); `temporality_class_code text` CHECK in (`instantaneous`, `flow_per_period`, `stock_at_period_end`, `cumulative_to_date`), the CHECK form ADR-952faa D-1 names; `unit_type_code text` FK `master_unit_type`; `display_decimal_count smallint` NULL; `created_by_name`; `created_at`. All NOT NULL except `display_decimal_count`. CHECKs: `display_decimal_count` is 0 to 6 when `unit_type_code <> 'currency'` and NULL when it is `currency`; `(temporality_class_code, temporality_code)` is a pair of the 3.4.1 table. Insert guard `fn_child_finalize_guard` (only in the version's creating transaction); the insert trigger also refuses a class the version's temporal intent shape cannot carry (3.4.1) | 3.3-3.5, 3.4.1; `member_version` has 24 columns |
+| 0085-B | `metric_directory.member_version_interpretation` (new, 8 columns) | `member_version_uid uuid` PK, FK `member_version`; `direction_code text` FK `master_metric_direction`; `direction_rationale_text text`; `temporality_class_code text` CHECK in (`instantaneous`, `flow_per_period`, `stock_at_period_end`, `cumulative_to_date`), the CHECK form ADR-952faa D-1 names; `unit_type_code text` FK `master_unit_type`; `display_decimal_count smallint` NULL; `created_by_name`; `created_at`. All NOT NULL except `display_decimal_count`. CHECKs: `display_decimal_count` is 0 to 6 when `unit_type_code <> 'currency'` and NULL when it is `currency`. Insert guard `fn_child_finalize_guard` (only in the version's creating transaction); the insert trigger also refuses a class the version's temporal intent shape cannot carry (3.4.1) | 3.3, 3.5, 3.4.1; `member_version` has 24 columns |
 | 0085-C | `metric_directory.fn_member_version_children_digest` | new algorithm value `pg-jsonb-set-digest-v2`: the v1 set plus the interpretation row; v1 unchanged for old versions | 3.7 |
 | 0085-D | `metric_directory.fn_member_version_finalize` | compare `children_set_digest` by the row's declared algorithm; refuse a new version that declares `pg-jsonb-set-digest-v1`; refuse a new version with no interpretation row | 3.7 |
 | 0085-E | `metric_directory.member_knowledge` | interim, until 0088-F: replace `fn_member_knowledge_frozen_guard` with a guard that refuses every INSERT and UPDATE ("retired: declared meaning lives on the member version"); the table has 0 rows | 3.2, Invariant III |
 | 0085-F | `metric_directory.member_version_faq_entry` | widen `ck_member_version_faq_entry_intent` (0084:187) from `temporal_intent`, `output_intent` to add `interpretation` | the direction entry cites the interpretation |
 | 0085-G | `metric_directory.family` | drop `uq_family_theme_active`; create `uq_family_theme_code` UNIQUE `(theme_code)`, with no WHERE clause; add `ck_family_theme_code_slug` CHECK (`theme_code ~ '^[a-z][a-z0-9]*(_[a-z0-9]+)*$'`) `NOT VALID` (the fixture `zz_trackA_cefa537` predates it). Precondition, else refuse: the 49 theme codes are distinct across all rows | 3.8.1 rule 2 |
 | 0085-H | `metric_directory."group"` | drop `uq_group_code_active`; create `uq_group_group_code` UNIQUE `(group_code)`, with no WHERE clause; add `ck_group_group_code_slug` CHECK, the same pattern, `NOT VALID` (the fixture's group predates it). Precondition, else refuse: the 143 group codes are distinct across all rows | 3.8.1 rule 2 |
-| 0085-I | `metric_directory.family`, `metric_directory."group"` | new triggers `trg_family_no_delete` and `trg_group_no_delete`, `BEFORE DELETE FOR EACH ROW EXECUTE FUNCTION metric_directory.fn_reject_mutation()`: a row is archived, never deleted, so its code is never freed | 3.8.1 rule 2 |
+| 0085-I | `metric_directory.family`, `metric_directory."group"` | new triggers `trg_family_no_delete` and `trg_group_no_delete`, `BEFORE DELETE FOR EACH ROW EXECUTE FUNCTION metric_directory.fn_reject_mutation()`: a row is archived, never deleted, so its code is never freed. Plus TRUNCATE refusal on both tables (the auditor's hardening item: a row-level DELETE trigger does not intercept TRUNCATE): a statement-level `BEFORE TRUNCATE` trigger on each, or `REVOKE TRUNCATE` from every role but the owner; the proof on the restore exercises both statements | 3.8.1 rule 2 |
 | 0085-J | `metric_directory.family_version` | add `ck_family_version_decision_question` CHECK (`btrim(decision_text) ~ '\?$' AND length(btrim(decision_text)) > 1`) `NOT VALID`: the 32 versions that predate it are immutable and never checked again; every new version is | 3.8.1 rule 3 |
 
 **Rollback 0085:** valid only before any member version declares `pg-jsonb-set-digest-v2`; after that it is refused and a forward fix is used (Invariant III). It drops the interpretation table, restores the v1-only digest and finalize, restores the knowledge guard and the FAQ check, deletes `neutral` if no row references it, and restores the old label.
 
-**Rollback 0085-G to J** (may run on its own, at any time before any family or group is archived): drops `ck_family_version_decision_question`, `trg_family_no_delete`, `trg_group_no_delete`, `ck_family_theme_code_slug` and `ck_group_group_code_slug`; drops `uq_family_theme_code` and `uq_group_group_code`; recreates `uq_family_theme_active` ON `(function_slug, subfunction_slug, theme_code) WHERE archived_at IS NULL` and `uq_group_code_active` ON `(family_id, group_code) WHERE archived_at IS NULL`, as they stand today (read live). Once any family or group is archived, it is refused: the partial indexes would let a new row take an archived code. A forward fix is used instead. The rollback deletes no family version, so a reworded family version stays.
+**Rollback 0085-G to J** (may run on its own, at any time before any family or group is archived): drops `ck_family_version_decision_question`, `trg_family_no_delete`, `trg_group_no_delete`, the TRUNCATE refusal of 0085-I (trigger or restored privilege), `ck_family_theme_code_slug` and `ck_group_group_code_slug`; drops `uq_family_theme_code` and `uq_group_group_code`; recreates `uq_family_theme_active` ON `(function_slug, subfunction_slug, theme_code) WHERE archived_at IS NULL` and `uq_group_code_active` ON `(family_id, group_code) WHERE archived_at IS NULL`, as they stand today (read live). Once any family or group is archived, it is refused: the partial indexes would let a new row take an archived code. A forward fix is used instead. The rollback deletes no family version, so a reworded family version stays.
 
 ### 9.2 Migration 0086: the contract references its definition version
 
@@ -556,7 +557,7 @@ Every name, definition and interpretation a tenant reads comes from the definiti
 | 0087-E | `demo.fn_declare_world_label`, `demo.fn_pin_world_cc_version`, `demo.fn_pin_world_metric_version` (new) | `SECURITY DEFINER`, `search_path` pinned; write `backfilled_flag = false` only; EXECUTE for `bc_platform_runtime`; no direct INSERT grant on 0087-A to D | 5.2 |
 | 0087-F | the four tables | backfill the six labels, 49 points, 7 canonical pins and 6 metric pins of 5.3 with `backfilled_flag = true`; the header states the months exemption; a probe asserts the world-months set equals the 41 declared months | 5.3 |
 | 0087-G | `demo.fn_hand_over_answer_sheet` | add format v3 (5.4); refuse a new v1 sheet on a binding with months; v2 unchanged | 5.4 |
-| 0087-H | `master.master_evaluation_mark_reason` (new, 5 columns) | `reason_code text` PK; `label text`; `description text`; `sort_order integer`; `archived_at timestamptz` NULL (the masters' pattern). Rows: `open_period`, `declared_flash`, `source_veracity_cap` | 6 |
+| 0087-H | `master.master_evaluation_mark_reason` (new, 5 columns) | `reason_code text` PK; `label text`; `description text`; `sort_order integer`; `archived_at timestamptz` NULL (the masters' pattern). Rows: `open_period`, `source_veracity_cap` | 6 |
 | 0087-I | `demo.metric_snapshot_mark` (new, 8 columns) | `metric_snapshot_mark_id uuid` PK; `metric_evaluation_id uuid` FK `demo.metric_evaluation`; `metric_snapshot_id uuid` NULL, FK `demo.ms_snapshot`, unique; `metric_snapshot_ccy_id uuid` NULL, FK `demo.ms_snapshot_ccy`, unique; `mark_code text` CHECK in (`final`, `preliminary`); `as_of_date date`; `period_end_date date`; `created_at`. CHECK: exactly one snapshot FK. Insert only in the snapshot's own transaction | 6 |
 | 0087-J | `demo.metric_snapshot_mark_reason` (new, 2 columns) | `metric_snapshot_mark_id uuid` FK 0087-I; `reason_code text` FK 0087-H; PK the pair. A deferred trigger on 0087-I: `preliminary` has at least one reason, `final` has none | 6 |
 
@@ -583,7 +584,7 @@ Every name, definition and interpretation a tenant reads comes from the definiti
 | # | Object | Change | Why |
 |---|---|---|---|
 | T-A | `progression.metric_snapshot_mark` (new, 6 columns) | `metric_snapshot_id uuid` PK, FK `progression.metric_snapshot_index`; `metric_evaluation_id uuid` FK `progression.metric_evaluation`; `mark_code text` CHECK in (`final`, `preliminary`); `as_of_date date`; `period_end_date date`; `created_at`; immutable | 6 |
-| T-B | `progression.metric_snapshot_mark_reason` (new, 2 columns) | `metric_snapshot_id uuid` FK T-A; `reason_code text`; PK the pair. A foreign key to the platform master is impossible across databases, so a CHECK lists the same three codes as 0087-H; a new reason code needs both a platform and a tenant migration. The same deferred reason rule as 0087-J | 6 |
+| T-B | `progression.metric_snapshot_mark_reason` (new, 2 columns) | `metric_snapshot_id uuid` FK T-A; `reason_code text`; PK the pair. A foreign key to the platform master is impossible across databases, so a CHECK lists the same two codes as 0087-H; a new reason code needs both a platform and a tenant migration. The same deferred reason rule as 0087-J | 6 |
 
 **Rollback tenant 0008:** valid only before any mark row exists; it drops both tables.
 
@@ -598,38 +599,28 @@ The first metric is retired as history and written again; nothing is deleted (In
    - definition text carried from v2 and re-read;
    - direction `neutral`, with the rationale "The count describes billing activity; more or fewer invoices is neither good nor bad without a target the customer sets.";
    - unit `count`, 0 decimals;
-   - temporality class `flow_per_period`: invoices counted in the period of their event. It agrees with the temporality code `period`, the temporal intent `period_aggregate` and the `count` aggregate (3.4.1);
+   - temporality class `flow_per_period`: invoices counted in the period of their event. It agrees with the temporal intent `period_aggregate` and the `count` aggregate (3.4.1);
    - placement through family version 5ecaa51a (finance, billing, theme `billing_health`) and group version ec729ddc (3.8). The family version already states a question and the group already has a version, so no directory act of 3.8.1 has to come before v3.
-4. **The five dimensions, for the owner's confirmation:**
-
-   | Dimension | Proposed | Reason |
-   |---|---|---|
-   | Purpose | `operational` | it says what is happening in billing; ADR-9dce29 puts an invoice count under operational |
-   | Shape | `scalar` | one number per legal entity and period |
-   | Temporality | `period` | invoices posted in the fiscal period; agrees with `period_aggregate` |
-   | Precision | `final` | it is meant to be exact on posted records; an open month is marked `preliminary` per value (6) |
-   | Impact | `volume` | throughput: ADR-9dce29 puts an invoice count under volume |
-
-5. **A fresh contract** is authored from v3. Its reference row names v3's uid and content hash. Its `mc_name` is `customer_invoice_volume`, the member's code. It has `aggregation_currency_code = not_applicable`, carries no description, thresholds, owner, tags, function or subfunction (those columns are dropped by 0088, 4.2), and is sealed under package v4. Its realization is asserted at `approved` (no other version of the member has an operative row after step 2), then it goes to audit.
-6. **Proven again through the second-proof path:**
+4. **A fresh contract** is authored from v3. Its reference row names v3's uid and content hash. Its `mc_name` is `customer_invoice_volume`, the member's code. It has `aggregation_currency_code = not_applicable`, carries no description, thresholds, owner, tags, function or subfunction (those columns are dropped by 0088, 4.2), and is sealed under package v4. Its realization is asserted at `approved` (no other version of the member has an operative row after step 2), then it goes to audit.
+5. **Proven again through the second-proof path:**
    - pin the new version on the label `kaveri-demo-v3lc5-v2-world-months` (a new metric contract, so a first pin, not a successor);
    - hand over its 41 cells in format v3 on binding e32071a8;
    - declare, run, and record the Demoed result.
-7. **The FAQ carried forward**, each entry checked against v3 (FAQ design 2.5):
+6. **The FAQ carried forward**, each entry checked against v3 (FAQ design 2.5):
    - the five customer facts on d49b1b25 (ee5354f7, 2af2bb2d) are carried as new rows that name their source and cite v3's own elements;
    - a new fact cites the interpretation: why the count is neutral.
-8. **Then certify** (held by de6d1fd8 until here).
+7. **Then certify** (held by de6d1fd8 until here).
 
 ## 11. Foundation gate (DEC-79b62f)
 
-1. **Why this location.** The fix is at **B**, contract semantics: what a definition version declares (interpretation, dimensions, temporality class, unit, placement) and that a contract references it. It is also at **C**, binding: the world, coordinate and pin facts are declarations of which versions a world proves. The mark is at **D**: the evaluation emits its own evidence (Invariant VI).
+1. **Why this location.** The fix is at **B**, contract semantics: what a definition version declares (interpretation, temporality class, unit, placement) and that a contract references it. It is also at **C**, binding: the world, coordinate and pin facts are declarations of which versions a world proves. The mark is at **D**: the evaluation emits its own evidence (Invariant VI).
 2. **Why not an upper layer.** Declared meaning is source-agnostic, so A has no part in sections 3 to 5. The mark does depend on A/C: the veracity cap needs the canonical boundary to carry veracity in its CO evidence, as ADR-f83b8a's propagation rule says. This design names that as a declaration at the canonical boundary and a prerequisite (section 6). The evaluation only reads it. It does not reach past the Canonical Objects to Source Objects, and it does not compensate at D for the missing evidence: until the evidence exists, no mark is written.
 3. **Why not a lower layer.** Fixing names at the read model (F) or copying text at storage (E) would be compensation. The second homes being retired are exactly such copies (database rule 4). No working implementation is bypassed: the code lists' behaviour is kept, as records plus one loader, checked to agree. Three behaviours change, and each is named, not hidden:
    - the successor pin amends DEC-49b574 G2-B1 rules 1 and 3 (5.2);
    - the identity fallback for labels with no entry is refused instead of reproduced, except where a first record writes it down explicitly (5.3);
    - a v1 hand-over on a binding with months is refused at hand-over (5.4).
 4. **Design act or execution act.** A **design act**, with these declarations named:
-   - the interpretation, the five dimensions and the temporality class on the definition version;
+   - the interpretation and the temporality class on the definition version;
    - the placement (function, subfunction, family, group) read only through the definition version's pinned family and group versions, with the existing foreign keys of 3.8.1 rule 5 as the coherence check;
    - the directory's code identity: a family theme code and a group code are globally unique, follow a slug pattern and are never reused (3.8.1 rule 2);
    - the family's question, declared on every family version (3.8.1 rule 3);
@@ -642,9 +633,9 @@ The first metric is retired as history and written again; nothing is deleted (In
    It needs a new ADR that settles them and amends or supersedes, by name:
    - **D053 (ADR-0b3c08):** supersede the direction clause (line 33) and the threshold clause (line 31: no platform thresholds; tenants own them);
    - **ADR-8f09d9:** move `unit` and `direction_code` (lines 138-139) from the contract body to the definition version, referenced by the contract;
-   - **ADR-952faa:** amend D-1 and P2.4 (lines 46-57): the class is stored as `temporality_class_code` on the definition version, not as `temporality_kind` on `metric.metric_definition`; P2.4's table keeps the live-master codes and adds `rolling` to `flow_per_period`. Amend D-2 and D-3 (lines 59-102): the class-to-primitive refusal is stated in MCF terms (aggregate nodes and gate shapes, 3.4.1) and runs at authoring, at approval and at activation;
+   - **ADR-952faa:** amend D-1 and P2.4 (lines 46-57): the class is stored as `temporality_class_code` on the definition version, not as `temporality_kind` on `metric.metric_definition`; P2.4's pairing of class with temporality code is not stored; the class is checked against the temporal intent and gate shapes (3.4.1). Amend D-2 and D-3 (lines 59-102): the class-to-primitive refusal is stated in MCF terms (aggregate nodes and gate shapes, 3.4.1) and runs at authoring, at approval and at activation;
    - **ADR-b1e9eb (proposed):** move unit and decimals from the contract version to the definition version;
-   - **ADR-9dce29:** move the storage home of the five dimensions from `metric.metric_definition` to the member version;
+   - **ADR-9dce29:** mark its metric dimensions deferred: they return only with a feature that reads them (3.4); the requirement in `metric-catalog.md` is marked the same way;
    - **DEC-49b574 G2-B1:** amend rules 1 and 3 for successor pins (5.2);
    - **ADR-f83b8a:** state that the metric reads veracity from CO evidence;
    - **DEC-b5c7ff (D506):** families and groups stay versioned directory records, never masters; codes globally unique and never reused; the family question mandatory on every version.
@@ -653,27 +644,28 @@ The first metric is retired as history and written again; nothing is deleted (In
 
 **Foundation amendment flagged, not bypassed.** Amend `the-contract-grammar.md:208` (drop "thresholds"; "unit semantics" become "unit by reference to the realized definition version") and `:210` ("metric identity" and "result shape and units" become "the exact realized definition version (uid, content_hash)"; add that reference as a body element). Amend the Metric Directory Member section (`:379-384`) to own declared meaning and be referenced by the MCF Metric Contract. The realized state stays derived from the realization relation and is never cached on the member (DEC-b5c7ff). These amendments go through the Foundation's own procedure before the code lands.
 
-## 12. Open questions for the owner
+## 12. Owner decisions (2026-11-25)
 
-1. **A new contract or a new version.** Author the fresh contract as a new contract uid, as the precedent did (fe91c450 to 8e8a6f28), or as v2 of 8e8a6f28 under a successor pin (5.2)? The note assumes a new uid for the first metric.
-2. **The neutral rationale wording** and the temporality class in step 3 of section 10, and the five-dimension values in step 4.
-3. **Canonical pins on an existing label.** May a disjoint canonical contract pin be added to an existing label by a metric act, as metric pins may? The code rule today freezes the whole entry; the auditor's list states the disjoint rule for metric pins only.
-4. **A change to the `unverified` rule.** ADR-f83b8a says `unverified` blocks metric production, and this design follows it: once CO evidence carries veracity (section 6), an evaluation that consumed an `unverified` input is refused, with no snapshot and no mark. Marking such a value `preliminary` instead would change that rule and needs an amendment of ADR-f83b8a. Do you want that change? The design assumes no.
-5. **Tags and data classification** (3.6): add them now or later?
+The owner answered every open question on 2026-11-25 (barecount-devhub `artifacts/operator-review/DECISIONS-workflow-review.md`, commit 9336dd8f). None remains open.
 
-**Decided by the owner on 2026-11-25** (former questions 5 and 7, and the family-and-group rulings):
+1. **A new calculation.** The fresh contract is a new contract uid, as the precedent was (fe91c450 to 8e8a6f28), not a v2 of 8e8a6f28 under a successor pin.
+2. **The meaning as written.** The neutral rationale and the temporality class of section 10 stand. There are no five dimensions (3.4).
+3. **Canonical pins on an existing label.** Yes: a metric act may add a disjoint canonical contract pin to an existing label, as it may for metric pins. Existing pins never change.
+4. **The `unverified` rule is unchanged.** Such an evaluation is refused, with no snapshot and no mark (section 6).
+5. **Tags and data classification come later** (3.6).
+6. **The first metric is not held for the structured group design.** Its time and output intents stay JSON inside the content hash until a later definition version moves them to columns (TSK-09855b). The owner ruled that structure lives in columns, not JSONB.
+7. **The database yes for migration authoring was given.** Each migration is proven on an owner- and grant-faithful restore of a fresh read-only live dump before review. Every live apply needs its own recorded grant.
+
+Earlier decisions of 2026-11-25 stand (former questions 5 and 7, and the family-and-group rulings):
 - the retired columns are dropped, with their values kept as evidence (4.2, 9.4);
 - function and subfunction leave the contract and are read through the definition version's pinned family version (3.8);
 - the six family-and-group rules (dda73851; 3.8.1);
-- the structured group is its own design, right after this one (44ebbd53; TSK-09855b; 3.8.2).
-
-None of these rulings adds an open question.
+- the structured group is its own design (44ebbd53; TSK-09855b; 3.8.2).
 
 ## 13. What was not grounded
 
 - **No proof yet:** no migration, routine or code path in this note has been written or run. The v1 hand-over on a binding with months is accepted by reading 0082, not by a run.
 - **Tenant databases were not read:** `progression.metric_evaluation` and `progression.metric_snapshot_index` were read in code only, because the read tool reaches `bc_platform_dev` only.
-- **Engine shapes:** whether the engine evaluates any shape other than `scalar` today was not checked. Until it does, the authoring check admits `scalar` only.
 - **Reason codes:** whether the withdraw-retire act accepts a reason code for "written again under the records design" was not checked.
 - **Revocation state (closed in revision 2):** the revoke branch of `fn_realization_event_guard` returns before any contract-state check (read live), so revoking f5936579 while 950f3ebd is `audit_pending` is allowed.
 - **The code-list readers:** the 17 code files that import the lists were counted, not read one by one. Which of them read identity alone (5.3) is left to the agreement check.
