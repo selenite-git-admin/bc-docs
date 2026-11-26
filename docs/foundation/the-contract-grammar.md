@@ -389,8 +389,9 @@ reintake requires the member identity tuple (DEC-21ca17 records the operative pr
 #### Grammar commitment: concept grounding of metric groups
 
 Adopted by DEC-6187a8 (with FND-ERR-010), decided together with DEC-45200d. It is a named
-grammar commitment, not a seventh invariant. The full part tables are in DEC-6187a8 and its
-proposal, sections 3.2 to 3.9.
+grammar commitment, not a seventh invariant. The full part tables are in the proposal
+DEC-6187a8 adopts (`docs/governance/proposals/foundation-amendment-concept-grounded-metrics.md`,
+sections 3.2 to 3.9).
 
 > **Concept grounding.** A metric group version is made of semantic references and typed governed parameters.
 >
