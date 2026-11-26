@@ -1,7 +1,7 @@
 ---
 uid: foundation-amendment-concept-grounded-metrics
 title: "Foundation amendment proposal: every metric group is grounded in one business entity's governed concepts"
-description: "Draft revision 4, after the owner's answers to revision 3's two questions (masters frozen insert-only; the 15 unhostable groups split). Earlier: revision 3 applied the auditor's answer (gen-52eda8-01) and the owner's rulings. Proposes a named Foundation grammar commitment, its ADR draft and a design sketch: semantic references are pinned entity or concept versions, governed parameters are typed, breakdowns are a separately versioned set pinned by the metric contract, and allowed values become typed rows. Nothing is recorded, built or written."
+description: "Draft revision 5, after the owner's rulings of 2026-11-26 (barecount-devhub 060d5328): a new definition version gets a new metric contract; grounded parts, including derived inputs and offsets, live only on the group version; the Recognition Event groups are archived. Revision 4: masters frozen insert-only; the 15 unhostable groups split. Earlier: revision 3 applied the auditor's answer (gen-52eda8-01) and the owner's rulings. Proposes a named Foundation grammar commitment, its ADR draft and a design sketch: semantic references are pinned entity or concept versions, governed parameters are typed, breakdowns are a separately versioned set pinned by the metric contract, and allowed values become typed rows. Nothing is recorded, built or written."
 status: drafting
 authority: reference
 date: 2026-11-26
@@ -14,11 +14,13 @@ governing_adr: DEC-79b62f
 
 # Proposal: metrics grounded in business concepts
 
-*Draft revision 4, 2026-11-26. Not an ADR and not Foundation text yet. Order (owner, 2026-11-26): draft, red team, auditor, then the group design (TSK-09855b). Counts were read live from `bc_platform_dev` on 2026-11-26; re-read before acting.*
+*Draft revision 5, 2026-11-26. Not an ADR and not Foundation text yet. Order (owner, 2026-11-26): draft, red team, auditor, then the group design (TSK-09855b). Counts were read live from `bc_platform_dev` on 2026-11-26; re-read before acting.*
 
 **Revision 3.** Applies the auditor's answer, bc-external-audit `RESPONSE-Codex-gen-52eda8-01` (ACCEPTED WITH BOUNDARY, origin/main 2657f2d7), points 1 to 5 and its ADR-set paragraph. Applies the owner's rulings in barecount-devhub `artifacts/operator-review/DECISIONS-workflow-review.md` on branch `claude/operator-review-content`, entries 5b12384f (the leans) and dfffb1a9 (ruled, "Yes to all"). Revision 2's open questions are answered and removed. Two questions remain (section 11).
 
 **Revision 4.** Applies the owner's answer to revision 3's two questions ("Yes, both", recorded 2026-11-26 08:40 IST), in the same file and branch, entry "Masters and the 15 groups that cannot count themselves". (1) The currency and country masters stay insert-only, with deactivation; their codes and the currency's decimal places are frozen by trigger (section 6.4, Unit V). (2) The 15 groups on entities that cannot count themselves are split: 6 wait for identity concepts by a concept act, 8 Legal Entity groups stay derived with a declared output grain, 1 Cost Center group becomes a slice (section 8.1, re-read live). No questions remain open (section 11).
+
+**Revision 5.** Applies the owner's rulings recorded in the same file and branch, commit `060d5328`, entry "Successor rule corrected, and the group design's three questions", and aligns with the group design (bc-docs PR 277, revision 2). (1) A new definition version gets a new metric contract plus a `mcf.metric_supersession` record; the directory member carries the lasting identity (sections 3.6, 7). (3) Grounded parts, including a derived definition's inputs and period offsets, live only on the group version, which each definition pins (sections 3.3, 5, 6.1, 6.3). (4) The two Recognition Event groups are archived with no replacement (sections 1, 8). Ruling (2), the owner's grant that opens a group, is design detail (PR 277 sections 2.11 and 4.1). Also aligned with live and with ADR-952faa: the time class takes the four ADR-952faa values (3.2), the open model is optional for a stock that is not an open item (3.2, 3.4), a `linear_combination` derivation is added (3.3), and 27 of the 29 currency code concepts are active (1, 6.4). One question is open (section 11).
 
 ## 1. The problem
 
@@ -33,10 +35,10 @@ A metric group names its grain and, sometimes, its date. Its other parts are fre
 | `template_json` | 24 distinct documents in 7 key shapes; 11 carry `closing_concept_id` inside JSON |
 | `member_version_discriminator` | concept version FK (`fk_disc_bcv`); values in `governed_values_json`; 2 rows |
 | `business_concept_version.canonical_value_set` | JSONB array on 182 versions; read by 39 bc-core files |
-| Currency and country code concepts | 29 currency, 4 country; none carries a value set |
+| Currency and country code concepts | 29 currency (27 active, 2 superseded), 4 country (active); none carries a value set |
 | `master.dim_currency` / `master.dim_country` | 40 / 50 rows, all active; keys `currency_code`, `alpha2` (`alpha3` unique); no FK points at either |
 
-Two live groups (`recognition_event_line_counts`, `recognition_event_revenue_amounts`) have a grain that is wrong in meaning: Recognition Event is employee recognition, not revenue recognition.
+Two live groups (`recognition_event_line_counts`, `recognition_event_revenue_amounts`) have a grain that is wrong in meaning: Recognition Event is employee recognition, not revenue recognition. They are archived with no replacement (owner, `060d5328`).
 
 ## 2. Status of the rule
 
@@ -69,12 +71,14 @@ The ADR (section 5) records both. The erratum is the next free `FND-ERR` number 
 | Measure kind | parameter: `entity_count`, `count_distinct`, `sum` | required |
 | Measure concept | reference: concept version | absent for `entity_count`; a reference concept for `count_distinct`; an amount, quantity or measure concept for `sum` |
 | Context | reference: the measure concept's currency or unit context | required for `sum` |
-| Time class | parameter: `flow` or `stock_as_of` (ADR-952faa master) | required |
-| Period anchor | reference: date concept version | required for `flow` |
-| Closing | reference: date concept version | optional; `stock_as_of` only; gross and binary open test (DEC-3926bf D1) |
-| Age bands | parameters: lower and upper days; reference: age anchor date concept | optional; `stock_as_of` only |
+| Time class | parameter: one of the four ADR-952faa D-1 values, `instantaneous`, `flow_per_period`, `stock_at_period_end`, `cumulative_to_date` (the values of the records design's `temporality_class_code`) | required |
+| Unit | parameter: a `master.master_unit_type` code, by FK | required |
+| Open model | parameter: `gross_binary` or `residual` | optional; `stock_at_period_end` only; absent for a stock that is not an open item |
+| Period anchor | reference: date concept version | required for `flow_per_period` and `cumulative_to_date`; for a `gross_binary` stock, the date the record is open from |
+| Closing | reference: date concept version | optional; `gross_binary` only; gross and binary open test (DEC-3926bf D1) |
+| Age bands | parameters: lower and upper days; reference: age anchor date concept | optional; `stock_at_period_end` only |
 | Axes | references: code concept versions | 0..n; values from typed rows or a master (section 6.4) |
-| Event input | references and parameters (section 3.7) | 0..1; for residual measures (DEC-3926bf amendment 2) |
+| Event input | references and parameters (section 3.7) | 0..1; `residual` only (DEC-3926bf amendment 2) |
 
 Breakdowns are not in the group version. They are a separate, versioned set (section 3.6).
 
@@ -83,11 +87,15 @@ Breakdowns are not in the group version. They are a separate, versioned set (sec
 | Part | Kind | Rule |
 |---|---|---|
 | Output grain | reference: entity version | required |
-| Derivation | parameter: `ratio`, `percentage_of_total`, `delta` | required |
-| Inputs | references: pinned input member versions, each with a role (`numerator`, `denominator`, `operand`) | required |
-| Period offsets | parameter: integer periods per input | default 0 |
-| Constants | parameters: role, value type, value | 0..n |
+| Derivation | parameter: `ratio`, `percentage_of_total`, `delta`, `linear_combination` | required |
+| Inputs | references: pinned input member versions, each with a role (`numerator`, `denominator`, `operand`); on the group version | required |
+| Period offsets | parameter: integer periods per input; on the group version | default 0 |
+| Operand signs | parameter: −1 or +1 per input, declared, never defaulted | `linear_combination` only |
+| Time class and unit | parameters, as in 3.2 | required |
+| Constants | slots: role and value type on the group version; the value is the member's selection | 0..n |
 | Reporting anchor | declared (owner ruling 1) | required |
+
+**Inputs live on the group version (owner, `060d5328`).** A derived definition's inputs and period offsets are grounded parts. They live only on the group version, which each definition pins; the member layer holds no copy. A new version of an input definition gives the derived group a successor version, and its definitions follow (section 7). `linear_combination` is the signed sum of its inputs, all of one unit and one currency partition; an input may itself be derived, so a margin is a `ratio` over a `linear_combination`. A top-N share is none of the four (question 1, section 11).
 
 **The anchor rule (owner ruling 1).** A derived group declares its own anchor, checked against its inputs. If all inputs share one anchor, the declared anchor must equal it. If they differ, the declaration names the reporting anchor, and each input keeps its own.
 
@@ -98,8 +106,8 @@ Breakdowns are not in the group version. They are a separate, versioned set (sec
 | Element | Value |
 |---|---|
 | Output grain | Legal Entity, pinned entity version |
-| Numerator | the open AR member version: base group on Customer Invoice, `sum` of the residual amount, `stock_as_of`, event input as for open AR (section 4) |
-| Denominator | the invoiced revenue member version: base group on Customer Invoice, `sum` of the invoice amount, `flow` over 365 days ending P, period anchor invoice date |
+| Numerator | the open AR member version: base group on Customer Invoice, `sum` of the residual amount, `stock_at_period_end`, `residual`, event input as for open AR (section 4) |
+| Denominator | the invoiced revenue member version: base group on Customer Invoice, `sum` of the invoice amount, `flow_per_period` over 365 days ending P, period anchor invoice date |
 | Partitions | both input metric contracts break down by the invoice's legal entity reference and by currency |
 | Constant | role `days_in_period`, integer, 365 |
 | Derivation | `ratio` × constant |
@@ -114,7 +122,7 @@ Breakdowns are not in the group version. They are a separate, versioned set (sec
 
 **An age band is a typed temporal choice, not an axis.** The group declares its bands and age anchor. A member selects one band. The selection is a typed row on the member, separate from axis selections. Neither the group nor the member computes or stamps a record's age. `metric-directory.md` §6 item 2, which makes aging buckets canonical values, is corrected.
 
-**Gross or residual.** Each open-item group declares which open model it uses. Gross and binary uses the closing concept (DEC-3926bf D1). Residual uses the event input (DEC-3926bf amendment 2). The two never mix in one group.
+**Gross or residual.** Each open-item group declares which open model it uses; a stock that is not an open item declares none. Gross and binary uses the closing concept (DEC-3926bf D1). Residual uses the event input (DEC-3926bf amendment 2). The two never mix in one group.
 
 ### 3.5 Realization equality
 
@@ -130,7 +138,7 @@ A metric contract realizes a member version only when, for every role the gramma
 | Axis selection | axis concept version and selected value rows | governed selection (DEC-c4c742), same concept version and values |
 | Event schedule | section 3.7, all parts | DEC-45200d schedule, all parts |
 | Output context | currency or unit partition or pin; breakdown set version | output context: the same partition or pin; the same breakdown set version, or a subset of it |
-| Derived inputs | input member versions, offsets, constants | the input metric contract versions realizing those members; the same offsets and constants |
+| Derived inputs | the group version's input member versions, offsets and signs; the member's constants | the input metric contract versions realizing those members; the same offsets, signs and constants |
 
 The gate checks the realization of **this member only**. A metric contract may hold other governed bindings in roles the directory does not model. Those are outside the gate. This is not a global limit on metric contract grammar. It is a condition on DEC-5a9dee 2c's realization relation, and the metric contract stays the sole metric authority.
 
@@ -146,7 +154,7 @@ Why:
 
 - **Invariant III.** A set version never changes. Adding a breakdown makes a new set version. No member version changes, because a breakdown partitions the same value and does not change its meaning.
 - **Invariant IV.** The authoritative object, the metric contract, pins an exact set version. No evaluation reads a "current" set.
-- **Governance.** The directory says which breakdowns a group allows; the gate checks the metric contract against it. Only a metric that wants a new breakdown needs a new metric contract version.
+- **Governance.** The directory says which breakdowns a group allows; the gate checks the metric contract against it. A metric contract version's pin never changes. Only a metric that wants a new breakdown needs a new metric contract, joined to the old one by a `mcf.metric_supersession` record (owner, `060d5328`; the database refuses a supersession within one metric contract).
 
 Currency and unit partitions are not breakdowns. They belong to the measure (section 3.8).
 
@@ -206,10 +214,10 @@ A bare foreign key proves only that a row exists. It cannot prove that a date is
 
 | Metric | Grain | Measure | Time class and selection | Axes, event, output | Metric contract |
 |---|---|---|---|---|---|
-| Invoices for customers in segment X | Customer Invoice | `entity_count` | `flow`, anchor invoice date | axis Customer segment, one step through the customer reference | member selects X |
-| Open AR at P | Customer Invoice | `sum` residual amount | `stock_as_of` | event: application entity; anchor sign +1; legs debit −1, credit +1 (DEC-45200d); partitioned by currency | `as_of` with schedule equal to the event input |
-| DSO | derived, Legal Entity | none | reporting anchor period end P | section 3.3 | `ratio` × 365 |
-| Aging 31 to 60 | Customer Invoice | `sum` residual amount | `stock_as_of`; bands on due date | event as for open AR; member selects band 31 to 60 | `age_band` gate |
+| Invoices for customers in segment X | Customer Invoice | `entity_count` | `flow_per_period`, anchor invoice date | axis on a Customer segment code concept (none exists live; a concept act creates it first), one step through the customer reference | member selects X |
+| Open AR at P | Customer Invoice | `sum` residual amount | `stock_at_period_end`, `residual` | event: application entity; anchor sign +1; legs debit −1, credit +1 (DEC-45200d); partitioned by currency | `as_of` with schedule equal to the event input |
+| DSO | derived, Legal Entity | none | `instantaneous`, unit `days`; reporting anchor period end P | section 3.3 | `ratio` × 365 |
+| Aging 31 to 60 | Customer Invoice | `sum` residual amount | `stock_at_period_end`, `residual`; bands on due date | event as for open AR; member selects band 31 to 60 | `age_band` gate |
 
 ## 5. The ADR text (draft)
 
@@ -222,12 +230,12 @@ A bare foreign key proves only that a row exists. It cannot prove that a date is
 1. Sections 3.1 to 3.9 are adopted as a named grammar commitment in `the-contract-grammar.md`, with Foundation erratum FND-ERR-010 (or the next free number at landing). No invariant is added.
 2. **Standing.** The invariants govern authoritative evaluation and references. A group is governed intent under DEC-5a9dee 2c. Invariant IV governs references to authoritative objects; this grammar imposes the stronger version pin on directory intent. Invariant I gives the boundary rule; this grammar enforces it for members.
 3. `the-invariants.md` gains two explanatory disallowed behaviours. Under IV: a directory part named by free text, by a key inside JSON, or by a concept identity without a version. Under I: a member that classifies, signs or ages records.
-4. The design rules of section 3 follow: every semantic reference is a foreign key with its role check; every parameter is a typed column; `template_json`, `temporal_intent_json` and `member.measure_concept_id` are retired; the member layer is extended, with no parallel tables (DEC-1918d0 rule 4); breakdowns are a set the metric contract pins; realization is by section 3.5; re-pointing a grain creates a new group and archives the old one, whose code stays reserved.
+4. The design rules of section 3 follow: every semantic reference is a foreign key with its role check; every parameter is a typed column; grounded parts, a derived definition's inputs and offsets included, live only on the group version; `template_json`, `temporal_intent_json`, `output_intent_json`, `member.measure_concept_id`, `member.discriminator_json`, `member.derivation_json` and `member_version`'s grain columns are retired; the member layer is extended, with no parallel tables (DEC-1918d0 rule 4); breakdowns are a set the metric contract pins; realization is by section 3.5; re-pointing a grain creates a new group and archives the old one, whose code stays reserved.
 
 **Relations.**
 
 - **Amends DEC-5a9dee 2c**, its grammar description only. The directory still holds no metric authority.
-- **Amends DEC-b5c7ff**: the template and member schema; D7's dependency source becomes `member_version_dependency`.
+- **Amends DEC-b5c7ff**: the template and member schema; D7's dependency source becomes the group version's derived inputs, read through the member version's pinned group version.
 - **Amends DEC-3926bf** only to align: the group declares its closing concept or event input. Its gross and binary versus residual distinction is kept.
 - **Decided together with DEC-45200d** (proposed), as one decision unit. Neither claims the other is already effective.
 - Consistent with DEC-02f5a9, DEC-67f399, DEC-ca8943, DEC-c4c742. Supersedes none of the four amended or aligned ADRs wholesale.
@@ -238,7 +246,7 @@ Tables only. DDL is authored as bc-db migrations with the owner's database yes.
 
 ### 6.1 Group version
 
-Each row of section 3.2 or 3.3 becomes a typed column or child table on the group version: a `*_concept_version_id` or `*_entity_version_id` foreign key for each semantic reference, a coded column for each parameter. Child tables hold age bands, axes (with an optional three-key step) and the event input with its legs. Derived inputs live on the derived member's `member_version_dependency`.
+Each row of section 3.2 or 3.3 becomes a typed column or child table on the group version: a `*_concept_version_id` or `*_entity_version_id` foreign key for each semantic reference, a coded column for each parameter. Child tables hold age bands, axes (with an optional three-key step), the event input with its legs, and a derived group's inputs with their roles, period offsets and signs. Grounded parts live only here (owner, `060d5328`).
 
 ### 6.2 Breakdown set
 
@@ -246,7 +254,7 @@ Each row of section 3.2 or 3.3 becomes a typed column or child table on the grou
 
 ### 6.3 Member layer
 
-The live tables are extended. `member_version_discriminator` may select only on the pinned group version's axes, with typed value rows (6.4). A new `member_version_age_band` holds the selected band. `member_version_direct_input` holds the grounded parts for the gate. `member_version_dependency` gains a role and a period offset. `member_version_constant` gets a typed value column in place of `value_json`.
+The member holds only its selections; its grounded parts are the pinned group version's. `member_version_discriminator` may select only on the pinned group version's axes, with typed value rows (6.4). A new `member_version_age_band` holds the selected band. `member_version_constant` gets a typed value column in place of `value_json`, for the group's constant slots. `member_version_direct_input` and `member_version_dependency` are not written under a grounded group version, and the member columns that repeat group parts are retired: `member.measure_concept_id`, `member.discriminator_json`, `member.derivation_json`, `member_version.grain_entity_id` and `grain_entity_version_id`, `temporal_intent_json` and `output_intent_json` (until they are dropped, the command writes them equal to the group version and finalize refuses any other value).
 
 ### 6.4 Allowed values: Unit V (owner rulings 2 and 5)
 
@@ -258,12 +266,12 @@ The live tables are extended. `member_version_discriminator` may select only on 
 - A member selection row has exactly one of `concept_value_id`, `currency_code` (FK to `master.dim_currency`) or `country_alpha2` (FK to `master.dim_country`). A check enforces one, and a trigger enforces that it matches the concept's value source.
 - A value outside a master is refused until the master adds it.
 - **The masters are frozen insert-only (owner, revision 4).** Rows are never deleted. Once a row exists its identity is frozen; only the label and the active flag may change. A `BEFORE UPDATE OR DELETE` trigger on `master.dim_currency` refuses any change to `currency_code` or `decimal_places`, and any delete. A trigger on `master.dim_country` refuses any change to its codes (`alpha2`, and `alpha3` and `numeric_code`, which name the same country), and any delete. `currency_label`, `country_label`, `symbol`, `is_active` and `updated_at` stay writable. A currency whose decimal places change gets a new row with a new code; the old row is deactivated. Deactivation refuses new selections and never breaks a pinned one. Both triggers are in Unit V.
-- The 29 currency and 4 country code concepts are given the `master` source.
+- The 27 active currency and 4 active country code concepts are given the `master` source, by new concept versions; the 2 superseded currency concepts are left as they are.
 - Ripple: the 39 bc-core files that read `canonical_value_set` and the 2 that read `governed_values_json` move to the typed rows in this unit.
 
 ## 7. The version cascade
 
-A new governed value makes a new concept version, then a new group version that pins it, then new member versions. A new breakdown makes only a new breakdown set version. Where a member's grounded parts change, the gate needs a metric contract version whose bindings equal them. Nothing is edited in place.
+A new governed value makes a new concept version, then a new group version that pins it, then new member versions. A new input definition version makes a new version of each derived group that pins it, then new derived member versions. A new breakdown makes only a new breakdown set version. Every new definition version is realized by a new metric contract, joined to its predecessor by a `mcf.metric_supersession` record; the directory member carries the lasting identity (owner, `060d5328`, replacing the same-metric-contract part of ruling 6e4a8803). Nothing is edited in place.
 
 ## 8. Order of units
 
@@ -276,7 +284,7 @@ A new governed value makes a new concept version, then a new group version that 
 | 5 | The sweep: all 143 groups move first (owner ruling 4) |
 | 6 | New metrics, on the metric lane |
 
-**The sweep** (counts from revision 2): 63 groups fit; 14 base groups need an anchor date and 47 derived groups declare one; 15 sit on entities that cannot count themselves and are split (section 8.1); 2 Recognition Event groups are replaced; 2 test leftovers are archived. The 29 versionless groups get a grounded v1. Groups whose members differ only by measure split. Every change goes through the directory commands.
+**The sweep** (re-read live 2026-11-26; the group design, PR 277 section 7, has the full table): 61 base groups fit; 14 base groups need an anchor date; 49 derived groups on a record grain are re-pointed to their output grain (a new group, the old one archived); 15 sit on entities that cannot count themselves and are split (section 8.1); the 2 Recognition Event groups are archived with no replacement (owner, `060d5328`); 2 test leftovers are archived. Of the 29 versionless groups, the 2 Recognition Event groups are archived, so 27 remain; each gets a grounded v1, or, where it is a derived group that is re-pointed, its new group's v1. The two Customer Invoice Line Item recognition groups that overlap the Revenue Recognition Line groups are a named sweep item (owner, `060d5328`). Groups whose members differ only by measure split. Every change goes through the directory commands.
 
 ### 8.1 The 15 groups that cannot count themselves (owner, revision 4)
 
@@ -293,7 +301,7 @@ Re-read live on 2026-11-26. None of the 15 has a member. Each has one group vers
 | Legal Entity | `free_cash_flow_metrics`, `profitability_margins`, `profitability_subtotals`, `receivable_control_derived`, `return_ratios`, `solvency_ratios`, `tax_rate_metrics`, `working_capital_metrics` | derived (8) | stay derived; output grain Legal Entity, declared reporting anchor (section 3.3); inputs break down by a `recording_legal_entity` or `issuing_legal_entity` reference (11 such references live) |
 | Cost Center | `cost_center_master` | base | becomes a slice: a breakdown on the Journal Entry Line `cost_center` reference; the group is archived and its code reserved |
 
-In counts: 6 groups on 3 entities wait for an identity concept, a concept act through the business concept path, never a metric act. 8 stay derived. 1 becomes a slice. Live, the three entities hold one date concept each and no identity or measure concept.
+In counts: 6 groups on 3 entities wait for an identity concept, a concept act through the business concept path, never a metric act. 8 stay derived. 1 becomes a slice. Live, the three entities hold one date concept each and no identity or measure concept. The identity marker is `business_concept.identity_role = 'identity_bearing'`, the column the canonical resolver reads; by it, Performance Obligation, Debt Instrument and Hedge Instrument also lack an identity concept (PR 277 section 3), and the same concept act comes first for their groups. The 3 derived groups above sit on record grains and, once their base inputs exist, are re-pointed to their output grain as in the sweep.
 
 ## 9. Proof cases
 
@@ -317,4 +325,6 @@ These are design requirements against wrong values, not a live metric act.
 
 ## 11. Open questions for the owner
 
-None open. Revision 3's two questions were answered by the owner on 2026-11-26 (revision 4 note): the masters are frozen insert-only (section 6.4), and the 15 groups are split (section 8.1).
+Revision 4 had none. The group design's three questions were answered by the owner (`060d5328`). One is open:
+
+1. **Customer and supplier concentration.** Two groups measure the share of the largest customers (or suppliers) in the total. The grammar cannot say "the top N" yet. Should we add a governed "share of the top N" derivation, or archive the two groups?
