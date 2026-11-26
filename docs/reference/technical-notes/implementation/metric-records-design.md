@@ -284,10 +284,10 @@ A metric contract version keeps what evaluation needs: formula AST, bindings, fi
 Today `supersedeMemberVersion` revokes the old realization and asserts it again on the new member version (`metric-directory.service.ts:2104-2120`). That move goes away. It was also refused whenever the contract version was `audit_pending`, because an assert needs `approved` or `active` (`fn_realization_event_guard`, read live: "interim: approved|active").
 
 How the records read it (each grounded in the live definition):
-- **`realization_operative`** is a table of one row per operative assert, keyed by member version, maintained by `fn_realization_operative_maint` (insert on assert, delete on supersede or revoke; read live). After definition v4 supersedes v3, the v3 contract's operative row stays on v3. Nothing is deleted.
-- **`v_member_realized`** today reads the operative row only for `fn_current_member_version(member)` (read live). After v4, it would show the member as not realized. It changes: it reads the one operative row (variant NULL) among **all** versions of the member, and adds two columns at the end, `realized_member_version_uid` and `realizes_current_definition_flag`. A screen can then say "counted: contract version X, which realizes definition v3; the current definition is v4".
+- **`realization_operative`** is a table of one row per operative assert, keyed by member version, maintained by `fn_realization_operative_maint` (insert on assert, delete on supersede or revoke; read live). After definition version 4 supersedes version 3, the operative row of the contract version that realizes version 3 stays on version 3. Nothing is deleted.
+- **`v_member_realized`** today reads the operative row only for `fn_current_member_version(member)` (read live). After definition version 4, it would show the member as not realized. It changes: it reads the one operative row (variant NULL) among **all** versions of the member, and adds two columns at the end, `realized_member_version_uid` and `realizes_current_definition_flag`. A screen can then say "counted: contract version X, which realizes definition v3; the current definition is v4".
 - **At most one operative row per member** (variant NULL) holds by a new rule in `fn_realization_event_guard`: an assert is refused while another version of the same member has an operative row. The existing rule that an assert targets the current member version stays.
-- **When a successor contract version realizes v4**, one command writes two explicit events in one transaction: first the revoke of the v3 contract's operative assert, then the assert on v4. Each is recorded; nothing is moved silently.
+- **When a successor contract version realizes definition version 4**, one command writes two explicit events in one transaction: first the revoke of the operative assert on version 3, then the assert on version 4. Each is recorded; nothing is moved silently.
 
 ### 4.2 Second homes dropped (owner ruling, 2026-11-25)
 
@@ -339,7 +339,7 @@ All four values are already allowed (`mcv_aggregation_currency_chk`, read live).
 
 ### 4.4 Settled while building (2026-11-25/26)
 
-The migrations were written against this design. Each point below was a choice made at writing. The migration header (bc-db PR 200, `migrations/0085_*.sql` to `0087_*.sql`, branch worktree `0085-metric-definition-meaning`) names it for review.
+The migrations were written against this design. Each point below was a choice made at writing. The migration header (bc-db PR 200, `migrations/0085_*.sql` to `0087_*.sql`, worktree `0085-metric-definition-meaning`) names it for review.
 
 - **Compatibility latch (0085-D).** The design refused format v1 of the children digest for every new definition version. The served bc-core 762fb59c writes only v1 versions with no interpretation row, so that refusal would break authoring the moment 0085 applies. v1 is now refused once any definition version has committed as v2.
 - **Archived rows are exempt from the slug CHECK on update (0085-G).** A legacy non-slug family or group can be archived. Its code is still never reused, because the unique index has no WHERE.
