@@ -23,13 +23,15 @@ governing_adr: DEC-79b62f
 - (3) Grounded parts, including a derived definition's inputs and period offsets, live only on the group version (sections 2.7, 2.12; the duplicate member columns are listed for retirement).
 - (4) The two Recognition Event groups are archived with no replacement; the Customer Invoice Line Item recognition overlap is a sweep item (section 7).
 
-It also applies the red team of revision 1: a group-version successor command (4.2), derived groups classed by output grain (7), a `linear_combination` derivation (2.2, 2.7), the three groups whose class differs from v1's (7), the identity marker (3), active currency concepts only (9), the four ADR-952faa time classes and a unit by FK (2.2), an optional open model (2.2), the segment concept (5), a date-only check (3), and the dim_country note (9). Section 11's three questions are answered and removed; one new question is asked.
+It also applies the red team of revision 1: a group-version successor command (4.2), derived groups classed by output grain (7), a `linear_combination` derivation (2.2, 2.7), the three groups whose class differs from v1's (7), the identity marker (3), active currency concepts only (9), the four ADR-952faa time classes and a unit by FK (2.2), an optional open model (2.2), the segment concept (5), a date-only check (3), and the dim_country note (9). Section 11's three questions are answered and removed.
+
+**Revision 2, later rulings** (same file and branch): `1ef2d04e`, a governed top-N share derivation (2.2, 2.7, 7); `53e9659c` (1), derived group versions pin exact input definition versions and move only on purpose, with a read-only check (2.7, 3); `53e9659c` (2), the country's currency stays out of this design (9). No question is open.
 
 ## 0. Authority and inputs
 
 | Input | Exact reference |
 |---|---|
-| The authority | The draft amendment, bc-docs PR 276, head `db0af246`, `docs/governance/proposals/foundation-amendment-concept-grounded-metrics.md` (revision 5, amended to the same rulings). Section numbers below written "A§n" point into it. |
+| The authority | The draft amendment, bc-docs PR 276, head `e4c98821`, `docs/governance/proposals/foundation-amendment-concept-grounded-metrics.md` (revision 5, amended to the same rulings). Section numbers below written "A§n" point into it. |
 | The owner's rulings | barecount-devhub `claude/operator-review-content` `060d5328` (above), and the earlier entries the amendment cites. |
 | The auditor's requirements | bc-external-audit `docs/RESPONSE-Codex-gen-52eda8-01-concept-grounded-metrics-2026-11-26.md`, point 5 and the ADR-set paragraph (origin/main `f28c72da`). |
 | The records design it builds on | bc-docs PR 275, head `e63d0c1f`, `metric-records-design.md`; its migrations 0085, 0086 and 0087 are bc-db PR 200. 0088 is planned there. |
@@ -66,7 +68,7 @@ The member children are already immutable (`fn_reject_mutation`) and insert-only
 - SELECT is granted to `bc_platform_runtime`. INSERT goes only through the directory commands' writer.
 - No JSONB anywhere. Every table is under 20 columns.
 
-### 2.2 `metric_directory.group_version_grammar` (new, 1:1, 13 columns)
+### 2.2 `metric_directory.group_version_grammar` (new, 1:1, 14 columns)
 
 The typed parameters of a group version (A§3.2, A§3.3).
 
@@ -79,7 +81,8 @@ The typed parameters of a group version (A§3.2, A§3.3).
 | `measure_kind_code` | text | yes | `entity_count`, `count_distinct`, `sum` |
 | `time_class_code` | text | no | the four ADR-952faa D-1 values: `instantaneous`, `flow_per_period`, `stock_at_period_end`, `cumulative_to_date`; a CHECK, the same as `member_version_interpretation.temporality_class_code` in 0085 |
 | `open_model_code` | text | yes | `gross_binary`, `residual` |
-| `derivation_code` | text | yes | `ratio`, `percentage_of_total`, `delta`, `linear_combination` |
+| `derivation_code` | text | yes | `ratio`, `percentage_of_total`, `delta`, `linear_combination`, `top_n_share` |
+| `top_n_count` | integer | yes | 1 to 1000; set exactly when `derivation_code = 'top_n_share'` |
 | `reporting_anchor_kind_code` | text | yes | `input_anchor`, `evaluation_point` |
 | `unit_type_code` | text | no | FK `master.master_unit_type`, as 0085's interpretation row |
 | `canonicalization_version` | text | no | `bc-directory-group-canonicalization-v2` |
@@ -89,7 +92,14 @@ Checks. `base`: measure kind set; derivation and reporting anchor kind NULL. `de
 
 **Linear combination.** `linear_combination` is the sum of its operands, each with a declared sign (2.7): `profitability_subtotals`, `free_cash_flow_metrics` and `working_capital_metrics` read, by name, as this. An input may itself be a derived group version, so a margin is a `ratio` whose numerator is a `linear_combination`. All operands share one unit and one currency partition (A§3.8).
 
-**Not expressible.** A top-N share (`ar_customer_concentration_derived`, `ap_supplier_concentration_derived`) ranks the records of a breakdown at P and keeps the first N. None of the four derivations states that, and a member may not rank records. These two groups are not grounded until the owner answers question 1 (section 11).
+**Top-N share** (owner, `1ef2d04e`). `top_n_share` is the share of the N largest partitions of one input in that input's total: the sum of the N largest values of the input partitioned by its `rank_by` concept, divided by the input's total, at P. N is the typed `top_n_count`. Its parts:
+
+- **One input**, role `ranked_input` (2.7): a base `sum` or `entity_count` definition version, `flow_per_period` or `stock_at_period_end`, offset 0.
+- **The ranking concept**, part role `rank_by` (2.3): a reference concept on the input group version's grain, with no step (for example the Customer Invoice `customer` reference), present in the input group version's breakdown set. The input's metric contract must partition by it (A§3.5).
+- **Ties and gaps.** Partitions are ranked by value, largest first; equal values are ordered by the ranking key, ascending, so the N are always the same. The `unmatched` partition (A§3.7) is in the total and never ranked. Fewer than N partitions is not a refusal: all of them are taken, and the partition count is emitted as evidence (Invariant VI).
+- **Unit and currency.** The output unit is `percentage` or `ratio`. A monetary input must be one currency partition or pin (A§3.8).
+
+The ranking is declared here and done once by the evaluation of the metric contract; a member never ranks records. `ar_customer_concentration_derived` and `ap_supplier_concentration_derived` are expressed this way.
 
 ### 2.3 `metric_directory.group_version_part` (new, 11 columns)
 
@@ -98,7 +108,7 @@ The semantic references, one row per role (A§3.1). Single-valued roles have ord
 | Column | Type | Null | Key or check |
 |---|---|---|---|
 | `group_version_uid` | uuid | no | FK `group_version_grammar` |
-| `role_code` | text | no | `measure`, `context`, `period_anchor`, `closing`, `age_anchor`, `axis`, `reporting_anchor` |
+| `role_code` | text | no | `measure`, `context`, `period_anchor`, `closing`, `age_anchor`, `axis`, `reporting_anchor`, `rank_by` |
 | `part_ordinal` | smallint | no | ≥ 1; = 1 unless `axis` |
 | `concept_id`, `concept_version_id` | uuid | no | the target concept version |
 | `step_reference_concept_id`, `step_reference_concept_version_id` | uuid | yes | the grain's reference concept version |
@@ -159,14 +169,16 @@ The inputs of a derived group version (A§3.3). Owner ruling (3) of `060d5328`: 
 | Column | Type | Null | Key or check |
 |---|---|---|---|
 | `group_version_uid` | uuid | no | FK `group_version_grammar`, class `derived` |
-| `input_role_code` | text | no | `numerator`, `denominator`, or `operand_` plus a slug |
+| `input_role_code` | text | no | `numerator`, `denominator`, `ranked_input`, or `operand_` plus a slug |
 | `input_member_version_uid` | uuid | no | composite FK with the next column to a new unique index `member_version (member_version_uid, group_version_uid)` |
 | `input_group_version_uid` | uuid | no | the input member version's group version; must be grounded |
 | `period_offset_count` | integer | no | default 0; −60 to 0 |
 | `operand_sign` | smallint | yes | −1 or +1, no default; set exactly when the derivation is `linear_combination` |
 | `created_at`, `created_by_name` | | no | |
 
-PK `(group_version_uid, input_role_code)`. `ratio` and `percentage_of_total` need exactly `numerator` and `denominator`; `delta` needs two operands; `linear_combination` needs two or more operands. A new version of an input definition does not move this row: the derived group gets a successor version (4.2) that pins it, and its definitions follow (A§7). The D7 dependency source (DEC-b5c7ff) becomes this table, read through the member version's pinned group version.
+PK `(group_version_uid, input_role_code)`. `ratio` and `percentage_of_total` need exactly `numerator` and `denominator`; `delta` needs two operands; `linear_combination` needs two or more operands; `top_n_share` needs exactly one `ranked_input`.
+
+**Input pins** (owner, `53e9659c` (1)). The row pins an exact input definition version. A new version of that input moves nothing: the derived group version stays on the old input until it is moved on purpose, by a successor version (4.2) that pins the new one. The read-only check `fn_derived_input_superseded_pin` (section 3) lists the derived group versions pinned to a replaced input. Moving them is one batch under the owner's group grant (4.1). The D7 dependency source (DEC-b5c7ff) becomes this table, read through the member version's pinned group version.
 
 ### 2.8 `metric_directory.group_version_constant_slot` (new, 5 columns)
 
@@ -260,6 +272,8 @@ Routines in `metric_directory`, `STABLE`, `search_path` pinned. Each returns a s
 | `fn_check_breakdown` | a code concept as an axis, or a reference concept on the grain; reachable |
 | `fn_check_event_input` | the grain reference and every leg key are reference concepts on the event entity whose `target_entity_id` is the grain; the grain key is an `identity_bearing` concept on the grain; event date on the event entity; leg amounts are amounts on the event entity with the same `context_concept_id` as the measure |
 | `fn_check_derived_input` | the input member version pins the input group version, which is grounded; the input's unit and currency partition agree with the other inputs (A§3.8); the anchor rule of A§3.3: if all inputs share one period anchor version, `reporting_anchor_kind_code = 'input_anchor'` and a `reporting_anchor` part equals it; otherwise `evaluation_point` is allowed |
+| `fn_check_rank_part` | `top_n_share` only: the concept is `kind = 'reference'`, its `entity_id` is the `ranked_input`'s grain (not the output grain), no step; it is an entry of a breakdown set version of the input group version |
+| `fn_derived_input_superseded_pin()` | read-only diagnostic, not a gate: returns each derived group version of a group that is not archived, with a `group_version_derived_input` row whose `input_member_version_uid` has a successor (`member_version.supersedes_version_uid` names it), and that successor. It reads rows only; it never evaluates and never moves a pin |
 | `fn_group_version_grammar_finalize` | deferred, at commit: the grammar row exists for every group version created after the migration; all parts pass; the role set is complete for the class and measure kind; the content hash covers the grammar and every child |
 | `fn_realization_grammar_check(member_version_uid, metric_contract_version_uid)` | A§3.5 role by role: grain entity version; measure kind and concept version against the aggregation operator and measure variable; time class and anchor against the temporal gate kind and anchor role; open test (closing role, or the schedule's every part including `anchor_sign`); band bounds and age anchor against the `age_band` gate; axis concept version and values against the governed selection; breakdown set version pinned and every partition in it; derived inputs, offsets and constants. Called from `fn_realization_event_guard` on assert |
 
@@ -298,7 +312,10 @@ Every grounded group version passes its own gate, a successor version (4.2) incl
 | `GRP_EVENT_INVALID` | event entity, contract, keys, dates, legs or a sign invalid; repeated leg pair |
 | `GRP_DERIVED_INPUT_INVALID` | an input not grounded, a wrong slot set, or an offset out of range |
 | `GRP_ANCHOR_RULE` | the declared reporting anchor breaks A§3.3 |
-| `GRP_DERIVATION_NOT_EXPRESSIBLE` | the derived group's arithmetic is none of the four derivations (2.2) |
+| `GRP_DERIVATION_NOT_EXPRESSIBLE` | the derived group's arithmetic is none of the five derivations (2.2) |
+| `GRP_TOPN_COUNT_INVALID` | `top_n_count` missing or outside 1 to 1000 for `top_n_share`, or set for another derivation |
+| `GRP_TOPN_INPUT_INVALID` | not exactly one `ranked_input`; the input is not a base `sum` or `entity_count`, not `flow_per_period` or `stock_at_period_end`, has an offset, or has more than one currency |
+| `GRP_TOPN_RANK_INELIGIBLE` | the `rank_by` concept is not a reference on the input's grain, has a step, or is not in the input group version's breakdown set |
 | `GRP_GATE_GRANT_INVALID` | no grant id, a malformed text sha256, or the grant does not name this group |
 | `GRP_GATE_PROOF_INVALID` | the member, the Demoed verdict or the realization does not match |
 
@@ -399,13 +416,13 @@ Classified from live reads on 2026-11-26. Rules, in order: a test fixture or pro
 
 | Group | Group class (template kind) | v1 class | Disposition |
 |---|---|---|---|
-| `ar_customer_concentration_derived` | derived (`derivation`) | base | not expressible (2.2); no v2 until question 1 is answered; then re-pointed with the derived class |
-| `ap_supplier_concentration_derived` | derived (`derivation`) | base | the same |
+| `ar_customer_concentration_derived` | derived (`derivation`) | base | `top_n_share` (2.2), ranked by the Customer Invoice `customer` reference; re-pointed with the derived class to Legal Entity (Customer Invoice has a Legal Entity reference) |
+| `ap_supplier_concentration_derived` | derived (`derivation`) | base | the same, ranked by the Supplier Invoice supplier reference |
 | `collections_overdue_base` | base (`aggregation`) | derived | grounded v2 as `base` (it needs a date, above); v1 stays as history |
 
 The successor command refuses a class different from the group's (`GV_CLASS_CHANGED`), so no v2 can carry v1's error forward. None of the three has a member.
 
-**The derived arithmetic.** Of the 60 derived groups, 36 carry `op` `ratio`, 9 `derivation`, 1 `formula` and 14 none. `ratio` maps to `ratio` or `percentage_of_total`. The 10 with `derivation` or `formula` (the 8 on Legal Entity, plus `capital_investment_metrics` on Asset and `ap_discount_capture` on Supplier Invoice) declare `ratio` or `linear_combination` fresh. Of the 14 with none (9 on Customer Invoice, 5 on Supplier Invoice), 12 read as ratios or percentages by name and the 2 concentration groups are not expressible.
+**The derived arithmetic.** Of the 60 derived groups, 36 carry `op` `ratio`, 9 `derivation`, 1 `formula` and 14 none. `ratio` maps to `ratio` or `percentage_of_total`. The 10 with `derivation` or `formula` (the 8 on Legal Entity, plus `capital_investment_metrics` on Asset and `ap_discount_capture` on Supplier Invoice) declare `ratio` or `linear_combination` fresh. Of the 14 with none (9 on Customer Invoice, 5 on Supplier Invoice), 12 read as ratios or percentages by name and the 2 concentration groups are `top_n_share`.
 
 **Recognition overlap (sweep item, owner ruling (4)).** Two Customer Invoice Line Item groups, `revenue_line_recognition` (count) and `revenue_recognition_amounts` (sum), both with no version and no member, overlap the Revenue Recognition Line groups `revenue_recognition_line_counts` and `revenue_recognition_line_amounts`. The sweep decides each: archive as a duplicate, or ground it with a meaning that differs from the Revenue Recognition Line pair and say how.
 
@@ -435,7 +452,7 @@ The successor command refuses a class different from the group's (`GV_CLASS_CHAN
 | V-4 | `metric_directory.member_version_discriminator_value` (new) | exactly one of `concept_value_id`, `currency_code` (FK `dim_currency`), `country_alpha2` (FK `dim_country`); trigger matches the value source | drop before any new member |
 | V-5 | `master.dim_currency`, `master.dim_country` | freeze triggers: refuse an UPDATE of `currency_code`, `decimal_places`; of `alpha2`, `alpha3`, `numeric_code`; refuse DELETE and TRUNCATE | drop triggers |
 
-*Note on V-5.* `master.dim_country.currency_code` has no FK to `master.dim_currency` (read live; no row names a missing currency today). No value source and no grounded part reads it, so this design adds no FK. V-5 freezes the codes that name a country, as the owner ruled (A§6.4), so `currency_code` stays writable: a country may change its currency. A later act that reads it must add the FK first.
+*Note on V-5.* `master.dim_country.currency_code` stays out of this design: no freeze and no FK (owner, `53e9659c` (2); no bc-core reader today). If a metric ever needs a country's currency, it gets its own dated record (`effective_from` / `effective_to`, FK to `master.dim_currency`); nothing is added until such a reader exists.
 
 | G1-1 | `group_version`, `member_version` | unique `(group_version_uid, class_code)` and `(group_version_uid, grain_entity_id)` on `group_version`; unique `(member_version_uid, group_version_uid)` on `member_version` (for 2.7) | drop indexes |
 | G1-2 | 2.2 to 2.11 (10 tables) | create, with FKs, checks, immutability, TRUNCATE refusal, finalize guards, grants | drop all, valid only before any grounded group version exists |
@@ -463,6 +480,4 @@ Invariants: III (every new table is insert-only; masters frozen); IV (every refe
 
 ## 11. Open questions for the owner
 
-Revision 1's three questions are answered by the owner (barecount-devhub `060d5328`) and removed: the review that opens a group is the owner's, by a desk grant that may cover a batch (2.11, 4.1); grounded parts live only on the group version (2.7, 2.12); the two Recognition Event groups are archived with no replacement (7).
-
-1. **Customer and supplier concentration.** Two groups measure the share of the largest customers (or suppliers) in the total. The grammar cannot say "the top N" yet. Should we add a governed "share of the top N" derivation, or archive the two groups?
+None open. Revision 1's three questions are answered by the owner (barecount-devhub `060d5328`): the review that opens a group is the owner's, by a desk grant that may cover a batch (2.11, 4.1); grounded parts live only on the group version (2.7, 2.12); the two Recognition Event groups are archived with no replacement (7). Revision 2's question on concentration is answered by `1ef2d04e`: a governed top-N share (2.2).
