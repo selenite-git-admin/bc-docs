@@ -1,7 +1,7 @@
 ---
 uid: structured-group-design
 title: The structured metric group, concept-grounded (design)
-description: "Design for TSK-09855b, revision 2. It implements the draft Foundation amendment on concept grounding (bc-docs PR 276, revision 5) and replaces the free-form group template with typed tables: group version parts by role, the event input, age bands, the breakdown set and its versions, and the derived-group inputs. It extends the typed member layer, defines the per-role reachability checks as database routines, the five directory commands with their refusal codes, the proof cases, the sweep plan for all 143 groups from live reads, and the database proposal for the owner's yes. Revision 2 applies the owner's rulings of 2026-11-26 (barecount-devhub 060d5328) and the red team of revision 1. Nothing is built."
+description: "Design for TSK-09855b, revision 3. It implements the draft Foundation amendment on concept grounding (bc-docs PR 276, revision 5) and replaces the free-form group template with typed tables: group version parts by role, the event input, age bands, the breakdown set and its versions, and the derived-group inputs. It extends the typed member layer, defines the per-role reachability checks as database routines, the five directory commands with their refusal codes, the proof cases, the sweep plan for all 143 groups from live reads, and the database proposal for the owner's yes. Revision 2 applies the owner's rulings of 2026-11-26 (barecount-devhub 060d5328) and the red team of revision 1; revision 3 applies the auditor's gen-52eda8-02 (B1, B2, N1) under the owner's dispositions ab2d086f. Nothing is built."
 status: drafting
 authority: reference
 date: 2026-11-26
@@ -14,7 +14,7 @@ governing_adr: DEC-79b62f
 
 # The structured metric group, concept-grounded
 
-*Design note, revision 2, 2026-11-26. Nothing in it is built, recorded or written. Counts were read live from `bc_platform_dev` on 2026-11-26 (read-only). Re-read them before acting.*
+*Design note, revision 3, 2026-11-26. Nothing in it is built, recorded or written. Counts were read live from `bc_platform_dev` on 2026-11-26 (read-only). Re-read them before acting.*
 
 **Revision 2.** Applies the owner's rulings recorded in barecount-devhub `artifacts/operator-review/DECISIONS-workflow-review.md`, branch `claude/operator-review-content`, commit `060d5328`, entry "Successor rule corrected, and the group design's three questions":
 
@@ -27,11 +27,19 @@ It also applies the red team of revision 1: a group-version successor command (4
 
 **Revision 2, later rulings** (same file and branch): `1ef2d04e`, a governed top-N share derivation (2.2, 2.7, 7); `53e9659c` (1), derived group versions pin exact input definition versions and move only on purpose, with a read-only check (2.7, 3); `53e9659c` (2), the country's currency stays out of this design (9). No question is open.
 
+**Revision 3.** Applies the auditor's answer gen-52eda8-02 (bc-external-audit `docs/RESPONSE-Codex-gen-52eda8-02-concept-grounded-metrics-design-2026-11-26.md`, commit `aac04d52`, CHANGES REQUIRED at `7dc360b8`) under the owner's dispositions in the same DECISIONS file, commit `ab2d086f`:
+
+- **B1.** A residual group declares its starting (anchor) amount concept and its result concept separately, and the metric contract binds both roles; a swap is refused (2.5, 2.13, 3, 5, 6). A missing result concept is a business concept act first (7).
+- **B2.** Old member columns and tables stay for historical versions, and the database refuses new writes to them. The later drops shrink to what no past version's content hash, directory projection or closure fingerprint reads at bc-core `762fb59c` (2.12, 2.14, 9). The evidence file of hashes is removed.
+- **N1.** Every reach "as at P" declares the exact target Canonical Object version set; the event input's set is pinned too; each evaluation records the versions it used in Lineage (2.3, 2.5, 3).
+
+The corrected design goes back to the auditor as a new governed unit, not a third round on gen-52eda8 (`ab2d086f`).
+
 ## 0. Authority and inputs
 
 | Input | Exact reference |
 |---|---|
-| The authority | The draft amendment, bc-docs PR 276, head `e4c98821`, `docs/governance/proposals/foundation-amendment-concept-grounded-metrics.md` (revision 5, amended to the same rulings). Section numbers below written "A§n" point into it. |
+| The authority | The draft amendment, bc-docs PR 276, head `f0fbe983`, `docs/governance/proposals/foundation-amendment-concept-grounded-metrics.md` (revision 6, amended to the same rulings). Section numbers below written "A§n" point into it. |
 | The owner's rulings | barecount-devhub `claude/operator-review-content` `060d5328` (above), and the earlier entries the amendment cites. |
 | The auditor's requirements | bc-external-audit `docs/RESPONSE-Codex-gen-52eda8-01-concept-grounded-metrics-2026-11-26.md`, point 5 and the ADR-set paragraph (origin/main `f28c72da`). |
 | The records design it builds on | bc-docs PR 275, head `e63d0c1f`, `metric-records-design.md`; its migrations 0085, 0086 and 0087 are bc-db PR 200. 0088 is planned there. |
@@ -101,7 +109,7 @@ Checks. `base`: measure kind set; derivation and reporting anchor kind NULL. `de
 
 The ranking is declared here and done once by the evaluation of the metric contract; a member never ranks records. `ar_customer_concentration_derived` and `ap_supplier_concentration_derived` are expressed this way.
 
-### 2.3 `metric_directory.group_version_part` (new, 11 columns)
+### 2.3 `metric_directory.group_version_part` (new, 13 columns)
 
 The semantic references, one row per role (A§3.1). Single-valued roles have ordinal 1.
 
@@ -113,9 +121,12 @@ The semantic references, one row per role (A§3.1). Single-valued roles have ord
 | `concept_id`, `concept_version_id` | uuid | no | the target concept version |
 | `step_reference_concept_id`, `step_reference_concept_version_id` | uuid | yes | the grain's reference concept version |
 | `step_target_entity_id`, `step_target_entity_version_id` | uuid | yes | the target entity version |
+| `step_target_canonical_contract_id`, `step_target_canonical_contract_version_code` | uuid, text | yes | composite FK to `contract.canonical_contract_version (canonical_contract_id, version_code)`: the exact target Canonical Object version set; its `grain_entity_version_id` must equal the step target entity version |
 | `created_at`, `created_by_name` | | no | |
 
-PK `(group_version_uid, role_code, part_ordinal)`. The four step columns are all NULL or all set. A step is allowed only on `axis` and `period_anchor`. The target concept of a step is the part's own concept, so a step names exactly the three pinned versions of A§3.7.
+PK `(group_version_uid, role_code, part_ordinal)`. The six step columns are all NULL or all set. A step is allowed only on `axis` and `period_anchor`. The target concept of a step is the part's own concept, so a step names exactly the three pinned versions of A§3.7, plus the target set.
+
+**The target set as at P** (N1, `ab2d086f`). A step resolves a grain record's key only among the Canonical Objects evaluated under the pinned target canonical contract version, as at P. It never takes the latest version found by the key. If more than one target Canonical Object version in that set matches at P, the evaluation is refused (A§3.7, fan-out). Each evaluation records, in its Lineage, the target Canonical Object and version it resolved for each step, or that it found none (Invariant VI).
 
 ### 2.4 `metric_directory.group_version_age_band` (new, 7 columns)
 
@@ -130,7 +141,7 @@ PK `(group_version_uid, role_code, part_ordinal)`. The four step columns are all
 
 PK `(group_version_uid, band_code)`. A deferred trigger refuses overlapping bands and refuses bands unless the grammar is `stock_at_period_end` and an `age_anchor` part exists.
 
-### 2.5 `metric_directory.group_version_event_input` (new, 1:1, 16 columns)
+### 2.5 `metric_directory.group_version_event_input` (new, 1:1, 18 columns)
 
 The separately pinned event-grain canonical input for a residual group (A§3.7).
 
@@ -143,11 +154,23 @@ The separately pinned event-grain canonical input for a residual group (A§3.7).
 | `grain_reference_concept_id`, `_version_id` | uuid | no | reference on the event entity, target the grain |
 | `grain_key_concept_id`, `_version_id` | uuid | no | the grain's identity concept |
 | `event_date_concept_id`, `_version_id` | uuid | no | a date on the event entity |
+| `anchor_amount_concept_id`, `_version_id` | uuid | no | the schedule's starting amount: an amount on the grain, for example the Customer Invoice `gross amount` |
 | `anchor_date_concept_id`, `_version_id` | uuid | no | a date on the grain |
 | `anchor_sign` | smallint | no | −1 or +1; no default (DEC-45200d (1)) |
 | `created_at`, `created_by_name` | | no | |
 
-The anchor amount is the group's `measure` part. The table exists only when `open_model_code = 'residual'` (deferred check both ways).
+The table exists only when `open_model_code = 'residual'` (deferred check both ways).
+
+**Two amount roles** (B1, `ab2d086f`). The starting amount and the result are different concepts and are pinned in different places:
+
+| Role | Where it is pinned | Meaning | Customer Invoice example |
+|---|---|---|---|
+| Starting (anchor) amount | `anchor_amount_concept_version_id` here | the schedule's first term: the amount the dated legs reduce | `gross amount` |
+| Result | the group's `measure` part (2.3) | what the group measures: anchor sign times the starting amount, plus the signed legs dated on or before P | `outstanding amount`, defined live as the gross amount less the signed application legs dated on or before P |
+
+Both are amounts on the grain with the same currency context, and they must be different concepts (`GRP_RESULT_IS_ANCHOR`). A current residual snapshot is never the starting amount (DEC-3926bf amendment 2). A residual group whose grain has no governed result concept is refused until a business concept act creates one (section 7); this design never invents it.
+
+**The event set** (N1). `canonical_contract_id` and `canonical_contract_version_code` are the exact event Canonical Object version set. Each evaluation records in Lineage the event Canonical Objects and versions it read.
 
 ### 2.6 `metric_directory.group_version_event_leg` (new, 9 columns)
 
@@ -198,9 +221,9 @@ PK `(group_version_uid, input_role_code)`. `ratio` and `percentage_of_total` nee
 
 Number 1 has no predecessor; every later number has exactly one.
 
-### 2.10 `metric_directory.group_version_breakdown` (new, 10 columns)
+### 2.10 `metric_directory.group_version_breakdown` (new, 12 columns)
 
-`group_version_breakdown_id` uuid PK; `breakdown_set_version_uid` FK; `breakdown_ordinal` smallint; `concept_id`, `concept_version_id`; the four step columns of 2.3; `created_at`. Unique `(breakdown_set_version_uid, concept_version_id, step_reference_concept_version_id)` with NULLs not distinct. Each set version holds its whole list; nothing is inherited from the previous set version.
+`group_version_breakdown_id` uuid PK; `breakdown_set_version_uid` FK; `breakdown_ordinal` smallint; `concept_id`, `concept_version_id`; the six step columns of 2.3; `created_at`. Unique `(breakdown_set_version_uid, concept_version_id, step_reference_concept_version_id)` with NULLs not distinct. Each set version holds its whole list; nothing is inherited from the previous set version.
 
 ### 2.11 `metric_directory.group_version_gate_event` (new, 9 columns)
 
@@ -221,30 +244,45 @@ Unique `(group_version_uid, event_kind_code)`. The grant id is not unique: owner
 
 **Why a typed pair and not an existing home.** The grant lives on the desk (bc-exchange), not in `bc_platform_dev`; the platform records the citation. `mcf.certification_record` does not fit: its `primitive_type` CHECK allows only `metric_contract_version` and its `action_code` CHECK only metric and audit acts. The pair follows the live precedent `infrastructure.fixture_reset_event (operator_grant_id, operator_grant_text_sha256)`, with the same hex CHECK. The free-text reviewer name of revision 1 is removed.
 
-### 2.12 The member layer, extended (no parallel tables)
+### 2.12 The member layer: old rows kept, new writes refused
 
 | Table | Change |
 |---|---|
-| `member_version_discriminator` (live, 6 columns) | add `group_version_uid uuid` and `axis_ordinal smallint`, both NULL for the 2 live rows; composite FK `(group_version_uid, 'axis', axis_ordinal)` to `group_version_part` (through a stored role column `axis_role_code text` fixed to `axis`, 9 columns). A trigger requires `group_version_uid` to equal the member version's, and `concept_version_id` to equal the axis part's. Value rows come from Unit V (`member_version_discriminator_value`, A§6.4). `governed_values_json` is NOT NULL today; G2-1 drops the NOT NULL, and a CHECK requires it NULL on every row with `group_version_uid` set. |
+| `member_version_discriminator` (live, 6 columns, 2 rows) | unchanged and kept for history. No column is added, because the closure fingerprint reads whole rows (2.14) and a new column would change it for the 2 past rows. A trigger refuses a new row for a member version under a grounded group version. |
+| `member_version_axis_selection` (new, 7 columns) | `member_version_uid` FK; `group_version_uid`; `axis_role_code text` fixed to `axis`; `axis_ordinal smallint`; composite FK `(group_version_uid, axis_role_code, axis_ordinal)` to `group_version_part`; `created_at`, `created_by_name`. PK `(member_version_uid, axis_ordinal)`. A trigger requires `group_version_uid` to equal the member version's. Its values are Unit V rows (`member_version_axis_value`, V-4). It succeeds the discriminator for grounded members; it is not a second home, because the database refuses discriminator rows for them. |
 | `member_version_age_band` (new, 5 columns, named in A§6.3) | `member_version_uid` PK FK; `group_version_uid`, `band_code`, composite FK to `group_version_age_band`; `created_at`. At most one band per member version. It is a typed temporal choice, not an axis (A§3.4). |
-| `member_version_dependency` (live, 3 columns, 0 rows) | not written for a member under a grounded group version; finalize refuses it. A derived definition's inputs and offsets are on the group version (2.7), owner ruling (3). No column is added. |
-| `member_version_constant` (live, 4 columns, 0 rows) | replace `value_json` with `integer_value bigint`, `decimal_value numeric`, `boolean_value boolean`, `date_value date` (7 columns); exactly one set, matching `value_type`; `text` removed from `value_type`. Role and type must equal a group constant slot. A constant's value is the member's selection, as an axis value is. |
-| `member_version_direct_input` (live) | not written for a member under a grounded group version; finalize refuses it. The grounded parts have one home, the group version, which the member pins (DEC-1918d0 rule 4; owner ruling (3)). The 2 live rows stay as history. |
+| `member_version_dependency` (live, 3 columns, 0 rows) | unchanged and kept. A trigger refuses a new row for a member version under a grounded group version: a derived definition's inputs and offsets are on the group version (2.7), owner ruling (3). |
+| `member_version_constant` (live, 4 columns, 0 rows) | add `integer_value bigint`, `decimal_value numeric`, `boolean_value boolean`, `date_value date` (8 columns); for a grounded member exactly one is set, matching `value_type`, and `value_json` is NULL (G2-1 drops its NOT NULL); `value_json` stays, because the projection reads it (2.14). With 0 rows, no past row changes. Role and type must equal a group constant slot. |
+| `member_version_direct_input` (live, 2 rows) | unchanged and kept. A trigger refuses a new row for a member version under a grounded group version. The grounded parts have one home, the group version, which the member pins (DEC-1918d0 rule 4; owner ruling (3)). |
 
-**Finalize.** `fn_member_version_finalize` gains, for a member under a grounded group version: every discriminator names an axis of that version; at most one band; every constant slot is filled; no dependency or direct input row; and the records design's interpretation row is present, with `temporality_class_code` equal to the grammar's `time_class_code` and `unit_type_code` equal to the grammar's. This activates the records design's check 3.8.2.
+**Finalize.** `fn_member_version_finalize` gains, for a member under a grounded group version: every axis selection names an axis of that version; at most one band; every constant slot is filled; no dependency or direct input row; and the records design's interpretation row is present, with `temporality_class_code` equal to the grammar's `time_class_code` and `unit_type_code` equal to the grammar's. This activates the records design's check 3.8.2.
 
-**Retired: the member columns that repeat group parts** (owner ruling (3)). Each is a second home for a grounded part.
+**Content hash of a grounded member version.** Schema v2 of `buildDirectoryProjectionInput` (2.14) has no place for axis selections, bands or typed constants, so a grounded member version is hashed under a new directory canonicalization that adds them and the pinned group version's content hash. Every past version keeps schema v2, and the projection re-derives it unchanged.
 
-| Column | Today | Until M-G3 | M-G3 |
+**The old columns that repeat group parts** (owner ruling (3) of `060d5328`, narrowed by B2 of `ab2d086f`). They stay for every historical version. The database refuses new values in them, or, where a column is part of the member version's content hash, accepts only the value the group version gives.
+
+| Column | Kept for history? | New writes | Later drop (M-G3) |
 |---|---|---|---|
-| `member.measure_concept_id` | nullable, FK `business_concept` (not a version) | NULL for every new member | drop |
-| `member.discriminator_json` | NOT NULL | G2 drops the NOT NULL; NULL for every new member | drop |
-| `member.derivation_json` | nullable | NULL for every new member | drop |
-| `member_version.grain_entity_id`, `grain_entity_version_id` | NOT NULL, composite FK `entity_version` | written by the command equal to the grammar's grain; finalize refuses any other value | drop |
-| `member_version.temporal_intent_json`, `output_intent_json` | NOT NULL | written as the canonical projection of the grammar; finalize refuses any other value | drop |
-| `member_version_dependency`, `member_version_direct_input` | live tables | not written under a grounded group version | drop once D7 and the gate read the group version |
+| `member_version.grain_entity_id`, `grain_entity_version_id`, `temporal_intent_json`, `output_intent_json` | yes: in the content hash, the projection and the fingerprint | NOT NULL and hashed: the command writes the group version's grain and the canonical projection of its grammar; finalize refuses any other value | never |
+| `group_version.template_json` | yes: in the group version's content hash and the fingerprint | refused: NULL only for a new row | never |
+| `group.template_json` | yes: the only record of the template of the 29 groups with no version | refused: G1-5 makes it nullable; a new non-NULL value is refused | never |
+| `member_version_direct_input`, `member_version_dependency`, `member_version_discriminator` (tables) | yes: in the content hash, the projection and the fingerprint | refused under a grounded group version | never |
+| `member_version_constant.value_json` | yes: read by the projection and the fingerprint | NULL for a grounded member | never |
+| `member.measure_concept_id`, `member.discriminator_json`, `member.derivation_json` | not version content: `member` is not a version, and none of the readers of 2.14 reads these columns | NULL for every new member (G2-1 drops the NOT NULL on `discriminator_json`) | yes, after their own readers move, and only if each live value equals what the member's versions hold (the one live `discriminator_json` equals its version's discriminator rows today; the other two columns are NULL on every row) |
 
-Also retired: `group.template_json` and `group_version.template_json` become NULL-only for new rows, and the two PATCH routes of section 1 are retired. The readers of every column above move before M-G3.
+The two PATCH routes of section 1 are retired. No migration adds, drops or retypes a column of a table that holds a past row read by 2.14; such tables gain only indexes, constraints that leave the row as it is, and triggers.
+
+### 2.14 What the past versions' readers read (bc-core `762fb59c`)
+
+Read in the code, not the comments.
+
+| Reader | What it reads |
+|---|---|
+| `src/registry/metric-directory/member-versioning.service.ts` | **Group version content hash** (`createGroupVersion`, lines 191 to 198): `canonicalization_version`, `group_id`, `family_id`, `family_version_uid`, `version_coordinate`, `group_code`, `class_code`, `grain_entity_id`, `temporal_anchor_concept_id`, `template_json`. **Member version content hash** (`buildDirectoryProjectionInput`, lines 128 to 161): `member_version_uid`, `member_uid`, `version_coordinate`, the family and group version refs (uid, coordinate, content hash), `member_code`, `display_name`, `definition_text`, `formula_intent_text`, `class_code`, the grain (`entity_id`, `entity_version_id`), `temporal_intent`, the direct inputs (`role_code`, `target_kind`, concept and entity ids and versions, `representation_code`), the constants (`role_code`, `value_type`, value), the discriminators (`role_code`, concept id and version, `operator_code`, governed values), the dependencies (`role_code`, upstream member version), `output_intent`, `decision_evidence_refs`. It writes the four child tables, with `value_json` and `governed_values_json` (lines 250 to 268). |
+| `src/registry/metric-directory/directory-intent-projection-v2.service.ts` | `member_version`: `member_version_uid`, `member_uid`, `group_id`, `group_version_uid`, `family_version_uid`, `version_coordinate`, `member_code`, `display_name`, `definition_text`, `formula_intent_text`, `class_code`, `grain_entity_id`, `grain_entity_version_id`, `temporal_intent_json`, `output_intent_json`, `decision_evidence_refs`, `content_hash`, `created_by_name` (lines 110 to 118); `member_version_direct_input` (the seven columns above), `member_version_constant` (`role_code`, `value_type`, `value_json`), `member_version_discriminator` (`role_code`, `concept_id`, `concept_version_id`, `operator_code`, `governed_values_json`), `member_version_dependency` (`role_code`, `upstream_member_version_uid`); the family and group versions' `version_coordinate` and `content_hash`. It re-derives the content hash and throws on drift (lines 61 to 66). |
+| `src/registry/mcf/mcf-cert-writer.service.ts`, `computeSubstrateFingerprint` (lines 3217 to 3268) | whole rows (`row_to_json`) of `mcf.metric_contract_version`, `mcf.metric_contract`, `mcf.metric_variable_binding`, `mcf.metric_filter_clause`, `mcf.metric_computed_dimension_ref`, `metric_directory.realization_operative`, `realization_event`, `member_version`, `member_version_direct_input`, `_constant`, `_discriminator`, `_dependency`, `family_version` and `group_version`, plus the fixture uids; and the closure reference records of `closure-dependency-record.service.ts` (the member version's `grain_entity_version_id`; the direct inputs' concept and entity version ids; the discriminators' `concept_version_id`; the dependencies' upstream member version; the family, group and member versions' coordinate and content hash). It reads `metric_directory.member` only for `realized_metric_contract_uid`, in two guards (lines 3988 and 4162), outside the fingerprint. |
+
+Because the fingerprint reads whole rows, a column dropped from, or added to, any of these tables changes the fingerprint of every past row in it. Live today: `member_version` 2 rows, `_direct_input` 2, `_discriminator` 2, `_constant` 0, `_dependency` 0, `group_version` 114, `family_version` 49, `metric_computed_dimension_ref` 0.
 
 ### 2.13 The metric contract side
 
@@ -253,7 +291,9 @@ Also retired: `group.template_json` and `group_version.template_json` become NUL
 | `mcf.mcv_breakdown_set_pin` (new, 4 columns) | `metric_contract_version_uid` PK FK; `breakdown_set_version_uid` FK; `created_at`, `created_by_name`. Insert-only, in the contract version's transaction. |
 | `mcf.metric_computed_dimension_ref` (live, 10 columns) | add `group_version_breakdown_id uuid` NULL, FK (11 columns). A trigger requires the entry to belong to the pinned set version, and its concept version to equal `source_business_concept_version_id`. |
 
-`mcf.metric_contract_version` (19 columns until 0088) gets no new column.
+`mcf.metric_contract_version` (19 columns) gets no new column. `metric_computed_dimension_ref` has 0 rows, so its new column changes no past row.
+
+**The two amount roles on the metric contract** (B1). A residual metric contract binds its measure variable to the group's result concept version, and the DEC-45200d schedule's anchor amount role to the event input's starting amount concept version. The realization check compares each role with its own pin (3); a contract that binds them the other way round is refused.
 
 **Successors on the metric contract side** (owner ruling (1) of `060d5328`, replacing the same-metric-contract part of ruling 6e4a8803). A new definition version is realized by a **new metric contract**, joined to its predecessor by a `mcf.metric_supersession` record. The directory member carries the metric's lasting identity. Reason, read live: `mcs_different_mc_chk` refuses a supersession whose predecessor and successor metric contract are the same, and a metric contract's identity is frozen once past draft. The same holds for a new breakdown pin on a metric contract past draft (4.4).
 
@@ -264,18 +304,18 @@ Routines in `metric_directory`, `STABLE`, `search_path` pinned. Each returns a s
 | Routine | Checks |
 |---|---|
 | `fn_concept_version_usable(concept_version_id)` | the concept is `active` and not archived; the version is its `active_version_id` at authoring |
-| `fn_part_reach(grain_entity_id, concept_version_id, step…)` | no step: the concept's `entity_id` equals the grain. Step: the reference concept is `kind = 'reference'`, its `entity_id` is the grain, its `target_entity_id` is the step target entity; the part concept's `entity_id` is the step target entity. Never two steps. |
+| `fn_part_reach(grain_entity_id, concept_version_id, step…)` | no step: the concept's `entity_id` equals the grain. Step: the reference concept is `kind = 'reference'`, its `entity_id` is the grain, its `target_entity_id` is the step target entity; the part concept's `entity_id` is the step target entity; the target canonical contract version exists and its `grain_entity_version_id` equals the step target entity version (the exact target set, N1). Never two steps. |
 | `fn_check_measure_part` | `count_distinct`: a reference concept on the grain. `sum`: `representation_term` in (`amount`, `quantity`, `measure`) and `context_concept_id` set (currency or unit). `entity_count`: no measure part, and the grain has an active concept with `identity_role = 'identity_bearing'`. |
 | `fn_check_context_part` | the concept equals the measure version's `context_concept_id` |
 | `fn_check_date_part` (period anchor, closing, age anchor, reporting anchor, event dates) | `data_type = 'date'` (A§3.9; all 69 live anchors are `date`); `semantic_role = 'temporal'`; reachable as above. `period_anchor` is required for `flow_per_period` and `cumulative_to_date`, and for `stock_at_period_end` with `gross_binary` it is the date the record is open from; `closing` and `age_anchor` need `stock_at_period_end`; `closing` needs `gross_binary` |
 | `fn_check_axis_part` | `representation_term = 'code'`; reachable; a declared value source (Unit V: `enumerated` with at least one value row, or `master`) |
 | `fn_check_breakdown` | a code concept as an axis, or a reference concept on the grain; reachable |
-| `fn_check_event_input` | the grain reference and every leg key are reference concepts on the event entity whose `target_entity_id` is the grain; the grain key is an `identity_bearing` concept on the grain; event date on the event entity; leg amounts are amounts on the event entity with the same `context_concept_id` as the measure |
+| `fn_check_event_input` | the grain reference and every leg key are reference concepts on the event entity whose `target_entity_id` is the grain; the grain key is an `identity_bearing` concept on the grain; event date on the event entity; leg amounts are amounts on the event entity with the same `context_concept_id` as the measure; the starting amount is an amount on the grain with that context, and differs from the result (`measure`) concept (B1) |
 | `fn_check_derived_input` | the input member version pins the input group version, which is grounded; the input's unit and currency partition agree with the other inputs (A§3.8); the anchor rule of A§3.3: if all inputs share one period anchor version, `reporting_anchor_kind_code = 'input_anchor'` and a `reporting_anchor` part equals it; otherwise `evaluation_point` is allowed |
 | `fn_check_rank_part` | `top_n_share` only: the concept is `kind = 'reference'`, its `entity_id` is the `ranked_input`'s grain (not the output grain), no step; it is an entry of a breakdown set version of the input group version |
 | `fn_derived_input_superseded_pin()` | read-only diagnostic, not a gate: returns each derived group version of a group that is not archived, with a `group_version_derived_input` row whose `input_member_version_uid` has a successor (`member_version.supersedes_version_uid` names it), and that successor. It reads rows only; it never evaluates and never moves a pin |
 | `fn_group_version_grammar_finalize` | deferred, at commit: the grammar row exists for every group version created after the migration; all parts pass; the role set is complete for the class and measure kind; the content hash covers the grammar and every child |
-| `fn_realization_grammar_check(member_version_uid, metric_contract_version_uid)` | A§3.5 role by role: grain entity version; measure kind and concept version against the aggregation operator and measure variable; time class and anchor against the temporal gate kind and anchor role; open test (closing role, or the schedule's every part including `anchor_sign`); band bounds and age anchor against the `age_band` gate; axis concept version and values against the governed selection; breakdown set version pinned and every partition in it; derived inputs, offsets and constants. Called from `fn_realization_event_guard` on assert |
+| `fn_realization_grammar_check(member_version_uid, metric_contract_version_uid)` | A§3.5 role by role: grain entity version; measure kind and the result concept version against the aggregation operator and measure variable; for a residual group, the starting amount concept version against the schedule's anchor amount role, each role against its own pin (refusal `realization_amount_role_mismatch`); a step's target set against the contract's; time class and anchor against the temporal gate kind and anchor role; open test (closing role, or the schedule's every part including `anchor_sign`); band bounds and age anchor against the `age_band` gate; axis concept version and values against the governed selection; breakdown set version pinned and every partition in it; derived inputs, offsets and constants. Called from `fn_realization_event_guard` on assert |
 
 A bare FK proves a row exists. These routines prove the row is eligible for its role.
 
@@ -310,6 +350,8 @@ Every grounded group version passes its own gate, a successor version (4.2) incl
 | `GRP_AXIS_NO_VALUE_SOURCE` | an axis concept with no value source |
 | `GRP_BANDS_INVALID` | overlap, bad bounds, or no age anchor |
 | `GRP_EVENT_INVALID` | event entity, contract, keys, dates, legs or a sign invalid; repeated leg pair |
+| `GRP_RESULT_IS_ANCHOR` | the result (`measure`) concept and the starting amount concept are the same, or have different currency contexts |
+| `GRP_RESULT_CONCEPT_MISSING` | a residual group whose grain has no governed result concept |
 | `GRP_DERIVED_INPUT_INVALID` | an input not grounded, a wrong slot set, or an offset out of range |
 | `GRP_ANCHOR_RULE` | the declared reporting anchor breaks A§3.3 |
 | `GRP_DERIVATION_NOT_EXPRESSIBLE` | the derived group's arithmetic is none of the five derivations (2.2) |
@@ -337,7 +379,7 @@ The sweep needs it: every grounded v2 in section 7 is a successor of an unground
 
 ### 4.3 Add a sibling member (a mechanical metric act)
 
-`POST groups/:groupId/members` with the member code, the axis values, an optional band, constants, the name, the plain definition, and the direction with its rationale (records design 0085-B). The unit and temporality class come from the group. It writes the member, its version, the interpretation row, discriminators with their value rows, the band and constants.
+`POST groups/:groupId/members` with the member code, the axis values, an optional band, constants, the name, the plain definition, and the direction with its rationale (records design 0085-B). The unit and temporality class come from the group. It writes the member, its version, the interpretation row, axis selections with their value rows, the band and constants.
 
 | Code | Meaning |
 |---|---|
@@ -372,7 +414,7 @@ All on Customer Invoice unless stated. "CI" is Customer Invoice.
 |---|---|---|---|
 | Invoice count | base, `entity_count`, `flow_per_period`, unit `count` | `period_anchor` invoice date | no axis, no band |
 | Invoiced amount | base, `sum`, `flow_per_period`, unit `currency` | `measure` invoice amount; `context` its currency code; `period_anchor` invoice date | no axis. The metric contract partitions by currency, or a sibling member pins one currency by an axis on the currency code (master value source) |
-| Open AR at P | base, `sum`, `stock_at_period_end`, `residual`, unit `currency` | `measure` invoice amount; `context` currency; `age_anchor` due date; event input: Receivable Application, its canonical contract version, grain key the CI identity, event date the application date, anchor date the invoice date, `anchor_sign` +1; legs: debit leg key with amount −1, credit leg key with amount +1 | the total member: no band |
+| Open AR at P | base, `sum`, `stock_at_period_end`, `residual`, unit `currency` | `measure` (result) the CI `outstanding amount`; `context` currency; `age_anchor` due date; event input: Receivable Application, its canonical contract version (the event set), grain key the CI identity, event date the application date, starting amount the CI `gross amount`, anchor date the invoice date, `anchor_sign` +1; legs: debit leg key with amount −1, credit leg key with amount +1 | the total member: no band |
 | Aging buckets | the same group as open AR | bands `d0_30`, `d31_60`, `d61_90`, `d91_plus` | one sibling per band, e.g. `d31_60` |
 | DSO | derived, `ratio`, `instantaneous`, unit `days`, reporting anchor `evaluation_point`; output grain Legal Entity | inputs `numerator` = the open AR total member version, `denominator` = the invoiced amount member version (`flow_per_period`, 365 days ending P); constant slot `days_in_period`, integer | constant 365; no dependency rows (the inputs are the group version's). Both input metric contracts partition by `issuing_legal_entity` and by currency |
 | Period-over-period change | derived, `delta`, `flow_per_period`, unit `count`, reporting anchor `input_anchor` = invoice date | inputs `operand_current` (offset 0) and `operand_prior` (offset −1), both the invoice count member version | nothing to select |
@@ -389,8 +431,10 @@ Design requirements against wrong values (auditor point 5), not a live metric ac
 | Case | Input | Expected | What enforces it |
 |---|---|---|---|
 | Partial payment | invoice 1,000; payment 400 dated before P | open AR 600; a `gross_binary` group gives 1,000 only where declared | the event input and legs; `fn_realization_grammar_check` equates the schedule |
+| Amount roles swapped (negative) | a metric contract that binds `gross amount` as the measure variable and `outstanding amount` as the schedule's anchor amount, against the Open AR group | refused at realization (`realization_amount_role_mismatch`); a group that names one concept in both roles is refused at authoring (`GRP_RESULT_IS_ANCHOR`) | `fn_realization_grammar_check`, role by role; `fn_check_event_input` |
 | Reversal | payment 400 and its reversal, both before P | 1,000. A contract whose leg sign or anchor sign differs is refused at realization | `anchor_sign`, `leg_sign`, the realization check, the schedule hash (DEC-45200d) |
 | One-step fan-out | a CI customer key matching two Customer records at P | the evaluation is refused, never doubled | the step is a lookup to at most one record (A§3.7); the evaluator's refusal, with a test |
+| Target version set | two versions of one Customer Canonical Object coexist at P, one outside the pinned target set | only the version in the pinned set is used, and Lineage names it; if two in the set match, refused | the step's target canonical contract version (2.3, N1) |
 | No matching reference | a CI with no Customer record | counts in the total; matches no segment; falls in `unmatched`; matched and unmatched counts emitted | A§3.7; evidence (Invariant VI) |
 | Mixed-currency sum | INR and USD invoices, no partition or pin | refused; with a currency partition, two values | `GRP_SUM_NO_CONTEXT` at authoring; the A§3.8 evaluation refusal |
 | Derived period offset | `delta`, offsets 0 and −1 on one input | value at P minus value one period earlier; refused if the input metric contract declares no period | `group_version_derived_input`; the realization check reads the input contract's calendar context |
@@ -428,7 +472,9 @@ The successor command refuses a class different from the group's (`GV_CLASS_CHAN
 
 **Concept acts before the sweep.** Of the 61 that fit, 26 are `sum` groups whose grain has no amount concept with a currency or unit context. They sit on 13 entities (Journal Entry Line 7, Asset 4, GL Account 3, Tax Line 2, Bank Account 2, and one each on Debt Instrument, Hedge Instrument, Contract, Maintenance Order, Performance Obligation, Product, Revenue Recognition Line and Budget). They would be refused with `GRP_SUM_NO_CONTEXT`. Each needs a concept act on the business concept path first. 16 base groups have no `op` in their template, so their measure kind is declared fresh; the 14 derived groups with none are above.
 
-**Order.** (1) Concept acts: identity concepts on 6 entities (the owner's 3, plus Performance Obligation, Debt Instrument and Hedge Instrument, whose 9 groups otherwise meet `GRP_COUNT_NO_IDENTITY` or an ungrounded input; section 3), contexts on 13, references to Legal Entity where the sweep re-points to it, the Customer segment concept if wanted, value sources through Unit V. (2) Archive the 2 leftovers, the 2 mis-pointed groups and `cost_center_master`. (3) Ground the base groups family by family, Finance first, then re-point the derived groups on top of them. Every change goes through the commands of section 4, never a row edit. Groups whose members differ only by measure are split at this step. The owner opens each batch by one grant (4.1). (4) The one live member, Customer Invoice Count, is re-placed by a new member version under the grounded `ci_invoice_volume` v2; that new definition version is realized by a new metric contract with a `mcf.metric_supersession` record from the current one (2.13).
+**Result concepts for residual groups** (B1, `ab2d086f`). A residual group needs a governed result concept on its grain, distinct from its starting amount. Read live: Customer Invoice has `outstanding amount`, active, with a currency context, defined as the gross amount less the signed application legs dated on or before P; Supplier Invoice has `outstanding amount`, active, with no currency context, so it needs a concept act (a context) before a residual Supplier Invoice group. Any other residual group waits on a concept act that creates its result concept. This design names them and invents none.
+
+**Order.** (1) Concept acts: identity concepts on 6 entities (the owner's 3, plus Performance Obligation, Debt Instrument and Hedge Instrument, whose 9 groups otherwise meet `GRP_COUNT_NO_IDENTITY` or an ungrounded input; section 3), contexts on 13 (and the Supplier Invoice `outstanding amount` context), the result concept of any other residual group, references to Legal Entity where the sweep re-points to it, the Customer segment concept if wanted, value sources through Unit V. (2) Archive the 2 leftovers, the 2 mis-pointed groups and `cost_center_master`. (3) Ground the base groups family by family, Finance first, then re-point the derived groups on top of them. Every change goes through the commands of section 4, never a row edit. Groups whose members differ only by measure are split at this step. The owner opens each batch by one grant (4.1). (4) The one live member, Customer Invoice Count, is re-placed by a new member version under the grounded `ci_invoice_volume` v2; that new definition version is realized by a new metric contract with a `mcf.metric_supersession` record from the current one (2.13).
 
 ## 8. The unit order and the migrations
 
@@ -436,8 +482,8 @@ The successor command refuses a class different from the group's (`GV_CLASS_CHAN
 |---|---|---|
 | 1 | The decision unit: the grounding ADR together with DEC-45200d, FND-ERR-010 or the next free, and the Foundation text edits (owner's landing go) | none |
 | 2 | This design | none |
-| 3 | Unit V, typed allowed values, with its measured ripple of 39 bc-core files that read `canonical_value_set` and 2 that read `governed_values_json` | **M-V**: value rows, value source, the masters' freeze triggers, `member_version_discriminator_value` |
-| 4 | The schema | **M-G1**: the group tables and routines. **M-G2**: the member and contract extensions, finalize, the realization check. **M-G3**, after readers move: drop the retired columns |
+| 3 | Unit V, typed allowed values, with its measured ripple of 39 bc-core files that read `canonical_value_set` and 2 that read `governed_values_json` | **M-V**: value rows, value source, the masters' freeze triggers (V-4 lands in M-G2, with the axis selection it hangs on) |
+| 4 | The schema | **M-G1**: the group tables and routines. **M-G2**: the member and contract extensions, finalize, the realization check. **M-G3**, after their readers move: drop only `member.measure_concept_id`, `member.discriminator_json` and `member.derivation_json` (2.12); nothing a past version's content hash, projection or fingerprint reads (2.14) |
 | 5 | The sweep (section 7) | none: commands only |
 
 **Numbers.** bc-db origin/main ends at 0084. Open PR 200 (head `ae4d7287`) holds 0085, 0086, 0087 and 0089. The records design plans 0088 and tenant 0008. Open PRs 177 and 111 hold 0073 and 0039. So each migration takes the next free number at authoring, 0090 or later today, after checking open bc-db PRs.
@@ -449,7 +495,7 @@ The successor command refuses a class different from the group's (`GV_CLASS_CHAN
 | V-1 | `concept_registry.business_concept_value` (new) | concept version FK, value code, label; insert-only | drop, before any member selects a value |
 | V-2 | `concept_registry.value_master` (new) | names a master table and key column; 2 rows: `master.dim_currency.currency_code`, `master.dim_country.alpha2` | drop with V-3 |
 | V-3 | `business_concept_version` (12 columns) | add `value_source_code` (`enumerated`, `master`) and `value_master_id` FK (14); set the 27 active currency and 4 active country code concepts to `master` through new concept versions, never in place; the 2 superseded currency concepts get no new version | drop columns before V-4 has rows |
-| V-4 | `metric_directory.member_version_discriminator_value` (new) | exactly one of `concept_value_id`, `currency_code` (FK `dim_currency`), `country_alpha2` (FK `dim_country`); trigger matches the value source | drop before any new member |
+| V-4 | `metric_directory.member_version_axis_value` (new; created in M-G2) | FK `(member_version_uid, axis_ordinal)` to `member_version_axis_selection`; exactly one of `concept_value_id`, `currency_code` (FK `dim_currency`), `country_alpha2` (FK `dim_country`); trigger matches the value source | drop before any new member |
 | V-5 | `master.dim_currency`, `master.dim_country` | freeze triggers: refuse an UPDATE of `currency_code`, `decimal_places`; of `alpha2`, `alpha3`, `numeric_code`; refuse DELETE and TRUNCATE | drop triggers |
 
 *Note on V-5.* `master.dim_country.currency_code` stays out of this design: no freeze and no FK (owner, `53e9659c` (2); no bc-core reader today). If a metric ever needs a country's currency, it gets its own dated record (`effective_from` / `effective_to`, FK to `master.dim_currency`); nothing is added until such a reader exists.
@@ -459,12 +505,14 @@ The successor command refuses a class different from the group's (`GV_CLASS_CHAN
 | G1-3 | section 3 routines | create, with the insert triggers that call them | drop |
 | G1-4 | `fn_group_version_grammar_finalize` | deferred constraint trigger on `group_version` for rows created after the migration | drop trigger |
 | G1-5 | `group`, `group_version` | `template_json` becomes nullable on `group`; a new row with non-NULL `template_json` is refused | restore NOT NULL only if no NULL row exists |
-| G2-1 | `member_version_discriminator`, `_constant`, `member` | columns of 2.12; drop NOT NULL on `member_version_discriminator.governed_values_json`, with a CHECK that it is NULL where `group_version_uid` is set; drop NOT NULL on `member.discriminator_json`; `value_json` dropped (0 rows) | re-add `value_json` and the NOT NULLs (valid while no NULL row exists), drop new columns, before any new row |
+| G2-1 | `member_version_constant`, `member`, `member_version_discriminator`, `_dependency`, `_direct_input`; `member_version_axis_selection` (new) | `member_version_constant` gains the four typed columns (0 rows) and its `value_json` loses NOT NULL; `member.discriminator_json` loses NOT NULL; the three old child tables get a trigger that refuses a row for a member version under a grounded group version, and no column change; the axis selection table and V-4 are created | drop the triggers and new tables, the new constant columns, and restore the NOT NULLs (valid while no NULL row exists), before any new row |
 | G2-2 | `member_version_age_band` (new) | 2.12 | drop before any row |
 | G2-3 | `fn_member_version_finalize` | the 2.12 rules | restore as after 0085 |
 | G2-4 | `mcf.mcv_breakdown_set_pin` (new); `mcf.metric_computed_dimension_ref` | 2.13 | drop, before any pin |
 | G2-5 | `metric_directory.fn_realization_event_guard` | call `fn_realization_grammar_check` on assert for a grounded member version | restore as after 0086 |
-| G3-1 | later | drop `group.template_json`, `group_version.template_json`, `member.measure_concept_id`, `member.discriminator_json`, `member.derivation_json`, `member_version.grain_entity_id`, `grain_entity_version_id`, `temporal_intent_json`, `output_intent_json`, and the tables `member_version_dependency` and `member_version_direct_input` (old values kept in an evidence file with a sha256 per value, as 0088-B) | re-add and restore from the evidence file |
+| G3-1 | later, after their readers move | drop only `member.measure_concept_id`, `member.discriminator_json` and `member.derivation_json`. It asserts first, and refuses otherwise, that each non-NULL value equals what the member's versions hold. No column or table read by 2.14 is dropped, so no evidence file of hashes is used | re-add the three columns (nullable) before any reader needs them; the values are still on the member's versions |
+
+*Note on 0088* (B2, `ab2d086f`: the later drops shrink to what no past version's content hash or fingerprint reads). The records design (bc-docs PR 275, head `e63d0c1f`, section 9.4) plans 0088-C to drop six columns of `mcf.metric_contract_version` and 0088-D `mcf.metric_contract.display_name`, with an evidence file. The fingerprint of 2.14 reads both tables as whole rows, so those two drops would change the fingerprint of every past contract version; they are for that design to narrow. 0088-E (`member.realized_metric_contract_uid`) is outside the fingerprint; the cert writer's two guards read it and move first.
 | Backfill | none | no migration writes directory data; the sweep uses the commands | |
 
 Each migration is proven on an owner- and grant-faithful restore of a fresh read-only dump, with `bc_platform_runtime` vectors and the six proof cases, never on live. Each live apply needs its own recorded grant.
@@ -476,7 +524,7 @@ Each migration is proven on an owner- and grant-faithful restore of a fresh read
 3. **Why not a lower layer?** A lint or an evaluation-time check (D, F) would be a net. The live member layer, `governed-selection.ts`, the resolver and the DEC-45200d schedule declaration are extended, not bypassed. Reads never trigger evaluation.
 4. **Design or execution act?** A design act, named in the amendment, its ADR, FND-ERR-010 and TSK-09855b.
 
-Invariants: III (every new table is insert-only; masters frozen); IV (every reference is a pinned version; no current set is read); I (members select, never classify, sign or age); VI (matched and unmatched counts emitted).
+Invariants: III (every new table is insert-only; masters frozen; no past version's bytes are dropped or reshaped, 2.14); IV (every reference is a pinned version; no current set is read); I (members select, never classify, sign or age); VI (matched and unmatched counts emitted).
 
 ## 11. Open questions for the owner
 
