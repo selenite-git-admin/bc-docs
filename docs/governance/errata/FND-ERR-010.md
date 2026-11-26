@@ -6,13 +6,13 @@ authority: authoritative
 affected: The Contract Grammar §Lifecycle and deprecation policy, Metric Directory Member family (as amended by DEC-6187a8); The Invariants, Invariants I and IV (explanatory disallowed behaviours); Metric Directory §6 item 2
 temporary_governance:
   - DEC-6187a8 (proposed; decided together with DEC-45200d)
-target_resolution: the directory is changed to match the amended Foundation through the later units (group design TSK-09855b, Unit V, the group schema, the sweep); this erratum moves to rejected when the decision unit lands and to closed when the sweep completes
+target_resolution: Foundation and the Metric Directory chapter are updated in the same landing as DEC-6187a8 (the-contract-grammar.md, the-invariants.md, metric-directory.md §6 item 2); the erratum lands closed
 opened: 2026-11-26
 ---
 
 # FND-ERR-010 — Metric groups are not grounded in governed concepts
 
-*Drafted with the decision unit DEC-6187a8 and DEC-45200d (bc-docs PR 276). Status `open` until the owner's landing grant; on landing it becomes `rejected` (the platform falls short of the amended Foundation and is changed to match it).*
+*Drafted with the decision unit DEC-6187a8 and DEC-45200d (bc-docs PR 276). Status `open` until the owner's landing grant; it lands `closed`: the resolution is applied in the same landing, by updating Foundation and the Metric Directory chapter themselves.*
 
 ## Contradiction summary
 
@@ -31,11 +31,11 @@ The directory accepts a group whose meaning is held in JSON keys and an anchor n
 
 ## Temporary governance
 
-DEC-6187a8, once decided with DEC-45200d, governs new group and member work. Until the group schema exists, no new group is opened on the free-JSON template; existing groups and their historical versions stay as recorded (Invariant III).
+Until the landing, the current Foundation text and DEC-5a9dee 2c govern. On landing, DEC-6187a8, decided together with DEC-45200d, governs, and the amended Foundation text states it. Existing groups and their historical versions stay as recorded (Invariant III).
 
 ## Resolution state
 
-Open. Path to closure, in order: the decision unit lands (this erratum becomes `rejected`); the group design (TSK-09855b); Unit V, typed allowed values; the group, breakdown and member schema; the sweep of every group. The erratum closes when the sweep completes and no current group version reads its parts from `template_json`.
+Open until landing; lands `closed`. The resolution is a Foundation update, not an implementation change: the same landing adds the grammar commitment to `the-contract-grammar.md` (Metric Directory Member family), the two disallowed behaviors to `the-invariants.md` (Invariants I and IV), and corrects `metric-directory.md` §6 item 2. Bringing the directory's tables to the amended grammar is the later units' work (the group design TSK-09855b, Unit V, the group, breakdown and member schema, the sweep), each its own act; it is not tracked by this erratum.
 
 ## References
 

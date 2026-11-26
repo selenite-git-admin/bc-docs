@@ -17,11 +17,13 @@ governing_adrs:
   - DEC-97bb94 (N:1 Source Object to Canonical Object cardinality)
   - DEC-d72560 (Business Field and Canonical Field split)
   - DEC-02f5a9 (Business Concept Registry — supersedes the BF/BO/CF vocabulary model)
+  - DEC-6187a8 (Concept grounding of metric groups — the named grammar commitment of the Metric Directory Member family; the platform-version record of that change)
 errata_referenced:
   - FND-ERR-001
   - FND-ERR-002
   - FND-ERR-003
   - FND-ERR-004
+  - FND-ERR-010
 v2_sources:
   - system/foundation/contract-schemas/index.md
   - system/foundation/contract-schemas/common-header.md
@@ -383,6 +385,53 @@ authority. A Member owns its intent state (`planned` | `blocked` + reason) and i
 spec; realized state is DERIVED from the MCF substrate through the realization relation, never
 cached (DEC-b5c7ff). Directory identity is load-bearing for lifecycle acts: governed
 reintake requires the member identity tuple (DEC-21ca17 records the operative proof).
+
+#### Grammar commitment: concept grounding of metric groups
+
+Adopted by DEC-6187a8 (with FND-ERR-010), decided together with DEC-45200d. It is a named
+grammar commitment, not a seventh invariant. The full part tables are in DEC-6187a8 and its
+proposal, sections 3.2 to 3.9.
+
+> **Concept grounding.** A metric group version is made of semantic references and typed governed parameters.
+>
+> Its **semantic references** are pinned versions of entities or business concepts: the grain, the measure concept, the anchors, the axes, the breakdowns (held in a separate versioned set), the event input's entity, reference, key, date and amounts, and any one-step target. Each is reached on the grain entity, or by one declared step along one of the grain's reference concepts.
+>
+> Its **typed governed parameters** are not business concepts: the measure kind, the time class, age bounds, signs, period offsets and constants. Each is a typed column or row with a governed value.
+>
+> Members select governed values on axes and never classify records. Selection relative to the evaluation point P is declared in the metric contract and never computed by a member. A group states the directory's intent. A metric contract realizes a member only when its bindings equal the member's grounded parts, role by role.
+
+- **Standing.** Invariant IV governs references to authoritative objects; this commitment
+  imposes the stronger version pin on governed directory intent. Invariant I gives the
+  boundary rule; this commitment enforces it for members.
+- **Base and derived groups.** A base group declares its grain, measure kind (`entity_count`,
+  `count_distinct`, `sum`), measure concept, time class (the four DEC-952faa values), unit,
+  and, as its time class requires, its period anchor, open model (`gross_binary` or
+  `residual`), closing concept, age bands, axes and event input. A derived group declares its
+  output grain, derivation (`ratio`, `percentage_of_total`, `delta`, `linear_combination`,
+  `top_n_share`), pinned input member versions with roles, period offsets and signs,
+  constants and reporting anchor. A derived definition's inputs and offsets live only on the
+  group version; a new input version moves no derived group until it is moved on purpose.
+- **Temporal selection and age bands.** Classification is done once, by a canonical
+  contract. Selection relative to P (`as_of`, `open_at`, `age_band`) is declared in the
+  metric contract's temporal gate. An age band is a typed temporal choice, not an axis: the
+  group declares its bands and age anchor, a member selects one band, and nothing stamps a
+  record's age.
+- **Realization equality.** A metric contract realizes a member version only when, for every
+  role the grammar models, its binding equals the member's grounded part by semantic role and
+  pinned version. The check covers this member only and sets no global limit on metric
+  contract grammar.
+- **Breakdowns.** A breakdown set is a separately versioned, immutable record keyed to a group
+  version. Members do not pin it; the metric contract's output context pins one set version.
+  Currency and unit partitions belong to the measure, not to breakdowns.
+- **One step and the event input.** A step pins the grain's reference concept version, its
+  target entity version, its target concept version and the exact target Canonical Object
+  version set; it never adds rows, refuses several targets, and puts a record with no target in
+  a declared `unmatched` partition. A residual group's event input is a separately pinned
+  event-grain canonical input; its starting amount and its result are two different concepts,
+  and a swap is refused. Each evaluation records in Lineage the versions it resolved.
+- **Currency and unit.** A monetary `sum` is partitioned by its currency context or pinned to
+  one currency; a sum across currencies, or a record with no valid currency, is refused.
+- **Role checks.** Every semantic reference is a foreign key with its role-specific check.
 
 ## Chapter boundaries
 

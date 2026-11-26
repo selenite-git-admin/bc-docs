@@ -12,7 +12,9 @@ governing_sources:
   - The Contract Grammar (Metric Contract — the realized declaration this directory references but never restates)
 governing_adrs:
   - DEC-c3e57f (D422 — MCF foundational; the Metric Contract is the realized authority)
-errata_referenced: []
+  - DEC-6187a8 (concept grounding of metric groups; corrects §6 item 2)
+errata_referenced:
+  - FND-ERR-010
 v2_sources: []
 diagrams: []
 ratification: operator-aligned in design session 2026-07-08; no ADR filed yet
@@ -91,7 +93,7 @@ The discriminator obeys one rule that makes the whole model source-agnostic:
 Consequences that fall straight out:
 
 1. **Source-agnostic by construction.** Because a discriminator names a canonical *concept + canonical value*, a source literal (`BLART`, `SHKZG`, an ERP entry-method code) has nowhere to live in it. This is PE-MC-12 ("filters bind status/dimension roles only") and Invariant I made structural, not a lint rule.
-2. **Buckets are canonical values, not metric ranges.** An aging member is `aging-bucket = '31-60'`, never `31 ≤ days < 60`. The bucketing derivation lives at canonical, where derivations belong; the metric selects the resulting value.
+2. **An age band is a typed temporal choice, not an axis** (corrected by DEC-6187a8, FND-ERR-010). The group declares its bands and age anchor. A member selects one band; the selection is a typed row on the member, separate from axis selections. Neither the group nor the member computes or stamps a record's age: selection relative to the evaluation point P is the metric contract's `age_band` temporal gate.
 3. **The empty discriminator is the total/base member** — the denominator, or the whole-population count.
 4. **It is a base-member parameter.** Derived members get their identity from their **input tuple** (the template's `inputs`), not from a discriminator — unless the derived *output* is further sliced.
 

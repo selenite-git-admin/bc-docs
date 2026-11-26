@@ -15,8 +15,10 @@ governing_sources:
 governing_adrs:
   - DEC-97bb94 (N:1 Source Object to Canonical Object cardinality)
   - DEC-c4c742 (defines the governed selection artifact reserved under Invariant IV)
+  - DEC-6187a8 (concept grounding of metric groups; the two directory disallowed behaviors under Invariants I and IV)
 errata_referenced:
   - FND-ERR-004
+  - FND-ERR-010
 v2_sources:
   - system/foundation/principles/execution-model.md §9
 word_target: 3500
@@ -62,6 +64,7 @@ Cardinality. N Source Objects may feed one Canonical Object evaluation (FND-ERR-
 - A surface layer aliases a Canonical Object version to a different meaning based on presentation context.
 - An operator re-evaluates a prior Canonical Object version under a newer contract and assigns the new meaning to the old version.
 - A service emits a Canonical Object outside the canonical evaluation boundary.
+- A metric directory member classifies, signs or ages records (DEC-6187a8; the member selects governed values only).
 
 **Governing source.** Foundation. Cardinality governed by DEC-97bb94 and FND-ERR-004.
 
@@ -120,6 +123,7 @@ Reference handling is constrained as follows.
 - Time-based inference that resolves a version without a declared, governed rule.
 - Query-driven selection that is not represented by a governed artifact.
 - Alias-only reference that names the object identity without naming a version.
+- A metric directory part named by free text, by a key inside JSON, or by a concept identity without a version (DEC-6187a8; the grammar imposes this version pin on governed directory intent).
 
 **Governing source.** Foundation (references and referential stability); The Governed Selection.
 
