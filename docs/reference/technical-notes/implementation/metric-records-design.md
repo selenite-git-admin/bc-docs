@@ -14,7 +14,16 @@ governing_adr: DEC-79b62f
 
 # The metric records design
 
-*Design note · proposed 2026-11-25, revision 5 · nothing in this note has been built or run. The owner gave the database yes for migration authoring on 2026-11-25 (section 12). Each migration is proven on an owner- and grant-faithful restore before review, and every live apply needs its own recorded grant.*
+*Design note · proposed 2026-11-25, revision 6 (2026-11-26) · nothing in this note has been built or run. The owner gave the database yes for migration authoring on 2026-11-25 (section 12). Each migration is proven on an owner- and grant-faithful restore before review, and every live apply needs its own recorded grant.*
+
+**Revision 6 (2026-11-26).** This revision records what the build settled and applies the owner's rulings of 2026-11-26 (barecount-devhub `artifacts/operator-review/DECISIONS-workflow-review.md`, branch `claude/operator-review-content`, commits 8ea9083e and 6e4a8803). What changed:
+- **Package v4 is dropped** (6e4a8803). The package stays v3, with `thresholds_digest` over NULL. The reference is sealed by the immutable `mcf.mcv_realized_member_version` row, which is written before the metric contract version, carries the definition's content hash and is required at commit. An audit decision or certification that names a metric contract version therefore pins exactly one definition. Package v4 would have rippled through the audit records and about 27 engine files to restate the same fact. Sections 3.5, 4, 8, 9 and 11 are updated.
+- **Successor-version rule** (6e4a8803). A new definition version is realized by a successor version of the same metric contract, not by a new metric contract, because `mc_name` equals `member_code` and is unique among live metric contracts. Customer Invoice Count's fresh start is the owner's exception (section 12, item 1): its old metric contract 8e8a6f28 is archived first. Section 4.1 is updated.
+- **The output-binding unit equality check is dropped** (6e4a8803), because it compares two vocabularies (for example `USD` or `rows` against `count` or `currency`). The unit-currency coherence check stays (4.3).
+- **A new subsection, 4.4,** lists what the build settled, each point cited to its migration header.
+- **Vocabulary** (8ea9083e): the prose says "metric contract" where it said "calculation". "Definition" stays.
+- 0086 is kept as the auditor accepted it, after the owner's repetition check (8ea9083e).
+- The status stays `drafting`.
 
 **Revision 5 (2026-11-25).** This revision applies the owner's rulings of 2026-11-25 (barecount-devhub `artifacts/operator-review/DECISIONS-workflow-review.md`, branch `claude/operator-review-content`, commit 9336dd8f) and the auditor's acceptance of revision 4 (bc-external-audit `docs/RESPONSE-Codex-gen-4fc3c9-02-metric-records-design-rev4-2026-11-25.md`). What changed:
 - **The five ADR-9dce29 dimensions are dropped from the definition** (purpose, shape, temporality, precision, impact). No code reads them: the Chief checked bc-core, bc-admin and bc-portal. Their five columns, foreign keys, authoring checks and the temporality pair check are removed. `member_version_interpretation` has 8 columns (0085-B). The masters stay untouched. Section 3.4 now says the dimensions are deferred.
@@ -31,7 +40,7 @@ governing_adr: DEC-79b62f
 - **The database rows** are added to migration 0085 (rows 0085-G to 0085-J, section 9.1), with their rollback.
 - **The structured group is its own design** (TSK-09855b), written right after this one. This design adds one forward-compatible check: a definition must match its group's declared unit and time class, once the group declares them (3.8).
 - **Two missing commands are named** (section 8): a family version successor, and a governed archive of a family and its groups.
-- **Words for readers:** in prose, "definition" is the member version and "calculation" is the metric contract version (section 3). Technical names stay in backticks.
+- **Words for readers:** in prose, "definition" is the member version and "calculation" was the word for the metric contract version (revision 6 says "metric contract" instead; section 3). Technical names stay in backticks.
 - The open questions stay five; none is added.
 
 **Revision 3 (2026-11-25).** This revision applies the auditor's CHANGES REQUIRED (bc-external-audit `docs/RESPONSE-Codex-gen-4fc3c9-01-metric-records-design-2026-11-25.md`, commit a8f9b1e9, on head a6ad5c0f). What changed:
@@ -101,7 +110,7 @@ Every record in this design keeps the Foundation:
 
 ## 3. The definition version owns declared metric meaning
 
-**Words used in this note.** The **definition** is the directory member version (`metric_directory.member_version`). The **calculation** is the metric contract version (`mcf.metric_contract_version`). A calculation calculates exactly one definition.
+**Words used in this note.** The **definition** is the directory member version (`metric_directory.member_version`). The **metric contract version** is `mcf.metric_contract_version`. A metric contract version realizes exactly one definition version.
 
 In this note, "meaning" is the **declared metric meaning**: what a definition version says the metric is. It is never evaluated. Foundation meaning in the sense of Invariant I is evaluated once, at canonical evaluation, and nothing here moves or repeats that.
 
@@ -185,7 +194,7 @@ This design therefore builds D-2 for MCF for the first time.
 ### 3.5 Unit, decimals and value format: one home
 
 - **The unit:** a code from `master.master_unit_type` (11 codes, `count` among them; read live), declared on the definition version. Today `output_intent_json.unit_code` is null for both versions of MDM-11fab0. The next output-intent schema refuses a `unit_code` key, so the unit has one home.
-- **The output binding's unit snapshot is not a declaration.** Package v3 takes its output unit from the output binding's `unit_code_snapshot` (`mcf-package-input.build.ts:107`). Package v4 takes it from the referenced definition version, and an authoring check refuses an output binding whose snapshot differs.
+- **The output binding's unit snapshot is not a declaration.** Package v3 takes its output unit from the output binding's `unit_code_snapshot` (`mcf-package-input.build.ts:107`). The package stays v3 (4), so the snapshot is still what the package hashes. No unit equality check is made between the snapshot and the definition version: the two use different vocabularies (for example `USD` or `rows` against `count` or `currency`). The unit-currency coherence check stays (4.3).
 - **Display decimals:** 0 to 6 for a non-money unit. For `currency` the places are derived from the resolved currency, never declared (ADR-b1e9eb rule 1b).
 - **The rounding mode** (half up, once, on the final value) is evaluation, on the contract (ADR-b1e9eb rule 3). The contract rounds to the definition's decimals through its exact reference (section 4).
 - **The value format** (unit label, scale, currency symbol) is code reading the unit, the decimals and the contract's currency semantics. No format field is stored.
@@ -210,7 +219,7 @@ Versions made before it (05d067b2, d49b1b25) have no row; readers show "not decl
 
 Where a metric sits (function, subfunction, family, group) is part of what it means. The directory already owns it: function, then subfunction, then family, then group, then member. `metric_directory.family` carries `(function_slug, subfunction_slug)` with the foreign key `fk_family_subfunction` to `master.master_subfunction(parent_function, slug)` (read live: 49 families, 119 subfunctions).
 
-**The placement is pinned, not looked up.** A family row can change, but a member version pins the exact family version: `member_version.family_version_uid` is NOT NULL, and `metric_directory.family_version` (with `function_slug`, `subfunction_slug` and its own content hash) is immutable (`trg_family_version_immutable`, read live). The family and group version references are inside the member version's content hash (`member-versioning.service.ts:128-138`). So a calculation reaches its placement by one exact path: its reference row (section 4), then the definition, then that definition's family and group versions. No live row is followed, so a later move of the family or the member cannot change what an old calculation reads.
+**The placement is pinned, not looked up.** A family row can change, but a member version pins the exact family version: `member_version.family_version_uid` is NOT NULL, and `metric_directory.family_version` (with `function_slug`, `subfunction_slug` and its own content hash) is immutable (`trg_family_version_immutable`, read live). The family and group version references are inside the member version's content hash (`member-versioning.service.ts:128-138`). So a metric contract version reaches its placement by one exact path: its reference row (section 4), then the definition, then that definition's family and group versions. No live row is followed, so a later move of the family or the member cannot change what an old metric contract version reads.
 
 MDM-11fab0's two versions both pin family version 5ecaa51a (finance, billing, theme `billing_health`, question "Are we billing completely, and how much?") and group version ec729ddc (`ci_invoice_volume`) (read live).
 
@@ -265,12 +274,12 @@ A metric contract version keeps what evaluation needs: formula AST, bindings, fi
 
 - **The reference has one home: a 1:1 child.** `mcf.metric_contract_version` has 19 columns (read live), and 13 after 0088 (4.2). The reference still lives in a new child, `mcf.mcv_realized_member_version`, because it must never change while the parent row stays editable as a draft, and a child insert-only row gives it its own guard: the contract version (PK), the member version it realizes, and that version's content hash, checked equal. It is written in the same transaction as the contract version and never changes. A new contract version without it is refused at commit. The two live contract versions predate it and have no row; they are never backfilled.
 - **The realization event is tied to it.** `metric_directory.realization_event` (12 columns, read live) already names both `member_version_uid` and `metric_contract_version_uid`. A composite foreign key from the event's `(metric_contract_version_uid, member_version_uid)` to the child's same pair (unique) makes an assert name the version the contract realizes, or fail. Revoke rows carry NULLs in both and are not checked. The key is added `NOT VALID`, because the three historic asserts (b8c8f904, 1687e443, f5936579; read live) predate the reference; every new row is checked.
-- **The package records the reference.** A new package version (v4, code) hashes `{member_version_uid, content_hash}` into the package signature and takes its output unit from the referenced version (3.5). It drops `thresholds_digest`, since thresholds are tenant-owned. No snapshot column is added: `mcv_package_snapshot` already has 35 columns, so the reference lives in the package bytes and signature only.
+- **The package stays v3** (owner, 6e4a8803; package v4 is dropped). It hashes no reference, and `thresholds_digest` stays, computed over NULL (4.2). The reference is sealed by this child row instead: it is immutable, written before the metric contract version, carries the definition's content hash, and is required at commit. An audit decision or certification that names a metric contract version therefore pins exactly one definition. Package v4 would have rippled through the audit records and about 27 engine files to restate the same fact. No snapshot column is added.
 - **The directory's acts stay on the event.** `realization_event` keeps assert, supersede and revoke: which contract the directory counts. The child says what a contract evaluates; the event says whether the directory currently counts it.
 
 ### 4.1 When the definition is superseded
 
-**Rule:** a contract version keeps the definition version it was authored from (Invariant IV). Superseding the definition never moves a realization. The directory **keeps counting the older contract version** until a new contract version realizes the new definition.
+**Rule:** a contract version keeps the definition version it was authored from (Invariant IV). Superseding the definition never moves a realization. The directory **keeps counting the older contract version** until a successor version of the **same metric contract** realizes the new definition. A new definition version is never realized by a new metric contract: `mc_name` equals `member_code` and is unique among live metric contracts (3.1). The one exception is Customer Invoice Count's fresh start, the owner's ruling (section 12, item 1), where the old metric contract 8e8a6f28 is archived first (section 10).
 
 Today `supersedeMemberVersion` revokes the old realization and asserts it again on the new member version (`metric-directory.service.ts:2104-2120`). That move goes away. It was also refused whenever the contract version was `audit_pending`, because an assert needs `approved` or `active` (`fn_realization_event_guard`, read live: "interim: approved|active").
 
@@ -278,7 +287,7 @@ How the records read it (each grounded in the live definition):
 - **`realization_operative`** is a table of one row per operative assert, keyed by member version, maintained by `fn_realization_operative_maint` (insert on assert, delete on supersede or revoke; read live). After definition v4 supersedes v3, the v3 contract's operative row stays on v3. Nothing is deleted.
 - **`v_member_realized`** today reads the operative row only for `fn_current_member_version(member)` (read live). After v4, it would show the member as not realized. It changes: it reads the one operative row (variant NULL) among **all** versions of the member, and adds two columns at the end, `realized_member_version_uid` and `realizes_current_definition_flag`. A screen can then say "counted: contract version X, which realizes definition v3; the current definition is v4".
 - **At most one operative row per member** (variant NULL) holds by a new rule in `fn_realization_event_guard`: an assert is refused while another version of the same member has an operative row. The existing rule that an assert targets the current member version stays.
-- **When a new contract version realizes v4**, one command writes two explicit events in one transaction: first the revoke of the v3 contract's operative assert, then the assert on v4. Each is recorded; nothing is moved silently.
+- **When a successor contract version realizes v4**, one command writes two explicit events in one transaction: first the revoke of the v3 contract's operative assert, then the assert on v4. Each is recorded; nothing is moved silently.
 
 ### 4.2 Second homes dropped (owner ruling, 2026-11-25)
 
@@ -308,7 +317,7 @@ The owner decided to drop the retired columns, not keep them unused: they exist 
 - `buildPackageV3Input` sets `thresholds` to NULL, the value every v3 package was sealed with;
 - a v3 reproof first checks that the snapshot's `thresholds_digest` equals the digest of NULL thresholds, and refuses the reproof by name if it does not.
 
-Both live approval snapshots (950f3ebd, b9357731) carry `thresholds_digest` `sha256:74234e98…f982b90b`, computed from a NULL `threshold_json` (read live). Migration 0088 asserts the same equivalence: for every v3 package snapshot, `threshold_json` is NULL on its contract version and the snapshot's `thresholds_digest` equals that NULL digest. Package v4 carries no thresholds at all (section 4).
+Both live approval snapshots (950f3ebd, b9357731) carry `thresholds_digest` `sha256:74234e98…f982b90b`, computed from a NULL `threshold_json` (read live). Migration 0088 asserts the same equivalence: for every v3 package snapshot, `threshold_json` is NULL on its contract version and the snapshot's `thresholds_digest` equals that NULL digest. The package stays v3 and keeps `thresholds_digest` over NULL (section 4).
 
 ### 4.3 Coherence holds for the life of the version
 
@@ -327,6 +336,22 @@ All four values are already allowed (`mcv_aggregation_currency_chk`, read live).
 - at review to approved and at audit pending to active (0086-J).
 
 **`mc_name` can change today.** No trigger on `mcf.metric_contract` reads `mc_name`, and `fn_mc_active_immutability_check` does not freeze it (read live; no bc-core code updates it). Its equality with the member code is therefore checked at insert and kept: once any version of the contract has a reference row, any change to `mc_name` is refused (0086-I).
+
+### 4.4 Settled while building (2026-11-25/26)
+
+The migrations were written against this design. Each point below was a choice made at writing. The migration header (bc-db PR 200, `migrations/0085_*.sql` to `0087_*.sql`, branch worktree `0085-metric-definition-meaning`) names it for review.
+
+- **Compatibility latch (0085-D).** The design refused format v1 of the children digest for every new definition version. The served bc-core 762fb59c writes only v1 versions with no interpretation row, so that refusal would break authoring the moment 0085 applies. v1 is now refused once any definition version has committed as v2.
+- **Archived rows are exempt from the slug CHECK on update (0085-G).** A legacy non-slug family or group can be archived. Its code is still never reused, because the unique index has no WHERE.
+- **A BEFORE INSERT slug trigger (0085-G, 0085-H).** `fn_directory_code_slug_guard` refuses a non-slug code on insert whatever `archived_at` holds, so an already-archived row cannot reserve one.
+- **The FAQ interpretation-citation guard (0085-F).** A BEFORE INSERT trigger refuses an entry that cites the interpretation of a definition version with no interpretation row (`faq_interpretation_missing`).
+- **The reference is written children-first (0086-A).** It is written before its metric contract version, in the same transaction, as every member-version child is. A guard refuses a reference to a version that already exists (`mcv_reference_late`). A deferred check at commit requires the reference. The interpretation row follows the same order, so its shape check runs at commit (0085-B).
+- **Writers run only as `bc_schema_owner` (0087-E).** Until a dedicated writer login exists, the 0087 routines grant EXECUTE to no login, and a direct INSERT by any other role is refused, the superuser included.
+- **SELECT on the records goes to `bc_demo_runtime` (0087, build note 1).** `bc_platform_runtime` has no USAGE on schema `demo` (the plane boundary, D575), so the demo records are read by the demo login. The mark-reason master goes to `bc_platform_runtime`, as every master.
+- **Same-transaction is read from `xmin` (0087, build note 3).** A point with its label, a mark with its snapshot and a reason with its mark are checked by the parent row's `xmin` being an in-progress transaction id visible to this one.
+- **One point per period on a new label (0087, build note 5).** A new label's binding must be a demo-plane binding with months, and the label has one point per legal entity and period.
+- **The calendar comes from `demo.fiscal_calendar_config` (0087, build note 6).** It is the loader's governed declaration, with exactly one active row covering the date.
+- **Format v1 is refused on a binding with months (0087).** The hand-over refuses it (`answer_sheet_v1_refused_months_declared`). The bc-demo tool relies on the routine's refusal and adds no check of its own (bc-demo PR 27).
 
 ## 5. Proof facts as governed records
 
@@ -484,9 +509,9 @@ Every name, definition and interpretation a tenant reads comes from the definiti
 | Command | State |
 |---|---|
 | Author a definition version, taking the name, interpretation, temporality class, unit and decimals from the act | extend `POST members/:memberUid/version` and `/version/supersede` |
-| Author a contract version from an exact definition version, recording the reference, with package v4 | extend the authoring route and the draft-writing service |
+| Author a contract version from an exact definition version, recording the reference; the package stays v3 | extend the authoring route and the draft-writing service |
 | Realize a new definition: revoke the older contract's operative assert, then assert the new one, in one transaction | change to the realization command (4.1) |
-| The authoring checks: temporality class against temporal intent and gate shape, ADR-952faa D-2 class against every aggregate node, unit against currency both ways, output unit snapshot against the definition, unit algebra (ADR-b1e9eb Annex A) | new |
+| The authoring checks: temporality class against temporal intent and gate shape, ADR-952faa D-2 class against every aggregate node, unit against currency both ways, unit algebra (ADR-b1e9eb Annex A) | new |
 | The group check: a definition matches its group version's declared unit and time class, inert until the group declares them (3.8.2) | new, in the definition-version command |
 | Create a family or a group: refuse a code outside the slug pattern or already taken by any row, archived or not; for a family, refuse a `decision_text` that is not a question (3.8.1) | extend `POST families` and `POST groups` |
 | Declare a family version successor: the question in `decision_text`, the old note moved to `rationale_text`; function, subfunction and theme code unchanged (3.8.1 rule 3) | new; today only an absent v1 can be authored |
@@ -601,7 +626,7 @@ The first metric is retired as history and written again; nothing is deleted (In
    - unit `count`, 0 decimals;
    - temporality class `flow_per_period`: invoices counted in the period of their event. It agrees with the temporal intent `period_aggregate` and the `count` aggregate (3.4.1);
    - placement through family version 5ecaa51a (finance, billing, theme `billing_health`) and group version ec729ddc (3.8). The family version already states a question and the group already has a version, so no directory act of 3.8.1 has to come before v3.
-4. **A fresh contract** is authored from v3. Its reference row names v3's uid and content hash. Its `mc_name` is `customer_invoice_volume`, the member's code. It has `aggregation_currency_code = not_applicable`, carries no description, thresholds, owner, tags, function or subfunction (those columns are dropped by 0088, 4.2), and is sealed under package v4. Its realization is asserted at `approved` (no other version of the member has an operative row after step 2), then it goes to audit.
+4. **A fresh contract** is authored from v3. Its reference row names v3's uid and content hash. Its `mc_name` is `customer_invoice_volume`, the member's code. It has `aggregation_currency_code = not_applicable`, carries no description, thresholds, owner, tags, function or subfunction (those columns are dropped by 0088, 4.2), and is sealed under package v3, with `thresholds_digest` over NULL. Its realization is asserted at `approved` (no other version of the member has an operative row after step 2), then it goes to audit.
 5. **Proven again through the second-proof path:**
    - pin the new version on the label `kaveri-demo-v3lc5-v2-world-months` (a new metric contract, so a first pin, not a successor);
    - hand over its 41 cells in format v3 on binding e32071a8;
@@ -625,7 +650,7 @@ The first metric is retired as history and written again; nothing is deleted (In
    - the directory's code identity: a family theme code and a group code are globally unique, follow a slug pattern and are never reused (3.8.1 rule 2);
    - the family's question, declared on every family version (3.8.1 rule 3);
    - the group's declared unit and time class as an authoring check, inert until TSK-09855b declares them (3.8.2);
-   - the definition reference on the contract version and in its package;
+   - the definition reference on the contract version (sealed by its child row, not by the package);
    - the storage home of DEC-3f6b1b's per-world binding (left open by that ADR);
    - veracity carried on CO evidence at the canonical boundary;
    - the per-value mark.
@@ -648,7 +673,7 @@ The first metric is retired as history and written again; nothing is deleted (In
 
 The owner answered every open question on 2026-11-25 (barecount-devhub `artifacts/operator-review/DECISIONS-workflow-review.md`, commit 9336dd8f). None remains open.
 
-1. **A new calculation.** The fresh contract is a new contract uid, as the precedent was (fe91c450 to 8e8a6f28), not a v2 of 8e8a6f28 under a successor pin.
+1. **A new metric contract, as the owner's exception.** The fresh contract is a new contract uid, as the precedent was (fe91c450 to 8e8a6f28), not a v2 of 8e8a6f28 under a successor pin. This is an exception to the successor-version rule of 4.1; 8e8a6f28 is archived first.
 2. **The meaning as written.** The neutral rationale and the temporality class of section 10 stand. There are no five dimensions (3.4).
 3. **Canonical pins on an existing label.** Yes: a metric act may add a disjoint canonical contract pin to an existing label, as it may for metric pins. Existing pins never change.
 4. **The `unverified` rule is unchanged.** Such an evaluation is refused, with no snapshot and no mark (section 6).
