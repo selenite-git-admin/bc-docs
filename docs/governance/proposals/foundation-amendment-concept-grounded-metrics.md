@@ -20,7 +20,7 @@ governing_adr: DEC-79b62f
 
 **Revision 4.** Applies the owner's answer to revision 3's two questions ("Yes, both", recorded 2026-11-26 08:40 IST), in the same file and branch, entry "Masters and the 15 groups that cannot count themselves". (1) The currency and country masters stay insert-only, with deactivation; their codes and the currency's decimal places are frozen by trigger (section 6.4, Unit V). (2) The 15 groups on entities that cannot count themselves are split: 6 wait for identity concepts by a concept act, 8 Legal Entity groups stay derived with a declared output grain, 1 Cost Center group becomes a slice (section 8.1, re-read live). No questions remain open (section 11).
 
-**Revision 5.** Applies the owner's rulings recorded in the same file and branch, commit `060d5328`, entry "Successor rule corrected, and the group design's three questions", and aligns with the group design (bc-docs PR 277, revision 2). (1) A new definition version gets a new metric contract plus a `mcf.metric_supersession` record; the directory member carries the lasting identity (sections 3.6, 7). (3) Grounded parts, including a derived definition's inputs and period offsets, live only on the group version, which each definition pins (sections 3.3, 5, 6.1, 6.3). (4) The two Recognition Event groups are archived with no replacement (sections 1, 8). Ruling (2), the owner's grant that opens a group, is design detail (PR 277 sections 2.11 and 4.1). Also aligned with live and with ADR-952faa: the time class takes the four ADR-952faa values (3.2), the open model is optional for a stock that is not an open item (3.2, 3.4), a `linear_combination` derivation is added (3.3), and 27 of the 29 currency code concepts are active (1, 6.4). One question is open (section 11).
+**Revision 5.** Applies the owner's rulings recorded in the same file and branch, commit `060d5328`, entry "Successor rule corrected, and the group design's three questions", and aligns with the group design (bc-docs PR 277, revision 2). (1) A new definition version gets a new metric contract plus a `mcf.metric_supersession` record; the directory member carries the lasting identity (sections 3.6, 7). (3) Grounded parts, including a derived definition's inputs and period offsets, live only on the group version, which each definition pins (sections 3.3, 5, 6.1, 6.3). (4) The two Recognition Event groups are archived with no replacement (sections 1, 8). Ruling (2), the owner's grant that opens a group, is design detail (PR 277 sections 2.11 and 4.1). Also aligned with live and with ADR-952faa: the time class takes the four ADR-952faa values (3.2), the open model is optional for a stock that is not an open item (3.2, 3.4), a `linear_combination` derivation is added (3.3), and 27 of the 29 currency code concepts are active (1, 6.4). Later rulings in the same file: `1ef2d04e` adds a governed top-N share derivation (3.3); `53e9659c` (1) makes derived input pins move only on purpose (3.3, 7). No question is open (section 11).
 
 ## 1. The problem
 
@@ -87,7 +87,9 @@ Breakdowns are not in the group version. They are a separate, versioned set (sec
 | Part | Kind | Rule |
 |---|---|---|
 | Output grain | reference: entity version | required |
-| Derivation | parameter: `ratio`, `percentage_of_total`, `delta`, `linear_combination` | required |
+| Derivation | parameter: `ratio`, `percentage_of_total`, `delta`, `linear_combination`, `top_n_share` | required |
+| Top N | parameter: integer N, a typed column | `top_n_share` only |
+| Ranking concept | reference: a reference concept version on the input's grain, in the input's breakdown set | `top_n_share` only |
 | Inputs | references: pinned input member versions, each with a role (`numerator`, `denominator`, `operand`); on the group version | required |
 | Period offsets | parameter: integer periods per input; on the group version | default 0 |
 | Operand signs | parameter: −1 or +1 per input, declared, never defaulted | `linear_combination` only |
@@ -95,7 +97,7 @@ Breakdowns are not in the group version. They are a separate, versioned set (sec
 | Constants | slots: role and value type on the group version; the value is the member's selection | 0..n |
 | Reporting anchor | declared (owner ruling 1) | required |
 
-**Inputs live on the group version (owner, `060d5328`).** A derived definition's inputs and period offsets are grounded parts. They live only on the group version, which each definition pins; the member layer holds no copy. A new version of an input definition gives the derived group a successor version, and its definitions follow (section 7). `linear_combination` is the signed sum of its inputs, all of one unit and one currency partition; an input may itself be derived, so a margin is a `ratio` over a `linear_combination`. A top-N share is none of the four (question 1, section 11).
+**Inputs live on the group version (owner, `060d5328`).** A derived definition's inputs and period offsets are grounded parts. They live only on the group version, which each definition pins; the member layer holds no copy. The group version pins exact input definition versions. A new input version moves nothing: each derived group version stays on the old input until it is moved on purpose by a successor version; a read-only check lists those pinned to a replaced input, and moving them is one batch under the owner's group grant (owner, `53e9659c` (1)). `linear_combination` is the signed sum of its inputs, all of one unit and one currency partition; an input may itself be derived, so a margin is a `ratio` over a `linear_combination`. `top_n_share` is the share of the N largest partitions of one input, ranked by its ranking concept, in that input's total at P; ties are ordered by the ranking key, the `unmatched` partition is never ranked, and the evaluation ranks, never a member (owner, `1ef2d04e`).
 
 **The anchor rule (owner ruling 1).** A derived group declares its own anchor, checked against its inputs. If all inputs share one anchor, the declared anchor must equal it. If they differ, the declaration names the reporting anchor, and each input keeps its own.
 
@@ -271,7 +273,7 @@ The member holds only its selections; its grounded parts are the pinned group ve
 
 ## 7. The version cascade
 
-A new governed value makes a new concept version, then a new group version that pins it, then new member versions. A new input definition version makes a new version of each derived group that pins it, then new derived member versions. A new breakdown makes only a new breakdown set version. Every new definition version is realized by a new metric contract, joined to its predecessor by a `mcf.metric_supersession` record; the directory member carries the lasting identity (owner, `060d5328`, replacing the same-metric-contract part of ruling 6e4a8803). Nothing is edited in place.
+A new governed value makes a new concept version, then a new group version that pins it, then new member versions. A new input definition version moves no derived group by itself: a derived group version stays on its pinned input until moved on purpose (section 3.3). A new breakdown makes only a new breakdown set version. Every new definition version is realized by a new metric contract, joined to its predecessor by a `mcf.metric_supersession` record; the directory member carries the lasting identity (owner, `060d5328`, replacing the same-metric-contract part of ruling 6e4a8803). Nothing is edited in place.
 
 ## 8. Order of units
 
@@ -325,6 +327,4 @@ These are design requirements against wrong values, not a live metric act.
 
 ## 11. Open questions for the owner
 
-Revision 4 had none. The group design's three questions were answered by the owner (`060d5328`). One is open:
-
-1. **Customer and supplier concentration.** Two groups measure the share of the largest customers (or suppliers) in the total. The grammar cannot say "the top N" yet. Should we add a governed "share of the top N" derivation, or archive the two groups?
+None open. The group design's three questions were answered by the owner (`060d5328`), and the concentration question by `1ef2d04e` (a governed top-N share, section 3.3).
