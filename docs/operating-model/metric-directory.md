@@ -95,7 +95,7 @@ Consequences that fall straight out:
 1. **Source-agnostic by construction.** Because a discriminator names a canonical *concept + canonical value*, a source literal (`BLART`, `SHKZG`, an ERP entry-method code) has nowhere to live in it. This is PE-MC-12 ("filters bind status/dimension roles only") and Invariant I made structural, not a lint rule.
 2. **An age band is a typed temporal choice, not an axis** (corrected by DEC-6187a8, FND-ERR-010). The group declares its bands and age anchor. A member selects one band; the selection is a typed row on the member, separate from axis selections. Neither the group nor the member computes or stamps a record's age: selection relative to the evaluation point P is the metric contract's `age_band` temporal gate.
 3. **The empty discriminator is the total/base member** — the denominator, or the whole-population count.
-4. **It is a base-member parameter.** Derived members get their identity from their **input tuple** (the template's `inputs`), not from a discriminator — unless the derived *output* is further sliced.
+4. **It is a base-member parameter.** Derived members get their identity from the exact input definition versions pinned on their group version (DEC-6187a8), not from a discriminator — unless the derived *output* is further sliced.
 
 - **class** = `base | derived`.
 
