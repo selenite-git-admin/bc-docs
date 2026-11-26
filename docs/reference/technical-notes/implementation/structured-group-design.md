@@ -29,7 +29,7 @@ It also applies the red team of revision 1: a group-version successor command (4
 
 | Input | Exact reference |
 |---|---|
-| The authority | The draft amendment, bc-docs PR 276, `docs/governance/proposals/foundation-amendment-concept-grounded-metrics.md` (revision 5, amended to the same rulings). Section numbers below written "A§n" point into it. |
+| The authority | The draft amendment, bc-docs PR 276, head `db0af246`, `docs/governance/proposals/foundation-amendment-concept-grounded-metrics.md` (revision 5, amended to the same rulings). Section numbers below written "A§n" point into it. |
 | The owner's rulings | barecount-devhub `claude/operator-review-content` `060d5328` (above), and the earlier entries the amendment cites. |
 | The auditor's requirements | bc-external-audit `docs/RESPONSE-Codex-gen-52eda8-01-concept-grounded-metrics-2026-11-26.md`, point 5 and the ADR-set paragraph (origin/main `f28c72da`). |
 | The records design it builds on | bc-docs PR 275, head `e63d0c1f`, `metric-records-design.md`; its migrations 0085, 0086 and 0087 are bc-db PR 200. 0088 is planned there. |
