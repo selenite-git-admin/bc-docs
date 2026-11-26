@@ -1,18 +1,18 @@
 ---
 id: FND-ERR-010
 title: "Metric groups are not grounded in governed concepts: the directory holds free JSON, unversioned concept references and aging buckets as canonical values"
-status: open
+status: closed
 authority: authoritative
-affected: The Contract Grammar §Lifecycle and deprecation policy, Metric Directory Member family (as amended by DEC-6187a8); The Invariants, Invariants I and IV (explanatory disallowed behaviours); Metric Directory §6 item 2
+affected: The Contract Grammar §Lifecycle and deprecation policy, Metric Directory Member family (as amended by DEC-6187a8); The Invariants, Invariants I and IV (explanatory disallowed behaviours); Metric Directory §6 items 2 and 4
 temporary_governance:
-  - DEC-6187a8 (proposed; decided together with DEC-45200d)
-target_resolution: Foundation and the Metric Directory chapter are updated in the same landing as DEC-6187a8 (the-contract-grammar.md, the-invariants.md, metric-directory.md §6 item 2); the erratum lands closed
+  - DEC-6187a8 (decided together with DEC-45200d)
+target_resolution: applied; Foundation and the Metric Directory chapter were updated in the same landing as DEC-6187a8 (the-contract-grammar.md, the-invariants.md, metric-directory.md §6 items 2 and 4)
 opened: 2026-11-26
 ---
 
 # FND-ERR-010 — Metric groups are not grounded in governed concepts
 
-*Drafted with the decision unit DEC-6187a8 and DEC-45200d (bc-docs PR 276). Status `open` until the owner's landing grant; it lands `closed`: the resolution is applied in the same landing, by updating Foundation and the Metric Directory chapter themselves.*
+*Landed with the decision unit DEC-6187a8 and DEC-45200d (bc-docs PR 276). Closed: the resolution is applied in the same landing, by updating Foundation and the Metric Directory chapter themselves.*
 
 ## Contradiction summary
 
@@ -35,7 +35,7 @@ Until the landing, the current Foundation text and DEC-5a9dee 2c govern. On land
 
 ## Resolution state
 
-Open until landing; lands `closed`. The resolution is a Foundation update, not an implementation change: the same landing adds the grammar commitment to `the-contract-grammar.md` (Metric Directory Member family), the two disallowed behaviors to `the-invariants.md` (Invariants I and IV), and corrects `metric-directory.md` §6 item 2. Bringing the directory's tables to the amended grammar is the later units' work (the group design TSK-09855b, Unit V, the group, breakdown and member schema, the sweep), each its own act; it is not tracked by this erratum.
+Closed. The resolution is a Foundation update, not an implementation change: the same landing adds the grammar commitment to `the-contract-grammar.md` (Metric Directory Member family), the two disallowed behaviors to `the-invariants.md` (Invariants I and IV), and corrects `metric-directory.md` §6 items 2 and 4. Bringing the directory's tables to the amended grammar is the later units' work (the group design TSK-09855b, Unit V, the group, breakdown and member schema, the sweep), each its own act; it is not tracked by this erratum.
 
 ## References
 
