@@ -1,7 +1,7 @@
 ---
 uid: foundation-amendment-concept-grounded-metrics
 title: "Foundation amendment proposal: every metric group is grounded in one business entity's governed concepts"
-description: "Draft revision 3, after the auditor's answer (gen-52eda8-01) and the owner's rulings. Proposes a named Foundation grammar commitment, its ADR draft and a design sketch: semantic references are pinned entity or concept versions, governed parameters are typed, breakdowns are a separately versioned set pinned by the metric contract, and allowed values become typed rows. Nothing is recorded, built or written."
+description: "Draft revision 4, after the owner's answers to revision 3's two questions (masters frozen insert-only; the 15 unhostable groups split). Earlier: revision 3 applied the auditor's answer (gen-52eda8-01) and the owner's rulings. Proposes a named Foundation grammar commitment, its ADR draft and a design sketch: semantic references are pinned entity or concept versions, governed parameters are typed, breakdowns are a separately versioned set pinned by the metric contract, and allowed values become typed rows. Nothing is recorded, built or written."
 status: drafting
 authority: reference
 date: 2026-11-26
@@ -14,9 +14,11 @@ governing_adr: DEC-79b62f
 
 # Proposal: metrics grounded in business concepts
 
-*Draft revision 3, 2026-11-26. Not an ADR and not Foundation text yet. Order (owner, 2026-11-26): draft, red team, auditor, then the group design (TSK-09855b). Counts were read live from `bc_platform_dev` on 2026-11-26; re-read before acting.*
+*Draft revision 4, 2026-11-26. Not an ADR and not Foundation text yet. Order (owner, 2026-11-26): draft, red team, auditor, then the group design (TSK-09855b). Counts were read live from `bc_platform_dev` on 2026-11-26; re-read before acting.*
 
 **Revision 3.** Applies the auditor's answer, bc-external-audit `RESPONSE-Codex-gen-52eda8-01` (ACCEPTED WITH BOUNDARY, origin/main 2657f2d7), points 1 to 5 and its ADR-set paragraph. Applies the owner's rulings in barecount-devhub `artifacts/operator-review/DECISIONS-workflow-review.md` on branch `claude/operator-review-content`, entries 5b12384f (the leans) and dfffb1a9 (ruled, "Yes to all"). Revision 2's open questions are answered and removed. Two questions remain (section 11).
+
+**Revision 4.** Applies the owner's answer to revision 3's two questions ("Yes, both", recorded 2026-11-26 08:40 IST), in the same file and branch, entry "Masters and the 15 groups that cannot count themselves". (1) The currency and country masters stay insert-only, with deactivation; their codes and the currency's decimal places are frozen by trigger (section 6.4, Unit V). (2) The 15 groups on entities that cannot count themselves are split: 6 wait for identity concepts by a concept act, 8 Legal Entity groups stay derived with a declared output grain, 1 Cost Center group becomes a slice (section 8.1, re-read live). No questions remain open (section 11).
 
 ## 1. The problem
 
@@ -255,6 +257,7 @@ The live tables are extended. `member_version_discriminator` may select only on 
 - `master`: a row in `concept_registry.value_master` names the master table and key column. Two rows to start: `master.dim_currency.currency_code` and `master.dim_country.alpha2`. The concept version references it by FK.
 - A member selection row has exactly one of `concept_value_id`, `currency_code` (FK to `master.dim_currency`) or `country_alpha2` (FK to `master.dim_country`). A check enforces one, and a trigger enforces that it matches the concept's value source.
 - A value outside a master is refused until the master adds it.
+- **The masters are frozen insert-only (owner, revision 4).** Rows are never deleted. Once a row exists its identity is frozen; only the label and the active flag may change. A `BEFORE UPDATE OR DELETE` trigger on `master.dim_currency` refuses any change to `currency_code` or `decimal_places`, and any delete. A trigger on `master.dim_country` refuses any change to its codes (`alpha2`, and `alpha3` and `numeric_code`, which name the same country), and any delete. `currency_label`, `country_label`, `symbol`, `is_active` and `updated_at` stay writable. A currency whose decimal places change gets a new row with a new code; the old row is deactivated. Deactivation refuses new selections and never breaks a pinned one. Both triggers are in Unit V.
 - The 29 currency and 4 country code concepts are given the `master` source.
 - Ripple: the 39 bc-core files that read `canonical_value_set` and the 2 that read `governed_values_json` move to the typed rows in this unit.
 
@@ -273,7 +276,24 @@ A new governed value makes a new concept version, then a new group version that 
 | 5 | The sweep: all 143 groups move first (owner ruling 4) |
 | 6 | New metrics, on the metric lane |
 
-**The sweep** (counts from revision 2): 63 groups fit; 14 base groups need an anchor date and 47 derived groups declare one; 15 sit on entities that cannot host a base group yet (question 2); 2 Recognition Event groups are replaced; 2 test leftovers are archived. The 29 versionless groups get a grounded v1. Groups whose members differ only by measure split. Every change goes through the directory commands.
+**The sweep** (counts from revision 2): 63 groups fit; 14 base groups need an anchor date and 47 derived groups declare one; 15 sit on entities that cannot count themselves and are split (section 8.1); 2 Recognition Event groups are replaced; 2 test leftovers are archived. The 29 versionless groups get a grounded v1. Groups whose members differ only by measure split. Every change goes through the directory commands.
+
+### 8.1 The 15 groups that cannot count themselves (owner, revision 4)
+
+Re-read live on 2026-11-26. None of the 15 has a member. Each has one group version.
+
+| Entity | Group | Class | Disposition |
+|---|---|---|---|
+| Tax Return | `tax_return_counts` | base | identity concept first (concept act), then grounded v2 |
+| Tax Return | `tax_return_ratios` | derived | derived, after its base inputs exist |
+| Financial Close | `financial_close_counts` | base | identity concept first (concept act), then grounded v2 |
+| Financial Close | `financial_close_ratios` | derived | derived, after its base inputs exist |
+| GL Account Reconciliation | `reconciliation_record_counts` | base | identity concept first (concept act), then grounded v2 |
+| GL Account Reconciliation | `reconciliation_event_ratios` | derived | derived, after its base inputs exist |
+| Legal Entity | `free_cash_flow_metrics`, `profitability_margins`, `profitability_subtotals`, `receivable_control_derived`, `return_ratios`, `solvency_ratios`, `tax_rate_metrics`, `working_capital_metrics` | derived (8) | stay derived; output grain Legal Entity, declared reporting anchor (section 3.3); inputs break down by a `recording_legal_entity` or `issuing_legal_entity` reference (11 such references live) |
+| Cost Center | `cost_center_master` | base | becomes a slice: a breakdown on the Journal Entry Line `cost_center` reference; the group is archived and its code reserved |
+
+In counts: 6 groups on 3 entities wait for an identity concept, a concept act through the business concept path, never a metric act. 8 stay derived. 1 becomes a slice. Live, the three entities hold one date concept each and no identity or measure concept.
 
 ## 9. Proof cases
 
@@ -297,5 +317,4 @@ These are design requirements against wrong values, not a live metric act.
 
 ## 11. Open questions for the owner
 
-1. **Master immutability.** `master.dim_currency` and `master.dim_country` have `updated_at` and `is_active` and no versions. Invariant III needs a pinned value to stay true. Proposal: codes are insert-only; deactivation refuses new selections but never breaks pinned ones; labels may change because no meaning rests on them. Is that enough, or must the masters gain versions?
-2. **Hosting entities.** 15 groups sit on entities with no identity concept (Legal Entity, Cost Center, Financial Close, GL Account Reconciliation, Tax Return). Should those entities gain identity concepts in the sweep, or should those groups be rebuilt as derived groups with a declared output grain?
+None open. Revision 3's two questions were answered by the owner on 2026-11-26 (revision 4 note): the masters are frozen insert-only (section 6.4), and the 15 groups are split (section 8.1).
